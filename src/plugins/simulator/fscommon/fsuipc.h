@@ -13,6 +13,7 @@
 #define BLACKSIMPLUGIN_FSUIPC_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/weather/weathergrid.h"
 #include <QStringList>
 
 namespace BlackSimPlugin
@@ -20,8 +21,10 @@ namespace BlackSimPlugin
     namespace FsCommon
     {
         //! Class representing a FSUIPC "interface"
-        class CFsuipc
+        class CFsuipc : public QObject
         {
+            Q_OBJECT
+
         public:
 
             //! Constructor
@@ -44,6 +47,9 @@ namespace BlackSimPlugin
 
             //! Write variables
             bool write(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Write weather grid to simulator
+            bool write(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
             //! Read data from FSUIPC
             //! \param aircraft       object to be updated
@@ -97,10 +103,29 @@ namespace BlackSimPlugin
             //! Log message category
             static QString getMessageCategory() { return "swift.fscommon.fsuipc"; }
 
+        protected:
+            //! \copydoc QObject::timerEvent
+            void timerEvent(QTimerEvent *event);
+
         private:
+            struct FsuipcWeatherMessage
+            {
+                FsuipcWeatherMessage() = default;
+                FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials);
+                int m_offset = 0;
+                QByteArray m_messageData;
+                int m_leftTrials = 0;
+            };
+
+            void clearAllWeather();
+            void processWeatherMessages();
+
             bool m_connected = false;
             QString m_lastErrorMessage;
             QString m_fsuipcVersion;
+
+            QVector<FsuipcWeatherMessage> m_weatherMessageQueue;
+            unsigned int m_lastTimestamp = 0;
 
             //! Integer representing fractional
             static double intToFractional(double fractional);

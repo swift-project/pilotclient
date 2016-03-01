@@ -179,6 +179,9 @@ namespace BlackSimPlugin
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
 
+            //! Inject weather grid to simulator
+            void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
+
             static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             bool m_simConnected  = false;       //!< Is simulator connected?
             bool m_simSimulating    = false;    //!< Simulator running?

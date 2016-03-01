@@ -105,6 +105,9 @@ namespace BlackSimPlugin
 
             void disconnectAllClients();
 
+            //! Inject weather grid to simulator
+            void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
+
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             QMetaObject::Connection m_connectionHostMessages;
             int m_dispatchTimerId = -1;

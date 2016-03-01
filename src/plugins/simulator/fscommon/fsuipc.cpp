@@ -15,6 +15,7 @@
 #include <Windows.h>
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 #include "FSUIPC/FSUIPC_User.h"
+#include "FSUIPC/NewWeather.h"
 
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/logmessage.h"
@@ -29,13 +30,17 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Weather;
 
 namespace BlackSimPlugin
 {
     namespace FsCommon
     {
 
-        CFsuipc::CFsuipc() { }
+        CFsuipc::CFsuipc()
+        {
+            startTimer(100);
+        }
 
         CFsuipc::~CFsuipc()
         {
@@ -87,6 +92,121 @@ namespace BlackSimPlugin
             Q_UNUSED(aircraft);
             //! \todo FSUIPC write values
             return false;
+        }
+
+        bool CFsuipc::write(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
+        {
+            if (!this->isConnected()) { return false; }
+
+            clearAllWeather();
+
+            CGridPoint gridPoint = weatherGrid.front();
+
+            NewWeather nw;
+            // Clear new weather
+            nw.uCommand = NW_SET;
+            nw.uFlags = 0;
+            nw.ulSignature = 0;
+            nw.uDynamics = 0;
+            for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
+
+            nw.dLatitude = 0.0;
+            nw.dLongitude = 0.0;
+            nw.nElevation = 0;
+            nw.ulTimeStamp = 0;
+            nw.nTempCtr = 0;
+            nw.nWindsCtr = 0;
+            nw.nCloudsCtr = 0;
+            nw.nElevation = 0; // metres * 65536;
+            nw.nUpperVisCtr = 0;
+
+            // todo: Take station from weather grid
+            memcpy(nw.chICAO, "GLOB", 4);
+
+            const CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers();
+            for (const auto &visibilityLayer : visibilityLayers)
+            {
+                NewVis vis;
+                vis.LowerAlt = visibilityLayer.getBase().value(CLengthUnit::m());
+                vis.UpperAlt = visibilityLayer.getCeiling().value(CLengthUnit::m());
+                vis.Range = visibilityLayer.getVisibility().value(CLengthUnit::mi()) * 100;
+                nw.Vis = vis;
+            }
+
+            const CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
+            for (const auto &temperatureLayer : temperatureLayers)
+            {
+                NewTemp temp;
+                temp.Alt = temperatureLayer.getLevel().value(CLengthUnit::m());
+                temp.Day = temperatureLayer.getTemperature().value(CTemperatureUnit::C());
+                temp.DayNightVar = 3;
+                temp.DewPoint = temperatureLayer.getDewPoint().value(CTemperatureUnit::C());
+                nw.Temp[nw.nTempCtr++] = temp;
+            }
+
+            const CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+            for (const auto &cloudLayer : cloudLayers)
+            {
+                NewCloud cloud;
+                cloud.Coverage = static_cast<char>(cloudLayer.getCoverage());
+
+                switch (cloudLayer.getCoverage())
+                {
+                case CCloudLayer::None: cloud.Coverage = 0; break;
+                case CCloudLayer::Few: cloud.Coverage = 2; break;
+                case CCloudLayer::Scattered: cloud.Coverage = 4; break;
+                case CCloudLayer::Broken: cloud.Coverage = 6; break;
+                case CCloudLayer::Overcast: cloud.Coverage = 8; break;
+                default: cloud.Coverage = 0;
+                }
+
+                cloud.Deviation = 0;
+                cloud.Icing = 0;
+                cloud.LowerAlt = cloudLayer.getBase().value(CLengthUnit::m());
+                cloud.PrecipBase = 0;
+                cloud.PrecipRate = static_cast<unsigned char>(cloudLayer.getPrecipitationRate());
+                cloud.PrecipType = static_cast<unsigned char>(cloudLayer.getPrecipitation());
+                cloud.TopShape = 0;
+                cloud.Turbulence = 0;
+
+                switch (cloudLayer.getClouds())
+                {
+                case CCloudLayer::NoClouds: cloud.Type = 0; break;
+                case CCloudLayer::Cirrus: cloud.Type = 1; break;
+                case CCloudLayer::Stratus: cloud.Type = 8; break;
+                case CCloudLayer::Cumulus: cloud.Type = 9; break;
+                case CCloudLayer::Thunderstorm: cloud.Type = 10; break;
+                default: cloud.Type = 0;
+                }
+
+                cloud.UpperAlt = cloudLayer.getCeiling().value(CLengthUnit::m());
+                nw.Cloud[nw.nCloudsCtr++] = cloud;
+            }
+
+            const CWindLayerList windLayers = gridPoint.getWindLayers();
+            for (const auto &windLayer : windLayers)
+            {
+                NewWind wind;
+                wind.Direction = windLayer.getDirection().value(CAngleUnit::deg()) * 65536 / 360.0;
+                wind.GapAbove = 0;
+                wind.Gust = windLayer.getGustSpeed().value(CSpeedUnit::kts());
+                wind.Shear = 0;
+                wind.Speed = windLayer.getSpeed().value(CSpeedUnit::kts());
+                wind.SpeedFract = 0;
+                wind.Turbulence = 0;
+                wind.UpperAlt = windLayer.getLevel().value(CLengthUnit::m());
+                wind.Variance = 0;
+                nw.Wind[nw.nWindsCtr++] = wind;
+            }
+
+            NewPress press;
+            press.Drift = 0;
+            press.Pressure = 15827; // 16 x mb
+            nw.Press = press;
+
+            QByteArray weatherData(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
+            m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, weatherData, 5));
+            return true;
         }
 
         bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)
@@ -263,6 +383,68 @@ namespace BlackSimPlugin
                 } // parts
             } // read
             return read;
+        }
+
+        void CFsuipc::timerEvent(QTimerEvent *event)
+        {
+            Q_UNUSED(event);
+            processWeatherMessages();
+        }
+
+        CFsuipc::FsuipcWeatherMessage::FsuipcWeatherMessage(unsigned int offset, const QByteArray &data, int leftTrials) :
+            m_offset(offset), m_messageData(data), m_leftTrials(leftTrials)
+        { }
+
+
+        void CFsuipc::clearAllWeather()
+        {
+            if (!this->isConnected()) { return; }
+
+            // clear all weather
+            NewWeather nw;
+
+            // Clear new weather
+            nw.uCommand = NW_CLEAR;
+            nw.uFlags = 0;
+            nw.ulSignature = 0;
+            nw.uDynamics = 0;
+            for (std::size_t i = 0; i < sizeof(nw.uSpare) / sizeof(nw.uSpare[0]); i++) { nw.uSpare[i] = 0; }
+
+            nw.dLatitude = 0.;
+            nw.dLongitude = 0.;
+            nw.nElevation = 0;
+            nw.ulTimeStamp = 0;
+            nw.nTempCtr = 0;
+            nw.nWindsCtr = 0;
+            nw.nCloudsCtr = 0;
+            QByteArray clearWeather(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));
+            m_weatherMessageQueue.append(FsuipcWeatherMessage(0xC800, clearWeather, 1));
+        }
+
+        void CFsuipc::processWeatherMessages()
+        {
+            if (m_weatherMessageQueue.empty()) { return; }
+            FsuipcWeatherMessage &weatherMessage = m_weatherMessageQueue.first();
+
+            DWORD dwResult;
+            weatherMessage.m_leftTrials--;
+            FSUIPC_Write(weatherMessage.m_offset, weatherMessage.m_messageData.size(), reinterpret_cast<void *>(weatherMessage.m_messageData.data()), &dwResult);
+
+            unsigned int timeStamp = 0;
+            FSUIPC_Read(0xC824, sizeof(timeStamp), &timeStamp, &dwResult);
+            FSUIPC_Process(&dwResult);
+            if (timeStamp > m_lastTimestamp)
+            {
+                m_weatherMessageQueue.removeFirst();
+                m_lastTimestamp = timeStamp;
+                return;
+            }
+
+            if (weatherMessage.m_leftTrials == 0)
+            {
+                CLogMessage(this).debug() << "Number of trials reached for weather message. Dropping it.";
+                m_weatherMessageQueue.removeFirst();
+            }
         }
 
         double CFsuipc::intToFractional(double fractional)

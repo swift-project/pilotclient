@@ -33,6 +33,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::Fsx;
+using namespace BlackMisc::Weather;
 using namespace BlackCore;
 
 namespace BlackSimPlugin
@@ -50,7 +51,7 @@ namespace BlackSimPlugin
             Q_ASSERT(remoteAircraftProvider);
             this->m_simulatorSetup = CFsxSimulatorSetup::getInitialSetup();
 
-            m_useFsuipc = false; // do not use FSUIPC at the moment with FSX
+            m_useFsuipc = true; // Temporarily enabled until Simconnect Weather is implemented.
             this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             m_modelMatcher.setDefaultModel(CAircraftModel(
                                                "Boeing 737-800 Paint1",
@@ -95,6 +96,10 @@ namespace BlackSimPlugin
             m_simconnectTimerId = startTimer(10);
             m_simConnected = true;
             emitSimulatorCombinedStatus();
+
+            // Pull weather data from core.
+            // Since we don't get weather data from core yet, use hard coded weather.
+            injectWeatherGrid(CWeatherGrid::getCavokGrid());
             return true;
         }
 
@@ -822,6 +827,11 @@ namespace BlackSimPlugin
                 m_syncDeferredCounter = 5; // allow some time to sync
                 CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
             }
+        }
+
+        void CSimulatorFsx::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
+        {
+            m_fsuipc->write(weatherGrid);
         }
 
         CSimulatorFsxListener::CSimulatorFsxListener(const CSimulatorPluginInfo &info) :

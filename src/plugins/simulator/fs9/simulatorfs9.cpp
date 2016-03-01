@@ -32,6 +32,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Weather;
 using namespace BlackSimPlugin::Fs9;
 using namespace BlackSimPlugin::FsCommon;
 
@@ -133,6 +134,11 @@ namespace BlackSimPlugin
                 m_fsuipc->connect(); // connect FSUIPC too
             }
             m_dispatchTimerId = startTimer(50);
+
+            // Pull weather data from core.
+            // Since we don't get weather data from core yet, use hard coded weather.
+            injectWeatherGrid(CWeatherGrid::getCavokGrid());
+
             return true;
         }
 
@@ -359,6 +365,11 @@ namespace BlackSimPlugin
             {
                 physicallyRemoveRemoteAircraft(fs9Client);
             }
+        }
+
+        void CSimulatorFs9::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
+        {
+            m_fsuipc->write(weatherGrid);
         }
 
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
