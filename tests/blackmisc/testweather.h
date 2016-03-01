@@ -32,6 +32,18 @@ namespace BlackMiscTest
         explicit CTestWeather(QObject *parent = nullptr);
 
     private slots:
+        //! Testing CCloudLayer/CCloudLayerList
+        void cloudLayer();
+
+        //! Testing CTemperatureLayer/CTemperatureLayerList
+        void temperatureLayer();
+
+        //! Testing CVisibilityLayer/CVisibilityLayerList
+        void visibilityLayer();
+
+        //! Testing CWindLayer/CWindLayerList
+        void windLayer();
+
         //! Testing METAR decoder
         void metarDecoder();
     };
