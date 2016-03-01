@@ -77,7 +77,7 @@ void CWeatherDataPrinter::ps_printWeatherData()
         for (int i = 0; i < cloudLayers.size(); i++)
         {
             const CCloudLayer &cloudLayer = cloudLayers[i];
-            qtout << "        Ceiling: " << cloudLayer.getCeiling().toQString() << endl;
+            qtout << "        Top: " << cloudLayer.getTop().toQString() << endl;
             qtout << "        Base: " << cloudLayer.getBase().toQString() << endl;
             qtout << "        Coverage: " << cloudLayer.getCoveragePercent() << " %" << endl;
         }

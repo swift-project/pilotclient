@@ -128,7 +128,7 @@ namespace BlackSimPlugin
             {
                 NewVis vis;
                 vis.LowerAlt = visibilityLayer.getBase().value(CLengthUnit::m());
-                vis.UpperAlt = visibilityLayer.getCeiling().value(CLengthUnit::m());
+                vis.UpperAlt = visibilityLayer.getTop().value(CLengthUnit::m());
                 vis.Range = visibilityLayer.getVisibility().value(CLengthUnit::mi()) * 100;
                 nw.Vis = vis;
             }
@@ -179,7 +179,7 @@ namespace BlackSimPlugin
                 default: cloud.Type = 0;
                 }
 
-                cloud.UpperAlt = cloudLayer.getCeiling().value(CLengthUnit::m());
+                cloud.UpperAlt = cloudLayer.getBase().value(CLengthUnit::m());
                 nw.Cloud[nw.nCloudsCtr++] = cloud;
             }
 

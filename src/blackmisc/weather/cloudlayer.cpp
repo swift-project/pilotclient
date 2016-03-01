@@ -23,18 +23,18 @@ namespace BlackMisc
     {
 
         CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                                 BlackMisc::Aviation::CAltitude ceiling,
+                                 BlackMisc::Aviation::CAltitude top,
                                  Coverage coverage) :
-            m_ceiling(ceiling), m_base(base), m_coverage(coverage)
+            m_base(base), m_top(top), m_coverage(coverage)
         { }
 
         CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                                 BlackMisc::Aviation::CAltitude ceiling,
+                                 BlackMisc::Aviation::CAltitude top,
                                  int precipitationRate,
                                  Precipitation precipitation,
                                  Clouds clouds,
                                  Coverage coverage) :
-            m_ceiling(ceiling), m_base(base), m_precipitationRate(precipitationRate),
+            m_base(base), m_top(top), m_precipitationRate(precipitationRate),
             m_precipitation(precipitation), m_clouds(clouds), m_coverage(coverage)
         { }
 
@@ -44,8 +44,10 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCeiling:
-                return CVariant::fromValue(m_ceiling);
+            case IndexBase:
+                return CVariant::fromValue(m_base);
+            case IndexTop:
+                return CVariant::fromValue(m_top);
             case IndexCoverage:
                 return CVariant::fromValue(m_coverage);
             default:
@@ -59,8 +61,11 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexCeiling:
-                setCeiling(variant.value<CAltitude>());
+            case IndexBase:
+                setBase(variant.value<CAltitude>());
+                break;
+            case IndexTop:
+                setTop(variant.value<CAltitude>());
                 break;
             case IndexCoverage:
                 setCoverage(variant.value<Coverage>());
@@ -82,7 +87,7 @@ namespace BlackMisc
                 { Overcast, "overcast" }
             };
 
-            return QString("%1 in %2").arg(hash.value(m_coverage)).arg(m_ceiling.toQString());
+            return QString("%1 from %2 to %3").arg(hash.value(m_coverage), m_base.toQString(), m_top.toQString());
         }
 
     } // namespace

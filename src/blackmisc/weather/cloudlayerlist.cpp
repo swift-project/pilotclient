@@ -19,14 +19,14 @@ namespace BlackMisc
             CSequence<CCloudLayer>(other)
         { }
 
-        bool CCloudLayerList::containsCeiling(const CAltitude &ceiling) const
+        bool CCloudLayerList::containsBase(const CAltitude &base) const
         {
-            return contains(&CCloudLayer::getCeiling, ceiling);
+            return contains(&CCloudLayer::getBase, base);
         }
 
-        CCloudLayer CCloudLayerList::findByCeiling(const CAltitude &ceiling) const
+        CCloudLayer CCloudLayerList::findByBase(const CAltitude &base) const
         {
-            return findFirstByOrDefault(&CCloudLayer::getCeiling, ceiling);
+            return findFirstByOrDefault(&CCloudLayer::getBase, base);
         }
 
     } // namespace

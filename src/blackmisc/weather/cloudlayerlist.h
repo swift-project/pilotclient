@@ -39,11 +39,11 @@ namespace BlackMisc
             //! Construct from a base class object.
             CCloudLayerList(const CSequence<CCloudLayer> &other);
 
-            //! Contains cloud layer with ceiling?
-            bool containsCeiling(const BlackMisc::Aviation::CAltitude &ceiling) const;
+            //! Contains cloud layer with base?
+            bool containsBase(const BlackMisc::Aviation::CAltitude &base) const;
 
-            //! Find cloud layer by ceiling
-            CCloudLayer findByCeiling(const BlackMisc::Aviation::CAltitude &ceiling) const;
+            //! Find cloud layer by base
+            CCloudLayer findByBase(const BlackMisc::Aviation::CAltitude &base) const;
         };
 
     } //namespace

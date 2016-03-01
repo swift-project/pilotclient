@@ -544,7 +544,7 @@ namespace BlackSimPlugin
             for (const auto &cloudLayer : cloudLayers)
             {
                 int base = cloudLayer.getBase().value(CLengthUnit::m());
-                int top = cloudLayer.getCeiling().value(CLengthUnit::m());
+                int top = cloudLayer.getTop().value(CLengthUnit::m());
 
                 int coverage = 0;
                 switch(cloudLayer.getCoverage())

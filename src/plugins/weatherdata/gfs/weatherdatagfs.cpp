@@ -263,7 +263,7 @@ namespace BlackWxPlugin
                 {
                     CCloudLayer cloudLayer;
                     cloudLayer.setBase(CAltitude(cloudLayerIt.value().bottomLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-                    cloudLayer.setCeiling(CAltitude(cloudLayerIt.value().topLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+                    cloudLayer.setTop(CAltitude(cloudLayerIt.value().topLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
                     cloudLayer.setCoveragePercent(cloudLayerIt.value().totalCoverage);
                     cloudLayers.insert(cloudLayer);
                 }

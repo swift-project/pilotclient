@@ -59,8 +59,8 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCloudLayer = BlackMisc::CPropertyIndex::GlobalIndexCCloudLayer,
-                IndexCeiling,
+                IndexBase = BlackMisc::CPropertyIndex::GlobalIndexCCloudLayer,
+                IndexTop,
                 IndexCoverage
             };
 
@@ -69,12 +69,12 @@ namespace BlackMisc
 
             //! Constructor
             CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                        BlackMisc::Aviation::CAltitude ceiling,
+                        BlackMisc::Aviation::CAltitude top,
                         Coverage coverage);
 
             //! Constructor
             CCloudLayer(BlackMisc::Aviation::CAltitude base,
-                        BlackMisc::Aviation::CAltitude ceiling,
+                        BlackMisc::Aviation::CAltitude top,
                         int precipitationRate,
                         Precipitation precipitation,
                         Clouds clouds,
@@ -86,11 +86,11 @@ namespace BlackMisc
             //! Get base
             BlackMisc::Aviation::CAltitude getBase() const { return m_base; }
 
-            //! Set ceiling
-            void setCeiling(BlackMisc::Aviation::CAltitude ceiling) { m_ceiling = ceiling; }
+            //! Set layer top
+            void setTop(BlackMisc::Aviation::CAltitude top) { m_top = top; }
 
-            //! Get ceiling
-            BlackMisc::Aviation::CAltitude getCeiling() const { return m_ceiling; }
+            //! Get layer top
+            BlackMisc::Aviation::CAltitude getTop() const { return m_top; }
 
             //! Set precipitation rate
             void setPrecipitationRate(int rate) { m_precipitationRate = rate; }
@@ -134,7 +134,7 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCloudLayer)
             BlackMisc::Aviation::CAltitude m_base;
-            BlackMisc::Aviation::CAltitude m_ceiling;
+            BlackMisc::Aviation::CAltitude m_top;
             int m_precipitationRate = 0;
             Precipitation m_precipitation = NoPrecipitation;
             Clouds m_clouds = NoClouds;
@@ -148,7 +148,7 @@ Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer)
 Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer::Coverage)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CCloudLayer, (
                                    attr(o.m_base),
-                                   attr(o.m_ceiling),
+                                   attr(o.m_top),
                                    attr(o.m_precipitationRate),
                                    attr(o.m_precipitation),
                                    attr(o.m_clouds),

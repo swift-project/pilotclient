@@ -560,12 +560,12 @@ namespace BlackMisc
                 static const QString clearSky = QString("(?<clear_sky>") + getClearSkyTokens().join('|') + QString(")");
                 // Cloud coverage.
                 static const QString coverage = QString("(?<coverage>") + QStringList(getCoverage().keys()).join('|') + QString(")");
-                // Cloud ceiling
-                static const QString ceiling = QStringLiteral("(?<ceiling>\\d{3}|///)");
+                // Cloud base
+                static const QString base = QStringLiteral("(?<base>\\d{3}|///)");
                 // CB (Cumulonimbus) or TCU (Towering Cumulus) are appended to the cloud group without a space
                 static const QString extra = QStringLiteral("(?<cb_tcu>CB|TCU|///)?");
                 // Add space at the end
-                static const QString regexp = QString("^(") + clearSky + '|' + coverage + ceiling + extra + QString(") ");
+                static const QString regexp = QString("^(") + clearSky + '|' + coverage + base + extra + QString(") ");
                 return regexp;
             }
 
@@ -579,18 +579,18 @@ namespace BlackMisc
                 }
 
                 QString coverageAsString = match.captured("coverage");
-                QString ceilingAsString = match.captured("ceiling");
-                Q_ASSERT(!coverageAsString.isEmpty() && !ceilingAsString.isEmpty());
+                QString baseAsString = match.captured("base");
+                Q_ASSERT(!coverageAsString.isEmpty() && !baseAsString.isEmpty());
                 Q_ASSERT(getCoverage().contains(coverageAsString));
-                if (ceilingAsString == "///") return true;
+                if (baseAsString == "///") return true;
 
                 bool ok = false;
-                int ceiling = ceilingAsString.toInt(&ok);
+                int base = baseAsString.toInt(&ok);
                 // Factor 100
-                ceiling *= 100;
+                base *= 100;
                 if (!ok) return false;
 
-                CCloudLayer cloudLayer(CAltitude(ceiling, CAltitude::AboveGround, CLengthUnit::ft()), {}, getCoverage().value(coverageAsString));
+                CCloudLayer cloudLayer(CAltitude(base, CAltitude::AboveGround, CLengthUnit::ft()), {}, getCoverage().value(coverageAsString));
                 metar.addCloudLayer(cloudLayer);
                 QString cb_tcu = match.captured("cb_tcu");
                 if (!cb_tcu.isEmpty()) { }
