@@ -96,20 +96,20 @@ namespace BlackMisc
                     // some known hardcoded fixes
                     if (al.startsWith("USAF")) { al = "AIO"; }
                 }
-                QString liveryPseudoCode(
+                const QString liveryPseudoCode(
                     al.length() != 3 ?
                     "" :
                     al +  "." + CLivery::standardLiveryMarker());
-                CAircraftIcaoCode aircraftIcao(m_typeCode);
-                CAirlineIcaoCode airlineIcao(al);
-                CLivery livery(liveryPseudoCode, airlineIcao, "vPilot rule based");
-                CDistributor distributor(getDistributor(), "vPilot based", "", "");
+                const CAircraftIcaoCode aircraftIcao(m_typeCode);
+                const CAirlineIcaoCode airlineIcao(al);
+                const CLivery livery(liveryPseudoCode, airlineIcao, "vPilot rule based");
+                const CDistributor distributor(getDistributor(), "vPilot based", "", "");
                 CAircraftModel model(
                     this->m_modelName, CAircraftModel::TypeVPilotRuleBased,
-                    "vPilot auto generated",
+                    "swift auto generated",
                     aircraftIcao, livery
                 );
-                CSimulatorInfo sim(CSimulatorInfo::FSX_P3D);
+                const CSimulatorInfo sim(CSimulatorInfo::FSX_P3D);
                 model.setMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
                 model.setDistributor(distributor);
                 model.setSimulatorInfo(sim);
