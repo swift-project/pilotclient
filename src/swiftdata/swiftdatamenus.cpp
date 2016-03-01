@@ -105,7 +105,7 @@ void CSwiftData::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_JsonBootstrapTemplate)
     {
-        QString json(m_setup.get().toJsonString());
+        QString json(sApp->getGlobalSetup().toJsonString());
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(json);
         this->displayConsole();
     }
@@ -123,7 +123,7 @@ void CSwiftData::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_InternalsSetup)
     {
-        QString setup(this->m_setup.get().convertToQString("\n", true));
+        QString setup(sApp->getGlobalSetup().convertToQString("\n", true));
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(setup);
         this->displayConsole();
     }
@@ -133,11 +133,6 @@ void CSwiftData::ps_onMenuClicked()
         this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
         this->displayConsole();
     }
-}
-
-void CSwiftData::ps_setupChanged()
-{
-    CLogMessage(this).debug() << "Setup changed";
 }
 
 void CSwiftData::initDynamicMenus()

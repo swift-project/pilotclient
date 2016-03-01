@@ -55,7 +55,7 @@ namespace BlackGui
             // this is debug/bootstrap feature we can continue to test when something goes wrong
             if (serverList.isEmpty() && (CProject::isBetaTest() || sGui->isRunningInDeveloperEnvironment()))
             {
-                serverList.push_back(m_setup.get().fsdTestServersPlusHardcodedServers());
+                serverList.push_back(sGui->getGlobalSetup().fsdTestServersPlusHardcodedServers());
                 this->ui->tvp_Servers->updateContainer(serverList);
             }
         }

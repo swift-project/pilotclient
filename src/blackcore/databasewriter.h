@@ -47,7 +47,6 @@ namespace BlackCore
         void ps_postResponse(QNetworkReply *nwReplyPtr);
 
     private:
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< data cache
         BlackMisc::Network::CUrl                       m_modelPublishUrl;
         QNetworkReply                                 *m_pendingReply = nullptr;
         bool                                           m_shutdown = false;

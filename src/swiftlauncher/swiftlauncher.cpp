@@ -134,7 +134,7 @@ void CSwiftLauncher::initStyleSheet()
 void CSwiftLauncher::displayLatestNews()
 {
 #ifndef Q_CC_MINGW
-    CFailoverUrlList newsUrls(this->m_setup.get().swiftLatestNewsUrls());
+    CFailoverUrlList newsUrls(sGui->getGlobalSetup().swiftLatestNewsUrls());
     QUrl newUrl(newsUrls.obtainNextWorkingUrl());
 
     Q_UNUSED(newUrl);
@@ -343,7 +343,7 @@ void CSwiftLauncher::ps_startButtonPressed()
     }
     else if (sender == this->ui->tb_Database)
     {
-        CUrl homePage(this->m_setup.get().dbHomePageUrl());
+        const CUrl homePage(sApp->getGlobalSetup().dbHomePageUrl());
         QDesktopServices::openUrl(homePage);
     }
 }

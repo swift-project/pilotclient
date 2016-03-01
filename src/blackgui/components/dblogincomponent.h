@@ -39,9 +39,8 @@ namespace BlackGui
             ~CDbLoginComponent();
 
         private:
-            QScopedPointer<Ui::CDbLoginComponent> ui;
-            BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CDbLoginComponent::ps_setupChanged};   //!< data cache
-            BlackCore::CDatabaseAuthenticationService      m_loginService {this};                                 //!< login service
+            QScopedPointer<Ui::CDbLoginComponent>     ui;
+            BlackCore::CDatabaseAuthenticationService m_loginService {this};  //!< login service
 
             //! Overlay messages
             void displayOverlayMessages(const BlackMisc::CStatusMessageList &msgs);
@@ -59,8 +58,6 @@ namespace BlackGui
             //! User authentication completed
             void ps_AuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &status);
 
-            //! Setup changed
-            void ps_setupChanged();
         };
     } // ns
 } // ns

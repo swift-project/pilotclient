@@ -60,7 +60,6 @@ protected:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
-    BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup      { this, &CSwiftLauncher::ps_changedCache };   //!< setup cache
     BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedCache }; //!< version cache
     QString     m_executable;
     QStringList m_executableArgs;

@@ -45,7 +45,7 @@ namespace BlackCore
     {
         this->threadAssertCheck();
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
-        QUrl url(m_setup.get().vatsimBookingsUrl());
+        const QUrl url(sApp->getGlobalSetup().vatsimBookingsUrl());
         if (url.isEmpty()) { return; }
 
         sApp->getFromNetwork(url, { this, &CVatsimBookingReader::ps_parseBookings});

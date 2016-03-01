@@ -10,6 +10,7 @@
 #include "dblogincomponent.h"
 #include "ui_dblogincomponent.h"
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/logmessage.h"
@@ -28,7 +29,11 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->setModeLogin(true);
-            this->ps_setupChanged();
+            CUrl url(sGui->getGlobalSetup().dbHomePageUrl());
+            ui->lbl_SwiftDB->setText("<a href=\"" + url.getFullUrl() + "\">swift DB@" + url.getHost() + "</a>");
+            ui->lbl_SwiftDB->setTextFormat(Qt::RichText);
+            ui->lbl_SwiftDB->setTextInteractionFlags(Qt::TextBrowserInteraction);
+            ui->lbl_SwiftDB->setOpenExternalLinks(true);
 
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
@@ -87,15 +92,6 @@ namespace BlackGui
                 this->displayOverlayMessages(status);
                 CLogMessage::preformatted(status);
             }
-        }
-
-        void CDbLoginComponent::ps_setupChanged()
-        {
-            CUrl url(m_setup.get().dbHomePageUrl());
-            ui->lbl_SwiftDB->setText("<a href=\"" + url.getFullUrl() + "\">swift DB@" + url.getHost() + "</a>");
-            ui->lbl_SwiftDB->setTextFormat(Qt::RichText);
-            ui->lbl_SwiftDB->setTextInteractionFlags(Qt::TextBrowserInteraction);
-            ui->lbl_SwiftDB->setOpenExternalLinks(true);
         }
 
         void CDbLoginComponent::setModeLogin(bool modeLogin)

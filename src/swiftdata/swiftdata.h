@@ -63,9 +63,6 @@ private slots:
     //! Menu clicked
     void ps_onMenuClicked();
 
-    //! Setup has been changed
-    void ps_setupChanged();
-
 private:
     void init();
     void initLogDisplay();
@@ -79,7 +76,6 @@ private:
 
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSwiftData::ps_setupChanged}; //!< setup cache
     BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this };                        //!< download / version data
 };
 

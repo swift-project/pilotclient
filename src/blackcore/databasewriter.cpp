@@ -51,7 +51,7 @@ namespace BlackCore
         CNetworkUtils::ignoreSslVerification(request);
         QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
         multiPart->append(CNetworkUtils::getJsonTextMultipart(models.toDatabaseJson()));
-        if (m_setup.get().dbDebugFlag())
+        if (sApp->getGlobalSetup().dbDebugFlag())
         {
             multiPart->append(CNetworkUtils::getMultipartWithDebugFlag());
         }

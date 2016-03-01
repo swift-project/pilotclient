@@ -158,9 +158,9 @@ namespace BlackCore
         // round robin for load balancing
         // remark: Don't use QThread to run network operations in the background
         // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
-        QUrl url(m_setup.get().vatsimDataFileUrls().getRandomUrl());
-        if (url.isEmpty()) { return; }
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
+        const QUrl url(sApp->getGlobalSetup().vatsimDataFileUrls().getRandomUrl());
+        if (url.isEmpty()) { return; }
         sApp->getFromNetwork(url, { this, &CVatsimDataFileReader::ps_parseVatsimFile});
 
     }

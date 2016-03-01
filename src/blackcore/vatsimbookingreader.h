@@ -54,9 +54,6 @@ namespace BlackCore
 
         //! Do reading
         void ps_read();
-
-    private:
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
     };
 }
 

@@ -281,7 +281,6 @@ namespace BlackCore
         CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
         CWebReaderFlags::DbReaderHint m_dbHint   = CWebReaderFlags::NoHint;              //!< how to read DB data
         bool m_initialRead                       = false;                                //!< Initial read conducted
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CWebDataServices::ps_setupChanged}; //!< setup cache
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;

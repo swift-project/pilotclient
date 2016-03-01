@@ -143,7 +143,6 @@ namespace BlackGui
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer { nullptr };
             BlackMisc::CSetting<BlackCore::Settings::Network::TrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
-            BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
         };
 
     } // namespace

@@ -128,7 +128,6 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList          m_atcStations;
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this}; //!< setup cache
 
         //! Split line and assign values to their corresponding attribute names
         static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);
