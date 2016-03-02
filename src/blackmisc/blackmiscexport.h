@@ -18,7 +18,6 @@
  * \def BLACKMISC_EXPORT
  * BlackMisc Export Macro
  */
-
 #ifndef WITH_STATIC
 #  if defined(BUILD_BLACKMISC_LIB)
 #    define BLACKMISC_EXPORT Q_DECL_EXPORT
@@ -33,15 +32,22 @@
  * \def BLACKMISC_EXPORT_TEMPLATE
  * BlackMisc Template Export Macro
  */
-
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
 #  define BLACKMISC_EXPORT_TEMPLATE BLACKMISC_EXPORT
 #else
 #  define BLACKMISC_EXPORT_TEMPLATE
 #endif
 
-//! make a define quoted (normally to be used then with QString)
+
+//! \cond
+// helper define
 #define BLACK_STRINGIFY_X(v) #v
+//! \endcond
+
+/*!
+ * \def BLACK_STRINGIFY
+ * Value in quotes (normally to be used then with QString)
+ */
 #define BLACK_STRINGIFY(v) BLACK_STRINGIFY_X(v)
 
 #endif // guard

@@ -22,7 +22,9 @@
 
 namespace Ui { class CSwiftCore; }
 
-//! swift core control
+/*!
+ * swift core control GUI
+ */
 class CSwiftCore :
     public BlackGui::CSystemTrayWindow,
     public BlackGui::IMainWindowAccess,
@@ -44,7 +46,7 @@ private slots:
     void ps_stopCorePressed();
     void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
     void ps_p2pModeToggled(bool checked);
-    //! }@
+    //! @}
 
     //! Style sheet has changed
     virtual void ps_onStyleSheetsChanged();
@@ -56,7 +58,7 @@ private:
     void initLogDisplay();
     void initStyleSheet();
     void initDBusMode();
-    //! }@
+    //! @}
 
     void startCore(const QString &dBusAdress);
     void stopCore();

@@ -26,6 +26,7 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
+    //! [CSwiftGuiStdApplication]
     QApplication qa(argc, argv);
     CGuiApplication a("swift core", CIcons::swiftNova24());
     a.addWindowStateOption();
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
                   CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress) :
                   CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(dBusAdress));
     a.start();
+    //! [CSwiftGuiStdApplication]
 
     if (!QSystemTrayIcon::isSystemTrayAvailable())
     {

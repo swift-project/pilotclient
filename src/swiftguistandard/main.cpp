@@ -22,9 +22,11 @@ using namespace BlackCore;
 
 int main(int argc, char *argv[])
 {
+    //! [CSwiftGuiStdApplication]
     QApplication qa(argc, argv);
     CSwiftGuiStdApplication a;
     if (!a.start()) { return EXIT_FAILURE; }
+    //! [CSwiftGuiStdApplication]
 
     // show window
     CEnableForFramelessWindow::WindowMode windowMode = a.getWindowMode();
