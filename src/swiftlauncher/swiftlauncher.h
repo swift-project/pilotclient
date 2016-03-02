@@ -66,7 +66,7 @@ private slots:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
-    BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedCache }; //!< version cache
+    BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
     BlackMisc::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };      //!< DBus address
     QString         m_executable;
     QStringList     m_executableArgs;
@@ -124,10 +124,10 @@ private slots:
     void ps_loadSetup();
 
     //! Loaded latest version
-    void ps_loadedSetup(bool success);
+    void ps_loadedUpdateInfo(bool success);
 
     //! Cache values have been changed
-    void ps_changedCache();
+    void ps_changedUpdateInfoCache();
 
     //! Start button pressed
     void ps_startButtonPressed();

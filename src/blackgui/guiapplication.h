@@ -16,6 +16,7 @@
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/blackguiexport.h"
+#include <QMenu>
 
 namespace BlackGui
 {
@@ -25,6 +26,18 @@ namespace BlackGui
      * \details Analog to QCoreApplication and QApplication this class provides more details for swift
      * GUI applications. It is normally used via the global sGui pointer. As an example of how to extend this
      * class see CSwiftGuiStdApplication.
+     *
+     *  - style sheet handling
+     *  - standard menus
+     *
+     *  Simple example
+     *  \snippet swiftlauncher/main.cpp CSwiftGuiStdApplication
+     *
+     *  Derived class example, hence very short (logic in CSwiftGuiStdApplication)
+     *  \snippet swiftguistandard/main.cpp CSwiftGuiStdApplication
+     *
+     *  Longer example
+     *  \snippet swiftcore/main.cpp CSwiftGuiStdApplication
      */
     class BLACKGUI_EXPORT CGuiApplication :
         public BlackCore::CApplication,
@@ -35,6 +48,9 @@ namespace BlackGui
     public:
         //! Similar to \sa QCoreApplication::instance() returns the single instance
         static CGuiApplication *instance();
+
+        //! Own log categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
         CGuiApplication(const QString &applicationName = executable(), const QPixmap &icon = BlackMisc::CIcons::swift48());
@@ -57,6 +73,9 @@ namespace BlackGui
         //! Allow the GUI to refresh by processing events
         void processEventsToRefreshGui() const;
 
+        //! Reload style sheets
+        bool reloadStyleSheets() const;
+
         //! Init the main application window based on information in this application
         void initMainApplicationWindow(QWidget *mainWindow) const;
 
@@ -69,10 +88,23 @@ namespace BlackGui
         //! @{
         virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
         virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message) override;
-        //! }@
+        virtual bool displayTextInConsole(const QString &text) override;
+        //! @}
 
-        //! Reload style sheets
-        bool reloadStyleSheets() const;
+        //! Add menu items for settings and cache
+        void addMenuForSettingsAndCache(QMenu &menu);
+
+        //! Add menu for style sheets
+        void addMenuForStyleSheets(QMenu &menu);
+
+        //! File menu
+        void addMenuFile(QMenu &menu);
+
+        //! Internals menu
+        void addMenuInternals(QMenu &menu);
+
+        //! Window operations
+        void addMenuWindow(QMenu &menu);
 
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter

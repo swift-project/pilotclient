@@ -45,7 +45,9 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
-    // connect(&CSetupReader::instance(), &CSetupReader::updateInfoSynchronized, this, &CSwiftLauncher::ps_loadedSetup);
+
+    // use version signal as trigger for completion
+    connect(sGui, &CApplication::updateInfoSynchronized, this, &CSwiftLauncher::ps_loadedUpdateInfo);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     this->ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
@@ -285,12 +287,12 @@ void CSwiftLauncher::ps_loadSetup()
     if (!this->ui->le_LatestVersion->text().isEmpty())
     {
         this->ui->le_LatestVersion->setText("");
-        CStatusMessage m(sApp->requestReloadOfSetupAndVersion());
+        const CStatusMessage m(sApp->requestReloadOfSetupAndVersion());
         this->ps_appendLogMessage(m);
     }
 }
 
-void CSwiftLauncher::ps_loadedSetup(bool success)
+void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
 {
     if (!success)
     {
@@ -298,8 +300,8 @@ void CSwiftLauncher::ps_loadedSetup(bool success)
         return;
     }
 
-    CUpdateInfo updateInfo(this->m_updateInfo.get());
-    QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
+    const CUpdateInfo updateInfo(this->m_updateInfo.get());
+    const QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
     CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
     bool newVersionAvailable = CProject::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
     this->ui->wi_NewVersionAvailable->setVisible(newVersionAvailable);
@@ -308,8 +310,8 @@ void CSwiftLauncher::ps_loadedSetup(bool success)
 
     if (!downloadUrls.isEmpty())
     {
-        CUrl downloadUrl(downloadUrls.obtainNextUrl());
-        QString urlStr(downloadUrl.toQString());
+        const CUrl downloadUrl(downloadUrls.obtainNextUrl());
+        const QString urlStr(downloadUrl.toQString());
         QString hl("<a href=\"%1\">%2 %3</a>");
         this->ui->lbl_NewVersionUrl->setText(hl.arg(urlStr).arg(urlStr).arg(latestVersion));
     }
@@ -317,9 +319,9 @@ void CSwiftLauncher::ps_loadedSetup(bool success)
     this->loadLatestNews();
 }
 
-void CSwiftLauncher::ps_changedCache()
+void CSwiftLauncher::ps_changedUpdateInfoCache()
 {
-    this->ps_loadedSetup(true);
+    this->ps_loadedUpdateInfo(true);
 }
 
 void CSwiftLauncher::ps_startButtonPressed()

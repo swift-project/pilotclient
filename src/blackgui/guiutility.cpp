@@ -32,7 +32,7 @@ namespace BlackGui
 {
     CEnableForFramelessWindow *CGuiUtility::mainFramelessEnabledApplicationWindow()
     {
-        QWidgetList tlw = topLevelApplicationWidgetsWithName();
+        const QWidgetList tlw = topLevelApplicationWidgetsWithName();
         for (QWidget *w : tlw)
         {
             // best choice is to check on frameless window
@@ -51,13 +51,12 @@ namespace BlackGui
         }
 
         // second choice, try via QMainWindow
-        QWidgetList tlw = topLevelApplicationWidgetsWithName();
+        const QWidgetList tlw = topLevelApplicationWidgetsWithName();
         for (QWidget *w : tlw)
         {
             QMainWindow *qmw = qobject_cast<QMainWindow *>(w);
             if (!qmw) { continue; }
             if (!qmw->parentWidget()) { return qmw; }
-
         }
         return nullptr;
     }
@@ -240,5 +239,31 @@ namespace BlackGui
 
         // then finally
         delete layout;
+    }
+
+    bool CGuiUtility::staysOnTop(QWidget *widget)
+    {
+        if (!widget) { return false; }
+        const Qt::WindowFlags flags = widget->windowFlags();
+        return Qt::WindowStaysOnTopHint & flags;
+    }
+
+    bool CGuiUtility::toggleStayOnTop(QWidget *widget)
+    {
+        if (!widget) { return false; }
+        Qt::WindowFlags flags = widget->windowFlags();
+        if (Qt::WindowStaysOnTopHint & flags)
+        {
+            flags ^= Qt::WindowStaysOnTopHint;
+            flags |= Qt::WindowStaysOnBottomHint;
+        }
+        else
+        {
+            flags ^= Qt::WindowStaysOnBottomHint;
+            flags |= Qt::WindowStaysOnTopHint;
+        }
+        widget->setWindowFlags(flags);
+        widget->show();
+        return Qt::WindowStaysOnTopHint & flags;
     }
 } // ns

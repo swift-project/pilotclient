@@ -79,34 +79,13 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menu_Settings">
-     <property name="title">
-      <string>Settings</string>
-     </property>
-     <addaction name="menu_SettingsDirectory"/>
-     <addaction name="menu_SettingsFiles"/>
-     <addaction name="menu_SettingsReset"/>
-    </widget>
-    <widget class="QMenu" name="menuCache">
-     <property name="title">
-      <string>Cache</string>
-     </property>
-     <addaction name="menu_CacheDirectory"/>
-     <addaction name="menu_CacheFiles"/>
-     <addaction name="menu_CacheReset"/>
-    </widget>
-    <addaction name="menu_Settings"/>
-    <addaction name="menuCache"/>
-    <addaction name="menu_FileReloadStyleSheets"/>
     <addaction name="separator"/>
-    <addaction name="menu_FileExit"/>
    </widget>
    <widget class="QMenu" name="menu_Window">
     <property name="title">
      <string>Window</string>
     </property>
     <addaction name="menu_WindowFont"/>
-    <addaction name="menu_WindowMinimize"/>
    </widget>
    <widget class="QMenu" name="menu_InfoAreas">
     <property name="title">
@@ -120,27 +99,10 @@
     <addaction name="menu_MappingMaxData"/>
     <addaction name="menu_MappingMaxMapping"/>
    </widget>
-   <widget class="QMenu" name="menu_Test">
+   <widget class="QMenu" name="menu_Internals">
     <property name="title">
-     <string>Test</string>
+     <string>Internals</string>
     </property>
-    <widget class="QMenu" name="menu_Internals">
-     <property name="title">
-      <string>Internals</string>
-     </property>
-     <widget class="QMenu" name="menuTemplates">
-      <property name="title">
-       <string>Templates</string>
-      </property>
-      <addaction name="menu_JsonBootstrapTemplate"/>
-      <addaction name="menu_JsonDownloadTemplate"/>
-     </widget>
-     <addaction name="menuTemplates"/>
-     <addaction name="menu_InternalsMetatypes"/>
-     <addaction name="menu_InternalsSetup"/>
-     <addaction name="menu_InternalsCompileInfo"/>
-    </widget>
-    <addaction name="menu_Internals"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -153,7 +115,7 @@
    <addaction name="menu_InfoAreas"/>
    <addaction name="menu_Help"/>
    <addaction name="menu_Mapping"/>
-   <addaction name="menu_Test"/>
+   <addaction name="menu_Internals"/>
   </widget>
   <widget class="QStatusBar" name="sb_SwiftData"/>
   <action name="menu_FileExit">

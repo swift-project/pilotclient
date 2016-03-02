@@ -83,6 +83,8 @@ namespace BlackCore
             sApp = this;
             this->m_setupReader.reset(new CSetupReader(this));
             connect(this->m_setupReader.data(), &CSetupReader::setupSynchronized, this, &CApplication::ps_setupSyncronized);
+            connect(this->m_setupReader.data(), &CSetupReader::updateInfoSynchronized, this, &CApplication::updateInfoSynchronized);
+
             this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions());
 
             // notify when app goes down
@@ -107,11 +109,18 @@ namespace BlackCore
         return s;
     }
 
-    Data::CGlobalSetup CApplication::getGlobalSetup() const
+    CGlobalSetup CApplication::getGlobalSetup() const
     {
         const CSetupReader *r = this->m_setupReader.data();
         if (!r) { return CGlobalSetup(); }
         return r->getSetup();
+    }
+
+    CUpdateInfo CApplication::getUpdateInfo() const
+    {
+        const CSetupReader *r = this->m_setupReader.data();
+        if (!r) { return CUpdateInfo(); }
+        return r->getUpdateInfo();
     }
 
     bool CApplication::start(bool waitForStart)
@@ -523,7 +532,7 @@ namespace BlackCore
     {
         if (success)
         {
-            emit setupSyncronized();
+            emit setupSyncronized(success);
             this->m_started = this->asyncWebAndContextStart();
         }
         this->m_startUpCompleted = true;
@@ -695,7 +704,8 @@ namespace BlackCore
 
     bool CApplication::supportsContexts() const
     {
-        if (m_coreFacade.isNull()) { return false; }
+        if (this->m_shutdown) { return false; }
+        if (this->m_coreFacade.isNull()) { return false; }
         if (!this->m_coreFacade->getIContextApplication()) { return false; }
         return (!this->m_coreFacade->getIContextApplication()->isEmptyObject());
     }

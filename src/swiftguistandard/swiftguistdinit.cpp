@@ -35,8 +35,14 @@ void SwiftGuiStd::init()
     // POST(!) GUI init
 
     if (this->m_init) { return; }
+
     this->setVisible(false); // hide all, so no flashing windows during init
+    this->m_mwaStatusBar = &this->m_statusBar;
+    this->m_mwaOverlayFrame = this->ui->fr_CentralFrameInside;
+    this->m_mwaLogComponent = this->ui->comp_MainInfoArea->getLogComponent();
+
     sGui->initMainApplicationWindow(this);
+    this->initStyleSheet();
 
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
@@ -102,8 +108,7 @@ void SwiftGuiStd::init()
 
     // start screen and complete menu
     this->ps_setMainPageToInfoArea();
-    this->initDynamicMenus();
-    this->initMenuIcons();
+    this->initMenus();
 
     // info
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
@@ -148,34 +153,17 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
 
     // menu
-    connect(this->ui->menu_ReloadSettings, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDDF, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDDM, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_TestLocationsLOWW, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
-    connect(this->ui->menu_FileExit, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-
-    connect(this->ui->menu_SettingsDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_SettingsFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_SettingsReset, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_CacheDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_CacheFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_CacheReset, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(this->ui->menu_WindowToggleNavigator, &QAction::triggered, this->m_navigator.data(), &CNavigatorDialog::toggleNavigator);
-
-    connect(this->ui->menu_InternalsCompileInfo, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsEnvVars, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsMetatypes, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsSetup, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsDeleteCachedFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsDisplayCachedFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
     connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);

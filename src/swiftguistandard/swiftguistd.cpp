@@ -9,16 +9,18 @@
 
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackmisc/icon.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextownaircraft.h"
 #include "blackcore/network.h"
+#include "blackmisc/threadutils.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -54,18 +56,6 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
 SwiftGuiStd::~SwiftGuiStd()
 { }
 
-bool SwiftGuiStd::displayInStatusBar(const CStatusMessage &message)
-{
-    this->ps_displayStatusMessageInGui(message);
-    return true;
-}
-
-bool SwiftGuiStd::displayInOverlayWindow(const CStatusMessage &message)
-{
-    this->ui->fr_CentralFrameInside->showOverlayMessage(message);
-    return true;
-}
-
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
     if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); }
@@ -81,13 +71,15 @@ void SwiftGuiStd::performGracefulShutdown()
     if (!this->m_init) { return; }
     this->m_init = false;
 
+    Q_ASSERT_X(CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Should shutdown in main thread");
+
     // shut down all timers
     this->stopAllTimers(true);
 
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
     {
-        if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
+        if (sGui && sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
         {
             if (this->m_contextAudioAvailable)
             {
@@ -103,10 +95,8 @@ void SwiftGuiStd::performGracefulShutdown()
     this->ui->comp_MainInfoArea->dockAllWidgets();
 
     // allow some other parts to react
+    if (!sGui) { return; } // overall shutdown
     sGui->processEventsToRefreshGui();
-
-    // tell GUI components to shut down
-    emit requestGracefulShutdown();
 
     // tell context GUI is going down
     if (sGui->getIContextApplication())
@@ -267,13 +257,16 @@ void SwiftGuiStd::setContextAvailability()
 {
     bool corePreviouslyAvailable = this->m_coreAvailable;
 
-    if (sGui->getIContextApplication()->isUsingImplementingObject())
+    if (sGui && sGui->getIContextApplication()->isUsingImplementingObject())
     {
         this->m_coreAvailable = true;
     }
     else
     {
-        this->m_coreAvailable = isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
+        // ping to check if core is still alive
+        this->m_coreAvailable =
+            sGui &&
+            this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
     }
     this->m_contextNetworkAvailable = this->m_coreAvailable || sGui->getIContextNetwork()->isUsingImplementingObject();
     this->m_contextAudioAvailable = this->m_coreAvailable || sGui->getIContextAudio()->isUsingImplementingObject();
@@ -283,7 +276,7 @@ void SwiftGuiStd::setContextAvailability()
     {
         if (this->m_coreAvailable)
         {
-            // core has just become available
+            // core has just become available (startup)
             sGui->getIContextApplication()->synchronizeLogSubscriptions();
             sGui->getIContextApplication()->synchronizeLocalSettings();
         }
@@ -321,21 +314,7 @@ void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
 
 void SwiftGuiStd::ps_toogleWindowStayOnTop()
 {
-    Qt::WindowFlags flags = this->windowFlags();
-    if (Qt::WindowStaysOnTopHint & flags)
-    {
-        flags ^= Qt::WindowStaysOnTopHint;
-        flags |= Qt::WindowStaysOnBottomHint;
-        CLogMessage(this).info("Window on bottom");
-    }
-    else
-    {
-        flags ^= Qt::WindowStaysOnBottomHint;
-        flags |= Qt::WindowStaysOnTopHint;
-        CLogMessage(this).info("Window on top");
-    }
-    this->setWindowFlags(flags);
-    this->show();
+    CGuiUtility::toggleStayOnTop(this);
 }
 
 void SwiftGuiStd::ps_toggleWindowVisibility()

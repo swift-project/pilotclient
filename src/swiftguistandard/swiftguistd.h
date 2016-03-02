@@ -70,17 +70,7 @@ public:
     //! Log message category
     static QString getMessageCategory() { return "swift.gui.stdgui"; }
 
-    //! \name direct access to main application window
-    //! @{
-    virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
-    virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message) override;
-    //! }@
-
 signals:
-    //! GUI is shutting down, request graceful shutdown
-    void requestGracefulShutdown();
-
-    //! Main info area changed
     //! \remarks using widget pointer allows the component itself to identify if it is current
     void currentMainInfoAreaChanged(const QWidget *currentWidget);
 
@@ -150,10 +140,7 @@ private:
     void initGuiSignals();
 
     //! Init dynamic menus
-    void initDynamicMenus();
-
-    //! Menu icons where required
-    void initMenuIcons();
+    void initMenus();
 
     //! Graceful shutdown
     void performGracefulShutdown();

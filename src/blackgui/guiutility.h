@@ -25,7 +25,6 @@ namespace BlackGui
     //! GUI utilities
     class BLACKGUI_EXPORT CGuiUtility
     {
-
     public:
         //! Main (frameless enabled) application window
         static CEnableForFramelessWindow *mainFramelessEnabledApplicationWindow();
@@ -71,6 +70,12 @@ namespace BlackGui
 
         //! Pseudo readonly state for checkbox
         static void checkBoxReadOnly(QCheckBox *checkBox, bool readOnly);
+
+        //! Toogle window flags / stay on top
+        static bool toggleStayOnTop(QWidget *widget);
+
+        //! Window on top?
+        static bool staysOnTop(QWidget *widget);
 
     private:
         //! Constructor, use static methods only

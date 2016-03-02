@@ -43,16 +43,6 @@ public:
     //! Destructor
     ~CSwiftData();
 
-    //! \name direct access to main application window
-    //! @{
-    virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
-    virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message) override;
-    //! }@
-
-protected:
-    //! \copydoc QMainWindow::closeEvent
-    virtual void closeEvent(QCloseEvent *event) override;
-
 private slots:
     //! Append log message
     void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
@@ -76,7 +66,7 @@ private:
 
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this };                        //!< download / version data
+    BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this };  //!< download / version data
 };
 
 #endif // guard

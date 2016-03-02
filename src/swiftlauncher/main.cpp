@@ -27,10 +27,12 @@ using namespace BlackCore;
 
 int main(int argc, char *argv[])
 {
+    //! [CSwiftGuiStdApplication]
     QApplication qa(argc, argv);
     CGuiApplication a("swift launcher", CIcons::swift24());
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup."), "installer"});
     a.parse();
+    //! [CSwiftGuiStdApplication]
 
     // Dialog to decide external or internal core
     CSwiftLauncher launcher;

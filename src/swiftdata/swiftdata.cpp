@@ -54,25 +54,6 @@ void CSwiftData::initStyleSheet()
 CSwiftData::~CSwiftData()
 { }
 
-bool CSwiftData::displayInStatusBar(const CStatusMessage &message)
-{
-    this->m_statusBar.displayStatusMessage(message);
-    return true;
-}
-
-bool CSwiftData::displayInOverlayWindow(const CStatusMessage &message)
-{
-    this->ui->comp_MainInfoArea->getMappingComponent()->showOverlayMessage(message);
-    return true;
-}
-
-void CSwiftData::closeEvent(QCloseEvent *event)
-{
-    Q_UNUSED(event);
-    this->performGracefulShutdown();
-    sGui->exit();
-}
-
 void CSwiftData::ps_appendLogMessage(const CStatusMessage &message)
 {
     CLogComponent *logComponent = ui->comp_MainInfoArea->getLogComponent();
@@ -91,8 +72,13 @@ void CSwiftData::ps_onStyleSheetsChanged()
 void CSwiftData::init()
 {
     sGui->initMainApplicationWindow(this);
-    this->initStyleSheet();
     this->initLogDisplay();
+
+    this->m_mwaLogComponent = this->ui->comp_MainInfoArea->getLogComponent();
+    this->m_mwaStatusBar = &this->m_statusBar;
+    this->m_mwaOverlayFrame = this->ui->comp_MainInfoArea->getMappingComponent();
+
+    this->initStyleSheet();
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);
     this->initMenu();
 }
@@ -112,32 +98,17 @@ void CSwiftData::initLogDisplay()
 void CSwiftData::initMenu()
 {
     // menu
+
     this->initDynamicMenus();
     this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
-    connect(this->ui->menu_FileExit, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-
-    connect(this->ui->menu_SettingsDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_SettingsFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_SettingsReset, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_CacheDirectory, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_CacheFiles, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_CacheReset, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 
     connect(this->ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-
     connect(this->ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
     connect(this->ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 
-    connect(this->ui->menu_InternalsCompileInfo, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsEnvVars, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsMetatypes, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_InternalsSetup, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_JsonBootstrapTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_JsonDownloadTemplate, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    sGui->addMenuFile(*this->ui->menu_File);
+    sGui->addMenuInternals(*this->ui->menu_Internals);
+    sGui->addMenuWindow(*this->ui->menu_Window);
 }
 
 void CSwiftData::performGracefulShutdown()

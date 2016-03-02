@@ -35,63 +35,10 @@ using namespace BlackMisc;
 void CSwiftData::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
-    if (sender == this->ui->menu_FileReloadStyleSheets)
-    {
-        sGui->reloadStyleSheets();
-    }
-    else if (sender == this->ui->menu_WindowFont)
+    if (sender == this->ui->menu_WindowFont)
     {
         // this->ps_setMainPageToInfoArea();
         // this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
-    }
-    else if (sender == this->ui->menu_WindowMinimize)
-    {
-        this->showMinimized();
-    }
-    else if (sender == this->ui->menu_FileExit)
-    {
-        CLogMessage(this).info("Closing");
-        this->close(); // graceful shutdown in close event
-    }
-    else if (sender == this->ui->menu_SettingsDirectory)
-    {
-        QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
-        if (QDir(path).exists())
-        {
-            QDesktopServices::openUrl(QUrl("file:///" + path));
-        }
-    }
-    else if (sender == this->ui->menu_SettingsReset)
-    {
-        CSettingsCache::instance()->clearAllValues();
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole("Cleared all settings!");
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_SettingsFiles)
-    {
-        QStringList cachedFiles(CSettingsCache::instance()->enumerateStore());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(cachedFiles.join("\n"));
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_CacheDirectory)
-    {
-        QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
-        if (QDir(path).exists())
-        {
-            QDesktopServices::openUrl(QUrl("file:///" + path));
-        }
-    }
-    else if (sender == this->ui->menu_CacheFiles)
-    {
-        QStringList cachedFiles(CDataCache::instance()->enumerateStore());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(cachedFiles.join("\n"));
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_CacheReset)
-    {
-        CDataCache::instance()->clearAllValues();
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole("Cleared all cached values!");
-        this->displayConsole();
     }
     else if (sender == this->ui->menu_MappingMaxData)
     {
@@ -102,36 +49,6 @@ void CSwiftData::ps_onMenuClicked()
     {
         CDbMappingComponent *mappingComponent = this->ui->comp_MainInfoArea->getMappingComponent();
         mappingComponent->resizeForMapping();
-    }
-    else if (sender == this->ui->menu_JsonBootstrapTemplate)
-    {
-        QString json(sApp->getGlobalSetup().toJsonString());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(json);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_JsonDownloadTemplate)
-    {
-        QString json(m_updateInfo.get().toJsonString());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(json);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsMetatypes)
-    {
-        QString metadata(getAllUserMetatypesTypes());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(metadata);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsSetup)
-    {
-        QString setup(sApp->getGlobalSetup().convertToQString("\n", true));
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(setup);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsCompileInfo)
-    {
-        QString project(sGui->convertToQString("\n"));
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
-        this->displayConsole();
     }
 }
 

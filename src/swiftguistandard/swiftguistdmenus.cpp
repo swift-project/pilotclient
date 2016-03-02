@@ -56,100 +56,23 @@ void SwiftGuiStd::ps_onMenuClicked()
     {
         this->setTestPosition("N 48° 7′ 6.3588", "E 16° 33′ 39.924", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
-    else if (sender == this->ui->menu_FileReloadStyleSheets)
-    {
-        sGui->reloadStyleSheets();
-    }
     else if (sender == this->ui->menu_WindowFont)
     {
         this->ps_setMainPageToInfoArea();
         this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
     }
-    else if (sender == this->ui->menu_WindowMinimize)
-    {
-        this->ps_showMinimized();
-    }
-    else if (sender == this->ui->menu_WindowToggleOnTop)
-    {
-        this->ps_toogleWindowStayOnTop();
-    }
-    else if (sender == this->ui->menu_FileExit)
-    {
-        CLogMessage(this).info("Closing");
-        this->close();
-    }
-    else if (sender == this->ui->menu_SettingsDirectory)
-    {
-        QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
-        if (QDir(path).exists())
-        {
-            QDesktopServices::openUrl(QUrl("file:///" + path));
-        }
-    }
-    else if (sender == this->ui->menu_SettingsReset)
-    {
-        CSettingsCache::instance()->clearAllValues();
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole("Cleared all settings!");
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_SettingsFiles)
-    {
-        QStringList cachedFiles(CSettingsCache::instance()->enumerateStore());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(cachedFiles.join("\n"));
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_CacheDirectory)
-    {
-        QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
-        if (QDir(path).exists())
-        {
-            QDesktopServices::openUrl(QUrl("file:///" + path));
-        }
-    }
-    else if (sender == this->ui->menu_CacheFiles)
-    {
-        QStringList cachedFiles(CDataCache::instance()->enumerateStore());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(cachedFiles.join("\n"));
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_CacheReset)
-    {
-        CDataCache::instance()->clearAllValues();
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole("Cleared all cached values!");
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_Internals)
+    else if (sender == this->ui->menu_InternalsPage)
     {
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
     }
-    else if (sender == this->ui->menu_InternalsMetatypes)
-    {
-        QString metadata(getAllUserMetatypesTypes());
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(metadata);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsSetup)
-    {
-        QString setup(sApp->getGlobalSetup().convertToQString("\n", true));
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(setup);
-        this->displayConsole();
-    }
-    else if (sender == this->ui->menu_InternalsCompileInfo)
-    {
-        QString project(sGui->convertToQString("\n"));
-        this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(project);
-        this->displayConsole();
-    }
 }
 
-void SwiftGuiStd::initDynamicMenus()
+void SwiftGuiStd::initMenus()
 {
     Q_ASSERT(this->ui->menu_InfoAreas);
     Q_ASSERT(this->ui->comp_MainInfoArea);
+    sGui->addMenuFile(*this->ui->menu_File);
+    sGui->addMenuInternals(*this->ui->menu_Internals);
+    sGui->addMenuWindow(*this->ui->menu_Window);
     this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
-}
-
-void SwiftGuiStd::initMenuIcons()
-{
-    this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
 }

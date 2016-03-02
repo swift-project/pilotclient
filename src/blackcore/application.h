@@ -15,6 +15,7 @@
 #include "corefacadeconfig.h"
 #include "cookiemanager.h"
 #include "webdataservices.h"
+#include "blackcore/data/updateinfo.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/logcategorylist.h"
@@ -78,6 +79,10 @@ namespace BlackCore
         //! Global setup
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getGlobalSetup() const;
+
+        //! Update info
+        //! \threadsafe
+        BlackCore::Data::CUpdateInfo getUpdateInfo() const;
 
         //! Delete all cookies from cookier manager
         void deleteAllCookies();
@@ -240,7 +245,10 @@ namespace BlackCore
 
     signals:
         //! Setup syncronized
-        void setupSyncronized();
+        void setupSyncronized(bool success);
+
+        //! Update info syncronized
+        void updateInfoSynchronized(bool success);
 
         //! Startup has been completed
         void startUpCompleted(bool success);

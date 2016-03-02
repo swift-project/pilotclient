@@ -10,10 +10,16 @@
 #include "guiapplication.h"
 #include "guiutility.h"
 #include "stylesheetutility.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/metadatautils.h"
+#include "blackmisc/settingscache.h"
 #include <QApplication>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QDir>
+#include <QKeySequence>
 
 using namespace BlackMisc;
 
@@ -24,6 +30,12 @@ namespace BlackGui
     CGuiApplication *CGuiApplication::instance()
     {
         return qobject_cast<CGuiApplication *>(CApplication::instance());
+    }
+
+    const BlackMisc::CLogCategoryList &CGuiApplication::getLogCategories()
+    {
+        static const CLogCategoryList l(CApplication::getLogCategories().join( { CLogCategory::guiComponent() }));
+        return l;
     }
 
     CGuiApplication::CGuiApplication(const QString &applicationName, const QPixmap &icon) : CApplication(applicationName)
@@ -139,9 +151,187 @@ namespace BlackGui
         return m->displayInOverlayWindow(message);
     }
 
+    bool CGuiApplication::displayTextInConsole(const QString &text)
+    {
+        IMainWindowAccess *m = mainWindowAccess();
+        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        if (!m) { return false; }
+        return m->displayTextInConsole(text);
+    }
+
     bool CGuiApplication::reloadStyleSheets() const
     {
         return CStyleSheetUtility::instance().read();
+    }
+
+    void CGuiApplication::addMenuForSettingsAndCache(QMenu &menu)
+    {
+        QMenu *sm = menu.addMenu(CIcons::appSettings16(), "Settings");
+        sm->setIcon(CIcons::appSettings16());
+        QAction *a = sm->addAction(CIcons::disk16(), "Settings directory");
+        bool c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            const QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
+            if (QDir(path).exists())
+            {
+                QDesktopServices::openUrl(QUrl("file:///" + path));
+            }
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = sm->addAction("Reset settings");
+        c = connect(a, &QAction::triggered, this, [this]()
+        {
+            CSettingsCache::instance()->clearAllValues();
+            this->displayTextInConsole("Cleared all settings!");
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = sm->addAction("List settings files");
+        c = connect(a, &QAction::triggered, this, [this]()
+        {
+            const QStringList files(CSettingsCache::instance()->enumerateStore());
+            this->displayTextInConsole(files.join("\n"));
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        sm = menu.addMenu("Cache");
+        sm->setIcon(CIcons::appSettings16());
+        a = sm->addAction(CIcons::disk16(), "Cache directory");
+        c = connect(a, &QAction::triggered, this, [this]()
+        {
+            const QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
+            if (QDir(path).exists())
+            {
+                QDesktopServices::openUrl(QUrl("file:///" + path));
+            }
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = sm->addAction("Reset cache");
+        c = connect(a, &QAction::triggered, this, [this]()
+        {
+            CDataCache::instance()->clearAllValues();
+            this->displayTextInConsole("Cleared cache!");
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = sm->addAction("List cache files");
+        c = connect(a, &QAction::triggered, this, [this]()
+        {
+            const QStringList files(CDataCache::instance()->enumerateStore());
+            this->displayTextInConsole(files.join("\n"));
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+    }
+
+    void CGuiApplication::addMenuForStyleSheets(QMenu &menu)
+    {
+        QMenu *sm = menu.addMenu("Style sheet");
+        QAction *a = sm->addAction(CIcons::refresh16(), "Reload");
+        bool c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            this->reloadStyleSheets();
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+    }
+
+    void CGuiApplication::addMenuFile(QMenu &menu)
+    {
+        addMenuForSettingsAndCache(menu);
+        addMenuForStyleSheets(menu);
+
+        menu.addSeparator();
+        QAction *a = menu.addAction("E&xit");
+        a->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
+        bool c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            // a close event might already trigger a shutdown
+            this->mainApplicationWindow()->close();
+            this->gracefulShutdown();
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+    }
+
+    void CGuiApplication::addMenuInternals(QMenu &menu)
+    {
+        QMenu *sm = menu.addMenu("Templates");
+        QAction *a = sm->addAction("JSON bootstrap");
+        bool c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            this->displayTextInConsole(this->getGlobalSetup().toJsonString());
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = sm->addAction("JSON update info");
+        c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            this->displayTextInConsole(this->getUpdateInfo().toJsonString());
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction("Metadata (slow)");
+        c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            this->displayTextInConsole(getAllUserMetatypesTypes());
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction("Setup");
+        c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            this->displayTextInConsole(this->getGlobalSetup().convertToQString("\n", true));
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction("Compile info");
+        c = connect(a, &QAction::triggered, this, [a, this]()
+        {
+            this->displayTextInConsole(this->getInfoString("\n"));
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+    }
+
+    void CGuiApplication::addMenuWindow(QMenu &menu)
+    {
+        QWidget *w = mainApplicationWindow();
+        if (!w) { return; }
+        QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarMaxButton), "Fullscreen");
+        bool c = connect(a, &QAction::triggered, this, [a, w]()
+        {
+            w->showFullScreen();
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarMinButton), "Minimize");
+        c = connect(a, &QAction::triggered, this, [a, w]()
+        {
+            w->showMinimized();
+
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarNormalButton), "Normal");
+        c = connect(a, &QAction::triggered, this, [a, w]()
+        {
+            w->showNormal();
+
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction("Toggle stay on top");
+        c = connect(a, &QAction::triggered, this, [a, w]()
+        {
+            if (CGuiUtility::toggleStayOnTop(w))
+            {
+                CLogMessage(w).info("Window on top");
+            }
+            else
+            {
+                CLogMessage(w).info("Window not always on top");
+            }
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
     }
 
     void CGuiApplication::cmdLineHelpMessage()
