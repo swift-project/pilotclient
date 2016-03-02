@@ -23,9 +23,11 @@ namespace BlackMisc
         CGridPoint::CGridPoint(const Geo::CLatitude &latitude, const Geo::CLongitude longitude,
                                const CCloudLayerList &cloudLayers,
                                const CTemperatureLayerList &temperatureLayers,
+                               const CVisibilityLayerList &visibilityLayers,
                                const CWindLayerList &windLayers) :
             m_latitude(latitude), m_longitude(longitude), m_cloudLayers(cloudLayers),
-            m_temperatureLayers(temperatureLayers), m_windLayers(windLayers)
+            m_temperatureLayers(temperatureLayers), m_visibilityLayers(visibilityLayers),
+            m_windLayers(windLayers)
         { }
 
         CVariant CGridPoint::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

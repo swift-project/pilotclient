@@ -20,6 +20,7 @@
 #include "blackmisc/geo/longitude.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/temperaturelayerlist.h"
+#include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayerlist.h"
 
 namespace BlackMisc
@@ -49,6 +50,7 @@ namespace BlackMisc
             CGridPoint(const Geo::CLatitude &latitude, const Geo::CLongitude longitude,
                        const CCloudLayerList &cloudLayers,
                        const CTemperatureLayerList &temperatureLayers,
+                       const CVisibilityLayerList &visibilityLayers,
                        const CWindLayerList &windLayers);
 
             //! Set latitude
@@ -75,6 +77,12 @@ namespace BlackMisc
             //! Get temperature layers
             CTemperatureLayerList getTemperatureLayers() const { return m_temperatureLayers; }
 
+            //! Set visibility layers
+            void setVisibilityLayers(const CVisibilityLayerList &visibilityLayers) { m_visibilityLayers = visibilityLayers; }
+
+            //! Get visibility layers
+            CVisibilityLayerList getVisibilityLayers() const { return m_visibilityLayers; }
+
             //! Set wind layers
             void setWindLayers(const CWindLayerList &windLayers) { m_windLayers = windLayers; }
 
@@ -96,7 +104,9 @@ namespace BlackMisc
             Geo::CLongitude m_longitude;
             CCloudLayerList m_cloudLayers;
             CTemperatureLayerList m_temperatureLayers;
+            CVisibilityLayerList m_visibilityLayers;
             CWindLayerList m_windLayers;
+
         };
     } // namespace
 } // namespace
@@ -107,6 +117,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CGridPoint, (
                                    attr(o.m_longitude),
                                    attr(o.m_cloudLayers),
                                    attr(o.m_temperatureLayers),
+                                   attr(o.m_visibilityLayers),
                                    attr(o.m_windLayers)
 ))
 
