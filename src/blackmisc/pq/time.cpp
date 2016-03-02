@@ -96,7 +96,7 @@ namespace BlackMisc
             double hr = CMathUtils::trunc(currentValue / 3600);
             double remaining = std::fmod(currentValue, 3600);
             double mi = CMathUtils::trunc(remaining / 60);
-            double se = std::fmod(remaining, 60);
+            double se = CMathUtils::trunc(std::fmod(remaining, 60));
 
             QList<int> parts;
             parts << hr << mi << se;
