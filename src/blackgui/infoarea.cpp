@@ -45,7 +45,7 @@ namespace BlackGui
 
         this->ps_setDockArea(Qt::TopDockWidgetArea);
         this->iniFileBasedSettings();
-        this->connectAllWidgets();
+        this->connectTopLevelChanged();
         this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
         this->tabifyAllWidgets();
 
@@ -522,7 +522,7 @@ namespace BlackGui
         return areaIndex >= 0 && areaIndex < this->m_dockWidgetInfoAreas.size();
     }
 
-    void CInfoArea::connectAllWidgets()
+    void CInfoArea::connectTopLevelChanged()
     {
         for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
         {

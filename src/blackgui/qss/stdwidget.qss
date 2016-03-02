@@ -333,13 +333,13 @@ QColorDialog {
 QMenuBar {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
-  padding: 0px 0px 0px 10px;
+  padding: 5px 0px 0px 10px;
   margin: 0px 0px 20px 0px; /* removes overlapping bar in frameless mode, why bottom margin helps here, no idea, bug? */
 }
 
 QMenuBar::item {
-  spacing: 3px; /* spacing between menu bar items */
-  padding: 1px 4px;
+  spacing: 5px; /* spacing between menu bar items */
+  padding: 3px 3px;
   background: transparent;
   border-radius: 4px;
 }
@@ -356,7 +356,11 @@ QMenu {
   border: 2px solid darkslategray; /* reserve space for selection border */
   background: lightgray;
   color: black;
-  padding: 2px;
+  padding: 3px;
+}
+
+QMenu::item {
+  padding: 4px 25px 4px 20px;
 }
 
 QScrollArea {

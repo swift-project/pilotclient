@@ -189,7 +189,7 @@ namespace BlackGui
         void setTabPixmaps();
 
         //! Connect all widgets
-        void connectAllWidgets();
+        void connectTopLevelChanged();
 
         //! Margins for the floating widgets
         void setMarginsWhenFloating(int left, int top, int right, int bottom);

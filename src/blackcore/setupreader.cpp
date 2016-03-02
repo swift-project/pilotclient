@@ -65,6 +65,8 @@ namespace BlackCore
         }
         else
         {
+            this->m_bootstrapUrls.clear(); // clean up previous values
+
             // web URL
             if (!this->m_bootsrapUrlFileValue.isEmpty())
             {
