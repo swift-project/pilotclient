@@ -26,8 +26,9 @@ namespace BlackGui
             ui(new Ui::CMainInfoAreaComponent)
         {
             ui->setupUi(this);
-            initInfoArea(); // init base class
-            this->setWindowIcon(CIcons::swift24());
+            CInfoArea::initInfoArea(); // init base class
+            this->setWindowIcon(CIcons::swift48());
+            connect(this->getLogComponent(), &CLogComponent::requestAttention, this, &CMainInfoAreaComponent::selectLog);
         }
 
         CMainInfoAreaComponent::~CMainInfoAreaComponent()
@@ -92,6 +93,11 @@ namespace BlackGui
         void CMainInfoAreaComponent::displayConsole()
         {
             this->ui->comp_Log->displayConsole();
+            this->selectArea(InfoAreaLog);
+        }
+
+        void CMainInfoAreaComponent::selectLog()
+        {
             this->selectArea(InfoAreaLog);
         }
 

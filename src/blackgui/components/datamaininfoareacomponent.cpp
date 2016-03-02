@@ -37,6 +37,7 @@ namespace BlackGui
             connect(ui->comp_Mapping, &CDbMappingComponent::requestUpdatedData, ui->comp_DataInfoArea, &CDataInfoAreaComponent::requestUpdatedData);
 
             connect(ui->comp_DataInfoArea->getModelComponent(), &CDbModelComponent::requestStash, ui->comp_Mapping, &CDbMappingComponent::stashModels);
+            connect(ui->comp_Log, &CLogComponent::requestAttention, this, &CDataMainInfoAreaComponent::selectLog);
         }
 
         CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent()
@@ -67,6 +68,11 @@ namespace BlackGui
         {
             this->selectArea(InfoAreaLog);
             this->getLogComponent()->displayConsole();
+        }
+
+        void CDataMainInfoAreaComponent::selectLog()
+        {
+            this->selectArea(InfoAreaLog);
         }
 
         QSize CDataMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const

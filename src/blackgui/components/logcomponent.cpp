@@ -47,14 +47,16 @@ namespace BlackGui
         CLogComponent::~CLogComponent()
         { }
 
-        void CLogComponent::displayLog()
+        void CLogComponent::displayLog(bool attention)
         {
             this->ui->tw_StatusPage->setCurrentIndex(0);
+            if(attention) { emit requestAttention(); }
         }
 
-        void CLogComponent::displayConsole()
+        void CLogComponent::displayConsole(bool attention)
         {
             this->ui->tw_StatusPage->setCurrentIndex(1);
+            if(attention) { emit requestAttention(); }
         }
 
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)

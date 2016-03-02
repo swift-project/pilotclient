@@ -109,6 +109,9 @@ namespace BlackGui
             //! Select area
             void selectArea(InfoArea infoArea) { CInfoArea::selectArea(static_cast<int>(infoArea)); }
 
+            //! Select log
+            void selectLog();
+
             //! Select settings with given area
             void selectSettingsTab(int index);
 

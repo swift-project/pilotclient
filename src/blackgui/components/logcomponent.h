@@ -53,10 +53,14 @@ namespace BlackGui
             ~CLogComponent();
 
             //! Display log
-            void displayLog();
+            void displayLog(bool attention = false);
 
             //! Display console
-            void displayConsole();
+            void displayConsole(bool attention = false);
+
+        signals:
+            //! Make me visible
+            void requestAttention();
 
         public slots:
             //! Append status message to console

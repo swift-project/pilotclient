@@ -68,6 +68,10 @@ namespace BlackGui
             //! Display console
             void displayConsole();
 
+        public slots:
+            //! Select log area
+            void selectLog();
+
         protected:
             //! \copydoc CInfoArea::getPreferredSizeWhenFloating
             virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
