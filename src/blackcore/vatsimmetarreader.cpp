@@ -63,10 +63,11 @@ namespace BlackCore
     void CVatsimMetarReader::ps_readMetars()
     {
         this->threadAssertCheck();
-        const CUrl url(sApp->getGlobalSetup().vatsimMetarsUrl());
+        CFailoverUrlList urls(sApp->getVatsimMetarUrls());
+        const CUrl url(urls.obtainNextWorkingUrl(true));
         if (url.isEmpty()) { return; }
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
-        sApp->getFromNetwork(url, { this, &CVatsimMetarReader::ps_decodeMetars});
+        sApp->getFromNetwork(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::ps_decodeMetars});
     }
 
     void CVatsimMetarReader::ps_decodeMetars(QNetworkReply *nwReplyPtr)

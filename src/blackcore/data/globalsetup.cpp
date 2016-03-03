@@ -25,8 +25,9 @@ namespace BlackCore
             ITimestampBased(0),
             m_dbRootDirectoryUrl("http://ubuntu12/swiftdatastore/public"),
             m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
-            m_vatsimMetarsUrl("http://metar.vatsim.net/metar.php"),
-            m_vatsimDataFileUrls(QStringList( { "http://info.vroute.net/vatsim-data.txt" })),
+            m_vatsimMetarsUrls( {"http://metar.vatsim.net/metar.php"}),
+            m_vatsimStatusFileUrls({ "https://status.vatsim.net" }),
+            m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" }),
             m_sharedUrls(CProject::swiftTeamDefaultServers()),
             m_newsUrls(QStringList({ "http://swift-project.org/" }))
         { }
@@ -70,11 +71,6 @@ namespace BlackCore
         bool CGlobalSetup::hasSameType(const CGlobalSetup &otherSetup) const
         {
             return this->isDevelopment() == otherSetup.isDevelopment();
-        }
-
-        CUrl CGlobalSetup::vatsimMetarsUrl() const
-        {
-            return this->m_vatsimMetarsUrl.withAppendedQuery("id=all");
         }
 
         CUrlList CGlobalSetup::bootstrapFileUrls() const
@@ -179,7 +175,7 @@ namespace BlackCore
             s.append(vatsimBookingsUrl().toQString(i18n));
             s.append(separator);
             s.append("VATSIM METARs: ");
-            s.append(vatsimMetarsUrl().toQString(i18n));
+            s.append(vatsimMetarsUrls().toQString(i18n));
             s.append(separator);
             s.append("VATSIM data file: ");
             s.append(vatsimDataFileUrls().toQString(i18n));
@@ -206,12 +202,14 @@ namespace BlackCore
                 return CVariant::fromValue(this->m_dbHttpsPort);
             case IndexDbLoginService:
                 return CVariant::fromValue(this->dbLoginServiceUrl());
+            case IndexVatsimStatus:
+                return CVariant::fromValue(this->m_vatsimStatusFileUrls);
             case IndexVatsimData:
                 return CVariant::fromValue(this->m_vatsimDataFileUrls);
             case IndexVatsimBookings:
                 return CVariant::fromValue(this->m_vatsimDataFileUrls);
             case IndexVatsimMetars:
-                return CVariant::fromValue(this->m_vatsimMetarsUrl);
+                return CVariant::fromValue(this->m_vatsimMetarsUrls);
             case IndexUpdateInfo:
                 return CVariant::fromValue(this->updateInfoFileUrls());
             case IndexBootstrap:
@@ -257,7 +255,7 @@ namespace BlackCore
                 this->m_vatsimBookingsUrl.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexVatsimMetars:
-                this->m_vatsimMetarsUrl.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_vatsimMetarsUrls = variant.value<CUrlList>();
                 break;
             case IndexShared:
                 this->m_sharedUrls = variant.value<CUrlList>();
@@ -273,7 +271,7 @@ namespace BlackCore
 
         const QString &CGlobalSetup::versionString()
         {
-            static const QString v("0.6.1");
+            static const QString v("0.7.0");
             return v;
         }
 

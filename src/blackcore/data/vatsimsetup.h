@@ -33,8 +33,12 @@ namespace BlackCore
             //! Properties by index
             enum ColumnIndex
             {
-                IndexFsdServers = BlackMisc::CPropertyIndex::GlobalIndexCGlobalSetup + 50,
-                IndexDataFiles
+                IndexServerFiles = BlackMisc::CPropertyIndex::GlobalIndexCVatsimSetup,
+                IndexDataFiles,
+                IndexMetarFiles,
+                IndexFsdServers,
+                IndexCVoiceServers,
+                IndexLastLoginUser
             };
 
             //! Default constructor
@@ -48,6 +52,18 @@ namespace BlackCore
 
             //! Set VATSIM data file URLs
             void setDataFileUrls(const BlackMisc::Network::CUrlList &urls) { m_dataFileUrls = urls; }
+
+            //! Server file URLs (like data file, only servers)
+            const BlackMisc::Network::CUrlList &getServerFileUrls() const { return m_serverFileUrls; }
+
+            //! Set server file URLs (like data file, only servers)
+            void setServerFileUrls(const BlackMisc::Network::CUrlList &urls) { m_serverFileUrls = urls; }
+
+            //! METAR file URLs
+            const BlackMisc::Network::CUrlList &getMetarFileUrls() const { return m_metarFileUrls; }
+
+            //! METAR file URLs
+            void setMetarFileUrls(const BlackMisc::Network::CUrlList &urls) { m_metarFileUrls = urls; }
 
             //! FSD test servers
             const BlackMisc::Network::CServerList &getFsdServers() const { return m_fsdServers; }
@@ -82,7 +98,9 @@ namespace BlackCore
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CVatsimSetup)
 
-            BlackMisc::Network::CUrlList    m_dataFileUrls;   //!< Overall VATSIM data file / merely for bootstrapping the first time
+            BlackMisc::Network::CUrlList    m_serverFileUrls; //!< only the FSD servers
+            BlackMisc::Network::CUrlList    m_dataFileUrls;   //!< Full VATSIM files
+            BlackMisc::Network::CUrlList    m_metarFileUrls;  //!< METAR files
             BlackMisc::Network::CServerList m_fsdServers;     //!< FSD test servers
             BlackMisc::Network::CServerList m_voiceServers;   //!< voice servers
             BlackMisc::Network::CUser       m_lastLoginUser;  //!< last login user
@@ -107,9 +125,12 @@ namespace BlackCore
 
 Q_DECLARE_METATYPE(BlackCore::Data::CVatsimSetup)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CVatsimSetup, (
+                                   attr(o.m_serverFileUrls),
                                    attr(o.m_dataFileUrls),
+                                   attr(o.m_metarFileUrls),
                                    attr(o.m_fsdServers),
                                    attr(o.m_voiceServers),
+                                   attr(o.m_lastLoginUser),
                                    attr(o.m_timestampMSecsSinceEpoch)
                                ))
 #endif // guard

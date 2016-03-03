@@ -13,6 +13,7 @@
 #include "blackcore/modeldatareader.h"
 #include "blackcore/icaodatareader.h"
 #include "blackcore/databasewriter.h"
+#include "blackcore/vatsimstatusfilereader.h"
 #include "blackcore/vatsimbookingreader.h"
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/vatsimmetarreader.h"
@@ -97,6 +98,18 @@ namespace BlackCore
     {
         if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getVoiceServers(); }
         return CServerList();
+    }
+
+    CUrlList CWebDataServices::getVatsimMetarUrls() const
+    {
+        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getMetarFileUrls(); }
+        return CUrlList();
+    }
+
+    CUrlList CWebDataServices::getVatsimDataFileUrls() const
+    {
+        if (m_vatsimStatusReader) { return m_vatsimStatusReader->getDataFileUrls(); }
+        return CUrlList();
     }
 
     CUserList CWebDataServices::getUsersForCallsign(const CCallsign &callsign) const
@@ -392,6 +405,7 @@ namespace BlackCore
     void CWebDataServices::gracefulShutdown()
     {
         this->disconnect(); // all signals
+        if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->gracefulShutdown(); }
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->gracefulShutdown(); }
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->gracefulShutdown(); }
         if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->gracefulShutdown(); }
@@ -408,7 +422,16 @@ namespace BlackCore
 
     void CWebDataServices::initReaders(CWebReaderFlags::WebReader flags)
     {
-        // 1. VATSIM bookings
+        // 1. Status file, updating the cache
+        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader) || flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
+        {
+            this->m_vatsimStatusReader = new CVatsimStatusFileReader(this);
+            this->m_vatsimStatusReader->start(QThread::LowPriority);
+            this->m_vatsimStatusReader->setInterval(60 * 60 * 1000); // very slow updates required only
+            QTimer::singleShot(100, this->m_vatsimStatusReader, &CVatsimStatusFileReader::readInBackgroundThread);
+        }
+
+        // 2. VATSIM bookings
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimBookingReader))
         {
             this->m_vatsimBookingReader = new CVatsimBookingReader(this);
@@ -419,7 +442,7 @@ namespace BlackCore
             this->m_vatsimBookingReader->setInterval(3 * 60 * 1000);
         }
 
-        // 2. VATSIM data file
+        // 3. VATSIM data file
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             this->m_vatsimDataFileReader = new CVatsimDataFileReader(this);
@@ -430,7 +453,7 @@ namespace BlackCore
             this->m_vatsimDataFileReader->setInterval(90 * 1000);
         }
 
-        // 3. VATSIM metar data
+        // 4. VATSIM metar data
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             this->m_vatsimMetarReader = new CVatsimMetarReader(this);
@@ -441,7 +464,7 @@ namespace BlackCore
             this->m_vatsimMetarReader->setInterval(90 * 1000);
         }
 
-        // 4. ICAO data reader
+        // 5. ICAO data reader
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             bool c;
@@ -452,7 +475,7 @@ namespace BlackCore
             this->m_icaoDataReader->start(QThread::LowPriority);
         }
 
-        // 5. Model reader
+        // 6. Model reader
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             this->m_modelDataReader = new CModelDataReader(this);

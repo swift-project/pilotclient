@@ -17,7 +17,6 @@
 #include "blackmisc/lockfree.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
-
 #include <QObject>
 #include <QTimer>
 #include <QNetworkReply>
@@ -27,9 +26,13 @@
 namespace BlackCore
 {
     //! Read the central URLs / locations of our data / setup.
-    //! This should be only used in BlackCore::CApplication
+    //!
+    //! \details This class should be only used in BlackCore::CApplication. It will also trigger reading
+    //!          update information.
+    //!
     //! \note This class is no(!) BlackCore::CThreadedReader as it will be loaded once during startup
-    //!       and is usually fast.
+    //!       and reading setup data is fast.
+    //!
     //! \sa BlackCore::Data::GlobalSetup
     //! \sa BlackCore::Data::UpdateInfo
     class BLACKCORE_EXPORT CSetupReader : public QObject

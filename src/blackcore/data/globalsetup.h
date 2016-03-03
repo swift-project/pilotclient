@@ -37,6 +37,7 @@ namespace BlackCore
                 IndexDbHttpPort,
                 IndexDbHttpsPort,
                 IndexDbLoginService,
+                IndexVatsimStatus,
                 IndexVatsimBookings,
                 IndexVatsimMetars,
                 IndexVatsimData,
@@ -93,7 +94,10 @@ namespace BlackCore
             const BlackMisc::Network::CUrl &vatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
 
             //! VATSIM METAR URL
-            BlackMisc::Network::CUrl vatsimMetarsUrl() const;
+            const BlackMisc::Network::CUrlList &vatsimMetarsUrls() const { return this->m_vatsimMetarsUrls; }
+
+            //! VATSIM status file URLs
+            const BlackMisc::Network::CUrlList &vatsimStatusFileUrls() const { return m_vatsimStatusFileUrls; }
 
             //! VATSIM data file URLs
             const BlackMisc::Network::CUrlList &vatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
@@ -149,7 +153,8 @@ namespace BlackCore
             bool                            m_development = false;  //!< dev. version?
             BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;   //!< Root directory of DB
             BlackMisc::Network::CUrl        m_vatsimBookingsUrl;    //!< ATC bookings
-            BlackMisc::Network::CUrl        m_vatsimMetarsUrl;      //!< METAR data
+            BlackMisc::Network::CUrlList    m_vatsimMetarsUrls;     //!< METAR data
+            BlackMisc::Network::CUrlList    m_vatsimStatusFileUrls; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
             BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;   //!< Overall VATSIM data file / merely for bootstrapping the first time
             BlackMisc::Network::CUrlList    m_sharedUrls;           //!< where we can obtain shared info files such as bootstrap, ..
             BlackMisc::Network::CUrlList    m_newsUrls;             //!< where we can obtain latest news
@@ -183,9 +188,10 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup, (
                                    attr(o.m_dbRootDirectoryUrl),
                                    attr(o.m_dbHttpPort),
                                    attr(o.m_dbHttpsPort),
-                                   attr(o.m_vatsimBookingsUrl),
-                                   attr(o.m_vatsimMetarsUrl),
+                                   attr(o.m_vatsimStatusFileUrls),
                                    attr(o.m_vatsimDataFileUrls),
+                                   attr(o.m_vatsimBookingsUrl),
+                                   attr(o.m_vatsimMetarsUrls),
                                    attr(o.m_sharedUrls),
                                    attr(o.m_newsUrls),
                                    attr(o.m_fsdTestServers),

@@ -28,7 +28,8 @@
 
 namespace BlackCore
 {
-    //! Read bookings from VATSIM
+    //! Read vatsim data file
+    //! \sa http://info.vroute.net/vatsim-data.txt
     class BLACKCORE_EXPORT CVatsimDataFileReader : public BlackMisc::CThreadedReader
     {
         Q_OBJECT
@@ -57,7 +58,7 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CServerList getVoiceServers() const;
 
-        //! Get all FSD servers
+        //! Get all VATSIM FSD servers
         //! \threadsafe
         BlackMisc::Network::CServerList getFsdServers() const;
 

@@ -158,7 +158,8 @@ namespace BlackCore
         // remark: Don't use QThread to run network operations in the background
         // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
-        const QUrl url(sApp->getGlobalSetup().vatsimDataFileUrls().getRandomUrl());
+        CFailoverUrlList urls(sApp->getVatsimDataFileUrls());
+        const QUrl url(urls.obtainNextWorkingUrl(true));
         if (url.isEmpty()) { return; }
         sApp->getFromNetwork(url, { this, &CVatsimDataFileReader::ps_parseVatsimFile});
 
@@ -239,7 +240,7 @@ namespace BlackCore
                         if (callsign.isEmpty()) { break; }
                         const BlackMisc::Network::CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
                         const QString clientType = clientPartsMap["clienttype"].toLower();
-                        if (clientType.isEmpty()) break; // sometimes type is empty
+                        if (clientType.isEmpty()) { break; } // sometimes type is empty
                         const double lat = clientPartsMap["latitude"].toDouble();
                         const double lng = clientPartsMap["longitude"].toDouble();
                         const double alt = clientPartsMap["altitude"].toDouble();
@@ -384,8 +385,8 @@ namespace BlackCore
         QMap<QString, QString> parts;
         for (int i = 0; i < clientSectionAttributes.size(); i++)
         {
-            Q_ASSERT(i < clientSectionAttributes.size());
-            Q_ASSERT(i < clientParts.size());
+            BLACK_VERIFY_X(i < clientSectionAttributes.size(), Q_FUNC_INFO, "Wrong section attribute size");
+            BLACK_VERIFY_X(i < clientParts.size(), Q_FUNC_INFO, "Wrong parts size");
             parts.insert(clientSectionAttributes.at(i).toLower(), clientParts.at(i));
         }
         return parts;

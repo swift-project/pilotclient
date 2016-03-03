@@ -20,6 +20,7 @@
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/urllist.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/distributorlist.h"
@@ -31,6 +32,7 @@
 
 namespace BlackCore
 {
+    class CVatsimStatusFileReader;
     class CVatsimBookingReader;
     class CVatsimDataFileReader;
     class CVatsimMetarReader;
@@ -83,6 +85,14 @@ namespace BlackCore
         //! Voice servers
         //! \threadsafe
         BlackMisc::Network::CServerList getVatsimVoiceServers() const;
+
+        //! METAR URLs (from status file)
+        //! \threadsafe
+        BlackMisc::Network::CUrlList getVatsimMetarUrls() const;
+
+        //! Data file locations (from status file)
+        //! \threadsafe
+        BlackMisc::Network::CUrlList getVatsimDataFileUrls() const;
 
         //! Users by callsign
         //! \threadsafe
@@ -283,14 +293,15 @@ namespace BlackCore
         bool m_initialRead                       = false;                                //!< Initial read conducted
 
         // for reading XML and VATSIM data files
-        CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
-        CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
-        CVatsimMetarReader    *m_vatsimMetarReader    = nullptr;
-        CIcaoDataReader       *m_icaoDataReader       = nullptr;
-        CModelDataReader      *m_modelDataReader      = nullptr;
+        CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;
+        CVatsimBookingReader    *m_vatsimBookingReader  = nullptr;
+        CVatsimDataFileReader   *m_vatsimDataFileReader = nullptr;
+        CVatsimMetarReader      *m_vatsimMetarReader    = nullptr;
+        CIcaoDataReader         *m_icaoDataReader       = nullptr;
+        CModelDataReader        *m_modelDataReader      = nullptr;
 
         // writing objects directly into DB
-        CDatabaseWriter       *m_databaseWriter       = nullptr;
+        CDatabaseWriter         *m_databaseWriter       = nullptr;
     };
 } // namespace
 

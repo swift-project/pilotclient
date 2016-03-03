@@ -29,31 +29,32 @@ namespace BlackMisc
             //! Which data to read, requires corresponding readers
             enum EntityFlag
             {
-                NoEntity               = 0,      ///< no data at all
-                VatsimDataFile         = 1 << 0, ///< the VATSIM data file (multiple data entities)
-                BookingEntity          = 1 << 1, ///< bookings
-                MetarEntity            = 1 << 2,
-                AircraftIcaoEntity     = 1 << 3, ///< ICAO codes for aircraft
-                AirlineIcaoEntity      = 1 << 4, ///< ICAO codes for airlines
-                CountryEntity          = 1 << 5, ///< country codes
-                DistributorEntity      = 1 << 6, ///< distributors
-                LiveryEntity           = 1 << 7, ///< liveries
-                ModelEntity            = 1 << 8, ///< models
-                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                 ///< all ICAO codes
-                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, ///< all ICAO codes and countries
-                DistributorLiveryModel = DistributorEntity | LiveryEntity | ModelEntity,         ///< Combinded
-                AllDbEntities          = AllIcaoEntities | DistributorLiveryModel,               ///< All DB stuff
-                AllEntities            = 0xFFFF  ///< everything
+                NoEntity               = 0,            //!< no data at all
+                BookingEntity          = 1 << 0,       //!< bookings
+                MetarEntity            = 1 << 1,       //!< METAR
+                AircraftIcaoEntity     = 1 << 2,       //!< ICAO codes for aircraft
+                AirlineIcaoEntity      = 1 << 3,       //!< ICAO codes for airlines
+                CountryEntity          = 1 << 4,       //!< country codes
+                DistributorEntity      = 1 << 5,       //!< distributors
+                LiveryEntity           = 1 << 6,       //!< liveries
+                ModelEntity            = 1 << 7,       //!< models
+                VatsimDataFile         = 1 << 8,       //!< the VATSIM data file (multiple data entities)
+                VatsimStatusFile       = 1 << 9,       //!< the VATSIM status file (URLs for data files etc.)
+                AllEntities            = ((1<<10)-1),  //!< everything
+                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                  //!< all ICAO codes
+                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity,  //!< all ICAO codes and countries
+                DistributorLiveryModel = DistributorEntity | LiveryEntity | ModelEntity,          //!< Combinded
+                AllDbEntities          = AllIcaoEntities | DistributorLiveryModel,                //!< All DB stuff
             };
             Q_DECLARE_FLAGS(Entity, EntityFlag)
 
             //! State of operation
             enum ReadState
             {
-                StartRead,                ///< reading has been started
-                ReadFinished,             ///< reading done
-                ReadFinishedRestricted,   ///< finished a timestamp restricted read
-                ReadFailed                ///< reading failed
+                StartRead,                 //!< reading has been started
+                ReadFinished,              //!< reading done
+                ReadFinishedRestricted,    //!< finished a timestamp restricted read
+                ReadFailed                 //!< reading failed
             };
 
             //! Convert to string

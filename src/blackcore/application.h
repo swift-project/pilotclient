@@ -49,6 +49,8 @@ namespace BlackCore
      * - The core facade (aka core runtime) is now part of the application. It can be started via cmd line arguments.
      * - Settings are loaded
      * - Setup is loaded (load the so called bootsrap file) to find servers and other resources
+     * - Update information (new swift versions etc.) are loaded
+     * - If applicable VATSIM status data (where are the VATSIM files?) are loaded
      * - An end of lifetime can be specified, aka time bombing
      *
      * \sa BlackGui::CGuiApplication for the GUI version of application
@@ -212,6 +214,16 @@ namespace BlackCore
         IContextOwnAircraft *getIContextOwnAircraft();
         IContextSimulator *getIContextSimulator();
         //! @}
+
+        // ----------------------- direct access to some setup data ---------------------------------
+
+        //! Consolidated version of METAR URLs, either from CGlobalSetup or CVatsimSetup
+        //! \threadsafe
+        BlackMisc::Network::CUrlList getVatsimMetarUrls() const;
+
+        //! Consolidated version of data file URLs, either from CGlobalSetup or CVatsimSetup
+        //! \threadsafe
+        BlackMisc::Network::CUrlList getVatsimDataFileUrls() const;
 
     public slots:
         //! Graceful shutdown

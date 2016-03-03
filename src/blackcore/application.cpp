@@ -471,7 +471,7 @@ namespace BlackCore
         this->addParserOption(this->m_cmdDevelopment);
 
         this->m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
-                               QCoreApplication::translate("application", "Local shred directory."),
+                               QCoreApplication::translate("application", "Local shared directory."),
                                "shared");
         this->addParserOption(this->m_cmdSharedDir);
     }
@@ -769,4 +769,37 @@ namespace BlackCore
         if (!supportsContexts()) { return nullptr; }
         return this->m_coreFacade->getIContextSimulator();
     }
+
+    // ---------------------------------------------------------------------------------
+    // Setup
+    // ---------------------------------------------------------------------------------
+
+    CUrlList CApplication::getVatsimMetarUrls() const
+    {
+        if (this->m_webDataServices)
+        {
+            const CUrlList urls(this->m_webDataServices->getVatsimMetarUrls());
+            if (!urls.empty()) { return urls; }
+        }
+        if (this->m_setupReader)
+        {
+            return this->m_setupReader->getSetup().vatsimMetarsUrls();
+        }
+        return CUrlList();
+    }
+
+    CUrlList CApplication::getVatsimDataFileUrls() const
+    {
+        if (this->m_webDataServices)
+        {
+            const CUrlList urls(this->m_webDataServices->getVatsimDataFileUrls());
+            if (!urls.empty()) { return urls; }
+        }
+        if (this->m_setupReader)
+        {
+            return this->m_setupReader->getSetup().vatsimDataFileUrls();
+        }
+        return CUrlList();
+    }
+
 } // ns
