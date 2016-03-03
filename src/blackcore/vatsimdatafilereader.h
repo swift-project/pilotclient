@@ -13,7 +13,7 @@
 #define BLACKCORE_VATSIMDATAFILEREADER_H
 
 #include "blackcoreexport.h"
-#include "blackcore/data/globalsetup.h"
+#include "blackcore/data/vatsimsetup.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/atcstationlist.h"
@@ -123,10 +123,9 @@ namespace BlackCore
         void ps_read();
 
     private:
-        BlackMisc::Network::CServerList               m_voiceServers;
-        BlackMisc::Network::CServerList               m_fsdServers;
-        BlackMisc::Aviation::CAtcStationList          m_atcStations;
-        BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
+        BlackMisc::Aviation::CAtcStationList           m_atcStations;
+        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraft;
+        BlackMisc::CData<BlackCore::Data::VatsimSetup> m_lastGoodSetup { this };
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
 
         //! Split line and assign values to their corresponding attribute names

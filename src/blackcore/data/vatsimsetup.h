@@ -46,8 +46,26 @@ namespace BlackCore
             //! VATSIM data file URLs
             const BlackMisc::Network::CUrlList &getDataFileUrls() const { return m_dataFileUrls; }
 
+            //! Set VATSIM data file URLs
+            void setDataFileUrls(const BlackMisc::Network::CUrlList &urls) { m_dataFileUrls = urls; }
+
             //! FSD test servers
             const BlackMisc::Network::CServerList &getFsdServers() const { return m_fsdServers; }
+
+            //! User for last login
+            const BlackMisc::Network::CUser &getLastLoginUser() const { return m_lastLoginUser; }
+
+            //! Set FSD servers
+            void setFsdServers(const BlackMisc::Network::CServerList &servers) { m_fsdServers = servers; }
+
+            //! Voice servers
+            const BlackMisc::Network::CServerList &getVoiceServers() const { return m_voiceServers; }
+
+            //! Set voice servers
+            void setVoiceServers(const BlackMisc::Network::CServerList &servers) { m_voiceServers = servers; }
+
+            //! User for last login
+            void setLastLoginUser(const BlackMisc::Network::CUser &user) { m_lastLoginUser = user; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -66,6 +84,8 @@ namespace BlackCore
 
             BlackMisc::Network::CUrlList    m_dataFileUrls;   //!< Overall VATSIM data file / merely for bootstrapping the first time
             BlackMisc::Network::CServerList m_fsdServers;     //!< FSD test servers
+            BlackMisc::Network::CServerList m_voiceServers;   //!< voice servers
+            BlackMisc::Network::CUser       m_lastLoginUser;  //!< last login user
         };
 
         //! Trait for global setup data
@@ -89,6 +109,7 @@ Q_DECLARE_METATYPE(BlackCore::Data::CVatsimSetup)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CVatsimSetup, (
                                    attr(o.m_dataFileUrls),
                                    attr(o.m_fsdServers),
+                                   attr(o.m_voiceServers),
                                    attr(o.m_timestampMSecsSinceEpoch)
                                ))
 #endif // guard

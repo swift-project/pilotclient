@@ -10,6 +10,7 @@
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/application.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/server.h"
@@ -59,14 +60,12 @@ namespace BlackCore
 
     CServerList CVatsimDataFileReader::getVoiceServers() const
     {
-        QReadLocker rl(&this->m_lock);
-        return this->m_voiceServers;
+        return this->m_lastGoodSetup.getCopy().getVoiceServers();
     }
 
     CServerList CVatsimDataFileReader::getFsdServers() const
     {
-        QReadLocker rl(&this->m_lock);
-        return this->m_fsdServers;
+        return this->m_lastGoodSetup.getCopy().getFsdServers();
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns)
@@ -188,16 +187,16 @@ namespace BlackCore
             nwReply->close(); // close asap
 
             if (dataFileData.isEmpty()) return;
-            QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+            const QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
             if (lines.isEmpty()) { return; }
 
             // build on local vars for thread safety
-            CServerList     voiceServers;
-            CServerList     fsdServers;
-            CAtcStationList atcStations;
-            CSimulatedAircraftList   aircraft;
+            CServerList                         voiceServers;
+            CServerList                         fsdServers;
+            CAtcStationList                     atcStations;
+            CSimulatedAircraftList              aircraft;
             QMap<CCallsign, CVoiceCapabilities> voiceCapabilities;
-            QDateTime updateTimestampFromFile;
+            QDateTime                           updateTimestampFromFile;
 
             QStringList clientSectionAttributes;
             Section section = SectionNone;
@@ -219,7 +218,7 @@ namespace BlackCore
                     {
                         // ; !CLIENTS section
                         int i = currentLine.lastIndexOf(' ');
-                        QString attributes = currentLine.mid(i).trimmed();
+                        const QString attributes = currentLine.mid(i).trimmed();
                         clientSectionAttributes = attributes.split(':', QString::SkipEmptyParts);
                         section = SectionNone; // reset
                     }
@@ -235,16 +234,16 @@ namespace BlackCore
                 {
                 case SectionClients:
                     {
-                        QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes);
-                        CCallsign callsign = CCallsign(clientPartsMap["callsign"]);
-                        if (callsign.isEmpty()) break;
-                        BlackMisc::Network::CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
+                        const QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes);
+                        const CCallsign callsign = CCallsign(clientPartsMap["callsign"]);
+                        if (callsign.isEmpty()) { break; }
+                        const BlackMisc::Network::CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
                         const QString clientType = clientPartsMap["clienttype"].toLower();
                         if (clientType.isEmpty()) break; // sometimes type is empty
-                        double lat = clientPartsMap["latitude"].toDouble();
-                        double lng = clientPartsMap["longitude"].toDouble();
-                        double alt = clientPartsMap["altitude"].toDouble();
-                        CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
+                        const double lat = clientPartsMap["latitude"].toDouble();
+                        const double lng = clientPartsMap["longitude"].toDouble();
+                        const double alt = clientPartsMap["altitude"].toDouble();
+                        const CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
                         CCoordinateGeodetic position(lat, lng, -1);
                         CAltitude altitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
                         QString flightPlanRemarks = clientPartsMap["planned_remarks"];
@@ -263,7 +262,7 @@ namespace BlackCore
                         if (clientType.startsWith('p'))
                         {
                             // Pilot section
-                            double groundspeed = clientPartsMap["groundspeed"].toDouble();
+                            const double groundspeed = clientPartsMap["groundspeed"].toDouble();
                             CAircraftSituation situation(position, altitude);
                             situation.setGroundspeed(CSpeed(groundspeed, CSpeedUnit::kts()));
                             CSimulatedAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
@@ -298,7 +297,8 @@ namespace BlackCore
                         }
                         else
                         {
-                            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong client type");
+                            BLACK_VERIFY_X(false, Q_FUNC_INFO, "Wrong client type");
+                            break;
                         }
                     }
                     break;
@@ -306,9 +306,9 @@ namespace BlackCore
                     {
                         if (currentLine.contains("UPDATE"))
                         {
-                            QStringList updateParts = currentLine.replace(" ", "").split('=');
+                            const QStringList updateParts = currentLine.replace(" ", "").split('=');
                             if (updateParts.length() < 2) break;
-                            QString dts = updateParts.at(1).trimmed();
+                            const QString dts = updateParts.at(1).trimmed();
                             updateTimestampFromFile = QDateTime::fromString(dts, "yyyyMMddHHmmss");
                             updateTimestampFromFile.setOffsetFromUtc(0);
                             bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
@@ -319,7 +319,7 @@ namespace BlackCore
                 case SectionFsdServers:
                     {
                         // ident:hostname_or_IP:location:name:clients_connection_allowed:
-                        QStringList fsdServerParts = currentLine.split(':');
+                        const QStringList fsdServerParts = currentLine.split(':');
                         if (fsdServerParts.size() < 5) break;
                         if (!fsdServerParts.at(4).trimmed().contains('1')) break; // allowed?
                         QString description(fsdServerParts.at(2)); // part(3) could be added
@@ -330,7 +330,7 @@ namespace BlackCore
                 case SectionVoiceServers:
                     {
                         // hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
-                        QStringList voiceServerParts = currentLine.split(':');
+                        const QStringList voiceServerParts = currentLine.split(':');
                         if (voiceServerParts.size() < 3) break;
                         if (!voiceServerParts.at(3).trimmed().contains('1')) break; // allowed?
                         BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
@@ -351,9 +351,12 @@ namespace BlackCore
                 this->setUpdateTimestamp(updateTimestampFromFile);
                 this->m_aircraft = aircraft;
                 this->m_atcStations = atcStations;
-                this->m_voiceServers = voiceServers;
-                this->m_fsdServers = fsdServers;
                 this->m_voiceCapabilities = voiceCapabilities;
+                CVatsimSetup vs(this->m_lastGoodSetup.get());
+                vs.setVoiceServers(voiceServers);
+                vs.setFsdServers(fsdServers);
+                vs.setUtcTimestamp(updateTimestampFromFile);
+                this->m_lastGoodSetup.set(vs);
             }
 
             // warnings, if required
