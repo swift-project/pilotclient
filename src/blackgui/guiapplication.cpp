@@ -34,7 +34,7 @@ namespace BlackGui
 
     const BlackMisc::CLogCategoryList &CGuiApplication::getLogCategories()
     {
-        static const CLogCategoryList l(CApplication::getLogCategories().join( { CLogCategory::guiComponent() }));
+        static const CLogCategoryList l(CApplication::getLogCategories().join({ CLogCategory::guiComponent() }));
         return l;
     }
 
@@ -121,13 +121,70 @@ namespace BlackGui
         CApplication::exit(retcode);
     }
 
+    void CGuiApplication::ps_startupCompleted()
+    {
+        CApplication::ps_startupCompleted();
+        if (this->m_splashScreen)
+        {
+            this->m_splashScreen->close();
+            this->m_splashScreen.reset();
+        }
+    }
+
+    QString CGuiApplication::beautifyHelpMessage(const QString &helpText)
+    {
+        // just formatting Qt help message into HTML table
+        if (helpText.isEmpty()) { return ""; }
+        const QStringList lines(helpText.split('\n'));
+        QString html;
+        bool tableMode = false;
+        bool pendingTr = false;
+        for (const QString &l : lines)
+        {
+            QString lt(l.trimmed());
+            if (!tableMode && lt.startsWith("-"))
+            {
+                tableMode = true;
+                html += "<table>\n";
+            }
+            if (!tableMode)
+            {
+                html += l;
+                html += "<br>";
+            }
+            else
+            {
+                // in table mode
+                if (lt.startsWith("-"))
+                {
+                    if (pendingTr)
+                    {
+                        html += "</td></tr>\n";
+                    }
+                    html += "<tr><td>";
+                    static const QRegExp reg("[ ]{2,}");
+                    html += lt.replace(reg, "</td><td>");
+                    pendingTr = true;
+                }
+                else
+                {
+                    html += " ";
+                    html += l.simplified();
+                }
+            }
+        }
+        html += "</table>\n";
+        return html;
+    }
+
     void CGuiApplication::cmdLineErrorMessage(const QString &errorMessage) const
     {
         if (CProject::isRunningOnWindowsNtPlatform())
         {
+            const QString helpText(beautifyHelpMessageImpl(this->m_parser.helpText()));
             QMessageBox::warning(nullptr,
                                  QGuiApplication::applicationDisplayName(),
-                                 "<html><head/><body><h2>" + errorMessage + "</h2><pre>" + this->m_parser.helpText() + "</pre></body></html>");
+                                 "<html><head/><body><h2>" + errorMessage + "</h2>" + helpText + "</body></html>");
         }
         else
         {

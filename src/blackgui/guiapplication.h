@@ -29,6 +29,7 @@ namespace BlackGui
      *
      *  - style sheet handling
      *  - standard menus
+     *  - splash screen support
      *
      *  Simple example
      *  \snippet swiftlauncher/main.cpp CSwiftGuiStdApplication
@@ -137,6 +138,9 @@ namespace BlackGui
         QPixmap m_windowIcon;
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };            //!< window mode (flags: frameless ...)
+
+        //! Qt help message to formatted HTML
+        static QString beautifyHelpMessage(const QString &helpText);
     };
 } // ns
 
