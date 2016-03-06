@@ -388,6 +388,11 @@
         <file>icons/own/swift/swift16Database.png</file>
         <file>icons/own/swift/swiftNova64.png</file>
         <file>icons/own/swift/swift64.png</file>
+        <file>icons/own/swift/swiftCirclePilotClient1024.png</file>
+        <file>icons/own/swift/swiftCircle64.png</file>
+        <file>icons/own/swift/swiftCircle256.png</file>
+        <file>icons/own/swift/swiftCircle512.png</file>
+        <file>icons/own/swift/swiftCircle1024.png</file>
     </qresource>
     <qresource prefix="/qled">
         <file>icons/qled/circle_black.svg</file>

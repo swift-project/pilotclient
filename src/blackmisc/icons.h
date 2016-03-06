@@ -162,7 +162,8 @@ namespace BlackMisc
             StandardIconWrench16,
             Swift16,
             Swift24,
-            Swift48,
+            Swift64,
+            Swift1024,
             SwiftDatabase16,
             SwiftDatabase24,
             SwiftDatabase48,
@@ -420,7 +421,10 @@ namespace BlackMisc
         static const QPixmap &swift24();
 
         //! swift icon
-        static const QPixmap &swift48();
+        static const QPixmap &swift64();
+
+        //! swift icon
+        static const QPixmap &swift1024();
 
         //! swift icon / database
         static const QPixmap &swiftDatabase16();

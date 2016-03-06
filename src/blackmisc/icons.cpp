@@ -464,19 +464,25 @@ namespace BlackMisc
 
     const QPixmap &CIcons::swift16()
     {
-        static const QPixmap pm(swift48().scaled(16, 16));
+        static const QPixmap pm(swift64().scaled(16, 16));
         return pm;
     }
 
     const QPixmap &CIcons::swift24()
     {
-        static const QPixmap pm(":/own/icons/own/swift/swift24.png");
+        static const QPixmap pm(swift64().scaled(16, 16));
         return pm;
     }
 
-    const QPixmap &CIcons::swift48()
+    const QPixmap &CIcons::swift64()
     {
-        static const QPixmap pm(":/own/icons/own/swift/swift48.png");
+        static const QPixmap pm(":/own/icons/own/swift/swiftCircle64.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swift1024()
+    {
+        static const QPixmap pm(":/own/icons/own/swift/swiftCircle1024.png");
         return pm;
     }
 
@@ -1088,8 +1094,10 @@ namespace BlackMisc
             return swift16();
         case Swift24:
             return swift24();
-        case Swift48:
-            return swift48();
+        case Swift64:
+            return swift64();
+        case Swift1024:
+            return swift1024();
         case SwiftNova16:
             return swiftNova16();
         case SwiftNova24:
