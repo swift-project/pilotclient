@@ -97,8 +97,8 @@ namespace BlackMiscTest
 
         user1.m_value2.set(42);
         user2.slotFired();
-        QTest::ignoreMessage(QtCriticalMsg, QRegularExpression("-1337 is not valid"));
-        user1.m_value2.set(-1337);
+        auto status = user1.m_value2.set(-1337);
+        QVERIFY(status.isFailure());
         QVERIFY(! user1.slotFired());
         QVERIFY(! user2.slotFired());
         singleShotAndWait(&user2, [ & ] { QVERIFY(user2.m_value2.get() == 42); });
