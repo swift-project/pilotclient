@@ -87,6 +87,9 @@ namespace BlackCore
 
             this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions());
 
+            // startup done
+            connect(this, &CApplication::startUpCompleted, this, &CApplication::ps_startupCompleted);
+
             // notify when app goes down
             connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
         }
@@ -251,6 +254,11 @@ namespace BlackCore
             return this->getGlobalSetup().isDevelopment();
         }
         return false;
+    }
+
+    void CApplication::signalStartupAutomatically(bool signal)
+    {
+        this->m_signalStartup = signal;
     }
 
     QString CApplication::getEnvironmentInfoString(const QString &separator) const
@@ -536,7 +544,15 @@ namespace BlackCore
             this->m_started = this->asyncWebAndContextStart();
         }
         this->m_startUpCompleted = true;
-        emit this->startUpCompleted(this->m_started);
+        if (this->m_signalStartup)
+        {
+            emit this->startUpCompleted(this->m_started);
+        }
+    }
+
+    void CApplication::ps_startupCompleted()
+    {
+        // void
     }
 
     bool CApplication::asyncWebAndContextStart()
@@ -575,9 +591,9 @@ namespace BlackCore
         return l;
     }
 
-    // ---------------------------------------------------------------------------------
-    // Parsing
-    // ---------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------
+// Parsing
+// ---------------------------------------------------------------------------------
 
     bool CApplication::addParserOption(const QCommandLineOption &option)
     {
@@ -698,9 +714,9 @@ namespace BlackCore
         printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
     }
 
-    // ---------------------------------------------------------------------------------
-    // Contexts
-    // ---------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------
+// Contexts
+// ---------------------------------------------------------------------------------
 
     bool CApplication::supportsContexts() const
     {
@@ -770,9 +786,9 @@ namespace BlackCore
         return this->m_coreFacade->getIContextSimulator();
     }
 
-    // ---------------------------------------------------------------------------------
-    // Setup
-    // ---------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------
+// Setup
+// ---------------------------------------------------------------------------------
 
     CUrlList CApplication::getVatsimMetarUrls() const
     {

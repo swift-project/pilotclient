@@ -84,6 +84,32 @@ namespace BlackGui
         }
     }
 
+    void CGuiApplication::splashScreen(const QString &resource)
+    {
+        if (this->m_splashScreen)
+        {
+            // delete old one
+            this->m_splashScreen.reset();
+        }
+        if (!resource.isEmpty())
+        {
+            const QPixmap pm(resource);
+            this->splashScreen(pm);
+        }
+    }
+
+    void CGuiApplication::splashScreen(const QPixmap &pixmap)
+    {
+        if (this->m_splashScreen)
+        {
+            // delete old one
+            this->m_splashScreen.reset();
+        }
+        this->m_splashScreen.reset(new QSplashScreen(pixmap.scaled(256, 256)));
+        this->m_splashScreen->show();
+        this->processEventsToRefreshGui();
+    }
+
     void CGuiApplication::processEventsToRefreshGui() const
     {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -181,7 +207,7 @@ namespace BlackGui
     {
         if (CProject::isRunningOnWindowsNtPlatform())
         {
-            const QString helpText(beautifyHelpMessageImpl(this->m_parser.helpText()));
+            const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
             QMessageBox::warning(nullptr,
                                  QGuiApplication::applicationDisplayName(),
                                  "<html><head/><body><h2>" + errorMessage + "</h2>" + helpText + "</body></html>");

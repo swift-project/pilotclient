@@ -121,6 +121,7 @@ void SwiftGuiStd::init()
     // whether init has been completed
     this->setVisible(true);
 
+    sGui->startUpCompleted(true);
     this->m_init = true;
 }
 

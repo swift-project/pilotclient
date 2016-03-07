@@ -116,8 +116,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
-               <height>301</height>
+               <width>199</width>
+               <height>63</height>
               </rect>
              </property>
              <attribute name="label">
@@ -181,8 +181,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>341</width>
-               <height>309</height>
+               <width>277</width>
+               <height>222</height>
               </rect>
              </property>
              <attribute name="label">
@@ -406,8 +406,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
-               <height>301</height>
+               <width>283</width>
+               <height>198</height>
               </rect>
              </property>
              <attribute name="label">
@@ -502,8 +502,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
-               <height>301</height>
+               <width>98</width>
+               <height>88</height>
               </rect>
              </property>
              <attribute name="label">
@@ -602,7 +602,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <property name="icon">
                  <iconset resource="../blackmisc/blackmisc.qrc">
-                  <normaloff>:/own/icons/own/swift/swift64.png</normaloff>:/own/icons/own/swift/swift64.png</iconset>
+                  <normaloff>:/own/icons/own/swift/swiftCircle64.png</normaloff>:/own/icons/own/swift/swiftCircle64.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>

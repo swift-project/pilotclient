@@ -14,7 +14,8 @@
 using namespace BlackMisc;
 using namespace BlackCore;
 
-CSwiftGuiStdApplication::CSwiftGuiStdApplication() : CGuiApplication("swift pilot client GUI", CIcons::swift24())
+CSwiftGuiStdApplication::CSwiftGuiStdApplication() :
+    CGuiApplication("swift pilot client GUI", CIcons::swift1024())
 {
     this->addParserOption(this->m_cmdFacadeMode);
     this->addWindowModeOption();

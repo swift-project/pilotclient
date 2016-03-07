@@ -17,6 +17,8 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/blackguiexport.h"
 #include <QMenu>
+#include <QSplashScreen>
+#include <QScopedPointer>
 
 namespace BlackGui
 {
@@ -54,7 +56,7 @@ namespace BlackGui
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
-        CGuiApplication(const QString &applicationName = executable(), const QPixmap &icon = BlackMisc::CIcons::swift48());
+        CGuiApplication(const QString &applicationName = executable(), const QPixmap &icon = BlackMisc::CIcons::swift64());
 
         //! Destructor
         virtual ~CGuiApplication();
@@ -71,7 +73,13 @@ namespace BlackGui
         //! Window mode (window flags)
         CEnableForFramelessWindow::WindowMode getWindowMode() const;
 
-        //! Allow the GUI to refresh by processing events
+        //! Add a splash screen based on resource, empty means remove splash screen
+        void splashScreen(const QString &resource);
+
+        //! Add a splash screen based on resource, empty means remove splash screen
+        void splashScreen(const QPixmap &pixmap);
+
+        //! Allow the GUI to refresh by processing events, call the event loop
         void processEventsToRefreshGui() const;
 
         //! Reload style sheets
@@ -124,6 +132,10 @@ namespace BlackGui
         //! Style sheet changed
         void styleSheetsChanged();
 
+    protected slots:
+        //! Startup competed
+        virtual void ps_startupCompleted() override;
+
     protected:
         //! \name print messages generated during parsing / cmd handling
         //! @{
@@ -137,7 +149,8 @@ namespace BlackGui
     private:
         QPixmap m_windowIcon;
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
-        QCommandLineOption m_cmdWindowMode { "empty" };            //!< window mode (flags: frameless ...)
+        QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
+        QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
 
         //! Qt help message to formatted HTML
         static QString beautifyHelpMessage(const QString &helpText);

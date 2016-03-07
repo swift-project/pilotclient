@@ -27,7 +27,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             CInfoArea::initInfoArea(); // init base class
-            this->setWindowIcon(CIcons::swift48());
+            this->setWindowIcon(CIcons::swift64());
             connect(this->getLogComponent(), &CLogComponent::requestAttention, this, &CMainInfoAreaComponent::selectLog);
         }
 

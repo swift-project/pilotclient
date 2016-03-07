@@ -116,6 +116,9 @@ namespace BlackCore
         //! Running in dev.environment?
         bool isRunningInDeveloperEnvironment() const;
 
+        //! Signal startup automatically or individually
+        void signalStartupAutomatically(bool signal = false);
+
         //! Info string
         QString getEnvironmentInfoString(const QString &separator) const;
 
@@ -275,6 +278,9 @@ namespace BlackCore
         //! Setup read/syncronized
         void ps_setupSyncronized(bool success);
 
+        //! Startup completed
+        virtual void ps_startupCompleted();
+
     protected:
         //! Display help message
         virtual void cmdLineHelpMessage();
@@ -344,6 +350,7 @@ namespace BlackCore
         std::atomic<bool>                      m_shutdown { false };     //!< is being shutdown?
         bool                                   m_useContexts = false;    //!< use contexts
         bool                                   m_useWebData = false;     //!< use web data
+        bool                                   m_signalStartup = true;   //!< signal startup automatically
     };
 } // namespace
 
