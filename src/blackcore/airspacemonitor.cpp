@@ -618,6 +618,7 @@ namespace BlackCore
         Q_ASSERT_X(!m_serverSupportsNameQuery || remoteAircraft.hasValidRealName(), Q_FUNC_INFO, "invalid model data");
         Q_ASSERT_X(remoteAircraft.getCallsign() == remoteAircraft.getModel().getCallsign(), Q_FUNC_INFO, "wrong model callsign");
         emit this->readyForModelMatching(remoteAircraft);
+        this->logMatching(QString("Ready for matching %1 for with model type %2").arg(callsign.toQString()).arg(remoteAircraft.getModel().getModelTypeAsString()));
     }
 
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
@@ -786,7 +787,6 @@ namespace BlackCore
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
-
         if (!this->m_connected) { return; }
         if (aircraftIcaoDesignator.isEmpty() && airlineIcaoDesignator.isEmpty() && livery.isEmpty()) { return; }
 
@@ -804,17 +804,17 @@ namespace BlackCore
             model = m_modelCache[callsign];
         }
 
-        // already matched with DB?
+        // already matched with DB? Means we already have DB data in cache or existing model
         if (!model.canInitializeFromFsd()) { return; }
 
         // update model string if not yet existing
-        if (!model.hasModelString() && !modelString.isEmpty()) { model.setModelString(modelString); }
         if (model.getModelType() == CAircraftModel::TypeUnknown || model.getModelType() == CAircraftModel::TypeQueriedFromNetwork)
         {
             model.setModelType(type); // update type if no type yet
         }
 
         // we have no DB model yet, but do we have model string?
+        if (!model.hasModelString() && !modelString.isEmpty()) { model.setModelString(modelString); }
         if (model.hasModelString())
         {
             // if we find the model here we have a fully defined DB model
@@ -892,6 +892,13 @@ namespace BlackCore
                 this->m_modelCache.insert(callsign, model);
             }
         } // lock
+    }
+
+    void CAirspaceMonitor::logMatching(const QString &text) const
+    {
+        if (text.isEmpty()) { return; }
+        if (!this->m_logMatchingProcess) { return; }
+        CLogMessage(this).info(text);
     }
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)

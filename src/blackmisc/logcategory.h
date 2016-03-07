@@ -99,6 +99,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Matching
+        static const CLogCategory &matching()
+        {
+            static const CLogCategory cat { "swift.matching" };
+            return cat;
+        }
+
         //! Webservice with swift DB
         static const CLogCategory &swiftDbWebservice()
         {
@@ -121,6 +128,7 @@ namespace BlackMisc
                 download(),
                 webservice(),
                 mapping(),
+                matching(),
                 swiftDbWebservice(),
             };
             return cats;

@@ -130,6 +130,9 @@ namespace BlackCore
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
 
+        //! Logging for matching process (see why a model is matched like it is)
+        void logMatchingProcess(bool log) { this->m_logMatchingProcess = log; }
+
         //! Clear the contents
         void clear();
 
@@ -214,14 +217,15 @@ namespace BlackCore
         CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
 
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>                m_flightPlanCache;
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>           m_modelCache; //!< any model information recevived from network temporarily stored until it is "completed". Will be removed when aircraft is moved to aircraft in range
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>       m_flightPlanCache; //!< flight plan information retrieved any cached
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>  m_modelCache;      //!< any model information recevived from network temporarily stored until it is "completed". Will be removed when aircraft is moved to aircraft in range
 
         INetwork              *m_network                 = nullptr;
         CAirspaceAnalyzer     *m_analyzer                = nullptr; //!< owned analyzer
         bool                   m_serverSupportsNameQuery = false;   //!< not all servers support name query
         bool                   m_connected               = false;   //!< retrieve data
-        bool                   m_sendInterimPositions    = false;
+        bool                   m_sendInterimPositions    = false;   //!< send interim positions to other clients
+        bool                   m_logMatchingProcess      = false;   //!< shall we log. information about the matching process
         QTimer                 m_interimPositionUpdateTimer;
 
         // locks
@@ -241,11 +245,14 @@ namespace BlackCore
         //! Remove data from caches
         void removeFromAircraftCaches(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Schedule a ready for model matching
+        //! Schedule a "ready for model matching"
         void fireDelayedReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1, int delayMs = 2500);
 
-        //! FSD or icao query received
+        //! FSD or icao query received. Here we also replace the model with a model from DB if possible (reverse lookup)
         void icaoOrFsdDataReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery, const QString &modelString, BlackMisc::Simulation::CAircraftModel::ModelType type);
+
+        //! Log.matching
+        void logMatching(const QString &text) const;
 
         //! Store an aircraft situation
         //! \threadsafe
