@@ -246,7 +246,8 @@ namespace BlackMisc
         //! \private
         void valuesChanged(const BlackMisc::CValueCachePacket &values, QObject *changedBy);
 
-    private slots:
+    protected slots:
+        //! \private
         void changeValues(const BlackMisc::CValueCachePacket &values);
     };
 

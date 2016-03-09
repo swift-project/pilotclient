@@ -22,6 +22,34 @@
 
 namespace BlackMisc
 {
+    namespace Private
+    {
+        /*!
+         * Decorator for CValuePage which allows incoming remote changes to be queued to allow for more
+         * flexibility to control how the queue is popped compared to the usual Qt::QueuedConnection.
+         */
+        class BLACKMISC_EXPORT CDataPageQueue : public QObject
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor.
+            CDataPageQueue(CValuePage *parent) : QObject(parent), m_page(parent) {}
+
+            //! Add to the queue to synchronize with a change caused by another page.
+            //! \threadsafe
+            void queueValuesFromCache(const BlackMisc::CValueCachePacket &values, QObject *changedBy);
+
+            //! Synchronize with changes queued by queueValuesFromCache, if the mutex is not currently locked.
+            void trySetQueuedValuesFromCache();
+
+        private:
+            CValuePage *m_page = nullptr;
+            QList<std::pair<CValueCachePacket, QObject*>> m_queue;
+            QMutex m_mutex;
+        };
+    }
+
     class CDataCache;
 
     /*!
@@ -168,6 +196,8 @@ namespace BlackMisc
 
         void saveToStoreAsync(const BlackMisc::CValueCachePacket &values);
         void loadFromStoreAsync();
+
+        virtual void connectPage(Private::CValuePage *page) override;
 
         QFileSystemWatcher m_watcher;
         const QString m_revisionFileName { persistentStore() + "/.rev" };

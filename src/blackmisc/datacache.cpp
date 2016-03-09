@@ -14,10 +14,14 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/atomicfile.h"
 #include <QStandardPaths>
+#include <QTimer>
 #include <utility>
 
 namespace BlackMisc
 {
+
+    using Private::CValuePage;
+    using Private::CDataPageQueue;
 
     class CDataCacheRevision::LockGuard
     {
@@ -147,6 +151,39 @@ namespace BlackMisc
         {
             m_serializer.loadFromStore(baseline);
         });
+    }
+
+    void CDataCache::connectPage(CValuePage *page)
+    {
+        auto *queue = new CDataPageQueue(page);
+        connect(page, &CValuePage::valuesWantToCache, this, &CDataCache::changeValues);
+        connect(this, &CDataCache::valuesChanged, queue, &CDataPageQueue::queueValuesFromCache, Qt::DirectConnection);
+
+        auto *timer = new QTimer(page);
+        connect(timer, &QTimer::timeout, queue, &CDataPageQueue::trySetQueuedValuesFromCache);
+        timer->start(0);
+    }
+
+    void CDataPageQueue::queueValuesFromCache(const CValueCachePacket &values, QObject *changedBy)
+    {
+        QMutexLocker lock(&m_mutex);
+        m_queue.push_back(std::make_pair(values, changedBy));
+    }
+
+    void CDataPageQueue::trySetQueuedValuesFromCache()
+    {
+        bool locked = m_mutex.tryLock(0);
+        if (locked)
+        {
+            decltype(m_queue) queue;
+            qSwap(m_queue, queue);
+            m_mutex.unlock();
+
+            for (const auto &pair : queue)
+            {
+                m_page->setValuesFromCache(pair.first, pair.second);
+            }
+        }
     }
 
     CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) :
