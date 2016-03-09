@@ -365,6 +365,12 @@ namespace BlackMisc
         }
     }
 
+    void CValueCache::connectPage(CValuePage *page)
+    {
+        connect(page, &CValuePage::valuesWantToCache, this, &CValueCache::changeValues);
+        connect(this, &CValueCache::valuesChanged, page, &CValuePage::setValuesFromCache);
+    }
+
 
     ////////////////////////////////
     // Private :: CValuePage
@@ -374,8 +380,7 @@ namespace BlackMisc
         QObject(parent),
         m_cache(cache)
     {
-        connect(this, &CValuePage::valuesWantToCache, cache, &CValueCache::changeValues);
-        connect(cache, &CValueCache::valuesChanged, this, &CValuePage::setValuesFromCache);
+        m_cache->connectPage(this);
     }
 
     CValuePage &CValuePage::getPageFor(QObject *parent, CValueCache *cache)

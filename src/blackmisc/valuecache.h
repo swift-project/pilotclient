@@ -240,6 +240,8 @@ namespace BlackMisc
         Element &getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos);
         std::tuple<CVariant, qint64, bool> getValue(const QString &key);
 
+        virtual void connectPage(Private::CValuePage *page);
+
     signals:
         //! \private
         void valuesChanged(const BlackMisc::CValueCachePacket &values, QObject *changedBy);
