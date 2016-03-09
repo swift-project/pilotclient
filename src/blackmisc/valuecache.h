@@ -54,12 +54,6 @@ namespace BlackMisc
         //! Insert values from another packet.
         void insert(const CValueCachePacket &other) { CDictionary::insert(other); }
 
-        //! Add a page owner and key to the list of inhibited notifications.
-        void inhibit(QObject *pageOwner, const QString &key) { m_inhibitions.push_back(std::make_pair(reinterpret_cast<quintptr>(pageOwner), key)); }
-
-        //! Query whether a particular owner/key pair should have its notification inhibited.
-        bool isInhibited(QObject *pageOwner, const QString &key) const { return m_inhibitions.contains(std::make_pair(reinterpret_cast<quintptr>(pageOwner), key)); }
-
         //! Discard timestamps and return as variant map.
         CVariantMap toVariantMap() const;
 
@@ -93,7 +87,6 @@ namespace BlackMisc
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CValueCachePacket)
         bool m_saved = false;
-        CSequence<std::pair<quintptr, QString>> m_inhibitions;
     };
 
     /*!
@@ -368,6 +361,6 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CValueCachePacket)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CValueCachePacket, (attr(o.m_saved), attr(o.m_inhibitions)))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CValueCachePacket, (attr(o.m_saved)))
 
 #endif

@@ -78,7 +78,6 @@ namespace BlackMisc
     {
         MetaType::registerMetadata();
         qDBusRegisterMetaType<value_type>();
-        qDBusRegisterMetaType<decltype(m_inhibitions)::value_type>();
     }
 
     ////////////////////////////////
@@ -493,7 +492,7 @@ namespace BlackMisc
 
         QList<NotifySlot> notifySlots;
 
-        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString & key, const ElementPtr & element, CValueCachePacket::const_iterator it)
+        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString &, const ElementPtr & element, CValueCachePacket::const_iterator it)
         {
             if (changedBy == this) // round trip
             {
@@ -508,7 +507,7 @@ namespace BlackMisc
                     element->m_value.uniqueWrite() = it.value();
                     element->m_timestamp = it.timestamp();
                     element->m_saved = values.isSaved();
-                    if (element->m_notifySlot && ! notifySlots.contains(element->m_notifySlot) && ! values.isInhibited(parent(), key))
+                    if (element->m_notifySlot && ! notifySlots.contains(element->m_notifySlot))
                     {
                         notifySlots.push_back(element->m_notifySlot);
                     }

@@ -192,19 +192,9 @@ namespace BlackMisc
     {
         if (! m_deferredChanges.isEmpty())
         {
-            auto promises = m_cache->m_revision.loadedValuePromises();
-            for (const auto &tuple : promises)
-            {
-                QObject *pageOwner = nullptr;
-                QString key;
-                std::tie(pageOwner, key, std::ignore) = tuple;
-
-                m_deferredChanges.inhibit(pageOwner, key); // don't fire notification slots for objects waiting on syncLoad futures
-            }
-
             m_deferredChanges.setSaved();
             emit valuesLoadedFromStore(m_deferredChanges, CIdentifier::anonymous());
-            deliverPromises(std::move(promises));
+            deliverPromises(m_cache->m_revision.loadedValuePromises());
             m_deferredChanges.clear();
         }
     }
