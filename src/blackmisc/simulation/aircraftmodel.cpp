@@ -220,7 +220,7 @@ namespace BlackMisc
             case IndexName:
                 return this->m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
             case IndexCallsign:
-                break;
+                return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved());
             case IndexFileName:
                 return this->m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
             case IndexModelType:
