@@ -67,6 +67,7 @@ namespace BlackMisc
         if (! QFile::exists(m_revisionFileName)) { QFile(m_revisionFileName).open(QFile::WriteOnly); }
         m_watcher.addPath(m_revisionFileName);
         m_serializer.start();
+        m_serializer.loadFromStore({}, false, true); // load pinned values
         loadFromStoreAsync();
     }
 
@@ -111,6 +112,11 @@ namespace BlackMisc
     void CDataCache::renewTimestamp(const QString &key, qint64 timestamp)
     {
         QTimer::singleShot(0, &m_serializer, [this, key, timestamp] { m_revision.overrideTimestamp(key, timestamp); });
+    }
+
+    void CDataCache::pinValue(const QString &key)
+    {
+        QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.pinValue(key); });
     }
 
     QString lockFileError(const QLockFile &lock)
@@ -226,9 +232,9 @@ namespace BlackMisc
         applyDeferredChanges(); // apply changes which we grabbed at the last minute above
     }
 
-    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer)
+    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer, bool pinsOnly)
     {
-        auto lock = m_cache->m_revision.beginUpdate(baseline.toTimestampMap());
+        auto lock = m_cache->m_revision.beginUpdate(baseline.toTimestampMap(), ! pinsOnly, pinsOnly);
         if (lock && m_cache->m_revision.isPendingRead())
         {
             CValueCachePacket newValues;
@@ -263,7 +269,7 @@ namespace BlackMisc
         });
     }
 
-    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid)
+    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid, bool pinsOnly)
     {
         QMutexLocker lock(&m_mutex);
 
@@ -317,6 +323,15 @@ namespace BlackMisc
                     if (m_pendingWrite) { return guard; }
                     return {};
                 }
+
+                if (pinsOnly)
+                {
+                    auto pins = fromJson(json.value("pins").toArray());
+                    for (const auto &key : m_timestamps.keys())
+                    {
+                        if (! pins.contains(key)) { m_timestamps.remove(key); }
+                    }
+                }
             }
             else if (revisionFile.size() > 0)
             {
@@ -357,6 +372,7 @@ namespace BlackMisc
         json.insert("uuid", m_uuid.toString());
         json.insert("timestamps", toJson(timestamps));
         json.insert("ttl", toJson(m_timesToLive));
+        json.insert("pins", toJson(m_pinnedValues));
         revisionFile.write(QJsonDocument(json).toJson());
     }
 
@@ -465,6 +481,13 @@ namespace BlackMisc
         m_lockFile.unlock();
     }
 
+    void CDataCacheRevision::pinValue(const QString &key)
+    {
+        Q_ASSERT(! m_updateInProgress);
+
+        m_pinnedValues.insert(key);
+    }
+
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)
     {
         QJsonObject result;
@@ -481,6 +504,26 @@ namespace BlackMisc
         for (auto it = timestamps.begin(); it != timestamps.end(); ++it)
         {
             result.insert(it.key(), static_cast<qint64>(it.value().toDouble()));
+        }
+        return result;
+    }
+
+    QJsonArray CDataCacheRevision::toJson(const QSet<QString> &pins)
+    {
+        QJsonArray result;
+        for (auto it = pins.begin(); it != pins.end(); ++it)
+        {
+            result.push_back(*it);
+        }
+        return result;
+    }
+
+    QSet<QString> CDataCacheRevision::fromJson(const QJsonArray &pins)
+    {
+        QSet<QString> result;
+        for (auto it = pins.begin(); it != pins.end(); ++it)
+        {
+            result.insert(it->toString());
         }
         return result;
     }

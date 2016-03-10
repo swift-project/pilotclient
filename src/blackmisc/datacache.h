@@ -78,7 +78,8 @@ namespace BlackMisc
         //! Return value can be converted to bool, false means update is not started (error, or already up-to-date).
         //! \param timestamps Current in-memory timestamps, to be compared with the on-disk ones.
         //! \param updateUuid Whether to prepare for an actual update, or just interrograte whether one is needed.
-        LockGuard beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid = true);
+        //! \param pinsOnly Only load pinned values.
+        LockGuard beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid = true, bool pinsOnly = false);
 
         //! During update, writes a new revision file with new timestamps.
         void writeNewRevision(const QMap<QString, qint64> &timestamps);
@@ -110,6 +111,9 @@ namespace BlackMisc
         //! Causes the new timestamp to be written to the revision file.
         void overrideTimestamp(const QString &key, qint64 timestamp);
 
+        //! Set the flag which will cause the value to be pre-loaded.
+        void pinValue(const QString &key);
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -120,10 +124,13 @@ namespace BlackMisc
         QUuid m_uuid;
         QMap<QString, qint64> m_timestamps;
         QMap<QString, qint64> m_timesToLive;
+        QSet<QString> m_pinnedValues;
         std::vector<std::promise<void>> m_promises;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
         static QMap<QString, qint64> fromJson(const QJsonObject &timestamps);
+        static QJsonArray toJson(const QSet<QString> &pins);
+        static QSet<QString> fromJson(const QJsonArray &pins);
     };
 
     /*!
@@ -145,8 +152,9 @@ namespace BlackMisc
         //! Also called by saveToStore, to ensure that remote changes to unrelated values are not lost.
         //! \param baseline A snapshot of the currently loaded values, taken when the load is queued.
         //! \param defer Whether to defer applying the changes. Used when called by saveToStore.
+        //! \param pinsOnly Only load pinned values.
         //! \return Usually ignored, but can be held in order to retain the revision file lock.
-        CDataCacheRevision::LockGuard loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer = false);
+        CDataCacheRevision::LockGuard loadFromStore(const BlackMisc::CValueCachePacket &baseline, bool defer = false, bool pinsOnly = false);
 
     signals:
         //! Signal back to the cache when values have been loaded.
@@ -194,6 +202,9 @@ namespace BlackMisc
         //! Method used for implementing timestamp renewal.
         void renewTimestamp(const QString &key, qint64 timestamp);
 
+        //! Method used for implementing pinning values.
+        void pinValue(const QString &key);
+
     private:
         CDataCache();
 
@@ -231,6 +242,7 @@ namespace BlackMisc
             CData::CCached(CDataCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot)
         {
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(Trait::key(), Trait::timeToLive()); }
+            if (Trait::isPinned()) { CDataCache::instance()->pinValue(Trait::key()); }
         }
 
         //! Reset the data to its default value.
@@ -281,6 +293,10 @@ namespace BlackMisc
         //! Number of milliseconds after which cached value becomes stale.
         //! Default is -1 which means value never becomes stale.
         static int timeToLive() { return -1; }
+
+        //! If true, then value will be synchronously loaded when CDataCache is constructed.
+        //! Good for small, important values; bad for large ones.
+        static bool isPinned() { return false; }
 
         //! Deleted default constructor.
         CDataTrait() = delete;
