@@ -57,9 +57,16 @@ namespace BlackMisc
             //! \param slot Optional member function of parent, will be called when value changes.
             Element &createElement(const QString &key, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot);
 
+            //! True if the currently paged value is a valid instance of the given type.
+            //! \threadsafe
+            bool isValid(const Element &element, int typeId) const;
+
+            //! Read the currently paged value corresponding to the element's key.
+            const CVariant &getValue(const Element &element) const;
+
             //! Read the currently paged value corresponding to the element's key.
             //! \threadsafe
-            const CVariant &getValue(const Element &element) const;
+            CVariant getValueCopy(const Element &element) const;
 
             //! Write the value corresponding to the element's key and begin synchronizing it to any other pages.
             CStatusMessage setValue(Element &element, const CVariant &value, qint64 timestamp, bool save = false);

@@ -422,7 +422,20 @@ namespace BlackMisc
         return element;
     }
 
+    bool CValuePage::isValid(const Element &element, int typeId) const
+    {
+        auto reader = element.m_value.read();
+        return reader->isValid() && reader->userType() == typeId;
+    }
+
     const CVariant &CValuePage::getValue(const Element &element) const
+    {
+        Q_ASSERT(QThread::currentThread() == thread());
+
+        return element.m_value.read();
+    }
+
+    CVariant CValuePage::getValueCopy(const Element &element) const
     {
         return element.m_value.read();
     }

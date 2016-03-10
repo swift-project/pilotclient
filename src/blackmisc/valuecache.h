@@ -292,8 +292,11 @@ namespace BlackMisc
         {}
 
         //! Read the current value.
-        //! \threadsafe
         const T &get() const { static const T empty {}; return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty); }
+
+        //! Get a copy of the current value.
+        //! \threadsafe
+        T getCopy() const { return isValid() ? getVariantCopy().template value<T>() : T{}; }
 
         //! Write a new value. Must be called from the thread in which the owner lives.
         CStatusMessage set(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp); }
@@ -328,7 +331,8 @@ namespace BlackMisc
         static Private::CValuePage::NotifySlot slot_cast(F slot) { return static_cast<Private::CValuePage::NotifySlot>(slot); }
 
         const QVariant &getVariant() const { return m_page.getValue(m_element).getQVariant(); }
-        bool isValid() const { return getVariant().isValid() && getVariant().userType() == qMetaTypeId<T>(); }
+        QVariant getVariantCopy() const { return m_page.getValueCopy(m_element).getQVariant(); }
+        bool isValid() const { return m_page.isValid(m_element, qMetaTypeId<T>()); }
 
         Private::CValuePage &m_page;
         Private::CValuePage::Element &m_element;
