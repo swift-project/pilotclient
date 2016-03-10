@@ -43,6 +43,9 @@ namespace BlackMisc
             //! Synchronize with changes queued by queueValuesFromCache, if the mutex is not currently locked.
             void trySetQueuedValuesFromCache();
 
+            //! Synchronize with one specific change in the queue, leave the rest for later.
+            void setQueuedValueFromCache(const QString &key);
+
         private:
             CValuePage *m_page = nullptr;
             QList<std::pair<CValueCachePacket, QObject*>> m_queue;
@@ -96,10 +99,10 @@ namespace BlackMisc
         bool isNewerValueAvailable(const QString &key, qint64 timestamp);
 
         //! Return a future which will be made ready when the value is loaded. Future is invalid if value is not loading.
-        std::future<CVariant> promiseLoadedValue(QObject *pageOwner, const QString &key, qint64 currentTimestamp);
+        std::future<void> promiseLoadedValue(const QString &key, qint64 currentTimestamp);
 
         //! Returns (by move) the container of promises to load values.
-        std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> loadedValuePromises();
+        std::vector<std::promise<void>> loadedValuePromises();
 
         //! Set TTL value that will be written to the revision file.
         void setTimeToLive(const QString &key, int ttl);
@@ -117,7 +120,7 @@ namespace BlackMisc
         QUuid m_uuid;
         QMap<QString, qint64> m_timestamps;
         QMap<QString, qint64> m_timesToLive;
-        std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> m_promises;
+        std::vector<std::promise<void>> m_promises;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
         static QMap<QString, qint64> fromJson(const QJsonObject &timestamps);
@@ -152,7 +155,7 @@ namespace BlackMisc
     private:
         const QString &persistentStore() const;
         void applyDeferredChanges();
-        void deliverPromises(std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>>);
+        void deliverPromises(std::vector<std::promise<void>>);
 
         CDataCache *const m_cache = nullptr;
         QUuid m_revision;
@@ -182,8 +185,8 @@ namespace BlackMisc
         //! Return all files where data may be stored.
         QStringList enumerateStore() const;
 
-        //! Method used for implementing CData::syncLoad.
-        std::future<CVariant> syncLoad(QObject *pageOwner, const QString &key);
+        //! Method used for implementing CData::synchronize.
+        bool synchronize(const QString &key);
 
         //! Method used for implementing TTL.
         void setTimeToLive(const QString &key, int ttl);
@@ -225,8 +228,7 @@ namespace BlackMisc
         //!             Must be a void, non-const member function of the owner.
         template <typename T>
         CData(T *owner, NotifySlot<T> slot = nullptr) :
-            CData::CCached(CDataCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot),
-            m_owner(owner)
+            CData::CCached(CDataCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot)
         {
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(Trait::key(), Trait::timeToLive()); }
         }
@@ -243,15 +245,17 @@ namespace BlackMisc
         //! Don't change the value, but write a new timestamp, to extend the life of the value.
         void renewTimestamp(qint64 timestamp) { return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp); }
 
-        //! Return a future providing the value. If the value is still loading, the future will wait for it.
-        //! If the value is not present, the variant is null. Bypasses async get and inhibits notification slot.
-        std::future<CVariant> syncLoad() { return CDataCache::instance()->syncLoad(m_owner, this->getKey()); }
+        //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
+        void synchronize()
+        {
+            auto *queue = this->m_page.template findChild<Private::CDataPageQueue *>();
+            Q_ASSERT(queue);
+            CDataCache::instance()->synchronize(this->getKey());
+            queue->setQueuedValueFromCache(this->getKey());
+        }
 
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
-
-    private:
-        QObject *m_owner = nullptr;
     };
 
     /*!

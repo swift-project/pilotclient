@@ -60,6 +60,9 @@ namespace BlackMisc
         //! Discard values and return as map of timestamps.
         QMap<QString, qint64> toTimestampMap() const;
 
+        //! Remove value matching the given key, and return it in a separate packet.
+        CValueCachePacket takeByKey(const QString &key);
+
         //! \copydoc BlackMisc::Mixin::MetaType::registerMetadata
         static void registerMetadata();
 
@@ -330,8 +333,9 @@ namespace BlackMisc
         QVariant getVariantCopy() const { return m_page.getValueCopy(m_element).getQVariant(); }
         bool isValid() const { return m_page.isValid(m_element, qMetaTypeId<T>()); }
 
-        Private::CValuePage &m_page;
-        Private::CValuePage::Element &m_element;
+    protected:
+        Private::CValuePage &m_page; //!< \private
+        Private::CValuePage::Element &m_element; //!< \private
     };
 
     /*!

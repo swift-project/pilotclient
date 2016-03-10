@@ -74,6 +74,14 @@ namespace BlackMisc
         return result;
     }
 
+    CValueCachePacket CValueCachePacket::takeByKey(const QString &key)
+    {
+        auto copy = *this;
+        remove(key);
+        copy.removeByKeyIf([ = ](const QString &key2) { return key2 != key; });
+        return copy;
+    }
+
     void CValueCachePacket::registerMetadata()
     {
         MetaType::registerMetadata();

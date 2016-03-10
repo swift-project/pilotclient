@@ -92,19 +92,15 @@ namespace BlackMisc
         return enumerateFiles(persistentStore());
     }
 
-    std::future<CVariant> CDataCache::syncLoad(QObject *pageOwner, const QString &key)
+    bool CDataCache::synchronize(const QString &key)
     {
-        auto future = m_revision.promiseLoadedValue(pageOwner, key, getTimestampSync(key));
+        auto future = m_revision.promiseLoadedValue(key, getTimestampSync(key));
         if (future.valid())
         {
-            return future;
+            future.wait();
+            return true;
         }
-        else // value is not awaiting load, so immediately return the current value
-        {
-            std::promise<CVariant> p;
-            p.set_value(getValueSync(key));
-            return p.get_future();
-        }
+        return false;
     }
 
     void CDataCache::setTimeToLive(const QString &key, int ttl)
@@ -186,6 +182,25 @@ namespace BlackMisc
         }
     }
 
+    void CDataPageQueue::setQueuedValueFromCache(const QString &key)
+    {
+        QMutexLocker lock(&m_mutex);
+
+        decltype(m_queue) filtered;
+        for (auto &pair : m_queue)
+        {
+            if (pair.first.contains(key))
+            {
+                filtered.push_back({ pair.first.takeByKey(key), pair.second });
+            }
+        }
+        lock.unlock();
+        for (const auto &pair : filtered)
+        {
+            m_page->setValuesFromCache(pair.first, pair.second);
+        }
+    }
+
     CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) :
         CContinuousWorker(owner),
         m_cache(owner),
@@ -236,19 +251,14 @@ namespace BlackMisc
         }
     }
 
-    void CDataCacheSerializer::deliverPromises(std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> i_promises)
+    void CDataCacheSerializer::deliverPromises(std::vector<std::promise<void>> i_promises)
     {
-        auto changes = m_deferredChanges;
         auto promises = std::make_shared<decltype(i_promises)>(std::move(i_promises)); // \todo use C++14 lambda init-capture
-        QTimer::singleShot(0, Qt::PreciseTimer, this, [this, changes, promises]
+        QTimer::singleShot(0, Qt::PreciseTimer, this, [this, promises]
         {
-            for (auto &tuple : *promises)
+            for (auto &promise : *promises)
             {
-                QString key;
-                std::promise<CVariant> promise;
-                std::tie(std::ignore, key, promise) = std::move(tuple);
-
-                promise.set_value(changes.value(key).first);
+                promise.set_value();
             }
         });
     }
@@ -391,21 +401,21 @@ namespace BlackMisc
         return (m_updateInProgress || beginUpdate({{ key, timestamp }}, false)) && m_timestamps.contains(key);
     }
 
-    std::future<CVariant> CDataCacheRevision::promiseLoadedValue(QObject *pageOwner, const QString &key, qint64 currentTimestamp)
+    std::future<void> CDataCacheRevision::promiseLoadedValue(const QString &key, qint64 currentTimestamp)
     {
         QMutexLocker lock(&m_mutex);
 
         if (isNewerValueAvailable(key, currentTimestamp))
         {
-            std::promise<CVariant> promise;
+            std::promise<void> promise;
             auto future = promise.get_future();
-            m_promises.emplace_back(pageOwner, key, std::move(promise));
+            m_promises.push_back(std::move(promise));
             return future;
         }
         return {};
     }
 
-    std::vector<std::tuple<QObject *, QString, std::promise<CVariant>>> CDataCacheRevision::loadedValuePromises()
+    std::vector<std::promise<void>> CDataCacheRevision::loadedValuePromises()
     {
         QMutexLocker lock(&m_mutex);
 
