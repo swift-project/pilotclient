@@ -9,6 +9,7 @@
 
 #include "aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
 
@@ -23,12 +24,8 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-            CAircraftCfgParser::CAircraftCfgParser() { }
-
-            CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes) :
-                IAircraftModelLoader(simInfo),
-                m_rootDirectory(rootDirectory),
-                m_excludedDirectories(exludes)
+            CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &excludeDirs) :
+                IAircraftModelLoader(simInfo, rootDirectory, excludeDirs)
             { }
 
             std::unique_ptr<CAircraftCfgParser> CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo)
@@ -64,15 +61,6 @@ namespace BlackMisc
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
             }
 
-            bool CAircraftCfgParser::changeRootDirectory(const QString &directory)
-            {
-                if (m_rootDirectory == directory) { return false; }
-                if (directory.isEmpty() || !existsDir(directory)) { return false; }
-
-                m_rootDirectory = directory;
-                return true;
-            }
-
             CPixmap CAircraftCfgParser::iconForModel(const QString &modelString, CStatusMessage &statusMessage) const
             {
                 static const CPixmap empty {};
@@ -101,13 +89,13 @@ namespace BlackMisc
                 return empty;
             }
 
-            void CAircraftCfgParser::startLoading(LoadMode mode)
+            void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode)
             {
-                if (mode == ModeBackground)
+                if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
-                    auto rootDirectory = m_rootDirectory;
-                    auto excludedDirectories = m_excludedDirectories;
+                    const QString rootDirectory(m_rootDirectory); // copy
+                    const QStringList excludedDirectories(m_excludedDirectories); // copy
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
                                      [this, rootDirectory, excludedDirectories]()
                     {
@@ -117,13 +105,18 @@ namespace BlackMisc
                     });
                     m_parserWorker->thenWithResult<std::pair<CAircraftCfgEntriesList, bool>>(this, [this](const auto &pair)
                     {
-                        if (pair.second) { this->updateCfgEntriesList(pair.first); }
+                        if (pair.second)
+                        {
+                            this->updateCfgEntriesList(pair.first);
+                            this->setModelsInCache(pair.first.toAircraftModelList());
+                        }
                     });
                 }
-                else if (mode == ModeBlocking)
+                else if (mode == LoadDirectly)
                 {
                     bool ok;
-                    m_parsedCfgEntriesList = performParsing(m_rootDirectory, m_excludedDirectories, &ok);
+                    this->m_parsedCfgEntriesList = performParsing(m_rootDirectory, m_excludedDirectories, &ok);
+                    this->setModelsInCache(this->m_parsedCfgEntriesList.toAircraftModelList());
                     emit loadingFinished(ok);
                 }
             }
@@ -133,16 +126,91 @@ namespace BlackMisc
                 return !m_parserWorker || m_parserWorker->isFinished();
             }
 
-            CAircraftModelList CAircraftCfgParser::getAircraftModels() const
+            QDateTime CAircraftCfgParser::getCacheTimestamp() const
             {
-                return getAircraftCfgEntriesList().toAircraftModelList(this->m_simulatorInfo);
+                if (this->m_simulatorInfo.fsx())
+                {
+                    return m_modelCacheFsx.getTimestamp();
+                }
+                else if (this->m_simulatorInfo.fs9())
+                {
+                    return m_modelCacheFs9.getTimestamp();
+                }
+                else if (this->m_simulatorInfo.p3d())
+                {
+                    return m_modelCacheP3D.getTimestamp();
+                }
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
+                return QDateTime();
             }
 
+            bool CAircraftCfgParser::areModelFilesUpdated() const
+            {
+                const QDateTime cacheTs(getCacheTimestamp());
+                if (!cacheTs.isValid()) { return true; }
+                //! \todo KB we cannot use the exclude dirs, a minor disadvantege. Also wonder if it was better to parse a QStringList ofr wildcard
+                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, "*.cfg");
+            }
+
+            bool CAircraftCfgParser::hasCachedData() const
+            {
+                if (this->m_simulatorInfo.fsx())
+                {
+                    return !m_modelCacheFsx.get().isEmpty();
+                }
+                else if (this->m_simulatorInfo.fs9())
+                {
+                    return !m_modelCacheFs9.get().isEmpty();
+                }
+                else if (this->m_simulatorInfo.p3d())
+                {
+                    return !m_modelCacheP3D.get().isEmpty();
+                }
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
+                return false;
+            }
+
+            const CAircraftModelList &CAircraftCfgParser::getAircraftModels() const
+            {
+                static const CAircraftModelList empty;
+                if (this->m_simulatorInfo.fsx())
+                {
+                    return m_modelCacheFsx.get();
+                }
+                else if (this->m_simulatorInfo.fs9())
+                {
+                    return m_modelCacheFs9.get();
+                }
+                else if (this->m_simulatorInfo.p3d())
+                {
+                    return m_modelCacheP3D.get();
+                }
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
+                return empty;
+            }
 
             void CAircraftCfgParser::updateCfgEntriesList(const CAircraftCfgEntriesList &cfgEntriesList)
             {
                 m_parsedCfgEntriesList = cfgEntriesList;
                 emit loadingFinished(true);
+            }
+
+            CStatusMessage CAircraftCfgParser::setModelsInCache(const CAircraftModelList &models)
+            {
+                if (this->m_simulatorInfo.fsx())
+                {
+                    return m_modelCacheFsx.set(models);
+                }
+                else if (this->m_simulatorInfo.fs9())
+                {
+                    return m_modelCacheFs9.set(models);
+                }
+                else if (this->m_simulatorInfo.p3d())
+                {
+                    return m_modelCacheP3D.set(models);
+                }
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
+                return CStatusMessage(this, CStatusMessage::SeverityError, "Wrong simulator type");
             }
 
             CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok)
@@ -205,7 +273,7 @@ namespace BlackMisc
                         // remark: in a 1st version I have used QSettings to parse to file as ini file
                         // unfortunately some files are malformed which could end up in wrong data
 
-                        QString fileName = file.absoluteFilePath();
+                        const QString fileName = file.absoluteFilePath();
                         QFile file(fileName);
                         if (!file.open(QFile::ReadOnly | QFile::Text))
                         {
@@ -333,14 +401,6 @@ namespace BlackMisc
                 // normally reached when no aircraft.cfg is found
                 *ok = true;
                 return result;
-            }
-
-            bool CAircraftCfgParser::existsDir(const QString &directory) const
-            {
-                if (directory.isEmpty()) { return false; }
-                QDir dir(directory);
-                //! \todo not available network dir can make this hang here
-                return dir.exists();
             }
 
             QString CAircraftCfgParser::fixedStringContent(const QSettings &settings, const QString &key)

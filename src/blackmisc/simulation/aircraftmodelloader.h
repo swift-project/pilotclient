@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/pixmap.h"
 #include <QObject>
 #include <atomic>
@@ -33,23 +34,45 @@ namespace BlackMisc
 
         public:
             //! Parser mode
-            enum LoadMode
+            enum LoadModeFlag
             {
-                ModeBlocking,
-                ModeBackground
+                NotSet            = 0,
+                LoadDirectly      = 1 << 0,   //!< load syncronously (blocking), normally for testing
+                LoadInBackground  = 1 << 1,   //!< load in background, asnycronously
+                CacheUntilNewer   = 1 << 2,   //!< use cache until newer data re available
+                CacheFirst        = 1 << 3,   //!< always use cache (if it has data)
+                CacheSkipped      = 1 << 4,   //!< ignore cache
+                CacheOnly         = 1 << 5,   //!< force ignoring the cache
+                Default           = LoadInBackground | CacheFirst //!< default mode
             };
+            Q_DECLARE_FLAGS(LoadMode, LoadModeFlag)
 
             //! Destructor
             virtual ~IAircraftModelLoader();
 
-            //! Start the loading process
-            virtual void startLoading(LoadMode mode = ModeBackground) = 0;
+            //! Start the loading process from disk
+            void startLoading(LoadMode mode = Default);
+
+            //! Change the directory
+            bool changeRootDirectory(const QString &directory);
+
+            //! Current root directory
+            QString getRootDirectory() const { return this->m_rootDirectory; }
 
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
 
-            //! The models loaded
-            virtual BlackMisc::Simulation::CAircraftModelList getAircraftModels() const = 0;
+            //! The loaded models
+            virtual const BlackMisc::Simulation::CAircraftModelList &getAircraftModels() const = 0;
+
+            //! Cache timestamp
+            virtual QDateTime getCacheTimestamp() const = 0;
+
+            //! Model files updated?
+            virtual bool areModelFilesUpdated() const = 0;
+
+            //! Any cached data
+            virtual bool hasCachedData() const = 0;
 
             //! A representive pixmap for given model
             virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const = 0;
@@ -78,13 +101,30 @@ namespace BlackMisc
 
         protected:
             //! Constructor
-            IAircraftModelLoader(const CSimulatorInfo &info = CSimulatorInfo());
+            IAircraftModelLoader(const CSimulatorInfo &info, const QString &rootDirectory, const QStringList &excludeDirs = {});
+
+            //! Check if directory exists
+            bool existsDir(const QString &directory) const;
+
+            //! Start the loading process from disk
+            virtual void startLoadingFromDisk(LoadMode mode) = 0;
 
             BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo; //!< Corresponding simulator
-            std::atomic<bool> m_cancelLoading { false }; //!< flag
+            std::atomic<bool> m_cancelLoading { false };           //!< flag
+            std::atomic<bool> m_loadingInProgress { false };       //!< Loading in progress
+            QString m_rootDirectory;                               //!< root directory parsing aircraft.cfg files
+            QStringList m_excludedDirectories;                     //!< directories not to be parsed
+
+        protected slots:
+            //! Loading finished
+            void ps_loadFinished(bool success);
         };
 
     } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Simulation::IAircraftModelLoader::LoadMode)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::IAircraftModelLoader::LoadModeFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::IAircraftModelLoader::LoadMode)
 
 #endif // guard

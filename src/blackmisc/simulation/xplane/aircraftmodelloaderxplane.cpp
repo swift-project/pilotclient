@@ -11,6 +11,7 @@
 #include "xplaneutil.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/fileutils.h"
 
 #include <QDirIterator>
 #include <QTextStream>
@@ -43,28 +44,14 @@ namespace BlackMisc
                 }
             }
 
-            CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane()
-            { }
-
-            CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane(const CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes) :
-                IAircraftModelLoader(simInfo),
-                m_rootDirectory(rootDirectory),
-                m_excludedDirectories(exludes)
+            CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane(const CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &excludeDirs) :
+                IAircraftModelLoader(simInfo, rootDirectory, excludeDirs)
             { }
 
             CAircraftModelLoaderXPlane::~CAircraftModelLoaderXPlane()
             {
                 // that should be safe as long as the worker uses deleteLater (which it does)
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
-            }
-
-            bool CAircraftModelLoaderXPlane::changeRootDirectory(const QString &directory)
-            {
-                if (m_rootDirectory == directory) { return false; }
-                if (directory.isEmpty() || !existsDir(directory)) { return false; }
-
-                m_rootDirectory = directory;
-                return true;
             }
 
             CPixmap CAircraftModelLoaderXPlane::iconForModel(const QString &modelString, CStatusMessage &statusMessage) const
@@ -75,7 +62,7 @@ namespace BlackMisc
                 return {};
             }
 
-            void CAircraftModelLoaderXPlane::startLoading(LoadMode mode)
+            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode)
             {
                 m_installedModels.clear();
                 if (m_rootDirectory.isEmpty())
@@ -84,7 +71,7 @@ namespace BlackMisc
                     return;
                 }
 
-                if (mode == ModeBackground)
+                if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     auto rootDirectory = m_rootDirectory;
@@ -100,7 +87,7 @@ namespace BlackMisc
                         this->updateInstalledModels(models);
                     });
                 }
-                else if (mode == ModeBlocking)
+                else if (mode.testFlag(LoadDirectly))
                 {
                     m_installedModels = performParsing(m_rootDirectory, m_excludedDirectories);
                     emit loadingFinished(true);
@@ -112,7 +99,27 @@ namespace BlackMisc
                 return !m_parserWorker || m_parserWorker->isFinished();
             }
 
-            CAircraftModelList CAircraftModelLoaderXPlane::getAircraftModels() const
+            bool CAircraftModelLoaderXPlane::areModelFilesUpdated() const
+            {
+                const QDateTime cacheTs(getCacheTimestamp());
+                if (!cacheTs.isValid()) { return true; }
+                //! \todo KB we cannot use the exclude dirs, a minor disadvantege. Also wonder if it was better to parse a QStringList ofr wildcard
+                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, "xsb_aircraft.txt");
+            }
+
+            bool CAircraftModelLoaderXPlane::hasCachedData() const
+            {
+                //! \todo KB
+                return false;
+            }
+
+            QDateTime CAircraftModelLoaderXPlane::getCacheTimestamp() const
+            {
+                //! \todo KB add cache and report back
+                return QDateTime();
+            }
+
+            const CAircraftModelList &CAircraftModelLoaderXPlane::getAircraftModels() const
             {
                 return m_installedModels;
             }
@@ -146,7 +153,7 @@ namespace BlackMisc
             {
                 if (models.containsModelString(model.getModelString()))
                 {
-                    CLogMessage(static_cast<CAircraftModelLoaderXPlane*>(nullptr)).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
+                    CLogMessage(static_cast<CAircraftModelLoaderXPlane *>(nullptr)).warning("Model %1 exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
                 }
                 models.push_back(model);
             }
@@ -216,7 +223,6 @@ namespace BlackMisc
 
                 m_cslPackages.clear();
 
-
                 QDir searchPath(rootDirectory, "xsb_aircraft.txt");
                 QDirIterator it(searchPath, QDirIterator::Subdirectories);
                 while (it.hasNext())
@@ -282,14 +288,6 @@ namespace BlackMisc
                 return installedModels;
             }
 
-            bool CAircraftModelLoaderXPlane::existsDir(const QString &directory) const
-            {
-                if (directory.isEmpty()) { return false; }
-                QDir dir(directory);
-                //! \todo not available network dir can make this hang here
-                return dir.exists();
-            }
-
             bool CAircraftModelLoaderXPlane::doPackageSub(QString &ioPath)
             {
                 for (auto i = m_cslPackages.begin(); i != m_cslPackages.end(); ++i)
@@ -353,7 +351,7 @@ namespace BlackMisc
                 {
                     line = stream.readLine();
                 }
-                while(line.isEmpty() && !stream.atEnd());
+                while (line.isEmpty() && !stream.atEnd());
                 return line;
             }
 
@@ -376,7 +374,7 @@ namespace BlackMisc
 
                 // Get obj header
                 QFile objFile(fullPath);
-                if(!objFile.open(QIODevice::ReadOnly | QIODevice::Text))
+                if (!objFile.open(QIODevice::ReadOnly | QIODevice::Text))
                 {
                     CLogMessage(this).warning("Object %1 does not exist.") << fullPath;
                     return false;

@@ -52,7 +52,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                m_aircraftCfgParser->startLoading(CAircraftCfgParser::ModeBackground);
+                m_aircraftCfgParser->startLoading(CAircraftCfgParser::LoadInBackground);
             }
             //
             // reading from cache / settings would go here

@@ -43,12 +43,12 @@ namespace BlackSample
         streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->getDatastoreModels().size() << endl;
 
         // mapper with rule set, handing over ownership
-        CAircraftCfgParser cfgParser;
         QString fsxDir = CSampleUtils::selectDirectory({QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
                          QStringLiteral("P:/Temp/SimObjects"),
                          QStringLiteral("C:/Flight Simulator 9/Aircraft")
                                                        }, streamOut, streamIn);
 
+        CAircraftCfgParser cfgParser(CSimulatorInfo(CSimulatorInfo::FSX), fsxDir);
         if (!cfgParser.changeRootDirectory(fsxDir))
         {
             streamOut << "Wrong or empty directoy " << fsxDir << endl;
@@ -56,7 +56,7 @@ namespace BlackSample
         }
 
         streamOut << "Start reading models" << endl;
-        cfgParser.startLoading(CAircraftCfgParser::ModeBlocking);
+        cfgParser.startLoading(CAircraftCfgParser::CacheSkipped | CAircraftCfgParser::LoadDirectly);
         streamOut << "Read models: " << cfgParser.getAircraftCfgEntriesList().size() << endl;
         streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << endl;
 

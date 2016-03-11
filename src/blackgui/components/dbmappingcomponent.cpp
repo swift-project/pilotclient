@@ -68,7 +68,10 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setCustomMenu(new CShowSimulatorFile(this), false);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMappingOwnSimulatorModelMenu(this));
             ui->tvp_OwnAircraftModels->setCustomMenu(new CModelStashTools(this, false));
-            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->m_cachedOwnModels.get());
+            if (this->m_modelLoader)
+            {
+                ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->m_modelLoader->getAircraftModels());
+            }
 
             // how to display forms
             ui->editor_AircraftIcao->setSelectOnly();
@@ -107,9 +110,9 @@ namespace BlackGui
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CModelStashTools(this, false));
                 this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
                 this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
-                const CAircraftModelList cachedModels(m_cachedVPilotModels.get());
-                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(cachedModels);
-                int noModels = cachedModels.size();
+                const CAircraftModelList vPilotModels(m_cachedVPilotModels.get());
+                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(vPilotModels);
+                int noModels = vPilotModels.size();
                 CLogMessage(this).info("%1 cached vPilot models loaded") << noModels;
             }
             this->m_vPilot1stInit = false;
@@ -264,7 +267,8 @@ namespace BlackGui
 
         CAircraftModel CDbMappingComponent::getOwnModelForModelString(const QString &modelString) const
         {
-            return m_cachedOwnModels.get().findFirstByModelString(modelString);
+            if (!this->m_modelLoader) { return CAircraftModel(); }
+            return this->m_modelLoader->getAircraftModels().findFirstByModelString(modelString);
         }
 
         CDbMappingComponent::TabIndex CDbMappingComponent::currentTabIndex() const
@@ -510,8 +514,9 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_requestOwnModelsUpdate()
         {
+            if (!this->m_modelLoader) { return; }
             this->ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(
-                this->m_cachedOwnModels.get()
+                this->m_modelLoader->getAircraftModels()
             );
         }
 
@@ -678,11 +683,7 @@ namespace BlackGui
             {
                 const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
                 CLogMessage(this).info("Loading %1 of models completed") << models.size();
-                this->m_cachedOwnModels.set(models);
-                CLogMessage(this).info("Written %1 own models to cache") << models.size();
-
-                // when the cache writting is done the view vill be updated in the
-                // cache changed slot
+                this->ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
             }
             else
             {
@@ -690,14 +691,6 @@ namespace BlackGui
                 this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
             }
             this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
-        }
-
-        void CDbMappingComponent::ps_ownModelsCacheChanged()
-        {
-            if (this->ui->tvp_OwnAircraftModels->displayAutomatically())
-            {
-                this->ui->tvp_OwnAircraftModels->updateContainer(this->m_cachedOwnModels.get());
-            }
         }
 
         CAircraftModel CDbMappingComponent::getEditorAircraftModel() const

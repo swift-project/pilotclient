@@ -181,9 +181,6 @@ namespace BlackGui
             //! Model loading finished
             void ps_onOwnModelsLoadingFinished(bool success);
 
-            //! Own models cache changed
-            void ps_ownModelsCacheChanged();
-
             //! Own model count changed
             void ps_onOwnModelsCountChanged(int count, bool withFilter);
 
@@ -221,7 +218,6 @@ namespace BlackGui
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader; //!< read vPilot rules
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;  //!< read own aircraft models
             BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
-            BlackMisc::CData<BlackCore::Data::OwnSimulatorAircraftModels> m_cachedOwnModels { this, &CDbMappingComponent::ps_ownModelsCacheChanged };   //!< cache for own installed models
             BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>        m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit       = true;
             bool m_withVPilot          = false;

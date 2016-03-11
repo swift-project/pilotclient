@@ -36,35 +36,30 @@ namespace BlackMisc
 
             public:
                 //! Constructor
-                CAircraftModelLoaderXPlane();
-
-                //! Constructor
                 CAircraftModelLoaderXPlane(const BlackMisc::Simulation::CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes = {});
 
                 //! Virtual destructor
                 virtual ~CAircraftModelLoaderXPlane();
 
-                //! Change the directory
-                bool changeRootDirectory(const QString &directory);
-
-                //! Current root directory
-                QString getRootDirectory() const { return this->m_rootDirectory; }
-
-                //! \copydoc IAircraftModelLoader::iconForModel
+                //! \name Interface functions
+                //! @{
                 virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
-
-                //! \copydoc IAircraftModelLoader::startLoading
-                virtual void startLoading(LoadMode mode = ModeBackground) override;
-
-                //! \copydoc IAircraftModelLoader::isLoadingFinished
                 virtual bool isLoadingFinished() const override;
-
-                //! \copydoc IAircraftModelLoader::getAircraftModels
-                virtual BlackMisc::Simulation::CAircraftModelList getAircraftModels() const override;
+                virtual bool areModelFilesUpdated() const override;
+                virtual bool hasCachedData() const override;
+                virtual QDateTime getCacheTimestamp() const override;
+                virtual const BlackMisc::Simulation::CAircraftModelList &getAircraftModels() const override;
+                //! @}
 
             public slots:
                 //! Parsed or injected models
                 void updateInstalledModels(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            protected:
+                //! \name Interface functions
+                //! @{
+                virtual void startLoadingFromDisk(LoadMode mode) override;
+                //! @}
 
             private:
                 struct CSLPlane
@@ -98,8 +93,6 @@ namespace BlackMisc
                 BlackMisc::Simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
                 BlackMisc::Simulation::CAircraftModelList parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories);
 
-                //! Does the directory exist?
-                bool existsDir(const QString &directory = QString()) const;
                 bool doPackageSub(QString &ioPath);
 
                 bool parseExportCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
@@ -118,8 +111,6 @@ namespace BlackMisc
                 CSLPackage parsePackageHeader(const QString &path, const QString &content);
                 void parseFullPackage(const QString &content, CSLPackage &package);
 
-                QString m_rootDirectory;                        //!< root directory parsing aircraft.cfg files
-                QStringList m_excludedDirectories;              //!< directories not to be parsed
                 QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
                 QVector<CSLPackage> m_cslPackages;              //!< Parsed Packages. No lock required since accessed only from one thread
                 BlackMisc::Simulation::CAircraftModelList m_installedModels;

@@ -15,6 +15,8 @@
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/aircraftmatcher.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+
 
 #include <QDebug>
 #include <QFuture>
@@ -24,16 +26,17 @@
 #include <QJsonDocument>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackSample
 {
     void CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
-        QString fsxDir = CSampleUtils::selectDirectory({"C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
+        const QString fsxDir = CSampleUtils::selectDirectory({"C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
                                                         "C:/Flight Simulator 9/Aircraft"}, streamOut, streamIn);
 
-        CAircraftCfgParser parser;
+        CAircraftCfgParser parser(CSimulatorInfo(CSimulatorInfo::FSX), fsxDir);
         parser.changeRootDirectory(fsxDir);
 
         streamOut << "start reading, press RETURN" << endl;

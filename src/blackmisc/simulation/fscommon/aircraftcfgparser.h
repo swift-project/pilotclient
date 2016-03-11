@@ -15,8 +15,10 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 
 #include <QPointer>
 
@@ -32,35 +34,24 @@ namespace BlackMisc
                 Q_OBJECT
 
             public:
-                //! Destructor
-                CAircraftCfgParser();
-
                 //! Constructor
                 CAircraftCfgParser(const BlackMisc::Simulation::CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes = {});
 
                 //! Virtual destructor
                 virtual ~CAircraftCfgParser();
 
-                //! Change the directory
-                bool changeRootDirectory(const QString &directory);
-
-                //! Current root directory
-                QString getRootDirectory() const { return this->m_rootDirectory; }
-
                 //! Get parsed aircraft cfg entries list
                 const CAircraftCfgEntriesList &getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }
 
-                //! \copydoc IAircraftModelLoader::iconForModel
+                //! \name Interface functions
+                //! @{
                 virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
-
-                //! \copydoc IAircraftModelLoader::startLoading
-                virtual void startLoading(LoadMode mode = ModeBackground) override;
-
-                //! \copydoc IAircraftModelLoader::isLoadingFinished
                 virtual bool isLoadingFinished() const override;
-
-                //! \copydoc IAircraftModelLoader::getAircraftModels
-                virtual BlackMisc::Simulation::CAircraftModelList getAircraftModels() const override;
+                virtual bool areModelFilesUpdated() const override;
+                virtual bool hasCachedData() const override;
+                virtual QDateTime getCacheTimestamp() const override;
+                virtual const BlackMisc::Simulation::CAircraftModelList &getAircraftModels() const override;
+                //! @}
 
                 //! Create an parser object for given simulator
                 static std::unique_ptr<CAircraftCfgParser> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
@@ -68,6 +59,15 @@ namespace BlackMisc
             public slots:
                 //! Parsed or injected entires
                 void updateCfgEntriesList(const BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList &cfgEntriesList);
+
+            protected:
+                //! Set cached values
+                BlackMisc::CStatusMessage setModelsInCache(const BlackMisc::Simulation::CAircraftModelList &models);
+
+                //! \name Interface functions
+                //! @{
+                virtual void startLoadingFromDisk(LoadMode mode) override;
+                //! @}
 
             private:
                 //! Section within file
@@ -77,9 +77,6 @@ namespace BlackMisc
                     Fltsim,
                     Unknown
                 };
-
-                //! Does the directory exist?
-                bool existsDir(const QString &directory = "") const;
 
                 //! Perform the parsing
                 //! \threadsafe
@@ -94,10 +91,13 @@ namespace BlackMisc
                 //! Content after "="
                 static QString getFixedIniLineContent(const QString &line);
 
-                QString m_rootDirectory;                        //!< root directory parsing aircraft.cfg files
-                QStringList m_excludedDirectories;              //!< directories not to be parsed
                 CAircraftCfgEntriesList m_parsedCfgEntriesList; //!< parsed entries
                 QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
+
+                //! \todo KB/MS Is there nothing better than having 3 cache members
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFsx> m_modelCacheFsx {this};  //!< FSX cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this};  //!< Fs9 cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this};  //!< P3D cache
             };
         } // namespace
     } // namespace
