@@ -45,23 +45,41 @@ namespace BlackMisc
         //! If it is a file, just copies the file.
         static bool copyRecursively(const QString &sourceDir, const QString &destinationDir);
 
+        //! Normalize file path to Qt standard, e.g by turning \ to /
+        static QString normalizeFilePathToQtStandard(const QString &filePath);
+
+        //! Case sensitivity for current OS
+        static Qt::CaseSensitivity osFileNameCaseSensitivity();
+
+        //! Is directory path matching the exclude path?
+        static bool matchesExcludeDirectory(const QString &directoryPath, const QString &excludeDirectory, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
+        //! Directory to be excluded?
+        static bool isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
+        //! Directory to be excluded?
+        static bool isExcludedDirectory(const QFileInfo &fileInfo, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
+        //! Directory to be excluded?
+        static bool isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
         //! Returns path to first file in dir which matches the optional wildcard and predicate, or empty string.
-        static QString findFirstFile(const QDir &dir, bool recursive, const QString &wildcard = {}, std::function<bool(const QFileInfo &)> predicate = {});
+        static QString findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
 
         //! True if there exists a file in dir which matches the optional wildcard and predicate.
-        static bool containsFile(const QDir &dir, bool recursive, const QString &wildcard = {}, std::function<bool(const QFileInfo &)> predicate = {});
+        static bool containsFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
 
         //! Returns path to first file in dir newer than the given time, optionally matching a wildcard, or empty string.
-        static QString findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard = {});
+        static QString findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
 
         //! True if there exists a file in dir newer than the given time, optionally matching a wildcard.
-        static bool containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard = {});
+        static bool containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
 
         //! Returns list of all files in dir, optionally matching a wildcard and predicate.
-        static QFileInfoList enumerateFiles(const QDir &dir, bool recursive, const QString &wildcard = {}, std::function<bool(const QFileInfo &)> predicate = {});
+        static QFileInfoList enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
 
         //! Returns path to the newest file in dir, optionally matching a wildcard, or empty string.
-        static QString findNewestFile(const QDir &dir, bool recursive, const QString &wildcard = {});
+        static QString findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
     };
 } // ns
 

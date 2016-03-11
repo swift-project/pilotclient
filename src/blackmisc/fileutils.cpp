@@ -9,7 +9,7 @@
 
 #include "blackmisc/worker.h"
 #include "fileutils.h"
-
+#include "project.h"
 #include <QFile>
 #include <QCoreApplication>
 
@@ -72,24 +72,75 @@ namespace BlackMisc
 
             QDir originDir(sourceFileInfo.absoluteFilePath());
             auto fileNames = originDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
-            for (const QString &fileName: fileNames)
+            for (const QString &fileName : fileNames)
             {
                 if (!copyRecursively(originDir.absoluteFilePath(fileName), targetDir.absoluteFilePath(fileName)))
+                {
                     return false;
+                }
             }
         }
         else
         {
             if (!QFile::copy(sourceDir, destinationDir))
+            {
                 return false;
+            }
         }
 
         return true;
     }
 
-    QString CFileUtils::findFirstFile(const QDir &dir, bool recursive, const QString &wildcard, std::function<bool(const QFileInfo &)> predicate)
+    QString CFileUtils::normalizeFilePathToQtStandard(const QString &filePath)
     {
-        QFileInfoList result = dir.entryInfoList({ wildcard }, QDir::Files);
+        if (filePath.isEmpty()) { return ""; }
+        QString n(filePath);
+        n = n.replace('\\', '/').replace("//", "/");
+        return n;
+    }
+
+    Qt::CaseSensitivity CFileUtils::osFileNameCaseSensitivity()
+    {
+        return CProject::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
+    }
+
+    bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludeDirectory, Qt::CaseSensitivity cs)
+    {
+        if (directoryPath.isEmpty() || excludeDirectory.isEmpty()) { return false; }
+        const QString ed(normalizeFilePathToQtStandard(excludeDirectory));
+        return directoryPath.contains(ed, cs);
+    }
+
+    bool CFileUtils::isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories, Qt::CaseSensitivity cs)
+    {
+        if (excludeDirectories.isEmpty()) { return false; }
+        const QString d = directory.absolutePath();
+        return isExcludedDirectory(d, excludeDirectories, cs);
+    }
+
+    bool CFileUtils::isExcludedDirectory(const QFileInfo &fileInfo, const QStringList &excludeDirectories, Qt::CaseSensitivity cs)
+    {
+        if (excludeDirectories.isEmpty()) { return false; }
+        return isExcludedDirectory(fileInfo.absoluteDir(), excludeDirectories, cs);
+    }
+
+    bool CFileUtils::isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories, Qt::CaseSensitivity cs)
+    {
+        if (excludeDirectories.isEmpty()) { return false; }
+        for (const QString &ex : excludeDirectories)
+        {
+            if (matchesExcludeDirectory(directoryPath, ex, cs))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    QString CFileUtils::findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
+    {
+        if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
+        const QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
             auto it = std::find_if(result.cbegin(), result.cend(), predicate);
@@ -103,31 +154,33 @@ namespace BlackMisc
         {
             for (const auto &subdir : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot))
             {
-                QString first = findFirstFile(subdir.filePath(), true, wildcard, predicate);
+                if (isExcludedDirectory(subdir, excludeDirectories)) { continue; }
+                const QString first = findFirstFile(subdir.filePath(), true, nameFilters, excludeDirectories, predicate);
                 if (! first.isEmpty()) { return first; }
             }
         }
         return {};
     }
 
-    bool CFileUtils::containsFile(const QDir &dir, bool recursive, const QString &wildcard, std::function<bool(const QFileInfo &)> predicate)
+    bool CFileUtils::containsFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
     {
-        return ! findFirstFile(dir, recursive, wildcard, predicate).isEmpty();
+        return ! findFirstFile(dir, recursive, nameFilters, excludeDirectories, predicate).isEmpty();
     }
 
-    QString CFileUtils::findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard)
+    QString CFileUtils::findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        return findFirstFile(dir, recursive, wildcard, [time](const QFileInfo &fi) { return fi.lastModified() > time; });
+        return findFirstFile(dir, recursive, nameFilters, excludeDirectories, [time](const QFileInfo & fi) { return fi.lastModified() > time; });
     }
 
-    bool CFileUtils::containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QString &wildcard)
+    bool CFileUtils::containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        return ! findFirstNewerThan(time, dir, recursive, wildcard).isEmpty();
+        return ! findFirstNewerThan(time, dir, recursive, nameFilters, excludeDirectories).isEmpty();
     }
 
-    QFileInfoList CFileUtils::enumerateFiles(const QDir &dir, bool recursive, const QString &wildcard, std::function<bool(const QFileInfo &)> predicate)
+    QFileInfoList CFileUtils::enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
     {
-        QFileInfoList result = dir.entryInfoList({ wildcard }, QDir::Files);
+        if (isExcludedDirectory(dir, excludeDirectories)) { return QFileInfoList(); }
+        QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
             result.erase(std::remove_if(result.begin(), result.end(), std::not1(predicate)), result.end());
@@ -136,18 +189,20 @@ namespace BlackMisc
         {
             for (const auto &subdir : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot))
             {
-                result += enumerateFiles(subdir.filePath(), true, wildcard, predicate);
+                if (isExcludedDirectory(subdir, excludeDirectories)) { continue; }
+                result += enumerateFiles(subdir.filePath(), true, nameFilters, excludeDirectories, predicate);
             }
         }
         return result;
     }
 
-    QString CFileUtils::findNewestFile(const QDir &dir, bool recursive, const QString &wildcard)
+    QString CFileUtils::findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        const QFileInfoList files = enumerateFiles(dir, recursive, wildcard);
+        if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
+        const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
         if (files.isEmpty()) { return {}; }
 
-        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo &a, const QFileInfo &b)
+        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo & a, const QFileInfo & b)
         {
             return a.lastModified() < b.lastModified();
         });

@@ -94,10 +94,12 @@ namespace BlackMisc
                 CAircraftCfgEntriesList m_parsedCfgEntriesList; //!< parsed entries
                 QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
 
-                //! \todo KB/MS Is there nothing better than having 3 cache members
+                //! \todo KB/MS Is there nothing better than having 3 cache members?
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFsx> m_modelCacheFsx {this};  //!< FSX cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this};  //!< Fs9 cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this};  //!< P3D cache
+
+                static const QString &fileFilter();
             };
         } // namespace
     } // namespace

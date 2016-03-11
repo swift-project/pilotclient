@@ -114,6 +114,9 @@ namespace BlackMisc
                 QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
                 QVector<CSLPackage> m_cslPackages;              //!< Parsed Packages. No lock required since accessed only from one thread
                 BlackMisc::Simulation::CAircraftModelList m_installedModels;
+
+                static const QString &fileFilterFlyable();
+                static const QString &fileFilterCsl();
             };
         } // namespace
     } // namespace

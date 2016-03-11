@@ -148,8 +148,7 @@ namespace BlackMisc
             {
                 const QDateTime cacheTs(getCacheTimestamp());
                 if (!cacheTs.isValid()) { return true; }
-                //! \todo KB we cannot use the exclude dirs, a minor disadvantege. Also wonder if it was better to parse a QStringList ofr wildcard
-                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, "*.cfg");
+                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, { fileFilter() }, this->m_excludedDirectories);
             }
 
             bool CAircraftCfgParser::hasCachedData() const
@@ -223,19 +222,15 @@ namespace BlackMisc
                 if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
 
                 // excluded?
-                for (const auto &excludeDir : excludeDirectories)
+                if (CFileUtils::isExcludedDirectory(directory, excludeDirectories))
                 {
-                    if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
-                    if (directory.contains(excludeDir, Qt::CaseInsensitive))
-                    {
-                        CLogMessage(this).debug() << "Skipping directory " << directory;
-                        *ok = true;
-                        return CAircraftCfgEntriesList();
-                    }
+                    CLogMessage(this).debug() << "Skipping directory " << directory;
+                    *ok = true;
+                    return CAircraftCfgEntriesList();
                 }
 
                 // set directory with name filters, get aircraft.cfg and sub directories
-                QDir dir(directory, "aircraft.cfg", QDir::Name, QDir::Files | QDir::AllDirs);
+                QDir dir(directory, fileFilter(), QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
                 if (!dir.exists())
                 {
                     *ok = true;
@@ -444,6 +439,12 @@ namespace BlackMisc
                 content.replace("\\n", " ");
                 content.replace("\\t", " ");
                 return content;
+            }
+
+            const QString &CAircraftCfgParser::fileFilter()
+            {
+                static const QString f("aircraft.cfg");
+                return f;
             }
 
         } // namespace

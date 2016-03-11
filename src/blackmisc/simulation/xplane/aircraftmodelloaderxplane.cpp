@@ -32,9 +32,9 @@ namespace BlackMisc
     {
         namespace XPlane
         {
-
             static void normalizePath(QString &path)
             {
+                //! \todo KB consider CFileUtil::normalizeFilePathToQtStandard ??
                 for (auto &e : path)
                 {
                     if (e == '/' || e == ':' || e == '\\')
@@ -103,8 +103,7 @@ namespace BlackMisc
             {
                 const QDateTime cacheTs(getCacheTimestamp());
                 if (!cacheTs.isValid()) { return true; }
-                //! \todo KB we cannot use the exclude dirs, a minor disadvantege. Also wonder if it was better to parse a QStringList ofr wildcard
-                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, "xsb_aircraft.txt");
+                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, {fileFilterCsl(), fileFilterFlyable()},  this->m_excludedDirectories);
             }
 
             bool CAircraftModelLoaderXPlane::hasCachedData() const
@@ -163,12 +162,13 @@ namespace BlackMisc
                 Q_UNUSED(excludeDirectories);
                 if (rootDirectory.isEmpty()) { return {}; }
 
-                QDir searchPath(rootDirectory, "*.acf");
+                QDir searchPath(rootDirectory, fileFilterFlyable());
                 QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
                 CAircraftModelList installedModels;
                 while (aircraftIt.hasNext())
                 {
+                    //! \todo KB I would consider exclude dirs here CFileUtils::matchesExcludeDirectory()
                     aircraftIt.next();
 
                     // <dirname> <filename> for the default model and <dirname> <filename> <texturedir> for the liveries
@@ -184,6 +184,7 @@ namespace BlackMisc
                     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
                     QTextStream ts(&file);
+                    //! \todo Do you rely on case sensitive parsing, mabe case insensitive would be better?
                     if (ts.readLine() == "I" && ts.readLine().contains("version") && ts.readLine() == "ACF")
                     {
                         while (!ts.atEnd())
@@ -223,11 +224,12 @@ namespace BlackMisc
 
                 m_cslPackages.clear();
 
-                QDir searchPath(rootDirectory, "xsb_aircraft.txt");
+                QDir searchPath(rootDirectory, fileFilterCsl());
                 QDirIterator it(searchPath, QDirIterator::Subdirectories);
                 while (it.hasNext())
                 {
                     QString packageFile = it.next();
+                    //! \todo KB I would consider exclude dirs here CFileUtils::matchesExcludeDirectory()
 
                     QString packageFilePath = it.fileInfo().absolutePath();
                     QFile file(packageFile);
@@ -635,6 +637,18 @@ namespace BlackMisc
                         }
                     }
                 }
+            }
+
+            const QString &CAircraftModelLoaderXPlane::fileFilterFlyable()
+            {
+                static const QString f("*.acf");
+                return f;
+            }
+
+            const QString &CAircraftModelLoaderXPlane::fileFilterCsl()
+            {
+                static const QString f("xsb_aircraft.txt");
+                return f;
             }
 
         } // namespace
