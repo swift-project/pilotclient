@@ -80,11 +80,17 @@ namespace BlackMisc
             //! Any simulator?
             bool isAnySimulator() const;
 
+            //! Single simulator selected
+            bool isSingleSimulator() const;
+
             //! No simulator?
             bool isNoSimulator() const;
 
             //! Is all simulators?
             bool isAllSimulators() const;
+
+            //! Number simulators selected
+            int numberSimulators() const;
 
             //! Matches all simulators
             bool matchesAll(const CSimulatorInfo &otherInfo) const;

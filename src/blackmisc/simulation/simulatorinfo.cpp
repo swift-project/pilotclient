@@ -66,6 +66,11 @@ namespace BlackMisc
             return fsx() || fs9() || xplane() || p3d();
         }
 
+        bool CSimulatorInfo::isSingleSimulator() const
+        {
+            return this->numberSimulators() == 1;
+        }
+
         bool CSimulatorInfo::isNoSimulator() const
         {
             return m_simulator == 0;
@@ -74,6 +79,15 @@ namespace BlackMisc
         bool CSimulatorInfo::isAllSimulators() const
         {
             return fsx() && fs9() && xplane() && p3d();
+        }
+
+        int CSimulatorInfo::numberSimulators() const
+        {
+            int c = fs9() ? 1 : 0;
+            if (fsx()) { c++; }
+            if (xplane()) { c++; }
+            if (p3d()) { c++; }
+            return c;
         }
 
         bool CSimulatorInfo::matchesAll(const CSimulatorInfo &otherInfo) const
