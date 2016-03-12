@@ -288,10 +288,9 @@ namespace BlackGui
             this->endResetModel();
 
             int newSize = this->m_container.size();
-            if (oldSize != newSize)
-            {
-                this->emitRowCountChanged();
-            }
+            // I have to update with same size because  cannot tell what data are changed
+            this->emitRowCountChanged();
+            Q_UNUSED(oldSize);
             return newSize;
         }
 
