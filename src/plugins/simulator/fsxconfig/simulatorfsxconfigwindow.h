@@ -16,15 +16,12 @@
 #include "blackgui/pluginconfigwindow.h"
 #include <QScopedPointer>
 
-namespace Ui {
-class CSimulatorFsxConfigWindow;
-}
+namespace Ui { class CSimulatorFsxConfigWindow; }
 
 namespace BlackSimPlugin
 {
     namespace Fsx
     {
-
         /**
          * A window the lets user set up the FSX plugin.
          */

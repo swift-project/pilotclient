@@ -23,7 +23,6 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         CSimulatorXPlaneConfigWindow::CSimulatorXPlaneConfigWindow(QWidget *parent) :
             CPluginConfigWindow(parent),
             ui(new Ui::CSimulatorXPlaneConfigWindow)

@@ -19,7 +19,6 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         /*!
          * Setting for XBus.
          */
@@ -50,7 +49,6 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
-
         };
     }
 }

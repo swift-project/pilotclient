@@ -21,7 +21,7 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        /**
+        /*!
          * A component that gathers all SimConnect-related settings.
          */
         class CSimConnectSettingsComponent : public QFrame

@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="BlackSimPlugin::Fsx::CSimConnectSettingsComponent" name="frame">
+    <widget class="BlackSimPlugin::Fsx::CSimConnectSettingsComponent" name="fr_simConnectSettings">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>

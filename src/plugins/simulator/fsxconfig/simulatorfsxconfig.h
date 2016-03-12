@@ -19,7 +19,6 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-
         /*!
          * Window for setting up the FSX plugin.
          */
@@ -39,7 +38,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackGui::IPluginConfig::createConfigWindow()
             BlackGui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
         };
-
     }
 }
 

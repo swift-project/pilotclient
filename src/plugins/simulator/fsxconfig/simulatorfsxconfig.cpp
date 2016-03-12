@@ -5,10 +5,9 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-
         CSimulatorFsxConfig::CSimulatorFsxConfig(QObject *parent) : QObject(parent)
         {
-
+            // void
         }
 
         BlackGui::CPluginConfigWindow *CSimulatorFsxConfig::createConfigWindow(QWidget *parent)

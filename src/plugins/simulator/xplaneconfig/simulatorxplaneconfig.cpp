@@ -5,7 +5,6 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
-
         CSimulatorXPlaneConfig::CSimulatorXPlaneConfig(QObject *parent) : QObject(parent)
         {
 
