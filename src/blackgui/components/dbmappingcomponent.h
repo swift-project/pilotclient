@@ -19,6 +19,7 @@
 #include "blackgui/menudelegate.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/data/lastselections.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
@@ -179,7 +180,7 @@ namespace BlackGui
             void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
             //! Model loading finished
-            void ps_onOwnModelsLoadingFinished(bool success);
+            void ps_onOwnModelsLoadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
             //! Own model count changed
             void ps_onOwnModelsCountChanged(int count, bool withFilter);
@@ -211,14 +212,18 @@ namespace BlackGui
             //! Open simulator file
             void ps_showSimulatorFile();
 
+            //! When main GUI application has been started
+            void ps_deferredInit();
+
         private:
-            QScopedPointer<Ui::CDbMappingComponent> ui;
-            QScopedPointer<CDbAutoStashingComponent>                      m_autoStashDialog;
-            QScopedPointer<CDbModelMappingModifyComponent>                m_modelModifyDialog;
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader           m_vPilotReader; //!< read vPilot rules
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>  m_modelLoader;  //!< read own aircraft models
-            BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>       m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
-            BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>        m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
+            QScopedPointer<Ui::CDbMappingComponent>                          ui;
+            QScopedPointer<CDbAutoStashingComponent>                         m_autoStashDialog;   //!< dialog auto stashing
+            QScopedPointer<CDbModelMappingModifyComponent>                   m_modelModifyDialog;
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader              m_vPilotReader;      //!< read vPilot rules
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>     m_modelLoader;       //!< read own aircraft models
+            BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>          m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
+            BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>           m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
+            BlackMisc::CData<BlackGui::Components::Data::DbMappingComponent> m_lastInteractions {this};  //!< last interactions
             bool m_vPilot1stInit       = true;
             bool m_withVPilot          = false;
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model

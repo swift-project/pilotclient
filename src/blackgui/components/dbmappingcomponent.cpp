@@ -84,6 +84,21 @@ namespace BlackGui
 
             // vPilot
             this->initVPilotLoading();
+            QTimer::singleShot(1000, this, &CDbMappingComponent::ps_deferredInit);
+        }
+
+        void CDbMappingComponent::ps_deferredInit()
+        {
+            // deferred
+            this->m_lastInteractions.synchronize();
+            const CSimulatorInfo sim = this->m_lastInteractions.get().getLastSimulatorSelection();
+
+            if (sim.isSingleSimulator())
+            {
+                // if we have already use this before, use it again, but only from cache
+                this->initModelLoader(sim);
+                this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
+            }
         }
 
         CDbMappingComponent::~CDbMappingComponent()
@@ -135,7 +150,11 @@ namespace BlackGui
         bool CDbMappingComponent::initModelLoader(const CSimulatorInfo &simInfo)
         {
             // already loaded
-            if (this->m_modelLoader && this->m_modelLoader->supportsSimulator(simInfo)) { return true; }
+            Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+            if (this->m_modelLoader && this->m_modelLoader->supportsSimulator(simInfo))
+            {
+                return true;
+            }
 
             // unload old
             if (this->m_modelLoader) { this->m_modelLoader->cancelLoading(); }
@@ -150,6 +169,7 @@ namespace BlackGui
             else
             {
                 bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbMappingComponent::ps_onOwnModelsLoadingFinished);
+
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
                 Q_UNUSED(c);
                 return true;
@@ -547,7 +567,7 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_VPilot);
+            const int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_VPilot);
             QString o = this->ui->tw_ModelsToBeMapped->tabText(i);
             QString f = this->ui->tvp_AircraftModelsForVPilot->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, this->ui->tvp_AircraftModelsForVPilot->rowCount()) + f;
@@ -558,8 +578,9 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_OwnModels);
-            QString o = this->ui->tw_ModelsToBeMapped->tabText(i);
+            const int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_OwnModels);
+            static const QString ot(this->ui->tw_ModelsToBeMapped->tabText(i));
+            QString o(ot);
             if (this->m_modelLoader)
             {
                 QString sims(this->m_modelLoader->supportedSimulatorsAsString());
@@ -659,7 +680,6 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_loadInstalledModels(const CSimulatorInfo &simInfo)
         {
-            //! \todo, load correct loader
             if (!this->initModelLoader(simInfo))
             {
                 CLogMessage(this).error("Cannot load model loader for %1") << simInfo.toQString();
@@ -677,18 +697,26 @@ namespace BlackGui
             this->m_modelLoader->startLoading();
         }
 
-        void CDbMappingComponent::ps_onOwnModelsLoadingFinished(bool success)
+        void CDbMappingComponent::ps_onOwnModelsLoadingFinished(bool success, const CSimulatorInfo &simInfo)
         {
             if (success && this->m_modelLoader)
             {
                 const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
-                CLogMessage(this).info("Loading %1 of models completed") << models.size();
                 this->ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
+                CLogMessage(this).info("Loading %1 of models completed") << models.size();
+
+                // store for later
+                Data::CDbMappingComponent mc(this->m_lastInteractions.get());
+                if (simInfo.isSingleSimulator() &&  mc.getLastSimulatorSelection() != simInfo)
+                {
+                    mc.setLastSimulatorSelection(simInfo);
+                    this->m_lastInteractions.set(mc);
+                }
             }
             else
             {
-                CLogMessage(this).error("Loading of models failed, simulator");
                 this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
+                CLogMessage(this).error("Loading of models failed, simulator %1") << simInfo.toQString();
             }
             this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
         }
