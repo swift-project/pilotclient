@@ -96,11 +96,11 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
+            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex()
+            int comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const;
+
             //! Can be initialized from FSD
             bool canInitializeFromFsd() const;
-
-            //! Compare for index
-            int comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const;
 
             //! Corresponding callsign if applicable
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_callsign; }

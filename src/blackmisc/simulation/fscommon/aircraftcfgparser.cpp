@@ -107,8 +107,9 @@ namespace BlackMisc
                     {
                         if (pair.second)
                         {
-                            this->updateCfgEntriesList(pair.first);
+                            this->m_parsedCfgEntriesList = pair.first;
                             this->setModelsInCache(pair.first.toAircraftModelList());
+                            emit loadingFinished(true, this->m_simulatorInfo);
                         }
                     });
                 }
@@ -117,7 +118,15 @@ namespace BlackMisc
                     bool ok;
                     this->m_parsedCfgEntriesList = performParsing(m_rootDirectory, m_excludedDirectories, &ok);
                     this->setModelsInCache(this->m_parsedCfgEntriesList.toAircraftModelList());
-                    emit loadingFinished(ok);
+                    emit loadingFinished(ok, this->m_simulatorInfo);
+                }
+            }
+
+            void CAircraftCfgParser::ps_cacheChanged()
+            {
+                if (this->hasCachedData())
+                {
+                    emit this->loadingFinished(true, this->m_simulatorInfo);
                 }
             }
 
@@ -186,12 +195,6 @@ namespace BlackMisc
                 }
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
                 return empty;
-            }
-
-            void CAircraftCfgParser::updateCfgEntriesList(const CAircraftCfgEntriesList &cfgEntriesList)
-            {
-                m_parsedCfgEntriesList = cfgEntriesList;
-                emit loadingFinished(true);
             }
 
             CStatusMessage CAircraftCfgParser::setModelsInCache(const CAircraftModelList &models)

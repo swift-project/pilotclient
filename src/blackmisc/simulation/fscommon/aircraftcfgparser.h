@@ -56,10 +56,6 @@ namespace BlackMisc
                 //! Create an parser object for given simulator
                 static std::unique_ptr<CAircraftCfgParser> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
-            public slots:
-                //! Parsed or injected entires
-                void updateCfgEntriesList(const BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList &cfgEntriesList);
-
             protected:
                 //! Set cached values
                 BlackMisc::CStatusMessage setModelsInCache(const BlackMisc::Simulation::CAircraftModelList &models);
@@ -68,6 +64,10 @@ namespace BlackMisc
                 //! @{
                 virtual void startLoadingFromDisk(LoadMode mode) override;
                 //! @}
+
+            private slots:
+                //! Cache changed
+                void ps_cacheChanged();
 
             private:
                 //! Section within file
@@ -95,9 +95,9 @@ namespace BlackMisc
                 QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
 
                 //! \todo KB/MS Is there nothing better than having 3 cache members?
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFsx> m_modelCacheFsx {this};  //!< FSX cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this};  //!< Fs9 cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this};  //!< P3D cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFsx> m_modelCacheFsx {this, &CAircraftCfgParser::ps_cacheChanged};  //!< FSX cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this, &CAircraftCfgParser::ps_cacheChanged};  //!< FS9 cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this, &CAircraftCfgParser::ps_cacheChanged};  //!< P3D cache
 
                 static const QString &fileFilter();
             };

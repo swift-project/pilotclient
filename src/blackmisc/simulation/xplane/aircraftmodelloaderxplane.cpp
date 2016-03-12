@@ -67,7 +67,7 @@ namespace BlackMisc
                 m_installedModels.clear();
                 if (m_rootDirectory.isEmpty())
                 {
-                    emit loadingFinished(false);
+                    emit loadingFinished(false, this->m_simulatorInfo);
                     return;
                 }
 
@@ -90,7 +90,7 @@ namespace BlackMisc
                 else if (mode.testFlag(LoadDirectly))
                 {
                     m_installedModels = performParsing(m_rootDirectory, m_excludedDirectories);
-                    emit loadingFinished(true);
+                    emit loadingFinished(true, this->m_simulatorInfo);
                 }
             }
 
@@ -126,7 +126,7 @@ namespace BlackMisc
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
                 m_installedModels = models;
-                emit loadingFinished(true);
+                emit loadingFinished(true, this->m_simulatorInfo);
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const

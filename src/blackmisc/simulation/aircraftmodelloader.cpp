@@ -58,23 +58,23 @@ namespace BlackMisc
             if (this->m_loadingInProgress) { return; }
             this->m_loadingInProgress = true;
             const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
-            if (useCachedData && mode.testFlag(CacheFirst))
+            if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
             {
-                emit loadingFinished(true);
+                emit loadingFinished(true, this->m_simulatorInfo);
                 return;
             }
             else if (useCachedData && mode.testFlag(CacheUntilNewer))
             {
                 if (!this->areModelFilesUpdated())
                 {
-                    emit loadingFinished(true);
+                    emit loadingFinished(true, this->m_simulatorInfo);
                     return;
                 }
             }
             if (mode.testFlag(CacheOnly))
             {
                 // only cache, but we did not find any data
-                emit loadingFinished(false);
+                emit loadingFinished(false, this->m_simulatorInfo);
                 return;
             }
             this->startLoadingFromDisk(mode);

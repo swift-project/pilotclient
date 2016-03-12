@@ -42,7 +42,7 @@ namespace BlackMisc
                 CacheUntilNewer   = 1 << 2,   //!< use cache until newer data re available
                 CacheFirst        = 1 << 3,   //!< always use cache (if it has data)
                 CacheSkipped      = 1 << 4,   //!< ignore cache
-                CacheOnly         = 1 << 5,   //!< force ignoring the cache
+                CacheOnly         = 1 << 5,   //!< only read cache, never load from disk
                 Default           = LoadInBackground | CacheFirst //!< default mode
             };
             Q_DECLARE_FLAGS(LoadMode, LoadModeFlag)
@@ -97,7 +97,7 @@ namespace BlackMisc
 
         signals:
             //! Parsing is finished
-            void loadingFinished(bool success);
+            void loadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         protected:
             //! Constructor
