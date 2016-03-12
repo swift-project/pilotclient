@@ -29,7 +29,9 @@ HEADERS += $$PWD/views/*.h
 SOURCES += $$PWD/views/*.cpp
 
 HEADERS += $$PWD/components/*.h
+HEADERS += $$PWD/components/data/*.h
 SOURCES += $$PWD/components/*.cpp
+SOURCES += $$PWD/components/data/*.cpp
 FORMS   += $$PWD/components/*.ui
 
 HEADERS += $$PWD/filters/*.h

@@ -10,6 +10,7 @@
 #include "guiapplication.h"
 #include "guiutility.h"
 #include "stylesheetutility.h"
+#include "registermetadata.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/project.h"
 #include "blackmisc/verify.h"
@@ -40,9 +41,13 @@ namespace BlackGui
 
     CGuiApplication::CGuiApplication(const QString &applicationName, const QPixmap &icon) : CApplication(applicationName)
     {
-        setWindowIcon(icon);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
-        sGui = this;
+        if (!sGui)
+        {
+            registerMetadata();
+            setWindowIcon(icon);
+            sGui = this;
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
+        }
     }
 
     CGuiApplication::~CGuiApplication()
