@@ -96,7 +96,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
-            //! \copydoc BlackMisc::Mixin::Index::comparePropertyByIndex()
+            //! Compare by index
             int comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const;
 
             //! Can be initialized from FSD
@@ -152,6 +152,9 @@ namespace BlackMisc
 
             //! Has aircraft designator?
             bool hasAircraftDesignator() const;
+
+            //! Has known aircraft designator?
+            bool hasKnownAircraftDesignator() const;
 
             //! Airline designator?
             bool hasAirlineDesignator() const;
@@ -217,7 +220,7 @@ namespace BlackMisc
             void setFileName(const QString &fileName) { m_fileName = fileName; }
 
             //! Update missing parts from another model
-            void updateMissingParts(const CAircraftModel &otherModel);
+            void updateMissingParts(const CAircraftModel &otherModel, bool dbModelPriority = true);
 
             //! Queried model string?
             bool hasQueriedModelString() const;

@@ -102,6 +102,40 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::withAircraftDesignator() const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return model.hasAircraftDesignator();
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::withAircraftDesignator(const QStringList &designators) const
+        {
+            if (designators.isEmpty()) { return CAircraftModelList(); }
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return designators.contains(model.getAircraftIcaoCodeDesignator());
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::withKnownAircraftDesignator() const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return model.hasKnownAircraftDesignator();
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::byDistributor(const CDistributorList &distributors) const
+        {
+            if (distributors.isEmpty()) { return CAircraftModelList(); }
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return model.matchesAnyDistributor(distributors);
+            });
+        }
+
         void CAircraftModelList::setSimulatorInfo(const CSimulatorInfo &info)
         {
             for (CAircraftModel &model : (*this))

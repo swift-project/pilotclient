@@ -62,7 +62,7 @@ namespace BlackMisc
                 return {};
             }
 
-            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode)
+            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
                 m_installedModels.clear();
                 if (m_rootDirectory.isEmpty())
@@ -77,9 +77,10 @@ namespace BlackMisc
                     auto rootDirectory = m_rootDirectory;
                     auto excludedDirectories = m_excludedDirectories;
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
-                                     [this, rootDirectory, excludedDirectories]()
+                                     [this, rootDirectory, excludedDirectories, dbModels]()
                     {
                         auto models = performParsing(rootDirectory, excludedDirectories);
+                        mergeWithDbData(models, dbModels);
                         return models;
                     });
                     m_parserWorker->thenWithResult<CAircraftModelList>(this, [this](const auto & models)
@@ -90,6 +91,7 @@ namespace BlackMisc
                 else if (mode.testFlag(LoadDirectly))
                 {
                     m_installedModels = performParsing(m_rootDirectory, m_excludedDirectories);
+                    mergeWithDbData(m_installedModels, dbModels);
                     emit loadingFinished(true, this->m_simulatorInfo);
                 }
             }

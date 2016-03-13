@@ -177,7 +177,7 @@ namespace BlackGui
             void ps_onModelRowSelected(const QModelIndex &index);
 
             //! Load the models
-            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
 
             //! Model loading finished
             void ps_onOwnModelsLoadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simInfo);
@@ -186,7 +186,7 @@ namespace BlackGui
             void ps_onOwnModelsCountChanged(int count, bool withFilter);
 
             //! Request simulator models
-            void ps_requestSimulatorModels();
+            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
 
             //! User object changed
             void ps_userChanged();

@@ -542,9 +542,9 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_onStashedModelsChanged()
         {
-            bool hlvp = this->ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
-            bool hlom = this->ui->tvp_OwnAircraftModels->derivedModel()->highlightModelStrings();
-            bool highlight =  hlom || hlvp;
+            const bool hlvp = this->ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
+            const bool hlom = this->ui->tvp_OwnAircraftModels->derivedModel()->highlightModelStrings();
+            const bool highlight =  hlom || hlvp;
             if (!highlight) { return; }
             const QStringList stashedModels(this->ui->comp_StashAircraft->getStashedModelStrings());
             if (hlvp)
@@ -602,13 +602,9 @@ namespace BlackGui
             this->ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 
-        void CDbMappingComponent::ps_requestSimulatorModels()
+        void CDbMappingComponent::ps_requestSimulatorModels(const CSimulatorInfo &simInfo, IAircraftModelLoader::LoadMode mode)
         {
-            QAction *a = qobject_cast<QAction *>(QObject::sender());
-            if (!a) { return; }
-            int f = a->data().toInt();
-            CSimulatorInfo sim(f);
-            this->ps_loadInstalledModels(sim);
+            this->ps_loadInstalledModels(simInfo, mode);
         }
 
         void CDbMappingComponent::ps_userChanged()
@@ -678,7 +674,7 @@ namespace BlackGui
             }
         }
 
-        void CDbMappingComponent::ps_loadInstalledModels(const CSimulatorInfo &simInfo)
+        void CDbMappingComponent::ps_loadInstalledModels(const CSimulatorInfo &simInfo, IAircraftModelLoader::LoadMode mode)
         {
             if (!this->initModelLoader(simInfo))
             {
@@ -694,7 +690,8 @@ namespace BlackGui
 
             CLogMessage(this).info("Starting loading for %1") << simInfo.toQString();
             this->ui->tvp_OwnAircraftModels->showLoadIndicator();
-            this->m_modelLoader->startLoading();
+            Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
+            this->m_modelLoader->startLoading(mode, sGui->getWebDataServices()->getModels());
         }
 
         void CDbMappingComponent::ps_onOwnModelsLoadingFinished(bool success, const CSimulatorInfo &simInfo)
@@ -702,15 +699,22 @@ namespace BlackGui
             if (success && this->m_modelLoader)
             {
                 const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
+                const int modelsLoaded = models.size();
                 this->ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
-                CLogMessage(this).info("Loading %1 of models completed") << models.size();
-
-                // store for later
-                Data::CDbMappingComponent mc(this->m_lastInteractions.get());
-                if (simInfo.isSingleSimulator() &&  mc.getLastSimulatorSelection() != simInfo)
+                if (modelsLoaded > 0)
                 {
-                    mc.setLastSimulatorSelection(simInfo);
-                    this->m_lastInteractions.set(mc);
+                    // store for later
+                    Data::CDbMappingComponent mc(this->m_lastInteractions.get());
+                    if (simInfo.isSingleSimulator() &&  mc.getLastSimulatorSelection() != simInfo)
+                    {
+                        mc.setLastSimulatorSelection(simInfo);
+                        this->m_lastInteractions.set(mc);
+                    }
+                }
+                else
+                {
+                    // loading ok, but no data
+                    CLogMessage(this).warning("Loading completed, but no models");
                 }
             }
             else
@@ -758,29 +762,69 @@ namespace BlackGui
             {
                 this->addSeparator(menu);
                 QMenu *load = menu.addMenu(CIcons::appModels16(), "Load installed models");
-                QAction *a = nullptr;
                 CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
                 Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access parent");
-
                 if (sims.fs9())
                 {
-                    a = load->addAction(CIcons::appModels16(), "FS9 models", mapComp, SLOT(ps_requestSimulatorModels()));
-                    a->setData(QVariant(static_cast<int>(CSimulatorInfo::FS9)));
+                    load->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
+                    {
+                        mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundWithCache);
+                    });
                 }
                 if (sims.fsx())
                 {
-                    a = load->addAction(CIcons::appModels16(), "FSX models", mapComp, SLOT(ps_requestSimulatorModels()));
-                    a->setData(QVariant(static_cast<int>(CSimulatorInfo::FSX)));
+                    load->addAction(CIcons::appModels16(), "P3D models", mapComp, [mapComp]()
+                    {
+                        mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundWithCache);
+                    });
                 }
                 if (sims.p3d())
                 {
-                    a = load->addAction(CIcons::appModels16(), "P3D models", mapComp, SLOT(ps_requestSimulatorModels()));
-                    a->setData(QVariant(static_cast<int>(CSimulatorInfo::P3D)));
+                    load->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
+                    {
+                        mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundWithCache);
+                    });
                 }
                 if (sims.xplane())
                 {
-                    a = load->addAction(CIcons::appModels16(), "XPlane models", mapComp, SLOT(ps_requestSimulatorModels()));
-                    a->setData(QVariant(static_cast<int>(CSimulatorInfo::XPLANE)));
+                    load->addAction(CIcons::appModels16(), "XP models", mapComp, [mapComp]()
+                    {
+                        mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundWithCache);
+                    });
+                }
+
+                // with models loaded I allow a refresh reload
+                if (sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
+                {
+                    QMenu *reloadMenu = load->addMenu("Force reload");
+                    if (sims.fs9())
+                    {
+                        reloadMenu->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
+                        {
+                            mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundNoCache);
+                        });
+                    }
+                    if (sims.fsx())
+                    {
+                        reloadMenu->addAction(CIcons::appModels16(), "P3D models", mapComp, [mapComp]()
+                        {
+                            mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundNoCache);
+                        });
+                    }
+                    if (sims.p3d())
+                    {
+                        reloadMenu->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
+                        {
+                            mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundNoCache);
+                        });
+                    }
+                    if (sims.xplane())
+                    {
+                        reloadMenu->addAction(CIcons::appModels16(), "XP models", mapComp, [mapComp]()
+                        {
+                            mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundNoCache);
+                        });
+                    }
                 }
             }
             this->nestedCustomMenu(menu);

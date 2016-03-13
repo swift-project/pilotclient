@@ -44,6 +44,7 @@ namespace BlackMisc
             bool containsModelStringOrId(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find by model string
+            //! \remark normally CAircraftModelList::findFirstByModelString would be used
             CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find first by model string
@@ -66,6 +67,18 @@ namespace BlackMisc
 
             //! With file name
             CAircraftModelList findWithFileName() const;
+
+            //! Models with aircraft ICAO code set
+            CAircraftModelList withAircraftDesignator() const;
+
+            //! Models with aircraft ICAO code from list
+            CAircraftModelList withAircraftDesignator(const QStringList &designators) const;
+
+            //! Models with a known aircraft ICAO code set
+            CAircraftModelList withKnownAircraftDesignator() const;
+
+            //! All models from given distributors
+            CAircraftModelList byDistributor(const CDistributorList &distributors) const;
 
             //! Set simulator for all elements
             void setSimulatorInfo(const BlackMisc::Simulation::CSimulatorInfo &info);

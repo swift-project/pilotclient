@@ -36,22 +36,24 @@ namespace BlackMisc
             //! Parser mode
             enum LoadModeFlag
             {
-                NotSet            = 0,
-                LoadDirectly      = 1 << 0,   //!< load syncronously (blocking), normally for testing
-                LoadInBackground  = 1 << 1,   //!< load in background, asnycronously
-                CacheUntilNewer   = 1 << 2,   //!< use cache until newer data re available
-                CacheFirst        = 1 << 3,   //!< always use cache (if it has data)
-                CacheSkipped      = 1 << 4,   //!< ignore cache
-                CacheOnly         = 1 << 5,   //!< only read cache, never load from disk
-                Default           = LoadInBackground | CacheFirst //!< default mode
+                NotSet                = 0,
+                LoadDirectly          = 1 << 0,   //!< load syncronously (blocking), normally for testing
+                LoadInBackground      = 1 << 1,   //!< load in background, asnycronously
+                CacheUntilNewer       = 1 << 2,   //!< use cache until newer data re available
+                CacheFirst            = 1 << 3,   //!< always use cache (if it has data)
+                CacheSkipped          = 1 << 4,   //!< ignore cache
+                CacheOnly             = 1 << 5,   //!< only read cache, never load from disk
+                InBackgroundWithCache = LoadInBackground | CacheFirst,   //!< Background, cached
+                InBackgroundNoCache   = LoadInBackground | CacheSkipped  //!< Background, not cached
             };
             Q_DECLARE_FLAGS(LoadMode, LoadModeFlag)
 
             //! Destructor
             virtual ~IAircraftModelLoader();
 
-            //! Start the loading process from disk
-            void startLoading(LoadMode mode = Default);
+            //! Start the loading process from disk.
+            //! Optional DB models can be passed and used for data consolidation.
+            void startLoading(LoadMode mode = InBackgroundWithCache, const CAircraftModelList &dbModels = {});
 
             //! Change the directory
             bool changeRootDirectory(const QString &directory);
@@ -64,6 +66,9 @@ namespace BlackMisc
 
             //! The loaded models
             virtual const BlackMisc::Simulation::CAircraftModelList &getAircraftModels() const = 0;
+
+            //! Count of loaded models
+            const int getAircraftModelsCount() const { return getAircraftModels().size(); }
 
             //! Cache timestamp
             virtual QDateTime getCacheTimestamp() const = 0;
@@ -107,7 +112,10 @@ namespace BlackMisc
             bool existsDir(const QString &directory) const;
 
             //! Start the loading process from disk
-            virtual void startLoadingFromDisk(LoadMode mode) = 0;
+            virtual void startLoadingFromDisk(LoadMode mode, const BlackMisc::Simulation::CAircraftModelList &dbModels) = 0;
+
+            //! Merge with DB data if possible
+            virtual bool mergeWithDbData(BlackMisc::Simulation::CAircraftModelList &modelsFromSimulator, const BlackMisc::Simulation::CAircraftModelList &dbModels);
 
             BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo; //!< Corresponding simulator
             std::atomic<bool> m_cancelLoading { false };           //!< flag

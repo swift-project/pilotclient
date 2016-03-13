@@ -19,10 +19,8 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         namespace FsCommon
         {
-
             bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
             {
                 if (title.isEmpty()) { return false; }
@@ -61,9 +59,9 @@ namespace BlackMisc
             CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList() const
             {
                 CAircraftModelList ml;
-                for (auto it = this->begin() ; it != this->end(); ++it)
+                for (const CAircraftCfgEntries &entries : (*this))
                 {
-                    ml.push_back(it->toAircraftModel());
+                    ml.push_back(entries.toAircraftModel());
                 }
                 return ml;
             }
@@ -71,9 +69,9 @@ namespace BlackMisc
             CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo) const
             {
                 CAircraftModelList ml;
-                for (auto it = this->begin() ; it != this->end(); ++it)
+                for (const CAircraftCfgEntries &entries : (*this))
                 {
-                    CAircraftModel m(it->toAircraftModel());
+                    CAircraftModel m(entries.toAircraftModel());
                     m.setSimulatorInfo(simInfo);
                     ml.push_back(m);
                 }

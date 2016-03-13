@@ -38,6 +38,23 @@ namespace BlackMisc
             return dir.exists();
         }
 
+        bool IAircraftModelLoader::mergeWithDbData(CAircraftModelList &modelsFromSimulator, const CAircraftModelList &dbModels)
+        {
+            if (dbModels.isEmpty() || modelsFromSimulator.isEmpty()) { return false; }
+            for (CAircraftModel &simModel : modelsFromSimulator)
+            {
+                if (simModel.hasValidDbKey()) { continue; } // already done
+                CAircraftModel dbModel(dbModels.findFirstByModelString(simModel.getModelString()));
+                if (!dbModel.hasValidDbKey())
+                {
+                    continue; // not found
+                }
+                dbModel.updateMissingParts(simModel, false);
+                simModel = dbModel;
+            }
+            return true;
+        }
+
         void IAircraftModelLoader::ps_loadFinished(bool success)
         {
             Q_UNUSED(success);
@@ -53,7 +70,7 @@ namespace BlackMisc
             return true;
         }
 
-        void IAircraftModelLoader::startLoading(LoadMode mode)
+        void IAircraftModelLoader::startLoading(LoadMode mode, const CAircraftModelList &dbModels)
         {
             if (this->m_loadingInProgress) { return; }
             this->m_loadingInProgress = true;
@@ -65,6 +82,7 @@ namespace BlackMisc
             }
             else if (useCachedData && mode.testFlag(CacheUntilNewer))
             {
+                //! \todo currently too slow, does not make sense with that overhead
                 if (!this->areModelFilesUpdated())
                 {
                     emit loadingFinished(true, this->m_simulatorInfo);
@@ -77,7 +95,7 @@ namespace BlackMisc
                 emit loadingFinished(false, this->m_simulatorInfo);
                 return;
             }
-            this->startLoadingFromDisk(mode);
+            this->startLoadingFromDisk(mode, dbModels);
         }
 
         const CSimulatorInfo &IAircraftModelLoader::supportedSimulators() const

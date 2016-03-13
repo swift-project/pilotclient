@@ -266,6 +266,11 @@ namespace BlackMisc
             return this->m_aircraftIcao.hasDesignator();
         }
 
+        bool CAircraftModel::hasKnownAircraftDesignator() const
+        {
+            return this->m_aircraftIcao.hasKnownDesignator();
+        }
+
         bool CAircraftModel::hasAirlineDesignator() const
         {
             return this->m_livery.hasValidAirlineDesignator();
@@ -291,9 +296,9 @@ namespace BlackMisc
             this->setModelMode(CAircraftModel::modelModeFromString(mode));
         }
 
-        void CAircraftModel::updateMissingParts(const CAircraftModel &otherModel)
+        void CAircraftModel::updateMissingParts(const CAircraftModel &otherModel, bool dbModelPriority)
         {
-            if (!this->hasValidDbKey() && otherModel.hasValidDbKey())
+            if (dbModelPriority && !this->hasValidDbKey() && otherModel.hasValidDbKey())
             {
                 // we have no DB data, but the other one has
                 // so we change roles. We take the DB object as base, and update our parts
