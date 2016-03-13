@@ -72,6 +72,11 @@ namespace BlackGui
         }
     }
 
+    void CGuiApplication::processEventsToRefreshGui() const
+    {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    }
+
     QWidget *CGuiApplication::mainApplicationWindow()
     {
         return CGuiUtility::mainApplicationWindow();

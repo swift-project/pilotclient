@@ -135,7 +135,7 @@ void CSwiftCore::startCore(const QString &dBusAdress)
     ui->pb_StartCore->setEnabled(false);
     ui->pb_StopCore->setEnabled(true);
     ui->gb_DBusMode->setDisabled(true);
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    sGui->processEventsToRefreshGui();
 
     // context
     connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
@@ -146,7 +146,7 @@ void CSwiftCore::stopCore()
     ui->pb_StartCore->setEnabled(true);
     ui->pb_StopCore->setEnabled(false);
     ui->gb_DBusMode->setDisabled(false);
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    sGui->processEventsToRefreshGui();
 
     sGui->exit();
 }

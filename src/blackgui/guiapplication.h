@@ -54,6 +54,9 @@ namespace BlackGui
         //! Window mode (window flags)
         CEnableForFramelessWindow::WindowMode getWindowMode() const;
 
+        //! Allow the GUI to refresh by processing events
+        void processEventsToRefreshGui() const;
+
         //! Init the main application window based on information in this application
         void initMainApplicationWindow(QWidget *mainWindow) const;
 

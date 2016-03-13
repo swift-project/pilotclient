@@ -221,7 +221,7 @@ namespace BlackGui
                 if (c % 25 == 0)
                 {
                     Q_ASSERT_X(c <= all, Q_FUNC_INFO, "illegal numbers");
-                    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+                    sGui->processEventsToRefreshGui();
 
                     int percent = c * 100 / all;
                     if (max < all)
@@ -235,7 +235,7 @@ namespace BlackGui
             }
 
             this->updateGuiValues(100);
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            sGui->processEventsToRefreshGui();
 
             const CStatusMessage stashedMsg(categgories(), CStatusMessage::SeverityInfo, QString("Ready to auto stashed %1 models").arg(autoStashed.size()));
             this->addStatusMessage(stashedMsg);

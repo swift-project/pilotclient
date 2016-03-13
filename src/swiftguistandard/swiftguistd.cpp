@@ -103,7 +103,7 @@ void SwiftGuiStd::performGracefulShutdown()
     this->ui->comp_MainInfoArea->dockAllWidgets();
 
     // allow some other parts to react
-    QApplication::processEvents(QEventLoop::AllEvents, 100);
+    sGui->processEventsToRefreshGui();
 
     // tell GUI components to shut down
     emit requestGracefulShutdown();
@@ -115,7 +115,7 @@ void SwiftGuiStd::performGracefulShutdown()
     }
 
     // allow some other parts to react
-    QApplication::processEvents(QEventLoop::AllEvents, 100);
+    sGui->processEventsToRefreshGui();
 }
 
 void SwiftGuiStd::closeEvent(QCloseEvent *event)
