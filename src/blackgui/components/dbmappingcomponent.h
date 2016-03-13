@@ -122,6 +122,9 @@ namespace BlackGui
             //! Resize so that mapping is easier
             void resizeForMapping();
 
+            //! Max. space for table view
+            void maxTableView();
+
             //! Stash models
             void stashSelectedModels();
 

@@ -419,16 +419,12 @@ namespace BlackGui
 
         void CDbMappingComponent::resizeForSelect()
         {
-            int h = this->height();
-            int h1 = h / 3 * 2;
-            int h2 = h / 3;
-            QList<int> sizes({h1, h2});
-            this->ui->sp_MappingComponent->setSizes(sizes);
+            this->maxTableView();
         }
 
         void CDbMappingComponent::resizeForMapping()
         {
-            int h = this->height(); // total height
+            const int h = this->height(); // total height
             int h2 = ui->qw_EditorsScrollArea->minimumHeight();
             h2 *= 1.10; // desired height of inner widget + some space for scrollarea
             int currentSize = ui->sp_MappingComponent->sizes().last(); // current size
@@ -445,7 +441,16 @@ namespace BlackGui
                 h1 = h / 3;
                 h2 = h / 3 * 2;
             }
-            QList<int> sizes({h1, h2});
+            const QList<int> sizes({h1, h2});
+            this->ui->sp_MappingComponent->setSizes(sizes);
+        }
+
+        void CDbMappingComponent::maxTableView()
+        {
+            const int h = this->height();
+            int h1 = h;
+            int h2 = 0;
+            const QList<int> sizes({h1, h2});
             this->ui->sp_MappingComponent->setSizes(sizes);
         }
 
