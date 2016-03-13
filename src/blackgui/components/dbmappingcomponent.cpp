@@ -310,7 +310,7 @@ namespace BlackGui
             }
             if (msgs.hasErrorMessages())
             {
-                this->showMessages(msgs);
+                this->showOverlayMessages(msgs);
             }
         }
 
@@ -379,7 +379,7 @@ namespace BlackGui
             // errors if any
             if (msgs.hasErrorMessages())
             {
-                this->showMessages(msgs);
+                this->showOverlayMessages(msgs);
             }
         }
 
@@ -594,7 +594,7 @@ namespace BlackGui
                 );
             if (msgs.hasWarningOrErrorMessages())
             {
-                this->showMessages(msgs);
+                this->showOverlayMessages(msgs);
             }
         }
 

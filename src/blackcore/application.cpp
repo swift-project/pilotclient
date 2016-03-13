@@ -110,7 +110,7 @@ namespace BlackCore
             CStatusMessage m(this->requestReloadOfSetupAndVersion());
             if (m.isWarningOrAbove())
             {
-                this->errorMessage(m.getMessage());
+                this->cmdLineErrorMessage(m.getMessage());
                 return false;
             }
         }
@@ -384,7 +384,7 @@ namespace BlackCore
     void CApplication::severeStartupProblem(const CStatusMessage &message)
     {
         CLogMessage(this).preformatted(message);
-        this->errorMessage(message.getMessage());
+        this->cmdLineErrorMessage(message.getMessage());
         this->exit(EXIT_FAILURE);
 
         // if I get here the event loop was not yet running
@@ -467,7 +467,7 @@ namespace BlackCore
         QStringList args(QCoreApplication::instance()->arguments());
         if (!this->m_parser.parse(args))
         {
-            this->errorMessage(this->m_parser.errorText());
+            this->cmdLineErrorMessage(this->m_parser.errorText());
             return false;
         }
 
@@ -475,12 +475,12 @@ namespace BlackCore
         if (this->m_parser.isSet(this->m_cmdHelp))
         {
             // Important parser help will already stop application
-            this->helpMessage();
+            this->cmdLineHelpMessage();
             return true;
         }
         if (this->m_parser.isSet(this->m_cmdVersion))
         {
-            this->versionMessage();
+            this->cmdLineVersionMessage();
             return true;
         }
 
@@ -493,20 +493,20 @@ namespace BlackCore
         return true;
     }
 
-    void CApplication::errorMessage(const QString &errorMessage) const
+    void CApplication::cmdLineErrorMessage(const QString &errorMessage) const
     {
         fputs(qPrintable(errorMessage), stderr);
         fputs("\n\n", stderr);
         fputs(qPrintable(this->m_parser.helpText()), stderr);
     }
 
-    void CApplication::helpMessage()
+    void CApplication::cmdLineHelpMessage()
     {
         this->m_parser.showHelp(); // terminates
         Q_UNREACHABLE();
     }
 
-    void CApplication::versionMessage() const
+    void CApplication::cmdLineVersionMessage() const
     {
         printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
     }

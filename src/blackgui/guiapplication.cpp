@@ -89,7 +89,7 @@ namespace BlackGui
         CApplication::exit(retcode);
     }
 
-    void CGuiApplication::errorMessage(const QString &errorMessage) const
+    void CGuiApplication::cmdLineErrorMessage(const QString &errorMessage) const
     {
         if (CProject::isRunningOnWindowsNtPlatform())
         {
@@ -99,11 +99,11 @@ namespace BlackGui
         }
         else
         {
-            CApplication::errorMessage(errorMessage);
+            CApplication::cmdLineErrorMessage(errorMessage);
         }
     }
 
-    void CGuiApplication::helpMessage()
+    void CGuiApplication::cmdLineHelpMessage()
     {
         if (CProject::isRunningOnWindowsNtPlatform())
         {
@@ -113,11 +113,11 @@ namespace BlackGui
         }
         else
         {
-            CApplication::helpMessage();
+            CApplication::cmdLineHelpMessage();
         }
     }
 
-    void CGuiApplication::versionMessage() const
+    void CGuiApplication::cmdLineVersionMessage() const
     {
         if (CProject::isRunningOnWindowsNtPlatform())
         {
@@ -127,7 +127,7 @@ namespace BlackGui
         }
         else
         {
-            CApplication::versionMessage();
+            CApplication::cmdLineVersionMessage();
         }
     }
 

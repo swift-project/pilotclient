@@ -54,8 +54,10 @@ namespace BlackGui
         //! Init the main application window based on information in this application
         void initMainApplicationWindow(QWidget *mainWindow) const;
 
-        //! \copydoc BlackCore::CApplication::errorMessage
-        virtual void errorMessage(const QString &errorMessage) const override;
+        //! \name print messages generated during parsing / cmd handling
+        //! @{
+        virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const override;
+        //! @}
 
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
@@ -65,10 +67,10 @@ namespace BlackGui
         static void exit(int retcode = 0);
 
     protected:
-        //! \name print messages generated during parsing
+        //! \name print messages generated during parsing / cmd handling
         //! @{
-        virtual void helpMessage() override;
-        virtual void versionMessage() const override;
+        virtual void cmdLineHelpMessage() override;
+        virtual void cmdLineVersionMessage() const override;
         //! @}
 
         //! Handle paring of special GUI cmd arguments

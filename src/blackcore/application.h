@@ -148,7 +148,7 @@ namespace BlackCore
         QString getParserOptionValue(const QCommandLineOption &option) const;
 
         //! Display parser error message
-        virtual void errorMessage(const QString &errorMessage) const;
+        virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const;
 
         //! Parses and handles the standard options such as help, version, parse error
         //! \note in some cases (error, version, help) application is terminated during this step
@@ -213,10 +213,10 @@ namespace BlackCore
         CApplication(const QString &applicationName, QCoreApplication *app);
 
         //! Display help message
-        virtual void helpMessage();
+        virtual void cmdLineHelpMessage();
 
         //! Display version message
-        virtual void versionMessage() const;
+        virtual void cmdLineVersionMessage() const;
 
         //! Can be used to parse specialized arguments
         virtual bool parsingHookIn() { return true; }
