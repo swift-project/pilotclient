@@ -12,8 +12,9 @@
 #ifndef SWIFTCORE_H
 #define SWIFTCORE_H
 
-#include "blackcore/corefacade.h"
 #include "blackgui/systemtraywindow.h"
+#include "blackgui/mainwindowaccess.h"
+#include "blackcore/corefacade.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/identifiable.h"
 
@@ -24,6 +25,7 @@ namespace Ui { class CSwiftCore; }
 //! swift core control
 class CSwiftCore :
     public BlackGui::CSystemTrayWindow,
+    public BlackGui::IMainWindowAccess,
     public BlackMisc::CIdentifiable
 {
     Q_OBJECT

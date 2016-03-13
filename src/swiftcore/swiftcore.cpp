@@ -36,6 +36,10 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     setSystemTrayMode(MinimizeToTray | QuitOnClose);
     setSystemTrayToolTip(name);
 
+    this->m_mwaLogComponent = this->ui->comp_InfoArea->getLogComponent();
+    this->m_mwaOverlayFrame = nullptr;
+    this->m_mwaStatusBar = nullptr;
+
     initLogDisplay();
     initSlots();
     initStyleSheet();
