@@ -21,6 +21,7 @@
 #include <QStandardPaths>
 #include <QFile>
 #include <QFileInfo>
+#include <stdlib.h>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -31,7 +32,8 @@ BlackCore::CApplication *sApp = nullptr; // set by constructor
 namespace BlackCore
 {
     CApplication::CApplication(const QString &applicationName) :
-        m_applicationName(applicationName)
+        m_applicationName(applicationName),
+        m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -69,6 +71,7 @@ namespace BlackCore
             // global setup
             sApp = this;
             this->m_setupReader.reset(new CSetupReader(this));
+            connect(this->m_setupReader.data(), &CSetupReader::setupSynchronized, this, &CApplication::ps_setupSyncronized);
             this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions());
 
             // notify when app goes down
@@ -86,7 +89,7 @@ namespace BlackCore
         return QCoreApplication::instance()->applicationName() + " " + CProject::version();
     }
 
-    bool CApplication::start()
+    bool CApplication::start(bool waitForStart)
     {
         if (!this->m_parsed)
         {
@@ -105,7 +108,27 @@ namespace BlackCore
             }
         }
 
-        this->m_started = this->startHookIn();
+        bool s = this->startHookIn();
+        if (waitForStart)
+        {
+            s = this->waitForStart();
+        }
+        this->m_started = s;
+        return s;
+    }
+
+    bool CApplication::waitForStart()
+    {
+        // process events return immediatley if nothing is to be processed
+        const QTime dieTime = QTime::currentTime().addMSecs(5000);
+        while (QTime::currentTime() < dieTime && !this->m_started && !this->m_startUpCompleted)
+        {
+            QCoreApplication::instance()->processEvents(QEventLoop::AllEvents, 250);
+        }
+        if (this->m_startUpCompleted)
+        {
+            CLogMessage(this).error("Waiting for startup timed out");
+        }
         return this->m_started;
     }
 
@@ -163,13 +186,28 @@ namespace BlackCore
         return QCoreApplication::arguments();
     }
 
-    void CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
+    bool CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
     {
-        if (this->m_coreFacade.isNull())
-        {
-            this->m_coreFacade.reset(new CCoreFacade(coreConfig));
-            this->coreFacadeStarted();
-        }
+        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this after parsing");
+
+        this->m_useContexts = true;
+        this->m_coreFacadeConfig = coreConfig;
+        return this->startCoreFacade(); // will do nothing if setup is not yet loaded
+    }
+
+    bool CApplication::startCoreFacade()
+    {
+        if (!this->m_useContexts) { return true; } // we do not use context, so no need to startup
+        if (!this->m_parsed) { return false; }
+        if (!this->m_setupReader || !this->m_setupReader->isSetupSyncronized()) { return false; }
+
+        Q_ASSERT_X(this->m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
+        Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
+
+        CLogMessage(this).info("Will start core facade now");
+        this->m_coreFacade.reset(new CCoreFacade(this->m_coreFacadeConfig));
+        emit this->coreFacadeStarted();
+        return true;
     }
 
     void CApplication::initLogging()
@@ -234,6 +272,29 @@ namespace BlackCore
         }
 
         this->m_fileLogger->close();
+    }
+
+    void CApplication::ps_setupSyncronized(bool success)
+    {
+        if (success)
+        {
+            if (!this->m_started)
+            {
+                // follow up startup
+                this->m_started = this->startCoreFacade();
+            }
+        }
+        this->m_startUpCompleted = true;
+    }
+
+    void CApplication::severeStartupProblem(const CStatusMessage &message)
+    {
+        CLogMessage(this).preformatted(message);
+        this->errorMessage(message.getMessage());
+        this->exit(EXIT_FAILURE);
+
+        // if I get here the event loop was not yet running
+        std::exit(EXIT_FAILURE);
     }
 
     CApplication *BlackCore::CApplication::instance()

@@ -54,6 +54,9 @@ namespace BlackCore
         //! Similar to \sa QCoreApplication::instance() returns the single instance
         static CApplication *instance();
 
+        //! Own log categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
+
         //! Constructor
         CApplication(const QString &applicationName = executable());
 
@@ -64,7 +67,10 @@ namespace BlackCore
         QString getApplicationNameAndVersion() const;
 
         //! Start services, if not yet parsed call CApplication::parse
-        virtual bool start();
+        virtual bool start(bool waitForStart = true);
+
+        //! Wait for stert by calling the event loop and waiting until everything is ready
+        bool waitForStart();
 
         //! Request to get network reply
         QNetworkReply *requestNetworkResource(const QNetworkRequest &request,
@@ -130,7 +136,7 @@ namespace BlackCore
 
         //! Init the contexts part and start core facade
         //! \sa coreFacadeStarted
-        void useContexts(const CCoreFacadeConfig &coreConfig);
+        bool useContexts(const CCoreFacadeConfig &coreConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
@@ -161,15 +167,13 @@ namespace BlackCore
         //! Facade started
         void coreFacadeStarted();
 
+    protected slots:
+        //! Setup read/syncronized
+        void ps_setupSyncronized(bool success);
+
     protected:
         //! Constructor
         CApplication(const QString &applicationName, QCoreApplication *app);
-
-        //! executable name
-        static const QString &executable();
-
-        //! Own log categories
-        static const BlackMisc::CLogCategoryList &cats();
 
         //! Display help message
         virtual void helpMessage();
@@ -183,13 +187,26 @@ namespace BlackCore
         //! Can be used to start special services
         virtual bool startHookIn() { return true; }
 
+        //! Severe issue during startup, most likely it does not make sense to continue
+        //! \note call this here if the parsing stage is over and reaction to a runtime issue
+        //!       is needed
+        void severeStartupProblem(const BlackMisc::CStatusMessage &message);
+
+        //! Start the core facade
+        //! \note does nothing when setup is not yet loaded
+        bool startCoreFacade();
+
+        //! executable name
+        static const QString &executable();
+
         // cmd parsing
         QCommandLineParser m_parser;                    //!< cmd parser
         QCommandLineOption m_cmdHelp {"help"};          //!< help option
         QCommandLineOption m_cmdVersion { "version" };  //!< version option
         QCommandLineOption m_cmdDBusAddress {"empty"};  //!< DBus address
         bool               m_parsed = false;            //!< Parsing accomplished?
-        bool               m_started = false;           //!< started?
+        bool               m_started = false;           //!< started with success?
+        bool               m_startUpCompleted = false;  //!< startup phase completed? Can mean startup failed
         bool               m_startSetupReader = false;  //!< start the setup reader
 
     private:
@@ -207,7 +224,9 @@ namespace BlackCore
         QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;             //!< file logger
         QNetworkAccessManager                  m_accessManager { this }; //!< single network access manager
         QString                                m_applicationName;        //!< application name
+        CCoreFacadeConfig                      m_coreFacadeConfig;       //!< Core facade config if any
         bool                                   m_shutdown = false;       //!< is being shut down
+        bool                                   m_useContexts = false;    //!< use contexts
     };
 } // namespace
 
