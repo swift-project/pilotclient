@@ -37,7 +37,7 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags::DbReaderHint hint, QObject *parent) :
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags::DbReaderHint hint, BlackMisc::Restricted<CApplication>, QObject *parent) :
         QObject(parent), m_readerFlags(readerFlags), m_dbHint(hint)
     {
         if (!sApp) { return; } // shutting down

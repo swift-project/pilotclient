@@ -28,6 +28,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/project.h"
+#include "blackmisc/restricted.h"
 #include <QObject>
 
 namespace BlackCore
@@ -48,11 +49,13 @@ namespace BlackCore
         public QObject
     {
         Q_OBJECT
-        friend class CApplication;
 
     public:
         //! Log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
+
+        //! Constructor, only allowed from BlackCore::CApplication
+        CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags:: DbReaderHint hint, BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);
 
         //! Shutdown
         void gracefulShutdown();
@@ -260,10 +263,6 @@ namespace BlackCore
     public slots:
         //! First read (allows to immediately read in background)
         void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities, int delayMs = 0);
-
-    protected:
-        //! Constructor
-        CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags:: DbReaderHint hint, QObject *parent = nullptr);
 
     private slots:
         //! ATC bookings received

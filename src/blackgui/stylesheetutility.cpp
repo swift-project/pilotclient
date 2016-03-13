@@ -19,8 +19,7 @@
 
 namespace BlackGui
 {
-
-    CStyleSheetUtility::CStyleSheetUtility(QObject *parent) : QObject(parent)
+    CStyleSheetUtility::CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent) : QObject(parent)
     {
         this->read();
     }

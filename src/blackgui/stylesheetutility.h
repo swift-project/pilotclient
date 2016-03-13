@@ -13,6 +13,7 @@
 #define BLACKGUI_STYLESHEETUTILITY_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/restricted.h"
 #include <QMap>
 #include <QObject>
 #include <QFont>
@@ -29,9 +30,11 @@ namespace BlackGui
     class BLACKGUI_EXPORT CStyleSheetUtility : public QObject
     {
         Q_OBJECT
-        friend class CGuiApplication;
 
     public:
+        //! Constructor
+        explicit CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent = nullptr);
+
         //! Style for given file name
         QString style(const QString &fileName) const;
 
@@ -137,10 +140,6 @@ namespace BlackGui
     private:
         QMap<QString, QString> m_styleSheets; //!< filename, stylesheet
         QScopedPointer<QSettings> m_iniFile;
-
-        //! Constructor
-        explicit CStyleSheetUtility(QObject *parent = nullptr);
     };
-
 }
 #endif // guard

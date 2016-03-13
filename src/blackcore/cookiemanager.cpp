@@ -18,7 +18,7 @@ using namespace BlackMisc;
 
 namespace BlackCore
 {
-    CCookieManager::CCookieManager(QObject *parent) : QNetworkCookieJar(parent)
+    CCookieManager::CCookieManager(BlackMisc::Restricted<CApplication>, QObject *parent) : QNetworkCookieJar(parent)
     {
         // code
     }

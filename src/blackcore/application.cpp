@@ -42,6 +42,7 @@ BlackCore::CApplication *sApp = nullptr; // set by constructor
 namespace BlackCore
 {
     CApplication::CApplication(const QString &applicationName) :
+        m_cookieManager( {}, this),
         m_applicationName(applicationName),
         m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
@@ -450,7 +451,7 @@ namespace BlackCore
         {
             CLogMessage(this).info("Will start web data services now");
             this->m_webDataServices.reset(
-                new CWebDataServices(this->m_webReader, this->m_dbReaderHint)
+                new CWebDataServices(this->m_webReader, this->m_dbReaderHint, {}, this)
             );
         }
         return true;

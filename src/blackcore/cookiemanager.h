@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_COOKIEMANAGER_H
 #define BLACKCORE_COOKIEMANAGER_H
 
+#include "blackmisc/restricted.h"
 #include "blackcore/blackcoreexport.h"
 #include <QNetworkCookieJar>
 #include <QNetworkCookie>
@@ -30,9 +31,10 @@ namespace BlackCore
     {
         Q_OBJECT
 
-        friend class CApplication;
-
     public:
+        //! Constructor, only allowed from BlackCore::CApplication
+        CCookieManager(BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);
+
         //! \copydoc QNetworkCookieJar::setCookiesFromUrl
         //! \threadsafe
         virtual bool setCookiesFromUrl(const QList<QNetworkCookie> &cookies, const QUrl &url) override;
@@ -62,9 +64,6 @@ namespace BlackCore
         virtual bool updateCookie(const QNetworkCookie &cookie) override;
 
     private:
-        //! Constructor
-        CCookieManager(QObject *parent = nullptr);
-
         mutable QReadWriteLock m_lock { QReadWriteLock::Recursive };
     };
 
