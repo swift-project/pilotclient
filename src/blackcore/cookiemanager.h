@@ -33,11 +33,11 @@ namespace BlackCore
         friend class CApplication;
 
     public:
-        //! cookiesForUrl::setCookiesFromUrl
+        //! \copydoc QNetworkCookieJar::setCookiesFromUrl
         //! \threadsafe
         virtual bool setCookiesFromUrl(const QList<QNetworkCookie> &cookies, const QUrl &url) override;
 
-        //! QNetworkCookieJar::cookiesForUrl
+        //! \copydoc QNetworkCookieJar::cookiesForUrl
         //! \threadsafe
         virtual QList<QNetworkCookie> cookiesForUrl(const QUrl &url) const override;
 

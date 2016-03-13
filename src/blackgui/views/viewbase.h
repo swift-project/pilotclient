@@ -68,17 +68,17 @@ namespace BlackGui
             //! Menu flags
             enum MenuFlag
             {
-                MenuNone                 = 0,       ///< no menu
-                MenuClear                = 1 << 0,  ///< allow clearing the view via menu
-                MenuRemoveSelectedRows   = 1 << 1,  ///< allow to remove selected rows
-                MenuRefresh              = 1 << 2,  ///< allow refreshing the view via menu
-                MenuBackend              = 1 << 3,  ///< allow to request data from backend
-                MenuDisplayAutomatically = 1 << 4,  ///< allow to switch display automatically
-                MenuDisplayAutomaticallyAndRefresh = MenuDisplayAutomatically | MenuRefresh, ///< should come together
-                MenuFilter               = 1 << 5,  ///< filter can be opened
-                MenuSave                 = 1 << 6,  ///< save as JSON
-                MenuLoad                 = 1 << 7,  ///< load from JSON
-                MenuToggleSelectionMode  = 1 << 8,  ///< allow to toggle selection mode
+                MenuNone                 = 0,        //!< no menu
+                MenuClear                = 1 << 0,   //!< allow clearing the view via menu
+                MenuRemoveSelectedRows   = 1 << 1,   //!< allow to remove selected rows
+                MenuRefresh              = 1 << 2,   //!< allow refreshing the view via menu
+                MenuBackend              = 1 << 3,   //!< allow to request data from backend
+                MenuDisplayAutomatically = 1 << 4,   //!< allow to switch display automatically
+                MenuDisplayAutomaticallyAndRefresh = MenuDisplayAutomatically | MenuRefresh,  //!< should come together
+                MenuFilter               = 1 << 5,   //!< filter can be opened
+                MenuSave                 = 1 << 6,   //!< save as JSON
+                MenuLoad                 = 1 << 7,   //!< load from JSON
+                MenuToggleSelectionMode  = 1 << 8,   //!< allow to toggle selection mode
                 MenuStandard             = MenuClear | MenuRemoveSelectedRows | MenuRefresh | MenuBackend |
                                            MenuDisplayAutomatically | MenuFilter | MenuSave | MenuLoad | MenuToggleSelectionMode,
                 MenuLoadAndSave          = MenuLoad  | MenuSave,
@@ -87,11 +87,11 @@ namespace BlackGui
                 MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightDbData      = 1 << 9,  ///< highlight DB data
-                MenuHighlightStashed     = 1 << 10, ///< highlight stashed models
-                MenuCanStashModels       = 1 << 11, ///< stash models
+                MenuHighlightDbData      = 1 << 9,   //!< highlight DB data
+                MenuHighlightStashed     = 1 << 10,  //!< highlight stashed models
+                MenuCanStashModels       = 1 << 11,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
-                MenuHighlightInvalid     = 1 << 12  ///< highlight invalid models
+                MenuHighlightInvalid     = 1 << 12   //!< highlight invalid models
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
 

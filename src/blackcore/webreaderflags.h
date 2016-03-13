@@ -28,15 +28,15 @@ namespace BlackCore
         //! Which readers to init
         enum WebReaderFlag
         {
-            None                 = 0,       ///< no reader at all
-            VatsimBookingReader  = 1 << 0,  ///< reader for VATSIM booking data
-            VatsimDataReader     = 1 << 1,  ///< reader for VATSIM data
-            VatsimMetarReader    = 1 << 2,  ///< reader for VATSIM metar data
-            IcaoDataReader       = 1 << 3,  ///< reader for ICAO data
-            ModelReader          = 1 << 4,  ///< reader for model data such as liveries, models, ..
-            AllVatsimReaders     = VatsimBookingReader | VatsimDataReader | VatsimMetarReader, ///< all readers
-            AllSwiftDbReaders    = IcaoDataReader | ModelReader,                               ///< all swift data
-            AllReaders           = AllSwiftDbReaders | AllVatsimReaders                        ///< everything
+            None                 = 0,        //!< no reader at all
+            VatsimBookingReader  = 1 << 0,   //!< reader for VATSIM booking data
+            VatsimDataReader     = 1 << 1,   //!< reader for VATSIM data
+            VatsimMetarReader    = 1 << 2,   //!< reader for VATSIM metar data
+            IcaoDataReader       = 1 << 3,   //!< reader for ICAO data
+            ModelReader          = 1 << 4,   //!< reader for model data such as liveries, models, etc
+            AllVatsimReaders     = VatsimBookingReader | VatsimDataReader | VatsimMetarReader,  //!< all readers
+            AllSwiftDbReaders    = IcaoDataReader | ModelReader,                                //!< all swift data
+            AllReaders           = AllSwiftDbReaders | AllVatsimReaders                         //!< everything
         };
         Q_DECLARE_FLAGS(WebReader, WebReaderFlag)
 
@@ -44,9 +44,9 @@ namespace BlackCore
         enum DbReaderHintFlag
         {
             NoHint        = 0,
-            FromDb        = 1 << 1, ///< directly from DB
-            FromJsonFile  = 1 << 2, ///< from the JSON files
-            FromCache     = 1 << 3, ///< try cache first
+            FromDb        = 1 << 1,  //!< directly from DB
+            FromJsonFile  = 1 << 2,  //!< from the JSON files
+            FromCache     = 1 << 3,  //!< try cache first
         };
         Q_DECLARE_FLAGS(DbReaderHint, DbReaderHintFlag)
 

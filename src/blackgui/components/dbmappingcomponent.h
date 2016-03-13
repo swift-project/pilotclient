@@ -271,9 +271,9 @@ namespace BlackGui
             };
 
             //! Menu for tools:
-            //! 1) removing DB models from current view and
-            //! 2) for auto stashing
-            //! 3) toggle auto filtering
+            //! -# removing DB models from current view and
+            //! -# for auto stashing
+            //! -# toggle auto filtering
             //! \note This is a specific menu for that very component
             class CModelStashTools : public BlackGui::IMenuDelegate
             {

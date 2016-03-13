@@ -466,9 +466,7 @@ namespace BlackCore
 
     void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
-        // todo:
-        // This was previously an assert and it should be one again in the future.
-        // This slot should not even be called when no simulator is available.
+        //! \todo This was previously an assert and it should be one again in the future. This slot should not even be called when no simulator is available.
         if (m_simulatorPlugin.first.isUnspecified())
         {
             // Do something if no simulator is running
