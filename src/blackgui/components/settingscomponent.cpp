@@ -51,7 +51,7 @@ namespace BlackGui
             this->ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(font));
             this->ui->cb_SettingsGuiFont->setCurrentFont(font);
             this->ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
-            this->m_fontColor = QColor(CStyleSheetUtility::instance().fontColor());
+            this->m_fontColor = QColor(sGui->getStyleSheetUtility().fontColor());
             this->ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
             bool connected = this->connect(this->ui->cb_SettingsGuiFont, SIGNAL(currentFontChanged(QFont)), this, SLOT(ps_fontChanged()));
             Q_ASSERT(connected);
@@ -91,9 +91,6 @@ namespace BlackGui
             return this->ui->hs_SettingsGuiUserRefreshTime->value();
         }
 
-        /*
-         * Set tab
-         */
         void CSettingsComponent::setSettingsTab(CSettingsComponent::SettingTab tab)
         {
             this->setCurrentIndex(static_cast<int>(tab));
@@ -107,10 +104,10 @@ namespace BlackGui
             QString fontColor = this->m_fontColor.name();
             if (!this->m_fontColor.isValid() || this->m_fontColor.name().isEmpty())
             {
-                fontColor = CStyleSheetUtility::instance().fontColor();
+                fontColor = sGui->getStyleSheetUtility().fontColor();
             }
             this->ui->le_SettingsGuiFontColor->setText(fontColor);
-            bool ok = CStyleSheetUtility::instance().updateFonts(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
+            bool ok = sGui->updateFonts(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
             if (ok)
             {
                 CLogMessage(this).info("Updated font style");

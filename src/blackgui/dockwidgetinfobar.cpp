@@ -10,6 +10,7 @@
 #include "guiutility.h"
 #include "dockwidgetinfobar.h"
 #include "components/maininfoareacomponent.h"
+#include "guiapplication.h"
 #include "stylesheetutility.h"
 #include "blackmisc/icons.h"
 
@@ -36,7 +37,7 @@ namespace BlackGui
     void CDockWidgetInfoBar::ps_onStyleSheetsChanged()
     {
         if (!this->objectName().isEmpty()) { this->setMarginsFromSettings(); }
-        QString st = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameInfoBar());
+        QString st = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameInfoBar());
         this->setStyleSheet(st);
     }
 }

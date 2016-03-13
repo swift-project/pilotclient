@@ -101,7 +101,7 @@ namespace BlackGui
         void CNavigatorDialog::ps_onStyleSheetsChanged()
         {
             const QString fn(CStyleSheetUtility::fileNameNavigator());
-            const QString qss(CStyleSheetUtility::instance().style(fn));
+            const QString qss(sGui->getStyleSheetUtility().style(fn));
             this->setStyleSheet(qss);
             this->repaint();
         }
@@ -201,6 +201,5 @@ namespace BlackGui
             QString frameLessActionText = this->isFrameless() ? "Normal window" : "Frameless";
             contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), frameLessActionText, this, SLOT(toggleFrameless()));
         }
-
     } // ns
 } // ns

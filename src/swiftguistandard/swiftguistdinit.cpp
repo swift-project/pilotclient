@@ -127,7 +127,7 @@ void SwiftGuiStd::init()
 
 void SwiftGuiStd::initStyleSheet()
 {
-    const QString s = CStyleSheetUtility::instance().styles(
+    const QString s = sGui->getStyleSheetUtility().styles(
     {
         CStyleSheetUtility::fileNameFonts(),
         CStyleSheetUtility::fileNameStandardWidget(),

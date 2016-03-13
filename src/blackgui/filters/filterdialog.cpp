@@ -8,7 +8,7 @@
  */
 
 #include "filterdialog.h"
-#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 
 namespace BlackGui
 {
@@ -17,8 +17,8 @@ namespace BlackGui
         CFilterDialog::CFilterDialog(QWidget *parent) : QDialog(parent, Qt::Tool)
         {
             this->setWindowTitle("Filter dialog");
-            ps_onStyleSheetChanged();
-            connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CFilterDialog::ps_onStyleSheetChanged);
+            this->ps_onStyleSheetChanged();
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::ps_onStyleSheetChanged);
         }
 
         CFilterDialog::~CFilterDialog()
@@ -26,11 +26,9 @@ namespace BlackGui
 
         void CFilterDialog::ps_onStyleSheetChanged()
         {
-            const QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameFilterDialog());
+            const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameFilterDialog());
             this->setStyleSheet(qss);
         }
 
     } // namespace
 } // namespace
-
-

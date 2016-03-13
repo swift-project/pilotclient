@@ -9,6 +9,7 @@
 
 #include "infoarea.h"
 #include "stylesheetutility.h"
+#include "guiapplication.h"
 #include "guiutility.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
@@ -52,7 +53,7 @@ namespace BlackGui
         // context menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this, &CInfoArea::customContextMenuRequested, this, &CInfoArea::ps_showContextMenu);
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CInfoArea::ps_onStyleSheetChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CInfoArea::ps_onStyleSheetChanged);
 
         // initial style sheet setting
         this->ps_onStyleSheetChanged();
@@ -477,7 +478,7 @@ namespace BlackGui
             // if we have > 1 docked widgets, we have a tab bar
             if (this->m_tabBar)
             {
-                QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameDockWidgetTab());
+                QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameDockWidgetTab());
                 this->m_tabBar->setStyleSheet(qss);
                 this->m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
                 this->m_tabBar->setMovable(false);
@@ -585,7 +586,7 @@ namespace BlackGui
     {
         // with Qt 5.5 still needed
         const QString section(this->objectName());
-        const QSettings *settings = CStyleSheetUtility::instance().iniFile();
+        const QSettings *settings = sGui->getStyleSheetUtility().iniFile();
         if (settings && !section.isEmpty())
         {
             for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
@@ -753,7 +754,7 @@ namespace BlackGui
         this->iniFileBasedSettings();
         if (this->m_tabBar)
         {
-            QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameDockWidgetTab());
+            QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameDockWidgetTab());
             this->m_tabBar->setStyleSheet(qss);
         }
     }

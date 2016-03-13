@@ -11,6 +11,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include <QCloseEvent>
 #include <QStyleOption>
@@ -35,7 +36,7 @@ namespace BlackGui
 
         // connect
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::ps_onTopLevelChanged);
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::ps_onStyleSheetsChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::ps_onStyleSheetsChanged);
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::ps_onVisibilityChanged);
     }
 
@@ -284,7 +285,7 @@ namespace BlackGui
     {
         QString sectionUsed(section.isEmpty() ? this->objectName() : section);
         if (sectionUsed.isEmpty()) { return false; }
-        const QSettings *settings = CStyleSheetUtility::instance().iniFile();
+        const QSettings *settings = sGui->getStyleSheetUtility().iniFile();
         Q_ASSERT_X(settings, "CDockWidget::setMarginsFromSettings", "Missing ini settings");
         if (!settings) { return false; }
 

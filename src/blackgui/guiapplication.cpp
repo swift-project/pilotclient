@@ -41,7 +41,7 @@ namespace BlackGui
     CGuiApplication::CGuiApplication(const QString &applicationName, const QPixmap &icon) : CApplication(applicationName)
     {
         setWindowIcon(icon);
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
         sGui = this;
     }
 
@@ -242,11 +242,6 @@ namespace BlackGui
         return m->displayTextInConsole(text);
     }
 
-    bool CGuiApplication::reloadStyleSheets() const
-    {
-        return CStyleSheetUtility::instance().read();
-    }
-
     void CGuiApplication::addMenuForSettingsAndCache(QMenu &menu)
     {
         QMenu *sm = menu.addMenu(CIcons::appSettings16(), "Settings");
@@ -417,6 +412,21 @@ namespace BlackGui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
     }
 
+    const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const
+    {
+        return this->m_styleSheetUtility;
+    }
+
+    bool CGuiApplication::reloadStyleSheets()
+    {
+        return m_styleSheetUtility.read();
+    }
+
+    bool CGuiApplication::updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    {
+        return m_styleSheetUtility.updateFonts(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+    }
+
     void CGuiApplication::cmdLineHelpMessage()
     {
         if (CProject::isRunningOnWindowsNtPlatform())
@@ -447,7 +457,6 @@ namespace BlackGui
 
     bool CGuiApplication::parsingHookIn()
     {
-        // void
         return true;
     }
 

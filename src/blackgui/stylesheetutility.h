@@ -48,7 +48,10 @@ namespace BlackGui
         bool updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
         //! Current font color from style sheet
-        QString fontColor();
+        QString fontColor() const;
+
+        //! Read the *.qss files
+        bool read();
 
         //! GUI ini file data
         const QSettings *iniFile() const { return m_iniFile.data(); }
@@ -58,9 +61,6 @@ namespace BlackGui
 
         //! Get the font weight
         static QString fontWeight(const QString &combinedStyleAndWeight);
-
-        //! Central reader
-        static CStyleSheetUtility &instance();
 
         //! File name fonts.qss
         static const QString &fileNameFonts();
@@ -135,9 +135,6 @@ namespace BlackGui
         void styleSheetsChanged();
 
     private:
-        //! Read the *.qss files
-        bool read();
-
         QMap<QString, QString> m_styleSheets; //!< filename, stylesheet
         QScopedPointer<QSettings> m_iniFile;
 

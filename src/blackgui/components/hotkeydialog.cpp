@@ -1,6 +1,6 @@
 #include "hotkeydialog.h"
 #include "ui_hotkeydialog.h"
-#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/logmessage.h"
@@ -74,7 +74,7 @@ namespace BlackGui
 
         void CHotkeyDialog::initStyleSheet()
         {
-            const QString s = CStyleSheetUtility::instance().styles(
+            const QString s = sGui->getStyleSheetUtility().styles(
             {
                 CStyleSheetUtility::fileNameFonts(),
                 CStyleSheetUtility::fileNameStandardWidget()

@@ -9,6 +9,7 @@
 
 #include "filterwidget.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 
 namespace BlackGui
 {
@@ -18,7 +19,7 @@ namespace BlackGui
         {
             this->setWindowTitle("Filter widget");
             ps_onStyleSheetChanged();
-            connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CFilterWidget::ps_onStyleSheetChanged);
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterWidget::ps_onStyleSheetChanged);
         }
 
         CFilterWidget::~CFilterWidget()
@@ -41,7 +42,7 @@ namespace BlackGui
 
         void CFilterWidget::ps_onStyleSheetChanged()
         {
-            const QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameFilterDialog());
+            const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameFilterDialog());
             this->setStyleSheet(qss);
         }
 
@@ -64,5 +65,3 @@ namespace BlackGui
 
     } // namespace
 } // namespace
-
-

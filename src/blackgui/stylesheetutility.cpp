@@ -82,13 +82,13 @@ namespace BlackGui
         return w.append(" ").append(s);
     }
 
-    QString CStyleSheetUtility::fontColor()
+    QString CStyleSheetUtility::fontColor() const
     {
-        QString s = this->style(fileNameFonts()).toLower();
+        const QString s = this->style(fileNameFonts()).toLower();
         if (!s.contains("color:")) return "red";
         QRegExp rx("color:\\s*(#*\\w+);");
         rx.indexIn(s);
-        QString c = rx.cap(1);
+        const QString c = rx.cap(1);
         return c.isEmpty() ? "red" : c;
     }
 
@@ -197,7 +197,7 @@ namespace BlackGui
     {
         static const QString n("normal");
         QString c = combinedStyleAndWeight.toLower();
-        foreach(QString s, fontStyles())
+        foreach (QString s, fontStyles())
         {
             if (c.contains(s))
             {
@@ -211,7 +211,7 @@ namespace BlackGui
     {
         static const QString n("normal");
         QString c = combinedStyleAndWeight.toLower();
-        foreach(QString w, fontWeights())
+        foreach (QString w, fontWeights())
         {
             if (c.contains(w))
             {
@@ -219,12 +219,6 @@ namespace BlackGui
             }
         }
         return n;
-    }
-
-    CStyleSheetUtility &CStyleSheetUtility::instance()
-    {
-        static CStyleSheetUtility r;
-        return r;
     }
 
     const QString &CStyleSheetUtility::fileNameFonts()
@@ -301,13 +295,13 @@ namespace BlackGui
 
     const QStringList &CStyleSheetUtility::fontWeights()
     {
-        static const QStringList w( {"bold", "semibold", "light", "black", "normal"});
+        static const QStringList w({"bold", "semibold", "light", "black", "normal"});
         return w;
     }
 
     const QStringList &CStyleSheetUtility::fontStyles()
     {
-        static const QStringList s( {"italic", "oblique", "normal"});
+        static const QStringList s({"italic", "oblique", "normal"});
         return s;
     }
 

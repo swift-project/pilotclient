@@ -8,7 +8,7 @@
  */
 
 #include "blackgui/overlaymessages.h"
-#include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "ui_overlaymessages.h"
 #include <QKeyEvent>
 
@@ -24,7 +24,7 @@ namespace BlackGui
         ui(new Ui::COverlayMessages)
     {
         this->init(w, h);
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
         connect(this->ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
         connect(this->ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
 

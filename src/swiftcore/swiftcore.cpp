@@ -50,7 +50,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
 
 void CSwiftCore::initStyleSheet()
 {
-    const QString s = CStyleSheetUtility::instance().styles(
+    const QString s = sGui->getStyleSheetUtility().styles(
     {
         CStyleSheetUtility::fileNameFonts(),
         CStyleSheetUtility::fileNameStandardWidget(),

@@ -8,7 +8,7 @@
  */
 
 #include "dropsite.h"
-#include "stylesheetutility.h"
+#include "guiapplication.h"
 #include <QDragEnterEvent>
 
 using namespace BlackMisc;
@@ -21,7 +21,7 @@ namespace BlackGui
         setAlignment(Qt::AlignCenter);
         setAcceptDrops(true);
         this->setInfoText(tr("<drop content>"));
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDropSite::ps_onStyleSheetsChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::ps_onStyleSheetsChanged);
         this->ps_onStyleSheetsChanged();
     }
 

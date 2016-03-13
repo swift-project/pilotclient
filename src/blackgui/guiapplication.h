@@ -15,6 +15,7 @@
 #include "blackcore/application.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/enableforframelesswindow.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackgui/blackguiexport.h"
 #include <QMenu>
 #include <QSplashScreen>
@@ -83,9 +84,6 @@ namespace BlackGui
         //! Allow the GUI to refresh by processing events, call the event loop
         void processEventsToRefreshGui() const;
 
-        //! Reload style sheets
-        bool reloadStyleSheets() const;
-
         //! Init the main application window based on information in this application
         void initMainApplicationWindow(QWidget *mainWindow) const;
 
@@ -115,6 +113,15 @@ namespace BlackGui
 
         //! Window operations
         void addMenuWindow(QMenu &menu);
+
+        //! Style sheet handling
+        const CStyleSheetUtility &getStyleSheetUtility() const;
+
+        //! Reload style sheets
+        bool reloadStyleSheets();
+
+        //! Update the fonts
+        bool updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
@@ -151,7 +158,8 @@ namespace BlackGui
         QPixmap m_windowIcon;
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
-        QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
+        CStyleSheetUtility m_styleSheetUtility{{}, this};         //!< style sheet utility
+        QScopedPointer<QSplashScreen>      m_splashScreen;        //!< splash screen
 
         //! Qt help message to formatted HTML
         static QString beautifyHelpMessage(const QString &helpText);

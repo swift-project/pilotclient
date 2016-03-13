@@ -10,15 +10,14 @@
 #include "textmessagetextedit.h"
 #include "blackmisc/iconlist.h"
 #include "stylesheetutility.h"
+#include "guiapplication.h"
 #include <QMenu>
 
 using namespace BlackMisc;
-using namespace BlackGui;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
-
     CTextMessageTextEdit::CTextMessageTextEdit(QWidget *parent) : QTextEdit(parent)
     {
         this->m_textDocument = new QTextDocument(this);
@@ -50,7 +49,7 @@ namespace BlackGui
         connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::ps_showContextMenuForTextEdit);
 
         // style sheet
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CTextMessageTextEdit::ps_onStyleSheetChanged);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageTextEdit::ps_onStyleSheetChanged);
         ps_onStyleSheetChanged();
     }
 
@@ -168,7 +167,7 @@ namespace BlackGui
     void CTextMessageTextEdit::ps_onStyleSheetChanged()
     {
         Q_ASSERT(this->m_textDocument);
-        QString style(CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameTextMessage()));
+        QString style(sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameTextMessage()));
         this->m_textDocument->setDefaultStyleSheet(style);
     }
 
