@@ -122,7 +122,7 @@ namespace BlackGui
 
     IMainWindowAccess *CGuiApplication::mainWindowAccess()
     {
-        IMainWindowAccess *m = dynamic_cast<IMainWindowAccess *>(mainApplicationWindow());
+        IMainWindowAccess *m = qobject_cast<IMainWindowAccess *>(mainApplicationWindow());
         return m;
     }
 

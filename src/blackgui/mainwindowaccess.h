@@ -45,4 +45,6 @@ namespace BlackGui
     };
 } // ns
 
+Q_DECLARE_INTERFACE(BlackGui::IMainWindowAccess, "org.swift-project.blackgui.mainwindowaccess")
+
 #endif // guard

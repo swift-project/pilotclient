@@ -35,6 +35,7 @@ class CSwiftData :
     public BlackGui::IMainWindowAccess
 {
     Q_OBJECT
+    Q_INTERFACES(BlackGui::IMainWindowAccess)
 
 public:
     //! Constructor

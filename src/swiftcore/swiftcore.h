@@ -31,6 +31,7 @@ class CSwiftCore :
     public BlackMisc::CIdentifiable
 {
     Q_OBJECT
+    Q_INTERFACES(BlackGui::IMainWindowAccess)
 
 public:
     //! Constructor

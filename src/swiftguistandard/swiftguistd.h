@@ -49,6 +49,7 @@ class SwiftGuiStd :
     public BlackGui::IMainWindowAccess
 {
     Q_OBJECT
+    Q_INTERFACES(BlackGui::IMainWindowAccess)
 
 public:
     //! Main page indexes

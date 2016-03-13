@@ -47,6 +47,7 @@ namespace BlackGui
         public BlackGui::IMainWindowAccess
     {
         Q_OBJECT
+        Q_INTERFACES(BlackGui::IMainWindowAccess)
 
     public:
         //! Similar to \sa QCoreApplication::instance() returns the single instance
