@@ -466,7 +466,7 @@ namespace BlackGui
             if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             if (!this->getMappingComponent()) { return false; }
-            this->getMappingComponent()->showMessages(msgs, timeoutMs);
+            this->getMappingComponent()->showOverlayMessages(msgs, timeoutMs);
             return true;
         }
 
@@ -476,7 +476,7 @@ namespace BlackGui
             if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             if (!this->getMappingComponent()) { return false; }
-            this->getMappingComponent()->showMessagesWithConfirmation(msgs, confirmation, okLambda, defaultButton, timeoutMs);
+            this->getMappingComponent()->showOverlayMessagesWithConfirmation(msgs, confirmation, okLambda, defaultButton, timeoutMs);
             return true;
         }
 
@@ -485,7 +485,7 @@ namespace BlackGui
             if (msg.isEmpty()) { return false; }
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             if (!this->getMappingComponent()) { return false; }
-            this->getMappingComponent()->showMessage(msg, timeoutMs);
+            this->getMappingComponent()->showOverlayMessage(msg, timeoutMs);
             return true;
         }
     } // ns

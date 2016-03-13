@@ -43,7 +43,7 @@ namespace BlackGui
             COverlayMessagesFrame *mf = qobject_cast<COverlayMessagesFrame *>(parentWidget());
             Q_ASSERT_X(mf, Q_FUNC_INFO, "No overlay widget");
             if (!mf) { return; }
-            mf->showMessages(msgs);
+            mf->showOverlayMessages(msgs);
         }
 
         void CDbLoginComponent::ps_onLoginClicked()

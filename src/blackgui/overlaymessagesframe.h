@@ -38,25 +38,26 @@ namespace BlackGui
         //! Hide the inner frame
         void hideStatusMessagesFrame();
 
-        //! \copydoc COverlayMessages::showMessagesWithConfirmation
-        void showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages,
-                                          const QString &confirmationMessage,
-                                          std::function<void()> okLambda,
-                                          int defaultButton = QMessageBox::Cancel,
-                                          int timeOutMs = -1);
+        //! \copydoc COverlayMessages::showOverlayMessagesWithConfirmation
+        void showOverlayMessagesWithConfirmation(
+            const BlackMisc::CStatusMessageList &messages,
+            const QString &confirmationMessage,
+            std::function<void()> okLambda,
+            int defaultButton = QMessageBox::Cancel,
+            int timeOutMs = -1);
 
     public slots:
-        //! \copydoc COverlayMessages::showMessages
-        void showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
+        //! \copydoc COverlayMessages::showOverlayMessages
+        void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
 
-        //! \copydoc COverlayMessages::showMessage
-        void showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+        //! \copydoc COverlayMessages::showOverlayMessage
+        void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
 
-        //! \copydoc COverlayMessages::showTextMessage
-        void showTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
+        //! \copydoc COverlayMessages::showOverlayTextMessage
+        void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
 
-        //! \copydoc COverlayMessages::showVariant
-        void showVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
+        //! \copydoc COverlayMessages::showOverlayVariant
+        void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
 
     protected:
         //! \copydoc QFrame::paintEvent

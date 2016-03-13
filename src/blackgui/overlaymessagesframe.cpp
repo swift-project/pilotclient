@@ -31,42 +31,42 @@ namespace BlackGui
         if (!m_overlayMessages) { return; }
     }
 
-    void COverlayMessagesFrame::showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showMessagesWithConfirmation(messages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+        this->m_overlayMessages->showOverlayMessagesWithConfirmation(messages, confirmationMessage, okLambda, defaultButton, timeOutMs);
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showMessage(message, timeOutMs);
+        this->m_overlayMessages->showOverlayMessage(message, timeOutMs);
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showMessages(messages, timeOutMs);
+        this->m_overlayMessages->showOverlayMessages(messages, timeOutMs);
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs)
     {
         if (textMessage.isEmpty()) { return; }
         this->initInnerFrame();
-        this->m_overlayMessages->showTextMessage(textMessage, timeOutMs);
+        this->m_overlayMessages->showOverlayTextMessage(textMessage, timeOutMs);
         this->repaint();
     }
 
-    void COverlayMessagesFrame::showVariant(const BlackMisc::CVariant &variant, int timeOutMs)
+    void COverlayMessagesFrame::showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs)
     {
         this->initInnerFrame();
-        this->m_overlayMessages->showVariant(variant, timeOutMs);
+        this->m_overlayMessages->showOverlayVariant(variant, timeOutMs);
         this->repaint();
     }
 

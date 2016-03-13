@@ -367,7 +367,7 @@ void CSwiftLauncher::ps_dbusServerModeSelected(bool selected)
 
 void CSwiftLauncher::ps_showStatusMessage(const CStatusMessage &msg)
 {
-    this->ui->fr_SwiftLauncherMain->showMessage(msg, 5000);
+    this->ui->fr_SwiftLauncherMain->showOverlayMessage(msg, 5000);
 }
 
 void CSwiftLauncher::ps_appendLogMessage(const CStatusMessage &message)

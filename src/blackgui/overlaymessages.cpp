@@ -93,7 +93,7 @@ namespace BlackGui
     COverlayMessages::~COverlayMessages()
     {}
 
-    void COverlayMessages::showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
+    void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         this->setModeToMessages();
@@ -101,7 +101,7 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
-    void COverlayMessages::showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
+    void COverlayMessages::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
         if (this->useSmall())
@@ -117,7 +117,7 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
-    void COverlayMessages::showTextMessage(const CTextMessage &textMessage, int timeOutMs)
+    void COverlayMessages::showOverlayTextMessage(const CTextMessage &textMessage, int timeOutMs)
     {
         if (textMessage.isEmpty()) { return; }
         this->setModeToTextMessage();
@@ -131,19 +131,19 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
-    void COverlayMessages::showVariant(const BlackMisc::CVariant &variant, int timeOutMs)
+    void COverlayMessages::showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs)
     {
         if (variant.canConvert<CStatusMessageList>())
         {
-            showMessages(variant.value<CStatusMessageList>(), timeOutMs);
+            showOverlayMessages(variant.value<CStatusMessageList>(), timeOutMs);
         }
         else if (variant.canConvert<CStatusMessage>())
         {
-            showMessage(variant.value<CStatusMessage>(), timeOutMs);
+            showOverlayMessage(variant.value<CStatusMessage>(), timeOutMs);
         }
         else if (variant.canConvert<CTextMessage>())
         {
-            showTextMessage(variant.value<CTextMessage>(), timeOutMs);
+            showOverlayTextMessage(variant.value<CTextMessage>(), timeOutMs);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type");
     }
@@ -185,10 +185,10 @@ namespace BlackGui
         }
     }
 
-    void COverlayMessages::showMessagesWithConfirmation(const CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
     {
         this->setConfirmationMessage(confirmationMessage);
-        this->showMessages(messages, timeOutMs);
+        this->showOverlayMessages(messages, timeOutMs);
         this->m_okLambda = okLambda;
         this->setDefaultConfirmationButton(defaultButton);
     }

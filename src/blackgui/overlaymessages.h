@@ -62,7 +62,7 @@ namespace BlackGui
         void setConfirmationMessage(const QString &message);
 
         //! Show multiple messages with confirmation bar
-        void showMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages,
+        void showOverlayMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages,
                                           const QString &confirmationMessage,
                                           std::function<void()> okLambda,
                                           int defaultButton = QMessageBox::Cancel,
@@ -73,16 +73,16 @@ namespace BlackGui
 
     public slots:
         //! Show multiple messages
-        void showMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
+        void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
 
         //! Show single message
-        void showMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
+        void showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs = -1);
 
         //! Info message, based on text message
-        void showTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
+        void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
 
         //! Display one of the supported types
-        void showVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
+        void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
 
         //! Close button clicked
         void close();

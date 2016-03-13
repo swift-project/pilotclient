@@ -210,7 +210,7 @@ void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessa
     // display overlay for errors, but not for validation
     if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategories().contains(CLogCategory::validation()))
     {
-        this->ui->fr_CentralFrameInside->showMessage(statusMessage);
+        this->ui->fr_CentralFrameInside->showOverlayMessage(statusMessage);
     }
 }
 
