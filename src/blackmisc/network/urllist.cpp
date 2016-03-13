@@ -20,22 +20,11 @@ namespace BlackMisc
         CUrlList::CUrlList() { }
 
         CUrlList::CUrlList(const CUrlList &other) : CSequence<CUrl>(other)
-        {
-            *this = other;
-        }
+        { }
 
-        CUrlList &CUrlList::operator =(const CUrlList &other)
-        {
-            if (this == &other) { return *this; }
-
-            QReadLocker readLock(&other.m_lock);
-            int index = other.m_currentIndexDistributedLoad;
-            readLock.unlock(); // avoid deadlock
-
-            QWriteLocker writeLock(&this->m_lock);
-            this->m_currentIndexDistributedLoad = index;
-            return *this;
-        }
+        CUrlList::CUrlList(const CSequence<CUrl> &other) :
+            CSequence<CUrl>(other)
+        { }
 
         CUrlList::CUrlList(const QStringList &listOfUrls, bool removeDuplicates)
         {
@@ -46,10 +35,6 @@ namespace BlackMisc
                 this->push_back(CUrl(url));
             }
         }
-
-        CUrlList::CUrlList(const CSequence<CUrl> &other) :
-            CSequence<CUrl>(other)
-        { }
 
         CUrl CUrlList::getRandomUrl() const
         {
@@ -83,36 +68,6 @@ namespace BlackMisc
             return copy.getRandomUrl();
         }
 
-        CUrl CUrlList::getNextUrl(bool randomStart) const
-        {
-            if (this->isEmpty()) { return CUrl(); }
-            if (this->size() == 1) { return this->front();}
-            if (m_currentIndexDistributedLoad < 0)
-            {
-                // random start point
-                m_currentIndexDistributedLoad =  randomStart ?
-                                                 CMathUtils::randomInteger(0, this->size() - 1) :
-                                                 0;
-            }
-            else
-            {
-                m_currentIndexDistributedLoad++;
-                if (m_currentIndexDistributedLoad >= this->size())
-                {
-                    m_currentIndexDistributedLoad = 0;
-                }
-            }
-            return (*this)[m_currentIndexDistributedLoad];
-        }
-
-        CUrl CUrlList::getNextUrlWithout(const CUrlList &exclude, bool randomStart) const
-        {
-            CUrlList copy(*this);
-            copy.removeIfIn(exclude);
-            if (copy.isEmpty()) { return CUrl(); }
-            return copy.getNextUrl(randomStart);
-        }
-
         CUrlList CUrlList::appendPath(const QString &path) const
         {
             if (path.isEmpty() || this->isEmpty()) { return (*this); }
@@ -144,7 +99,7 @@ namespace BlackMisc
         int CUrlList::removeDuplicates()
         {
             if (this->size() < 2) { return 0; }
-            CUrlList withoutDuplicates(getWithoutDuplicates());
+            const CUrlList withoutDuplicates(getWithoutDuplicates());
             if (this->size() == withoutDuplicates.size()) { return 0; }
             int r = this->size() - withoutDuplicates.size();
             (*this) = withoutDuplicates;
@@ -187,14 +142,44 @@ namespace BlackMisc
             return (m_failedUrls.size() < this->size() && m_failedUrls.size() < m_maxTrials);
         }
 
-        CUrl CFailoverUrlList::getNextWorkingUrl(const CUrl &failedUrl, bool random)
+        CUrl CFailoverUrlList::obtainNextWorkingUrl(bool random, const CUrl &failedUrl)
         {
             if (!failedUrl.isEmpty()) { this->addFailedUrl(failedUrl); }
             if (!hasMoreUrlsToTry()) { return CUrl(); }
-            CUrl url(this->getNextUrlWithout(this->m_failedUrls, random));
+            const CUrl url(this->obtainNextUrlWithout(random, this->m_failedUrls));
             if (CNetworkUtils::canConnect(url)) { return url; }
-            if (addFailedUrl(url)) { return getNextWorkingUrl(); }
+            if (addFailedUrl(url)) { return obtainNextWorkingUrl(); }
             return CUrl();
+        }
+
+        CUrl CFailoverUrlList::obtainNextUrl(bool randomStart)
+        {
+            if (this->isEmpty()) { return CUrl(); }
+            if (this->size() == 1) { return this->front();}
+            if (m_currentIndexDistributedLoad < 0)
+            {
+                // random start point
+                m_currentIndexDistributedLoad =  randomStart ?
+                                                 CMathUtils::randomInteger(0, this->size() - 1) :
+                                                 0;
+            }
+            else
+            {
+                m_currentIndexDistributedLoad++;
+                if (m_currentIndexDistributedLoad >= this->size())
+                {
+                    m_currentIndexDistributedLoad = 0;
+                }
+            }
+            return (*this)[m_currentIndexDistributedLoad];
+        }
+
+        CUrl CFailoverUrlList::obtainNextUrlWithout(bool randomStart, const CUrlList &exclude) const
+        {
+            CFailoverUrlList copy(*this);
+            copy.removeIfIn(exclude);
+            if (copy.isEmpty()) { return CUrl(); }
+            return copy.obtainNextUrl(randomStart);
         }
 
         void CFailoverUrlList::reset(int maxTrials)

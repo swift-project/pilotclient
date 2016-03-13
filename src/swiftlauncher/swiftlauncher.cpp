@@ -134,8 +134,8 @@ void CSwiftLauncher::initStyleSheet()
 void CSwiftLauncher::displayLatestNews()
 {
 #ifndef Q_CC_MINGW
-    CUrlList newsUrls(this->m_setup.get().swiftLatestNewsUrls());
-    QUrl newUrl(newsUrls.getNextUrl());
+    CFailoverUrlList newsUrls(this->m_setup.get().swiftLatestNewsUrls());
+    QUrl newUrl(newsUrls.obtainNextWorkingUrl());
 
     Q_UNUSED(newUrl);
     /** Qt bug
@@ -299,7 +299,7 @@ void CSwiftLauncher::ps_loadedSetup(bool success)
 
     CUpdateInfo updateInfo(this->m_updateInfo.get());
     QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
-    CUrlList downloadUrls(updateInfo.getDownloadUrls());
+    CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
     bool newVersionAvailable = CProject::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
     this->ui->wi_NewVersionAvailable->setVisible(newVersionAvailable);
     this->ui->wi_NoNewVersion->setVisible(!newVersionAvailable);
@@ -307,7 +307,7 @@ void CSwiftLauncher::ps_loadedSetup(bool success)
 
     if (!downloadUrls.isEmpty())
     {
-        CUrl downloadUrl(downloadUrls.getNextUrl());
+        CUrl downloadUrl(downloadUrls.obtainNextUrl());
         QString urlStr(downloadUrl.toQString());
         QString hl("<a href=\"%1\">%2 %3</a>");
         this->ui->lbl_NewVersionUrl->setText(hl.arg(urlStr).arg(urlStr).arg(latestVersion));

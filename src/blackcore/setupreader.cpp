@@ -139,7 +139,7 @@ namespace BlackCore
 
     void CSetupReader::ps_readSetup()
     {
-        CUrl url(this->m_bootstrapUrls.getNextWorkingUrl());
+        CUrl url(this->m_bootstrapUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
             CLogMessage(this).warning("Cannot read setup, failed URLs: %1") << this->m_bootstrapUrls.getFailedUrls();
@@ -152,7 +152,7 @@ namespace BlackCore
 
     void CSetupReader::ps_readUpdateInfo()
     {
-        CUrl url(this->m_updateInfoUrls.getNextWorkingUrl());
+        CUrl url(this->m_updateInfoUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
             CLogMessage(this).warning("Cannot read update info, failed URLs: %1") << this->m_updateInfoUrls.getFailedUrls();

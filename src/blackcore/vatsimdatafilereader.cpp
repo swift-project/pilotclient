@@ -161,7 +161,7 @@ namespace BlackCore
         // round robin for load balancing
         // remark: Don't use QThread to run network operations in the background
         // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
-        QUrl url(m_setup.get().vatsimDataFileUrls().getNextUrl());
+        QUrl url(m_setup.get().vatsimDataFileUrls().getRandomUrl());
         if (url.isEmpty()) { return; }
         Q_ASSERT_X(this->m_networkManager, Q_FUNC_INFO, "Missing network manager");
         QNetworkRequest request(url);

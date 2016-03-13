@@ -36,14 +36,11 @@ namespace BlackMisc
             //! Copy constructor (because of mutex)
             CUrlList(const CUrlList &other);
 
-            //! Copy assignment (because of mutex)
-            CUrlList &operator =(const CUrlList &other);
+            //! Construct from a base class object.
+            CUrlList(const CSequence<CUrl> &other);
 
             //! By list of URLs
             explicit CUrlList(const QStringList &listOfUrls, bool removeDuplicates = true);
-
-            //! Construct from a base class object.
-            CUrlList(const CSequence<CUrl> &other);
 
             //! Random location for distributed load
             CUrl getRandomUrl() const;
@@ -53,12 +50,6 @@ namespace BlackMisc
 
             //! Random location for distributed load
             CUrl getRandomWithout(const CUrlList &exclude) const;
-
-            //! Round robin with random start point
-            CUrl getNextUrl(bool randomStart = true) const;
-
-            //! Round robin with random start point
-            CUrl getNextUrlWithout(const CUrlList &exclude, bool randomStart = true) const;
 
             //! Append path to all URLs
             CUrlList appendPath(const QString &path) const;
@@ -71,10 +62,6 @@ namespace BlackMisc
 
             //! Remove duplicated URL and return number of removed elements
             int removeDuplicates();
-
-        private:
-            mutable int m_currentIndexDistributedLoad = -1; //!< index for random access
-            mutable QReadWriteLock m_lock;  //!< lock (because of mutable members)
         };
 
         //! URL list with fail support
@@ -105,14 +92,21 @@ namespace BlackMisc
             //! More URLs to try
             bool hasMoreUrlsToTry() const;
 
+            //! Next utl from this list
+            CUrl obtainNextUrl(bool randomStart = false);
+
+            //! Round robin with random start point
+            CUrl obtainNextUrlWithout(bool randomStart = false, const CUrlList &exclude = CUrlList()) const;
+
             //! Next working URL, test if it can be connected
-            CUrl getNextWorkingUrl(const CUrl &failedUrl = CUrl(), bool random = true);
+            CUrl obtainNextWorkingUrl( bool random = false, const CUrl &failedUrl = CUrl());
 
             //! Reset failed URL, allows to set an optional new number of max.trials
             void reset(int maxTrials = -1);
 
         private:
-            int m_maxTrials = 2; //!< number of max trials
+            int m_currentIndexDistributedLoad = -1; //!< index for random access
+            int m_maxTrials = 2;                    //!< number of max trials
             CUrlList m_failedUrls;
         };
 
