@@ -54,6 +54,18 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
 SwiftGuiStd::~SwiftGuiStd()
 { }
 
+bool SwiftGuiStd::displayInStatusBar(const CStatusMessage &message)
+{
+    this->ps_displayStatusMessageInGui(message);
+    return true;
+}
+
+bool SwiftGuiStd::displayInOverlayWindow(const CStatusMessage &message)
+{
+    this->ui->fr_CentralFrameInside->showOverlayMessage(message);
+    return true;
+}
+
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
     if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); }
@@ -197,6 +209,7 @@ bool SwiftGuiStd::isContextAudioAvailableCheck()
 void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (!this->m_init) { return; }
+    // used with log subscriber
     if (statusMessage.wasHandledBy(this)) { return; }
     statusMessage.markAsHandledBy(this);
     this->m_statusBar.displayStatusMessage(statusMessage);

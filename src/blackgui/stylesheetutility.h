@@ -132,6 +132,7 @@ namespace BlackGui
 
     signals:
         //! Sheets have been changed
+        //! \deprecated use BlackGui::CGuiApplication::styleSheetsChanged
         void styleSheetsChanged();
 
     private:

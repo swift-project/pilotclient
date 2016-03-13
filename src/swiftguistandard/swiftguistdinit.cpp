@@ -10,9 +10,9 @@
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
 #include "blackcore/contextallinterfaces.h"
-#include "blackgui/stylesheetutility.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackgui/components/allmaininfoareacomponents.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackmisc/dbusserver.h"
@@ -182,11 +182,11 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->menu_InternalsDisplayCachedFiles, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
-    connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->ui->fr_CentralFrameInside, &COverlayMessagesFrame::showVariant);
+    connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);
 
     // settings (GUI component), styles
     connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_onChangedWindowOpacity);
-    connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &SwiftGuiStd::ps_onStyleSheetsChanged);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &SwiftGuiStd::ps_onStyleSheetsChanged);
 
     // sliders
     connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, this->ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);

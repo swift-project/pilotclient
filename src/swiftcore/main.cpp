@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
     a.useContexts(a.isParserOptionSet("coreaudio") ?
                   CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress) :
                   CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(dBusAdress));
+    a.start();
 
     if (!QSystemTrayIcon::isSystemTrayAvailable())
     {

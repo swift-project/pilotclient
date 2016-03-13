@@ -8,7 +8,10 @@
  */
 
 #include "guiapplication.h"
+#include "guiutility.h"
+#include "stylesheetutility.h"
 #include "blackmisc/project.h"
+#include "blackmisc/verify.h"
 #include <QApplication>
 #include <QMessageBox>
 
@@ -26,6 +29,7 @@ namespace BlackGui
     CGuiApplication::CGuiApplication(const QString &applicationName, const QPixmap &icon) : CApplication(applicationName)
     {
         setWindowIcon(icon);
+        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
         sGui = this;
     }
 
@@ -68,6 +72,17 @@ namespace BlackGui
         }
     }
 
+    QWidget *CGuiApplication::mainApplicationWindow()
+    {
+        return CGuiUtility::mainApplicationWindow();
+    }
+
+    IMainWindowAccess *CGuiApplication::mainWindowAccess()
+    {
+        IMainWindowAccess *m = dynamic_cast<IMainWindowAccess *>(mainApplicationWindow());
+        return m;
+    }
+
     void CGuiApplication::initMainApplicationWindow(QWidget *mainWindow) const
     {
         if (!mainWindow) { return; }
@@ -101,6 +116,22 @@ namespace BlackGui
         {
             CApplication::cmdLineErrorMessage(errorMessage);
         }
+    }
+
+    bool CGuiApplication::displayInStatusBar(const CStatusMessage &message)
+    {
+        IMainWindowAccess *m = mainWindowAccess();
+        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        if (!m) { return false; }
+        return m->displayInStatusBar(message);
+    }
+
+    bool CGuiApplication::displayInOverlayWindow(const CStatusMessage &message)
+    {
+        IMainWindowAccess *m = mainWindowAccess();
+        BLACK_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
+        if (!m) { return false; }
+        return m->displayInOverlayWindow(message);
     }
 
     void CGuiApplication::cmdLineHelpMessage()

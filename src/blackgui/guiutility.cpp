@@ -42,7 +42,7 @@ namespace BlackGui
         return nullptr;
     }
 
-    QWidget *CGuiUtility::mainApplicationWindowWidget()
+    QWidget *CGuiUtility::mainApplicationWindow()
     {
         CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
         if (mw && mw->getWidget())

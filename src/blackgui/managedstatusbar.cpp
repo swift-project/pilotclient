@@ -92,6 +92,7 @@ namespace BlackGui
         Q_ASSERT_X(this->m_statusBarIcon, Q_FUNC_INFO, "Missing status bar icon");
         Q_ASSERT_X(this->m_statusBar, Q_FUNC_INFO, "Missing status bar");
 
+        // used with log subscriber, make sure it is not displayed twice
         if (statusMessage.wasHandledBy(this)) { return; }
         statusMessage.markAsHandledBy(this);
 
@@ -111,7 +112,7 @@ namespace BlackGui
 
     void CManagedStatusBar::displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
     {
-        foreach(CStatusMessage m, statusMessages)
+        foreach (CStatusMessage m, statusMessages)
         {
             displayStatusMessage(m);
         }

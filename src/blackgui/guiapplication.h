@@ -13,6 +13,7 @@
 #define BLACKGUI_GUIAPPLICATION_H
 
 #include "blackcore/application.h"
+#include "blackgui/mainwindowaccess.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/blackguiexport.h"
 
@@ -25,7 +26,9 @@ namespace BlackGui
      * GUI applications. It is normally used via the global sGui pointer. As an example of how to extend this
      * class see CSwiftGuiStdApplication.
      */
-    class BLACKGUI_EXPORT CGuiApplication : public BlackCore::CApplication
+    class BLACKGUI_EXPORT CGuiApplication :
+        public BlackCore::CApplication,
+        public BlackGui::IMainWindowAccess
     {
         Q_OBJECT
 
@@ -59,12 +62,28 @@ namespace BlackGui
         virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const override;
         //! @}
 
+        //! \name direct access to main application window
+        //! @{
+        virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
+        virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message) override;
+        //! }@
+
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
         static void setWindowIcon(const QPixmap &icon);
 
+        //! Main application window
+        static QWidget *mainApplicationWindow();
+
+        //! Main window access
+        static BlackGui::IMainWindowAccess *mainWindowAccess();
+
         //! Exit application, perform graceful shutdown and exit
         static void exit(int retcode = 0);
+
+    signals:
+        //! Style sheet changed
+        void styleSheetsChanged();
 
     protected:
         //! \name print messages generated during parsing / cmd handling

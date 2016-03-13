@@ -14,9 +14,8 @@
 #include "blackmisc/project.h"
 #include "blackmisc/dbusserver.h"
 #include "blackgui/guiapplication.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/components/logcomponent.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/components/logcomponent.h"
 #include <QMenu>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -116,7 +115,7 @@ void CSwiftCore::initSlots()
     connect(ui->pb_StartCore, &QPushButton::clicked, this, &CSwiftCore::ps_startCorePressed);
     connect(ui->pb_StopCore, &QPushButton::clicked, this, &CSwiftCore::ps_stopCorePressed);
     connect(ui->rb_P2PBus, &QRadioButton::toggled, this, &CSwiftCore::ps_p2pModeToggled);
-    connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftCore::ps_onStyleSheetsChanged);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::ps_onStyleSheetsChanged);
 }
 
 void CSwiftCore::initLogDisplay()

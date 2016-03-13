@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/datainfoareacomponent.h"
+#include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/webdataservices.h"
@@ -53,6 +54,18 @@ void CSwiftData::initStyleSheet()
 CSwiftData::~CSwiftData()
 { }
 
+bool CSwiftData::displayInStatusBar(const CStatusMessage &message)
+{
+    this->m_statusBar.displayStatusMessage(message);
+    return true;
+}
+
+bool CSwiftData::displayInOverlayWindow(const CStatusMessage &message)
+{
+    this->ui->comp_MainInfoArea->getMappingComponent()->showOverlayMessage(message);
+    return true;
+}
+
 void CSwiftData::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
@@ -80,7 +93,7 @@ void CSwiftData::init()
     sGui->initMainApplicationWindow(this);
     this->initStyleSheet();
     this->initLogDisplay();
-    connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);
+    connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);
     this->initMenu();
 }
 

@@ -40,7 +40,7 @@ namespace BlackGui
             this->ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
             connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
             connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
-            connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDbModelComponent::ps_onStyleSheetChanged);
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::ps_onStyleSheetChanged);
 
             // configure view
             this->ui->tvp_AircraftModel->setFilterWidget(this->ui->filter_AircraftModelFilter);

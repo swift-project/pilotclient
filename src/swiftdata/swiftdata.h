@@ -12,12 +12,13 @@
 #ifndef SWIFTDATA_H
 #define SWIFTDATA_H
 
+#include "blackgui/systemtraywindow.h"
+#include "blackgui/managedstatusbar.h"
+#include "blackgui/mainwindowaccess.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/setupreader.h"
-#include "blackgui/systemtraywindow.h"
-#include "blackgui/managedstatusbar.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/identifiable.h"
 #include <QScopedPointer>
@@ -30,7 +31,8 @@ namespace BlackCore { class CWebDataServices; }
  */
 class CSwiftData :
     public QMainWindow,
-    public BlackMisc::CIdentifiable
+    public BlackMisc::CIdentifiable,
+    public BlackGui::IMainWindowAccess
 {
     Q_OBJECT
 
@@ -40,6 +42,12 @@ public:
 
     //! Destructor
     ~CSwiftData();
+
+    //! \name direct access to main application window
+    //! @{
+    virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
+    virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message) override;
+    //! }@
 
 protected:
     //! \copydoc QMainWindow::closeEvent

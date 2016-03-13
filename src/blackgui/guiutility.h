@@ -31,7 +31,7 @@ namespace BlackGui
         static CEnableForFramelessWindow *mainFramelessEnabledApplicationWindow();
 
         //! Main application window widget
-        static QWidget *mainApplicationWindowWidget();
+        static QWidget *mainApplicationWindow();
 
         //! Is main window frameless?
         static bool isMainWindowFrameless();

@@ -198,6 +198,9 @@ namespace BlackCore
         virtual void gracefulShutdown();
 
     signals:
+        //! Setup syncronized
+        void setupSyncronized();
+
         //! Facade started
         void coreFacadeStarted();
 
@@ -256,6 +259,9 @@ namespace BlackCore
 
         //! Init parser
         void initParser();
+
+        //! Async. start when setup is loaded
+        bool asyncWebAndContextStart();
 
         //! static init part
         static void initEnvironment();

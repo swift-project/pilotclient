@@ -13,6 +13,7 @@
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/simulation//distributorlist.h"
 #include "blackgui/shortcut.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/filters/aircraftmodelfilterdialog.h"
 #include <QHeaderView>
@@ -300,11 +301,13 @@ namespace BlackGui
         {
             if (!m_menus.testFlag(MenuCanStashModels)) { return; }
             if (!this->hasSelection()) { return; }
-            emit requestStash(this->selectedObjects());
+            const CAircraftModelList models(this->selectedObjects());
+            emit requestStash(models);
             if (this->m_stashingClearsSelection)
             {
                 this->clearSelection();
             }
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Stashed " + models.getModelStrings(true).join(" ")));
         }
     } // namespace
 } // namespace

@@ -16,9 +16,6 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include "blackcore/contextallinterfaces.h"
-#include "blackcore/actionbind.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
 #include "blackgui/components/transpondermodeselector.h"
@@ -28,7 +25,10 @@
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
-#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/mainwindowaccess.h"
+#include "blackcore/contextallinterfaces.h"
+#include "blackcore/actionbind.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/identifiable.h"
@@ -46,7 +46,8 @@ namespace Ui { class SwiftGuiStd; }
 class SwiftGuiStd :
     public QMainWindow,
     public BlackMisc::CIdentifiable,
-    public BlackGui::CEnableForFramelessWindow
+    public BlackGui::CEnableForFramelessWindow,
+    public BlackGui::IMainWindowAccess
 {
     Q_OBJECT
 
@@ -69,6 +70,12 @@ public:
 
     //! Log message category
     static QString getMessageCategory() { return "swift.gui.stdgui"; }
+
+    //! \name direct access to main application window
+    //! @{
+    virtual bool displayInStatusBar(const BlackMisc::CStatusMessage &message) override;
+    virtual bool displayInOverlayWindow(const BlackMisc::CStatusMessage &message) override;
+    //! }@
 
 signals:
     //! GUI is shutting down, request graceful shutdown

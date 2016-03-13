@@ -19,7 +19,6 @@ CSwiftGuiStdApplication::CSwiftGuiStdApplication() : CGuiApplication("swift pilo
     this->addParserOption(this->m_cmdFacadeMode);
     this->addWindowModeOption();
     this->addDBusAddressOption();
-    this->useWebDataServices(CWebReaderFlags::AllReaders, CWebReaderFlags::FromCache);
 }
 
 bool CSwiftGuiStdApplication::startHookIn()

@@ -138,7 +138,7 @@ namespace BlackGui
 
         QWidget *CViewBaseNonTemplate::mainApplicationWindowWidget() const
         {
-            return CGuiUtility::mainApplicationWindowWidget();
+            return CGuiUtility::mainApplicationWindow();
         }
 
         void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)

@@ -105,7 +105,7 @@ namespace BlackCore
         }
 
         // parsing itself is done
-        if (this->m_startSetupReader)
+        if (this->m_startSetupReader && !this->m_setupReader->isSetupSyncronized())
         {
             CStatusMessage m(this->requestReloadOfSetupAndVersion());
             if (m.isWarningOrAbove())
@@ -132,7 +132,7 @@ namespace BlackCore
         {
             QCoreApplication::instance()->processEvents(QEventLoop::AllEvents, 250);
         }
-        if (this->m_startUpCompleted)
+        if (!this->m_startUpCompleted)
         {
             CLogMessage(this).error("Waiting for startup timed out");
         }
@@ -250,6 +250,11 @@ namespace BlackCore
 
         this->m_useContexts = true;
         this->m_coreFacadeConfig = coreConfig;
+
+        if (!this->m_useWebData)
+        {
+            this->useWebDataServices(CWebReaderFlags::AllReaders, CWebReaderFlags::FromCache);
+        }
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
@@ -371,14 +376,19 @@ namespace BlackCore
     {
         if (success)
         {
-            if (!this->m_started)
-            {
-                // follow up startups
-                bool s = this->startWebDataServices();
-                this->m_started = s && this->startCoreFacade();
-            }
+            emit setupSyncronized();
+            this->m_started = this->asyncWebAndContextStart();
         }
         this->m_startUpCompleted = true;
+    }
+
+    bool CApplication::asyncWebAndContextStart()
+    {
+        if (this->m_started) { return true; }
+
+        // follow up startups
+        bool s = this->startWebDataServices();
+        return s && this->startCoreFacade();
     }
 
     void CApplication::severeStartupProblem(const CStatusMessage &message)

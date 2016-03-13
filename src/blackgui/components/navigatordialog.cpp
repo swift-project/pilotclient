@@ -10,6 +10,7 @@
 #include "navigatordialog.h"
 #include "ui_navigatordialog.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include <QToolButton>
 #include <QGridLayout>
@@ -36,7 +37,7 @@ namespace BlackGui
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::ps_showContextMenu);
 
-            connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CNavigatorDialog::ps_onStyleSheetsChanged);
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::ps_onStyleSheetsChanged);
             this->ps_onStyleSheetsChanged();
         }
 
