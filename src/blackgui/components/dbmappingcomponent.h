@@ -13,7 +13,6 @@
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 
 #include "blackcore/data/authenticateduser.h"
-#include "blackcore/data/aircraftmodels.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/menudelegate.h"
@@ -23,6 +22,7 @@
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QFrame>
@@ -52,10 +52,11 @@ namespace BlackGui
             //! Must match real tab index
             enum TabIndex
             {
-                NoValidTab   = -1,
-                TabStash     =  0,
-                TabOwnModels =  1,
-                TabVPilot    =  2
+                NoValidTab   =  -1,
+                TabStash     =   0,
+                TabOwnModels =   1,
+                TabOwnModelSet = 2,
+                TabVPilot      = 3
             };
 
             //! Constructor
@@ -85,14 +86,20 @@ namespace BlackGui
             //! Own (installed) model for given model string
             BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
+            //! Own models
+            BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
+
+            //! Own models for simulator
+            const BlackMisc::Simulation::CSimulatorInfo &getOwnModelsSimulator() const;
+
+            //! Number of own models
+            int getOwnModelsCount() const;
+
             //! Current tab index
             TabIndex currentTabIndex() const;
 
             //! Current model view
-            const BlackGui::Views::CAircraftModelView *currentModelView() const;
-
-            //! Current model view
-            BlackGui::Views::CAircraftModelView *currentModelView();
+            BlackGui::Views::CAircraftModelView *currentModelView() const;
 
             //! Is stashed view
             bool isStashedTab() const;
@@ -142,6 +149,9 @@ namespace BlackGui
             //! Request latest (incremental) data from backend
             void requestUpdatedData(BlackMisc::Network::CEntityFlags::Entity entities);
 
+            //! Tab index has been changed
+            void tabIndexChanged(int index);
+
         private slots:
             //! Load the vPilot rules
             void ps_loadVPilotData();
@@ -172,6 +182,9 @@ namespace BlackGui
 
             //! Stash count has been changed
             void ps_onStashCountChanged(int count, bool withFilter);
+
+            //! Model set count has been changed
+            void ps_onModelSetCountChanged(int count, bool withFilter);
 
             //! Row has been selected
             void ps_onModelRowSelected(const QModelIndex &index);
@@ -212,18 +225,15 @@ namespace BlackGui
             //! Open simulator file
             void ps_showSimulatorFile();
 
-            //! When main GUI application has been started
-            void ps_deferredInit();
-
         private:
-            QScopedPointer<Ui::CDbMappingComponent>                          ui;
-            QScopedPointer<CDbAutoStashingComponent>                         m_autoStashDialog;   //!< dialog auto stashing
-            QScopedPointer<CDbModelMappingModifyComponent>                   m_modelModifyDialog;
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader              m_vPilotReader;      //!< read vPilot rules
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>     m_modelLoader;       //!< read own aircraft models
-            BlackMisc::CData<BlackCore::Data::VPilotAircraftModels>          m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
-            BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>           m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
-            BlackMisc::CData<BlackGui::Components::Data::DbMappingComponent> m_lastInteractions {this};  //!< last interactions
+            QScopedPointer<Ui::CDbMappingComponent>                             ui;
+            QScopedPointer<CDbAutoStashingComponent>                            m_autoStashDialog;          //!< dialog auto stashing
+            QScopedPointer<CDbModelMappingModifyComponent>                      m_modelModifyDialog;        //!< dialog when modifying models
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader                 m_vPilotReader;             //!< read vPilot rules
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>        m_modelLoader;              //!< read own aircraft models
+            BlackMisc::CData<BlackMisc::Simulation::Data::VPilotAircraftModels> m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
+            BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>              m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
+            BlackMisc::CData<BlackGui::Components::Data::DbMappingComponent>    m_lastInteractions {this};  //!< last interactions
             bool m_vPilot1stInit       = true;
             bool m_withVPilot          = false;
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model

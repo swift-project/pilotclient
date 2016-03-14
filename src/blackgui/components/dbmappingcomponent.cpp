@@ -43,6 +43,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->ui->comp_StashAircraft->setMappingComponent(this);
+            this->ui->comp_OwnModelSet->setMappingComponent(this);
 
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
             this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
@@ -64,13 +65,21 @@ namespace BlackGui
             connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::ps_onStashedModelsChanged);
             connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::ps_onModelsSuccessfullyPublished);
 
+            connect(ui->comp_OwnModelSet->getView(), &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onModelSetCountChanged);
+            connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::tabIndexChanged);
+
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CShowSimulatorFile(this), false);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMappingOwnSimulatorModelMenu(this));
             ui->tvp_OwnAircraftModels->setCustomMenu(new CModelStashTools(this, false));
-            if (this->m_modelLoader)
+
+            this->m_lastInteractions.synchronize();
+            const CSimulatorInfo sim = this->m_lastInteractions.get().getLastSimulatorSelection();
+            if (sim.isSingleSimulator())
             {
-                ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->m_modelLoader->getAircraftModels());
+                // if we have already use this before, use it again, but only from cache
+                this->initModelLoader(sim);
+                this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
             }
 
             // how to display forms
@@ -84,21 +93,6 @@ namespace BlackGui
 
             // vPilot
             this->initVPilotLoading();
-            QTimer::singleShot(1000, this, &CDbMappingComponent::ps_deferredInit);
-        }
-
-        void CDbMappingComponent::ps_deferredInit()
-        {
-            // deferred
-            this->m_lastInteractions.synchronize();
-            const CSimulatorInfo sim = this->m_lastInteractions.get().getLastSimulatorSelection();
-
-            if (sim.isSingleSimulator())
-            {
-                // if we have already use this before, use it again, but only from cache
-                this->initModelLoader(sim);
-                this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
-            }
         }
 
         CDbMappingComponent::~CDbMappingComponent()
@@ -169,7 +163,6 @@ namespace BlackGui
             else
             {
                 bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbMappingComponent::ps_onOwnModelsLoadingFinished);
-
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
                 Q_UNUSED(c);
                 return true;
@@ -221,7 +214,7 @@ namespace BlackGui
             return false;
         }
 
-        const CAircraftModelView *CDbMappingComponent::currentModelView() const
+        CAircraftModelView *CDbMappingComponent::currentModelView() const
         {
             TabIndex tab = currentTabIndex();
             switch (tab)
@@ -232,22 +225,8 @@ namespace BlackGui
                 return ui->tvp_AircraftModelsForVPilot;
             case TabStash:
                 return ui->comp_StashAircraft->getView();
-            default:
-                return nullptr;
-            }
-        }
-
-        CAircraftModelView *CDbMappingComponent::currentModelView()
-        {
-            TabIndex tab = currentTabIndex();
-            switch (tab)
-            {
-            case TabOwnModels:
-                return ui->tvp_OwnAircraftModels;
-            case TabVPilot:
-                return ui->tvp_AircraftModelsForVPilot;
-            case TabStash:
-                return ui->comp_StashAircraft->getView();
+            case TabOwnModelSet:
+                return ui->comp_OwnModelSet->getView();
             default:
                 return nullptr;
             }
@@ -289,6 +268,26 @@ namespace BlackGui
         {
             if (!this->m_modelLoader) { return CAircraftModel(); }
             return this->m_modelLoader->getAircraftModels().findFirstByModelString(modelString);
+        }
+
+        CAircraftModelList CDbMappingComponent::getOwnModels() const
+        {
+            static const CAircraftModelList empty;
+            if (!this->m_modelLoader) { return empty; }
+            return this->m_modelLoader->getAircraftModels();
+        }
+
+        const CSimulatorInfo &CDbMappingComponent::getOwnModelsSimulator() const
+        {
+            static const CSimulatorInfo noSim;
+            if (!this->m_modelLoader) { return noSim; }
+            return this->m_modelLoader->getSimulator();
+        }
+
+        int CDbMappingComponent::getOwnModelsCount() const
+        {
+            if (!this->m_modelLoader) { return 0; }
+            return this->m_modelLoader->getAircraftModelsCount();
         }
 
         CDbMappingComponent::TabIndex CDbMappingComponent::currentTabIndex() const
@@ -583,7 +582,7 @@ namespace BlackGui
             QString o(ot);
             if (this->m_modelLoader)
             {
-                QString sims(this->m_modelLoader->supportedSimulatorsAsString());
+                QString sims(this->m_modelLoader->getSimulatorAsString());
                 if (!sims.isEmpty()) { o = o.append(" ").append(sims); }
             }
             QString f = this->ui->tvp_OwnAircraftModels->hasFilter() ? "F" : "";
@@ -599,6 +598,17 @@ namespace BlackGui
             QString o = this->ui->tw_ModelsToBeMapped->tabText(i);
             QString f = this->ui->comp_StashAircraft->getView()->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, this->ui->comp_StashAircraft->getView()->rowCount()) + f;
+            this->ui->tw_ModelsToBeMapped->setTabText(i, o);
+        }
+
+        void CDbMappingComponent::ps_onModelSetCountChanged(int count, bool withFilter)
+        {
+            Q_UNUSED(count);
+            Q_UNUSED(withFilter);
+            int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_OwnModelSet);
+            QString o = this->ui->tw_ModelsToBeMapped->tabText(i);
+            QString f = this->ui->comp_StashAircraft->getView()->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, this->ui->comp_OwnModelSet->getView()->rowCount()) + f;
             this->ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 
@@ -696,6 +706,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_onOwnModelsLoadingFinished(bool success, const CSimulatorInfo &simInfo)
         {
+            Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
             if (success && this->m_modelLoader)
             {
                 const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
@@ -764,21 +775,21 @@ namespace BlackGui
                 QMenu *load = menu.addMenu(CIcons::appModels16(), "Load installed models");
                 CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
                 Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access parent");
-                if (sims.fs9())
+                if (sims.fsx())
                 {
-                    load->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
+                    load->addAction(CIcons::appModels16(), "FSX models", mapComp, [mapComp]()
                     {
                         mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundWithCache);
                     });
                 }
-                if (sims.fsx())
+                if (sims.p3d())
                 {
                     load->addAction(CIcons::appModels16(), "P3D models", mapComp, [mapComp]()
                     {
                         mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundWithCache);
                     });
                 }
-                if (sims.p3d())
+                if (sims.fs9())
                 {
                     load->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
                     {
@@ -797,21 +808,21 @@ namespace BlackGui
                 if (sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
                 {
                     QMenu *reloadMenu = load->addMenu("Force reload");
-                    if (sims.fs9())
+                    if (sims.fsx())
                     {
-                        reloadMenu->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
+                        reloadMenu->addAction(CIcons::appModels16(), "FSX models", mapComp, [mapComp]()
                         {
                             mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundNoCache);
                         });
                     }
-                    if (sims.fsx())
+                    if (sims.p3d())
                     {
                         reloadMenu->addAction(CIcons::appModels16(), "P3D models", mapComp, [mapComp]()
                         {
                             mapComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundNoCache);
                         });
                     }
-                    if (sims.p3d())
+                    if (sims.fs9())
                     {
                         reloadMenu->addAction(CIcons::appModels16(), "FS9 models", mapComp, [mapComp]()
                         {
@@ -911,9 +922,6 @@ namespace BlackGui
 
                 a = subMenu->addAction(CIcons::appLiveries16(), "Current livery", mapComp, SLOT(ps_applyDbData()));
                 a->setData(CLivery().getClassName());
-
-                // a = subMenu->addAction(CIcons::appAirlineIcao16(), "Current airline ICAO", mapComp, SLOT(ps_applyDbData()));
-                // a->setData(CAirlineIcaoCode().getClassName());
 
                 menu.addAction(CIcons::databaseTable16(), "Modify model data", mapComp, SLOT(ps_modifyModelDialog()));
             }

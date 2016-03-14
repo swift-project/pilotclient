@@ -26,20 +26,17 @@ namespace BlackGui
         {
         public:
             //! Set the corresponding component
-            void setMappingComponent(CDbMappingComponent *component) { m_mappingComponent = component; }
+            virtual void setMappingComponent(CDbMappingComponent *component);
 
         protected:
             //! Constructor
             CDbMappingComponentAware(QObject *parent);
 
             //! Get the mapping component
-            const CDbMappingComponent *getMappingComponent() const { return m_mappingComponent; }
-
-            //! Get mapping component
-            CDbMappingComponent *getMappingComponent() { return m_mappingComponent; }
+            CDbMappingComponent *getMappingComponent() const { return m_mappingComponent; }
 
         private :
-            CDbMappingComponent *m_mappingComponent = nullptr;
+            CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component
         };
     } // ns
 } // ns

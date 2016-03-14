@@ -14,6 +14,11 @@ namespace BlackGui
 {
     namespace Components
     {
+        void CDbMappingComponentAware::setMappingComponent(CDbMappingComponent *component)
+        {
+            m_mappingComponent = component;
+        }
+
         CDbMappingComponentAware::CDbMappingComponentAware(QObject *parent)
         {
             // if we get a mapping component we use it
@@ -23,5 +28,6 @@ namespace BlackGui
             if (!m) { return; }
             m_mappingComponent = m;
         }
+
     } // ns
 } // ns
