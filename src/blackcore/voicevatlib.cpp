@@ -24,9 +24,6 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
-    /*
-     * Constructor
-     */
     CVoiceVatlib::CVoiceVatlib(QObject *parent) :
         IVoice(parent),
         m_audioService(Vat_CreateAudioService()),
@@ -38,9 +35,6 @@ namespace BlackCore
         this->startTimer(10);
     }
 
-    /*
-     * Destructor
-     */
     CVoiceVatlib::~CVoiceVatlib() {}
 
     QSharedPointer<IVoiceChannel> CVoiceVatlib::createVoiceChannel()

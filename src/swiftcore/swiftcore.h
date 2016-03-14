@@ -31,41 +31,34 @@ class CSwiftCore :
     Q_OBJECT
 
 public:
-
-    //! SwiftCore setup information
-    struct SetupInfo
-    {
-        SetupInfo() {}
-
-        bool m_minimzed = false;  //!< Start minimized to tray
-        bool m_start = false;     //!< Start server when core is started
-        bool m_coreAudio = false; //!< Audio in core
-        QString m_dbusAddress;    //!< DBus address (session, system, p2p)
-    };
-
     //! Constructor
-    CSwiftCore(const SetupInfo &info, QWidget *parent = nullptr);
+    CSwiftCore(QWidget *parent = nullptr);
 
     //! Destructor
     ~CSwiftCore();
 
 private slots:
-    // PushButton slots
+    //! \name PushButton slots
+    //! @[
     void ps_startCorePressed();
     void ps_stopCorePressed();
     void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
     void ps_p2pModeToggled(bool checked);
+    //! }@
 
     //! Style sheet has changed
     virtual void ps_onStyleSheetsChanged();
 
 private:
+    //! \name Init
+    //! @[
     void initSlots();
     void initLogDisplay();
     void initStyleSheet();
-    void initDBusMode(const SetupInfo &setup);
+    void initDBusMode();
+    //! }@
 
-    void startCore(const SetupInfo &setup);
+    void startCore(const QString &dBusAdress);
     void stopCore();
     QString getDBusAddress() const;
 

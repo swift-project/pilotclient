@@ -48,18 +48,6 @@ namespace BlackGui
         //! Delete hierarchy of layouts
         static void deleteLayout(QLayout *layout, bool deleteWidgets);
 
-        //! Message box or command line warning (depending on OS)
-        static void commandLineErrorMessage(const QString &errorMessage, const QCommandLineParser &parser);
-
-        //! Message box or command line version info
-        static void commandLineVersionRequested();
-
-        //! Message box or command line version info
-        static void commandLineHelpRequested(QCommandLineParser &parser);
-
-        //! Standard initialization for a swift GUI application
-        static void initSwiftGuiApplication(QApplication &a, const QString &applicationName, const QPixmap &icon = BlackMisc::CIcons::swift24());
-
         //! Leninet / relaxed
         static bool lenientTitleComparison(const QString &title, const QString &comparison);
 

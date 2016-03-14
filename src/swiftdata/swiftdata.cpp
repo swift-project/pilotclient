@@ -9,6 +9,7 @@
 
 #include "swiftdata.h"
 #include "ui_swiftdata.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/logcomponent.h"
@@ -78,9 +79,7 @@ void CSwiftData::ps_onStyleSheetsChanged()
 
 void CSwiftData::init()
 {
-    this->setWindowIcon(CIcons::swiftDatabase24());
-    this->setWindowTitle(QCoreApplication::instance()->applicationName() + " " + CProject::versionStringDevBetaInfo());
-    this->setObjectName("CSwiftData");
+    sGui->initMainApplicationWindow(this);
     this->initStyleSheet();
     this->initLogDisplay();
     connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);

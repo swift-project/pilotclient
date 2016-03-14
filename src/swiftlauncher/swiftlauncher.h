@@ -16,10 +16,10 @@
 #include <QScopedPointer>
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
+#include "blackcore/coremodeenums.h"
 #include "blackcore/settings/network.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "swiftguistandard/guimodeenums.h"
 
 namespace Ui { class CSwiftLauncher; }
 
@@ -67,7 +67,7 @@ private:
     BlackMisc::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
 
     //! Get core mode
-    GuiModes::CoreMode getCoreMode() const;
+    BlackCore::CoreModes::CoreMode getCoreMode() const;
 
     //! select DBus address/mode
     QString getDBusAddress() const;

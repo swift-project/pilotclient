@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/modeldatareader.h"
@@ -40,6 +41,7 @@ namespace BlackCore
         QObject(parent), m_readerFlags(readerFlags), m_autoReadAfterSetupMs(autoReadAfterSetupSynchronizedMs)
     {
         Q_ASSERT_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "missing SSL support");
+        if (!sApp) { return; } // shutting doen
         this->setObjectName("CWebDataReader");
         this->initReaders(readerFlags);
         this->initWriters();
@@ -47,14 +49,14 @@ namespace BlackCore
         {
             // wait for setup read completion
             // in case this was already fired or will never be fired set a time out
-            if (CSetupReader::instance().updatedWithinLastMs(10 * 1000))
+            if (sApp->isSetupSyncronized())
             {
                 QTimer::singleShot(500, this, &CWebDataServices::ps_setupTimedOut);
             }
             else
             {
-                connect(&CSetupReader::instance(), &CSetupReader::setupSynchronized, this, &CWebDataServices::ps_setupRead);
-                QTimer::singleShot(10 * 1000, this, &CWebDataServices::ps_setupTimedOut);
+                //! \todo change !!!!!!
+                QTimer::singleShot(2500, this, &CWebDataServices::ps_setupTimedOut);
             }
         }
     }

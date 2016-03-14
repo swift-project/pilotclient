@@ -11,6 +11,7 @@
 #include "ui_swiftguistd.h"
 #include "blackcore/contextallinterfaces.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/components/allmaininfoareacomponents.h"
 #include "blackgui/models/atcstationlistmodel.h"
@@ -29,19 +30,17 @@ using namespace BlackMisc::Input;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
-void SwiftGuiStd::init(const CCoreFacadeConfig &runtimeConfig)
+void SwiftGuiStd::init()
 {
     // POST(!) GUI init
 
     if (this->m_init) { return; }
     this->setVisible(false); // hide all, so no flashing windows during init
+    sGui->initMainApplicationWindow(this);
 
     // init window
-    this->setWindowIcon(CIcons::swift24());
     this->setWindowTitle(CProject::versionStringDevBetaInfo());
-    this->setObjectName("SwiftGuiStd");
     this->initStyleSheet();
-
 
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
@@ -71,9 +70,8 @@ void SwiftGuiStd::init(const CCoreFacadeConfig &runtimeConfig)
     }
 
     // context
-    this->createRuntime(runtimeConfig, this);
-    CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
-    this->getIContextApplication()->loadSettings();
+    CEnableForRuntime::setRuntimeForComponents(sGui->getCoreFacade(), this);
+    sGui->getIContextApplication()->loadSettings();
 
     // info bar and status bar
     this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
@@ -92,10 +90,10 @@ void SwiftGuiStd::init(const CCoreFacadeConfig &runtimeConfig)
     this->initGuiSignals();
 
     // signal / slots contexts / timers
-    connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
-    connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
-    connect(this->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
-    connect(this->getIContextNetwork(), &IContextNetwork::textMessageSent, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
+    connect(sGui->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
+    connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
+    connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
+    connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
     connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
 
     // log messages

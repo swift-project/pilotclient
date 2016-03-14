@@ -7,11 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "swiftguistandard/guimodeenums.h"
 #include "swiftlauncher.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/registermetadata.h"
-#include "blackgui/guiutility.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/project.h"
@@ -27,75 +25,23 @@ using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackCore;
 
-enum CommandLineParseResult
-{
-    CommandLineOk,
-    CommandLineError,
-    CommandLineVersionRequested,
-    CommandLineHelpRequested
-};
-
-CommandLineParseResult parseCommandLine(QCommandLineParser &parser, bool &installer, QString &errorMessage)
-{
-    parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
-    parser.addOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup.")});
-
-    QCommandLineOption helpOption = parser.addHelpOption();
-    QCommandLineOption versionOption = parser.addVersionOption();
-
-    if (!parser.parse(QCoreApplication::arguments()))
-    {
-        errorMessage = parser.errorText();
-        return CommandLineError;
-    }
-
-    // help/version
-    if (parser.isSet(helpOption)) { return CommandLineHelpRequested; }
-    if (parser.isSet(versionOption)) { return CommandLineVersionRequested; }
-
-    installer = parser.isSet("installer");
-    return CommandLineOk;
-}
-
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    const QString appName("swift launcher");
-    a.setApplicationVersion(CProject::version());
-    a.setApplicationName(appName);
-    CGuiUtility::initSwiftGuiApplication(a, appName, CIcons::swift24());
-
-    // Process the actual command line arguments given by the user
-    QCommandLineParser parser;
-    parser.setApplicationDescription(appName);
-    QString errorMessage;
-    bool installer = false;
-    switch (parseCommandLine(parser, installer, errorMessage))
-    {
-    case CommandLineOk:
-        break;
-    case CommandLineError:
-        CGuiUtility::commandLineErrorMessage(errorMessage, parser);
-        return 1;
-    case CommandLineVersionRequested:
-        CGuiUtility::commandLineVersionRequested();
-        return 0;
-    case CommandLineHelpRequested:
-        CGuiUtility::commandLineHelpRequested(parser);
-        return 0;
-    }
+    CGuiApplication a(argc, argv, "swift launcher");
+    a.setWindowIcon(CIcons::swift24());
+    a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup."), "installer"});
+    a.parse();
 
     // Dialog to decide external or internal core
     CSwiftLauncher launcher;
-    launcher.setWindowIcon(CIcons::swift24());
-    if (launcher.exec() == QDialog::Rejected) { return 0; }
+    if (launcher.exec() == QDialog::Rejected) { return EXIT_SUCCESS; }
     launcher.close();
 
     QString exe(launcher.getExecutable());
     QStringList exeArgs(launcher.getExecutableArgs());
     Q_ASSERT_X(!exe.isEmpty(), Q_FUNC_INFO, "Missing executable");
-    CLogMessage(QCoreApplication::instance()).debug() << launcher.getCmdLine();
+    CLogMessage(QCoreApplication::instance()).info(launcher.getCmdLine());
     QProcess::startDetached(exe, exeArgs);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -25,6 +25,7 @@
 #include <QDesktopServices>
 #include <QProcess>
 #include <QFontDialog>
+#include <QDir>
 
 using namespace BlackGui;
 using namespace BlackCore;

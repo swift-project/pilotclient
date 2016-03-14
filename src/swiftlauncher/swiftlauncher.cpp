@@ -9,6 +9,7 @@
 
 #include "swiftlauncher.h"
 #include "ui_swiftlauncher.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/dbusserver.h"
@@ -41,7 +42,6 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     ui(new Ui::CSwiftLauncher)
 {
     ui->setupUi(this);
-    this->setWindowTitle(QCoreApplication::instance()->applicationName() + " " + CProject::versionStringDevBetaInfo());
     this->init();
     connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CSwiftLauncher::ps_loadSetup);
     connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
@@ -72,14 +72,14 @@ CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
     return CEnableForFramelessWindow::WindowNormal;
 }
 
-GuiModes::CoreMode CSwiftLauncher::getCoreMode() const
+CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 {
-    if (ui->rb_SwiftStandalone->isChecked()) { return GuiModes::CoreInGuiProcess; }
-    if (ui->rb_SwiftCoreAudio->isChecked()) { return GuiModes::CoreExternalCoreAudio; }
-    if (ui->rb_SwiftCoreGuiAudio->isChecked()) { return GuiModes::CoreExternalAudioGui; }
+    if (ui->rb_SwiftStandalone->isChecked()) { return CoreModes::CoreInGuiProcess; }
+    if (ui->rb_SwiftCoreAudio->isChecked()) { return CoreModes::CoreExternalCoreAudio; }
+    if (ui->rb_SwiftCoreGuiAudio->isChecked()) { return CoreModes::CoreExternalAudioGui; }
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
-    return GuiModes::CoreInGuiProcess;
+    return CoreModes::CoreInGuiProcess;
 }
 
 QString CSwiftLauncher::getDBusAddress() const
@@ -103,6 +103,7 @@ void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 
 void CSwiftLauncher::init()
 {
+    sGui->initMainApplicationWindow(this);
     this->ui->lbl_NewVersionUrl->setTextFormat(Qt::RichText);
     this->ui->lbl_NewVersionUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
     this->ui->lbl_NewVersionUrl->setOpenExternalLinks(true);
@@ -210,7 +211,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
         m_executable = CProject::swiftGuiExecutableName();
         QStringList args
         {
-            "--core", GuiModes::coreModeToString(getCoreMode()),
+            "--core", CoreModes::coreModeToString(getCoreMode()),
             "--window", CEnableForFramelessWindow::windowModeToString(getWindowMode())
         };
         if (!this->isStandaloneGuiSelected())

@@ -13,6 +13,7 @@
 #include "blackmisc/loghandler.h"
 #include "blackmisc/project.h"
 #include "blackmisc/dbusserver.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/stylesheetutility.h"
@@ -25,25 +26,23 @@ using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
-CSwiftCore::CSwiftCore(const SetupInfo &info, QWidget *parent) :
+CSwiftCore::CSwiftCore(QWidget *parent) :
     CSystemTrayWindow(CIcons::swiftNova24(), parent),
     CIdentifiable(this),
     ui(new Ui::CSwiftCore)
 {
     ui->setupUi(this);
-    const QString name(QCoreApplication::instance()->applicationName() + " " + CProject::version());
+    sGui->initMainApplicationWindow(this);
+    const QString name(sGui->getApplicationNameAndVersion());
     setSystemTrayMode(MinimizeToTray | QuitOnClose);
     setSystemTrayToolTip(name);
-    setWindowTitle(name);
-    setWindowIcon(CIcons::swiftNova24());
-    setWindowIconText(name);
 
     initLogDisplay();
     initSlots();
     initStyleSheet();
-    initDBusMode(info);
+    initDBusMode();
 
-    if (info.m_start) { startCore(info); }
+    if (sGui->isParserOptionSet("start")) { startCore(sGui->getCmdDBusAddressValue()); }
 }
 
 void CSwiftCore::initStyleSheet()
@@ -58,20 +57,21 @@ void CSwiftCore::initStyleSheet()
     this->setStyleSheet(s);
 }
 
-void CSwiftCore::initDBusMode(const CSwiftCore::SetupInfo &setup)
+void CSwiftCore::initDBusMode()
 {
-    if (setup.m_dbusAddress.startsWith(CDBusServer::sessionBusAddress()))
+    const QString dBusAddress(sGui->getCmdDBusAddressValue());
+    if (dBusAddress.startsWith(CDBusServer::sessionBusAddress()))
     {
         this->ui->rb_SessionBus->setChecked(true);
     }
-    else if (setup.m_dbusAddress.startsWith(CDBusServer::systemBusAddress()))
+    else if (dBusAddress.startsWith(CDBusServer::systemBusAddress()))
     {
         this->ui->rb_SystemBus->setChecked(true);
     }
     else
     {
         this->ui->rb_P2PBus->setChecked(true);
-        this->ui->le_P2PAddress->setText(setup.m_dbusAddress);
+        this->ui->le_P2PAddress->setText(dBusAddress);
     }
 }
 
@@ -80,9 +80,7 @@ CSwiftCore::~CSwiftCore()
 
 void CSwiftCore::ps_startCorePressed()
 {
-    SetupInfo setup;
-    setup.m_dbusAddress = getDBusAddress();
-    startCore(setup);
+    startCore(getDBusAddress());
 }
 
 void CSwiftCore::ps_stopCorePressed()
@@ -131,10 +129,10 @@ void CSwiftCore::initLogDisplay()
     logHandler->subscribe(this, &CSwiftCore::ps_appendLogMessage);
 }
 
-void CSwiftCore::startCore(const SetupInfo &setup)
+void CSwiftCore::startCore(const QString &dBusAdress)
 {
     if (getRuntime()) { return; }
-    if (setup.m_dbusAddress.isEmpty()) { return; }
+    if (dBusAdress.isEmpty()) { return; }
 
     ui->pb_StartCore->setEnabled(false);
     ui->pb_StopCore->setEnabled(true);
@@ -142,9 +140,9 @@ void CSwiftCore::startCore(const SetupInfo &setup)
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
     // context
-    this->createRuntime(setup.m_coreAudio ?
-                        CCoreFacadeConfig::forCoreAllLocalInDBus(setup.m_dbusAddress) :
-                        CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(setup.m_dbusAddress),
+    this->createRuntime(sGui->isParserOptionSet("coreaudio") ?
+                        CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress) :
+                        CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(dBusAdress),
                         this);
     CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
     connect(ui->le_CommandLineInput, &CCommandInput::commandEntered, getRuntime(), &CCoreFacade::parseCommandLine);

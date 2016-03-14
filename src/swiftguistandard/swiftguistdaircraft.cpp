@@ -9,6 +9,7 @@
 
 #include "swiftguistd.h"
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/dbusserver.h"
 #include "blackcore/contextnetwork.h"
 
@@ -31,7 +32,7 @@ bool SwiftGuiStd::ps_reloadOwnAircraft()
 
     // check for changed aircraft
     bool changed = false;
-    CSimulatedAircraft loadedAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+    CSimulatedAircraft loadedAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
     if (loadedAircraft != this->m_ownAircraft)
     {
         this->m_ownAircraft = loadedAircraft;
@@ -52,5 +53,5 @@ void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgs
 
     this->m_ownAircraft.setPosition(coordinate);
     this->m_ownAircraft.setAltitude(altitude);
-    this->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude);
+    sGui->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude);
 }

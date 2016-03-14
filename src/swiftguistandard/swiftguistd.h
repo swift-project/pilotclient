@@ -16,7 +16,6 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include "guimodeenums.h"
 #include "blackcore/contextallinterfaces.h"
 #include "blackcore/actionbind.h"
 #include "blackcore/data/globalsetup.h"
@@ -48,8 +47,7 @@ namespace Ui { class SwiftGuiStd; }
 class SwiftGuiStd :
     public QMainWindow,
     public BlackMisc::CIdentifiable,
-    public BlackGui::CEnableForFramelessWindow,
-    public BlackGui::Components::CEnableForRuntime
+    public BlackGui::CEnableForFramelessWindow
 {
     Q_OBJECT
 
@@ -65,13 +63,10 @@ public:
     };
 
     //! Constructor
-    SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent = nullptr);
+    SwiftGuiStd(WindowMode windowMode, QWidget *parent = nullptr);
 
     //! Destructor
     ~SwiftGuiStd();
-
-    //! Init data
-    void init(const BlackCore::CCoreFacadeConfig &runtimeConfig);
 
     //! Log message category
     static QString getMessageCategory() { return "swift.gui.stdgui"; }
@@ -143,6 +138,9 @@ private:
 
     //! 1st data reads
     void initialDataReads();
+
+    //! Init data (post GUI init)
+    void init();
 
     //! Init GUI signals
     void initGuiSignals();

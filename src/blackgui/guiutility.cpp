@@ -69,39 +69,6 @@ namespace BlackGui
         return (mw && mw->isFrameless());
     }
 
-    void CGuiUtility::initSwiftGuiApplication(QApplication &a, const QString &applicationName, const QPixmap &icon)
-    {
-        CCoreFacade::registerMetadata(); // register metadata
-        CCookieManager::instance(); // init cookie manager if ever needed
-
-        CLogHandler::instance()->install(); // make sure we have a log handler!
-
-        QApplication::setApplicationName(applicationName);
-        QApplication::setApplicationVersion(CProject::version());
-        QApplication::setWindowIcon(icon);
-
-        // Logging
-        QString executableName = QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName();
-        QString category("swift." + executableName);
-
-        // Translations
-        QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
-        CLogMessage(category).debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
-        QTranslator translator;
-        if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/"))
-        {
-            CLogMessage(category).debug() << "Translator loaded";
-        }
-
-        // File logger
-        static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/logs";
-        CFileLogger *fileLogger = new CFileLogger(executableName, logPath, &a);
-        fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
-
-        // GUI icon
-        a.installTranslator(&translator);
-    }
-
     bool CGuiUtility::lenientTitleComparison(const QString &title, const QString &comparison)
     {
         if (title == comparison) { return true; }
@@ -273,35 +240,5 @@ namespace BlackGui
 
         // then finally
         delete layout;
-    }
-
-    void CGuiUtility::commandLineErrorMessage(const QString &errorMessage, const QCommandLineParser &parser)
-    {
-#   ifdef Q_OS_WIN
-        QMessageBox::warning(nullptr, QGuiApplication::applicationDisplayName(), "<html><head/><body><h2>" + errorMessage + "</h2><pre>" + parser.helpText() + "</pre></body></html>");
-#   else
-        fputs(qPrintable(errorMessage), stderr);
-        fputs("\n\n", stderr);
-        fputs(qPrintable(parser.helpText()), stderr);
-#   endif
-    }
-
-    void CGuiUtility::commandLineVersionRequested()
-    {
-#   ifdef Q_OS_WIN
-        QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(), QGuiApplication::applicationDisplayName() + ' ' + QCoreApplication::applicationVersion());
-#   else
-        printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
-#   endif
-    }
-
-    void CGuiUtility::commandLineHelpRequested(QCommandLineParser &parser)
-    {
-#   ifdef Q_OS_WIN
-        QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(), "<html><head/><body><pre>" + parser.helpText() + "</pre></body></html>");
-#   else
-        parser.showHelp(); // terminates
-        Q_UNREACHABLE();
-#   endif
     }
 } // ns

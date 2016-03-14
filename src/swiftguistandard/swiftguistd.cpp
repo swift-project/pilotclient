@@ -14,6 +14,7 @@
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/settingscomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextownaircraft.h"
@@ -47,6 +48,7 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
     // GUI
     ui->setupUi(this);
     this->setDynamicProperties(windowMode == CEnableForFramelessWindow::WindowFrameless);
+    this->init();
 }
 
 SwiftGuiStd::~SwiftGuiStd()
@@ -73,15 +75,15 @@ void SwiftGuiStd::performGracefulShutdown()
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
     {
-        if (this->getIContextNetwork() && this->getIContextNetwork()->isConnected())
+        if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
         {
             if (this->m_contextAudioAvailable)
             {
-                this->getIContextAudio()->leaveAllVoiceRooms();
-                this->getIContextAudio()->disconnect(this); // break down signal / slots
+                sGui->getIContextAudio()->leaveAllVoiceRooms();
+                sGui->getIContextAudio()->disconnect(this); // break down signal / slots
             }
-            this->getIContextNetwork()->disconnectFromNetwork();
-            this->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
+            sGui->getIContextNetwork()->disconnectFromNetwork();
+            sGui->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
         }
     }
 
@@ -95,9 +97,9 @@ void SwiftGuiStd::performGracefulShutdown()
     emit requestGracefulShutdown();
 
     // tell context GUI is going down
-    if (this->getIContextApplication())
+    if (sGui->getIContextApplication())
     {
-        this->getIContextApplication()->unregisterApplication(identifier());
+        sGui->getIContextApplication()->unregisterApplication(identifier());
     }
 
     // allow some other parts to react
@@ -108,7 +110,7 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     this->performGracefulShutdown();
-    QApplication::exit();
+    CGuiApplication::exit();
 }
 
 void SwiftGuiStd::changeEvent(QEvent *event)
@@ -252,16 +254,16 @@ void SwiftGuiStd::setContextAvailability()
 {
     bool corePreviouslyAvailable = this->m_coreAvailable;
 
-    if (this->getIContextApplication()->isUsingImplementingObject())
+    if (sGui->getIContextApplication()->isUsingImplementingObject())
     {
         this->m_coreAvailable = true;
     }
     else
     {
-        this->m_coreAvailable = isMyIdentifier(this->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
+        this->m_coreAvailable = isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
     }
-    this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->isUsingImplementingObject();
-    this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->isUsingImplementingObject();
+    this->m_contextNetworkAvailable = this->m_coreAvailable || sGui->getIContextNetwork()->isUsingImplementingObject();
+    this->m_contextAudioAvailable = this->m_coreAvailable || sGui->getIContextAudio()->isUsingImplementingObject();
 
     // react to a change in core's availability
     if (this->m_coreAvailable != corePreviouslyAvailable)
@@ -269,8 +271,8 @@ void SwiftGuiStd::setContextAvailability()
         if (this->m_coreAvailable)
         {
             // core has just become available
-            this->getIContextApplication()->synchronizeLogSubscriptions();
-            this->getIContextApplication()->synchronizeLocalSettings();
+            sGui->getIContextApplication()->synchronizeLogSubscriptions();
+            sGui->getIContextApplication()->synchronizeLocalSettings();
         }
         else
         {
@@ -285,7 +287,7 @@ void SwiftGuiStd::updateGuiStatusInformation()
     QString network("unavailable");
     if (this->m_contextNetworkAvailable)
     {
-        bool dbus = !this->getIContextNetwork()->isUsingImplementingObject();
+        bool dbus = !sGui->getIContextNetwork()->isUsingImplementingObject();
         network = dbus ? now : "local";
         this->ui->comp_InfoBarStatus->setDBusStatus(dbus);
     }
@@ -366,7 +368,7 @@ void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notific
 {
     if (!this->m_contextAudioAvailable) { return; }
     if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
-    this->getIContextAudio()->playNotification(notification, true);
+    sGui->getIContextAudio()->playNotification(notification, true);
 }
 
 void SwiftGuiStd::displayConsole()
@@ -378,4 +380,3 @@ void SwiftGuiStd::displayLog()
 {
     this->ui->comp_MainInfoArea->displayLog();
 }
-

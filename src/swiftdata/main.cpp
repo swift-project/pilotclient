@@ -8,14 +8,14 @@
  */
 
 #include "swiftdata.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/application.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/filelogger.h"
-#include "blackgui/guiutility.h"
 #include "blackgui/stylesheetutility.h"
 
 #include <QApplication>
@@ -27,9 +27,8 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    CGuiUtility::initSwiftGuiApplication(a, "swift mapping tool", CIcons::swiftDatabase24());
-
+    CGuiApplication a(argc, argv, "swift mapping tool");
+    a.setWindowIcon(CIcons::swiftDatabase48());
     CSwiftData w;
     w.show();
     int r = a.exec();
