@@ -22,5 +22,15 @@ namespace BlackGui
             this->standardInit(new CDistributorListModel(this));
             this->setMenu(MenuDefaultDbViews);
         }
+
+        void CDistributorView::setDistributorMode(CDistributorListModel::DistributorMode distributorMode)
+        {
+            derivedModel()->setDistributorMode(distributorMode);
+        }
+
+        CDistributorListModel::DistributorMode CDistributorView::getDistributorMode() const
+        {
+            return derivedModel()->getDistributorMode();
+        }
     }
 } // namespace

@@ -26,11 +26,28 @@ namespace BlackGui
             public CListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>
         {
         public:
+            //! What kind of stations
+            enum DistributorMode
+            {
+                NotSet,
+                Normal,
+                Minimal
+            };
+
             //! Constructor
             explicit CDistributorListModel(QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CDistributorListModel() {}
+
+            //! Set mode
+            void setDistributorMode(DistributorMode distributorMode);
+
+            //! Mode
+            DistributorMode getDistributorMode() const { return this->m_distributorMode; }
+
+        private:
+            DistributorMode m_distributorMode = NotSet;
         };
     } // ns
 } // ns

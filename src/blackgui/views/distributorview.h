@@ -27,6 +27,12 @@ namespace BlackGui
         public:
             //! Constructor
             explicit CDistributorView(QWidget *parent = nullptr);
+
+            //! Set mode
+            void setDistributorMode(BlackGui::Models::CDistributorListModel::DistributorMode distributorMode);
+
+            //! Mode
+            BlackGui::Models::CDistributorListModel::DistributorMode getDistributorMode() const;
         };
     } // ns
 } // ns

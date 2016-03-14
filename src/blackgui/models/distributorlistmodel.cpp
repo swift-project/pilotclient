@@ -20,17 +20,52 @@ namespace BlackGui
         CDistributorListModel::CDistributorListModel(QObject *parent) :
             CListModelDbObjects("ModelDistributorList", parent)
         {
-            this->m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
-            this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
-            this->m_columns.addColumn(CColumn::standardString("alias1", CDistributor::IndexAlias1));
-            this->m_columns.addColumn(CColumn::standardString("alias2", CDistributor::IndexAlias2));
-            this->m_columns.addColumn(CColumn::standardString("changed", CDistributor::IndexUtcTimestampFormattedYmdhms));
+            this->setDistributorMode(Normal);
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelDistributorList", "key");
             (void)QT_TRANSLATE_NOOP("ModelDistributorList", "description");
             (void)QT_TRANSLATE_NOOP("ModelDistributorList", "alias1");
             (void)QT_TRANSLATE_NOOP("ModelDistributorList", "alias2");
+        }
+
+        void CDistributorListModel::setDistributorMode(CDistributorListModel::DistributorMode distributorMode)
+        {
+            if (this->m_distributorMode == distributorMode) { return; }
+            this->m_distributorMode = distributorMode;
+            this->m_columns.clear();
+            switch (distributorMode)
+            {
+            case NotSet:
+            case Normal:
+                {
+                    this->m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
+                    this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
+                    this->m_columns.addColumn(CColumn::standardString("alias1", CDistributor::IndexAlias1));
+                    this->m_columns.addColumn(CColumn::standardString("alias2", CDistributor::IndexAlias2));
+                    this->m_columns.addColumn(CColumn::standardString("changed", CDistributor::IndexUtcTimestampFormattedYmdhms));
+
+                    // default sort order
+                    this->setSortColumnByPropertyIndex(CDistributor::IndexDbStringKey);
+                    this->m_sortOrder = Qt::AscendingOrder;
+                }
+                break;
+
+            case Minimal:
+                {
+                    this->m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
+                    this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
+
+                    // default sort order
+                    this->setSortColumnByPropertyIndex(CDistributor::IndexDbStringKey);
+                    this->m_sortOrder = Qt::AscendingOrder;
+                }
+                break;
+
+            default:
+                qFatal("Wrong mode");
+                break;
+            }
         }
     } // class
 } // namespace
