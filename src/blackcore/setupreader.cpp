@@ -68,10 +68,10 @@ namespace BlackCore
             this->m_bootstrapUrls.clear(); // clean up previous values
 
             // web URL
-            if (!this->m_bootsrapUrlFileValue.isEmpty())
+            if (!this->m_bootstrapUrlFileValue.isEmpty())
             {
                 // start with the one from cmd args
-                this->m_bootstrapUrls.push_front(CUrl(this->m_bootsrapUrlFileValue));
+                this->m_bootstrapUrls.push_front(CUrl(this->m_bootstrapUrlFileValue));
             }
 
             // if ever loaded add those URLs
@@ -101,11 +101,11 @@ namespace BlackCore
 
     bool CSetupReader::parseCmdLineArguments()
     {
-        this->m_bootsrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(
+        this->m_bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(
                                            sApp->getParserValue(this->m_cmdBootstrapUrl)
                                        );
         this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
-        QUrl url(this->m_bootsrapUrlFileValue);
+        QUrl url(this->m_bootstrapUrlFileValue);
 
         // check on local file
         if (url.isLocalFile())
@@ -194,7 +194,7 @@ namespace BlackCore
         // settings have changed on disk
     }
 
-    CSetupReader::BootsrapMode CSetupReader::stringToEnum(const QString &s)
+    CSetupReader::BootstrapMode CSetupReader::stringToEnum(const QString &s)
     {
         const QString bsm(s.toLower().trimmed());
         if (bsm.startsWith("expl")) return Explicit;

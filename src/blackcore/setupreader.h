@@ -107,7 +107,7 @@ namespace BlackCore
 
     private:
         //! Bootstrap mode
-        enum BootsrapMode
+        enum BootstrapMode
         {
             Default,
             Explicit,
@@ -118,8 +118,8 @@ namespace BlackCore
         std::atomic<bool> m_setupSyncronized { false };
         std::atomic<bool> m_updateInfoSyncronized { false };
         QString m_localSetupFileValue;
-        QString m_bootsrapUrlFileValue;
-        BootsrapMode m_bootstrapMode;
+        QString m_bootstrapUrlFileValue;
+        BootstrapMode m_bootstrapMode;
         BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;  //!< location of setup files
         BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
@@ -128,7 +128,7 @@ namespace BlackCore
         QCommandLineOption m_cmdBootstrapUrl
         {
             { "url", "bootstrap-url", "bootstrapurl" },
-            QCoreApplication::translate("application", "bootsrap URL, e.g. datastore.swift-project.org"),
+            QCoreApplication::translate("application", "bootstrap URL, e.g. datastore.swift-project.org"),
             "bootstrapurl"
         };                                              //!< bootstrap URL
         QCommandLineOption m_cmdBootstrapMode
@@ -142,7 +142,7 @@ namespace BlackCore
         bool readLocalBootstrapFile(QString &fileName);
 
         //! Convert string to mode
-        static BootsrapMode stringToEnum(const QString &s);
+        static BootstrapMode stringToEnum(const QString &s);
     };
 } // ns
 

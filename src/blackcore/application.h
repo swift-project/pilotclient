@@ -48,7 +48,7 @@ namespace BlackCore
      *   Also some standard swift cmd arguments do not need to be re-implemented for each swift application.
      * - The core facade (aka core runtime) is now part of the application. It can be started via cmd line arguments.
      * - Settings are loaded
-     * - Setup is loaded (load the so called bootsrap file) to find servers and other resources
+     * - Setup is loaded (load the so called bootstrap file) to find servers and other resources
      * - Update information (new swift versions etc.) are loaded
      * - If applicable VATSIM status data (where are the VATSIM files?) are loaded
      * - An end of lifetime can be specified, aka time bombing

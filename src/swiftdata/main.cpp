@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     Q_UNUSED(qa);
     CGuiApplication a("swift mapping tool", CIcons::swiftDatabase48());
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, BlackCore::CWebReaderFlags::FromDb);
-    a.start();
+    if (!a.start()) { return EXIT_FAILURE; }
     CSwiftData w;
     w.show();
     int r = a.exec();
