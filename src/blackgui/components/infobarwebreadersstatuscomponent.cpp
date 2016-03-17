@@ -26,13 +26,18 @@ namespace BlackGui
         CInfoBarWebReadersStatusComponent::CInfoBarWebReadersStatusComponent(QWidget *parent) :
             QFrame(parent), ui(new Ui::CInfoBarWebReadersStatusComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "No sGui");
+            Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "No web data services");
             ui->setupUi(this);
             this->initLeds();
-            connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusComponent::ps_checkServerAndData);
+            bool c = connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusComponent::ps_checkServerAndData);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
             m_timer.setInterval(30 * 1000);
             m_timer.start();
             m_timer.setObjectName("CInfoBarWebReadersStatusComponent::CheckSwiftDbTimer");
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusComponent::ps_dataRead);
+            c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusComponent::ps_dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
+            Q_UNUSED(c);
         }
 
         CInfoBarWebReadersStatusComponent::~CInfoBarWebReadersStatusComponent()

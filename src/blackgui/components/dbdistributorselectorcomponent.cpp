@@ -27,19 +27,24 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CDbDistributorSelectorComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             ui->setupUi(this);
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
             this->ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
 
-            connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::ps_dataChanged);
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorSelectorComponent::ps_distributorsRead);
+            bool c = connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::ps_dataChanged);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorSelectorComponent::ps_distributorsRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            Q_UNUSED(c);
+
             this->ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getDistributorsCount());
         }
 
         CDbDistributorSelectorComponent::~CDbDistributorSelectorComponent()
         {
-            //
+            // void
         }
 
         void CDbDistributorSelectorComponent::setDistributor(const CDistributor &distributor)

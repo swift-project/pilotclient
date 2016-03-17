@@ -34,7 +34,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CTextMessageComponent::CTextMessageComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CTextMessageComponent)
@@ -42,17 +41,27 @@ namespace BlackGui
             ui->setupUi(this);
 
             this->ui->le_textMessages->setVisible(false);
-            connect(this->ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_textMessageEntered);
-
             this->ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
 
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::ps_onChangedAircraftCockpit);
-            connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::ps_topLevelChanged);
-            connect(this, &CTextMessageComponent::commandEntered, sApp->getCoreFacade(), &CCoreFacade::parseCommandLine);
+            bool c = connect(this->ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_textMessageEntered);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::ps_onChangedAircraftCockpit);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            c = connect(this, &CTextMessageComponent::commandEntered, sApp->getCoreFacade(), &CCoreFacade::parseCommandLine);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            Q_UNUSED(c);
         }
 
         CTextMessageComponent::~CTextMessageComponent()
         { }
+
+        bool CTextMessageComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
+        {
+            bool c = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
+            c = c && connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::ps_topLevelChanged);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
+            return c;
+        }
 
         QWidget *CTextMessageComponent::getTabWidget(CTextMessageComponent::Tab tab) const
         {

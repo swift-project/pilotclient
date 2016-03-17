@@ -52,6 +52,9 @@ namespace BlackGui
             //! Destructor
             ~CTextMessageComponent();
 
+            //! copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
+
         signals:
             //! Message to be displayed in info window
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
