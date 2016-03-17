@@ -44,6 +44,8 @@ namespace BlackSimPlugin
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect signal");
             Q_UNUSED(c);
 
+            //! \todo remove from plugin if data there are cached as well
+            /**
             CVariant aircraftCfg = getPluginData(this, "aircraft_cfg");
             if (aircraftCfg.isValid())
             {
@@ -54,9 +56,8 @@ namespace BlackSimPlugin
             {
                 m_aircraftCfgParser->startLoading(CAircraftCfgParser::LoadInBackground);
             }
-            //
-            // reading from cache / settings would go here
-            //
+            **/
+            m_aircraftCfgParser->startLoading(CAircraftCfgParser::InBackgroundWithCache);
         }
 
         CSimulatorFsCommon::~CSimulatorFsCommon() { }
