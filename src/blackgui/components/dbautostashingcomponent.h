@@ -79,10 +79,7 @@ namespace BlackGui
             int getSelectedOrAllCount() const;
 
             //! Model view to take models from
-            const BlackGui::Views::CAircraftModelView *currentModelView() const;
-
-            //! Model view to take models from
-            BlackGui::Views::CAircraftModelView *currentModelView();
+            BlackGui::Views::CAircraftModelView *currentModelView() const;
 
             //! Add a status message
             void addStatusMessage(const BlackMisc::CStatusMessage &msg);

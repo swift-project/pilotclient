@@ -125,12 +125,7 @@ namespace BlackGui
             return this->ui->tvp_StashAircraftModels->removeModelsWithModelString(modelStrings);
         }
 
-        const Views::CAircraftModelView *CDbStashComponent::getView() const
-        {
-            return ui->tvp_StashAircraftModels;
-        }
-
-        Views::CAircraftModelView *CDbStashComponent::getView()
+        Views::CAircraftModelView *CDbStashComponent::getView() const
         {
             return ui->tvp_StashAircraftModels;
         }

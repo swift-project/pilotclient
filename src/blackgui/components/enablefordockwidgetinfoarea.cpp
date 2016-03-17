@@ -31,7 +31,7 @@ namespace BlackGui
             {
                 // we already have a value
                 // changes should not happen
-                Q_ASSERT(this->m_parentDockableInfoArea == parentDockableWidget);
+                Q_ASSERT_X(this->m_parentDockableInfoArea == parentDockableWidget, Q_FUNC_INFO, "Reassigned parent dock widget area");
                 return this->m_parentDockableInfoArea == parentDockableWidget;
             }
 
@@ -46,14 +46,7 @@ namespace BlackGui
             return true;
         }
 
-        const CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea() const
-        {
-            Q_ASSERT(this->m_parentDockableInfoArea);
-            if (!this->m_parentDockableInfoArea) return nullptr;
-            return this->m_parentDockableInfoArea->getParentInfoArea();
-        }
-
-        CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea()
+        CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea() const
         {
             Q_ASSERT(this->m_parentDockableInfoArea);
             if (!this->m_parentDockableInfoArea) return nullptr;

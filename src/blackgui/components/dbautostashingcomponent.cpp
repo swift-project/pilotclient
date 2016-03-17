@@ -155,12 +155,7 @@ namespace BlackGui
             }
         }
 
-        const CAircraftModelView *CDbAutoStashingComponent::currentModelView() const
-        {
-            return this->getMappingComponent()->currentModelView();
-        }
-
-        CAircraftModelView *CDbAutoStashingComponent::currentModelView()
+        CAircraftModelView *CDbAutoStashingComponent::currentModelView() const
         {
             return this->getMappingComponent()->currentModelView();
         }

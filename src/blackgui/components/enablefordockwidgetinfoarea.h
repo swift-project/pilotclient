@@ -29,10 +29,7 @@ namespace BlackGui
         {
         public:
             //! Corresponding dockable widget in info area
-            BlackGui::CDockWidgetInfoArea *getDockWidgetInfoArea() { return m_parentDockableInfoArea; }
-
-            //! Corresponding dockable widget in info area
-            const BlackGui::CDockWidgetInfoArea *getDockWidgetInfoArea() const { return m_parentDockableInfoArea; }
+            BlackGui::CDockWidgetInfoArea *getDockWidgetInfoArea() const { return m_parentDockableInfoArea; }
 
             //! Has dock area?
             bool hasDockWidgetArea() const { return m_parentDockableInfoArea; }
@@ -42,10 +39,7 @@ namespace BlackGui
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
 
             //! The parent info area
-            const CInfoArea *getParentInfoArea() const;
-
-            //! The parent info area
-            CInfoArea *getParentInfoArea();
+            CInfoArea *getParentInfoArea() const;
 
             //! Is the parent dockable widget floating?
             bool isParentDockWidgetFloating() const;
