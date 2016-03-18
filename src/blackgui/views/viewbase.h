@@ -197,6 +197,12 @@ namespace BlackGui
             //! Main application window widget if any
             QWidget *mainApplicationWindowWidget() const;
 
+            //! Show file load dialog
+            BlackMisc::CStatusMessage showFileLoadDialog();
+
+            //! Show file save dialog
+            BlackMisc::CStatusMessage showFileSaveDialog() const;
+
         signals:
             //! Ask for new data from currently loaded data
             void requestUpdate();

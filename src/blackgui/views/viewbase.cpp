@@ -141,6 +141,16 @@ namespace BlackGui
             return CGuiUtility::mainApplicationWindow();
         }
 
+        CStatusMessage CViewBaseNonTemplate::showFileLoadDialog()
+        {
+            return this->ps_loadJson();
+        }
+
+        CStatusMessage CViewBaseNonTemplate::showFileSaveDialog() const
+        {
+            return this->ps_saveJson();
+        }
+
         void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
         {
             if (menu && nestPreviousMenu)
@@ -232,8 +242,8 @@ namespace BlackGui
 
             // load/save
             items = menu.actions().size();
-            if (m_menus.testFlag(MenuLoad)) { menu.addAction(CIcons::disk16(), "Load from file", this, SLOT(ps_loadJson())); }
-            if (m_menus.testFlag(MenuSave) && !isEmpty()) { menu.addAction(CIcons::disk16(), "Save data in file", this, SLOT(ps_saveJson()), CShortcut::keySaveViews()); }
+            if (m_menus.testFlag(MenuLoad)) { menu.addAction(CIcons::disk16(), "Load from file", this, &CViewBaseNonTemplate::ps_loadJson); }
+            if (m_menus.testFlag(MenuSave) && !isEmpty()) { menu.addAction(CIcons::disk16(), "Save data in file", this, &CViewBaseNonTemplate::ps_saveJson, CShortcut::keySaveViews()); }
             if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // resizing
@@ -362,10 +372,10 @@ namespace BlackGui
         QString CViewBaseNonTemplate::getDefaultFilename() const
         {
             // some logic to find a useful default name
-            QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
+            const QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
             QString name;
-            if (getDockWidgetInfoArea()) { name = getDockWidgetInfoArea()->windowTitle(); }
-            else if (!windowTitle().isEmpty()) { name = windowType(); }
+            if (this->getDockWidgetInfoArea()) { name = this->getDockWidgetInfoArea()->windowTitle(); }
+            else if (!windowTitle().isEmpty()) { name = this->windowType(); }
             else { name = this->metaObject()->className(); }
             name += ".json";
 
