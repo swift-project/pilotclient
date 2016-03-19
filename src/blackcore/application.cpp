@@ -800,7 +800,7 @@ namespace BlackCore
         }
         if (this->m_setupReader)
         {
-            return this->m_setupReader->getSetup().vatsimMetarsUrls();
+            return this->m_setupReader->getSetup().getVatsimMetarsUrls();
         }
         return CUrlList();
     }
@@ -814,7 +814,7 @@ namespace BlackCore
         }
         if (this->m_setupReader)
         {
-            return this->m_setupReader->getSetup().vatsimDataFileUrls();
+            return this->m_setupReader->getSetup().getVatsimDataFileUrls();
         }
         return CUrlList();
     }

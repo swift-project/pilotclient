@@ -55,7 +55,7 @@ namespace BlackCore
         this->threadAssertCheck();
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
-        CFailoverUrlList urls(sApp->getGlobalSetup().vatsimStatusFileUrls());
+        CFailoverUrlList urls(sApp->getGlobalSetup().getVatsimStatusFileUrls());
         const CUrl url(urls.obtainNextWorkingUrl(true)); // random working URL
         if (url.isEmpty()) { return; }
         sApp->getFromNetwork(url, { this, &CVatsimStatusFileReader::ps_parseVatsimFile});

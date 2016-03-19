@@ -61,10 +61,10 @@ namespace BlackCore
             void markAsLoaded(bool loaded) { this->m_wasLoaded = loaded; }
 
             //! Http port
-            int dbHttpPort() const { return m_dbHttpPort; }
+            int getDbHttpPort() const { return m_dbHttpPort; }
 
             //! Https port
-            int dbHttpsPort() const { return m_dbHttpsPort; }
+            int getDbHttpsPort() const { return m_dbHttpsPort; }
 
             //! Debug flag
             bool dbDebugFlag() const;
@@ -76,49 +76,49 @@ namespace BlackCore
             bool hasSameType(const CGlobalSetup &otherSetup) const;
 
             //! Home page url
-            BlackMisc::Network::CUrl dbHomePageUrl() const;
+            BlackMisc::Network::CUrl getDbHomePageUrl() const;
 
             //! Login service
-            BlackMisc::Network::CUrl dbLoginServiceUrl() const;
+            BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
 
             //! Root directory of DB
-            const BlackMisc::Network::CUrl &dbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
+            const BlackMisc::Network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
 
             //! ICAO Reader location
-            BlackMisc::Network::CUrl dbIcaoReaderUrl() const;
+            BlackMisc::Network::CUrl getDbIcaoReaderUrl() const;
 
             //! Model Reader protocol
-            BlackMisc::Network::CUrl dbModelReaderUrl() const;
+            BlackMisc::Network::CUrl getDbModelReaderUrl() const;
 
             //! URL to read VATSIM bookings
-            const BlackMisc::Network::CUrl &vatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
+            const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
 
             //! VATSIM METAR URL
-            const BlackMisc::Network::CUrlList &vatsimMetarsUrls() const { return this->m_vatsimMetarsUrls; }
+            const BlackMisc::Network::CUrlList &getVatsimMetarsUrls() const { return this->m_vatsimMetarsUrls; }
 
             //! VATSIM status file URLs
-            const BlackMisc::Network::CUrlList &vatsimStatusFileUrls() const { return m_vatsimStatusFileUrls; }
+            const BlackMisc::Network::CUrlList &getVatsimStatusFileUrls() const { return m_vatsimStatusFileUrls; }
 
             //! VATSIM data file URLs
-            const BlackMisc::Network::CUrlList &vatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
+            const BlackMisc::Network::CUrlList &getVatsimDataFileUrls() const { return m_vatsimDataFileUrls; }
 
             //! Bootstrap URLs (where the data for the setup itself can be downloaded)
-            BlackMisc::Network::CUrlList bootstrapFileUrls() const;
+            BlackMisc::Network::CUrlList getBootstrapFileUrls() const;
 
             //! Version and download locations
-            BlackMisc::Network::CUrlList updateInfoFileUrls() const;
+            BlackMisc::Network::CUrlList getUpdateInfoFileUrls() const;
 
             //! Alternative locations of swift DB data files
-            BlackMisc::Network::CUrlList swiftDbDataFileLocationUrls() const;
+            BlackMisc::Network::CUrlList getSwiftDbDataFileLocationUrls() const;
 
             //! Locations of swift DB news
-            const BlackMisc::Network::CUrlList &swiftLatestNewsUrls() const { return m_newsUrls; }
+            const BlackMisc::Network::CUrlList &getSwiftLatestNewsUrls() const { return m_newsUrls; }
 
             //! FSD test servers
-            const BlackMisc::Network::CServerList &fsdTestServers() const { return m_fsdTestServers; }
+            const BlackMisc::Network::CServerList &getFsdTestServers() const { return m_fsdTestServers; }
 
             //! FSD test servers plus hardcoded
-            BlackMisc::Network::CServerList fsdTestServersPlusHardcodedServers() const;
+            BlackMisc::Network::CServerList getFsdTestServersPlusHardcodedServers() const;
 
             //! Productive settings?
             bool isDevelopment() const { return m_development; }

@@ -108,7 +108,7 @@ namespace BlackGui
             // add a testserver when no servers can be loaded
             if (otherServers.isEmpty() && (sGui->isRunningInDeveloperEnvironment() || CProject::isBetaTest()))
             {
-                otherServers.push_back(sGui->getGlobalSetup().fsdTestServersPlusHardcodedServers());
+                otherServers.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
                 CLogMessage(this).info("Added servers for testing");
             }
             this->ui->cbp_OtherServers->setServers(otherServers);

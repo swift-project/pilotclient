@@ -307,7 +307,7 @@ namespace BlackMisc
 
     QString getSwiftStaticDbFilesDirImpl()
     {
-        QString d(CProject::getSwiftResourceDir());
+        const QString d(CProject::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
         QDir dir(CFileUtils::appendFilePaths(d, "shared/dbdata"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
@@ -322,7 +322,7 @@ namespace BlackMisc
 
     QString getImagesDirImpl()
     {
-        QString d(CProject::getSwiftResourceDir());
+        const QString d(CProject::getSwiftResourceDir());
         QDir dir(CFileUtils::appendFilePaths(d, "data/images"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();

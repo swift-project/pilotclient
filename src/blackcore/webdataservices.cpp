@@ -489,7 +489,7 @@ namespace BlackCore
     void CWebDataServices::initWriters()
     {
         this->m_databaseWriter = new CDatabaseWriter(
-            sApp->getGlobalSetup().dbRootDirectoryUrl(),
+            sApp->getGlobalSetup().getDbRootDirectoryUrl(),
             this);
     }
 

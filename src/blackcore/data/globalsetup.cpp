@@ -14,6 +14,7 @@
 #include <QStringList>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Json;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Network;
 
@@ -32,24 +33,24 @@ namespace BlackCore
             m_newsUrls(QStringList({ "http://swift-project.org/" }))
         { }
 
-        CUrl CGlobalSetup::dbIcaoReaderUrl() const
+        CUrl CGlobalSetup::getDbIcaoReaderUrl() const
         {
-            return dbRootDirectoryUrl();
+            return getDbRootDirectoryUrl();
         }
 
-        CUrl CGlobalSetup::dbModelReaderUrl() const
+        CUrl CGlobalSetup::getDbModelReaderUrl() const
         {
-            return dbRootDirectoryUrl();
+            return getDbRootDirectoryUrl();
         }
 
-        CUrl CGlobalSetup::dbHomePageUrl() const
+        CUrl CGlobalSetup::getDbHomePageUrl() const
         {
-            return dbRootDirectoryUrl().withAppendedPath("/page/index.php");
+            return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
         }
 
-        CUrl CGlobalSetup::dbLoginServiceUrl() const
+        CUrl CGlobalSetup::getDbLoginServiceUrl() const
         {
-            return dbRootDirectoryUrl().
+            return getDbRootDirectoryUrl().
                    withAppendedPath("/service/jsonauthenticate.php").
                    withSwitchedScheme("https", m_dbHttpsPort);
         }
@@ -73,7 +74,7 @@ namespace BlackCore
             return this->isDevelopment() == otherSetup.isDevelopment();
         }
 
-        CUrlList CGlobalSetup::bootstrapFileUrls() const
+        CUrlList CGlobalSetup::getBootstrapFileUrls() const
         {
             CUrlList urls(m_sharedUrls);
             return urls.appendPath(CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
@@ -103,19 +104,26 @@ namespace BlackCore
             return url.getFullUrl();
         }
 
-        CUrlList CGlobalSetup::updateInfoFileUrls() const
+        CGlobalSetup CGlobalSetup::fromJsonFile(const QString &fileNameAndPath)
+        {
+            CGlobalSetup setup;
+            loadFromJsonFile(setup, fileNameAndPath);
+            return setup;
+        }
+
+        CUrlList CGlobalSetup::getUpdateInfoFileUrls() const
         {
             const CUrlList urls(m_sharedUrls);
             return urls.appendPath(CGlobalSetup::versionString() + "/development/updateinfo/updateinfo.json");
         }
 
-        CUrlList CGlobalSetup::swiftDbDataFileLocationUrls() const
+        CUrlList CGlobalSetup::getSwiftDbDataFileLocationUrls() const
         {
             const CUrlList urls(m_sharedUrls);
             return urls.appendPath(CGlobalSetup::versionString() + "/dbdata/");
         }
 
-        CServerList CGlobalSetup::fsdTestServersPlusHardcodedServers() const
+        CServerList CGlobalSetup::getFsdTestServersPlusHardcodedServers() const
         {
             static const CServerList hardcoded({ CServer("swift", "swift Testserver", "vatsim-germany.org", 6809, CUser("1234567", "swift Test User", "", "123456"), true) });
             CServerList testServers(m_fsdTestServers);
@@ -143,46 +151,46 @@ namespace BlackCore
             s.append(separator);
 
             s.append("Update info URLs: ");
-            s.append(updateInfoFileUrls().toQString(i18n));
+            s.append(getUpdateInfoFileUrls().toQString(i18n));
             s.append(separator);
             s.append("Bootstrap URLs: ");
-            s.append(bootstrapFileUrls().toQString(i18n));
+            s.append(getBootstrapFileUrls().toQString(i18n));
             s.append(separator);
             s.append("News URLs: ");
-            s.append(swiftLatestNewsUrls().toQString(i18n));
+            s.append(getSwiftLatestNewsUrls().toQString(i18n));
             s.append(separator);
 
             s.append("DB root directory: ");
-            s.append(dbRootDirectoryUrl().toQString(i18n));
+            s.append(getDbRootDirectoryUrl().toQString(i18n));
             s.append(separator);
             s.append("ICAO DB reader: ");
-            s.append(dbIcaoReaderUrl().toQString(i18n));
+            s.append(getDbIcaoReaderUrl().toQString(i18n));
             s.append(separator);
             s.append("Model DB reader: ");
-            s.append(dbModelReaderUrl().toQString(i18n));
+            s.append(getDbModelReaderUrl().toQString(i18n));
             s.append(separator);
             s.append("DB home page: ");
-            s.append(dbHomePageUrl().toQString(i18n));
+            s.append(getDbHomePageUrl().toQString(i18n));
             s.append(separator);
             s.append("DB login service: ");
-            s.append(dbLoginServiceUrl().toQString(i18n));
+            s.append(getDbLoginServiceUrl().toQString(i18n));
             s.append(separator);
             s.append("swift DB datafile locations: ");
-            s.append(swiftDbDataFileLocationUrls().toQString(i18n));
+            s.append(getSwiftDbDataFileLocationUrls().toQString(i18n));
             s.append(separator);
 
             s.append("VATSIM bookings: ");
-            s.append(vatsimBookingsUrl().toQString(i18n));
+            s.append(getVatsimBookingsUrl().toQString(i18n));
             s.append(separator);
             s.append("VATSIM METARs: ");
-            s.append(vatsimMetarsUrls().toQString(i18n));
+            s.append(getVatsimMetarsUrls().toQString(i18n));
             s.append(separator);
             s.append("VATSIM data file: ");
-            s.append(vatsimDataFileUrls().toQString(i18n));
+            s.append(getVatsimDataFileUrls().toQString(i18n));
             s.append(separator);
 
             s.append("FSD test servers: ");
-            s.append(fsdTestServers().toQString(i18n));
+            s.append(getFsdTestServers().toQString(i18n));
             return s;
         }
 
@@ -201,7 +209,7 @@ namespace BlackCore
             case IndexDbHttpsPort:
                 return CVariant::fromValue(this->m_dbHttpsPort);
             case IndexDbLoginService:
-                return CVariant::fromValue(this->dbLoginServiceUrl());
+                return CVariant::fromValue(this->getDbLoginServiceUrl());
             case IndexVatsimStatus:
                 return CVariant::fromValue(this->m_vatsimStatusFileUrls);
             case IndexVatsimData:
@@ -211,11 +219,11 @@ namespace BlackCore
             case IndexVatsimMetars:
                 return CVariant::fromValue(this->m_vatsimMetarsUrls);
             case IndexUpdateInfo:
-                return CVariant::fromValue(this->updateInfoFileUrls());
+                return CVariant::fromValue(this->getUpdateInfoFileUrls());
             case IndexBootstrap:
-                return CVariant::fromValue(this->bootstrapFileUrls());
+                return CVariant::fromValue(this->getBootstrapFileUrls());
             case IndexSwiftDbFiles:
-                return CVariant::fromValue(this->swiftDbDataFileLocationUrls());
+                return CVariant::fromValue(this->getSwiftDbDataFileLocationUrls());
             case IndexShared:
                 return CVariant::fromValue(this->m_sharedUrls);
             case IndexWasLoaded:

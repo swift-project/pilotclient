@@ -40,7 +40,7 @@ namespace BlackCoreTest
 
     void CTestReaders::readIcaoData()
     {
-        const CUrl url(sApp->getGlobalSetup().dbIcaoReaderUrl());
+        const CUrl url(sApp->getGlobalSetup().getDbIcaoReaderUrl());
         if (!this->pingServer(url)) { return; }
         m_icaoReader->start();
         m_icaoReader->readInBackgroundThread(CEntityFlags::AllIcaoEntities, QDateTime());
@@ -69,7 +69,7 @@ namespace BlackCoreTest
 
     void CTestReaders::readModelData()
     {
-        const CUrl url(sApp->getGlobalSetup().dbModelReaderUrl());
+        const CUrl url(sApp->getGlobalSetup().getDbModelReaderUrl());
         if (!this->pingServer(url)) { return; }
         m_modelReader->start();
         m_modelReader->readInBackgroundThread(CEntityFlags::ModelEntity, QDateTime());

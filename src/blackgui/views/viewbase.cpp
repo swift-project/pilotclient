@@ -942,9 +942,9 @@ namespace BlackGui
         CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson()
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
-            QString fileName = QFileDialog::getOpenFileName(nullptr,
-                               tr("Load data file"), getDefaultFilename(),
-                               tr("swift (*.json *.txt)"));
+            const QString fileName = QFileDialog::getOpenFileName(nullptr,
+                                     tr("Load data file"), getDefaultFilename(),
+                                     tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Load canceled"); }
             QString json(CFileUtils::readFileToString(fileName));
             if (json.isEmpty())
@@ -961,9 +961,9 @@ namespace BlackGui
         CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson() const
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
-            QString fileName = QFileDialog::getSaveFileName(nullptr,
-                               tr("Save data file"), getDefaultFilename(),
-                               tr("swift (*.json *.txt)"));
+            const QString fileName = QFileDialog::getSaveFileName(nullptr,
+                                     tr("Save data file"), getDefaultFilename(),
+                                     tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Save canceled"); }
             const QString json(this->toJsonString());
             bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);

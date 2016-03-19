@@ -146,7 +146,7 @@ void CSwiftLauncher::initStyleSheet()
 
 void CSwiftLauncher::loadLatestNews()
 {
-    CFailoverUrlList newsUrls(sGui->getGlobalSetup().swiftLatestNewsUrls());
+    CFailoverUrlList newsUrls(sGui->getGlobalSetup().getSwiftLatestNewsUrls());
     const CUrl newsUrl(newsUrls.obtainNextWorkingUrl());
     if (newsUrl.isEmpty()) { return; }
     sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::ps_displayLatestNews});
@@ -346,7 +346,7 @@ void CSwiftLauncher::ps_startButtonPressed()
     }
     else if (sender == this->ui->tb_Database)
     {
-        const CUrl homePage(sApp->getGlobalSetup().dbHomePageUrl());
+        const CUrl homePage(sApp->getGlobalSetup().getDbHomePageUrl());
         QDesktopServices::openUrl(homePage);
     }
 }

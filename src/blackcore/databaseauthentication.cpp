@@ -51,7 +51,7 @@ namespace BlackCore
         if (pw.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No password")); }
         if (!msgs.isEmpty()) { return msgs; }
 
-        const CUrl url(sApp->getGlobalSetup().dbLoginServiceUrl());
+        const CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
         QString msg;
         if (!CNetworkUtils::canConnect(url, msg))
         {
@@ -74,7 +74,7 @@ namespace BlackCore
 
     void CDatabaseAuthenticationService::logoff()
     {
-        CUrl url(sApp->getGlobalSetup().dbLoginServiceUrl());
+        CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
         url.setQuery("logoff=true");
         QNetworkRequest request(CNetworkUtils::getNetworkRequest(url));
         sApp->getFromNetwork(request, { this, &CDatabaseAuthenticationService::ps_parseServerResponse });

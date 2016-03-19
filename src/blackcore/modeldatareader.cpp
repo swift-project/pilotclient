@@ -418,7 +418,7 @@ namespace BlackCore
 
     CUrl CModelDataReader::getBaseUrl() const
     {
-        const CUrl baseUrl(sApp->getGlobalSetup().dbModelReaderUrl());
+        const CUrl baseUrl(sApp->getGlobalSetup().getDbModelReaderUrl());
         return baseUrl;
     }
 

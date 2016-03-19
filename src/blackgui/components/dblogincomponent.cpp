@@ -29,7 +29,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->setModeLogin(true);
-            CUrl url(sGui->getGlobalSetup().dbHomePageUrl());
+            CUrl url(sGui->getGlobalSetup().getDbHomePageUrl());
             ui->lbl_SwiftDB->setText("<a href=\"" + url.getFullUrl() + "\">swift DB@" + url.getHost() + "</a>");
             ui->lbl_SwiftDB->setTextFormat(Qt::RichText);
             ui->lbl_SwiftDB->setTextInteractionFlags(Qt::TextBrowserInteraction);
