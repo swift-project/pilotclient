@@ -114,6 +114,19 @@ namespace BlackMisc
             return c;
         }
 
+        QStringList CAircraftIcaoCodeList::allIcaoCodes(bool onlyKnownDesignators) const
+        {
+            QStringList c;
+            for (const CAircraftIcaoCode &icao : *this)
+            {
+                if (onlyKnownDesignators && !icao.hasKnownDesignator()) { continue; }
+                const QString d(icao.getDesignator());
+                if (c.contains(d)) { continue; }
+                c.append(d);
+            }
+            return c;
+        }
+
         CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete)
         {
             CAircraftIcaoCodeList codes;
