@@ -54,56 +54,63 @@ namespace BlackCore
             emit this->setupSynchronized(true);
             return CStatusMessage(this, CStatusMessage::SeverityInfo, "Using local bootstrap file: " + this->m_localSetupFileValue);
         }
-        else if (this->m_bootstrapMode == CacheOnly)
+
+        m_setup.synchronize(); // make sure it is loaded
+        if (this->m_bootstrapMode == CacheOnly)
         {
-            m_setup.synchronize();
+
             CGlobalSetup currentSetup = m_setup.getCopy();
-            this->m_updateInfoUrls = currentSetup.updateInfoFileUrls();
+            this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls();
             emit this->setupSynchronized(true);
             emit this->updateInfoSynchronized(true);
             return CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is");
         }
-        else
+
+        this->m_bootstrapUrls.clear(); // clean up previous values
+
+        // web URL
+        if (!this->m_bootstrapUrlFileValue.isEmpty())
         {
-            this->m_bootstrapUrls.clear(); // clean up previous values
+            // start with the one from cmd args
+            this->m_bootstrapUrls.push_front(CUrl(this->m_bootstrapUrlFileValue));
+        }
 
-            // web URL
-            if (!this->m_bootstrapUrlFileValue.isEmpty())
-            {
-                // start with the one from cmd args
-                this->m_bootstrapUrls.push_front(CUrl(this->m_bootstrapUrlFileValue));
-            }
+        // if ever loaded add those URLs
+        const CGlobalSetup currentSetup = m_setup.getCopy();
+        if (this->m_bootstrapMode != Explicit)
+        {
+            // also use previously cached URLs
+            this->m_bootstrapUrls.push_back(currentSetup.getBootstrapFileUrls());
 
-            // if ever loaded add those URLs
-            m_setup.synchronize();
-            CGlobalSetup currentSetup = m_setup.getCopy();
-            if (currentSetup.wasLoaded())
-            {
-                if (this->m_bootstrapMode != Explicit || this->m_bootstrapUrls.isEmpty())
-                {
-                    // also use previously cached URLS
-                    this->m_bootstrapUrls.push_back(currentSetup.bootstrapFileUrls());
-                }
-            }
-
+            // fail over if still empty
+            //! \todo do we want to keep this or use a cmd line flag to enable the behaviour. Risk here to use an undesired setup
             if (this->m_bootstrapUrls.isEmpty())
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup");
+                CGlobalSetup resourceSetup(CGlobalSetup::fromJsonFile(
+                                               CProject::getBootstrapResourceFile()
+                                           ));
+                this->m_bootstrapUrls.push_back(resourceSetup.getBootstrapFileUrls());
             }
-            else
-            {
-                this->m_bootstrapUrls.removeDuplicates();
-                this->ps_readSetup(); // start reading
-                return CStatusMessage(this, CStatusMessage::SeverityInfo, "Will start loading setup");
-            }
+        }
+
+        this->m_bootstrapUrls.removeDuplicates(); // clean up
+        if (this->m_bootstrapUrls.isEmpty())
+        {
+            // after all still empty
+            return CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup");
+        }
+        else
+        {
+            this->ps_readSetup(); // start reading
+            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Will start loading setup");
         }
     }
 
     bool CSetupReader::parseCmdLineArguments()
     {
         this->m_bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(
-                                           sApp->getParserValue(this->m_cmdBootstrapUrl)
-                                       );
+                                            sApp->getParserValue(this->m_cmdBootstrapUrl)
+                                        );
         this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
         QUrl url(this->m_bootstrapUrlFileValue);
 
@@ -254,7 +261,7 @@ namespace BlackCore
             else
             {
                 const CGlobalSetup currentSetup = m_setup.get();
-                this->m_updateInfoUrls = currentSetup.updateInfoFileUrls();
+                this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls();
                 CGlobalSetup loadedSetup;
                 loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
                 loadedSetup.markAsLoaded(true);
@@ -287,7 +294,7 @@ namespace BlackCore
                     }
                     else
                     {
-                        this->m_updateInfoUrls = loadedSetup.updateInfoFileUrls();
+                        this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
                         CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
                         emit setupSynchronized(true);
                         return; // success

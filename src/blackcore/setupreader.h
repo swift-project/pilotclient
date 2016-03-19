@@ -117,9 +117,9 @@ namespace BlackCore
         bool m_shutdown = false;
         std::atomic<bool> m_setupSyncronized { false };
         std::atomic<bool> m_updateInfoSyncronized { false };
-        QString m_localSetupFileValue;
-        QString m_bootstrapUrlFileValue;
-        BootstrapMode m_bootstrapMode;
+        QString m_localSetupFileValue;                         //! Local file for setup, passed by cmd line arguments
+        QString m_bootstrapUrlFileValue;                       //! Bootstrap URL if not local
+        BootstrapMode m_bootstrapMode;                         //! How to bootstrap
         BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;  //!< location of setup files
         BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
