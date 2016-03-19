@@ -29,7 +29,7 @@ namespace BlackCore
         m_audioService(Vat_CreateAudioService()),
         m_udpPort(Vat_CreateUDPAudioPort(m_audioService.data(), 0))
     {
-        Vat_SetVoiceLogHandler(SeverityError, CVoiceVatlib::voiceLogHandler);
+        Vat_SetVoiceLogHandler(SeverityLevel::SeverityError, CVoiceVatlib::voiceLogHandler);
 
         // do processing
         this->startTimer(10);

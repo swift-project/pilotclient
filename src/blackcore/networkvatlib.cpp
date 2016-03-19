@@ -51,7 +51,7 @@ namespace BlackCore
         Q_ASSERT_X(m_fsdTextCodec, "CNetworkVatlib", "Missing default wire text encoding");
         Q_ASSERT_X(Vat_GetVersion() == VAT_LIBVATLIB_VERSION, "swift.network", "Wrong vatlib shared library installed");
 
-        Vat_SetNetworkLogHandler(SeverityError, CNetworkVatlib::networkLogHandler);
+        Vat_SetNetworkLogHandler(SeverityLevel::SeverityError, CNetworkVatlib::networkLogHandler);
 
         connect(&m_processingTimer, SIGNAL(timeout()), this, SLOT(process()));
         connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendPositionUpdate);

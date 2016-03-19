@@ -25,25 +25,6 @@
 namespace BlackMisc
 {
     /*!
-     * Trait to detect whether T contains a member toQString.
-     */
-    template <typename T>
-    class HasToQString
-    {
-        // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
-        struct Fallback { int toQString; };
-        template <int Fallback:: *> struct int_t { typedef int type; };
-        template <typename U, bool = std::is_class<U>::value> struct Derived : public U, public Fallback {};
-        template <typename U> struct Derived<U, false> : public Fallback {};
-        template <typename U> static char test(typename int_t<&Derived<U>::toQString>::type);
-        template <typename U> static int test(...);
-
-    public:
-        //! True if T contains a member toQString.
-        static const bool value = sizeof(test<T>(0)) > 1;
-    };
-
-    /*!
      * Helper with static methods for dealing with metadata embedded in log message category strings.
      *
      * There are certain aspects of log messages which cannot be represented in Qt's native log message machinery.
@@ -83,26 +64,17 @@ namespace BlackMisc
      * The categories are arbitrary string tags which can be attached to the message to categorize it.
      * A message can have more than one category. The categories can be used for filtering by message handlers.
      */
-    class BLACKMISC_EXPORT CLogMessage
+    class BLACKMISC_EXPORT CLogMessage : public CMessageBase<CLogMessage>
     {
     public:
+        //! Inheriting constructors.
+        using CMessageBase::CMessageBase;
+
         //! Construct a message with the "uncategorized" category.
-        CLogMessage() {}
+        CLogMessage();
 
         //! Constructor taking filename, line number, and function name, for uncategorized verbose debug messages.
-        CLogMessage(const char *file, int line, const char *function) : m_logger(file, line, function) {}
-
-        //! Construct a message with some specific category.
-        CLogMessage(const CLogCategory &category) : m_categories({ category }) {}
-
-        //! Construct a message with some specific categories.
-        CLogMessage(const CLogCategoryList &categories) : m_categories(categories) {}
-
-        //! Construct a message with some specific categories.
-        CLogMessage(const CLogCategoryList &categories, const CLogCategory &extra) : CLogMessage(categories) { m_categories.push_back(extra); }
-
-        //! Construct a message with some specific categories.
-        CLogMessage(const CLogCategoryList &categories, const CLogCategoryList &extra) : CLogMessage(categories) { m_categories.push_back(extra); }
+        CLogMessage(const char *file, int line, const char *function);
 
         //! Destructor. This actually emits the message.
         ~CLogMessage();
@@ -113,48 +85,6 @@ namespace BlackMisc
         //! Convert to CVariant for returning the message directly from the function which generated it.
         operator CVariant();
 
-        //! Set the severity to debug.
-        CLogMessage &debug();
-
-        //! Set the severity to info, providing a format string.
-        CLogMessage &info(QString format);
-
-        //! Set the severity to warning, providing a format string.
-        CLogMessage &warning(QString format);
-
-        //! Set the severity to error, providing a format string.
-        CLogMessage &error(QString format);
-
-        //! Set the severity to info, providing a format string, and adding the validation category.
-        CLogMessage &validationInfo(QString format);
-
-        //! Set the severity to warning, providing a format string, and adding the validation category.
-        CLogMessage &validationWarning(QString format);
-
-        //! Set the severity to error, providing a format string, and adding the validation category.
-        CLogMessage &validationError(QString format);
-
-        //! Streaming operators.
-        //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
-        //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
-        //! \see QString::arg
-        //! @{
-        CLogMessage &operator <<(const QString &v) { return arg(v); }
-        CLogMessage &operator <<(int v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(uint v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(long v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(ulong v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(qlonglong v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(qulonglong v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(short v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(ushort v) { return arg(QString::number(v)); }
-        CLogMessage &operator <<(QChar v) { return arg(v); }
-        CLogMessage &operator <<(char v) { return arg(QChar(v)); }
-        CLogMessage &operator <<(double v) { return arg(QString::number(v)); }
-        template <class T, class = typename std::enable_if<HasToQString<T>::value>::type>
-        CLogMessage &operator <<(const T &v) { return arg(v.toQString()); }
-        //! @}
-
         //! Sends a verbatim, preformatted message to the log.
         static void preformatted(const CStatusMessage &statusMessage);
 
@@ -163,13 +93,7 @@ namespace BlackMisc
 
     private:
         QMessageLogger m_logger;
-        CStatusMessage::StatusSeverity m_severity = CStatusMessage::SeverityDebug;
-        CLogCategoryList m_categories = CLogCategoryList { CLogCategory::uncategorized() };
-        QString m_message;
-        QStringList m_args;
 
-        CLogMessage &arg(QString value) { m_args.push_back(value); return *this; }
-        QString message() const;
         QByteArray qtCategory() const;
         QDebug ostream(const QByteArray &category) const;
     };

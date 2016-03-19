@@ -15,53 +15,9 @@
 namespace BlackMisc
 {
 
-    CLogMessage &CLogMessage::debug()
-    {
-        m_severity = CStatusMessage::SeverityDebug;
-        return *this;
-    }
+    CLogMessage::CLogMessage() = default;
 
-    CLogMessage &CLogMessage::info(QString format)
-    {
-        m_severity = CStatusMessage::SeverityInfo;
-        m_message = format;
-        return *this;
-    }
-
-    CLogMessage &CLogMessage::warning(QString format)
-    {
-        m_severity = CStatusMessage::SeverityWarning;
-        m_message = format;
-        return *this;
-    }
-
-    CLogMessage &CLogMessage::error(QString format)
-    {
-        m_severity = CStatusMessage::SeverityError;
-        m_message = format;
-        return *this;
-    }
-
-    CLogMessage &CLogMessage::validationInfo(QString format)
-    {
-        m_categories.remove(CLogCategory::uncategorized());
-        m_categories.push_back(CLogCategory::validation());
-        return info(format);
-    }
-
-    CLogMessage &CLogMessage::validationWarning(QString format)
-    {
-        m_categories.remove(CLogCategory::uncategorized());
-        m_categories.push_back(CLogCategory::validation());
-        return warning(format);
-    }
-
-    CLogMessage &CLogMessage::validationError(QString format)
-    {
-        m_categories.remove(CLogCategory::uncategorized());
-        m_categories.push_back(CLogCategory::validation());
-        return error(format);
-    }
+    CLogMessage::CLogMessage(const char *file, int line, const char *function) : m_logger(file, line, function) {}
 
     CLogMessage::operator CStatusMessage()
     {
@@ -121,37 +77,6 @@ namespace BlackMisc
             case CStatusMessage::SeverityInfo: return m_logger.debug(QLoggingCategory(category.constData()));
             case CStatusMessage::SeverityWarning: return m_logger.warning(QLoggingCategory(category.constData()));
             case CStatusMessage::SeverityError: return m_logger.critical(QLoggingCategory(category.constData()));
-            }
-        }
-    }
-
-    namespace Private
-    {
-        template <size_t... Is> QString arg(index_sequence<Is...>, const QString &format, const QStringList &args) { return format.arg(args[Is]...); }
-        QString arg(index_sequence<>, const QString &format, const QStringList &) { return format; }
-    }
-
-    QString CLogMessage::message() const
-    {
-        if (m_message.isEmpty())
-        {
-            return m_args.join(" ");
-        }
-        else
-        {
-            switch (m_args.size())
-            {
-            case 0: return Private::arg(Private::make_index_sequence<0>(), m_message, m_args);
-            case 1: return Private::arg(Private::make_index_sequence<1>(), m_message, m_args);
-            case 2: return Private::arg(Private::make_index_sequence<2>(), m_message, m_args);
-            case 3: return Private::arg(Private::make_index_sequence<3>(), m_message, m_args);
-            case 4: return Private::arg(Private::make_index_sequence<4>(), m_message, m_args);
-            case 5: return Private::arg(Private::make_index_sequence<5>(), m_message, m_args);
-            case 6: return Private::arg(Private::make_index_sequence<6>(), m_message, m_args);
-            case 7: return Private::arg(Private::make_index_sequence<7>(), m_message, m_args);
-            case 8: return Private::arg(Private::make_index_sequence<8>(), m_message, m_args);
-            default: qWarning("Too many arguments"); // intentional fall-through
-            case 9: return Private::arg(Private::make_index_sequence<9>(), m_message, m_args);
             }
         }
     }

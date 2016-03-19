@@ -18,37 +18,89 @@
 
 namespace BlackMisc
 {
+    namespace Private
+    {
+        namespace
+        {
+            template <size_t... Is> QString arg(index_sequence<Is...>, const QString &format, const QStringList &args) { return format.arg(args[Is]...); }
+            QString arg(index_sequence<>, const QString &format, const QStringList &) { return format; }
+        }
+
+        QString arg(const QString &format, const QStringList &args)
+        {
+            if (format.isEmpty())
+            {
+                return args.join(" ");
+            }
+            else
+            {
+                switch (args.size())
+                {
+                case 0: return arg(Private::make_index_sequence<0>(), format, args);
+                case 1: return arg(Private::make_index_sequence<1>(), format, args);
+                case 2: return arg(Private::make_index_sequence<2>(), format, args);
+                case 3: return arg(Private::make_index_sequence<3>(), format, args);
+                case 4: return arg(Private::make_index_sequence<4>(), format, args);
+                case 5: return arg(Private::make_index_sequence<5>(), format, args);
+                case 6: return arg(Private::make_index_sequence<6>(), format, args);
+                case 7: return arg(Private::make_index_sequence<7>(), format, args);
+                case 8: return arg(Private::make_index_sequence<8>(), format, args);
+                default: qWarning("Too many arguments to BlackMisc::Private::arg"); // intentional fall-through
+                case 9: return arg(Private::make_index_sequence<9>(), format, args);
+                }
+            }
+        }
+    }
+
+    // needed because these constants are odr-used (just like traditional C++98 static const)
+    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=54483
+    const StatusSeverity CStatusMessage::SeverityDebug;
+    const StatusSeverity CStatusMessage::SeverityInfo;
+    const StatusSeverity CStatusMessage::SeverityWarning;
+    const StatusSeverity CStatusMessage::SeverityError;
+
+    CStatusMessage::CStatusMessage() = default;
+
     CStatusMessage::CStatusMessage(const CStatusMessage &other) :
         CValueObject(other),
+        CMessageBase(other),
         ITimestampBased(other)
     {
-        *this = other;
+        QReadLocker lock(&other.m_lock);
+        m_handledByObjects = other.m_handledByObjects;
     }
 
     CStatusMessage &CStatusMessage::operator =(const CStatusMessage &other)
     {
         if (this == &other) { return *this; }
 
+        static_cast<CMessageBase &>(*this) = other;
+
         QReadLocker readLock(&other.m_lock);
-        auto tuple = std::make_tuple(other.m_categories, other.m_severity, other.m_message, other.m_handledByObjects);
+        auto handledBy = other.m_handledByObjects;
         readLock.unlock(); // avoid deadlock
 
         QWriteLocker writeLock(&this->m_lock);
-        std::tie(m_categories, m_severity, m_message, m_handledByObjects) = tuple;
+        m_handledByObjects = handledBy;
         return *this;
     }
 
     CStatusMessage::CStatusMessage(const QString &message)
-        : m_message(message.trimmed())
-    {}
+    {
+        m_message = message.trimmed();
+    }
 
     CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message)
-        : m_severity(severity), m_message(message.trimmed())
-    {}
+        : CStatusMessage(message)
+    {
+        m_severity = severity;
+    }
 
     CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message)
-        : m_categories(categories), m_severity(severity), m_message(message.trimmed())
-    {}
+        : CStatusMessage(severity, message)
+    {
+        m_categories = categories;
+    }
 
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
         : CStatusMessage(message.trimmed())
@@ -82,7 +134,7 @@ namespace BlackMisc
         }
 
         *o_category = category;
-        *o_message = this->m_message;
+        *o_message = this->getMessage();
 
         switch (this->m_severity)
         {
@@ -185,7 +237,7 @@ namespace BlackMisc
         s.append(" when: ");
         s.append(this->getFormattedUtcTimestampYmdhms());
 
-        s.append(" ").append(this->m_message);
+        s.append(" ").append(this->getMessage());
         return s;
     }
 
@@ -320,7 +372,7 @@ namespace BlackMisc
         switch (i)
         {
         case IndexMessage:
-            return CVariant::from(this->m_message);
+            return CVariant::from(this->getMessage());
         case IndexSeverity:
             return CVariant::from(this->m_severity);
         case IndexSeverityAsString:
@@ -345,6 +397,7 @@ namespace BlackMisc
         {
         case IndexMessage:
             this->m_message = variant.value<QString>();
+            this->m_args.clear();
             break;
         case IndexSeverity:
             this->m_severity = variant.value<StatusSeverity>();

@@ -23,22 +23,141 @@ namespace BlackMisc
 {
     class CStatusException;
 
+    namespace Private
+    {
+        //! Like QString::arg() but accepts a QStringList of args.
+        BLACKMISC_EXPORT QString arg(const QString &format, const QStringList &args);
+    }
+
+    /*!
+     * Trait to detect whether T contains a member toQString.
+     */
+    template <typename T>
+    class HasToQString
+    {
+        // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
+        struct Fallback { int toQString; };
+        template <int Fallback:: *> struct int_t { using type = int; };
+        template <typename U, bool = std::is_class<U>::value> struct Derived : public U, public Fallback {};
+        template <typename U> struct Derived<U, false> : public Fallback {};
+        template <typename U> static char test(typename int_t<&Derived<U>::toQString>::type);
+        template <typename U> static int test(...);
+
+    public:
+        //! True if T contains a member toQString.
+        static const bool value = sizeof(test<T>(0)) > 1;
+    };
+
+    /*!
+     * Status severities
+     */
+    enum StatusSeverity
+    {
+        SeverityDebug,
+        SeverityInfo,
+        SeverityWarning,
+        SeverityError
+    };
+
+    /*!
+     * Base class for CStatusMessage and CLogMessage.
+     */
+    template <class Derived>
+    class CMessageBase
+    {
+    public:
+        //! Default constructor.
+        CMessageBase() {}
+
+        //! Construct a message with some specific category.
+        explicit CMessageBase(const CLogCategory &category) : m_categories({ category }) {}
+
+        //! Construct a message with some specific categories.
+        explicit CMessageBase(const CLogCategoryList &categories) : m_categories(categories) {}
+
+        //! Construct a message with some specific categories.
+        CMessageBase(const CLogCategoryList &categories, const CLogCategory &extra) : CMessageBase(categories) { m_categories.push_back(extra); }
+
+        //! Construct a message with some specific categories.
+        CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { m_categories.push_back(extra); }
+
+        //! Set the severity to debug.
+        Derived &debug() { return setSeverityAndMessage(SeverityDebug, ""); }
+
+        //! Set the severity to info, providing a format string.
+        Derived &info(QString format) { return setSeverityAndMessage(SeverityInfo, format); }
+
+        //! Set the severity to warning, providing a format string.
+        Derived &warning(QString format) { return setSeverityAndMessage(SeverityWarning, format); }
+
+        //! Set the severity to error, providing a format string.
+        Derived &error(QString format) { return setSeverityAndMessage(SeverityError, format); }
+
+        //! Set the severity to info, providing a format string, and adding the validation category.
+        Derived &validationInfo(QString format) { setValidation(); return setSeverityAndMessage(SeverityInfo, format); }
+
+        //! Set the severity to warning, providing a format string, and adding the validation category.
+        Derived &validationWarning(QString format) { setValidation(); return setSeverityAndMessage(SeverityWarning, format); }
+
+        //! Set the severity to error, providing a format string, and adding the validation category.
+        Derived &validationError(QString format) { setValidation(); return setSeverityAndMessage(SeverityError, format); }
+
+        //! Streaming operators.
+        //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
+        //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
+        //! \see QString::arg
+        //! @{
+        Derived &operator <<(const QString &v) { return arg(v); }
+        Derived &operator <<(int v) { return arg(QString::number(v)); }
+        Derived &operator <<(uint v) { return arg(QString::number(v)); }
+        Derived &operator <<(long v) { return arg(QString::number(v)); }
+        Derived &operator <<(ulong v) { return arg(QString::number(v)); }
+        Derived &operator <<(qlonglong v) { return arg(QString::number(v)); }
+        Derived &operator <<(qulonglong v) { return arg(QString::number(v)); }
+        Derived &operator <<(short v) { return arg(QString::number(v)); }
+        Derived &operator <<(ushort v) { return arg(QString::number(v)); }
+        Derived &operator <<(QChar v) { return arg(v); }
+        Derived &operator <<(char v) { return arg(QChar(v)); }
+        Derived &operator <<(double v) { return arg(QString::number(v)); }
+        template <class T, class = typename std::enable_if<HasToQString<T>::value>::type>
+        Derived &operator <<(const T &v) { return arg(v.toQString()); }
+        //! @}
+
+    private:
+        void setValidation() { m_categories.remove(CLogCategory::uncategorized()); m_categories.push_back(CLogCategory::validation()); }
+        Derived &setSeverityAndMessage(StatusSeverity s, const QString &m) { m_message = m; m_severity = s; return derived(); }
+        Derived &arg(QString value) { m_args.push_back(value); return derived(); }
+        Derived &derived() { return static_cast<Derived &>(*this); }
+
+    protected:
+        //! \private
+        //! @{
+        QString m_message;
+        QStringList m_args;
+        CLogCategoryList m_categories = CLogCategoryList { CLogCategory::uncategorized() };
+        StatusSeverity m_severity = SeverityDebug;
+
+        QString message() const { return Private::arg(m_message, m_args); }
+        //! @}
+    };
+
     /*!
      * Streamable status message, e.g. from Core -> GUI
      */
     class BLACKMISC_EXPORT CStatusMessage :
         public CValueObject<CStatusMessage>,
+        public CMessageBase<CStatusMessage>,
         public ITimestampBased
     {
     public:
-        //! Status severities
-        enum StatusSeverity
-        {
-            SeverityDebug,
-            SeverityInfo,
-            SeverityWarning,
-            SeverityError
-        };
+        //! \copydoc BlackMisc::StatusSeverity
+        //! @{
+        using StatusSeverity = BlackMisc::StatusSeverity;
+        constexpr static auto SeverityDebug = BlackMisc::SeverityDebug;
+        constexpr static auto SeverityInfo = BlackMisc::SeverityInfo;
+        constexpr static auto SeverityWarning = BlackMisc::SeverityWarning;
+        constexpr static auto SeverityError = BlackMisc::SeverityError;
+        //! @}
 
         //! Properties by index
         enum ColumnIndex
@@ -51,8 +170,11 @@ namespace BlackMisc
             IndexMessage
         };
 
+        //! Inheriting constructors.
+        using CMessageBase::CMessageBase;
+
         //! Constructor
-        CStatusMessage() = default;
+        CStatusMessage();
 
         //! Copy constructor (because of mutex)
         CStatusMessage(const CStatusMessage &other);
@@ -114,7 +236,7 @@ namespace BlackMisc
         bool isFailure() const;
 
         //! Message
-        QString getMessage() const { return this->m_message; }
+        QString getMessage() const { return this->message(); }
 
         //! Prepend message
         void prependMessage(const QString &msg);
@@ -123,7 +245,7 @@ namespace BlackMisc
         void appendMessage(const QString &msg);
 
         //! Message empty
-        bool isEmpty() const { return this->m_message.isEmpty(); }
+        bool isEmpty() const { return this->m_message.isEmpty() && this->m_args.isEmpty(); }
 
         //! Returns true if this message was sent by an instance of class T.
         template <class T>
@@ -201,9 +323,6 @@ namespace BlackMisc
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
-        CLogCategoryList          m_categories;
-        StatusSeverity            m_severity = SeverityDebug;
-        QString                   m_message;
         mutable QVector<quintptr> m_handledByObjects;
         mutable QReadWriteLock    m_lock;  //!< lock (because of mutable members)
     };
@@ -214,6 +333,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
                                    o.m_categories,
                                    o.m_severity,
                                    o.m_message,
+                                   o.m_args,
                                    o.m_timestampMSecsSinceEpoch,
                                    attr(o.m_handledByObjects, flags < DisabledForHashing | DisabledForJson | DisabledForComparison | DisabledForMarshalling > ())
                                ))

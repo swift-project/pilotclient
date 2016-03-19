@@ -48,6 +48,12 @@ const QJsonValue &operator >>(const QJsonValue &json, QString &value)
     return json;
 }
 
+const QJsonValue &operator >>(const QJsonValue &json, QStringList &value)
+{
+    for (auto &&element : json.toArray()) { value << element.toString(); }
+    return json;
+}
+
 const QJsonValue &operator >>(const QJsonValue &json, double &value)
 {
     value = json.toDouble();
@@ -113,6 +119,12 @@ const QJsonValueRef &operator >>(const QJsonValueRef &json, qint16 &value)
 const QJsonValueRef &operator >>(const QJsonValueRef &json, QString &value)
 {
     value = json.toString();
+    return json;
+}
+
+const QJsonValueRef &operator >>(const QJsonValueRef &json, QStringList &value)
+{
+    for (auto &&element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
@@ -249,6 +261,12 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const uint &
 QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QString &> &value)
 {
     json.insert(value.first, QJsonValue(value.second));
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QStringList &> &value)
+{
+    json.insert(value.first, QJsonValue(QJsonArray::fromStringList(value.second)));
     return json;
 }
 
