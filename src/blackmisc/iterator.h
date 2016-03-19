@@ -53,16 +53,16 @@ namespace BlackMisc
             //! @}
 
             //! Return the value at this iterator position.
-            auto value() const -> decltype(std::declval<I>().value()) { return m_iterator.value(); }
+            auto value() const { return m_iterator.value(); }
 
             //! Return the key at this iterator position.
             //! @{
-            auto key() const -> decltype(std::declval<I>().key()) { return m_iterator.key(); }
-            auto operator *() const -> decltype(std::declval<I>().key()) { return key(); }
+            auto key() const { return m_iterator.key(); }
+            auto operator *() const { return key(); }
             //! @}
 
             //! Indirection operator: pointer to the key at this iterator position.
-            auto operator ->() const -> typename std::remove_reference<decltype(std::declval<I>().key())>::type * { return &key(); }
+            auto operator ->() const { return &key(); }
 
             //! Equality operators.
             //! @{

@@ -27,7 +27,7 @@ namespace BlackMisc
             {
                 if (title.isEmpty()) { return false; }
                 return this->containsBy(
-                           [ = ](const CAircraftCfgEntries & entries) -> bool { return title.compare(entries.getTitle(), caseSensitivity) == 0; }
+                           [ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; }
                        );
             }
 
@@ -82,7 +82,7 @@ namespace BlackMisc
 
             CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const
             {
-                return this->findBy([ = ](const CAircraftCfgEntries & entries) -> bool
+                return this->findBy([ = ](const CAircraftCfgEntries & entries)
                 { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
             }
 

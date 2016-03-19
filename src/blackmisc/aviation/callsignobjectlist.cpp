@@ -93,7 +93,7 @@ namespace BlackMisc
             CONTAINER r;
             if (suffix.isEmpty()) { return r; }
             QString sfxUpper(suffix.trimmed().toUpper());
-            r = this->container().findBy([ = ](const OBJ & csObj) -> bool
+            r = this->container().findBy([ = ](const OBJ & csObj)
             {
                 return (csObj.getCallsign().getSuffix() == sfxUpper);
             });

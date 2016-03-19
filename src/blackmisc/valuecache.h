@@ -191,18 +191,14 @@ namespace BlackMisc
         //! If the derived class does not handle such requests, the signal can be ignored.
         void valuesSaveRequested(const BlackMisc::CValueCachePacket &values);
 
-    private:
-        struct Element; // remove forward declaration (and uncomment the one below) when elementsStartingWith uses C++14 auto deduced return type
-
     protected:
         //! Returns a range referring to all elements which start with the given prefix.
-        //! \todo Use C++14 auto deduced return type.
         //! @{
-        CRange<QMap<QString, QSharedPointer<Element>>::iterator> elementsStartingWith(const QString &keyPrefix)
+        auto elementsStartingWith(const QString &keyPrefix)
         {
             return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
         }
-        CRange<QMap<QString, QSharedPointer<Element>>::const_iterator> elementsStartingWith(const QString &keyPrefix) const
+        auto elementsStartingWith(const QString &keyPrefix) const
         {
             return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
         }
@@ -234,7 +230,7 @@ namespace BlackMisc
 
     private:
         friend class Private::CValuePage;
-        // struct Element; // to be uncommented when the forward declaration above elementsStartingWith is removed
+        struct Element;
         using ElementPtr = QSharedPointer<Element>; // QMap doesn't support move-only types
 
         QMap<QString, ElementPtr> m_elements;

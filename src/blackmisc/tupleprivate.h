@@ -40,7 +40,7 @@ namespace BlackMisc
         {
         protected:
             template <class T>
-            static auto toMetaTuple(T &o) -> decltype(TupleConverter<typename std::decay<T>::type>::toMetaTuple(o))
+            static auto toMetaTuple(T &o)
             {
                 return TupleConverter<typename std::decay<T>::type>::toMetaTuple(o);
             }
@@ -213,14 +213,14 @@ namespace BlackMisc
 
         // Convert a meta tuple to a value tuple
         template <class Tu, size_t... Is>
-        auto stripMeta(Tu &&tu, index_sequence<Is...>) -> decltype(std::make_tuple(tieHelper(std::get<Is>(std::forward<Tu>(tu)))...))
+        auto stripMeta(Tu &&tu, index_sequence<Is...>)
         {
             return std::make_tuple(tieHelper(std::get<Is>(std::forward<Tu>(tu)))...);
         }
 
         // Convert a value tuple to a meta tuple with default metadata
         template <class Tu, size_t... Is>
-        auto recoverMeta(Tu &&tu, index_sequence<Is...>) -> decltype(std::make_tuple(tieMetaHelper(std::get<Is>(std::forward<Tu>(tu)))...))
+        auto recoverMeta(Tu &&tu, index_sequence<Is...>)
         {
             return std::make_tuple(tieMetaHelper(std::get<Is>(std::forward<Tu>(tu)))...);
         }
@@ -297,7 +297,7 @@ namespace BlackMisc
 
         private:
             template <size_t I, class Tu>
-            static auto get_ref(Tu &&tu) -> decltype(tieHelper(std::get<I>(std::forward<Tu>(tu))))
+            static auto get_ref(Tu &&tu)
             {
                 return tieHelper(std::get<I>(std::forward<Tu>(tu)));
             }

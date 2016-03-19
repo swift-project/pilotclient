@@ -72,31 +72,6 @@ namespace BlackMisc
             };
 
             //! \private
-            template <class T, class M> struct MemberTransform
-            {
-                M m;
-                MemberTransform(M m_) : m(m_) {}
-                auto operator()(const T &v) const -> decltype((v.*std::declval<M>())()) { return (v.*m)(); }
-            };
-
-            //! \private
-            template <class T, class M> struct MemberValid
-            {
-                M m;
-                MemberValid(M m_) : m(m_) {}
-                bool operator()(const T &v) const { return (v.*m)().isValid(); }
-            };
-
-            //! \private
-            template <class T, class M, class C> struct MemberIsAnyOf
-            {
-                M m;
-                const C &c;
-                MemberIsAnyOf(M m_, const C &c_) : m(m_), c(c_) {}
-                bool operator()(const T &v) const { return c.contains((v.*m)()); }
-            };
-
-            //! \private
             template <class T> struct Equals
             {
                 const T m_value;
@@ -137,58 +112,44 @@ namespace BlackMisc
         }
 
         /*!
-         * Transformation function object which returns the value returned by one of it's argument member functions.
-         *
-         * A lambda would usually be easier, but it is difficult to directly return a lambda from a function
-         * without C++14 deduced return types.
+         * Returns a function object that returns the value returned by one of it's argument member functions.
          */
         template <class T, class R>
-        auto MemberTransform(R(T::*memberFunc)() const) -> Private::MemberTransform<T, decltype(memberFunc)>
+        auto MemberTransform(R(T::*memberFunc)() const)
         {
-            return { memberFunc };
+            return [memberFunc](const T &object) { return (object.*memberFunc)(); };
         }
 
         /*!
-         * Predicate which is true if the isValid() method of the value returned from one of its member functions returns true.
-         *
-         * A lambda would usually be easier, but it is difficult to directly return a lambda from a function
-         * without C++14 deduced return types.
+         * Returns a predicate that returns true if the isValid() method of the value returned from one of its member functions returns true.
          */
         template <class T, class R>
-        auto MemberValid(R(T::*memberFunc)() const) -> Private::MemberValid<T, decltype(memberFunc)>
+        auto MemberValid(R(T::*memberFunc)() const)
         {
-            return { memberFunc };
+            return [memberFunc](const T &object) { return (object.*memberFunc)().isValid(); };
         }
 
         /*!
-         * Predicate which is true if the value returned by its argument's member function can be found in a captured container.
-         *
-         * A lambda would usually be easier, but it is difficult to directly return a lambda from a function
-         * without C++14 deduced return types.
-         *
+         * Returns a predicate that returns true if the value returned by its argument's member function can be found in a captured container.
          * \warning The container is captured by reference, so be careful that it remains valid for the lifetime of the predicate.
          */
         template <class T, class R, class C>
-        auto MemberIsAnyOf(R(T::*memberFunc)() const, const C &container) -> Private::MemberIsAnyOf<T, decltype(memberFunc), C>
+        auto MemberIsAnyOf(R(T::*memberFunc)() const, const C &container)
         {
-            return { memberFunc, container };
+            return [memberFunc, &container](const T &object) { return container.contains((object.*memberFunc)()); };
         }
 
         /*!
-         * Predicate which is true if its argument compares equal with another, captured value.
-         *
-         * A lambda would usually be easier, but it is difficult to directly return a lambda from a function
-         * without C++14 deduced return types. It is also a generic function object, which is only possible
-         * with C++14 generic lambdas.
+         * Returns a predicate that returns true if its argument compares equal with another, captured value.
          */
         template <class T>
-        auto Equals(T &&value) -> Private::Equals<typename std::decay<T>::type>
+        auto Equals(T &&value)
         {
-            return { std::forward<T>(value), 0 };
+            return [value = std::forward<T>(value)](const T &object) { return object == value; };
         }
 
         /*!
-         * Predicate which is true if its argument matches a captured CPropertyIndexVariantMap.
+         * Returns a predicate that returns true if its argument matches a captured CPropertyIndexVariantMap.
          */
         inline auto Matches(const CPropertyIndexVariantMap &map) -> Private::Matches
         {

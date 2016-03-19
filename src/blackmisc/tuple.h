@@ -75,21 +75,21 @@ namespace BlackMisc
             friend class BlackMisc::Private::EncapsulationBreaker;              \
             static_assert(Private::HasEnabledTupleConversion<T>::value,         \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \
-            static auto toTuple(const T &o) -> decltype(BlackMisc::tie MEMBERS) \
+            static auto toTuple(const T &o)                                     \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
-            static auto toTuple(T &o) -> decltype(BlackMisc::tie MEMBERS)       \
+            static auto toTuple(T &o)                                           \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
-            static auto toMetaTuple(const T &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            static auto toMetaTuple(const T &o)                                 \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
                 parser().extendMetaTuple(tu);                                   \
                 return tu;                                                      \
             }                                                                   \
-            static auto toMetaTuple(T &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            static auto toMetaTuple(T &o)                                       \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
                 parser().extendMetaTuple(tu);                                   \
@@ -105,7 +105,7 @@ namespace BlackMisc
                 return parser().m_names;                                        \
             }                                                                   \
         public:                                                                 \
-            static auto constToTuple(const T &o) -> decltype(BlackMisc::tie MEMBERS) \
+            static auto constToTuple(const T &o)                                \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
@@ -127,21 +127,21 @@ namespace BlackMisc
             friend class BlackMisc::Private::EncapsulationBreaker;              \
             static_assert(Private::HasEnabledTupleConversion<T<U...>>::value,   \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \
-            static auto toTuple(const T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
+            static auto toTuple(const T<U...> &o)                               \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
-            static auto toTuple(T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
+            static auto toTuple(T<U...> &o)                                     \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
-            static auto toMetaTuple(const T<U...> &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            static auto toMetaTuple(const T<U...> &o)                           \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
                 parser().extendMetaTuple(tu);                                   \
                 return tu;                                                      \
             }                                                                   \
-            static auto toMetaTuple(T<U...> &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            static auto toMetaTuple(T<U...> &o)                                 \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
                 parser().extendMetaTuple(tu);                                   \
@@ -157,7 +157,7 @@ namespace BlackMisc
                 return parser().m_names;                                        \
             }                                                                   \
         public:                                                                 \
-            static auto constToTuple(const T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
+            static auto constToTuple(const T<U...> &o)                          \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
@@ -286,7 +286,7 @@ namespace BlackMisc
      * \ingroup Tuples
      */
     template <class... Ts>
-    auto tie(Ts &&... args) -> decltype(std::make_tuple(Private::tieHelper(args)...))
+    auto tie(Ts &&... args)
     {
         return std::make_tuple(Private::tieHelper(args)...);
     }
@@ -296,7 +296,7 @@ namespace BlackMisc
      * \ingroup Tuples
      */
     template <class... Ts>
-    auto tieMeta(Ts &&... args) -> decltype(std::make_tuple(Private::tieMetaHelper(args)...))
+    auto tieMeta(Ts &&... args)
     {
         return std::make_tuple(Private::tieMetaHelper(args)...);
     }

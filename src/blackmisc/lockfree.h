@@ -275,7 +275,7 @@ namespace BlackMisc
 
         //! Pass the current value to the functor inspector, and return whatever inspector returns.
         template <typename F>
-        auto read(F &&inspector) -> decltype(inspector(std::declval<const T &>()))
+        auto read(F &&inspector)
         {
             return std::forward<F>(inspector)(read().get());
         }
@@ -314,14 +314,14 @@ namespace BlackMisc
         //! \param function The LockFree values from which this LockFreeMulti was constructed will be passed as arguments to this functor.
         //! \return The value returned by the functor, if any.
         template <typename F>
-        auto operator ()(F &&function) && -> decltype(function(std::declval<Ts>()...))
+        auto operator ()(F &&function) &&
         {
             return call(std::forward<F>(function), Private::make_index_sequence<sizeof...(Ts)>());
         }
 
     private:
         template <typename F, size_t... Is>
-        auto call(F &&function, Private::index_sequence<Is...>) -> decltype(function(std::declval<Ts>()...))
+        auto call(F &&function, Private::index_sequence<Is...>)
         {
             return std::forward<F>(function)(std::get<Is>(m_tup).get()...);
         }
