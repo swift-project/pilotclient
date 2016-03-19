@@ -96,6 +96,21 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER, typename KEYTYPE>
+    int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::removeObjectsWithoutDbKey()
+    {
+        if (this->container().isEmpty()) { return 0; }
+        CONTAINER newValues;
+        for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
+        {
+            if (!obj.hasValidDbKey()) { continue; }
+            newValues.push_back(obj);
+        }
+        int delta = this->container().size() - newValues.size();
+        this->container() = newValues;
+        return delta;
+    }
+
+    template <class OBJ, class CONTAINER, typename KEYTYPE>
     int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::replaceOrAddObjectsByKey(const CONTAINER &container)
     {
         if (container.isEmpty()) { return 0; }

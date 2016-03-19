@@ -8,7 +8,7 @@
  */
 
 #include "aircraftmodel.h"
-#include "distributor.h"
+#include "distributorlist.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
 #include <QString>
@@ -274,6 +274,25 @@ namespace BlackMisc
         bool CAircraftModel::hasAirlineDesignator() const
         {
             return this->m_livery.hasValidAirlineDesignator();
+        }
+
+        bool CAircraftModel::hasDistributor() const
+        {
+            return this->m_distributor.hasValidDbKey();
+        }
+
+        bool CAircraftModel::matchesDistributor(const CDistributor &distributor) const
+        {
+            if (!distributor.hasValidDbKey()) { return false; }
+            if (!this->hasDistributor()) { return false; }
+            return this->m_distributor.getDbKey() == distributor.getDbKey();
+        }
+
+        bool CAircraftModel::matchesAnyDistributor(const CDistributorList &distributors) const
+        {
+            if (distributors.isEmpty()) { return false; }
+            if (!this->hasDistributor()) { return false; }
+            return distributors.matchesAnyKeyOrAlias(this->m_distributor.getDbKey());
         }
 
         const CIcon &CAircraftModel::getModelModeAsIcon() const

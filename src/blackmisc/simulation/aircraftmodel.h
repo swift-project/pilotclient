@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/network/user.h"
@@ -174,6 +174,15 @@ namespace BlackMisc
             //! Set distributor
             void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
 
+            //! Distributor
+            bool hasDistributor() const;
+
+            //! By distributor
+            bool matchesDistributor(const CDistributor &distributor) const;
+
+            //! By distributor
+            bool matchesAnyDistributor(const CDistributorList &distributors) const;
+
             //! Name
             const QString &getName() const { return this->m_name; }
 
@@ -273,13 +282,13 @@ namespace BlackMisc
             BlackMisc::Aviation::CAircraftIcaoCode m_aircraftIcao; //!< ICAO code if available
             BlackMisc::Aviation::CLivery m_livery;                 //!< livery information
             CSimulatorInfo m_simulator;                            //!< model for given simulator
-            CDistributor m_distributor;                            //!< who designed or distributed the model
-            QString m_modelString;                                 //!< Simulator model key, unique
-            QString m_name;                                        //!< Model name
-            QString m_description;                                 //!< descriptive text
-            QString m_fileName;                                    //!< file name
-            ModelType m_modelType = TypeUnknown;                   //!< model string is coming representing ...?
-            ModelMode m_modelMode = Include;                       //!< model mode (include / exclude)
+            CDistributor   m_distributor;                          //!< who designed or distributed the model
+            QString        m_modelString;                          //!< Simulator model key, unique
+            QString        m_name;                                 //!< Model name
+            QString        m_description;                          //!< descriptive text
+            QString        m_fileName;                             //!< file name
+            ModelType      m_modelType = TypeUnknown;              //!< model string is coming representing ...?
+            ModelMode      m_modelMode = Include;                  //!< model mode (include / exclude)
         };
     } // namespace
 } // namespace

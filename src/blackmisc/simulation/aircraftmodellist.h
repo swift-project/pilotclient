@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"

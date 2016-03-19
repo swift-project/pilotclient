@@ -43,6 +43,9 @@ namespace BlackMisc
         //! Remove objects with key
         int removeObjectsWithKeys(const QList<KEYTYPE> &keys);
 
+        //! Remove objects without key
+        int removeObjectsWithoutDbKey();
+
         //! Update or insert data (based on DB key)
         int replaceOrAddObjectsByKey(const CONTAINER &container);
 
