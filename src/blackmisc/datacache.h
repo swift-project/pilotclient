@@ -252,7 +252,7 @@ namespace BlackMisc
         QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
 
         //! True if the current timestamp is older than the TTL (time to live).
-        bool isStale() const { return this->getTimestamp() + Trait::timeToLive() > QDateTime::currentMSecsSinceEpoch(); }
+        bool isStale() const { return Trait::timeToLive() >= 0 && this->getTimestamp() + Trait::timeToLive() > QDateTime::currentMSecsSinceEpoch(); }
 
         //! Don't change the value, but write a new timestamp, to extend the life of the value.
         void renewTimestamp(qint64 timestamp) { return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp); }
