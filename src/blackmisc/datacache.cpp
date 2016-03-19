@@ -161,31 +161,28 @@ namespace BlackMisc
         auto *queue = new CDataPageQueue(page);
         connect(page, &CValuePage::valuesWantToCache, this, &CDataCache::changeValues);
         connect(this, &CDataCache::valuesChanged, queue, &CDataPageQueue::queueValuesFromCache, Qt::DirectConnection);
-
-        auto *timer = new QTimer(page);
-        connect(timer, &QTimer::timeout, queue, &CDataPageQueue::trySetQueuedValuesFromCache);
-        timer->start(0);
     }
 
     void CDataPageQueue::queueValuesFromCache(const CValueCachePacket &values, QObject *changedBy)
     {
         QMutexLocker lock(&m_mutex);
+        if (m_queue.isEmpty())
+        {
+            QTimer::singleShot(0, this, &CDataPageQueue::setQueuedValuesFromCache);
+        }
         m_queue.push_back(std::make_pair(values, changedBy));
     }
 
-    void CDataPageQueue::trySetQueuedValuesFromCache()
+    void CDataPageQueue::setQueuedValuesFromCache()
     {
-        bool locked = m_mutex.tryLock(0);
-        if (locked)
-        {
-            decltype(m_queue) queue;
-            qSwap(m_queue, queue);
-            m_mutex.unlock();
+        QMutexLocker lock(&m_mutex);
+        decltype(m_queue) queue;
+        qSwap(m_queue, queue);
+        lock.unlock();
 
-            for (const auto &pair : queue)
-            {
-                m_page->setValuesFromCache(pair.first, pair.second);
-            }
+        for (const auto &pair : queue)
+        {
+            m_page->setValuesFromCache(pair.first, pair.second);
         }
     }
 

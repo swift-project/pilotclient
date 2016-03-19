@@ -40,8 +40,8 @@ namespace BlackMisc
             //! \threadsafe
             void queueValuesFromCache(const BlackMisc::CValueCachePacket &values, QObject *changedBy);
 
-            //! Synchronize with changes queued by queueValuesFromCache, if the mutex is not currently locked.
-            void trySetQueuedValuesFromCache();
+            //! Synchronize with changes queued by queueValuesFromCache.
+            void setQueuedValuesFromCache();
 
             //! Synchronize with one specific change in the queue, leave the rest for later.
             void setQueuedValueFromCache(const QString &key);
