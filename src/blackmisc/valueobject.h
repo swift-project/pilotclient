@@ -144,10 +144,11 @@ namespace BlackMisc
         using Mixin::MetaType<Derived>::registerMetadata;
 
     protected:
-        //! Template constructor, forwards all arguments to base class constructor.
-        //! \todo When our compilers support C++11 inheriting constructors, use those instead.
-        template <typename... Ts, typename = typename std::enable_if<! std::is_same<CValueObject, typename Private::DecayFirst<Ts...>::type>::value>::type>
-        CValueObject(Ts &&... args) : Base(std::forward<Ts>(args)...) {}
+        //! Inheriting constructors.
+        using Base::Base;
+
+        //! Default constructor.
+        CValueObject() = default;
 
         //! Copy constructor.
         CValueObject(const CValueObject &) = default;
