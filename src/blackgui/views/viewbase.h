@@ -52,10 +52,10 @@ namespace BlackGui
             //! \remarks Using own resizing (other than QHeaderView::ResizeMode)
             enum ResizeMode
             {
-                ResizingAuto,       //!< resizing when below threshold, \sa m_resizeAutoNthTime forcing only every n-th update to be resized
-                ResizingOnce,       //!< only one time
-                ResizingOnceSubset, //!< use a subset of the data to resize
-                ResizingOff         //!< never
+                ResizingAuto,    //!< resizing when below threshold, \sa m_resizeAutoNthTime forcing only every n-th update to be resized
+                ResizingOnce,    //!< only one time
+                PresizeSubset,   //!< use a subset of the data to resize
+                ResizingOff      //!< never
             };
 
             //! How rows are resized, makes sense when \sa ResizeMode is \sa ResizingOff
@@ -99,7 +99,7 @@ namespace BlackGui
             static constexpr int ASyncRowsCountThreshold = 50;
 
             //! When to use pre-sizing with random elements
-            static constexpr int ResizeSubsetThreshold = 50;
+            static constexpr int ResizeSubsetThreshold = 250;
 
             //! Clear data
             virtual void clear() = 0;
@@ -307,7 +307,7 @@ namespace BlackGui
             //! Default file for load/save operations
             QString getDefaultFilename() const;
 
-            ResizeMode     m_resizeMode = ResizingOnceSubset;                  //!< mode
+            ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
             SelectionMode m_originalSelectionMode     = this->selectionMode(); //!< Selection mode set
             int m_resizeCount                         = 0;                     //!< flag / counter, how many resize activities

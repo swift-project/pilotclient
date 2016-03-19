@@ -14,7 +14,6 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/shortcut.h"
 #include "blackcore/registermetadata.h"
-
 #include <QHeaderView>
 #include <QModelIndex>
 #include <QTime>
@@ -28,6 +27,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QDir>
+#include <limits>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -183,17 +183,17 @@ namespace BlackGui
             int items = menu.actions().size();
             if (this->m_menus.testFlag(MenuRefresh)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
             if (this->m_menus.testFlag(MenuBackend)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, SIGNAL(requestNewBackendData())); }
-            if (this->m_menus.testFlag(MenuClear)) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear())); }
+            if (this->m_menus.testFlag(MenuClear)) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, &CViewBaseNonTemplate::ps_clear); }
             if (this->m_menus.testFlag(MenuRemoveSelectedRows))
             {
                 if (this->hasSelection())
                 {
-                    menu.addAction(BlackMisc::CIcons::delete16(), "Remove selected rows", this, SLOT(ps_removeSelectedRows()), CShortcut::keyDelete());
+                    menu.addAction(BlackMisc::CIcons::delete16(), "Remove selected rows", this, &CViewBaseNonTemplate::ps_removeSelectedRows, CShortcut::keyDelete());
                 }
             }
             if (this->m_menus.testFlag(MenuDisplayAutomatically))
             {
-                QAction *a = menu.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", this, SLOT(ps_toggleAutoDisplay()));
+                QAction *a = menu.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", this, &CViewBaseNonTemplate::ps_toggleAutoDisplay);
                 a->setCheckable(true);
                 a->setChecked(this->displayAutomatically());
             }
@@ -202,8 +202,8 @@ namespace BlackGui
             items = menu.actions().size();
             if (this->m_menus.testFlag(MenuFilter))
             {
-                menu.addAction(CIcons::filter16(), "Filter", this, SLOT(ps_displayFilterDialog()), CShortcut::keyDisplayFilter());
-                menu.addAction(CIcons::filter16(), "Remove Filter", this, SLOT(ps_removeFilter()));
+                menu.addAction(CIcons::filter16(), "Filter", this, &CViewBaseNonTemplate::ps_displayFilterDialog, CShortcut::keyDisplayFilter());
+                menu.addAction(CIcons::filter16(), "Remove Filter", this, &CViewBaseNonTemplate::ps_removeFilter);
             }
             if (menu.actions().size() > items) { menu.addSeparator(); }
 
@@ -212,31 +212,31 @@ namespace BlackGui
             SelectionMode sm = this->selectionMode();
             if (sm == MultiSelection || sm == ExtendedSelection)
             {
-                menu.addAction(QIcon(), "Select all", this, SLOT(selectAll()), Qt::CTRL + Qt::Key_A);
+                menu.addAction(QIcon(), "Select all", this, &CViewBaseNonTemplate::selectAll, Qt::CTRL + Qt::Key_A);
             }
             if ((this->m_originalSelectionMode == MultiSelection || this->m_originalSelectionMode == ExtendedSelection) && this->m_menus.testFlag(MenuToggleSelectionMode))
             {
                 if (sm != MultiSelection)
                 {
-                    QAction *a = menu.addAction(QIcon(), "Switch to multi selection", this, SLOT(ps_toggleSelectionMode()));
+                    QAction *a = menu.addAction(QIcon(), "Switch to multi selection", this, &CViewBaseNonTemplate::ps_toggleSelectionMode);
                     a->setData(MultiSelection);
                 }
 
                 if (sm != ExtendedSelection)
                 {
-                    QAction *a = menu.addAction(QIcon(), "Switch to extended selection", this, SLOT(ps_toggleSelectionMode()));
+                    QAction *a = menu.addAction(QIcon(), "Switch to extended selection", this, &CViewBaseNonTemplate::ps_toggleSelectionMode);
                     a->setData(ExtendedSelection);
                 }
 
                 if (sm != SingleSelection)
                 {
-                    QAction *a = menu.addAction(QIcon(), "Switch to single selection", this, SLOT(ps_toggleSelectionMode()));
+                    QAction *a = menu.addAction(QIcon(), "Switch to single selection", this, &CViewBaseNonTemplate::ps_toggleSelectionMode);
                     a->setData(SingleSelection);
                 }
             }
             if (sm != NoSelection)
             {
-                menu.addAction(QIcon(), "Clear selection", this, SLOT(clearSelection()), CShortcut::keyClearSelection());
+                menu.addAction(QIcon(), "Clear selection", this, &CViewBaseNonTemplate::clearSelection, CShortcut::keyClearSelection());
             }
             if (menu.actions().size() > items) { menu.addSeparator(); }
 
@@ -247,7 +247,7 @@ namespace BlackGui
             if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // resizing
-            menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, SLOT(fullResizeToContents()));
+            menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, &CViewBaseNonTemplate::fullResizeToContents);
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
@@ -257,12 +257,12 @@ namespace BlackGui
             // when not auto let set how we want to resize rows
             if (m_rowResizeMode == Interactive)
             {
-                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), " Resize rows to content (auto)", this, SLOT(rowsResizeModeToContent()));
+                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), " Resize rows to content (auto)", this, &CViewBaseNonTemplate::rowsResizeModeToContent);
                 a->setEnabled(enabled && !autoResize);
             }
             else
             {
-                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, SLOT(rowsResizeModeToInteractive()));
+                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, &CViewBaseNonTemplate::rowsResizeModeToInteractive);
                 a->setEnabled(!autoResize);
             }
 
@@ -279,7 +279,7 @@ namespace BlackGui
             if (m_showingLoadIndicator)
             {
                 // just in case, if this ever will be dangling
-                menu.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", this, SLOT(hideLoadIndicator()));
+                menu.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", this, &CViewBaseNonTemplate::hideLoadIndicator);
             }
         }
 
@@ -493,7 +493,7 @@ namespace BlackGui
 
         bool CViewBaseNonTemplate::isResizeConditionMet(int containerSize) const
         {
-            if (m_resizeMode == ResizingOnceSubset) { return false; }
+            if (m_resizeMode == PresizeSubset) { return false; }
             if (m_resizeMode == ResizingOff) { return false; }
             if (m_resizeMode == ResizingOnce) { return m_resizeCount < 1; }
             if (m_resizeMode == ResizingAuto)
@@ -507,7 +507,15 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::fullResizeToContents()
         {
-            m_resizeCount++;
+            this->setVisible(false);
+            // magic trick from:
+            // http://stackoverflow.com/q/3433664/356726
+            const QRect vporig = this->viewport()->geometry();
+            QRect vpnew = vporig;
+            vpnew.setWidth(std::numeric_limits<int>::max());
+            this->viewport()->setGeometry(vpnew);
+
+            this->m_resizeCount++;
             this->resizeColumnsToContents(); // columns
             this->resizeRowsToContents(); // rows
             if (m_forceStretchLastColumnWhenResized)
@@ -515,6 +523,9 @@ namespace BlackGui
                 // re-stretch
                 this->horizontalHeader()->setStretchLastSection(true);
             }
+
+            this->viewport()->setGeometry(vporig);
+            this->setVisible(true);
         }
 
         void CViewBaseNonTemplate::ps_customMenuRequested(QPoint pos)
@@ -623,23 +634,26 @@ namespace BlackGui
             // we have data
             this->showLoadIndicator(container.size());
             bool reallyResize = resize && isResizeConditionMet(container.size()); // do we really perform resizing
-            bool presize = (m_resizeMode == ResizingOnceSubset) &&
+            bool presize = (m_resizeMode == PresizeSubset) &&
                            this->isEmpty() && // only when no data yet
                            !reallyResize;     // not when we resize later
             presize = presize || (this->isEmpty() && resize && !reallyResize); // we presize if we wanted to resize but actually do not because of condition
-            bool presizeThreshold = presize && container.size() > ResizeSubsetThreshold; // only when size making sense
+            const bool presizeThresholdReached = presize && container.size() > ResizeSubsetThreshold; // only when size making sense
 
             // when we will not resize, we might presize
-            if (presizeThreshold)
+            if (presizeThresholdReached)
             {
-                int presizeRandomElements = container.size() / 100;
-                this->m_model->update(container.randomElements(presizeRandomElements), false);
-                this->fullResizeToContents();
+                const int presizeRandomElements = container.size() > 1000 ? container.size() / 100 : container.size() / 40;
+                if (presizeRandomElements > 0)
+                {
+                    this->m_model->update(container.sampleElements(presizeRandomElements), false);
+                    this->fullResizeToContents();
+                }
             }
             int c = this->m_model->update(container, sort);
 
             // resize after real update according to mode
-            if (presizeThreshold)
+            if (presizeThresholdReached)
             {
                 // currently no furhter actions
             }
@@ -647,7 +661,7 @@ namespace BlackGui
             {
                 this->resizeToContents();
             }
-            else if (presize && !presizeThreshold)
+            else if (presize && !presizeThresholdReached)
             {
                 // small amount of data not covered before
                 this->fullResizeToContents();
