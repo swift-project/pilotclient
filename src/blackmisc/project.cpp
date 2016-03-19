@@ -305,6 +305,21 @@ namespace BlackMisc
         return s;
     }
 
+    const QString getBootstrapResourceFileImpl()
+    {
+        const QString d(CProject::getSwiftResourceDir());
+        if (d.isEmpty()) { return ""; }
+        const QFile file(CFileUtils::appendFilePaths(d, "shared/boostrap/boostrap.json"));
+        Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing dir");
+        return QFileInfo(file).absoluteFilePath();
+    }
+
+    const QString &CProject::getBootstrapResourceFile()
+    {
+        static const QString s(getBootstrapResourceFileImpl());
+        return s;
+    }
+
     QString getSwiftStaticDbFilesDirImpl()
     {
         const QString d(CProject::getSwiftResourceDir());

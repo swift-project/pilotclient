@@ -144,6 +144,9 @@ namespace BlackCore
             //! Build bootstrap file URL
             static QString buildBootstrapFileUrl(const QString &candidate);
 
+            //! Object initialized by JSON file
+            static CGlobalSetup fromJsonFile(const QString &fileNameAndPath);
+
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup)
 

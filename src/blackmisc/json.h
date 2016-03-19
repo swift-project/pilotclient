@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/tuple.h"
 #include "blackmisc/inheritancetraits.h"
+#include "blackmisc/fileutils.h"
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonValue>
@@ -164,6 +165,28 @@ namespace BlackMisc
         //! Merges an incremental json object into an existing one
         BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
 
+        /*!
+         * Load JSON file and init by that
+         */
+        template <class T>
+        bool loadFromJsonFile(T &object, const QString &fileNameAndPath)
+        {
+            const QString jsonString(CFileUtils::readFileToString(fileNameAndPath));
+            if (jsonString.isEmpty()) { return false; }
+            object.convertFromJson(jsonString);
+            return true;
+        }
+
+        /*!
+         * Save to JSON file
+         */
+        template <class T>
+        bool saveToJsonFile(const T &object, const QString &fileNameAndPath)
+        {
+            const QString jsonString(object.toJsonString());
+            if (jsonString.isEmpty()) { return false; }
+            return CFileUtils::writeStringToFile(jsonString, fileNameAndPath);
+        }
     } // Json
 
     namespace Mixin
@@ -266,8 +289,8 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                          \
-            using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::toJson;                 \
-            using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::convertFromJson;
+        using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::toJson;                 \
+        using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::convertFromJson;
 
     } // Mixin
 } // BlackMisc

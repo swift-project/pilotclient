@@ -96,6 +96,9 @@ namespace BlackMisc
         //! Where resource files (static DB files, ...) etc are located
         static const QString &getSwiftResourceDir();
 
+        //! Bootstrap resource directory
+        static const QString &getBootstrapResourceFile();
+
         //! Where static DB files are located
         static const QString &getSwiftStaticDbFilesDir();
 
