@@ -41,7 +41,7 @@ namespace BlackMisc
         const CStatusMessage &status() const { return m_payload; }
 
         //! Destructor.
-        ~CStatusException() Q_DECL_NOEXCEPT {}
+        ~CStatusException() {}
 
     private:
         const CStatusMessage   m_payload;

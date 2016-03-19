@@ -345,7 +345,7 @@ namespace BlackMisc
     {
     public:
         //! Destructor. Applies deferred changes.
-        ~BatchGuard() Q_DECL_NOEXCEPT;
+        ~BatchGuard();
 
         //! Deleted copy constructor. Class is move-only.
         BatchGuard(const BatchGuard &) = delete;

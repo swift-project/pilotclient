@@ -86,7 +86,7 @@ namespace BlackMisc
 
             const QString &operationName() const { return m_operationName; }
 
-            ~CVariantException() Q_DECL_NOEXCEPT {}
+            ~CVariantException() {}
 
         private:
             QString m_operationName;

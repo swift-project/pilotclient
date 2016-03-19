@@ -32,7 +32,7 @@ namespace BlackMisc
         Q_OBJECT
     public:
         CSingleShotController(QObject *parent) : QObject(parent), m_strongRef(QSharedPointer<int>::create(0)) {}
-        ~CSingleShotController() Q_DECL_NOEXCEPT { auto wr = weakRef(); m_strongRef.clear(); waitForNull(wr); }
+        ~CSingleShotController() { auto wr = weakRef(); m_strongRef.clear(); waitForNull(wr); }
         QWeakPointer<int> weakRef() const { return m_strongRef.toWeakRef(); }
     private:
         static void waitForNull(QWeakPointer<int> wp) { while (wp) { QThread::msleep(10); } }
@@ -86,7 +86,7 @@ namespace BlackMisc
         CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
 
         //! Destructor
-        ~CRegularThread() Q_DECL_NOEXCEPT
+        ~CRegularThread()
         {
             quit();
             wait();

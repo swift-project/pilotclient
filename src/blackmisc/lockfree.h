@@ -142,7 +142,7 @@ namespace BlackMisc
         }
 
         //! Destructor. The original object will be overwritten by the new one stored in the writer.
-        ~LockFreeUniqueWriter() Q_DECL_NOEXCEPT
+        ~LockFreeUniqueWriter()
         {
             if (m_ptr.use_count() == 0) { return; } // *this has been moved from
             bool success = Private::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr));
@@ -203,7 +203,7 @@ namespace BlackMisc
         }
 
         //! Destructor. The writer's changes must be committed before this is called.
-        ~LockFreeSharedWriter() Q_DECL_NOEXCEPT
+        ~LockFreeSharedWriter()
         {
             Q_ASSERT_X(m_ptr.use_count() == 0, qPrintable(name()), "SharedWriter destroyed without committing changes");
         }

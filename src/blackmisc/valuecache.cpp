@@ -365,7 +365,7 @@ namespace BlackMisc
         return page;
     }
 
-    CValueCache::BatchGuard::~BatchGuard() Q_DECL_NOEXCEPT
+    CValueCache::BatchGuard::~BatchGuard()
     {
         if (m_page)
         {
