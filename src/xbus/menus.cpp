@@ -10,7 +10,6 @@
 //! \cond PRIVATE
 
 #include "menus.h"
-#include "blackmisc/makeunique.h"
 #include <type_traits>
 #include <cassert>
 #include <string>
@@ -78,7 +77,7 @@ namespace XBus
     CMenu CMenu::subMenu(std::string name)
     {
         assert(! name.empty());
-        auto items = BlackMisc::make_unique<ItemList>();
+        auto items = std::make_unique<ItemList>();
         auto itemsVoidPtr = static_cast<void *>(&*items);
         return { XPLMCreateMenu(name.c_str(), m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), nullptr, false), handler, itemsVoidPtr), false, std::move(items) };
     }

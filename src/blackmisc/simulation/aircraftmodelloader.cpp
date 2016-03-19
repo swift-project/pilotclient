@@ -11,7 +11,6 @@
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
-#include "blackmisc/makeunique.h"
 
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
@@ -58,7 +57,7 @@ namespace BlackMisc
         {
             if (simInfo.xplane())
             {
-                return make_unique<CAircraftModelLoaderXPlane>(
+                return std::make_unique<CAircraftModelLoaderXPlane>(
                            CSimulatorInfo(CSimulatorInfo::XPLANE),
                            CXPlaneUtil::xplaneRootDir());
             }

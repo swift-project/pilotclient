@@ -15,7 +15,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/makeunique.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
 #include <QString>
@@ -64,7 +63,7 @@ namespace BlackSimPlugin
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
 
-            m_modelMatcher.setModelMappingProvider(BlackMisc::make_unique<CModelMappingsProviderDummy>());
+            m_modelMatcher.setModelMappingProvider(std::make_unique<CModelMappingsProviderDummy>());
             m_modelMatcher.setDefaultModel(CAircraftModel(
                                                "__XPFW_Jets/A320_a/A320_a_Austrian_Airlines.obj __XPFW_Jets/A320_a/A320_a_Austrian_Airlines.png",
                                                CAircraftModel::TypeModelMatchingDefaultModel,

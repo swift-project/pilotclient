@@ -11,7 +11,6 @@
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/makeunique.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -36,21 +35,21 @@ namespace BlackMisc
             {
                 if (simInfo.fsx())
                 {
-                    return make_unique<CAircraftCfgParser>(
+                    return std::make_unique<CAircraftCfgParser>(
                                CSimulatorInfo(CSimulatorInfo::FSX),
                                CFsCommonUtil::fsxSimObjectsDir(),
                                CFsCommonUtil::fsxSimObjectsExcludeDirectories());
                 }
                 else if (simInfo.fs9())
                 {
-                    return make_unique<CAircraftCfgParser>(
+                    return std::make_unique<CAircraftCfgParser>(
                                CSimulatorInfo(CSimulatorInfo::FS9),
                                CFsCommonUtil::fs9AircraftDir(),
                                CFsCommonUtil::fs9AircraftObjectsExcludeDirectories());
                 }
                 else if (simInfo.p3d())
                 {
-                    return make_unique<CAircraftCfgParser>(
+                    return std::make_unique<CAircraftCfgParser>(
                                CSimulatorInfo(CSimulatorInfo::P3D),
                                CFsCommonUtil::p3dSimObjectsDir(),
                                CFsCommonUtil::p3dSimObjectsExcludeDirectories());

@@ -12,7 +12,6 @@
 #include "audiodevicevatlib.h"
 #include "audiomixervatlib.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/makeunique.h"
 #include <QDebug>
 #include <QTimer>
 #include <memory>
@@ -44,17 +43,17 @@ namespace BlackCore
 
     std::unique_ptr<IAudioInputDevice> CVoiceVatlib::createInputDevice()
     {
-        return make_unique<CAudioInputDeviceVatlib>(m_audioService.data(), this);
+        return std::make_unique<CAudioInputDeviceVatlib>(m_audioService.data(), this);
     }
 
     std::unique_ptr<IAudioOutputDevice> CVoiceVatlib::createOutputDevice()
     {
-        return make_unique<CAudioOutputDeviceVatlib>(m_audioService.data(), this);
+        return std::make_unique<CAudioOutputDeviceVatlib>(m_audioService.data(), this);
     }
 
     std::unique_ptr<IAudioMixer> CVoiceVatlib::createAudioMixer()
     {
-        return make_unique<CAudioMixerVatlib>(this);
+        return std::make_unique<CAudioMixerVatlib>(this);
     }
 
     void CVoiceVatlib::connectVoice(IAudioInputDevice *device, IAudioMixer *mixer, IAudioMixer::InputPort inputPort)

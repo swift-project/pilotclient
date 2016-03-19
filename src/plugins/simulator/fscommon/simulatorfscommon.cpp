@@ -9,9 +9,7 @@
 
 #include "simulatorfscommon.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/makeunique.h"
 #include "blackmisc/simulation/fscommon/modelmappingsprovidervpilot.h"
-#include "blackmisc/makeunique.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
@@ -39,7 +37,7 @@ namespace BlackSimPlugin
         {
             // hack to init mapper
             connect(&m_modelMatcher, &CAircraftMatcher::initializationFinished, this, &CSimulatorFsCommon::ps_mapperInitialized);
-            auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider> { BlackMisc::make_unique<CModelMappingsProviderVPilot>(true) };
+            auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider> { std::make_unique<CModelMappingsProviderVPilot>(true) };
             m_modelMatcher.setModelMappingProvider(std::move(modelMappingsProvider));
 
             bool c = connect(m_aircraftCfgParser.get(), &CAircraftCfgParser::loadingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);

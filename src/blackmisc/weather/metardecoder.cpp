@@ -12,7 +12,6 @@
 #include "metardecoder.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/weather/presentweather.h"
-#include "blackmisc/makeunique.h"
 #include <QRegularExpression>
 #include <QDebug>
 
@@ -835,21 +834,21 @@ namespace BlackMisc
         void CMetarDecoder::allocateDecoders()
         {
             m_decoders.clear();
-            m_decoders.push_back(make_unique<CMetarDecoderReportType>());
-            m_decoders.push_back(make_unique<CMetarDecoderAirport>());
-            m_decoders.push_back(make_unique<CMetarDecoderDayTime>());
-            m_decoders.push_back(make_unique<CMetarDecoderStatus>());
-            m_decoders.push_back(make_unique<CMetarDecoderWind>());
-            m_decoders.push_back(make_unique<CMetarDecoderVariationsWindDirection>());
-            m_decoders.push_back(make_unique<CMetarDecoderVisibility>());
-            m_decoders.push_back(make_unique<CMetarDecoderRunwayVisualRange>());
-            m_decoders.push_back(make_unique<CMetarDecoderPresentWeather>());
-            m_decoders.push_back(make_unique<CMetarDecoderCloud>());
-            m_decoders.push_back(make_unique<CMetarDecoderVerticalVisibility>());
-            m_decoders.push_back(make_unique<CMetarDecoderTemperature>());
-            m_decoders.push_back(make_unique<CMetarDecoderPressure>());
-            m_decoders.push_back(make_unique<CMetarDecoderRecentWeather>());
-            m_decoders.push_back(make_unique<CMetarDecoderWindShear>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderReportType>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderAirport>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderDayTime>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderStatus>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderWind>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderVariationsWindDirection>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderVisibility>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderRunwayVisualRange>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderPresentWeather>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderCloud>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderVerticalVisibility>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderTemperature>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderPressure>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderRecentWeather>());
+            m_decoders.push_back(std::make_unique<CMetarDecoderWindShear>());
         }
 
     } // namespace
