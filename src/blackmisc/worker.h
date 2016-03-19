@@ -159,14 +159,14 @@ namespace BlackMisc
 
         //! Blocks until the task is finished.
         //! \threadsafe Will deadlock if called by the worker thread.
-        void waitForFinished() Q_DECL_NOEXCEPT;
+        void waitForFinished() noexcept;
 
         //! Notify the task that its result is no longer needed, so it can finish early.
         //! \threadsafe
-        void abandon() Q_DECL_NOEXCEPT;
+        void abandon() noexcept;
 
         //! Convenience to call abandon() followed by waitForFinished().
-        void abandonAndWait() Q_DECL_NOEXCEPT;
+        void abandonAndWait() noexcept;
 
     signals:
         //! Emitted when the task is finished.
@@ -200,8 +200,8 @@ namespace BlackMisc
         }
 
     private:
-        virtual void quit() Q_DECL_NOEXCEPT {}
-        virtual void quitAndWait() Q_DECL_NOEXCEPT { waitForFinished(); }
+        virtual void quit() noexcept {}
+        virtual void quitAndWait() noexcept { waitForFinished(); }
 
         bool m_finished = false;
         mutable QMutex m_finishedMutex { QMutex::Recursive };
@@ -293,11 +293,11 @@ namespace BlackMisc
         //! Stops the thread the next time around its event loop.
         //! The thread and the worker will then be deleted.
         //! \threadsafe
-        virtual void quit() Q_DECL_NOEXCEPT final override;
+        virtual void quit() noexcept final override;
 
         //! Calls quit() and blocks until the thread is finished.
         //! \threadsafe Will deadlock if called by the worker thread.
-        virtual void quitAndWait() Q_DECL_NOEXCEPT final override;
+        virtual void quitAndWait() noexcept final override;
 
     protected slots:
         //! Called when the thread is started.

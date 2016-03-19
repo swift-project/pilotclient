@@ -45,20 +45,20 @@ namespace BlackMisc
         QMetaObject::invokeMethod(this, "deleteLater");
     }
 
-    void CWorkerBase::waitForFinished() Q_DECL_NOEXCEPT
+    void CWorkerBase::waitForFinished() noexcept
     {
         std::promise<void> promise;
         then([ & ] { promise.set_value(); });
         promise.get_future().wait();
     }
 
-    void CWorkerBase::abandon() Q_DECL_NOEXCEPT
+    void CWorkerBase::abandon() noexcept
     {
         thread()->requestInterruption();
         quit();
     }
 
-    void CWorkerBase::abandonAndWait() Q_DECL_NOEXCEPT
+    void CWorkerBase::abandonAndWait() noexcept
     {
         thread()->requestInterruption();
         quitAndWait();
@@ -90,13 +90,13 @@ namespace BlackMisc
         thread->start(priority);
     }
 
-    void CContinuousWorker::quit() Q_DECL_NOEXCEPT
+    void CContinuousWorker::quit() noexcept
     {
         Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
         thread()->quit();
     }
 
-    void CContinuousWorker::quitAndWait() Q_DECL_NOEXCEPT
+    void CContinuousWorker::quitAndWait() noexcept
     {
         Q_ASSERT_X(!CThreadUtils::isApplicationThreadObjectThread(this), Q_FUNC_INFO, "Try to stop main thread");
         auto *ownThread = thread();

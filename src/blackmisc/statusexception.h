@@ -35,7 +35,7 @@ namespace BlackMisc
         CStatusException &operator=(const CStatusException &) = delete;
 
         //! Return null-terminated message string.
-        virtual const char *what() const Q_DECL_NOEXCEPT override;
+        virtual const char *what() const noexcept override;
 
         //! Return the contained status message.
         const CStatusMessage &status() const { return m_payload; }

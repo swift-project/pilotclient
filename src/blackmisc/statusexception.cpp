@@ -21,7 +21,7 @@ namespace BlackMisc
         this->m_temp = other.m_temp;
     }
 
-    const char *CStatusException::what() const Q_DECL_NOEXCEPT
+    const char *CStatusException::what() const noexcept
     {
         QWriteLocker lock(&this->m_lock);
         if (m_temp.isNull()) { m_temp = m_payload.getMessage().toLocal8Bit(); }
