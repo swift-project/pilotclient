@@ -147,6 +147,9 @@ namespace BlackMisc
             //! Default port for given protocol
             static bool isDefaultPort(const QString &protocol, int port);
 
+            //! From local file path
+            static CUrl fromLocalFile(const QString &localFile);
+
             //! Convert to QUrl
             operator QUrl() const { return this->toQUrl(); }
 

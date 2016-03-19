@@ -200,6 +200,11 @@ namespace BlackMisc
             return port == p;
         }
 
+        CUrl CUrl::fromLocalFile(const QString &localFile)
+        {
+            return QUrl::fromLocalFile(localFile);
+        }
+
         QString CUrl::stripQueryString(const QString query)
         {
             QString q(query.trimmed());
