@@ -45,7 +45,7 @@ namespace BlackMisc
      */
     //! @{
     template <class T>
-    Q_CONSTEXPR typename std::add_const<T>::type &as_const(T &v) Q_DECL_NOEXCEPT { return v; }
+    constexpr typename std::add_const<T>::type &as_const(T &v) Q_DECL_NOEXCEPT { return v; }
     template <class T>
     void as_const(const T &&) = delete;
     //! @}

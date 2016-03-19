@@ -839,7 +839,7 @@ namespace BlackSimPlugin
             ISimulatorListener(info),
             m_timer(new QTimer(this))
         {
-            Q_CONSTEXPR int QueryInterval = 5 * 1000; // 5 seconds
+            constexpr int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
             this->m_timer->setObjectName(this->objectName().append(":m_timer"));
             connect(m_timer, &QTimer::timeout, this, &CSimulatorFsxListener::ps_checkConnection);

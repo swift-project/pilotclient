@@ -232,7 +232,7 @@ namespace BlackMisc
         template <typename T, bool IsRegisteredMetaType /* = true */>
         struct MetaTypeHelperImpl
         {
-            static Q_DECL_CONSTEXPR int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
+            static constexpr int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
             static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); registerMetaValueType<T>(); }
             static QVariant maybeToQVariant(const T &obj) { return QVariant::fromValue(obj); }
             static void maybeConvertFromQVariant(T &obj, const QVariant &var) { BlackMisc::setFromQVariant(&obj, var); }
@@ -241,7 +241,7 @@ namespace BlackMisc
         template <typename T>
         struct MetaTypeHelperImpl<T, /* IsRegisteredMetaType = */ false>
         {
-            static Q_DECL_CONSTEXPR int maybeGetMetaTypeId() { return QMetaType::UnknownType; }
+            static constexpr int maybeGetMetaTypeId() { return QMetaType::UnknownType; }
             static void maybeRegisterMetaType() {}
             static QVariant maybeToQVariant(const T &) { return {}; }
             static void maybeConvertFromQVariant(T &, const QVariant &) {}
