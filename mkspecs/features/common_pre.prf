@@ -39,7 +39,7 @@ include(config.pri)
 
 CONFIG += qt
 CONFIG += warn_on
-CONFIG += c++11
+CONFIG += c++14
 
 ################################
 # Detect 32 or 64 bit
