@@ -82,6 +82,23 @@
         <file>icons/pastel/16/database-table.png</file>
         <file>icons/pastel/16/paintcan.png</file>
         <file>icons/pastel/16/disk.png</file>
+        <file>icons/pastel/32/application-error.png</file>
+        <file>icons/pastel/32/basket-error.png</file>
+        <file>icons/pastel/32/bullet-error.png</file>
+        <file>icons/pastel/32/chart-bar-error.png</file>
+        <file>icons/pastel/32/cog-error.png</file>
+        <file>icons/pastel/32/database-error.png</file>
+        <file>icons/pastel/32/exclamation.png</file>
+        <file>icons/pastel/32/picture-error.png</file>
+        <file>icons/pastel/32/plugin-error.png</file>
+        <file>icons/pastel/48/application-error.png</file>
+        <file>icons/pastel/48/bullet-error.png</file>
+        <file>icons/pastel/48/chart-bar-error.png</file>
+        <file>icons/pastel/48/cog-error.png</file>
+        <file>icons/pastel/48/database-error.png</file>
+        <file>icons/pastel/48/font-error.png</file>
+        <file>icons/pastel/48/plugin-error.png</file>
+        <file>icons/pastel/48/table-error.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>
