@@ -63,12 +63,13 @@ namespace BlackMisc
     template <typename ForwardIt, typename OutputIt, typename Generator>
     void copySampleElements(ForwardIt in, ForwardIt end, OutputIt out, const int n, Generator &&rng)
     {
-        for (const auto size = std::distance(in, end); in != end && n > 0; )
+        const auto size = static_cast<int>(std::distance(in, end));
+        for (int i = 0; i < std::min(n, size); ++i)
         {
-            const auto index = std::uniform_int_distribution<>(0, size / n - 1)(rng);
+            const auto index = std::uniform_int_distribution<>(0, std::max(size / n, 1) - 1)(rng);
             std::advance(in, index);
             *out++ = *in;
-            std::advance(in, size / n - index);
+            std::advance(in, std::max(size / n, 1) - index);
         }
     }
 
