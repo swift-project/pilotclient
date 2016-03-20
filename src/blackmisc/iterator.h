@@ -92,10 +92,8 @@ namespace BlackMisc
             {
                 PointerWrapper(typename std::decay<undecayed_type>::type *obj) : m_obj(std::move(*obj)) {}
                 typename std::decay<undecayed_type>::type const *operator ->() const { return &m_obj; }
-                typename std::decay<undecayed_type>::type operator *() const { return m_obj; }
-                // TODO replace operator* above with the following, when our compilers support C++11 ref-qualifiers
-                //typename std::decay<undecayed_type>::type operator *() const & { return m_obj; }
-                //typename std::decay<undecayed_type>::type operator *() && { return std::move(m_obj); }
+                typename std::decay<undecayed_type>::type operator *() const & { return m_obj; }
+                typename std::decay<undecayed_type>::type operator *() && { return std::move(m_obj); }
             private:
                 const typename std::decay<undecayed_type>::type m_obj;
             };

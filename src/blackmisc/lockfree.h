@@ -19,12 +19,6 @@
 #include <atomic>
 #include <utility>
 
-#if _MSC_VER < 1900
-#define BLACK_RVALUE_REF_QUALIFIER
-#else
-#define BLACK_RVALUE_REF_QUALIFIER &&
-#endif
-
 // http://www.drdobbs.com/lock-free-data-structures/184401865
 // http://en.cppreference.com/w/cpp/memory/shared_ptr/atomic
 
@@ -320,7 +314,7 @@ namespace BlackMisc
         //! \param function The LockFree values from which this LockFreeMulti was constructed will be passed as arguments to this functor.
         //! \return The value returned by the functor, if any.
         template <typename F>
-        auto operator ()(F &&function) BLACK_RVALUE_REF_QUALIFIER -> decltype(function(std::declval<Ts>()...))
+        auto operator ()(F &&function) && -> decltype(function(std::declval<Ts>()...))
         {
             return call(std::forward<F>(function), Private::make_index_sequence<sizeof...(Ts)>());
         }
