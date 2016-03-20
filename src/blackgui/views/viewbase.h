@@ -96,10 +96,10 @@ namespace BlackGui
             Q_DECLARE_FLAGS(Menu, MenuFlag)
 
             //! When (row count) to use asynchronous updates
-            static const int ASyncRowsCountThreshold = 50;
+            static constexpr int ASyncRowsCountThreshold = 50;
 
             //! When to use pre-sizing with random elements
-            static const int ResizeSubsetThreshold = 50;
+            static constexpr int ResizeSubsetThreshold = 50;
 
             //! Clear data
             virtual void clear() = 0;

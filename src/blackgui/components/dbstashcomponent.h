@@ -39,7 +39,7 @@ namespace BlackGui
 
         public:
             //! Number of models which can be published at once
-            static const int MaxModelPublished = 1000;
+            static constexpr int MaxModelPublished = 1000;
 
             //! Constructor
             explicit CDbStashComponent(QWidget *parent = nullptr);

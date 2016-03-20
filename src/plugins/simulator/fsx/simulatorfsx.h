@@ -182,7 +182,7 @@ namespace BlackSimPlugin
             //! Inject weather grid to simulator
             void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
-            static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
+            static constexpr int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             bool m_simConnected  = false;       //!< Is simulator connected?
             bool m_simSimulating    = false;    //!< Simulator running?
             bool m_useSbOffsets  = true;        //!< with SB offsets

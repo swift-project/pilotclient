@@ -75,7 +75,7 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CJoystickButton)
             int m_buttonIndex = m_invalidIndex;
 
-            static const int m_invalidIndex = -1;
+            static constexpr int m_invalidIndex = -1;
         };
     }
 }

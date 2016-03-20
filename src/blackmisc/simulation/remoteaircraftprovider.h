@@ -32,8 +32,8 @@ namespace BlackMisc
         class BLACKMISC_EXPORT IRemoteAircraftProvider
         {
         public:
-            static const int MaxSituationsPerCallsign = 6; //!< How many situations per callsign
-            static const int MaxPartsPerCallsign = 3;      //!< How many parts per callsign
+            static constexpr int MaxSituationsPerCallsign = 6; //!< How many situations per callsign
+            static constexpr int MaxPartsPerCallsign = 3;      //!< How many parts per callsign
 
             //! Situations per callsign
             using CSituationsPerCallsign = QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList>;

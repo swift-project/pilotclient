@@ -47,7 +47,7 @@ namespace BlackMisc
             void CSettingsAudio::initNotificationFlags()
             {
                 // if we add flags in the future, we automatically extend ...
-                static const int l = 1 + static_cast<int>(CNotificationSounds::Notification::NotificationsLoadSounds);
+                constexpr int l = 1 + static_cast<int>(CNotificationSounds::Notification::NotificationsLoadSounds);
                 if (this->m_notificationFlags.length() < l)
                 {
                     int cl = m_notificationFlags.length();

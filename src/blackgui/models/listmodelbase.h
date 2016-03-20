@@ -33,7 +33,7 @@ namespace BlackGui
 
         public:
             //! Number of elements when to use asynchronous updates
-            static const int asyncThreshold = 50;
+            static constexpr int asyncThreshold = 50;
 
             //! Destructor
             virtual ~CListModelBaseNonTemplate() {}

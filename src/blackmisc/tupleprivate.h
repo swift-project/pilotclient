@@ -54,7 +54,7 @@ namespace BlackMisc
         struct HasEnabledTupleConversion
         {
             using type = decltype(hasEnabledTupleConversionHelper(static_cast<T *>(nullptr)));
-            static const bool value = type::value;
+            static constexpr bool value = type::value;
         };
 
         // Using tag dispatch to select which implementation of compare() to use
@@ -79,13 +79,13 @@ namespace BlackMisc
         template <class P, size_t I, size_t C, size_t I2, size_t... Is>
         struct GenSequenceOnPredicate<P, I, C, true, I2, Is...>
         {
-            static const bool test = P::template test<I>::value;
+            static constexpr bool test = P::template test<I>::value;
             using type = typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is..., I2>::type;
         };
         template <class P, size_t I, size_t C, size_t I2, size_t... Is>
         struct GenSequenceOnPredicate<P, I, C, false, I2, Is...>
         {
-            static const bool test = P::template test<I>::value;
+            static constexpr bool test = P::template test<I>::value;
             using type = typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is...>::type;
         };
         template <class P, size_t C, size_t I2, size_t... Is>
@@ -172,7 +172,7 @@ namespace BlackMisc
         struct Attribute : public AttributeComparable<Attribute<T, Flags>, bool(Flags & DisabledForComparison), bool(Flags & CaseInsensitiveComparison)>
         {
             using type = T;
-            static const qint64 flags = Flags;
+            static constexpr qint64 flags = Flags;
 
             Attribute(T &obj, QString jsonName = {}) : m_obj(obj), m_jsonName(jsonName) {}
             void extend(QString jsonName) { if (m_jsonName.isEmpty()) m_jsonName = jsonName; }

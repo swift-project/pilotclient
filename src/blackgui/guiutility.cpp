@@ -149,7 +149,7 @@ namespace BlackGui
 
     int CGuiUtility::metaTypeIdFromSwiftDragAndDropData(const QMimeData *mime)
     {
-        static const int Unknown = static_cast<int>(QMetaType::UnknownType);
+        constexpr int Unknown = static_cast<int>(QMetaType::UnknownType);
 
         if (!hasSwiftVariantMimeType(mime)) { return Unknown; }
         QJsonDocument jsonDoc(QJsonDocument::fromJson(mime->data(swiftJsonDragAndDropMimeType())));

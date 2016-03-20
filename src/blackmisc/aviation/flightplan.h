@@ -37,8 +37,8 @@ namespace BlackMisc
                 DVFR        //!< Defense VFR
             };
 
-            static const int MaxRemarksLength = 150; //!< Max remarks length
-            static const int MaxRouteLength = 150; //!< Max route length
+            static constexpr int MaxRemarksLength = 150; //!< Max remarks length
+            static constexpr int MaxRouteLength = 150; //!< Max route length
 
             //! Default constructor
             CFlightPlan() = default;
