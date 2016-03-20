@@ -93,7 +93,6 @@ namespace BlackMisc
     private:
         bool m_isValid;
 
-#if defined(Q_COMPILER_UNRESTRICTED_UNIONS)
         T &dereference() { Q_ASSERT(m_isValid); return m_data.object; }
         const T &dereference() const { Q_ASSERT(m_isValid); return m_data.object; }
         union Data
@@ -104,11 +103,6 @@ namespace BlackMisc
             T object;
         };
         Data m_data;
-#else
-        T &dereference() { Q_ASSERT(m_isValid); return *reinterpret_cast<T *>(m_data.bytes); }
-        const T &dereference() const { Q_ASSERT(m_isValid); return *reinterpret_cast<const T *>(m_data.bytes); }
-        struct { typename std::aligned_storage<sizeof(T)>::type bytes[1]; } m_data;
-#endif
     };
 
     /*!
