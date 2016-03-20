@@ -38,14 +38,16 @@ namespace BlackMisc
             using ::BlackMisc::qHash; // bring hidden name into scope
 
             template <class Key>
-            struct SupportsQHash : std::integral_constant<bool,
-                ! std::is_same<decltype(std::declval<Key>() == std::declval<Key>()), NotFound>::value &&
-                ! std::is_same<decltype(qHash(std::declval<Key>())), NotFound>::value
-            > {};
+            constexpr static bool supportsQHash()
+            {
+                return ! std::is_same<decltype(std::declval<Key>() == std::declval<Key>()), NotFound>::value &&
+                       ! std::is_same<decltype(qHash(std::declval<Key>())), NotFound>::value;
+            };
             template <class Key>
-            struct SupportsQMap : std::integral_constant<bool,
-                ! std::is_same<decltype(std::declval<Key>() < std::declval<Key>()), NotFound>::value
-            > {};
+            constexpr static bool supportsQMap()
+            {
+                return ! std::is_same<decltype(std::declval<Key>() < std::declval<Key>()), NotFound>::value;
+            };
         }
 
         template <bool KeySupportsQHash /* = true */, bool KeySupportsQMap>
@@ -72,12 +74,11 @@ namespace BlackMisc
 
 
     //! Trait to select the appropriate default associative container type depending on what the key type supports
-    template <class Key>
-    struct AssociativityTraits : public Private::AssociativityTraits<Private::ADL::SupportsQHash<Key>::value, Private::ADL::SupportsQMap<Key>::value>
-    {};
+    template <typename K, typename V>
+    using DefaultAssociativeType = typename Private::AssociativityTraits<Private::ADL::supportsQHash<K>(), Private::ADL::supportsQMap<K>()>::template DefaultType<K, V>;
 
     //! Associative container with value semantics, chooses a sensible default implementation container type
-    template<class Key, class Value, template <class...> class Impl = AssociativityTraits<Key>::template DefaultType>
+    template<class Key, class Value, template <class...> class Impl = DefaultAssociativeType>
     class CDictionary :
         public Mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::JsonOperators<CDictionary<Key, Value, Impl>>,
