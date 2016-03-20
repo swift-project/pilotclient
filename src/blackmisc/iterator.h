@@ -426,7 +426,7 @@ namespace BlackMisc
                 I m_impl;
             };
 
-            typedef QScopedPointer<PimplBase> PimplPtr;
+            using PimplPtr = QScopedPointer<PimplBase>;
             PimplPtr m_pimpl;
 
             explicit ConstForwardIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
@@ -633,7 +633,7 @@ namespace BlackMisc
                 I m_impl;
             };
 
-            typedef QScopedPointer<PimplBase> PimplPtr;
+            using PimplPtr = QScopedPointer<PimplBase>;
             PimplPtr m_pimpl;
 
             explicit ConstBidirectionalIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
@@ -854,7 +854,7 @@ namespace BlackMisc
                 I m_impl;
             };
 
-            typedef QScopedPointer<PimplBase> PimplPtr;
+            using PimplPtr = QScopedPointer<PimplBase>;
             PimplPtr m_pimpl;
 
             explicit BidirectionalIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()

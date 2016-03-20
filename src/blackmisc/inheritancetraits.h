@@ -54,7 +54,7 @@ namespace BlackMisc
         // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
         struct Empty {};
         struct Fallback { int propertyByIndex; };
-        template <int Fallback:: *> struct int_t { typedef int type; };
+        template <int Fallback:: *> struct int_t { using type = int; };
         template <typename U> struct Derived : public Fallback, public std::conditional_t<std::is_void<U>::value, Empty, U> {};
 
         template <typename U> static void test(typename int_t<&Derived<U>::propertyByIndex>::type);
@@ -62,7 +62,7 @@ namespace BlackMisc
 
     public:
         //! Type of T::base_type, or void if not declared.
-        typedef decltype(test<typename BaseOf<T>::type>(0)) type;
+        using type = decltype(test<typename BaseOf<T>::type>(0));
     };
 
     /*!

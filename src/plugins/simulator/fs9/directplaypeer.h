@@ -87,7 +87,7 @@ namespace BlackSimPlugin
 
             QMutex m_mutexHostList; //!< Host list mutex
 
-            typedef CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *> TCallbackWrapper; //!< DirectPlay peer message handler wrapper
+            using TCallbackWrapper = CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *>; //!< DirectPlay peer message handler wrapper
             TCallbackWrapper m_callbackWrapper; //!< Callback wrapper
         };
     }

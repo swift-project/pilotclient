@@ -89,10 +89,10 @@ namespace XBus
         DataRef() : DataRefImpl(DataRefTraits::name()) {}
 
         //! Traits type
-        typedef DataRefTraits TraitsType;
+        using TraitsType = DataRefTraits;
 
         //! Dataref type
-        typedef typename DataRefTraits::type DataRefType;
+        using DataRefType = typename DataRefTraits::type;
 
         //! Set the value of the dataref (if it is writable)
         void set(DataRefType d) { DataRefImpl::implSet(d); }
@@ -114,10 +114,10 @@ namespace XBus
         ArrayDataRef() : ArrayDataRefImpl(DataRefTraits::name(), DataRefTraits::size) {}
 
         //! Traits type
-        typedef DataRefTraits TraitsType;
+        using TraitsType = DataRefTraits;
 
         //! Dataref type
-        typedef typename DataRefTraits::type DataRefType;
+        using DataRefType = typename DataRefTraits::type;
 
         //! Set the value of the whole array (if it is writable)
         void setAll(std::vector<DataRefType> const& a) { ArrayDataRefImpl::implSetAll(a); }

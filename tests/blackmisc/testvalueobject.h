@@ -96,16 +96,16 @@ Q_DECLARE_METATYPE(BlackMisc::CNotHashable)
 // https://bugreports.qt-project.org/browse/QTBUG-11485
 
 //! Test value object dictionary using ordered container
-typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject> CValueObjectDictionary;
+using CValueObjectDictionary = BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject>;
 
 //! Test value object dictionary using unordered container
-typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject, QHash> CValueObjectHashDictionary;
+using CValueObjectHashDictionary = BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject, QHash>;
 
 //! Test value object dictionary using ordered container with not hashable key
-typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString> CNotHashableDictionary;
+using CNotHashableDictionary = BlackMisc::CDictionary<BlackMisc::CNotHashable, QString>;
 
 //! Test value object dictionary using unordered container with not hashable key
-typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString, QMap> CNotHashableMapDictionary;
+using CNotHashableMapDictionary = BlackMisc::CDictionary<BlackMisc::CNotHashable, QString, QMap>;
 Q_DECLARE_METATYPE(CValueObjectDictionary)
 Q_DECLARE_METATYPE(CNotHashableDictionary)
 

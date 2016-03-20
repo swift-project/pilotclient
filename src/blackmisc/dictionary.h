@@ -93,7 +93,7 @@ namespace BlackMisc
 
     public:
         //! The implementation container
-        typedef Impl<Key,Value> impl_type;
+        using impl_type = Impl<Key,Value>;
 
         //! STL compatibility
         //! @{

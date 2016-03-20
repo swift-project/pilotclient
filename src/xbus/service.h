@@ -31,7 +31,7 @@ class QTimer;
 //! \endcond
 
 //! Typedef needed to use QList<double> as a DBus argument
-typedef QList<double> QDoubleList;
+using QDoubleList = QList<double>;
 
 //! Typedef needed to use QList<double> as a DBus argument
 Q_DECLARE_METATYPE(QDoubleList)

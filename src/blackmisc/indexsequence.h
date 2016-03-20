@@ -27,17 +27,17 @@ namespace BlackMisc
         struct index_sequence
         {
             static const size_t size = sizeof...(Is);
-            typedef std::tuple<std::integral_constant<size_t, Is>...> tuple_type;
+            using tuple_type = std::tuple<std::integral_constant<size_t, Is>...>;
         };
         template <size_t I, size_t C, size_t... Is>
         struct GenSequence
         {
-            typedef typename GenSequence<I + 1, C, Is..., I>::type type;
+            using type = typename GenSequence<I + 1, C, Is..., I>::type;
         };
         template <size_t C, size_t... Is>
         struct GenSequence<C, C, Is...>
         {
-            typedef index_sequence<Is...> type;
+            using type = index_sequence<Is...>;
         };
         template <size_t C>
         using make_index_sequence = typename GenSequence<0, C>::type;

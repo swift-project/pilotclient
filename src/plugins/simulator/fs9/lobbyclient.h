@@ -61,7 +61,7 @@ namespace BlackSimPlugin
 
             DPNHANDLE m_applicationHandle = 0;
 
-            typedef CallbackWrapper<CLobbyClient, HRESULT, DWORD, void *> TCallbackWrapper; //!< DirectPlay message handler wrapper
+            using TCallbackWrapper = CallbackWrapper<CLobbyClient, HRESULT, DWORD, void *>; //!< DirectPlay message handler wrapper
             TCallbackWrapper m_callbackWrapper; //!< Callback wrapper
             TCallbackWrapper m_lobbyCallbackWrapper; //!< Callback wrapper
 

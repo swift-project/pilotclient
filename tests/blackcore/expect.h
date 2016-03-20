@@ -172,7 +172,7 @@ namespace BlackCoreTest
 
         // Helper traits class. Given T is a pointer-to-member-of-U, ClassOf<T>::type is U.
         template <class T> struct ClassOf;
-        template <class U, class R> struct ClassOf<R U::*> { typedef U type; };
+        template <class U, class R> struct ClassOf<R U::*> { using type = U; };
 
         // Given T is a pointer-to-member-of-U, subject<T>() returns Expect's subject casted to U*.
         template <class T> typename ClassOf<T>::type *subject() const { return qobject_cast<typename ClassOf<T>::type *>(m_subject.data()); }

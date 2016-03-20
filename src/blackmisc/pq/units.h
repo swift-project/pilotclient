@@ -55,7 +55,7 @@ namespace BlackMisc
             struct FeetToMeters             { static double factor() { return    0.3048; } };
             struct MilesToMeters            { static double factor() { return 1609.344;  } };
             struct StatuteMilesToMeters     { static double factor() { return 1609.3472; } };
-            typedef One MetersToMeters;
+            using MetersToMeters = One;
 
         public:
             //! Base type
@@ -170,7 +170,7 @@ namespace BlackMisc
             {}
 
             struct RadiansToDegrees { static double factor() { return 180.0 / M_PI; } };
-            typedef One DegreesToDegrees;
+            using DegreesToDegrees = One;
 
         public:
             //! Base type
@@ -268,7 +268,7 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, nullptr)
             {}
 
-            typedef One HertzToHertz;
+            using HertzToHertz = One;
 
         public:
             //! Base type
@@ -358,7 +358,7 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, nullptr)
             {}
 
-            typedef Milli<One> GramsToKilograms;
+            using GramsToKilograms = Milli<One>;
             struct PoundsToKilograms { static double factor() { return 0.45359237; } };
 
         public:
@@ -457,7 +457,7 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, nullptr)
             {}
 
-            typedef Centi<One> PascalsToHectopascals;
+            using PascalsToHectopascals = Centi<One>;
             struct PsiToHectopascals            { static double factor() { return  68.948;      } };
             struct InchesToHectopascals         { static double factor() { return  33.86389;    } };
             struct MillimetersToHectopascals    { static double factor() { return 860.142806;   } };
@@ -773,7 +773,7 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, nullptr)
             {}
 
-            typedef One SecondsToSeconds;
+            using SecondsToSeconds = One;
             struct DaysToSeconds    { static double factor() { return 60.0 * 60.0 * 24.0;   } };
             struct HoursToSeconds   { static double factor() { return 60.0 * 60.0;          } };
             struct MinutesToSeconds { static double factor() { return 60.0;                 } };

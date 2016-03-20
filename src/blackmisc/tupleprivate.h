@@ -53,7 +53,7 @@ namespace BlackMisc
         template <class T>
         struct HasEnabledTupleConversion
         {
-            typedef decltype(hasEnabledTupleConversionHelper(static_cast<T *>(nullptr))) type;
+            using type = decltype(hasEnabledTupleConversionHelper(static_cast<T *>(nullptr)));
             static const bool value = type::value;
         };
 
@@ -80,23 +80,23 @@ namespace BlackMisc
         struct GenSequenceOnPredicate<P, I, C, true, I2, Is...>
         {
             static const bool test = P::template test<I>::value;
-            typedef typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is..., I2>::type type;
+            using type = typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is..., I2>::type;
         };
         template <class P, size_t I, size_t C, size_t I2, size_t... Is>
         struct GenSequenceOnPredicate<P, I, C, false, I2, Is...>
         {
             static const bool test = P::template test<I>::value;
-            typedef typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is...>::type type;
+            using type = typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is...>::type;
         };
         template <class P, size_t C, size_t I2, size_t... Is>
         struct GenSequenceOnPredicate<P, C, C, true, I2, Is...>
         {
-            typedef index_sequence<Is..., I2> type;
+            using type = index_sequence<Is..., I2>;
         };
         template <class P, size_t C, size_t I2, size_t... Is>
         struct GenSequenceOnPredicate<P, C, C, false, I2, Is...>
         {
-            typedef index_sequence<Is...> type;
+            using type = index_sequence<Is...>;
         };
         template <class P>
         using make_index_sequence_if = typename GenSequenceOnPredicate<P, 0, std::tuple_size<typename P::tuple_type>::value>::type;
@@ -105,14 +105,14 @@ namespace BlackMisc
         template <qint64 F, class Tu>
         struct FlagPresent
         {
-            typedef Tu tuple_type;
+            using tuple_type = Tu;
             template <size_t I>
             struct test : std::integral_constant<bool, bool(std::tuple_element_t<I, Tu>::flags & F)> {};
         };
         template <qint64 F, class Tu>
         struct FlagMissing
         {
-            typedef Tu tuple_type;
+            using tuple_type = Tu;
             template <size_t I>
             struct test : std::integral_constant<bool, ! bool(std::tuple_element_t<I, Tu>::flags & F)> {};
         };
@@ -171,7 +171,7 @@ namespace BlackMisc
         template <class T, qint64 Flags = 0>
         struct Attribute : public AttributeComparable<Attribute<T, Flags>, bool(Flags & DisabledForComparison), bool(Flags & CaseInsensitiveComparison)>
         {
-            typedef T type;
+            using type = T;
             static const qint64 flags = Flags;
 
             Attribute(T &obj, QString jsonName = {}) : m_obj(obj), m_jsonName(jsonName) {}

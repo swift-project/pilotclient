@@ -43,7 +43,7 @@ namespace BlackMisc
  * \ingroup Tuples
  */
 #define BLACK_ENABLE_TUPLE_CONVERSION(T)                    \
-    public: typedef std::true_type EnabledTupleConversion;  \
+    public: using EnabledTupleConversion = std::true_type;  \
     private: friend class BlackMisc::TupleConverter<T>;
 
 /*!

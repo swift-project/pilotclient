@@ -704,7 +704,7 @@ namespace BlackMisc
             C m_impl;
         };
 
-        typedef QScopedPointer<PimplBase> PimplPtr;
+        using PimplPtr = QScopedPointer<PimplBase>;
         PimplPtr m_pimpl;
 
         explicit CSequence(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()

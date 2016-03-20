@@ -228,7 +228,7 @@ namespace BlackMisc
             MU m_unit;      //!< unit part
 
             //! Which subclass of CMeasurementUnit is used?
-            typedef MU UnitClass;
+            using UnitClass = MU;
 
             //! Implementation of compare
             static int compareImpl(const PQ &, const PQ &);

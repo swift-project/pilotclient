@@ -42,7 +42,7 @@ namespace BlackCore
 
     public:
         //! List of callsigns and their last activity
-        typedef QHash<BlackMisc::Aviation::CCallsign, qint64> CCallsignTimestampSet;
+        using CCallsignTimestampSet = QHash<BlackMisc::Aviation::CCallsign, qint64>;
 
         //! Constructor
         CAirspaceAnalyzer(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,

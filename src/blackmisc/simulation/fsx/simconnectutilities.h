@@ -25,7 +25,7 @@
 #endif
 #include <Windows.h>
 #else
-typedef unsigned long   DWORD; //!< Fake Windows DWORD
+using DWORD = unsigned long; //!< Fake Windows DWORD
 #endif
 
 namespace BlackMisc

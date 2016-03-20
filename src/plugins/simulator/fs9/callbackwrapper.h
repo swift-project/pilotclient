@@ -24,7 +24,7 @@ namespace BlackSimPlugin
         struct CallbackWrapper
         {
             //! Typedef to a MemberFunction
-            typedef ReturnType (Object::*MemberFunction)(Argument1, Argument2);
+            using MemberFunction = ReturnType (Object::*)(Argument1, Argument2);
 
             //! Constructor
             CallbackWrapper(Object *obj, MemberFunction memberFunction) :

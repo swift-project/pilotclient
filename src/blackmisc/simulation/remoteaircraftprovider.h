@@ -36,10 +36,10 @@ namespace BlackMisc
             static const int MaxPartsPerCallsign = 3;      //!< How many parts per callsign
 
             //! Situations per callsign
-            typedef QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList> CSituationsPerCallsign;
+            using CSituationsPerCallsign = QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList>;
 
             //! Parts per callsign
-            typedef QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftPartsList> CPartsPerCallsign;
+            using CPartsPerCallsign = QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftPartsList>;
 
             //! All remote aircraft
             //! \threadsafe

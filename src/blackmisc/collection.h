@@ -34,7 +34,7 @@ namespace BlackMisc
     {
     public:
         //! Type of values stored in the set.
-        typedef T value_type;
+        using value_type = T;
 
         //! Insert a new value into the set.
         typename QMap<T, T>::iterator insert(const T &value) { return QMap<T, T>::insert(value, value); }
@@ -447,7 +447,7 @@ namespace BlackMisc
             template <class I> static I insertHelper(std::pair<I, bool> p) { return p.first; }
         };
 
-        typedef QScopedPointer<PimplBase> PimplPtr;
+        using PimplPtr = QScopedPointer<PimplBase>;
         PimplPtr m_pimpl;
 
         CCollection(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()

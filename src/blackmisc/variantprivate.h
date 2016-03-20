@@ -122,7 +122,7 @@ namespace BlackMisc
             //! \cond PRIVATE
             // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
             struct Fallback { int toJson, convertFromJson, setPropertyByIndex, propertyByIndex, propertyByIndexAsString, equalsPropertyByIndex, toIcon; };
-            template <int Fallback::*> struct int_t { typedef int type; };
+            template <int Fallback::*> struct int_t { using type = int; };
             template <typename U> struct Derived : public U, public Fallback {};
 #           define DISABLE_IF_HAS(MEMBER) typename int_t<&Derived<U>::MEMBER>::type
             //! \endcond
