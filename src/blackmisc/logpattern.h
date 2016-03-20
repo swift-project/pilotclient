@@ -27,6 +27,7 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CLogPattern :
         public Mixin::MetaType<CLogPattern>,
+        public Mixin::HashByTuple<CLogPattern>,
         public Mixin::EqualsByTuple<CLogPattern>,
         public Mixin::DBusOperators<CLogPattern>,
         public Mixin::Index<CLogPattern>,
@@ -91,15 +92,6 @@ namespace BlackMisc
 
         //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus()
         void unmarshallFromDbus(const QDBusArgument &argument);
-
-        //! \copydoc CValueObject::qHash
-        //! \todo Use Mixin::HashByTuple when Qt 5.5 is baseline (qHash(QSet<T>) was added in Qt 5.5).
-        friend uint qHash(const CLogPattern &p, uint seed = 0)
-        {
-            seed = std::accumulate(p.m_severities.begin(), p.m_severities.end(), seed, [](uint i, CStatusMessage::StatusSeverity s) { return i + (1 << static_cast<int>(s)); });
-            seed ^= std::accumulate(p.m_strings.begin(), p.m_strings.end(), 0, [](uint i, const QString &s) { return i + qHash(s); });
-            return qHash(static_cast<int>(p.m_strategy), seed);
-        }
 
     private:
         bool checkInvariants() const;
