@@ -202,28 +202,21 @@ namespace BlackCore
 
     std::function<const char **()> CNetworkVatlib::toFSD(QStringList qstrList) const
     {
-        struct Closure
+        QVector<QByteArray> bytesVec;
+        for (auto i = qstrList.cbegin(); i != qstrList.cend(); ++i)
         {
-            QVector<QByteArray> m_bytesVec;
-            QVector<const char *> m_cstrVec;
-            Closure(QStringList qsl, const CNetworkVatlib *creator)
+            bytesVec.push_back(toFSD(*i));
+        }
+
+        return [ cstrVec = QVector<const char *>(), bytesVec = std::move(bytesVec) ]() mutable
+        {
+            Q_ASSERT(cstrVec.isEmpty());
+            for (auto i = bytesVec.cbegin(); i != bytesVec.cend(); ++i)
             {
-                for (auto i = qsl.begin(); i != qsl.end(); ++i)
-                {
-                    m_bytesVec.push_back(creator->toFSD(*i));
-                }
+                cstrVec.push_back(i->constData());
             }
-            const char **operator()()
-            {
-                Q_ASSERT(m_cstrVec.isEmpty());
-                for (auto i = m_bytesVec.begin(); i != m_bytesVec.end(); ++i)
-                {
-                    m_cstrVec.push_back(i->constData());
-                }
-                return const_cast<const char **>(m_cstrVec.constData());
-            }
+            return const_cast<const char **>(cstrVec.constData());
         };
-        return Closure(qstrList, this);
     }
 
     QString CNetworkVatlib::fromFSD(const char *cstr) const
