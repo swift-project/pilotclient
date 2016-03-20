@@ -30,8 +30,6 @@ namespace BlackMisc
     /*!
      * Callable wrapper for a member function with function signature R(Args...).
      * Allows for easy manipulation of slots to be used as callbacks.
-     *
-     * \todo Use perfect forwarding with C++14 generic lambda.
      */
     template <typename R, typename... Args>
     class CSlot<R(Args...)>
