@@ -91,7 +91,7 @@ namespace BlackMisc
         LockFreeReader &operator =(const LockFreeReader &) = default;
 
     private:
-        friend class LockFree<typename std::remove_const<T>::type>;
+        friend class LockFree<std::remove_const_t<T>>;
     
         LockFreeReader(std::shared_ptr<const T> ptr) : m_ptr(ptr) {}
         std::shared_ptr<const T> m_ptr;

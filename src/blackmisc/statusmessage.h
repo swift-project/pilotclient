@@ -119,7 +119,7 @@ namespace BlackMisc
         Derived &operator <<(QChar v) { return arg(v); }
         Derived &operator <<(char v) { return arg(QChar(v)); }
         Derived &operator <<(double v) { return arg(QString::number(v)); }
-        template <class T, class = typename std::enable_if<HasToQString<T>::value>::type>
+        template <class T, class = std::enable_if_t<HasToQString<T>::value>>
         Derived &operator <<(const T &v) { return arg(v.toQString()); }
         //! @}
 

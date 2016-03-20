@@ -66,14 +66,14 @@ namespace BlackMisc
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
 
-            template <typename T, typename std::enable_if<std::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, std::enable_if_t<std::is_default_constructible<T>::value, int> = 0>
             CVariant myself() const { return CVariant::from(*derived()); }
-            template <typename T, typename std::enable_if<std::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, std::enable_if_t<std::is_default_constructible<T>::value, int> = 0>
             void myself(const CVariant &variant) { *derived() = variant.to<T>(); }
 
-            template <typename T, typename std::enable_if<! std::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, std::enable_if_t<! std::is_default_constructible<T>::value, int> = 0>
             CVariant myself() const { qFatal("isMyself should have been handled before reaching here"); return {}; }
-            template <typename T, typename std::enable_if<! std::is_default_constructible<T>::value, int>::type = 0>
+            template <typename T, std::enable_if_t<! std::is_default_constructible<T>::value, int> = 0>
             void myself(const CVariant &) { qFatal("isMyself should have been handled before reaching here"); }
 
             template <typename T>

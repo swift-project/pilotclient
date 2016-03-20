@@ -47,7 +47,7 @@ namespace BlackMisc
         //! \private
         template <typename T, typename... Ts> struct DecayFirst<T, Ts...>
         {
-            typedef typename std::decay<T>::type type;
+            using type = std::decay_t<T>;
         };
     }
 

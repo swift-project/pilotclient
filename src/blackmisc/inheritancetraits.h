@@ -26,12 +26,12 @@ namespace BlackMisc
     class BaseOf
     {
         //template <typename U> static typename U::base_type *test(int);
-        template <typename U> static typename U::base_type *test(typename std::enable_if<! std::is_same<typename U::base_type, CEmpty>::value, int>::type);
+        template <typename U> static typename U::base_type *test(std::enable_if_t<! std::is_same<typename U::base_type, CEmpty>::value, int>);
         template <typename U> static void *test(...);
 
     public:
         //! The declared base_type of T, or void if there is none.
-        typedef typename std::remove_pointer<decltype(test<T>(0))>::type type;
+        using type = std::remove_pointer_t<decltype(test<T>(0))>;
     };
 
     /*!
@@ -42,7 +42,7 @@ namespace BlackMisc
     {
     public:
         //! Type of T::base_type, or void if not declared.
-        typedef typename std::conditional<QMetaTypeId<typename BaseOf<T>::type>::Defined, typename BaseOf<T>::type, void>::type type;
+        using type = std::conditional_t<QMetaTypeId<typename BaseOf<T>::type>::Defined, typename BaseOf<T>::type, void>;
     };
 
     /*!
@@ -55,7 +55,7 @@ namespace BlackMisc
         struct Empty {};
         struct Fallback { int propertyByIndex; };
         template <int Fallback:: *> struct int_t { typedef int type; };
-        template <typename U> struct Derived : public Fallback, public std::conditional<std::is_void<U>::value, Empty, U>::type {};
+        template <typename U> struct Derived : public Fallback, public std::conditional_t<std::is_void<U>::value, Empty, U> {};
 
         template <typename U> static void test(typename int_t<&Derived<U>::propertyByIndex>::type);
         template <typename U> static U test(...);

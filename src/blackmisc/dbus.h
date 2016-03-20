@@ -100,7 +100,7 @@ namespace BlackMisc
 /*!
  * Operator for streaming enums to QDBusArgument.
  */
-template <class E, typename std::enable_if<std::is_enum<E>::value, int>::type = 0>
+template <class E, std::enable_if_t<std::is_enum<E>::value, int> = 0>
 QDBusArgument &operator <<(QDBusArgument &arg, const E &value)
 {
     arg.beginStructure();
@@ -112,7 +112,7 @@ QDBusArgument &operator <<(QDBusArgument &arg, const E &value)
 /*!
  * Operator for streaming enums from QDBusArgument.
  */
-template <class E, typename std::enable_if<std::is_enum<E>::value, int>::type = 0>
+template <class E, std::enable_if_t<std::is_enum<E>::value, int> = 0>
 const QDBusArgument &operator >>(const QDBusArgument &arg, E &value)
 {
     int temp;

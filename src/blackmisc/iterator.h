@@ -32,7 +32,7 @@ namespace BlackMisc
          * By creating a CRange from such iterators, it is possible to create a container of keys without copying them.
          */
         template <class I> class KeyIterator
-            : public std::iterator<std::bidirectional_iterator_tag, typename std::decay<decltype(std::declval<I>().key())>::type>
+            : public std::iterator<std::bidirectional_iterator_tag, std::decay_t<decltype(std::declval<I>().key())>>
         {
         public:
             //! Constructor
@@ -81,7 +81,7 @@ namespace BlackMisc
          */
         template <class I, class F> class TransformIterator
             : public std::iterator<std::input_iterator_tag,
-                                   typename std::decay<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>::type>
+                                   std::decay_t<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>>
         {
         public:
             //! The type returned by the transformation function, which may or may not be a reference.
@@ -90,17 +90,17 @@ namespace BlackMisc
             //! \private A pointer-like wrapper returned by the arrow operator if the transformation function returns by value.
             struct PointerWrapper
             {
-                PointerWrapper(typename std::decay<undecayed_type>::type *obj) : m_obj(std::move(*obj)) {}
-                typename std::decay<undecayed_type>::type const *operator ->() const { return &m_obj; }
-                typename std::decay<undecayed_type>::type operator *() const & { return m_obj; }
-                typename std::decay<undecayed_type>::type operator *() && { return std::move(m_obj); }
+                PointerWrapper(std::decay_t<undecayed_type> *obj) : m_obj(std::move(*obj)) {}
+                std::decay_t<undecayed_type> const *operator ->() const { return &m_obj; }
+                std::decay_t<undecayed_type> operator *() const & { return m_obj; }
+                std::decay_t<undecayed_type> operator *() && { return std::move(m_obj); }
             private:
-                const typename std::decay<undecayed_type>::type m_obj;
+                const std::decay_t<undecayed_type> m_obj;
             };
 
             //! The type returned by this iterator's arrow operator, which may be a pointer or a pointer-like wrapper object
             using pointer = typename std::conditional<std::is_reference<undecayed_type>::value,
-                                                      typename std::remove_reference<undecayed_type>::type *,
+                                                      std::remove_reference_t<undecayed_type> *,
                                                       PointerWrapper>::type;
 
             //! Constructor.

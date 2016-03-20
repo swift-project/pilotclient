@@ -187,14 +187,14 @@ namespace BlackMisc
 
         //! Uniform way to invoke either a functor or a method.
         template <typename T, typename F, typename... Ts>
-        static auto invoke(T *object, F func, Ts &&... args) -> typename std::enable_if<std::is_member_function_pointer<F>::value>::type
+        static auto invoke(T *object, F func, Ts &&... args) -> std::enable_if_t<std::is_member_function_pointer<F>::value>
         {
             return (object->*func)(std::forward<Ts>(args)...);
         }
 
         //! Uniform way to invoke either a functor or a method.
         template <typename T, typename F, typename... Ts>
-        static auto invoke(T *, F func, Ts &&... args) -> typename std::enable_if<! std::is_member_function_pointer<F>::value>::type
+        static auto invoke(T *, F func, Ts &&... args) -> std::enable_if_t<! std::is_member_function_pointer<F>::value>
         {
             return func(std::forward<Ts>(args)...);
         }

@@ -63,8 +63,8 @@ BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QBy
 //! \brief Specialized JSON serialization for enum
 //! \remarks needs to be in global namespace
 //! \ingroup JSON
-template<class ENUM> typename
-std::enable_if<std::is_enum<ENUM>::value, QJsonObject>::type
+template<class ENUM>
+std::enable_if_t<std::is_enum<ENUM>::value, QJsonObject>
 &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
@@ -73,8 +73,8 @@ std::enable_if<std::is_enum<ENUM>::value, QJsonObject>::type
 
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
-template<class ENUM> typename
-std::enable_if<std::is_enum<ENUM>::value, QJsonValue>::type
+template<class ENUM>
+std::enable_if_t<std::is_enum<ENUM>::value, QJsonValue>
 const &operator>>(const QJsonValue &json, ENUM &value)
 {
     value = static_cast<ENUM>(json.toInt());
@@ -83,8 +83,8 @@ const &operator>>(const QJsonValue &json, ENUM &value)
 
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
-template<class ENUM> typename
-std::enable_if<std::is_enum<ENUM>::value, QJsonValueRef>::type
+template<class ENUM>
+std::enable_if_t<std::is_enum<ENUM>::value, QJsonValueRef>
 const &operator>>(const QJsonValueRef &json, ENUM &value)
 {
     value = static_cast<ENUM>(json.toInt());

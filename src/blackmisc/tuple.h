@@ -217,7 +217,7 @@ namespace BlackMisc
             void extendMetaTuple(Tu &&tu) const
             {
                 Private::extendMeta(std::forward<Tu>(tu), m_names,
-                    Private::make_index_sequence<std::tuple_size<typename std::decay<Tu>::type>::value>());
+                    Private::make_index_sequence<std::tuple_size<std::decay_t<Tu>>::value>());
             }
         };
     };

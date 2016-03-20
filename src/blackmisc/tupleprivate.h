@@ -42,7 +42,7 @@ namespace BlackMisc
             template <class T>
             static auto toMetaTuple(T &o)
             {
-                return TupleConverter<typename std::decay<T>::type>::toMetaTuple(o);
+                return TupleConverter<std::decay_t<T>>::toMetaTuple(o);
             }
         };
 
@@ -107,24 +107,24 @@ namespace BlackMisc
         {
             typedef Tu tuple_type;
             template <size_t I>
-            struct test : std::integral_constant<bool, bool(std::tuple_element<I, Tu>::type::flags & F)> {};
+            struct test : std::integral_constant<bool, bool(std::tuple_element_t<I, Tu>::flags & F)> {};
         };
         template <qint64 F, class Tu>
         struct FlagMissing
         {
             typedef Tu tuple_type;
             template <size_t I>
-            struct test : std::integral_constant<bool, ! bool(std::tuple_element<I, Tu>::type::flags & F)> {};
+            struct test : std::integral_constant<bool, ! bool(std::tuple_element_t<I, Tu>::flags & F)> {};
         };
 
         // Combine make_index_sequence_if with predicates to get the indices of tuple elements with certain flags.
         template <qint64 F, class Tu>
-        auto findFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagPresent<F, typename std::decay<Tu>::type>>
+        auto findFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagPresent<F, std::decay_t<Tu>>>
         {
             return {};
         }
         template <qint64 F, class Tu>
-        auto skipFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagMissing<F, typename std::decay<Tu>::type>>
+        auto skipFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagMissing<F, std::decay_t<Tu>>>
         {
             return {};
         }
@@ -318,9 +318,9 @@ namespace BlackMisc
                 marshallHelper(arg, head, 0);
                 marshallImpl(arg, tail...);
             }
-            template <class T, typename std::enable_if<std::is_base_of<CEmpty, T>::value, int>::type = 0>
+            template <class T, std::enable_if_t<std::is_base_of<CEmpty, T>::value, int> = 0>
             static void marshallHelper(QDBusArgument &arg, const T &val, int) { static_cast<const typename T::CValueObject &>(val).marshallToDbus(arg); }
-            template <class T, typename std::enable_if<std::is_enum<T>::value, int>::type = 0>
+            template <class T, std::enable_if_t<std::is_enum<T>::value, int> = 0>
             static void marshallHelper(QDBusArgument &arg, const T &val, int) { arg << static_cast<int>(val); }
             template <class T>
             static void marshallHelper(QDBusArgument &arg, const T &val, ...) { arg << val; }
@@ -332,9 +332,9 @@ namespace BlackMisc
                 unmarshallHelper(arg, head, 0);
                 unmarshallImpl(arg, tail...);
             }
-            template <class T, typename std::enable_if<std::is_base_of<CEmpty, T>::value, int>::type = 0>
+            template <class T, std::enable_if_t<std::is_base_of<CEmpty, T>::value, int> = 0>
             static void unmarshallHelper(const QDBusArgument &arg, T &val, int) { static_cast<typename T::CValueObject &>(val).unmarshallFromDbus(arg); }
-            template <class T, typename std::enable_if<std::is_enum<T>::value, int>::type = 0>
+            template <class T, std::enable_if_t<std::is_enum<T>::value, int> = 0>
             static void unmarshallHelper(const QDBusArgument &arg, T &val, int) { int i; arg >> i; val = static_cast<T>(i); }
             template <class T>
             static void unmarshallHelper(const QDBusArgument &arg, T &val, ...) { arg >> val; }

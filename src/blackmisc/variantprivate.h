@@ -140,7 +140,7 @@ namespace BlackMisc
             template <typename U> static bool equalsPropertyByIndexHelper(const U &object, const CVariant &, const CPropertyIndex &, DISABLE_IF_HAS(equalsPropertyByIndex)) { throw CVariantException(object, "equalsPropertyByIndex"); }
             template <typename U> static bool equalsPropertyByIndexHelper(const U &object, const CVariant &variant, const CPropertyIndex &index, ...) { return object.equalsPropertyByIndex(variant, index); }
             template <typename U> static void toIconHelper(const U &object, CIcon &, DISABLE_IF_HAS(toIcon)) { throw CVariantException(object, "toIcon"); }
-            template <typename U> static void toIconHelper(const U &object, CIcon &, typename std::enable_if<std::is_same<U, CVariant>::value, int>::type) { throw CVariantException(object, "toIcon"); } // CIcon is incomplete when CValueObjectMetaInfo<CVariant> is instantiated
+            template <typename U> static void toIconHelper(const U &object, CIcon &, std::enable_if_t<std::is_same<U, CVariant>::value, int>) { throw CVariantException(object, "toIcon"); } // CIcon is incomplete when CValueObjectMetaInfo<CVariant> is instantiated
             template <typename U> static void toIconHelper(const U &object, CIcon &o_icon, ...) { assign(o_icon, object.toIcon()); }
 
 #           undef DISABLE_IF_HAS

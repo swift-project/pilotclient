@@ -76,7 +76,7 @@ namespace BlackMisc
          * \param pointer The value of pointer is unimportant. Only the static type T is considered.
          *                It is legal to pass static_cast<T>(nullptr), but in member functions passing the <tt>this</tt> pointer is easier.
          */
-        template <typename T, typename = typename std::enable_if<std::is_class<T>::value>::type>
+        template <typename T, typename = std::enable_if_t<std::is_class<T>::value>>
         CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass<T>()) { Q_UNUSED(pointer); }
 
         //! Convert each of the categories to a QString and return the result as a QStringList.
