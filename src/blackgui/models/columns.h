@@ -13,7 +13,6 @@
 #define BLACKGUI_COLUMNS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include "blackmisc/collection.h"
 #include "blackmisc/propertyindex.h"
 #include "columnformatters.h"

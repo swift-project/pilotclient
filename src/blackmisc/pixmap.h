@@ -64,9 +64,8 @@ namespace BlackMisc
     };
 } // namespace
 
-//! \todo remove flags when gcc 4.7 streaming issue is resolved
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CPixmap, (
-                                   attr(o.m_array, flags<DisabledForJson>())
+                                   attr(o.m_array)
                                ))
 Q_DECLARE_METATYPE(BlackMisc::CPixmap)
 

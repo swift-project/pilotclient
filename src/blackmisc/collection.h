@@ -429,9 +429,9 @@ namespace BlackMisc
             void clear() override { m_impl.clear(); }
             iterator insert(const T &value) override { return iterator::fromImpl(insertHelper(m_impl.insert(value))); }
             iterator insert(T &&value) override { return iterator::fromImpl(insertHelper(m_impl.insert(std::move(value)))); }
-            iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
-            //iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
-            iterator erase(iterator it1, iterator it2) override { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()))); } return it1; }
+            iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(pos.template getImpl<const typename C::iterator>())); }
+            //iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(it1.template getImpl<const typename C::iterator>(), it2.template getImpl<const typename C::iterator>())); }
+            iterator erase(iterator it1, iterator it2) override { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(it1.template getImpl<const typename C::iterator>())); } return it1; }
             iterator find(const T &value) override { return iterator::fromImpl(m_impl.find(value)); }
             const_iterator find(const T &value) const override { return const_iterator::fromImpl(m_impl.find(value)); }
             bool operator ==(const PimplBase &other) const override { return implType() == other.implType() ? m_impl == *static_cast<const C *>(other.impl()) : size() == other.size() && std::equal(begin(), end(), other.begin()); }

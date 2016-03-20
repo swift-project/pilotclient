@@ -225,13 +225,12 @@ namespace BlackMisc
          * \param owner Will be the parent of the new thread (the worker has no parent).
          * \param name A name for the task, which will be used to create a name for the thread.
          * \param task A function object which will be run by the worker in its thread.
-         * \todo An MSVC bug prevents perfect-forwarding of task.
          */
         template <typename F>
-        static CWorker *fromTask(QObject *owner, const QString &name, F task)
+        static CWorker *fromTask(QObject *owner, const QString &name, F &&task)
         {
-            int typeId = qMetaTypeId<typename std::decay<decltype(task())>::type>();
-            return fromTaskImpl(owner, name, typeId, [task]() { return CVariant::fromResultOf(task); });
+            int typeId = qMetaTypeId<std::decay_t<decltype(std::forward<F>(task)())>>();
+            return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() { return CVariant::fromResultOf(std::move(task)); });
         }
 
         //! Connects to a functor to which will be passed the result when the task is finished.

@@ -109,13 +109,10 @@ using CNotHashableMapDictionary = BlackMisc::CDictionary<BlackMisc::CNotHashable
 Q_DECLARE_METATYPE(CValueObjectDictionary)
 Q_DECLARE_METATYPE(CNotHashableDictionary)
 
-// MSVC has trouble with these checks
-#if !defined(Q_CC_MSVC)
 static_assert(std::is_same<CValueObjectDictionary::impl_type, CValueObjectHashDictionary::impl_type>::value,
               "Expected CValueObjectDictionary to use QHash");
 static_assert(std::is_same<CNotHashableDictionary::impl_type, CNotHashableMapDictionary::impl_type>::value,
               "Expected CDictionary<CNotHashableDictionary, Value> to use QMap");
-#endif // ! Q_CC_MSVC
 
 //! \endcond
 

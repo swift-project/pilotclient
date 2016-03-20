@@ -693,12 +693,12 @@ namespace BlackMisc
             size_type size() const override { return m_impl.size(); }
             bool empty() const override { return m_impl.empty(); }
             void clear() override { m_impl.clear(); }
-            iterator insert(iterator pos, const T &value) override { return iterator::fromImpl(m_impl.insert(*static_cast<const typename C::iterator *>(pos.getImpl()), value)); }
+            iterator insert(iterator pos, const T &value) override { return iterator::fromImpl(m_impl.insert(pos.template getImpl<const typename C::iterator>(), value)); }
             void push_back(const T &value) override { m_impl.push_back(value); }
             void push_back(T &&value) override { m_impl.push_back(std::move(value)); }
             void pop_back() override { m_impl.pop_back(); }
-            iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
-            iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator *>(it2.getImpl()))); }
+            iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(pos.template getImpl<const typename C::iterator>())); }
+            iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(it1.template getImpl<const typename C::iterator>(), it2.template getImpl<const typename C::iterator>())); }
             void *impl() override { return &m_impl; }
         private:
             C m_impl;

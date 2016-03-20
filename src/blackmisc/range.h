@@ -25,17 +25,6 @@
 
 namespace BlackMisc
 {
-    namespace Private
-    {
-        // Trait to exclude std::initializer_list from the overload set of CRange conversion operators using SFINAE.
-        // Needed to workaround a bug in MSVC whereby it considers the copy constructor and initializer list constructor
-        // of a container to be ambiguous when converting from a CRange.
-        //! \private
-        template <class T> struct is_initializer_list : public std::false_type {};
-        //! \private
-        template <class T> struct is_initializer_list<std::initializer_list<T>> : public std::true_type {};
-    }
-
     template <class> class CRange;
 
     /*!
@@ -201,8 +190,7 @@ namespace BlackMisc
         //! @}
 
         //! Implicit conversion to any container of value_type which supports push_back. This will copy elements.
-        template <class T, class = typename std::enable_if<! Private::is_initializer_list<T>::value &&
-                                                           std::is_convertible<value_type, typename T::value_type>::value>::type>
+        template <class T, class = std::enable_if_t<std::is_convertible<value_type, typename T::value_type>::value>>
         operator T() const
         {
             T container;

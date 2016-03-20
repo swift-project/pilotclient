@@ -28,11 +28,7 @@ namespace XBus
     struct CMessage
     {
         //! Constructor.
-        CMessage(const std::string &text, float r, float g, float b) : m_text(text)
-        {
-            // MSVC initializer list bug
-            std::tie(m_rgb[0], m_rgb[1], m_rgb[2]) = std::tie(r, g, b);
-        }
+        CMessage(const std::string &text, float r, float g, float b) : m_text(text), m_rgb{{ r, g, b }} {}
 
         //! Text.
         std::string m_text;

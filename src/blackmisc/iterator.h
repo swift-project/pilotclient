@@ -20,6 +20,7 @@
 #include <type_traits>
 #include <iterator>
 #include <utility>
+#include <typeindex>
 
 namespace BlackMisc
 {
@@ -393,9 +394,8 @@ namespace BlackMisc
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
              * \pre The iterator must have been initialized.
-             * \todo Returning by void* is rotten, but GCC gives a very cryptic error if I make it a function template with a cast inside.
              */
-            void *getImpl() { return pimpl()->impl(); }
+            template <typename U> U &getImpl() { pimpl()->assertType(typeid(std::decay_t<U>)); return *static_cast<U*>(pimpl()->impl()); }
 
         private:
             class PimplBase
@@ -408,6 +408,7 @@ namespace BlackMisc
                 virtual void operator +=(difference_type) = 0;
                 virtual bool operator ==(const PimplBase &) const = 0;
                 virtual void *impl() = 0;
+                virtual void assertType(std::type_index) const = 0;
             };
 
             template <class I> class Pimpl : public PimplBase
@@ -422,6 +423,7 @@ namespace BlackMisc
                 virtual void operator +=(difference_type n) override { std::advance(m_impl, n); }
                 virtual bool operator ==(const PimplBase &other) const override { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
                 virtual void *impl() override { return &m_impl; }
+                virtual void assertType(std::type_index ti) const override { Q_ASSERT(ti == typeid(I)); Q_UNUSED(ti); }
             private:
                 I m_impl;
             };
@@ -586,9 +588,8 @@ namespace BlackMisc
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
              * \pre The iterator must have been initialized.
-             * \todo Returning by void* is rotten, but GCC gives a very cryptic error if I make it a function template with a cast inside.
              */
-            void *getImpl() { return pimpl()->impl(); }
+            template <typename U> U &getImpl() { pimpl()->assertType(typeid(std::decay_t<U>)); return *static_cast<U*>(pimpl()->impl()); }
 
         private:
             class PimplBase
@@ -608,6 +609,7 @@ namespace BlackMisc
                 virtual bool operator <=(const PimplBase &) const = 0;
                 virtual bool operator >=(const PimplBase &) const = 0;
                 virtual void *impl() = 0;
+                virtual void assertType(std::type_index) const = 0;
             };
 
             template <class I> class Pimpl : public PimplBase
@@ -629,6 +631,7 @@ namespace BlackMisc
                 virtual bool operator <=(const PimplBase &other) const override { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
                 virtual bool operator >=(const PimplBase &other) const override { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
                 virtual void *impl() override { return &m_impl; }
+                virtual void assertType(std::type_index ti) const override { Q_ASSERT(ti == typeid(I)); Q_UNUSED(ti); }
             private:
                 I m_impl;
             };
@@ -805,9 +808,8 @@ namespace BlackMisc
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
              * \pre The iterator must have been initialized.
-             * \todo Returning by void* is rotten, but GCC gives a very cryptic error if I make it a function template with a cast inside.
              */
-            void *getImpl() { return pimpl()->impl(); }
+            template <typename U> U &getImpl() { pimpl()->assertType(typeid(std::decay_t<U>)); return *static_cast<U*>(pimpl()->impl()); }
 
         private:
             class PimplBase
@@ -828,6 +830,7 @@ namespace BlackMisc
                 virtual bool operator <=(const PimplBase &) const = 0;
                 virtual bool operator >=(const PimplBase &) const = 0;
                 virtual void *impl() = 0;
+                virtual void assertType(std::type_index) const = 0;
             };
 
             template <class I> class Pimpl : public PimplBase
@@ -850,6 +853,7 @@ namespace BlackMisc
                 virtual bool operator <=(const PimplBase &other) const override { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
                 virtual bool operator >=(const PimplBase &other) const override { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
                 virtual void *impl() override { return &m_impl; }
+                virtual void assertType(std::type_index ti) const override { Q_ASSERT(ti == typeid(I)); Q_UNUSED(ti); }
             private:
                 I m_impl;
             };
