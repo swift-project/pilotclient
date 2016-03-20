@@ -115,7 +115,7 @@ namespace BlackMisc
                         auto aircraftCfgEntriesList = this->performParsing(rootDirectory, excludedDirectories, &ok);
                         return std::make_pair(aircraftCfgEntriesList, ok);
                     });
-                    m_parserWorker->thenWithResult<std::pair<CAircraftCfgEntriesList, bool>>(this, [this](const std::pair<CAircraftCfgEntriesList, bool> &pair)
+                    m_parserWorker->thenWithResult<std::pair<CAircraftCfgEntriesList, bool>>(this, [this](const auto &pair)
                     {
                         if (pair.second) { this->updateCfgEntriesList(pair.first); }
                     });

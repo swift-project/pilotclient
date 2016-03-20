@@ -95,9 +95,9 @@ namespace BlackMisc
                         auto models = performParsing(rootDirectory, excludedDirectories);
                         return models;
                     });
-                    m_parserWorker->thenWithResult<CAircraftModelList>(this, [this](const CAircraftModelList & models)
+                    m_parserWorker->thenWithResult<CAircraftModelList>(this, [this](const auto & models)
                     {
-                        updateInstalledModels(models);
+                        this->updateInstalledModels(models);
                     });
                 }
                 else if (mode == ModeBlocking)
