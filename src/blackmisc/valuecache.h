@@ -354,10 +354,10 @@ namespace BlackMisc
         BatchGuard &operator =(const BatchGuard &) = delete;
 
         //! Move constructor.
-        BatchGuard(BatchGuard &&other) : m_page(other.m_page) { other.m_page = nullptr; }
+        BatchGuard(BatchGuard &&other) noexcept : m_page(other.m_page) { other.m_page = nullptr; }
 
         //! Move assignment operator.
-        BatchGuard &operator =(BatchGuard &&other) { std::swap(m_page, other.m_page); return *this; }
+        BatchGuard &operator =(BatchGuard &&other) noexcept { std::swap(m_page, other.m_page); return *this; }
 
     private:
         friend class CValueCache;

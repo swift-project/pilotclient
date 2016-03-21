@@ -98,7 +98,7 @@ namespace BlackMisc
         /*!
          * \brief Move constructor.
          */
-        CCollection(CCollection &&other) : m_pimpl(other.m_pimpl.take()) {}
+        CCollection(CCollection &&other) noexcept(std::is_nothrow_move_constructible<T>::value) : m_pimpl(other.m_pimpl.take()) {}
 
         /*!
          * \brief Copy assignment.
@@ -108,7 +108,7 @@ namespace BlackMisc
         /*!
          * \brief Move assignment.
          */
-        CCollection &operator =(CCollection && other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+        CCollection &operator =(CCollection && other) noexcept(std::is_nothrow_move_assignable<T>::value) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
         /*!
          * \brief Create a new collection with a specific implementation type.
@@ -162,7 +162,7 @@ namespace BlackMisc
         /*!
          * \brief Swap this collection with another.
          */
-        void swap(CCollection &other) { m_pimpl.swap(other.m_pimpl); }
+        void swap(CCollection &other) noexcept { m_pimpl.swap(other.m_pimpl); }
 
         /*!
          * \brief Returns number of elements in the collection.

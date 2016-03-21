@@ -40,13 +40,13 @@ namespace BlackMisc
         CVariantMap(const CVariantMap &) = default;
 
         //! Move constructor.
-        CVariantMap(CVariantMap &&other) : CDictionary(std::move(other)) {}
+        CVariantMap(CVariantMap &&other) noexcept : CDictionary(std::move(other)) {}
 
         //! Copy assignment operator.
         CVariantMap &operator =(const CVariantMap &other) { CDictionary::operator =(other); return *this; }
 
         //! Move assignment operator.
-        CVariantMap &operator =(CVariantMap &&other) { CDictionary::operator =(std::move(other)); return *this; }
+        CVariantMap &operator =(CVariantMap &&other) noexcept { CDictionary::operator =(std::move(other)); return *this; }
 
         //! \copydoc BlackMisc::CValueObject::toJson
         QJsonObject toJson() const;

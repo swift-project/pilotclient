@@ -274,7 +274,7 @@ namespace BlackMisc
         CDictionary(const CDictionary &) = default;
 
         //! Move constructor
-        CDictionary(CDictionary &&other) : m_impl(std::move(other.m_impl)) {}
+        CDictionary(CDictionary &&other) noexcept : m_impl(std::move(other.m_impl)) {}
 
         //! Virtual destructor
         virtual ~CDictionary() {}
@@ -367,7 +367,7 @@ namespace BlackMisc
         int	size() const { return m_impl.size(); }
 
         //! Swaps hash other with this hash. This operation is very fast and never fails.
-        void swap(CDictionary &other) { m_impl.swap(other.m_impl); }
+        void swap(CDictionary &other) noexcept { m_impl.swap(other.m_impl); }
 
         //! Returns the value associated with the key.
         const Value	value(const Key &key) const { return m_impl.value(key); }
@@ -382,7 +382,7 @@ namespace BlackMisc
         CDictionary &operator =(const CDictionary &other) { m_impl = other.m_impl; return *this; }
 
         //! Move assignment
-        CDictionary &operator =(CDictionary && other) { m_impl = std::move(other.m_impl); return *this; }
+        CDictionary &operator =(CDictionary && other) noexcept { m_impl = std::move(other.m_impl); return *this; }
 
         //! Return reference to the internal implementation object.
         friend impl_type &implementationOf(CDictionary &dict) { return dict.m_impl; }

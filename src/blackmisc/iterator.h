@@ -321,7 +321,7 @@ namespace BlackMisc
             /*!
              * \brief Move constructor.
              */
-            ConstForwardIterator(ConstForwardIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
+            ConstForwardIterator(ConstForwardIterator &&other) noexcept : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
@@ -331,7 +331,7 @@ namespace BlackMisc
             /*!
              * \brief Move assignment.
              */
-            ConstForwardIterator &operator =(ConstForwardIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+            ConstForwardIterator &operator =(ConstForwardIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
             /*!
              * \brief Create a new iterator with a specific implementation type.
@@ -469,7 +469,7 @@ namespace BlackMisc
             /*!
              * \brief Move constructor.
              */
-            ConstBidirectionalIterator(ConstBidirectionalIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
+            ConstBidirectionalIterator(ConstBidirectionalIterator &&other) noexcept : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
@@ -479,7 +479,7 @@ namespace BlackMisc
             /*!
              * \brief Move assignment.
              */
-            ConstBidirectionalIterator &operator =(ConstBidirectionalIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+            ConstBidirectionalIterator &operator =(ConstBidirectionalIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
             /*!
              * \brief Create a new iterator with a specific implementation type.
@@ -676,7 +676,7 @@ namespace BlackMisc
             /*!
              * \brief Move constructor.
              */
-            BidirectionalIterator(BidirectionalIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
+            BidirectionalIterator(BidirectionalIterator &&other) noexcept : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
@@ -686,7 +686,7 @@ namespace BlackMisc
             /*!
              * \brief Move assignment.
              */
-            BidirectionalIterator &operator =(BidirectionalIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+            BidirectionalIterator &operator =(BidirectionalIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
             /*!
              * \brief Create a new iterator with a specific implementation type.

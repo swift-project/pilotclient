@@ -129,13 +129,13 @@ namespace BlackMisc
         CVariant(const CVariant &) = default;
 
         //! Move constructor.
-        CVariant(CVariant &&other) : m_v(std::move(other.m_v)) {}
+        CVariant(CVariant &&other) noexcept : m_v(std::move(other.m_v)) {}
 
         //! Construct from a QVariant.
         CVariant(const QVariant &var) : m_v(var) {}
 
         //! Move-construct from a QVariant.
-        CVariant(QVariant &&var) : m_v(std::move(var)) {}
+        CVariant(QVariant &&var) noexcept : m_v(std::move(var)) {}
 
         //! Construct a null variant of the given type.
         CVariant(QVariant::Type type) : m_v(type) {}
@@ -165,19 +165,19 @@ namespace BlackMisc
         CVariant &operator =(const CVariant &other) { m_v = other.m_v; return *this; }
 
         //! Move assignment operatior.
-        CVariant &operator =(CVariant && other) { m_v = std::move(other.m_v); return *this; }
+        CVariant &operator =(CVariant && other) noexcept { m_v = std::move(other.m_v); return *this; }
 
         //! Change the internal QVariant
         CVariant &operator =(const QVariant &var) { m_v = var; return *this; }
 
         //! Change the internal QVariant
-        CVariant &operator =(QVariant && var) { m_v = std::move(var); return *this; }
+        CVariant &operator =(QVariant && var) noexcept { m_v = std::move(var); return *this; }
 
         //! Swap this variant with another.
-        void swap(CVariant &other) { m_v.swap(other.m_v); }
+        void swap(CVariant &other) noexcept { m_v.swap(other.m_v); }
 
         //! Swap the internal QVariant with another.
-        void swap(QVariant &other) { m_v.swap(other); }
+        void swap(QVariant &other) noexcept { m_v.swap(other); }
 
         //! Construct a variant from a value.
         template <typename T> static CVariant fromValue(T &&value)

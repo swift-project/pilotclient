@@ -29,8 +29,8 @@ namespace BlackMisc
     public:
         LockGuard(const LockGuard &) = delete;
         LockGuard &operator =(const LockGuard &) = delete;
-        LockGuard(LockGuard &&other) : m_movedFrom(true) { *this = std::move(other); }
-        LockGuard &operator =(LockGuard &&other) { std::swap(m_movedFrom, other.m_movedFrom); std::swap(m_rev, other.m_rev); return *this; }
+        LockGuard(LockGuard &&other) noexcept : m_movedFrom(true) { *this = std::move(other); }
+        LockGuard &operator =(LockGuard &&other) noexcept { std::swap(m_movedFrom, other.m_movedFrom); std::swap(m_rev, other.m_rev); return *this; }
 
         ~LockGuard()
         {

@@ -74,7 +74,7 @@ namespace BlackMisc
         /*!
          * \brief Move constructor.
          */
-        CSequence(CSequence &&other) : m_pimpl(other.m_pimpl.take()) {}
+        CSequence(CSequence &&other) noexcept(std::is_nothrow_move_constructible<T>::value) : m_pimpl(other.m_pimpl.take()) {}
 
         /*!
          * \brief Copy assignment.
@@ -84,7 +84,7 @@ namespace BlackMisc
         /*!
          * \brief Move assignment.
          */
-        CSequence &operator =(CSequence && other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+        CSequence &operator =(CSequence && other) noexcept(std::is_nothrow_move_assignable<T>::value) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
         /*!
          * \brief Create a new sequence with a specific implementation type.
@@ -138,7 +138,7 @@ namespace BlackMisc
         /*!
          * \brief Swap this sequence with another.
          */
-        void swap(CSequence &other) { m_pimpl.swap(other.m_pimpl); }
+        void swap(CSequence &other) noexcept { m_pimpl.swap(other.m_pimpl); }
 
         /*!
          * \brief Access an element by its index.

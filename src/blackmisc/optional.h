@@ -41,7 +41,7 @@ namespace BlackMisc
         }
 
         //! Move constructor.
-        Optional(Optional &&other) : m_isValid(other.m_isValid)
+        Optional(Optional &&other) noexcept(std::is_nothrow_move_constructible<T>::value) : m_isValid(other.m_isValid)
         {
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
         }
@@ -64,7 +64,7 @@ namespace BlackMisc
         }
 
         //! Move assignment.
-        Optional &operator =(Optional &&other)
+        Optional &operator =(Optional &&other) noexcept(std::is_nothrow_move_assignable<T>::value)
         {
             if (m_isValid) { (*this)->~T(); }
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
@@ -113,6 +113,7 @@ namespace BlackMisc
 
     /*!
      * Efficient swap for two Optional objects.
+     * \todo Make conditionally noexcept using C++17 std::is_nothrow_swappable.
      */
     template <typename T>
     void swap(Optional<T> &a, Optional<T> &b)

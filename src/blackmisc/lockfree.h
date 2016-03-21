@@ -123,7 +123,7 @@ namespace BlackMisc
         LockFreeUniqueWriter &operator =(const T &other) { *m_ptr = other; return *this; }
 
         //! Replace the stored value by moving from a T. The change is applied in the destructor.
-        LockFreeUniqueWriter &operator =(T &&other) { *m_ptr = std::move(other); return *this; }
+        LockFreeUniqueWriter &operator =(T &&other) noexcept(std::is_nothrow_move_assignable<T>::value) { *m_ptr = std::move(other); return *this; }
 
         //! LockFreeUniqueWriter cannot be copied.
         //! @{
@@ -132,10 +132,10 @@ namespace BlackMisc
         //! @}
 
         //! Move constructor.
-        LockFreeUniqueWriter(LockFreeUniqueWriter &&other) : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr)) {}
+        LockFreeUniqueWriter(LockFreeUniqueWriter &&other) noexcept : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr)) {}
 
         //! Move assignment operator.
-        LockFreeUniqueWriter &operator =(LockFreeUniqueWriter &&other)
+        LockFreeUniqueWriter &operator =(LockFreeUniqueWriter &&other) noexcept
         {
             std::tie(m_old, m_now, m_ptr) = std::forward_as_tuple(std::move(other.m_old), std::move(other.m_now), std::move(other.m_ptr));
             return *this;
@@ -180,7 +180,7 @@ namespace BlackMisc
         LockFreeSharedWriter &operator =(const T &other) { *m_ptr = other; return *this; }
 
         //! Replace the stored value by moving from a T. The change is applied by evaluating in a bool context.
-        LockFreeSharedWriter &operator =(T &&other) { *m_ptr = std::move(other); return *this; }
+        LockFreeSharedWriter &operator =(T &&other) noexcept(std::is_nothrow_move_assignable<T>::value) { *m_ptr = std::move(other); return *this; }
 
         //! Try to overwrite the original object with the new one stored in the writer, and return false on success.
         //! If true is returned, then the caller must try again. This would happen if another simultaneous write had occurred.
@@ -215,10 +215,10 @@ namespace BlackMisc
         //! @}
 
         //! Move constructor.
-        LockFreeSharedWriter(LockFreeSharedWriter &&other) : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr)) {}
+        LockFreeSharedWriter(LockFreeSharedWriter &&other) noexcept : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr)) {}
 
         //! Move assignment operator.
-        LockFreeSharedWriter &operator =(LockFreeSharedWriter &&other)
+        LockFreeSharedWriter &operator =(LockFreeSharedWriter &&other) noexcept
         {
             std::tie(m_old, m_now, m_ptr) = std::forward_as_tuple(std::move(other.m_old), std::move(other.m_now), std::move(other.m_ptr));
             return *this;
@@ -251,7 +251,7 @@ namespace BlackMisc
         LockFree(const T &other) : m_ptr(std::make_shared<const T>(other)) {}
 
         //! Construct by moving from a T.
-        LockFree(T &&other) : m_ptr(std::make_shared<const T>(std::move(other))) {}
+        LockFree(T &&other) noexcept(std::is_nothrow_move_assignable<T>::value) : m_ptr(std::make_shared<const T>(std::move(other))) {}
 
         //! LockFree cannot be copied or moved.
         //! @{
