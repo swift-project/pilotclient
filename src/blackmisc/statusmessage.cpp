@@ -217,11 +217,13 @@ namespace BlackMisc
 
     void CStatusMessage::markAsHandledBy(const QObject *object) const
     {
+        QWriteLocker lock(&m_lock);
         this->m_handledByObjects.push_back(quintptr(object));
     }
 
     bool CStatusMessage::wasHandledBy(const QObject *object) const
     {
+        QReadLocker lock(&m_lock);
         return this->m_handledByObjects.contains(quintptr(object));
     }
 
