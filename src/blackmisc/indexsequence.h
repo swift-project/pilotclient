@@ -22,7 +22,7 @@ namespace BlackMisc
         // Inhibit doxygen warnings about missing documentation
         //! \cond PRIVATE
 
-        // Our own implementation of std::index_sequence (because not implemented by MSVC2013)
+        // Our own implementation of std::index_sequence (because not implemented by GCC 4.9)
         template <size_t... Is>
         struct index_sequence
         {
