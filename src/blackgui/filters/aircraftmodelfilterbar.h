@@ -57,6 +57,9 @@ namespace BlackGui
             //! Distributor changed
             void ps_distributorChanged(const BlackMisc::Simulation::CDistributor &distributor);
 
+            //! Checkbox has been changed
+            void ps_checkBoxChanged(bool state);
+
         private:
             QScopedPointer<Ui::CAircraftModelFilterBar> ui;
         };

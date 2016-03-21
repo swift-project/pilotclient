@@ -38,10 +38,92 @@
    <property name="verticalSpacing">
     <number>2</number>
    </property>
-   <item row="0" column="11">
-    <widget class="QLineEdit" name="le_AircraftManufacturer">
+   <item row="0" column="5">
+    <widget class="QWidget" name="wi_IncludeExclude" native="true">
+     <layout class="QHBoxLayout" name="hl_IncludeExclude">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="cb_Include">
+        <property name="toolTip">
+         <string>Included models</string>
+        </property>
+        <property name="text">
+         <string>In.</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_Exclude">
+        <property name="toolTip">
+         <string>Excluded models</string>
+        </property>
+        <property name="text">
+         <string>Ex.</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="4" alignment="Qt::AlignLeft">
+    <widget class="BlackGui::Filters::CFilterBarButtons" name="filter_Buttons">
+     <property name="minimumSize">
+      <size>
+       <width>50</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="8">
+    <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="comp_DistributorSelector">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="6">
+    <widget class="BlackGui::Components::CSimulatorSelector" name="frp_SimulatorSelector"/>
+   </item>
+   <item row="1" column="10">
+    <widget class="QLineEdit" name="le_AirlineIcao">
+     <property name="maximumSize">
+      <size>
+       <width>50</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="maxLength">
+      <number>4</number>
+     </property>
      <property name="placeholderText">
-      <string>Manufacturer</string>
+      <string>ICAO</string>
      </property>
     </widget>
    </item>
@@ -65,26 +147,17 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="10">
-    <widget class="QLineEdit" name="le_AirlineIcao">
-     <property name="maximumSize">
-      <size>
-       <width>50</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="maxLength">
-      <number>4</number>
-     </property>
+   <item row="0" column="11">
+    <widget class="QLineEdit" name="le_AircraftManufacturer">
      <property name="placeholderText">
-      <string>ICAO</string>
+      <string>Manufacturer</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="7">
-    <widget class="QLineEdit" name="le_LiveryCode">
-     <property name="placeholderText">
-      <string>Code</string>
+   <item row="1" column="9">
+    <widget class="QLabel" name="lbl_Airline">
+     <property name="text">
+      <string>Airline:</string>
      </property>
     </widget>
    </item>
@@ -95,17 +168,17 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="7">
+    <widget class="QLineEdit" name="le_LiveryCode">
+     <property name="placeholderText">
+      <string>Code</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="6">
     <widget class="QLabel" name="lbl_Livery">
      <property name="text">
       <string>Livery:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="9">
-    <widget class="QLabel" name="lbl_Airline">
-     <property name="text">
-      <string>Airline:</string>
      </property>
     </widget>
    </item>
@@ -119,13 +192,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="7">
-    <widget class="QLineEdit" name="le_ModelKey">
-     <property name="placeholderText">
-      <string>Key</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="9">
     <widget class="QLabel" name="lbl_Aircraft">
      <property name="text">
@@ -133,48 +199,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" colspan="4" alignment="Qt::AlignLeft">
-    <widget class="BlackGui::Filters::CFilterBarButtons" name="filter_Buttons">
-     <property name="minimumSize">
-      <size>
-       <width>50</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <spacer name="hs_FilterButtons">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>60</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="0" colspan="6">
-    <widget class="BlackGui::Components::CSimulatorSelector" name="frp_SimulatorSelector"/>
-   </item>
-   <item row="1" column="8">
-    <widget class="BlackGui::Components::CDbDistributorSelectorComponent" name="comp_DistributorSelector">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+   <item row="0" column="7">
+    <widget class="QLineEdit" name="le_ModelKey">
+     <property name="placeholderText">
+      <string>Key</string>
      </property>
     </widget>
    </item>

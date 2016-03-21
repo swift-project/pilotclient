@@ -295,6 +295,11 @@ namespace BlackMisc
             return distributors.matchesAnyKeyOrAlias(this->m_distributor.getDbKey());
         }
 
+        bool CAircraftModel::matchesMode(ModelModeFilter mode) const
+        {
+            return (mode & this->m_modelMode) > 0;
+        }
+
         const CIcon &CAircraftModel::getModelModeAsIcon() const
         {
             switch (this->getModelMode())
@@ -303,6 +308,8 @@ namespace BlackMisc
                 return CIconList::iconByIndex(CIcons::ModelInclude);
             case Exclude:
                 return CIconList::iconByIndex(CIcons::ModelExclude);
+            case Undefined:
+                return CIconList::iconByIndex(CIcons::StandardIconUnknown16);
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
                 break;
@@ -332,6 +339,7 @@ namespace BlackMisc
             if (this->m_fileName.isEmpty())    { this->setFileName(otherModel.getFileName()); }
             if (this->m_callsign.isEmpty())    { this->setCallsign(otherModel.getCallsign()); }
             if (this->m_modelType == TypeUnknown) { this->m_modelType = otherModel.getModelType(); }
+            if (this->m_modelMode == Undefined) { this->m_modelType = otherModel.getModelType(); }
             if (this->m_simulator.isUnspecified())
             {
                 this->setSimulatorInfo(otherModel.getSimulatorInfo());

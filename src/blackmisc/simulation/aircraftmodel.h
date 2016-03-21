@@ -49,9 +49,13 @@ namespace BlackMisc
             //! Mode
             enum ModelMode
             {
-                Include,
-                Exclude
+                Undefined = 0,
+                Include   = 1 << 0,
+                Exclude   = 1 << 1
             };
+
+            //! Supposed to be used only in filter operations
+            Q_DECLARE_FLAGS(ModelModeFilter, ModelMode)
 
             //! Indexes
             enum ColumnIndex
@@ -201,6 +205,9 @@ namespace BlackMisc
             //! Model mode
             ModelMode getModelMode() const { return m_modelMode; }
 
+            //! Matches given mode?
+            bool matchesMode(BlackMisc::Simulation::CAircraftModel::ModelModeFilter mode) const;
+
             //! Model mode as string
             const QString &getModelModeAsString() const { return modelModeToString(getModelMode()); }
 
@@ -309,8 +316,11 @@ BLACK_DECLARE_TUPLE_CONVERSION(
         attr(o.m_modelType),
         attr(o.m_modelMode)
     ))
+
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel::ModelType)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel::ModelMode)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel::ModelModeFilter)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CAircraftModel::ModelModeFilter)
 
 #endif // guard

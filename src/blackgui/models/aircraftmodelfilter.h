@@ -20,13 +20,12 @@ namespace BlackGui
 {
     namespace Models
     {
-
         //! Filter for aircraft models
         class BLACKGUI_EXPORT CAircraftModelFilter : public IModelFilter<BlackMisc::Simulation::CAircraftModelList>
         {
         public:
             //! Constructor
-            CAircraftModelFilter(const QString &modelKey, const QString &description,
+            CAircraftModelFilter(const QString &modelKey, const QString &description, BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
                                  const QString &aircraftIcao, const QString &aircraftManufacturer,
                                  const QString &airlineIcao, const QString &airlineName,
                                  const QString &liveryCode,
@@ -43,6 +42,7 @@ namespace BlackGui
         private:
             QString m_modelKey;
             QString m_description;
+            BlackMisc::Simulation::CAircraftModel::ModelModeFilter m_modelMode;
             QString m_aircraftIcao;
             QString m_aircraftManufacturer;
             QString m_airlineIcao;

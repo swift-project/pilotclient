@@ -16,15 +16,13 @@ namespace BlackGui
 {
     namespace Models
     {
-
-        CAircraftModelFilter::CAircraftModelFilter(
-            const QString &modelKey, const QString &description,
-            const QString &aircraftIcao, const QString &aircraftManufacturer,
-            const QString &airlineIcao, const QString &airlineName,
-            const QString &liveryCode,
-            const CSimulatorInfo &simInfo,
-            const CDistributor &distributor) :
-            m_modelKey(modelKey.trimmed()), m_description(description.trimmed()),
+        CAircraftModelFilter::CAircraftModelFilter(const QString &modelKey, const QString &description, CAircraftModel::ModelModeFilter modelMode,
+                const QString &aircraftIcao, const QString &aircraftManufacturer,
+                const QString &airlineIcao, const QString &airlineName,
+                const QString &liveryCode,
+                const CSimulatorInfo &simInfo,
+                const CDistributor &distributor) :
+            m_modelKey(modelKey.trimmed().toUpper()), m_description(description.trimmed()), m_modelMode(modelMode),
             m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftManufacturer(aircraftManufacturer.trimmed().toUpper()),
             m_airlineIcao(airlineIcao.trimmed().toUpper()), m_airlineName(airlineName.trimmed().toUpper()),
             m_liveryCode(liveryCode.trimmed().toUpper()),
@@ -51,6 +49,11 @@ namespace BlackGui
                 if (!this->m_description.isEmpty())
                 {
                     if (!this->stringMatchesFilterExpression(model.getDescription(), this->m_description)) { continue; }
+                }
+
+                if (this->m_modelMode != CAircraftModel::Undefined)
+                {
+                    if (!model.matchesMode(this->m_modelMode)) { continue; }
                 }
 
                 if (!this->m_aircraftIcao.isEmpty())
@@ -91,6 +94,7 @@ namespace BlackGui
         bool CAircraftModelFilter::isValid() const
         {
             return !(this->m_modelKey.isEmpty() && this->m_description.isEmpty() &&
+                     (this->m_modelMode != CAircraftModel::Undefined && this->m_modelMode != CAircraftModel::All) &&
                      this->m_aircraftManufacturer.isEmpty() && this->m_aircraftIcao.isEmpty() &&
                      this->m_airlineIcao.isEmpty() && this->m_airlineName.isEmpty() &&
                      this->m_liveryCode.isEmpty() &&
