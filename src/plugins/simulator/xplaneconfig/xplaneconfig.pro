@@ -1,7 +1,5 @@
 load(common_pre)
 
-REQUIRES += contains(BLACK_CONFIG,XPlane)
-
 QT       += core widgets dbus
 
 TARGET = simulatorxplaneconfig

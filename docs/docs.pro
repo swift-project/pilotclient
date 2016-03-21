@@ -1,7 +1,5 @@
 load(common_pre)
 
-REQUIRES += contains(BLACK_CONFIG,Doxygen)
-
 TEMPLATE = lib
 CONFIG += staticlib
 CONFIG -= qt

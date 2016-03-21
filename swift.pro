@@ -6,11 +6,17 @@ CONFIG += ordered
 OTHER_FILES += mkspecs/features/*.prf
 OTHER_FILES += mkspecs/features/*.pri
 
-SUBDIRS += docs
+contains(BLACK_CONFIG,Doxygen) {
+    SUBDIRS += docs
+}
 SUBDIRS += resources
 SUBDIRS += src
-SUBDIRS += samples
-SUBDIRS += tests
+contains(BLACK_CONFIG,Samples) {
+    SUBDIRS += samples
+}
+contains(BLACK_CONFIG,Unittests) {
+    SUBDIRS += tests
+}
 
 include(install.pri)
 

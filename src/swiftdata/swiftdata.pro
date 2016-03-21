@@ -1,7 +1,5 @@
 load(common_pre)
 
-REQUIRES += contains(BLACK_CONFIG,SwiftData)
-
 QT       += core dbus network xml multimedia gui svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

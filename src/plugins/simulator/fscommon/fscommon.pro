@@ -1,7 +1,5 @@
 load(common_pre)
 
-REQUIRES += contains(BLACK_CONFIG,FSX|FS9)
-
 QT       += core dbus concurrent xml
 
 TARGET = simulatorfscommon

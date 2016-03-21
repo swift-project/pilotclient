@@ -3,11 +3,19 @@ load(common_pre)
 TEMPLATE = subdirs
 CONFIG += ordered
 
-SUBDIRS += fscommon
-SUBDIRS += fsx
-SUBDIRS += fsxconfig
-SUBDIRS += fs9
-SUBDIRS += xplane
-SUBDIRS += xplaneconfig
+contains(BLACK_CONFIG,FSX|FS9) {
+    SUBDIRS += fscommon
+}
+contains(BLACK_CONFIG,FSX) {
+    SUBDIRS += fsx
+    SUBDIRS += fsxconfig
+}
+contains(BLACK_CONFIG,FS9) {
+    SUBDIRS += fs9
+}
+contains(BLACK_CONFIG,XPlane) {
+    SUBDIRS += xplane
+    SUBDIRS += xplaneconfig
+}
 
 load(common_post)

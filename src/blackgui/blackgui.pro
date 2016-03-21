@@ -1,7 +1,5 @@
 load(common_pre)
 
-REQUIRES += contains(BLACK_CONFIG,BlackGui)
-
 QT       += network dbus gui svg widgets
 
 TARGET = blackgui
