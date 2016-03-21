@@ -334,8 +334,7 @@ BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
                                    o.m_severity,
                                    o.m_message,
                                    o.m_args,
-                                   o.m_timestampMSecsSinceEpoch,
-                                   attr(o.m_handledByObjects, flags < DisabledForHashing | DisabledForJson | DisabledForComparison | DisabledForMarshalling > ())
+                                   o.m_timestampMSecsSinceEpoch
                                ))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage::StatusSeverity)
