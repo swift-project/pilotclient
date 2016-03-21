@@ -256,6 +256,7 @@ namespace BlackMisc
             {
                 QJsonValueRef jsonKey = (*it);
                 ++it;
+                if (it == array.end()) { qWarning("Odd number of elements in CDictionary::convertFromJson"); return; }
                 QJsonValueRef jsonValue = (*it);
                 Key key;
                 Value value;
