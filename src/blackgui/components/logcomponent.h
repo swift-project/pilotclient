@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackgui/menudelegate.h"
+#include "blackgui/menus/menudelegate.h"
 #include <QPlainTextEdit>
 #include <QFrame>
 #include <QScopedPointer>
@@ -76,7 +76,7 @@ namespace BlackGui
             QScopedPointer<Ui::CLogComponent> ui;
 
             //! Custom menu for the log component
-            class CLogMenu : public BlackGui::IMenuDelegate
+            class CLogMenu : public BlackGui::Menus::IMenuDelegate
             {
             public:
                 //! Constructor

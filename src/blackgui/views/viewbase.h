@@ -16,7 +16,7 @@
 #include "blackgui/filters/filterdialog.h"
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackgui/menudelegate.h"
+#include "blackgui/menus/menudelegate.h"
 #include "blackgui/loadindicator.h"
 #include "blackgui/dropbase.h"
 #include "blackgui/blackguiexport.h"
@@ -165,7 +165,7 @@ namespace BlackGui
             void setFilterWidget(BlackGui::Filters::CFilterWidget *filterWidget);
 
             //! Set custom menu if applicable
-            void setCustomMenu(BlackGui::IMenuDelegate *menu, bool nestPreviousMenu = true);
+            BlackGui::Menus::IMenuDelegate *setCustomMenu(BlackGui::Menus::IMenuDelegate *menu, bool nestPreviousMenu = true);
 
             //! Enable loading indicator
             void enableLoadIndicator(bool enable);
@@ -323,7 +323,7 @@ namespace BlackGui
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu                      m_menus         = MenuDefault;           //!< Default menu settings
-            BlackGui::IMenuDelegate  *m_menu          = nullptr;               //!< custom menu if any
+            BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if neeeded
 
         protected slots:

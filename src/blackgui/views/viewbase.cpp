@@ -31,6 +31,7 @@
 
 using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackGui::Menus;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
 
@@ -151,7 +152,7 @@ namespace BlackGui
             return this->ps_saveJson();
         }
 
-        void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
+        IMenuDelegate *CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
         {
             if (menu && nestPreviousMenu)
             {
@@ -169,6 +170,7 @@ namespace BlackGui
                 // no nesting
                 m_menu = menu;
             }
+            return menu;
         }
 
         void CViewBaseNonTemplate::customMenu(QMenu &menu) const
