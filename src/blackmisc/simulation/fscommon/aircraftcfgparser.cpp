@@ -109,7 +109,7 @@ namespace BlackMisc
                         CAircraftModelList models;
                         if (ok)
                         {
-                            models = (aircraftCfgEntriesList.toAircraftModelList(this->supportedSimulators()));
+                            models = (aircraftCfgEntriesList.toAircraftModelList(this->getSimulator()));
                             this->mergeWithDbData(models, dbModels);
                         }
                         return std::make_tuple(aircraftCfgEntriesList, models, ok);
@@ -139,7 +139,7 @@ namespace BlackMisc
                 {
                     bool ok;
                     this->m_parsedCfgEntriesList = performParsing(m_rootDirectory, m_excludedDirectories, &ok);
-                    CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(this->supportedSimulators()));
+                    CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(this->getSimulator()));
                     this->mergeWithDbData(models, dbModels);
                     const bool hasData = !models.isEmpty();
                     if (hasData)
@@ -164,84 +164,11 @@ namespace BlackMisc
                 return !m_parserWorker || m_parserWorker->isFinished();
             }
 
-            QDateTime CAircraftCfgParser::getCacheTimestamp() const
-            {
-                if (this->m_simulatorInfo.fsx())
-                {
-                    return m_modelCacheFsx.getTimestamp();
-                }
-                else if (this->m_simulatorInfo.fs9())
-                {
-                    return m_modelCacheFs9.getTimestamp();
-                }
-                else if (this->m_simulatorInfo.p3d())
-                {
-                    return m_modelCacheP3D.getTimestamp();
-                }
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
-                return QDateTime();
-            }
-
             bool CAircraftCfgParser::areModelFilesUpdated() const
             {
                 const QDateTime cacheTs(getCacheTimestamp());
                 if (!cacheTs.isValid()) { return true; }
                 return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, { fileFilter() }, this->m_excludedDirectories);
-            }
-
-            bool CAircraftCfgParser::hasCachedData() const
-            {
-                if (this->m_simulatorInfo.fsx())
-                {
-                    return !m_modelCacheFsx.get().isEmpty();
-                }
-                else if (this->m_simulatorInfo.fs9())
-                {
-                    return !m_modelCacheFs9.get().isEmpty();
-                }
-                else if (this->m_simulatorInfo.p3d())
-                {
-                    return !m_modelCacheP3D.get().isEmpty();
-                }
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
-                return false;
-            }
-
-            const CAircraftModelList &CAircraftCfgParser::getAircraftModels() const
-            {
-                static const CAircraftModelList empty;
-                if (this->m_simulatorInfo.fsx())
-                {
-                    return m_modelCacheFsx.get();
-                }
-                else if (this->m_simulatorInfo.fs9())
-                {
-                    return m_modelCacheFs9.get();
-                }
-                else if (this->m_simulatorInfo.p3d())
-                {
-                    return m_modelCacheP3D.get();
-                }
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
-                return empty;
-            }
-
-            CStatusMessage CAircraftCfgParser::setModelsInCache(const CAircraftModelList &models)
-            {
-                if (this->m_simulatorInfo.fsx())
-                {
-                    return m_modelCacheFsx.set(models);
-                }
-                else if (this->m_simulatorInfo.fs9())
-                {
-                    return m_modelCacheFs9.set(models);
-                }
-                else if (this->m_simulatorInfo.p3d())
-                {
-                    return m_modelCacheP3D.set(models);
-                }
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
-                return CStatusMessage(this, CStatusMessage::SeverityError, "Wrong simulator type");
             }
 
             CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok)

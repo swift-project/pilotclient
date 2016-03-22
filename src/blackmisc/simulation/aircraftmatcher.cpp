@@ -197,7 +197,7 @@ namespace BlackMisc
 
         CAircraftModel CAircraftMatcher::matchByExactModelName(const CSimulatedAircraft &remoteAircraft)
         {
-            return this->m_installedModels.findFirstByModelString(remoteAircraft.getModelString());
+            return this->m_installedModels.findFirstByModelStringOrDefault(remoteAircraft.getModelString());
         }
 
         CAircraftModel CAircraftMatcher::matchInstalledModelsByIcaoData(const CSimulatedAircraft &remoteAircraft)

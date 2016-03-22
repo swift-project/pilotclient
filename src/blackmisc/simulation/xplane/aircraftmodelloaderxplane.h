@@ -46,9 +46,6 @@ namespace BlackMisc
                 virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
                 virtual bool isLoadingFinished() const override;
                 virtual bool areModelFilesUpdated() const override;
-                virtual bool hasCachedData() const override;
-                virtual QDateTime getCacheTimestamp() const override;
-                virtual const BlackMisc::Simulation::CAircraftModelList &getAircraftModels() const override;
                 //! @}
 
             public slots:
@@ -113,7 +110,6 @@ namespace BlackMisc
 
                 QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
                 QVector<CSLPackage> m_cslPackages;              //!< Parsed Packages. No lock required since accessed only from one thread
-                BlackMisc::Simulation::CAircraftModelList m_installedModels;
 
                 static const QString &fileFilterFlyable();
                 static const QString &fileFilterCsl();

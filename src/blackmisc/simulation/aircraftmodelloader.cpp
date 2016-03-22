@@ -22,6 +22,7 @@ namespace BlackMisc
         IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &info, const QString &rootDirectory, const QStringList &excludeDirs) :
             m_simulatorInfo(info), m_rootDirectory(rootDirectory), m_excludedDirectories(excludeDirs)
         {
+            Q_ASSERT_X(info.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::ps_loadFinished);
         }
 
@@ -34,7 +35,7 @@ namespace BlackMisc
         {
             if (directory.isEmpty()) { return false; }
             QDir dir(directory);
-            //! \todo not available network dir can make this hang here
+            //! \todo not available network dir can make this hang here, however there is no obvious solution to that
             return dir.exists();
         }
 
@@ -44,7 +45,7 @@ namespace BlackMisc
             for (CAircraftModel &simModel : modelsFromSimulator)
             {
                 if (simModel.hasValidDbKey()) { continue; } // already done
-                CAircraftModel dbModel(dbModels.findFirstByModelString(simModel.getModelString()));
+                CAircraftModel dbModel(dbModels.findFirstByModelStringOrDefault(simModel.getModelString()));
                 if (!dbModel.hasValidDbKey())
                 {
                     continue; // not found
@@ -68,6 +69,36 @@ namespace BlackMisc
 
             m_rootDirectory = directory;
             return true;
+        }
+
+        CAircraftModelList IAircraftModelLoader::getAircraftModels() const
+        {
+            return this->m_caches.getModels(this->m_simulatorInfo);
+        }
+
+        QDateTime IAircraftModelLoader::getCacheTimestamp() const
+        {
+            return this->m_caches.getCacheTimestamp(this->m_simulatorInfo);
+        }
+
+        void IAircraftModelLoader::syncronizeCache()
+        {
+            return this->m_caches.syncronize(this->m_simulatorInfo);
+        }
+
+        bool IAircraftModelLoader::hasCachedData() const
+        {
+            return !this->m_caches.getModels(this->m_simulatorInfo).isEmpty();
+        }
+
+        CStatusMessage IAircraftModelLoader::setModelsInCache(const CAircraftModelList &models)
+        {
+            return this->m_caches.setModels(models, this->m_simulatorInfo);
+        }
+
+        CStatusMessage IAircraftModelLoader::clearCache()
+        {
+            return this->setModelsInCache(CAircraftModelList());
         }
 
         void IAircraftModelLoader::startLoading(LoadMode mode, const CAircraftModelList &dbModels)
@@ -98,19 +129,19 @@ namespace BlackMisc
             this->startLoadingFromDisk(mode, dbModels);
         }
 
-        const CSimulatorInfo &IAircraftModelLoader::supportedSimulators() const
+        const CSimulatorInfo &IAircraftModelLoader::getSimulator() const
         {
             return m_simulatorInfo;
         }
 
-        QString IAircraftModelLoader::supportedSimulatorsAsString() const
+        QString IAircraftModelLoader::getSimulatorAsString() const
         {
             return m_simulatorInfo.toQString();
         }
 
         bool IAircraftModelLoader::supportsSimulator(const CSimulatorInfo &info)
         {
-            return supportedSimulators().matchesAny(info);
+            return getSimulator().matchesAny(info);
         }
 
         void IAircraftModelLoader::cancelLoading()
@@ -126,16 +157,20 @@ namespace BlackMisc
 
         std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simInfo)
         {
+            std::unique_ptr<IAircraftModelLoader> loader;
             if (simInfo.xplane())
             {
-                return std::make_unique<CAircraftModelLoaderXPlane>(
+                loader = std::make_unique<CAircraftModelLoaderXPlane>(
                            CSimulatorInfo(CSimulatorInfo::XPLANE),
                            CXPlaneUtil::xplaneRootDir());
             }
             else
             {
-                return CAircraftCfgParser::createModelLoader(simInfo);
+                loader = CAircraftCfgParser::createModelLoader(simInfo);
             }
+            // make sure the cache is really available
+            loader->syncronizeCache();
+            return loader;
         }
     } // ns
 } // ns

@@ -82,7 +82,7 @@ namespace BlackCore
     {
         if (modelString.isEmpty()) { return CAircraftModel(); }
         CAircraftModelList models(getModels());
-        return models.findFirstByModelString(modelString);
+        return models.findFirstByModelStringOrDefault(modelString);
     }
 
     CAircraftModelList CModelDataReader::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode)

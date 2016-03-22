@@ -50,7 +50,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModel CAircraftModelList::findFirstByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+        CAircraftModel CAircraftModelList::findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->findFirstByOrDefault([ = ](const CAircraftModel & model)
             {

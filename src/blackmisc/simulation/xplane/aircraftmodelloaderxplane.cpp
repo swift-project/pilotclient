@@ -64,9 +64,9 @@ namespace BlackMisc
 
             void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
-                m_installedModels.clear();
                 if (m_rootDirectory.isEmpty())
                 {
+                    this->clearCache();
                     emit loadingFinished(false, this->m_simulatorInfo);
                     return;
                 }
@@ -90,9 +90,9 @@ namespace BlackMisc
                 }
                 else if (mode.testFlag(LoadDirectly))
                 {
-                    m_installedModels = performParsing(m_rootDirectory, m_excludedDirectories);
-                    mergeWithDbData(m_installedModels, dbModels);
-                    emit loadingFinished(true, this->m_simulatorInfo);
+                    CAircraftModelList models(performParsing(m_rootDirectory, m_excludedDirectories));
+                    mergeWithDbData(models, dbModels);
+                    updateInstalledModels(models);
                 }
             }
 
@@ -108,26 +108,10 @@ namespace BlackMisc
                 return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, {fileFilterCsl(), fileFilterFlyable()},  this->m_excludedDirectories);
             }
 
-            bool CAircraftModelLoaderXPlane::hasCachedData() const
-            {
-                //! \todo KB
-                return false;
-            }
-
-            QDateTime CAircraftModelLoaderXPlane::getCacheTimestamp() const
-            {
-                //! \todo KB add cache and report back
-                return QDateTime();
-            }
-
-            const CAircraftModelList &CAircraftModelLoaderXPlane::getAircraftModels() const
-            {
-                return m_installedModels;
-            }
 
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
-                m_installedModels = models;
+                this->setModelsInCache(models);
                 emit loadingFinished(true, this->m_simulatorInfo);
             }
 

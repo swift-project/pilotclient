@@ -55,7 +55,7 @@ SOURCES +=  *.cpp \
             $$PWD/simulation/fscommon/*.cpp \
             $$PWD/simulation/fsx/*.cpp \
             $$PWD/simulation/xplane/*.cpp \
-#           $$PWD/simulation/data/*.cpp \
+            $$PWD/simulation/data/*.cpp \
             $$PWD/weather/*.cpp
 
 win32 {
