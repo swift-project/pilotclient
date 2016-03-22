@@ -92,6 +92,10 @@ namespace BlackMisc
             //! \return number of elements removed
             int removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
 
+            //! Replace or add based on model string
+            //! \return number of elements removed
+            int replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity);
+
             //! Model strings
             QStringList getModelStrings(bool sort = true) const;
 

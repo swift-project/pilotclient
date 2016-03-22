@@ -143,6 +143,16 @@ namespace BlackGui
             return this->removeModelsWithModelString(models.getModelStrings(), sensitivity);
         }
 
+        int CAircraftModelView::replaceOrAddModelsWithString(const CAircraftModelList &models, Qt::CaseSensitivity sensitivity)
+        {
+            if (models.isEmpty()) { return 0; }
+            CAircraftModelList copy(this->container());
+            int c = copy.replaceOrAddModelsWithString(models, sensitivity);
+            if (c == 0) { return 0; }
+            this->updateContainerMaybeAsync(copy);
+            return c;
+        }
+
         void CAircraftModelView::setHighlightModelStrings(const QStringList &highlightModels)
         {
             this->derivedModel()->setHighlightModelStrings(highlightModels);

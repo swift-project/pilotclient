@@ -122,10 +122,10 @@ namespace BlackMisc
         CONTAINER newValues(this->container());
         const QList<KEYTYPE> keys(container.toDbKeyList());
         newValues.removeObjectsWithKeys(keys);
+        int removeSize = newValues.size(); // size after removing data
         newValues.push_back(container);
-        int delta = newValues.size() - this->container().size();
         this->container() = newValues;
-        return delta;
+        return newValues.size() - removeSize;
     }
 
     template <class OBJ, class CONTAINER, typename KEYTYPE>

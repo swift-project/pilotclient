@@ -160,6 +160,23 @@ namespace BlackMisc
             return d;
         }
 
+        int CAircraftModelList::replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity)
+        {
+            if (addOrReplaceList.isEmpty()) { return 0; }
+            if (this->isEmpty())
+            {
+                *this = addOrReplaceList;
+                return addOrReplaceList.size();
+            }
+            CAircraftModelList newModels(*this);
+            const QStringList keys(addOrReplaceList.getModelStrings(false));
+            newModels.removeModelsWithString(keys, sensitivity);
+            int removed = newModels.size();  // size after removing
+            newModels.push_back(addOrReplaceList);
+            *this = newModels;
+            return this->size() - removed;
+        }
+
         CAircraftModelList CAircraftModelList::findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->findBy([ = ](const CAircraftModel & model)
