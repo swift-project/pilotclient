@@ -24,6 +24,8 @@ HEADERS += *.h
 SOURCES += *.cpp
 HEADERS += $$PWD/models/*.h
 SOURCES += $$PWD/models/*.cpp
+HEADERS += $$PWD/menus/*.h
+SOURCES += $$PWD/menus/*.cpp
 
 HEADERS += $$PWD/views/*.h
 SOURCES += $$PWD/views/*.cpp

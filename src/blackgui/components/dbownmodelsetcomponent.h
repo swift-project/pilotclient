@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 
@@ -14,7 +16,6 @@
 #include "dbmappingcomponentaware.h"
 #include <QFrame>
 #include <QScopedPointer>
-
 
 namespace Ui { class CDbOwnModelSetComponent; }
 
@@ -42,13 +43,16 @@ namespace BlackGui
             virtual ~CDbOwnModelSetComponent();
 
             //! Corresponding view
-            Views::CAircraftModelView *getView() const;
+            Views::CAircraftModelView *view() const;
 
             //! Set the model set
             void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;
+
+            //! Model set is for simulator
+            const BlackMisc::Simulation::CSimulatorInfo &getModelSetSimulator() const { return m_simulator; }
 
         private slots:
             //! Tab has been changed

@@ -15,7 +15,7 @@
 #include "blackcore/data/authenticateduser.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackgui/menudelegate.h"
+#include "blackgui/menus/menudelegate.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/data/lastselections.h"
@@ -83,18 +83,6 @@ namespace BlackGui
             //! Stashed model strings
             QStringList getStashedModelStrings() const;
 
-            //! Own (installed) model for given model string
-            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
-
-            //! Own models
-            BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
-
-            //! Own models for simulator
-            const BlackMisc::Simulation::CSimulatorInfo &getOwnModelsSimulator() const;
-
-            //! Number of own models
-            int getOwnModelsCount() const;
-
             //! Current tab index
             TabIndex currentTabIndex() const;
 
@@ -107,6 +95,22 @@ namespace BlackGui
             //! Unvalidated consolidated aircraft model from the editor subparts (icao, distributor)
             //! \note not guaranteed to be valid, just a snapshot of its current editor state
             BlackMisc::Simulation::CAircraftModel getEditorAircraftModel() const;
+
+            //! \name Own models from BlackGui::Components::CDbOwnModelsComponent
+            //! @{
+
+            //! Own models
+            BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
+
+            //! Own (installed) model for given model string
+            BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
+
+            //! Own models for simulator
+            const BlackMisc::Simulation::CSimulatorInfo &getOwnModelsSimulator() const;
+
+            //! Number of own models
+            int getOwnModelsCount() const;
+            //! @}
 
         public slots:
             //! \copydoc CDbStashComponent::stashModel
@@ -165,9 +169,6 @@ namespace BlackGui
             //! Request update of vPilot data
             void ps_requestVPilotDataUpdate();
 
-            //! Request own models
-            void ps_requestOwnModelsUpdate();
-
             //! Stashed models changed
             void ps_onStashedModelsChanged();
 
@@ -188,18 +189,6 @@ namespace BlackGui
 
             //! Row has been selected
             void ps_onModelRowSelected(const QModelIndex &index);
-
-            //! Load the models
-            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
-
-            //! Model loading finished
-            void ps_onOwnModelsLoadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simInfo);
-
-            //! Own model count changed
-            void ps_onOwnModelsCountChanged(int count, bool withFilter);
-
-            //! Request simulator models
-            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
 
             //! User object changed
             void ps_userChanged();
@@ -222,27 +211,22 @@ namespace BlackGui
             //! Open model modify dialog
             void ps_modifyModelDialog();
 
-            //! Open simulator file
-            void ps_showSimulatorFile();
+            //! Own models have been changed
+            void ps_onOwnModelsCountChanged(int count, bool withFilter);
 
         private:
             QScopedPointer<Ui::CDbMappingComponent>                             ui;
             QScopedPointer<CDbAutoStashingComponent>                            m_autoStashDialog;          //!< dialog auto stashing
             QScopedPointer<CDbModelMappingModifyComponent>                      m_modelModifyDialog;        //!< dialog when modifying models
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader                 m_vPilotReader;             //!< read vPilot rules
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>        m_modelLoader;              //!< read own aircraft models
             BlackMisc::CData<BlackMisc::Simulation::Data::VPilotAircraftModels> m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
             BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>              m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
-            BlackMisc::CData<BlackGui::Components::Data::DbMappingComponent>    m_lastInteractions {this};  //!< last interactions
             bool m_vPilot1stInit       = true;
             bool m_withVPilot          = false;
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
 
             //! Init vPilot if rights and suitable
             void initVPilotLoading();
-
-            //! Init model loader
-            bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
             //! Model for given index from sender/current view
             BlackMisc::Simulation::CAircraftModel getModelFromView(const QModelIndex &index) const;
@@ -252,28 +236,14 @@ namespace BlackGui
 
             // -------------------- component specific menus --------------------------
 
-            //! The menu for loading and handling own models for mapping tasks
-            //! \note This is specific for that very component
-            class CMappingOwnSimulatorModelMenu : public BlackGui::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CMappingOwnSimulatorModelMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::IMenuDelegate(mappingComponent, separator)
-                {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-            };
-
             //! The menu for loading and handling VPilot rules for mapping tasks
             //! \note This is a specific menu for that very component
-            class CMappingVPilotMenu : public BlackGui::IMenuDelegate
+            class CMappingVPilotMenu : public BlackGui::Menus::IMenuDelegate
             {
             public:
                 //! Constructor
                 CMappingVPilotMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::IMenuDelegate(mappingComponent, separator)
+                    BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -289,12 +259,12 @@ namespace BlackGui
             //! -# for auto stashing
             //! -# toggle auto filtering
             //! \note This is a specific menu for that very component
-            class CModelStashTools : public BlackGui::IMenuDelegate
+            class CModelStashTools : public BlackGui::Menus::IMenuDelegate
             {
             public:
                 //! Constructor
                 CModelStashTools(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::IMenuDelegate(mappingComponent, separator)
+                    BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
@@ -306,29 +276,12 @@ namespace BlackGui
             };
 
             //! Apply DB data to selected models
-            class CApplyDbDataMenu : public BlackGui::IMenuDelegate
+            class CApplyDbDataMenu : public BlackGui::Menus::IMenuDelegate
             {
             public:
                 //! Constructor
                 CApplyDbDataMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::IMenuDelegate(mappingComponent, separator)
-                {}
-
-                //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-
-            private:
-                //! Mapping component
-                CDbMappingComponent *mappingComponent() const;
-            };
-
-            //! Open up the simulator file (e.g. aircraft.cfg) in the standard text editor
-            class CShowSimulatorFile : public BlackGui::IMenuDelegate
-            {
-            public:
-                //! Constructor
-                CShowSimulatorFile(CDbMappingComponent *mappingComponent, bool separator = true) :
-                    BlackGui::IMenuDelegate(mappingComponent, separator)
+                    BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu

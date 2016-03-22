@@ -41,7 +41,7 @@ namespace BlackGui
             // void
         }
 
-        Views::CAircraftModelView *CDbOwnModelSetComponent::getView() const
+        Views::CAircraftModelView *CDbOwnModelSetComponent::view() const
         {
             return ui->tvp_OwnModelSet;
         }

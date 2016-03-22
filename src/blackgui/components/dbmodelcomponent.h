@@ -16,7 +16,7 @@
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackgui/menudelegate.h"
+#include "blackgui/menus/menudelegate.h"
 #include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -28,7 +28,7 @@ namespace BlackGui
     namespace Components
     {
         /**
-         * Database models from DB
+         * Database models. Those are the models loaaded from the DB.
          */
         class BLACKGUI_EXPORT CDbModelComponent :
             public QFrame,

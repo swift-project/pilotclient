@@ -16,7 +16,7 @@ namespace BlackGui
     {
         void registerMetadata()
         {
-            Data::CDbMappingComponent::registerMetadata();
+            Data::CDbOwnModelsComponent::registerMetadata();
         }
 
     } // ns

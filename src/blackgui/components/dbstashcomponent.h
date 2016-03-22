@@ -14,7 +14,7 @@
 
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackgui/menudelegate.h"
+#include "blackgui/menus/menudelegate.h"
 #include "blackmisc/verify.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -60,7 +60,7 @@ namespace BlackGui
             int unstashModels(QStringList modelStrings);
 
             //! The embedded view
-            BlackGui::Views::CAircraftModelView *getView() const;
+            BlackGui::Views::CAircraftModelView *view() const;
 
             //! Has stashed models
             bool hasStashedModels() const;

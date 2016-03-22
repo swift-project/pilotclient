@@ -17,13 +17,13 @@ namespace BlackGui
     {
         namespace Data
         {
-            QString CDbMappingComponent::convertToQString(bool i18n) const
+            QString CDbOwnModelsComponent::convertToQString(bool i18n) const
             {
                 QString s(this->m_simulator.toQString(i18n));
                 return s;
             }
 
-            CVariant CDbMappingComponent::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+            CVariant CDbOwnModelsComponent::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
             {
                 if (index.isMyself()) { return CVariant::from(*this); }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -36,9 +36,9 @@ namespace BlackGui
                 }
             }
 
-            void CDbMappingComponent::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+            void CDbOwnModelsComponent::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
             {
-                if (index.isMyself()) { (*this) = variant.to<CDbMappingComponent>(); return; }
+                if (index.isMyself()) { (*this) = variant.to<CDbOwnModelsComponent>(); return; }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -51,7 +51,7 @@ namespace BlackGui
                 }
             }
 
-            int CDbMappingComponent::comparePropertyByIndex(const CDbMappingComponent &compareValue, const CPropertyIndex &index) const
+            int CDbOwnModelsComponent::comparePropertyByIndex(const CDbOwnModelsComponent &compareValue, const CPropertyIndex &index) const
             {
                 if (index.isMyself()) { return this->toQString().compare(compareValue.toQString()); }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();

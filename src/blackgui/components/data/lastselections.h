@@ -26,7 +26,7 @@ namespace BlackGui
             /*!
              * Store last selections/interactions with this component
              */
-            class BLACKGUI_EXPORT CDbMappingComponent : public BlackMisc::CValueObject<CDbMappingComponent>
+            class BLACKGUI_EXPORT CDbOwnModelsComponent : public BlackMisc::CValueObject<CDbOwnModelsComponent>
             {
             public:
                 //! Properties by index
@@ -51,32 +51,32 @@ namespace BlackGui
                 void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
                 //! Compare by index
-                int comparePropertyByIndex(const CDbMappingComponent &compareValue, const BlackMisc::CPropertyIndex &index) const;
+                int comparePropertyByIndex(const CDbOwnModelsComponent &compareValue, const BlackMisc::CPropertyIndex &index) const;
 
             private:
-                BLACK_ENABLE_TUPLE_CONVERSION(CDbMappingComponent)
+                BLACK_ENABLE_TUPLE_CONVERSION(CDbOwnModelsComponent)
                 BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< Last simulator selection
             };
 
             //! Trait for model cache
-            struct DbMappingComponent : public BlackMisc::CDataTrait<CDbMappingComponent>
+            struct DbOwnModelsComponent : public BlackMisc::CDataTrait<CDbOwnModelsComponent>
             {
                 //! Default value
-                static const CDbMappingComponent &defaultValue()
+                static const CDbOwnModelsComponent &defaultValue()
                 {
-                    static const CDbMappingComponent ls;
+                    static const CDbOwnModelsComponent ls;
                     return ls;
                 }
 
                 //! Key in data cache
-                static const char *key() { return "dbmappingcomponent"; }
+                static const char *key() { return "dbownmodelscomponent"; }
             };
         } // ns
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackGui::Components::Data::CDbMappingComponent)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackGui::Components::Data::CDbMappingComponent, (
+Q_DECLARE_METATYPE(BlackGui::Components::Data::CDbOwnModelsComponent)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackGui::Components::Data::CDbOwnModelsComponent, (
                                    attr(o.m_simulator)
                                ))
 
