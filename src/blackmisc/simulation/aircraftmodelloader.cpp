@@ -39,12 +39,12 @@ namespace BlackMisc
             return dir.exists();
         }
 
-        bool IAircraftModelLoader::mergeWithDbData(CAircraftModelList &modelsFromSimulator, const CAircraftModelList &dbModels)
+        bool IAircraftModelLoader::mergeWithDbData(CAircraftModelList &modelsFromSimulator, const CAircraftModelList &dbModels, bool force)
         {
             if (dbModels.isEmpty() || modelsFromSimulator.isEmpty()) { return false; }
             for (CAircraftModel &simModel : modelsFromSimulator)
             {
-                if (simModel.hasValidDbKey()) { continue; } // already done
+                if (!force && simModel.hasValidDbKey()) { continue; } // already done
                 CAircraftModel dbModel(dbModels.findFirstByModelStringOrDefault(simModel.getModelString()));
                 if (!dbModel.hasValidDbKey())
                 {
@@ -54,6 +54,36 @@ namespace BlackMisc
                 simModel = dbModel;
             }
             return true;
+        }
+
+        CStatusMessage IAircraftModelLoader::replaceCacheWithModelData(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        {
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_simulatorInfo;
+            if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
+            const CStatusMessage m(this->m_caches.setModels(models, sim));
+            if (m.isSeverityInfoOrLess())
+            {
+                // set is asny
+                // emit loadingFinished(true, sim);
+            }
+            return m;
+        }
+
+        CStatusMessage IAircraftModelLoader::replaceOrAddModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        {
+            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_simulatorInfo;
+            if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
+            CAircraftModelList allModels(this->m_caches.getModels(sim));
+            int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
+            if (c > 0)
+            {
+                return this->replaceCacheWithModelData(models, sim);
+            }
+            else
+            {
+                return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data changed");
+            }
         }
 
         void IAircraftModelLoader::ps_loadFinished(bool success)

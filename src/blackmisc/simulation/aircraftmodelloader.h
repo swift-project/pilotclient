@@ -91,11 +91,20 @@ namespace BlackMisc
             //! Shutdown
             void gracefulShutdown();
 
-            //! Create a loader
+            //! Create a loader and syncronize caches
             static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
             //! Merge with DB data if possible
-            static bool mergeWithDbData(BlackMisc::Simulation::CAircraftModelList &modelsFromSimulator, const BlackMisc::Simulation::CAircraftModelList &dbModels);
+            static bool mergeWithDbData(BlackMisc::Simulation::CAircraftModelList &modelsFromSimulator, const BlackMisc::Simulation::CAircraftModelList &dbModels, bool force = false);
+
+        public slots:
+            //! Set cache from outside, this should only be used in special cases.
+            //! But it allows to modify data elsewhere nd update the cache with manipulated data.
+            BlackMisc::CStatusMessage replaceCacheWithModelData(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
+
+            //! Set cache from outside, this should only be used in special cases.
+            //! But it allows to modify data elsewhere nd update the cache with manipulated data.
+            BlackMisc::CStatusMessage replaceOrAddModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
         signals:
             //! Parsing is finished
