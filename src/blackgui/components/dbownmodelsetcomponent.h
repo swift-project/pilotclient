@@ -62,6 +62,9 @@ namespace BlackGui
             void ps_buttonClicked();
 
         private:
+            //! Default file name
+            void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
+
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
             QScopedPointer<CDbOwnModelSetDialog>        m_modelSetDialog;
             BlackMisc::Simulation::CSimulatorInfo       m_simulator;

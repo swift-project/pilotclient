@@ -15,6 +15,18 @@
 
 namespace BlackMisc
 {
+    const QString &CFileUtils::jsonAppendix()
+    {
+        static const QString j(".json");
+        return j;
+    }
+
+    const QString &CFileUtils::jsonWildcardAppendix()
+    {
+        static const QString jw("*" + jsonAppendix());
+        return jw;
+    }
+
     bool CFileUtils::writeStringToFile(const QString &content, const QString &fileNameAndPath)
     {
         if (fileNameAndPath.isEmpty()) { return false; }

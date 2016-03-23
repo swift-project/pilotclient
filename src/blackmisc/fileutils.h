@@ -25,6 +25,12 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CFileUtils
     {
     public:
+        //! Our JSON file name appendix
+        static const QString &jsonAppendix();
+
+        //! JSON wildcard + appendix
+        static const QString &jsonWildcardAppendix();
+
         //! Write string to text file
         static bool writeStringToFile(const QString &content, const QString &fileNameAndPath);
 

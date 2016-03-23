@@ -31,7 +31,8 @@ namespace BlackGui
             ui->setupUi(this);
             ui->tvp_OwnModelSet->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
             ui->tvp_OwnModelSet->menuRemoveItems(CAircraftModelView::MenuDisplayAutomaticallyAndRefresh | CAircraftModelView::MenuStashing | CAircraftModelView::MenuBackend | CAircraftModelView::MenuRefresh);
-            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
+            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
+            ui->tvp_OwnModelSet->addFilterDialog();
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
         }
@@ -52,6 +53,7 @@ namespace BlackGui
             this->ui->pb_SaveAsSetForSimulator->setText("save for " + simulator.toQString());
             this->ui->pb_SaveAsSetForSimulator->setEnabled(!models.isEmpty());
             this->m_simulator = simulator;
+            this->setSaveFileName(simulator);
         }
 
         void CDbOwnModelSetComponent::setMappingComponent(CDbMappingComponent *component)
@@ -110,6 +112,13 @@ namespace BlackGui
             {
                 this->ui->tvp_OwnModelSet->showFileLoadDialog();
             }
+        }
+
+        void CDbOwnModelSetComponent::setSaveFileName(const CSimulatorInfo &sim)
+        {
+            Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const QString n("modelset" + sim.toQString(true));
+            this->ui->tvp_OwnModelSet->setSaveFileName(n);
         }
     } // ns
 } // ns

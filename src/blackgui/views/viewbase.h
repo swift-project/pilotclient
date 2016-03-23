@@ -203,6 +203,9 @@ namespace BlackGui
             //! Show file save dialog
             BlackMisc::CStatusMessage showFileSaveDialog() const;
 
+            //! Save file name (optional)
+            void setSaveFileName(const QString &saveName) { this->m_saveFileName = saveName; }
+
         signals:
             //! Ask for new data from currently loaded data
             void requestUpdate();
@@ -305,11 +308,12 @@ namespace BlackGui
             void init();
 
             //! Default file for load/save operations
-            QString getDefaultFilename() const;
+            QString getDefaultFilename(bool load) const;
 
+            QString        m_saveFileName;                                     //!< save file name (JSON)
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
-            SelectionMode m_originalSelectionMode     = this->selectionMode(); //!< Selection mode set
+            SelectionMode  m_originalSelectionMode    = this->selectionMode(); //!< Selection mode set
             int m_resizeCount                         = 0;                     //!< flag / counter, how many resize activities
             int m_skipResizeThreshold                 = 40;                    //!< when to skip resize (rows count)
             int m_resizeAutoNthTime                   = 1;                     //!< with ResizeAuto, resize every n-th time
@@ -322,8 +326,8 @@ namespace BlackGui
             bool m_displayAutomatically               = true;                  //!< display directly when loaded
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
-            Menu                      m_menus         = MenuDefault;           //!< Default menu settings
-            BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
+            Menu     m_menus                          = MenuDefault;           //!< Default menu settings
+            BlackGui::Menus::IMenuDelegate    *m_menu = nullptr;               //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if neeeded
 
         protected slots:

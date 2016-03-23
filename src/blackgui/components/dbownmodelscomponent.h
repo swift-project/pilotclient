@@ -82,6 +82,9 @@ namespace BlackGui
             //! Init model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
+            //! File name for savinf
+            void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
+
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
             class CLoadModelsMenu : public BlackGui::Menus::IMenuDelegate

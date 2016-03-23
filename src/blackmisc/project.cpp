@@ -17,6 +17,7 @@
 #include <QStringList>
 #include <QCoreApplication>
 #include <QProcessEnvironment>
+#include <QStandardPaths>
 
 #if !defined(BLACK_VERSION)
 #error Missing version
@@ -347,6 +348,22 @@ namespace BlackMisc
     {
         static const QString s(getImagesDirImpl());
         return s;
+    }
+
+    QString getDocumentationDirectoryImpl()
+    {
+        QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
+        QString d = pathes.first();
+        d = CFileUtils::appendFilePaths(d, "/swift");
+        QDir dir(d);
+        if (dir.exists()) { return dir.absolutePath(); }
+        return pathes.first();
+    }
+
+    const QString &CProject::getDocumentationDirectory()
+    {
+        static const QString d(getDocumentationDirectoryImpl());
+        return d;
     }
 
     const QString &CProject::compiledWithInfo(bool shortVersion)

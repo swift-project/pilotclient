@@ -9,6 +9,7 @@
 
 #include "viewbase.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/project.h"
 #include "blackgui/models/allmodels.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
@@ -25,7 +26,6 @@
 #include <QPainter>
 #include <QShortcut>
 #include <QFileDialog>
-#include <QStandardPaths>
 #include <QDir>
 #include <limits>
 
@@ -371,29 +371,30 @@ namespace BlackGui
             }
         }
 
-        QString CViewBaseNonTemplate::getDefaultFilename() const
+        QString CViewBaseNonTemplate::getDefaultFilename(bool load) const
         {
             // some logic to find a useful default name
-            const QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
-            QString name;
-            if (this->getDockWidgetInfoArea()) { name = this->getDockWidgetInfoArea()->windowTitle(); }
-            else if (!windowTitle().isEmpty()) { name = this->windowType(); }
-            else { name = this->metaObject()->className(); }
-            name += ".json";
+            QString dir = CProject::getDocumentationDirectory();
 
-            if (!pathes.isEmpty())
+            if (load)
             {
-                QString p(CFileUtils::appendFilePaths(pathes.first(), "swift/" + name));
-                if (!QDir(p).exists())
-                {
-                    p = CFileUtils::appendFilePaths(pathes.first(), "swift " + name);
-                }
-                return p;
+                return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix());
             }
-            else
+
+            // Save file path
+            QString name(this->m_saveFileName);
+            if (name.isEmpty())
             {
-                return name;
+                // create a name
+                if (this->getDockWidgetInfoArea()) { name = this->getDockWidgetInfoArea()->windowTitle(); }
+                else if (!windowTitle().isEmpty()) { name = this->windowType(); }
+                else { name = this->metaObject()->className(); }
             }
+            if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))
+            {
+                name += CFileUtils::jsonAppendix();
+            }
+            return CFileUtils::appendFilePaths(dir, name);
         }
 
         void CViewBaseNonTemplate::menuRemoveItems(Menu menusToRemove)
@@ -959,7 +960,7 @@ namespace BlackGui
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                     tr("Load data file"), getDefaultFilename(),
+                                     tr("Load data file"), getDefaultFilename(true),
                                      tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Load canceled"); }
             QString json(CFileUtils::readFileToString(fileName));
@@ -978,7 +979,7 @@ namespace BlackGui
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
-                                     tr("Save data file"), getDefaultFilename(),
+                                     tr("Save data file"), getDefaultFilename(false),
                                      tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Save canceled"); }
             const QString json(this->toJsonString());

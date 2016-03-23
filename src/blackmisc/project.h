@@ -105,6 +105,9 @@ namespace BlackMisc
         //! Where images are located
         static const QString &getImagesDir();
 
+        //! Directory where data can be stored
+        static const QString &getDocumentationDirectory();
+
         //! Info string about compilation
         static const QString &compiledWithInfo(bool shortVersion = true);
 

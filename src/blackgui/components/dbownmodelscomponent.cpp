@@ -101,6 +101,7 @@ namespace BlackGui
             Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
             if (this->m_modelLoader && this->m_modelLoader->supportsSimulator(simInfo))
             {
+                this->setSaveFileName(simInfo);
                 return true;
             }
 
@@ -123,8 +124,16 @@ namespace BlackGui
                 bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
                 Q_UNUSED(c);
+                this->setSaveFileName(simInfo);
                 return true;
             }
+        }
+
+        void CDbOwnModelsComponent::setSaveFileName(const CSimulatorInfo &sim)
+        {
+            Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const QString n("simulator models " + sim.toQString(true));
+            this->ui->tvp_OwnAircraftModels->setSaveFileName(n);
         }
 
         void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(QMenu &menu) const
