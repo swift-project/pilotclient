@@ -31,6 +31,7 @@ namespace BlackMisc
             CSimulatedAircraft::registerMetadata();
             CSimulatedAircraftList::registerMetadata();
             CSimulatorInfo::registerMetadata();
+            CSimulatorInfoList::registerMetadata();
             CSimulatorPluginInfo::registerMetadata();
             CSimulatorPluginInfoList::registerMetadata();
             CSimulatorSetup::registerMetadata();

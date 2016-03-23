@@ -32,7 +32,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CSimulatorInfo : public BlackMisc::CValueObject<CSimulatorInfo>
         {
         public:
-
             //! Simulator
             enum SimulatorFlag
             {

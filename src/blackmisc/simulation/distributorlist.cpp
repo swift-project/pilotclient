@@ -50,7 +50,7 @@ namespace BlackMisc
             {
                 if (distributor.matchesKeyOrAlias(keyOrAlias)) { return true; }
             }
-            return true;
+            return false;
         }
 
         QStringList CDistributorList::getDbKeysAndAliases() const
