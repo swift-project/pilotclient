@@ -51,7 +51,8 @@ namespace BlackMisc
             {
                 Undefined = 0,
                 Include   = 1 << 0,
-                Exclude   = 1 << 1
+                Exclude   = 1 << 1,
+                All       = Include | Exclude
             };
 
             //! Supposed to be used only in filter operations

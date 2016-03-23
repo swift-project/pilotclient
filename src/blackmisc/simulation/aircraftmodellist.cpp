@@ -102,7 +102,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::withAircraftDesignator() const
+        CAircraftModelList CAircraftModelList::findWithAircraftDesignator() const
         {
             return this->findBy([ = ](const CAircraftModel & model)
             {
@@ -110,7 +110,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::withAircraftDesignator(const QStringList &designators) const
+        CAircraftModelList CAircraftModelList::findWithAircraftDesignator(const QStringList &designators) const
         {
             if (designators.isEmpty()) { return CAircraftModelList(); }
             return this->findBy([ = ](const CAircraftModel & model)
@@ -119,7 +119,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::withKnownAircraftDesignator() const
+        CAircraftModelList CAircraftModelList::findWithKnownAircraftDesignator() const
         {
             return this->findBy([ = ](const CAircraftModel & model)
             {
@@ -127,7 +127,16 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::byDistributor(const CDistributorList &distributors) const
+        CAircraftModelList CAircraftModelList::matchesSimulator(const CSimulatorInfo &simulator) const
+        {
+            const CSimulatorInfo::Simulator s = simulator.getSimulator();
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return (s & model.getSimulatorInfo().getSimulator()) > 0;
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByDistributors(const CDistributorList &distributors) const
         {
             if (distributors.isEmpty()) { return CAircraftModelList(); }
             return this->findBy([ = ](const CAircraftModel & model)
@@ -136,12 +145,40 @@ namespace BlackMisc
             });
         }
 
-        void CAircraftModelList::setSimulatorInfo(const CSimulatorInfo &info)
+        int CAircraftModelList::setSimulatorInfo(const CSimulatorInfo &info)
         {
+            int c = 0;
+            const CSimulatorInfo::Simulator s = info.getSimulator();
             for (CAircraftModel &model : (*this))
             {
+                if (model.getSimulatorInfo().getSimulator() == s) { continue; }
                 model.setSimulatorInfo(info);
+                c++;
             }
+            return c;
+        }
+
+        CSimulatorInfo CAircraftModelList::simulatorsSupported() const
+        {
+            CSimulatorInfo::Simulator s = CSimulatorInfo::None;
+            for (const CAircraftModel &model : (*this))
+            {
+                s |= model.getSimulatorInfo().getSimulator();
+                if (s == CSimulatorInfo::All) { break; }
+            }
+            return CSimulatorInfo(s);
+        }
+
+        int CAircraftModelList::setModelMode(CAircraftModel::ModelMode mode)
+        {
+            int c = 0;
+            for (CAircraftModel &model : (*this))
+            {
+                if (model.getModelMode() == mode) { continue; }
+                model.setModelMode(mode);
+                c++;
+            }
+            return c;
         }
 
         int CAircraftModelList::keepModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
@@ -244,7 +281,7 @@ namespace BlackMisc
             return validateForPublishing(invalidModels);
         }
 
-        CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &invalidModels) const
+        CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &validateModels) const
         {
             if (this->isEmpty()) { return CStatusMessageList(); }
             CStatusMessageList msgs;
@@ -271,7 +308,7 @@ namespace BlackMisc
                     singleMsg.prependMessage(model.getModelString() + ": ");
                 }
                 msgs.push_back(singleMsg);
-                invalidModels.push_back(model);
+                validateModels.push_back(model);
             }
             return msgs;
         }

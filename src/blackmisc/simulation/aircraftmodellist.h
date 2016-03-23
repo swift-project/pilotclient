@@ -69,20 +69,29 @@ namespace BlackMisc
             //! With file name
             CAircraftModelList findWithFileName() const;
 
+            //! All models from given distributors
+            CAircraftModelList findByDistributors(const CDistributorList &distributors) const;
+
             //! Models with aircraft ICAO code set
-            CAircraftModelList withAircraftDesignator() const;
+            CAircraftModelList findWithAircraftDesignator() const;
 
             //! Models with aircraft ICAO code from list
-            CAircraftModelList withAircraftDesignator(const QStringList &designators) const;
+            CAircraftModelList findWithAircraftDesignator(const QStringList &designators) const;
 
             //! Models with a known aircraft ICAO code set
-            CAircraftModelList withKnownAircraftDesignator() const;
+            CAircraftModelList findWithKnownAircraftDesignator() const;
 
-            //! All models from given distributors
-            CAircraftModelList byDistributor(const CDistributorList &distributors) const;
+            //! Find for given simulator
+            CAircraftModelList matchesSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Set simulator for all elements
-            void setSimulatorInfo(const BlackMisc::Simulation::CSimulatorInfo &info);
+            int setSimulatorInfo(const BlackMisc::Simulation::CSimulatorInfo &info);
+
+            //! Which simulators are supported in that model list
+            CSimulatorInfo simulatorsSupported() const;
+
+            //! Set mode for all elements
+            int setModelMode(BlackMisc::Simulation::CAircraftModel::ModelMode mode);
 
             //! Keep only those models with given model strings
             //! \return number of elements removed
@@ -112,7 +121,7 @@ namespace BlackMisc
             CStatusMessageList validateForPublishing() const;
 
             //! Validate for publishing
-            CStatusMessageList validateForPublishing(CAircraftModelList &invalidModels) const;
+            CStatusMessageList validateForPublishing(CAircraftModelList &validateModels) const;
 
             //! To database JSON
             QJsonArray toDatabaseJson() const;
