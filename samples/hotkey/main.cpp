@@ -11,17 +11,18 @@
 //! \ingroup samplehotkey
 
 #include "blackgui/components/settingshotkeycomponent.h"
-#include "blackmisc/registermetadata.h"
+#include "blackgui/guiapplication.h"
 #include <QApplication>
+
+using namespace BlackGui;
 
 //! main
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
-    BlackMisc::registerMetadata();
+    CGuiApplication::highDpiScreenSupport();
+    QApplication qa(argc, argv);
+    CGuiApplication a;
     BlackGui::Components::CSettingsHotkeyComponent w;
     w.show();
-
     return a.exec();
 }
