@@ -136,6 +136,10 @@ namespace BlackGui
         //! Exit application, perform graceful shutdown and exit
         static void exit(int retcode = 0);
 
+        //! Support for high DPI screens
+        //! \note Needs to be at the beginning of main
+        static void highDpiScreenSupport();
+
     signals:
         //! Style sheet changed
         void styleSheetsChanged();

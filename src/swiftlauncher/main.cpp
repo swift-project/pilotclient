@@ -28,6 +28,7 @@ using namespace BlackCore;
 int main(int argc, char *argv[])
 {
     //! [CSwiftGuiStdApplication]
+    CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("swift launcher", CIcons::swift1024());
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup."), "installer"});

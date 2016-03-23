@@ -27,6 +27,7 @@ using namespace BlackGui;
 int main(int argc, char *argv[])
 {
     //! [CSwiftGuiStdApplication]
+    CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("swift core", CIcons::swiftNova24());
     a.addWindowStateOption();

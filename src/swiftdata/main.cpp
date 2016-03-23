@@ -27,6 +27,7 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
+    CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa);
     CGuiApplication a("swift mapping tool", CIcons::swiftDatabase48());
