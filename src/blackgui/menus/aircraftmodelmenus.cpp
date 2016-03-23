@@ -107,7 +107,7 @@ namespace BlackGui
             mv->updateContainerMaybeAsync(models);
             if (this->m_loader)
             {
-                this->m_loader->replaceCacheWithModelData(models);
+                this->m_loader->setModelsInCache(models);
             }
         }
 
@@ -126,7 +126,7 @@ namespace BlackGui
             mv->replaceOrAddModelsWithString(models);
             if (this->m_loader)
             {
-                this->m_loader->replaceCacheWithModelData(models);
+                this->m_loader->setModelsInCache(models);
             }
         }
     } // ns

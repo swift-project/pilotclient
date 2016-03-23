@@ -56,14 +56,14 @@ namespace BlackMisc
             return true;
         }
 
-        CStatusMessage IAircraftModelLoader::replaceCacheWithModelData(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        CStatusMessage IAircraftModelLoader::setModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_simulatorInfo;
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
             const CStatusMessage m(this->m_caches.setModels(models, sim));
             if (m.isSeverityInfoOrLess())
             {
-                // set is asny
+                // set is asynchronous
                 // emit loadingFinished(true, sim);
             }
             return m;
@@ -78,7 +78,7 @@ namespace BlackMisc
             int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {
-                return this->replaceCacheWithModelData(models, sim);
+                return this->setModelsInCache(models, sim);
             }
             else
             {
@@ -119,11 +119,6 @@ namespace BlackMisc
         bool IAircraftModelLoader::hasCachedData() const
         {
             return !this->m_caches.getModels(this->m_simulatorInfo).isEmpty();
-        }
-
-        CStatusMessage IAircraftModelLoader::setModelsInCache(const CAircraftModelList &models)
-        {
-            return this->m_caches.setModels(models, this->m_simulatorInfo);
         }
 
         CStatusMessage IAircraftModelLoader::clearCache()

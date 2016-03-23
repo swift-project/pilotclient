@@ -65,6 +65,7 @@ namespace BlackMisc
             virtual bool isLoadingFinished() const = 0;
 
             //! The loaded models
+            //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getAircraftModels() const;
 
             //! Count of loaded models
@@ -99,11 +100,11 @@ namespace BlackMisc
 
         public slots:
             //! Set cache from outside, this should only be used in special cases.
-            //! But it allows to modify data elsewhere nd update the cache with manipulated data.
-            BlackMisc::CStatusMessage replaceCacheWithModelData(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
+            //! But it allows to modify data elsewhere and update the cache with manipulated data.
+            BlackMisc::CStatusMessage setModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
             //! Set cache from outside, this should only be used in special cases.
-            //! But it allows to modify data elsewhere nd update the cache with manipulated data.
+            //! But it allows to modify data elsewhere and update the cache with manipulated data.
             BlackMisc::CStatusMessage replaceOrAddModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
         signals:
@@ -123,9 +124,6 @@ namespace BlackMisc
             //! Any cached data?
             bool hasCachedData() const;
 
-            //! Set models in cache
-            BlackMisc::CStatusMessage setModelsInCache(const BlackMisc::Simulation::CAircraftModelList &models);
-
             //! Clear cache
             BlackMisc::CStatusMessage clearCache();
 
@@ -135,12 +133,12 @@ namespace BlackMisc
             //! Start the loading process from disk
             virtual void startLoadingFromDisk(LoadMode mode, const BlackMisc::Simulation::CAircraftModelList &dbModels) = 0;
 
-            BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;       //!< Corresponding simulator
-            std::atomic<bool> m_cancelLoading { false };                 //!< flag
-            std::atomic<bool> m_loadingInProgress { false };             //!< Loading in progress
-            QString           m_rootDirectory;                           //!< root directory parsing aircraft.cfg files
-            QStringList       m_excludedDirectories;                     //!< directories not to be parsed
-            BlackMisc::Simulation::Data::CModelCaches m_caches { this }; //!< caches
+            BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;        //!< Corresponding simulator
+            std::atomic<bool> m_cancelLoading { false };                  //!< flag
+            std::atomic<bool> m_loadingInProgress { false };              //!< Loading in progress
+            QString           m_rootDirectory;                            //!< root directory parsing aircraft.cfg files
+            QStringList       m_excludedDirectories;                      //!< directories not to be parsed
+            BlackMisc::Simulation::Data::CModelCaches m_caches { this };  //!< caches
 
         protected slots:
             //! Loading finished
