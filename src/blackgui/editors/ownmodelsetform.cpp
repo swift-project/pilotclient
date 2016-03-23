@@ -53,6 +53,11 @@ namespace BlackGui
             return this->ui->rb_DbDataOnly->isChecked();
         }
 
+        bool COwnModelSetForm::incrementalBuild() const
+        {
+            return ui->rb_Incremental->isChecked();
+        }
+
         bool COwnModelSetForm::dbIcaoCodesOnly() const
         {
             return this->ui->rb_DbIcaoCodesOnly->isChecked();

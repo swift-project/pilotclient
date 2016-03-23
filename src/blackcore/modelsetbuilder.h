@@ -34,7 +34,8 @@ namespace BlackCore
             NoOptions              = 0,
             FilterDistributos      = 1 << 0,
             OnlyDbData             = 1 << 1,
-            OnlyDbIcaoCodes        = 1 << 2
+            OnlyDbIcaoCodes        = 1 << 2,
+            Incremental            = 1 << 3
         };
         Q_DECLARE_FLAGS(Builder, BuilderFlag)
 
@@ -43,8 +44,10 @@ namespace BlackCore
 
         //! Build a model set
         BlackMisc::Simulation::CAircraftModelList buildModelSet(
-				const BlackMisc::Simulation::CAircraftModelList &models, Builder oprions,
-				const BlackMisc::Simulation::CDistributorList &onlyByDistributors = BlackMisc::Simulation::CDistributorList()) const;
+            const BlackMisc::Simulation::CSimulatorInfo &simulator,
+            const BlackMisc::Simulation::CAircraftModelList &models,
+            const BlackMisc::Simulation::CAircraftModelList &currentSet, Builder oprions,
+            const BlackMisc::Simulation::CDistributorList &onlyByDistributors = {}) const;
     };
 } // ns
 

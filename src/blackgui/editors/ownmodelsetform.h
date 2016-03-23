@@ -51,6 +51,9 @@ namespace BlackGui
             //! DB ICAO codes
             bool dbIcaoCodesOnly() const;
 
+            //! Request incremental build
+            bool incrementalBuild() const;
+
         private:
             QScopedPointer<Ui::COwnModelSetForm> ui;
         };

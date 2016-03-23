@@ -66,7 +66,7 @@ namespace BlackGui
             BlackMisc::Simulation::CSimulatorInfo     m_simulatorInfo;
 
             //! Build the set
-            BlackMisc::Simulation::CAircraftModelList buildSet();
+            BlackMisc::Simulation::CAircraftModelList buildSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &currentSet = {});
         };
     } // ns
 } // ns

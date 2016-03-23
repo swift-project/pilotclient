@@ -19,13 +19,15 @@ namespace BlackCore
         // void
     }
 
-    CAircraftModelList CModelSetBuilder::buildModelSet(const CAircraftModelList &models, Builder oprions, const CDistributorList &onlyByDistributors) const
+    CAircraftModelList CModelSetBuilder::buildModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &models, const CAircraftModelList &currentSet, Builder oprions, const CDistributorList &onlyByDistributors) const
     {
         if (models.isEmpty()) { return CAircraftModelList(); }
         CAircraftModelList modelSet;
-        if (oprions.testFlag(FilterDistributos))
+
+        // I avoid and empty distributor set wipes out everything
+        if (oprions.testFlag(FilterDistributos) && !onlyByDistributors.isEmpty())
         {
-            modelSet = models.byDistributor(onlyByDistributors);
+            modelSet = models.findByDistributors(onlyByDistributors);
         }
         else
         {
@@ -40,13 +42,24 @@ namespace BlackCore
         {
             Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web data services");
             const QStringList designators(sApp->getWebDataServices()->getAircraftIcaoCodes().allIcaoCodes());
-            modelSet = modelSet.withAircraftDesignator(designators);
+            modelSet = modelSet.findWithAircraftDesignator(designators);
         }
         else
         {
             // without any information we can not use them
-            modelSet = modelSet.withKnownAircraftDesignator();
+            modelSet = modelSet.findWithKnownAircraftDesignator();
         }
-        return modelSet;
+        modelSet.setModelMode(CAircraftModel::Include); // in sets we only include, exclude means not present in set
+        if (oprions.testFlag(Incremental))
+        {
+            if (currentSet.isEmpty()) { return modelSet; }
+            CAircraftModelList copy(currentSet);
+            copy.replaceOrAddModelsWithString(modelSet, Qt::CaseInsensitive); // incremental
+            return copy.matchesSimulator(simulator);
+        }
+        else
+        {
+            return modelSet.matchesSimulator(simulator);
+        }
     }
-}
+} // ns
