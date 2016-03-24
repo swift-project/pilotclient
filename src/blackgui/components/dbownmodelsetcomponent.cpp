@@ -10,6 +10,7 @@
 #include "dbownmodelsetcomponent.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackgui/models/aircrafticaolistmodel.h"
+#include "blackmisc/logmessage.h"
 #include "dbmappingcomponent.h"
 #include "dbownmodelsetdialog.h"
 #include "ui_dbownmodelsetcomponent.h"
@@ -33,8 +34,15 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuRemoveItems(CAircraftModelView::MenuDisplayAutomaticallyAndRefresh | CAircraftModelView::MenuStashing | CAircraftModelView::MenuBackend | CAircraftModelView::MenuRefresh);
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
             ui->tvp_OwnModelSet->addFilterDialog();
+            ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
+
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
+            connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
+            connect(&this->m_modelSetLoader, &CModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::rowCountChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
+
+            this->ps_onRowCountChanged(ui->tvp_OwnModelSet->rowCount(), ui->tvp_OwnModelSet->hasFilter());
         }
 
         CDbOwnModelSetComponent::~CDbOwnModelSetComponent()
@@ -49,11 +57,18 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            if (models.isEmpty()) { return; }
+            CAircraftModelList cleanModelList(models.matchesSimulator(simulator)); // remove those not matching the simulator
+            const int diff = models.size() - cleanModelList.size();
+            if (diff > 0)
+            {
+                CLogMessage(this).warning("Removed models from set because not matching " + simulator.toQString(true));
+            }
+            if (cleanModelList.isEmpty()) { return; }
+
+            this->setSimulator(simulator);
             this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
-            this->ui->pb_SaveAsSetForSimulator->setText("save for " + simulator.toQString());
-            this->ui->pb_SaveAsSetForSimulator->setEnabled(!models.isEmpty());
-            this->m_simulator = simulator;
-            this->setSaveFileName(simulator);
         }
 
         void CDbOwnModelSetComponent::setMappingComponent(CDbMappingComponent *component)
@@ -72,10 +87,6 @@ namespace BlackGui
             {
                 // myself
                 this->getMappingComponent()->resizeForSelect();
-            }
-            else
-            {
-                // others
             }
         }
 
@@ -110,15 +121,106 @@ namespace BlackGui
             }
             else if (sender == ui->pb_LoadExistingSet)
             {
+                this->ui->tvp_OwnModelSet->setLoadValidation(CAircraftModelView::AllowOnlySingeSimulator);
                 this->ui->tvp_OwnModelSet->showFileLoadDialog();
+            }
+            else if (sender == ui->pb_SaveAsSetForSimulator)
+            {
+                const CAircraftModelList ml(ui->tvp_OwnModelSet->container());
+                if (!ml.isEmpty())
+                {
+                    const CStatusMessage m = this->m_modelSetLoader.setModelsInCache(ml);
+                    CLogMessage::preformatted(m);
+                }
+            }
+        }
+
+        void CDbOwnModelSetComponent::ps_changeSimulator(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            this->m_modelSetLoader.changeSimulator(simulator);
+            this->setSimulator(simulator);
+        }
+
+        void CDbOwnModelSetComponent::ps_onSimulatorChanged(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const CAircraftModelList models(this->m_modelSetLoader.getAircraftModels());
+            this->setSimulator(simulator);
+            ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
+        }
+
+        void CDbOwnModelSetComponent::ps_onRowCountChanged(int count, bool withFilter)
+        {
+            Q_UNUSED(count);
+            Q_UNUSED(withFilter);
+            int realUnfilteredCount = ui->tvp_OwnModelSet->container().size();
+            bool canSave = this->m_simulator.isSingleSimulator() && (realUnfilteredCount > 0);
+            this->ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
+            if (canSave)
+            {
+                this->setSaveFileName(this->m_simulator);
+                ui->pb_SaveAsSetForSimulator->setText("save for " + this->m_simulator.toQString(true));
+            }
+            else
+            {
+                ui->pb_SaveAsSetForSimulator->setText("save");
             }
         }
 
         void CDbOwnModelSetComponent::setSaveFileName(const CSimulatorInfo &sim)
         {
             Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const QString n("modelset" + sim.toQString(true));
-            this->ui->tvp_OwnModelSet->setSaveFileName(n);
+            const QString name("modelset" + sim.toQString(true));
+            this->ui->tvp_OwnModelSet->setSaveFileName(name);
+        }
+
+        void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &sim)
+        {
+            this->m_simulator = sim;
+            this->ui->le_Simulator->setText(sim.toQString(true));
+        }
+
+        void CDbOwnModelSetComponent::CLoadModelsMenu::customMenu(QMenu &menu) const
+        {
+            const CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
+            bool noSims = sims.isNoSimulator() || sims.isUnspecified();
+            if (!noSims)
+            {
+                this->addSeparator(menu);
+                QMenu *load = menu.addMenu(CIcons::appModels16(), "Model set");
+                CDbOwnModelSetComponent *ownModelSetComp = qobject_cast<CDbOwnModelSetComponent *>(this->parent());
+                Q_ASSERT_X(ownModelSetComp, Q_FUNC_INFO, "Cannot access parent");
+                if (sims.fsx())
+                {
+                    load->addAction(CIcons::appModels16(), "FSX models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
+                    });
+                }
+                if (sims.p3d())
+                {
+                    load->addAction(CIcons::appModels16(), "P3D models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
+                    });
+                }
+                if (sims.fs9())
+                {
+                    load->addAction(CIcons::appModels16(), "FS9 models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
+                    });
+                }
+                if (sims.xplane())
+                {
+                    load->addAction(CIcons::appModels16(), "XP models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
+                    });
+                }
+            }
+            this->nestedCustomMenu(menu);
         }
     } // ns
 } // ns

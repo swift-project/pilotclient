@@ -77,6 +77,29 @@
        </spacer>
       </item>
       <item>
+       <widget class="QLabel" name="lbl_Simulator">
+        <property name="text">
+         <string>Simulator:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="le_Simulator">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Simulator</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_CreateNewSet">
         <property name="minimumSize">
          <size>

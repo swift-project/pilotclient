@@ -12,10 +12,13 @@
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 
+#include "blackgui/menus/menudelegate.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "dbmappingcomponentaware.h"
 #include <QFrame>
 #include <QScopedPointer>
+#include <QMenu>
 
 namespace Ui { class CDbOwnModelSetComponent; }
 
@@ -61,15 +64,41 @@ namespace BlackGui
             //! Button was clicked
             void ps_buttonClicked();
 
+            //! Change current simulator
+            void ps_changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Simulator has been changed (in loader)
+            void ps_onSimulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! View has changed row count
+            void ps_onRowCountChanged(int count, bool withFilter);
+
         private:
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
+            //! Simulator
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &sim);
+
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
             QScopedPointer<CDbOwnModelSetDialog>        m_modelSetDialog;
             BlackMisc::Simulation::CSimulatorInfo       m_simulator;
-        };
+            BlackMisc::Simulation::CModelSetLoader      m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
 
+            //! The menu for loading and handling own models for mapping tasks
+            //! \note This is specific for that very component
+            class CLoadModelsMenu : public BlackGui::Menus::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CLoadModelsMenu(CDbOwnModelSetComponent *ownModelSetComponent, bool separator = true) :
+                    BlackGui::Menus::IMenuDelegate(ownModelSetComponent, separator)
+                {}
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+            };
+        };
     } // ns
 } // ns
 
