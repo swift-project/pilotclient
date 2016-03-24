@@ -528,6 +528,12 @@ namespace BlackGui
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
 
+            //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
+            virtual BlackMisc::CStatusMessage modifyLoadedData(ContainerType &data) const;
+
+            //! Verify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
+            virtual BlackMisc::CStatusMessage validateLoadedData(const ContainerType &data) const;
+
             // --------------------------------------------- SLOTS start here -----------------------------------------
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_filterDialogFinished

@@ -28,6 +28,14 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! How to validate loaded JSON data
+            enum LoadValidationFlag
+            {
+                NoValidation,
+                AllowOnlySingeSimulator
+            };
+            Q_DECLARE_FLAGS(LoadValidation, LoadValidationFlag)
+
             //! Constructor
             explicit CAircraftModelView(QWidget *parent = nullptr);
 
@@ -79,6 +87,9 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CAircraftModelListModel::highlightModelStrings
             bool highlightModelStrings() const;
 
+            //! Load validation
+            void setLoadValidation(LoadValidation validation) { m_validation = validation; }
+
         signals:
             //! Request to stash if applicable
             void requestStash(const BlackMisc::Simulation::CAircraftModelList &models);
@@ -93,8 +104,11 @@ namespace BlackGui
             //! \copydoc QTableView::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
 
-            //! \copydoc CViewBaseNonTemplate::customMenu
+            //! \name View base class overrides
+            //! @{
             virtual void customMenu(QMenu &menu) const override;
+            virtual BlackMisc::CStatusMessage validateLoadedData(const BlackMisc::Simulation::CAircraftModelList &models) const override;
+            //! @}
 
         private slots:
             //! Highlight stashed models
@@ -110,8 +124,14 @@ namespace BlackGui
             void ps_requestStash();
 
         private:
-            bool m_stashingClearsSelection = true; //!< stashing unselects
+            bool           m_stashingClearsSelection = true;         //!< stashing unselects
+            LoadValidation m_validation              = NoValidation; //!< Loaded JSON validation
         };
     } // ns
 } // ns
+
+Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::LoadValidation)
+Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::LoadValidationFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CAircraftModelView::LoadValidation)
+
 #endif // guard

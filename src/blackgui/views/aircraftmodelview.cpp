@@ -289,6 +289,19 @@ namespace BlackGui
             CViewWithDbObjects::customMenu(menu);
         }
 
+        CStatusMessage CAircraftModelView::validateLoadedData(const CAircraftModelList &models) const
+        {
+            static const CStatusMessage ok(this, CStatusMessage::SeverityInfo, "model validation passed", true);
+            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "no data", true); }
+            if (this->m_validation == AllowOnlySingeSimulator)
+            {
+                const CSimulatorInfo sim = models.simulatorsSupported();
+                if (sim.isSingleSimulator()) { return ok; }
+                return CStatusMessage(this, CStatusMessage::SeverityError, "data need to be from one simulator");
+            }
+            return CViewWithDbObjects::validateLoadedData(models);
+        }
+
         void CAircraftModelView::ps_toggleHighlightStashedModels()
         {
             bool h = derivedModel()->highlightModelStrings();

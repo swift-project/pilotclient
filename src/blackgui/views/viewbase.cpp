@@ -956,41 +956,57 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::modifyLoadedData(ContainerType &data) const
+        {
+            Q_UNUSED(data);
+            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "no modification", true);
+            return e;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::validateLoadedData(const ContainerType &data) const
+        {
+            Q_UNUSED(data);
+            static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "no validation", true);
+            return e;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
         CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson()
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             const QString fileName = QFileDialog::getOpenFileName(nullptr,
                                      tr("Load data file"), getDefaultFilename(true),
                                      tr("swift (*.json *.txt)"));
-            if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Load canceled"); }
+            if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Load canceled", true); }
             QString json(CFileUtils::readFileToString(fileName));
             if (json.isEmpty())
             {
-                return CStatusMessage(cats, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data");
+                return CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data", true);
             }
             ContainerType container;
             container.convertFromJson(json);
+            const CStatusMessage s = this->validateLoadedData(container);
+            if (s.getSeverity() == CStatusMessage::SeverityError) { return s; }
             this->updateContainerMaybeAsync(container);
-            return CStatusMessage(cats, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed");
+            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed", true);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_saveJson() const
         {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
             const QString fileName = QFileDialog::getSaveFileName(nullptr,
                                      tr("Save data file"), getDefaultFilename(false),
                                      tr("swift (*.json *.txt)"));
-            if (fileName.isEmpty()) { return CStatusMessage(cats, CStatusMessage::SeverityDebug, "Save canceled"); }
+            if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
             const QString json(this->toJsonString());
             bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
             if (ok)
             {
-                return CStatusMessage(cats, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress");
+                return CStatusMessage(this, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress", true);
             }
             else
             {
-                return CStatusMessage(cats, CStatusMessage::SeverityError, "Writing " + fileName + " failed");
+                return CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
             }
         }
 
