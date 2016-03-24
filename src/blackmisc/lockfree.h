@@ -19,6 +19,11 @@
 #include <atomic>
 #include <utility>
 
+#if ! (defined(Q_CC_GNU) && __GNUC__ <= 4)
+//! \private
+#define BLACK_HAS_ATOMIC_SHARED_PTR
+#endif
+
 // http://www.drdobbs.com/lock-free-data-structures/184401865
 // http://en.cppreference.com/w/cpp/memory/shared_ptr/atomic
 
@@ -39,11 +44,11 @@ namespace BlackMisc
         template <typename T>
         std::shared_ptr<T> atomic_load(const std::shared_ptr<T>* ptr)
         {
-#if defined(Q_CC_GNU) && __GNUC__ <= 4
+#ifdef BLACK_HAS_ATOMIC_SHARED_PTR
+            return std::atomic_load(ptr);
+#else
             QMutexLocker lock(BlackMisc::Private::atomicSharedPtrMutex());
             return *ptr;
-#else
-            return std::atomic_load(ptr);
 #endif
         }
 
@@ -51,7 +56,9 @@ namespace BlackMisc
         template <typename T>
         bool atomic_compare_exchange_strong(std::shared_ptr<T>* ptr, std::shared_ptr<T>* exp, std::shared_ptr<T> des)
         {
-#if defined(Q_CC_GNU) && __GNUC__ <= 4
+#ifdef BLACK_HAS_ATOMIC_SHARED_PTR
+            return std::atomic_compare_exchange_strong(ptr, exp, des);
+#else
             std::shared_ptr<T> tmp;
             QMutexLocker lock(BlackMisc::Private::atomicSharedPtrMutex());
             if (*ptr == *exp && ! ptr->owner_before(*exp) && ! exp->owner_before(*ptr))
@@ -63,8 +70,6 @@ namespace BlackMisc
             tmp = std::move(*exp);
             *exp = *ptr;
             return false;
-#else
-            return std::atomic_compare_exchange_strong(ptr, exp, des);
 #endif
         }
     }
