@@ -15,6 +15,7 @@
 #include "blackmiscexport.h"
 #include "variant.h"
 #include "stacktrace.h"
+#include "invoke.h"
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
@@ -109,7 +110,7 @@ namespace BlackMisc
             Q_ASSERT(context->thread() == QThread::currentThread());
             QMutexLocker lock(&m_finishedMutex);
             connect(this, &CWorkerBase::finished, context, functor);
-            if (m_finished) { invoke(context, functor); }
+            if (m_finished) { Private::invokeSlot(functor, context); }
         }
 
         //! Connects to a functor which will be called when the task is finished.
@@ -185,20 +186,6 @@ namespace BlackMisc
             emit finished();
         }
 
-        //! Uniform way to invoke either a functor or a method.
-        template <typename T, typename F, typename... Ts>
-        static auto invoke(T *object, F func, Ts &&... args) -> std::enable_if_t<std::is_member_function_pointer<F>::value>
-        {
-            return (object->*func)(std::forward<Ts>(args)...);
-        }
-
-        //! Uniform way to invoke either a functor or a method.
-        template <typename T, typename F, typename... Ts>
-        static auto invoke(T *, F func, Ts &&... args) -> std::enable_if_t<! std::is_member_function_pointer<F>::value>
-        {
-            return func(std::forward<Ts>(args)...);
-        }
-
     private:
         virtual void quit() noexcept {}
         virtual void quitAndWait() noexcept { waitForFinished(); }
@@ -250,7 +237,7 @@ namespace BlackMisc
         void thenWithResult(T *context, F functor)
         {
             Q_ASSERT_X(m_result.canConvert<R>(), Q_FUNC_INFO, "Type in thenWithResult must match return type of task");
-            then(context, [this, context, functor]() { invoke(context, functor, this->result<R>()); });
+            then(context, [this, context, functor]() { Private::invokeSlot(functor, context, this->result<R>()); });
         }
 
         //! Returns the result of the task, waiting for it to finish if necessary.
