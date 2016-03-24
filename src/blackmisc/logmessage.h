@@ -16,7 +16,7 @@
 #include "statusmessagelist.h"
 #include "statusmessage.h"
 #include "logcategorylist.h"
-#include "indexsequence.h"
+#include "integersequence.h"
 #include <QDebug>
 #include <QLoggingCategory>
 #include <QList>

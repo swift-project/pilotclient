@@ -10,7 +10,7 @@
 #ifndef BLACKMISC_TUPLE_PRIVATE_H
 #define BLACKMISC_TUPLE_PRIVATE_H
 
-#include "indexsequence.h"
+#include "integersequence.h"
 #include <QtGlobal>
 #include <QDBusArgument>
 #include <QHash>

@@ -14,7 +14,7 @@
 #ifndef BLACKMISC_PREDICATES_H
 #define BLACKMISC_PREDICATES_H
 
-#include "indexsequence.h"
+#include "integersequence.h"
 #include <QObject>
 #include <functional>
 #include <algorithm>
