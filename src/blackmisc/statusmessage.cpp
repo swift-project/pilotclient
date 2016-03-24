@@ -96,10 +96,14 @@ namespace BlackMisc
         m_severity = severity;
     }
 
-    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message)
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool verification)
         : CStatusMessage(severity, message)
     {
         m_categories = categories;
+        if (verification)
+        {
+            this->addVerificationCategory();
+        }
     }
 
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
@@ -225,6 +229,11 @@ namespace BlackMisc
     {
         QReadLocker lock(&m_lock);
         return this->m_handledByObjects.contains(quintptr(object));
+    }
+
+    void CStatusMessage::addVerificationCategory()
+    {
+        this->addCategory(CLogCategory::verification());
     }
 
     QString CStatusMessage::convertToQString(bool /** i18n */) const
