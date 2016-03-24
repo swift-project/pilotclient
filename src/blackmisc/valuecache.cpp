@@ -476,6 +476,8 @@ namespace BlackMisc
                 element.m_value.uniqueWrite() = value;
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
+            // All good info
+            status = CStatusMessage(this, CStatusMessage::SeverityInfo, "set values in cache");
         }
         return status;
     }
@@ -579,15 +581,15 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, invalidSeverity, "Uninitialized value for " + element.m_key);
+            return CStatusMessage(this, invalidSeverity, "Uninitialized value for " + element.m_key, true);
         }
         else if (value.userType() != element.m_metaType)
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError, QString("Expected ") + QMetaType::typeName(element.m_metaType) + " but got " + value.typeName() + " for " + element.m_key);
+            return CStatusMessage(this, CStatusMessage::SeverityError, QString("Expected ") + QMetaType::typeName(element.m_metaType) + " but got " + value.typeName() + " for " + element.m_key, true);
         }
         else if (element.m_validator && ! element.m_validator(value))
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError, value.toQString() + " is not valid for " + element.m_key);
+            return CStatusMessage(this, CStatusMessage::SeverityError, value.toQString() + " is not valid for " + element.m_key, true);
         }
         else
         {
