@@ -28,7 +28,8 @@ namespace BlackMisc
         //! Property index
         enum ColumnIndex
         {
-            IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastoreInteger
+            IndexDbIntegerKey = CPropertyIndex::GlobalIndexIDatastoreInteger,
+            IndexDatabaseIcon
         };
 
         //! Get DB key.
@@ -51,6 +52,9 @@ namespace BlackMisc
 
         //! Has valid DB key
         bool hasValidDbKey() const { return m_dbKey >= 0; }
+
+        //! Database icon if this has valid key, otherwise empty
+        const CIcon &toDatabaseIcon() const;
 
         //! Invalid key
         static int invalidDbKey() { return -1; }
@@ -95,7 +99,8 @@ namespace BlackMisc
         //! Property index
         enum ColumnIndex
         {
-            IndexDbStringKey = CPropertyIndex::GlobalIndexIDatastoreString
+            IndexDbStringKey = CPropertyIndex::GlobalIndexIDatastoreString,
+            IndexDatabaseIcon
         };
 
         //! Get DB key.
@@ -109,6 +114,9 @@ namespace BlackMisc
 
         //! Has valid DB key
         bool hasValidDbKey() const { return !m_dbKey.isEmpty(); }
+
+        //! Database icon if this has valid key, otherwise empty
+        const CIcon &toDatabaseIcon() const;
 
         //! Invalid key
         static QString invalidDbKey() { return ""; }

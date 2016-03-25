@@ -34,6 +34,13 @@ namespace BlackMisc
         this->m_dbKey = k;
     }
 
+    const CIcon &IDatastoreObjectWithIntegerKey::toDatabaseIcon() const
+    {
+        static const CIcon empty;
+        if (this->hasValidDbKey()) { return CIconList::iconByIndex(CIcons::StandardIconDatabaseKey16); }
+        return empty;
+    }
+
     int IDatastoreObjectWithIntegerKey::stringToDbKey(const QString &candidate)
     {
         if (candidate.isEmpty()) { return invalidDbKey(); }
@@ -69,8 +76,8 @@ namespace BlackMisc
         switch (i)
         {
         case IndexDbIntegerKey: return CVariant::from(this->m_dbKey);
-        default:
-            break;
+        case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
+        default: break;
         }
         return CVariant();
     }
@@ -100,10 +107,9 @@ namespace BlackMisc
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbIntegerKey:
-            return Compare::compare(this->m_dbKey, compareValue.getDbKey());
-        default:
-            break;
+        case IndexDbIntegerKey:  return Compare::compare(this->m_dbKey, compareValue.getDbKey());
+        case IndexDatabaseIcon:  return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
+        default: break;
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
         return 0;
@@ -113,7 +119,7 @@ namespace BlackMisc
     {
         if (ITimestampBased::canHandleIndex(index)) { return true;}
         int i = index.frontCasted<int>();
-        return (i >= static_cast<int>(IndexDbIntegerKey)) && (i <= static_cast<int>(IndexDbIntegerKey));
+        return (i >= static_cast<int>(IndexDbIntegerKey)) && (i <= static_cast<int>(IndexDatabaseIcon));
     }
 
     QJsonValue IDatastoreObjectWithStringKey::getDbKeyAsJsonValue() const
@@ -121,6 +127,13 @@ namespace BlackMisc
         if (this->hasValidDbKey()) { return QJsonValue(this->m_dbKey); }
         static const QJsonValue null;
         return null;
+    }
+
+    const CIcon &IDatastoreObjectWithStringKey::toDatabaseIcon() const
+    {
+        static const CIcon empty;
+        if (this->hasValidDbKey()) { return CIconList::iconByIndex(CIcons::StandardIconDatabaseKey16); }
+        return empty;
     }
 
     void IDatastoreObjectWithStringKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
@@ -143,6 +156,7 @@ namespace BlackMisc
         switch (i)
         {
         case IndexDbStringKey: return CVariant::from(this->m_dbKey);
+        case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
         default:
             break;
         }
@@ -174,8 +188,8 @@ namespace BlackMisc
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbStringKey:
-            return this->m_dbKey.compare(compareValue.getDbKey());
+        case IndexDbStringKey:  return this->m_dbKey.compare(compareValue.getDbKey());
+        case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
         default:
             break;
         }
@@ -188,7 +202,7 @@ namespace BlackMisc
         if (index.isEmpty()) { return false; }
         if (ITimestampBased::canHandleIndex(index)) { return true;}
         int i = index.frontCasted<int>();
-        return (i >= static_cast<int>(IndexDbStringKey)) && (i <= static_cast<int>(IndexDbStringKey));
+        return (i >= static_cast<int>(IndexDbStringKey)) && (i <= static_cast<int>(IndexDatabaseIcon));
     }
 
 } // namespace
