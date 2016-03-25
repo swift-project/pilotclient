@@ -95,6 +95,7 @@ namespace BlackMisc
             GlobalIndexCGlobalSetup           = 12000,
             GlobalIndexCUpdateInfo            = 12100,
             GlobalIndexCVatsimSetup           = 12200,
+            GlobalIndexCDbOwnModelsComponent  = 14000,
             GlobalIndexAbuseMode              = 20000  // property index abused as map key or otherwise, to be removed if no longer needed
         };
 

@@ -32,7 +32,7 @@ namespace BlackGui
                 //! Properties by index
                 enum ColumnIndex
                 {
-                    IndexLastSimulator = BlackMisc::CPropertyIndex::GlobalIndexCCountry + 33
+                    IndexLastSimulator = BlackMisc::CPropertyIndex::GlobalIndexCDbOwnModelsComponent
                 };
 
                 //! Simulator last selected
