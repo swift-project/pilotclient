@@ -37,20 +37,6 @@
 namespace BlackMisc
 {
 
-    namespace Private
-    {
-        //! \private SFINAE for CValueObject constructor to avoid being selected as a viable copy constructor.
-        template <typename...> struct DecayFirst
-        {
-            using type = void;
-        };
-        //! \private
-        template <typename T, typename... Ts> struct DecayFirst<T, Ts...>
-        {
-            using type = std::decay_t<T>;
-        };
-    }
-
     /*!
      * Default base class for CValueObject.
      */
