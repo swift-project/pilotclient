@@ -17,6 +17,7 @@
 #include "propertyindex.h"
 #include "logcategorylist.h"
 #include "timestampbased.h"
+#include "typetraits.h"
 #include <QReadWriteLock>
 
 namespace BlackMisc
@@ -28,25 +29,6 @@ namespace BlackMisc
         //! Like QString::arg() but accepts a QStringList of args.
         BLACKMISC_EXPORT QString arg(const QString &format, const QStringList &args);
     }
-
-    /*!
-     * Trait to detect whether T contains a member toQString.
-     */
-    template <typename T>
-    class HasToQString
-    {
-        // http://en.wikibooks.org/wiki/More_C++_Idioms/Member_Detector
-        struct Fallback { int toQString; };
-        template <int Fallback:: *> struct int_t { using type = int; };
-        template <typename U, bool = std::is_class<U>::value> struct Derived : public U, public Fallback {};
-        template <typename U> struct Derived<U, false> : public Fallback {};
-        template <typename U> static char test(typename int_t<&Derived<U>::toQString>::type);
-        template <typename U> static int test(...);
-
-    public:
-        //! True if T contains a member toQString.
-        static const bool value = sizeof(test<T>(0)) > 1;
-    };
 
     /*!
      * Status severities

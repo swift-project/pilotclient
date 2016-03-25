@@ -84,6 +84,8 @@ namespace BlackMisc
             template <typename T> static void baseUnmarshall(T *base, const QDBusArgument &arg) { base->unmarshallFromDbus(arg); }
             static void baseMarshall(const void *, QDBusArgument &) {}
             static void baseUnmarshall(void *, const QDBusArgument &) {}
+            static void baseMarshall(const CEmpty *, QDBusArgument &) {}
+            static void baseUnmarshall(CEmpty *, const QDBusArgument &) {}
         };
 
         /*!

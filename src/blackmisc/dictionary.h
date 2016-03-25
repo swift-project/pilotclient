@@ -18,6 +18,7 @@
 #include "iterator.h"
 #include "range.h"
 #include "containerbase.h"
+#include "typetraits.h"
 #include <QHash>
 #include <utility>
 #include <initializer_list>
@@ -27,29 +28,6 @@ namespace BlackMisc
     namespace Private
     {
         //! \cond PRIVATE
-
-        namespace ADL
-        {
-            struct NotFound {};
-            struct FromAny { template <class T> FromAny(const T &); };
-            NotFound operator <(const FromAny &, const FromAny &);
-            NotFound operator ==(const FromAny &, const FromAny &);
-            NotFound qHash(...);
-            using ::BlackMisc::qHash; // bring hidden name into scope
-
-            template <class Key>
-            constexpr static bool supportsQHash()
-            {
-                return ! std::is_same<decltype(std::declval<Key>() == std::declval<Key>()), NotFound>::value &&
-                       ! std::is_same<decltype(qHash(std::declval<Key>())), NotFound>::value;
-            };
-            template <class Key>
-            constexpr static bool supportsQMap()
-            {
-                return ! std::is_same<decltype(std::declval<Key>() < std::declval<Key>()), NotFound>::value;
-            };
-        }
-
         template <bool KeySupportsQHash /* = true */, bool KeySupportsQMap>
         struct AssociativityTraits
         {
@@ -75,7 +53,7 @@ namespace BlackMisc
 
     //! Trait to select the appropriate default associative container type depending on what the key type supports
     template <typename K, typename V>
-    using DefaultAssociativeType = typename Private::AssociativityTraits<Private::ADL::supportsQHash<K>(), Private::ADL::supportsQMap<K>()>::template DefaultType<K, V>;
+    using DefaultAssociativeType = typename Private::AssociativityTraits<ModelsQHashKey<K>::value, ModelsQMapKey<K>::value>::template DefaultType<K, V>;
 
     //! Associative container with value semantics, chooses a sensible default implementation container type
     template<class Key, class Value, template <class...> class Impl = DefaultAssociativeType>
@@ -495,6 +473,7 @@ namespace BlackMisc
 
             template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
             static uint baseHash(const void *) { return 0; }
+            static uint baseHash(const CEmpty *) { return 0; }
         };
     }
 

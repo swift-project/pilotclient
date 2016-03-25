@@ -282,6 +282,8 @@ namespace BlackMisc
             template <typename T> static void baseConvertFromJson(T *base, const QJsonObject &json) { base->convertFromJson(json); }
             static QJsonObject baseToJson(const void *) { return {}; }
             static void baseConvertFromJson(void *, const QJsonObject &) {}
+            static QJsonObject baseToJson(const CEmpty *) { return {}; }
+            static void baseConvertFromJson(CEmpty *, const QJsonObject &) {}
         };
 
         /*!

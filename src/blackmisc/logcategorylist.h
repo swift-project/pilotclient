@@ -16,6 +16,7 @@
 #include "logcategory.h"
 #include "sequence.h"
 #include "collection.h"
+#include "typetraits.h"
 #include <QObject>
 #include <QThreadStorage>
 #include <type_traits>
@@ -23,21 +24,6 @@
 
 namespace BlackMisc
 {
-    namespace Private
-    {
-        //! \private Trait to detect whether a class T has a member function called getLogCategories
-        template <class T> class HasGetLogCategories
-        {
-            struct Base { int getLogCategories; };
-            struct Derived : T, Base {};
-            template <typename U, U> struct TypeCheck {};
-            template <typename U> static std::false_type test(TypeCheck<decltype(&Base::getLogCategories), &U::getLogCategories> *);
-            template <typename U> static std::true_type test(...);
-        public:
-            using type = decltype(test<Derived>(nullptr));
-        };
-    }
-
     /*!
      * A sequence of log categories.
      */
@@ -117,7 +103,7 @@ namespace BlackMisc
             static QThreadStorage<CLogCategoryList> list;
             if (! list.hasLocalData())
             {
-                list.localData().appendCategoriesFromMemberFunction(tag<T>(), typename Private::HasGetLogCategories<T>::type());
+                list.localData().appendCategoriesFromMemberFunction(tag<T>(), HasGetLogCategories<T>());
                 list.localData().appendCategoriesFromMetaType(tag<T>(), std::integral_constant<bool, QMetaTypeId<T>::Defined>());
                 list.localData().appendCategoriesFromMetaObject(tag<T>(), std::is_base_of<QObject, T>());
                 if (list.localData().isEmpty()) { list.localData().push_back(CLogCategory::uncategorized()); }

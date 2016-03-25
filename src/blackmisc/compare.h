@@ -56,6 +56,7 @@ namespace BlackMisc
             }
             template <typename T> static bool baseEquals(const T *a, const T *b) { return *a == *b; }
             static bool baseEquals(const void *, const void *) { return true; }
+            static bool baseEquals(const CEmpty *, const CEmpty *) { return true; }
         };
 
         /*!
@@ -107,6 +108,7 @@ namespace BlackMisc
             }
             template <typename T> static bool baseLess(const T *a, const T *b) { return *a < *b; }
             static bool baseLess(const void *, const void *) { return false; }
+            static bool baseLess(const CEmpty *, const CEmpty *) { return false; }
         };
 
         /*!
@@ -130,6 +132,7 @@ namespace BlackMisc
             }
             template <typename T> static int baseCompare(const T *a, const T *b) { return compare(*a, *b); }
             static int baseCompare(const void *, const void *) { return 0; }
+            static int baseCompare(const CEmpty *, const CEmpty *) { return 0; }
         };
 
     } // Mixin
