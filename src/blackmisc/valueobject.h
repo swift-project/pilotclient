@@ -14,6 +14,7 @@
 
 #include "blackmiscexport.h"
 #include "dbus.h"
+#include "metaclass.h"
 #include "tuple.h"
 #include "json.h"
 #include "compare.h"

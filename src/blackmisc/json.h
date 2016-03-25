@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/tuple.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/fileutils.h"
 #include <QJsonObject>
@@ -266,6 +267,60 @@ namespace BlackMisc
             {
                 baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
                 BlackMisc::deserializeJson(json, Private::EncapsulationBreaker::toMetaTuple(*derived()));
+            }
+
+            //! Assign from JSON object string
+            void convertFromJson(const QString &jsonString)
+            {
+                convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
+            }
+
+        private:
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
+            Derived *derived() { return static_cast<Derived *>(this); }
+
+            template <typename T> static QJsonObject baseToJson(const T *base) { return base->toJson(); }
+            template <typename T> static void baseConvertFromJson(T *base, const QJsonObject &json) { base->convertFromJson(json); }
+            static QJsonObject baseToJson(const void *) { return {}; }
+            static void baseConvertFromJson(void *, const QJsonObject &) {}
+            static QJsonObject baseToJson(const CEmpty *) { return {}; }
+            static void baseConvertFromJson(CEmpty *, const QJsonObject &) {}
+        };
+
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with JSON by metatuple.
+         *
+         * \see BLACKMISC_DECLARE_USING_MIXIN_JSON
+         */
+        template <class Derived>
+        class JsonByMetaClass : public JsonOperators<Derived>
+        {
+        public:
+            //! Cast to JSON object
+            QJsonObject toJson() const
+            {
+                QJsonObject json;
+                auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
+                meta.forEachMemberName(*derived(), [ & ](const auto &member, const QString &name)
+                {
+                    json << std::pair<QString, const std::decay_t<decltype(member)> &>(name, member); // std::make_pair causes an ambiguous operator<<
+                });
+                return Json::appendJsonObject(json, baseToJson(static_cast<const BaseOfT<Derived> *>(derived())));
+            }
+
+            //! Convenience function JSON as string
+            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const
+            {
+                QJsonDocument jsonDoc(toJson());
+                return jsonDoc.toJson(format);
+            }
+
+            //! Assign from JSON object
+            void convertFromJson(const QJsonObject &json)
+            {
+                baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
+                auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
+                meta.forEachMemberName(*derived(), [ & ](auto &member, const QString &name) { json.value(name) >> member; });
             }
 
             //! Assign from JSON object string

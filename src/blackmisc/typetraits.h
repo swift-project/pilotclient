@@ -76,6 +76,16 @@ namespace BlackMisc
     struct ModelsQMapKey<T, void_t<decltype(std::declval<T>() < std::declval<T>())>> : public std::true_type {};
     //! \endcond
 
+    /*!
+     * Trait which is true if the expression compare(a, b) is valid when a and b are instances of T and U.
+     */
+    template <typename T, typename U, typename = void_t<>>
+    struct HasCompare : public std::false_type {};
+    //! \cond
+    template <typename T, typename U>
+    struct HasCompare<T, U, void_t<decltype(compare(std::declval<T>(), std::declval<U>()))>> : public std::true_type {};
+    //! \endcond
+
 }
 
 #endif

@@ -19,6 +19,7 @@
 #include "range.h"
 #include "containerbase.h"
 #include "typetraits.h"
+#include "metaclass.h"
 #include <QHash>
 #include <utility>
 #include <initializer_list>
@@ -45,6 +46,14 @@ namespace BlackMisc
         {
             template <class Key, class>
             struct DefaultType { static_assert(std::is_void<Key>::value, "Key does not support either QHash or QMap"); };
+        };
+
+        // Work around MSVC2015 bug affecting generic lambda
+        struct Hasher
+        {
+            template <typename T>
+            void operator()(const T &object) { m_hash ^= qHash(object); }
+            uint &m_hash;
         };
 
         //! \endcond
@@ -469,6 +478,35 @@ namespace BlackMisc
             static uint hashImpl(const Derived &value)
             {
                 return BlackMisc::qHash(toMetaTuple(value)) ^ baseHash(static_cast<const BaseOfT<Derived> *>(&value));
+            }
+
+            template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
+            static uint baseHash(const void *) { return 0; }
+            static uint baseHash(const CEmpty *) { return 0; }
+        };
+
+        /*!
+         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metaclass.
+         *
+         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
+         */
+        template <class Derived>
+        class HashByMetaClass
+        {
+        public:
+            //! qHash overload, needed for storing value in a QSet.
+            friend uint qHash(const Derived &value, uint seed = 0)
+            {
+                return ::qHash(hashImpl(value), seed);
+            }
+
+        private:
+            static uint hashImpl(const Derived &value)
+            {
+                uint hash = baseHash(static_cast<const BaseOfT<Derived> *>(&value));
+                auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
+                meta.forEachMember(value, Private::Hasher { hash });
+                return hash;
             }
 
             template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
