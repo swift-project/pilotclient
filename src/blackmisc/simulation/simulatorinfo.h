@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
+#include <QMultiMap>
 
 namespace BlackMisc
 {
@@ -45,6 +46,9 @@ namespace BlackMisc
                 All     = FSX | FS9 | XPLANE | P3D
             };
             Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
+
+            //! Number of known individual simulators
+            static constexpr int NumberOfSimulators = 4;
 
             //! Default constructor
             CSimulatorInfo();
@@ -103,6 +107,12 @@ namespace BlackMisc
             //! Simulator
             void setSimulator(Simulator s) { m_simulator = static_cast<int>(s); }
 
+            //! Add simulator flags
+            void addSimulator(Simulator s) { m_simulator |= static_cast<int>(s); }
+
+            //! Add simulator
+            void addSimulator(CSimulatorInfo simulatorInfo) { this->addSimulator(simulatorInfo.getSimulator()); }
+
             //! All simulators
             void setAllSimulators() { setSimulator(All); }
 
@@ -131,12 +141,47 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorInfo)
             int m_simulator = static_cast<int>(None);
         };
+
+        //! Count per simulator, small utility class allows to retrieve values as per simulator
+        class BLACKMISC_EXPORT CCountPerSimulator
+        {
+        public:
+            //! Constructor
+            CCountPerSimulator();
+
+            //! Object count for given simulator
+            int getCount(const CSimulatorInfo &simulator) const;
+
+            //! Unkown count
+            int getCountForUnknownSimulators() const;
+
+            //! Set count
+            void setCount(int count, const CSimulatorInfo &simulator);
+
+            //! Increase all simulators given here
+            void increaseSimulatorCounts(const CSimulatorInfo &simulator);
+
+            //! Maximum
+            int getMaximum() const;
+
+            //! Minimum
+            int getMinimum() const;
+
+            //! Number of simulators with count > 0
+            int simulatorsRepresented() const;
+
+            //! Sorted (ascending) per simulator
+            QMultiMap<int, CSimulatorInfo> countPerSimulator() const;
+
+        private:
+            QList<int> m_counts;
+            static int internalIndex(const CSimulatorInfo &simulator);
+            static CSimulatorInfo simulator(int internalIndex);
+        };
     } // ns
 } // ns
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorInfo, (
-                                   attr(o.m_simulator)
-                               ))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorInfo, (attr(o.m_simulator)))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo::SimulatorFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CSimulatorInfo::Simulator)

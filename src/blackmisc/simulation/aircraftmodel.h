@@ -227,6 +227,9 @@ namespace BlackMisc
             //! Set simulator info
             void setSimulatorInfo(const CSimulatorInfo &simulator) { this->m_simulator = simulator; }
 
+            //! Matches given simulator?
+            bool matchesSimulator(const CSimulatorInfo &simulator) const;
+
             //! File name (corresponding data for simulator, only available if representing simulator model
             QString getFileName() const { return m_fileName; }
 

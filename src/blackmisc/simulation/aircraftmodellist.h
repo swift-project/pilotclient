@@ -101,12 +101,21 @@ namespace BlackMisc
             //! \return number of elements removed
             int removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
 
+            //! Remove if not matching simulator
+            int removeIfNotMatchingSimulator(const CSimulatorInfo &needToMatch);
+
             //! Replace or add based on model string
             //! \return number of elements removed
             int replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity);
 
             //! Model strings
             QStringList getModelStrings(bool sort = true) const;
+
+            //! Simulator counts
+            CCountPerSimulator countPerSimulator() const;
+
+            //! Which simulator(s) have the most entries
+            CSimulatorInfo simulatorsWithMaxEntries() const;
 
             //! Update distributors
             void updateDistributor(const CDistributor &distributor);

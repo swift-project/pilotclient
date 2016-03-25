@@ -11,6 +11,7 @@
 #include "blackmisc/project.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include <algorithm>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::FsCommon;
@@ -186,6 +187,101 @@ namespace BlackMisc
                 CSimulatorInfo::boolToFlag(fsx, fs9, xp, p3d)
             );
             return sim;
+        }
+
+        CCountPerSimulator::CCountPerSimulator()
+        {
+            this->m_counts.reserve(CSimulatorInfo::NumberOfSimulators + 1);
+            for (int i = 0; i < CSimulatorInfo::NumberOfSimulators + 1; i++)
+            {
+                this->m_counts.push_back(0);
+            }
+        }
+
+        int CCountPerSimulator::getCount(const CSimulatorInfo &simulator) const
+        {
+            return this->m_counts[internalIndex(simulator)];
+        }
+
+        int CCountPerSimulator::getCountForUnknownSimulators() const
+        {
+            return this->m_counts[CSimulatorInfo::NumberOfSimulators];
+        }
+
+        int CCountPerSimulator::getMaximum() const
+        {
+            return *std::min_element(m_counts.begin(), m_counts.end());
+        }
+
+        int CCountPerSimulator::getMinimum() const
+        {
+            return *std::max_element(m_counts.begin(), m_counts.end());
+        }
+
+        int CCountPerSimulator::simulatorsRepresented() const
+        {
+            int c = 0;
+            for (int i = 0; i < this->m_counts.size() - 1; i++)
+            {
+                if (this->m_counts[i] > 0) { c++; }
+            }
+            return c;
+        }
+
+        QMultiMap<int, CSimulatorInfo> CCountPerSimulator::countPerSimulator() const
+        {
+            QMultiMap<int, CSimulatorInfo> counts;
+            for (int i = 0; i < this->m_counts.size(); i++)
+            {
+                counts.insertMulti(this->m_counts[i], simulator(i));
+            }
+            return counts;
+        }
+
+        void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)
+        {
+            this->m_counts[internalIndex(simulator)] = count;
+        }
+
+        void CCountPerSimulator::increaseSimulatorCounts(const CSimulatorInfo &simulator)
+        {
+            if (simulator.isNoSimulator() || simulator.isUnspecified())
+            {
+                // unknown count
+                m_counts[4] = m_counts[4] + 1;
+                return;
+            }
+            if (simulator.fsx()) { m_counts[0] = m_counts[0] + 1; }
+            if (simulator.p3d()) { m_counts[1] = m_counts[1] + 1; }
+            if (simulator.fs9()) { m_counts[2] = m_counts[2] + 1; }
+            if (simulator.xplane()) { m_counts[3] = m_counts[3] + 1; }
+        }
+
+        int CCountPerSimulator::internalIndex(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            switch (simulator.getSimulator())
+            {
+            case CSimulatorInfo::FSX: return 0;
+            case CSimulatorInfo::P3D: return 1;
+            case CSimulatorInfo::FS9: return 2;
+            case CSimulatorInfo::XPLANE: return 3;
+            default:
+                return CSimulatorInfo::NumberOfSimulators; // unknown
+            }
+        }
+
+        CSimulatorInfo CCountPerSimulator::simulator(int internalIndex)
+        {
+            switch (internalIndex)
+            {
+            case 0: return CSimulatorInfo(CSimulatorInfo::FSX);
+            case 1: return CSimulatorInfo(CSimulatorInfo::P3D);
+            case 2: return CSimulatorInfo(CSimulatorInfo::FS9);
+            case 3: return CSimulatorInfo(CSimulatorInfo::XPLANE);
+            default:
+                return CSimulatorInfo(CSimulatorInfo::None);
+            }
         }
     } // ns
 } // ns

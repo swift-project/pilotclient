@@ -322,6 +322,11 @@ namespace BlackMisc
             this->setModelMode(CAircraftModel::modelModeFromString(mode));
         }
 
+        bool CAircraftModel::matchesSimulator(const CSimulatorInfo &simulator) const
+        {
+            return (static_cast<int>(simulator.getSimulator()) & static_cast<int>(this->getSimulatorInfo().getSimulator())) > 0;
+        }
+
         void CAircraftModel::updateMissingParts(const CAircraftModel &otherModel, bool dbModelPriority)
         {
             if (dbModelPriority && !this->hasValidDbKey() && otherModel.hasValidDbKey())

@@ -129,10 +129,9 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::matchesSimulator(const CSimulatorInfo &simulator) const
         {
-            const CSimulatorInfo::Simulator s = simulator.getSimulator();
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ = ](const CAircraftModel &model)
             {
-                return (s & model.getSimulatorInfo().getSimulator()) > 0;
+                return model.matchesSimulator(simulator);
             });
         }
 
@@ -197,6 +196,25 @@ namespace BlackMisc
             return d;
         }
 
+        int CAircraftModelList::removeIfNotMatchingSimulator(const CSimulatorInfo &needToMatch)
+        {
+            if (this->isEmpty()) { return 0; }
+            int c = 0;
+            for (auto it = this->begin(); it != this->end();)
+            {
+                if (it->matchesSimulator(needToMatch))
+                {
+                    ++it;
+                }
+                else
+                {
+                    c++;
+                    it = this->erase(it);
+                }
+            }
+            return c;
+        }
+
         int CAircraftModelList::replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity)
         {
             if (addOrReplaceList.isEmpty()) { return 0; }
@@ -249,6 +267,39 @@ namespace BlackMisc
             }
             if (sort) { ms.sort(Qt::CaseInsensitive); }
             return ms;
+        }
+
+        CCountPerSimulator CAircraftModelList::countPerSimulator() const
+        {
+            CCountPerSimulator count;
+            for (const CAircraftModel &model : (*this))
+            {
+                count.increaseSimulatorCounts(model.getSimulatorInfo());
+            }
+            return count;
+        }
+
+        CSimulatorInfo CAircraftModelList::simulatorsWithMaxEntries() const
+        {
+            if (this->isEmpty()) { return CSimulatorInfo(); } // not known
+            const CCountPerSimulator counts(this->countPerSimulator());
+            const int simulatorsRepresented = counts.simulatorsRepresented();
+            if (simulatorsRepresented < 1)
+            {
+                return CSimulatorInfo();
+            }
+            const QMultiMap<int, CSimulatorInfo> cps(counts.countPerSimulator());
+            CSimulatorInfo maxSim = cps.last();
+            if (simulatorsRepresented > 0)
+            {
+                const int count = cps.lastKey(); // how many elements
+                const QList<CSimulatorInfo> infoWithMaxValues = cps.values(count); // all with the same counts
+                for (const CSimulatorInfo &info : infoWithMaxValues)
+                {
+                    maxSim.addSimulator(info);
+                }
+            }
+            return maxSim;
         }
 
         void CAircraftModelList::updateDistributor(const CDistributor &distributor)
