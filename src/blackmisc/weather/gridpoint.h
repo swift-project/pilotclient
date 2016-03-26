@@ -80,6 +80,9 @@ namespace BlackMisc
             //! Get wind layers
             CWindLayerList getWindLayers() const { return m_windLayers; }
 
+            //! Copies all weather data from other without modifying identifier and position.
+            void copyWeatherDataFrom(const CGridPoint &other);
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 

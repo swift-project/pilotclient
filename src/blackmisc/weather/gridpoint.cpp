@@ -13,6 +13,7 @@
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -27,6 +28,14 @@ namespace BlackMisc
             m_temperatureLayers(temperatureLayers), m_visibilityLayers(visibilityLayers),
             m_windLayers(windLayers)
         { }
+
+        void CGridPoint::copyWeatherDataFrom(const CGridPoint &other)
+        {
+            setCloudLayers(other.getCloudLayers());
+            setTemperatureLayers(other.getTemperatureLayers());
+            setVisibilityLayers(other.getVisibilityLayers());
+            setWindLayers(other.getWindLayers());
+        }
 
         CVariant CGridPoint::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
