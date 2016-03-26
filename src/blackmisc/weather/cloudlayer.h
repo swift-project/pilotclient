@@ -60,7 +60,7 @@ namespace BlackMisc
             {
                 IndexBase = BlackMisc::CPropertyIndex::GlobalIndexCCloudLayer,
                 IndexTop,
-                IndexCoverage
+                IndexCoveragePercent
             };
 
             //! Default constructor.
@@ -110,10 +110,10 @@ namespace BlackMisc
             Clouds getClouds() const { return m_clouds; }
 
             //! Set coverage
-            void setCoverage(Coverage coverage) { m_coverage = coverage; }
+            void setCoverage(Coverage coverage);
 
             //! Get coverage
-            Coverage getCoverage() const { return m_coverage; }
+            Coverage getCoverage() const;
 
             //! Set coverage in %
             void setCoveragePercent(int coverage) { m_coveragePercent = coverage; }
@@ -136,7 +136,6 @@ namespace BlackMisc
             int m_precipitationRate = 0;
             Precipitation m_precipitation = NoPrecipitation;
             Clouds m_clouds = NoClouds;
-            Coverage m_coverage;
             int m_coveragePercent;
 
             BLACK_METACLASS(
@@ -146,7 +145,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(precipitationRate),
                 BLACK_METAMEMBER(precipitation),
                 BLACK_METAMEMBER(clouds),
-                BLACK_METAMEMBER(coverage),
                 BLACK_METAMEMBER(coveragePercent)
             );
         };

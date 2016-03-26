@@ -24,8 +24,10 @@ namespace BlackMisc
         CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
                                  BlackMisc::Aviation::CAltitude top,
                                  Coverage coverage) :
-            m_base(base), m_top(top), m_coverage(coverage)
-        { }
+            m_base(base), m_top(top)
+        {
+            setCoverage(coverage);
+        }
 
         CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
                                  BlackMisc::Aviation::CAltitude top,
@@ -34,8 +36,24 @@ namespace BlackMisc
                                  Clouds clouds,
                                  Coverage coverage) :
             m_base(base), m_top(top), m_precipitationRate(precipitationRate),
-            m_precipitation(precipitation), m_clouds(clouds), m_coverage(coverage)
-        { }
+            m_precipitation(precipitation), m_clouds(clouds)
+        {
+            setCoverage(coverage);
+        }
+
+        void CCloudLayer::setCoverage(Coverage coverage)
+        {
+            m_coveragePercent = 100 * coverage / 4;
+        }
+
+        CCloudLayer::Coverage CCloudLayer::getCoverage() const
+        {
+            if (m_coveragePercent > 80) { return Overcast; }
+            if (m_coveragePercent > 60 && m_coveragePercent <= 80) { return Broken; }
+            if (m_coveragePercent > 40 && m_coveragePercent <= 60) { return Scattered; }
+            if (m_coveragePercent > 20 && m_coveragePercent <= 40) { return Few; }
+            return None;
+        }
 
         CVariant CCloudLayer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
@@ -47,8 +65,8 @@ namespace BlackMisc
                 return CVariant::fromValue(m_base);
             case IndexTop:
                 return CVariant::fromValue(m_top);
-            case IndexCoverage:
-                return CVariant::fromValue(m_coverage);
+            case IndexCoveragePercent:
+                return CVariant::fromValue(m_coveragePercent);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -66,8 +84,8 @@ namespace BlackMisc
             case IndexTop:
                 setTop(variant.value<CAltitude>());
                 break;
-            case IndexCoverage:
-                setCoverage(variant.value<Coverage>());
+            case IndexCoveragePercent:
+                setCoveragePercent(variant.value<int>());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
@@ -86,7 +104,7 @@ namespace BlackMisc
                 { Overcast, "overcast" }
             };
 
-            return QString("%1 from %2 to %3").arg(hash.value(m_coverage), m_base.toQString(), m_top.toQString());
+            return QString("%1 from %2 to %3").arg(hash.value(getCoverage()), m_base.toQString(), m_top.toQString());
         }
 
     } // namespace
