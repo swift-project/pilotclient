@@ -147,7 +147,8 @@ namespace BlackMisc
 
         public:
             //! Default constructor
-            CCoordinateGeodetic() = default;
+            CCoordinateGeodetic() :
+                CCoordinateGeodetic(0, 0, 0) {}
 
             //! Constructor by normal vector
             CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
