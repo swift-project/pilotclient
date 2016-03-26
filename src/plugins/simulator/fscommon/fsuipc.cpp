@@ -148,7 +148,6 @@ namespace BlackSimPlugin
             for (const auto &cloudLayer : cloudLayers)
             {
                 NewCloud cloud;
-                cloud.Coverage = static_cast<char>(cloudLayer.getCoverage());
 
                 switch (cloudLayer.getCoverage())
                 {
@@ -164,7 +163,13 @@ namespace BlackSimPlugin
                 cloud.Icing = 0;
                 cloud.LowerAlt = cloudLayer.getBase().value(CLengthUnit::m());
                 cloud.PrecipBase = 0;
-                cloud.PrecipRate = static_cast<unsigned char>(cloudLayer.getPrecipitationRate());
+
+                // Light rain - when the precipitation rate is < 2.5 mm (0.098 in) per hour
+                // Moderate rain - when the precipitation rate is between 2.5 mm (0.098 in) - 7.6 mm (0.30 in) or 10 mm (0.39 in) per hour
+                // Heavy rain - when the precipitation rate is > 7.6 mm (0.30 in) per hour, or between 10 mm (0.39 in) and 50 mm (2.0 in) per hour
+                // Violent rain - when the precipitation rate is > 50 mm (2.0 in) per hour
+
+                cloud.PrecipRate = 2 * static_cast<unsigned char>(cloudLayer.getPrecipitationRate());
                 cloud.PrecipType = static_cast<unsigned char>(cloudLayer.getPrecipitation());
                 cloud.TopShape = 0;
                 cloud.Turbulence = 0;

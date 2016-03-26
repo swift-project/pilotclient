@@ -71,7 +71,9 @@ namespace BlackWxPlugin
                 VGRD,
                 PRES,
                 PRMSL,
-                TCDC
+                TCDC,
+                CRAIN,
+                CSNOW
             };
 
             enum Grib2FixedSurfaceTypes
@@ -119,6 +121,8 @@ namespace BlackWxPlugin
                 int fieldPosition = 0;
                 QHash<int, GfsCloudLayer> cloudLayers;
                 QHash<double, GfsIsobaricLayer> isobaricLayers;
+                double surfaceRainRate = 0;
+                double surfaceSnowRate = 0;
             };
 
             QUrl getDownloadUrl() const;
@@ -134,6 +138,8 @@ namespace BlackWxPlugin
             void setWindU(const g2float *fld, double level);
             void setCloudCoverage(const g2float *fld, int level);
             void setCloudLevel(const g2float *fld, int surfaceType, int level);
+            void setSurfaceRain(const g2float *fld);
+            void setSurfaceSnow(const g2float *fld);
 
             BlackMisc::Weather::CWeatherGrid m_grid;
             BlackMisc::PhysicalQuantities::CLength m_maxRange;

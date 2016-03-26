@@ -31,6 +31,8 @@ namespace BlackWxPlugin
         {
             { { {0, 0} }, { TMP, "Temperature", "K" } },
             { { {1, 1} }, { RH, "Relative Humidity", "%" } },
+            { { {1, 192} }, { CRAIN, "Categorical Rain", "-" } },
+            { { {1, 195} }, { CSNOW, "Categorical Snow", "-" } },
             { { {2, 2} }, { UGRD, "U-Component of Wind", "m s-1" } },
             { { {2, 3} }, { VGRD, "V-Component of Wind", "m s-1" } },
             { { {3, 0} }, { PRES, "Pressure", "Pa" } },
@@ -104,6 +106,7 @@ namespace BlackWxPlugin
 
             static const QStringList grib2Levels =
             {
+                "surface",
                 "100_mb",
                 "150_mb",
                 "200_mb",
@@ -114,6 +117,7 @@ namespace BlackWxPlugin
                 "700_mb",
                 "800_mb",
                 "900_mb",
+                "1000_mb",
                 "high_cloud_bottom_level",
                 "high_cloud_layer",
                 "high_cloud_top_level",
@@ -134,6 +138,8 @@ namespace BlackWxPlugin
                 "TMP",
                 "UGRD",
                 "VGRD",
+                "CRAIN",
+                "CSNOW"
             };
 
             static const std::array<int, 4> cycles = { { 0, 6, 12, 18 } };
@@ -264,6 +270,16 @@ namespace BlackWxPlugin
                     cloudLayer.setBase(CAltitude(cloudLayerIt.value().bottomLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
                     cloudLayer.setTop(CAltitude(cloudLayerIt.value().topLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
                     cloudLayer.setCoveragePercent(cloudLayerIt.value().totalCoverage);
+                    if (gfsGridPoint.surfaceSnowRate > 0.0)
+                    {
+                        cloudLayer.setPrecipitation(CCloudLayer::Snow);
+                        cloudLayer.setPrecipitationRate(gfsGridPoint.surfaceSnowRate);
+                    }
+                    if (gfsGridPoint.surfaceRainRate > 0.0)
+                    {
+                        cloudLayer.setPrecipitation(CCloudLayer::Rain);
+                        cloudLayer.setPrecipitationRate(gfsGridPoint.surfaceRainRate);
+                    }
                     cloudLayers.insert(cloudLayer);
                 }
 
@@ -482,6 +498,8 @@ namespace BlackWxPlugin
                 break;
             case PRMSL:
                 break;
+            case PRES:
+                break;
             default:
                 Q_ASSERT(false);
                 break;
@@ -529,6 +547,12 @@ namespace BlackWxPlugin
                 break;
             case PRES:
                 setCloudLevel(gfld->fld, typeFirstFixedSurface, grib2CloudLevelHash.value(typeFirstFixedSurface));
+                break;
+            case CRAIN:
+                setSurfaceRain(gfld->fld);
+                break;
+            case CSNOW:
+                setSurfaceSnow(gfld->fld);
                 break;
             default:
                 break;
@@ -596,6 +620,22 @@ namespace BlackWxPlugin
                     Q_ASSERT(false);
                     break;
                 }
+            }
+        }
+
+        void CWeatherDataGfs::setSurfaceRain(const g2float *fld)
+        {
+            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            {
+                gridPointIt->surfaceRainRate = fld[gridPointIt->fieldPosition];
+            }
+        }
+
+        void CWeatherDataGfs::setSurfaceSnow(const g2float *fld)
+        {
+            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            {
+                gridPointIt->surfaceSnowRate = fld[gridPointIt->fieldPosition];
             }
         }
 
