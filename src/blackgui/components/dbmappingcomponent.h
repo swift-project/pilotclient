@@ -52,11 +52,11 @@ namespace BlackGui
             //! Must match real tab index
             enum TabIndex
             {
-                NoValidTab   =  -1,
-                TabStash     =   0,
-                TabOwnModels =   1,
-                TabOwnModelSet = 2,
-                TabVPilot      = 3
+                NoValidTab     =  -1,
+                TabStash       =   0,
+                TabOwnModels   =   1,
+                TabOwnModelSet =   2,
+                TabVPilot      =   3
             };
 
             //! Constructor
@@ -71,34 +71,36 @@ namespace BlackGui
             //! With vPilot rules
             bool withVPilot() const { return m_withVPilot; }
 
-            //! Any models which can be stashed
+            //! Any models which can be stashed?
             bool hasSelectedModelsToStash() const;
 
             //! Models to be stashed from currently activated tab (table view)
             BlackMisc::Simulation::CAircraftModelList getSelectedModelsToStash() const;
 
-            //! Stashed models
-            const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
-
-            //! Stashed model strings
-            QStringList getStashedModelStrings() const;
-
             //! Current tab index
             TabIndex currentTabIndex() const;
 
+            //! Is stashed view
+            bool isStashTab() const;
+
             //! Current model view
             BlackGui::Views::CAircraftModelView *currentModelView() const;
-
-            //! Is stashed view
-            bool isStashedTab() const;
 
             //! Unvalidated consolidated aircraft model from the editor subparts (icao, distributor)
             //! \note not guaranteed to be valid, just a snapshot of its current editor state
             BlackMisc::Simulation::CAircraftModel getEditorAircraftModel() const;
 
+            //! \name Models from BlackGui::Components::CDbStashComponent
+            //! @{
+            //! Stashed models
+            const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
+
+            //! Stashed model strings
+            QStringList getStashedModelStrings() const;
+            //! @}
+
             //! \name Own models from BlackGui::Components::CDbOwnModelsComponent
             //! @{
-
             //! Own models
             BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
 
@@ -118,6 +120,9 @@ namespace BlackGui
 
             //! \copydoc CDbStashComponent::stashModels
             BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! \copydoc CDbOwnModelSetComponent::addToModelSet
+            BlackMisc::CStatusMessage addToOwnModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! \copydoc CDbStashComponent::consolidateModel
             BlackMisc::Simulation::CAircraftModel consolidateModel(const BlackMisc::Simulation::CAircraftModel &model) const;
@@ -214,6 +219,9 @@ namespace BlackGui
             //! Own models have been changed
             void ps_onOwnModelsCountChanged(int count, bool withFilter);
 
+            //! Add to own model set
+            void ps_addToOwnModelSet();
+
         private:
             QScopedPointer<Ui::CDbMappingComponent>                             ui;
             QScopedPointer<CDbAutoStashingComponent>                            m_autoStashDialog;          //!< dialog auto stashing
@@ -259,11 +267,26 @@ namespace BlackGui
             //! -# for auto stashing
             //! -# toggle auto filtering
             //! \note This is a specific menu for that very component
-            class CModelStashTools : public BlackGui::Menus::IMenuDelegate
+            class CModelStashToolsMenu : public BlackGui::Menus::IMenuDelegate
             {
             public:
                 //! Constructor
-                CModelStashTools(CDbMappingComponent *mappingComponent, bool separator = true) :
+                CModelStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator = true);
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+
+            private:
+                //! Mapping component
+                CDbMappingComponent *mappingComponent() const;
+            };
+
+            //! Menu for own model sets
+            class COwnModelSetMenu : public BlackGui::Menus::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                COwnModelSetMenu(CDbMappingComponent *mappingComponent, bool separator = true) :
                     BlackGui::Menus::IMenuDelegate(mappingComponent, separator)
                 {}
 

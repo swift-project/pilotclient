@@ -58,17 +58,59 @@ namespace BlackGui
         void CDbOwnModelSetComponent::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            if (models.isEmpty()) { return; }
+            this->setSimulator(simulator);
+            if (models.isEmpty())
+            {
+                this->ui->tvp_OwnModelSet->clear();
+                return;
+            }
+
+            // unempty set, consolidate
             CAircraftModelList cleanModelList(models.matchesSimulator(simulator)); // remove those not matching the simulator
             const int diff = models.size() - cleanModelList.size();
             if (diff > 0)
             {
                 CLogMessage(this).warning("Removed models from set because not matching " + simulator.toQString(true));
             }
-            if (cleanModelList.isEmpty()) { return; }
+            this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
+        }
 
-            this->setSimulator(simulator);
-            this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
+        const CAircraftModelList &CDbOwnModelSetComponent::getModelSet() const
+        {
+            return ui->tvp_OwnModelSet->container();
+        }
+
+        CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModel &model, const CSimulatorInfo &simulator)
+        {
+            return this->addToModelSet(CAircraftModelList({model}), simulator);
+        }
+
+        CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data", true); }
+            if (!this->getModelSetSimulator().isSingleSimulator())
+            {
+                // no sim yet, we set it
+                this->setSimulator(simulator);
+            }
+            if (simulator != this->getModelSetSimulator())
+            {
+                // only currently selected sim allowed
+                return CStatusMessage(this, CStatusMessage::SeverityError,
+                                      "Cannot add data for " + simulator.toQString(true) + " to " + this->getModelSetSimulator().toQString(true), true);
+            }
+            CAircraftModelList updateModels(this->getModelSet());
+            int d = updateModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
+            if (d > 0)
+            {
+                this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
+                return CStatusMessage(this, CStatusMessage::SeverityInfo, "Modified " + QString::number(d) + " entries in model set " + this->getModelSetSimulator().toQString(true), true);
+            }
+            else
+            {
+                return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data modified in model set", true);
+            }
         }
 
         void CDbOwnModelSetComponent::setMappingComponent(CDbMappingComponent *component)
@@ -217,6 +259,36 @@ namespace BlackGui
                     load->addAction(CIcons::appModels16(), "XP models", ownModelSetComp, [ownModelSetComp]()
                     {
                         ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
+                    });
+                }
+
+                QMenu *emptySetMenu = load->addMenu("New empty set");
+                if (sims.fsx())
+                {
+                    emptySetMenu->addAction(CIcons::appModels16(), "FSX models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FSX));
+                    });
+                }
+                if (sims.p3d())
+                {
+                    emptySetMenu->addAction(CIcons::appModels16(), "P3D models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::P3D));
+                    });
+                }
+                if (sims.fs9())
+                {
+                    emptySetMenu->addAction(CIcons::appModels16(), "FS9 models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FS9));
+                    });
+                }
+                if (sims.xplane())
+                {
+                    emptySetMenu->addAction(CIcons::appModels16(), "XP models", ownModelSetComp, [ownModelSetComp]()
+                    {
+                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::XPLANE));
                     });
                 }
             }

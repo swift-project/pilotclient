@@ -48,14 +48,24 @@ namespace BlackGui
             //! Corresponding view
             Views::CAircraftModelView *view() const;
 
-            //! Set the model set
-            void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            //! Add to model set
+            BlackMisc::CStatusMessage addToModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Add to model set
+            BlackMisc::CStatusMessage addToModelSet(const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Current model set for simulator CDbOwnModelSetComponent::getModelSetSimulator
+            const BlackMisc::Simulation::CAircraftModelList &getModelSet() const;
+
+            //! Model set is for simulator
+            const BlackMisc::Simulation::CSimulatorInfo &getModelSetSimulator() const { return m_simulator; }
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;
 
-            //! Model set is for simulator
-            const BlackMisc::Simulation::CSimulatorInfo &getModelSetSimulator() const { return m_simulator; }
+        public slots:
+            //! Set the model set
+            void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         private slots:
             //! Tab has been changed
