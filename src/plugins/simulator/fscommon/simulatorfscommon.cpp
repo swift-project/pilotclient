@@ -29,8 +29,9 @@ namespace BlackSimPlugin
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
             IPluginStorageProvider *pluginStorageProvider,
+            Weather::IWeatherGridProvider *weatherGridProvider,
             QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, parent),
+            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, weatherGridProvider, parent),
             m_fsuipc(new CFsuipc()),
             m_aircraftCfgParser(CAircraftCfgParser::createModelLoader(CSimulatorInfo(info.getIdentifier()))),
             m_modelMatcher(CAircraftMatcher::AllModes, this)

@@ -43,8 +43,9 @@ namespace BlackSimPlugin
                                      IOwnAircraftProvider *ownAircraftProvider,
                                      IRemoteAircraftProvider *remoteAircraftProvider,
                                      IPluginStorageProvider *pluginStorageProvider,
+                                     IWeatherGridProvider *weatherGridProvider,
                                      QObject *parent) :
-            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
+            CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, weatherGridProvider, parent)
         {
             Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");

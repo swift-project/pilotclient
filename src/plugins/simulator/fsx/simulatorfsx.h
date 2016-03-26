@@ -79,6 +79,7 @@ namespace BlackSimPlugin
                 BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                 BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                 BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+                BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                 QObject *parent = nullptr);
 
             //! Destructor

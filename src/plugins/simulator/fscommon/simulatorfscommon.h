@@ -82,6 +82,7 @@ namespace BlackSimPlugin
                                BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
                                BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+                               BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                                QObject *parent = nullptr);
 
             QString simulatorDetails;                               //!< describes version etc.

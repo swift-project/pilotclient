@@ -20,17 +20,21 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
     CSimulatorCommon::CSimulatorCommon(const CSimulatorPluginInfo &info,
                                        BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                       IPluginStorageProvider *pluginStorageProvider, QObject *parent)
+                                       IPluginStorageProvider *pluginStorageProvider,
+                                       IWeatherGridProvider *weatherGridProvider,
+                                       QObject *parent)
         : ISimulator(parent),
           COwnAircraftAware(ownAircraftProvider),
           CRemoteAircraftAware(remoteAircraftProvider),
           CPluginStorageAware(pluginStorageProvider),
+          CWeatherGridAware(weatherGridProvider),
           m_simulatorPluginInfo(info)
     {
         this->setObjectName("Simulator: " + info.getIdentifier());

@@ -28,6 +28,7 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/connectionguard.h"
+#include "blackmisc/weather/weathergridprovider.h"
 #include <QObject>
 
 namespace BlackCore
@@ -37,7 +38,8 @@ namespace BlackCore
         public BlackCore::ISimulator,
         public BlackMisc::Simulation::COwnAircraftAware,    // gain access to in memory own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
-        public BlackMisc::CPluginStorageAware               // gain access to in memory plugin storage
+        public BlackMisc::CPluginStorageAware,              // gain access to in memory plugin storage
+        public BlackMisc::Weather::CWeatherGridAware        // gain access to in memory weather grid
     {
         Q_OBJECT
 
@@ -118,6 +120,7 @@ namespace BlackCore
                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                          BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+                         BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                          QObject *parent);
 
         //! \copydoc ISimulator::logicallyAddRemoteAircraft

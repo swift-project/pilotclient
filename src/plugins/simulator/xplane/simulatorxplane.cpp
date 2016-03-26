@@ -45,8 +45,9 @@ namespace BlackSimPlugin
                                            IOwnAircraftProvider *ownAircraftProvider,
                                            IRemoteAircraftProvider *remoteAircraftProvider,
                                            IPluginStorageProvider *pluginStorageProvider,
+                                           IWeatherGridProvider *weatherGridProvider,
                                            QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, parent)
+            CSimulatorCommon(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, weatherGridProvider, parent)
         {
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
@@ -575,9 +576,10 @@ namespace BlackSimPlugin
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,
                 IOwnAircraftProvider *ownAircraftProvider,
                 IRemoteAircraftProvider *remoteAircraftProvider,
-                IPluginStorageProvider *pluginStorageProvider)
+                IPluginStorageProvider *pluginStorageProvider,
+                IWeatherGridProvider *weatherGridProvider)
         {
-            return new CSimulatorXPlane(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, this);
+            return new CSimulatorXPlane(info, ownAircraftProvider, remoteAircraftProvider, pluginStorageProvider, weatherGridProvider, this);
         }
 
         CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info): ISimulatorListener(info)

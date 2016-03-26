@@ -15,6 +15,7 @@
 #include "blackcoreexport.h"
 #include "blackcore/contextsimulator.h"
 #include "blackcore/simulator.h"
+#include "blackcore/weathermanager.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/network/textmessagelist.h"
@@ -179,6 +180,7 @@ namespace BlackCore
         QPair<BlackMisc::Simulation::CSimulatorPluginInfo, ISimulator *> m_simulatorPlugin; //!< Currently loaded simulator plugin
         CPluginManagerSimulator *m_plugins = nullptr;
         BlackMisc::CRegularThread m_listenersThread;
+        BlackCore::CWeatherManager m_weatherManager { this };
     };
 
 } // namespace

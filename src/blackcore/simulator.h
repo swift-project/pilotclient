@@ -27,6 +27,7 @@
 #include "blackmisc/network/client.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/weather/weathergridprovider.h"
 #include <QObject>
 
 namespace BlackCore
@@ -284,7 +285,8 @@ namespace BlackCore
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::IPluginStorageProvider *pluginStorageProvider) = 0;
+            BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+            BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider) = 0;
 
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) = 0;

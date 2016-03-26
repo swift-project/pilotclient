@@ -37,7 +37,8 @@ namespace BlackSimPlugin
             virtual BlackCore::ISimulator *create(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                                                   BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                                                   BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                                  BlackMisc::IPluginStorageProvider *pluginStorageProvider) override;
+                                                  BlackMisc::IPluginStorageProvider *pluginStorageProvider,
+                                                  BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider) override;
 
             //! \copydoc BlackCore::ISimulatorFactory::createListener
             virtual BlackCore::ISimulatorListener *createListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info) override;
