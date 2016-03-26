@@ -59,14 +59,17 @@ namespace BlackMisc
 
     void CFileLogger::ps_writeStatusMessageToFile(const BlackMisc::CStatusMessage &statusMessage)
     {
+        if (statusMessage.isEmpty()) { return; }
         if (!m_logFile.isOpen()) { return; }
         if (! m_logPattern.match(statusMessage)) { return; }
         const QString finalContent(QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss "))
-                                   % statusMessage.getHumanReadablePattern()
-                                   % " "
                                    % statusMessage.getSeverityAsString()
                                    % ": "
-                                   % statusMessage.getMessage());
+                                   % statusMessage.getMessage()
+                                   % " cat: "
+                                   % statusMessage.getCategoriesAsString()
+                                  );
+
         writeContentToFile(finalContent);
     }
 
@@ -91,7 +94,7 @@ namespace BlackMisc
         QDateTime now = QDateTime::currentDateTime();
         for (const auto &logFileInfo : dir.entryInfoList())
         {
-            if (logFileInfo.lastModified().daysTo(now) > 7 )
+            if (logFileInfo.lastModified().daysTo(now) > 7)
             {
                 dir.remove(logFileInfo.fileName());
             }
