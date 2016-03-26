@@ -41,8 +41,8 @@ namespace BlackGui
             case OwnSimulatorModel:
             case StashModel:
                 this->m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString}));
-                this->m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("DB", "parts from DB", { CAircraftModel::IndexMembersDbStatus}));
+                this->m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("description", { CAircraftModel::IndexDescription}));
                 this->m_columns.addColumn(CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
 
@@ -62,6 +62,7 @@ namespace BlackGui
 
             case OwnSimulatorModelMapping:
                 this->m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
+                this->m_columns.addColumn(CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
                 this->m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
                 // this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraftModel::IndexCallsign));
                 this->m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey}));
