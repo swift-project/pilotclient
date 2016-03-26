@@ -15,6 +15,7 @@
 
 #include "blackcore/pluginmanagerweatherdata.h"
 #include "blackcore/weatherdata.h"
+#include "blackcore/weathermanager.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
 #include <QObject>
@@ -36,12 +37,10 @@ public slots:
 
 private slots:
     //! Print weather data to stdout
-    void ps_printWeatherData();
+    void ps_printWeatherData(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
 private:
-    BlackCore::CPluginManagerWeatherData m_plugins;
-    QScopedPointer<BlackCore::IWeatherDataFactory> m_weatherDataFactory;
-    BlackCore::IWeatherData *m_weatherData = nullptr;
+    BlackCore::CWeatherManager m_weatherManger { this };
 };
 
 #endif // guard

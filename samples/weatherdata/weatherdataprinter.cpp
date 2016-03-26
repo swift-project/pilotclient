@@ -13,42 +13,21 @@ using namespace BlackCore;
 
 
 CWeatherDataPrinter::CWeatherDataPrinter(QObject *parent) : QObject(parent)
-{
-    m_plugins.collectPlugins();
+{ }
 
-    if (m_plugins.getAvailableWeatherDataPlugins().isEmpty())
-    {
-        CLogMessage(this).warning("No weather data plugin found!");
-    }
-
-    CWeatherDataPluginInfo info = m_plugins.getAvailableWeatherDataPlugins().front();
-    m_weatherDataFactory.reset(m_plugins.getPluginById<IWeatherDataFactory>(info.getIdentifier()));
-    if (!m_weatherDataFactory)
-    {
-        CLogMessage(this).error("Failed to create IWeatherDataFactory.");
-    }
-
-    m_weatherData = m_weatherDataFactory->create(this);
-    if (!m_weatherData)
-    {
-        CLogMessage(this).error("Failed to create IWeatherData instance.");
-    }
-
-    connect(m_weatherData, &IWeatherData::fetchingFinished, this, &CWeatherDataPrinter::ps_printWeatherData);
-}
-
-void CWeatherDataPrinter::fetchAndPrintWetherData(const CLatitude &lat, const CLongitude &lon)
+void CWeatherDataPrinter::fetchAndPrintWetherData(const CCoordinateGeodetic &position)
 {
     QTextStream qtout(stdout);
     qtout << "Fetching weather data. This may take a while..." << endl;
-    m_weatherData->fetchWeatherData(lat, lon, 0.001);
+
+    CWeatherGrid weatherGrid { { "", position } };
+    m_weatherManger.requestWeatherGrid(weatherGrid, { this, &CWeatherDataPrinter::ps_printWeatherData });
 }
 
-void CWeatherDataPrinter::ps_printWeatherData()
+void CWeatherDataPrinter::ps_printWeatherData(const BlackMisc::Weather::CWeatherGrid &weatherGrid)
 {
     QTextStream qtout(stdout);
     qtout << "... finished." << endl;
-    CWeatherGrid weatherGrid = m_weatherData->getWeatherData();
     for (const CGridPoint &gridPoint : weatherGrid)
     {
         qtout << "Latitude:" << gridPoint.getPosition().latitude().toQString() << endl;
