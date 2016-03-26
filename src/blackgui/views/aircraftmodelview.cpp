@@ -265,26 +265,36 @@ namespace BlackGui
 
         void CAircraftModelView::customMenu(QMenu &menu) const
         {
+            QMenu *stashMenu = new QMenu("Stash", &menu);
             if (this->m_menus.testFlag(MenuCanStashModels))
             {
-                menu.addAction(CIcons::appDbStash16(), "Stash", this, SLOT(ps_requestStash()));
-                QAction *a = menu.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", this, SLOT(ps_stashingClearsSelection()));
+                stashMenu->addAction(CIcons::appDbStash16(), "Stash", this, &CAircraftModelView::ps_requestStash);
+                QAction *a = stashMenu->addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", this, &CAircraftModelView::ps_stashingClearsSelection);
                 a->setCheckable(true);
                 a->setChecked(m_stashingClearsSelection);
             }
             if (this->m_menus.testFlag(MenuHighlightStashed))
             {
                 // this function requires that someone provides the model strings to be highlighted
-                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", this, SLOT(ps_toggleHighlightStashedModels()));
+                QAction *a = stashMenu->addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", this, &CAircraftModelView::ps_toggleHighlightStashedModels);
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightModelStrings());
             }
             if (this->m_menus.testFlag(MenuHighlightInvalid))
             {
                 // this function requires that someone provides the model strings to be highlighted
-                QAction *a = menu.addAction(CIcons::appDbStash16(), "Highlight invalid models (on/off)", this, SLOT(ps_toggleHighlightDbData()));
+                QAction *a = stashMenu->addAction(CIcons::appDbStash16(), "Highlight invalid models (on/off)", this, &CAircraftModelView::ps_toggleHighlightDbData);
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightDbData());
+            }
+            if (stashMenu->isEmpty())
+            {
+                stashMenu->deleteLater();
+            }
+            else
+            {
+                menu.addMenu(stashMenu);
+                stashMenu->setIcon(CIcons::appDbStash16());
             }
             CViewWithDbObjects::customMenu(menu);
         }

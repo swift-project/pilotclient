@@ -86,7 +86,7 @@ namespace BlackGui
         {
             if (this->m_menus.testFlag(CViewBase<ModelClass, ContainerType, ObjectType>::MenuHighlightDbData))
             {
-                QAction *a = menu.addAction(CIcons::database16(), "Highlight DB data", this, SLOT(ps_toggleHighlightDbData()));
+                QAction *a = menu.addAction(CIcons::database16(), "Highlight DB data", this, &CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleHighlightDbData);
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightDbData());
             }
