@@ -15,6 +15,7 @@
 #include "gridpoint.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/geo/geoobjectlist.h"
 
 namespace BlackMisc
 {
@@ -39,8 +40,14 @@ namespace BlackMisc
             //! Construct from a base class object.
             CWeatherGrid(const CSequence<CGridPoint> &other);
 
-            //! CAVOK grid
-            static const BlackMisc::Weather::CWeatherGrid &getCavokGrid();
+            //! \copydoc Geo::IGeoObjectList::findWithinRange
+            CWeatherGrid findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
+
+            //! \copydoc Geo::IGeoObjectList::findClosest
+            CWeatherGrid findClosest(int number, const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
+
+            //! Clear weather grid
+            static const BlackMisc::Weather::CWeatherGrid &getClearWeatherGrid();
 
             //! Thunderstorm grid
             static const BlackMisc::Weather::CWeatherGrid &getThunderStormGrid();

@@ -8,9 +8,11 @@
  */
 
 #include "weathergrid.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
 
 namespace BlackMisc
 {
@@ -20,7 +22,25 @@ namespace BlackMisc
             CSequence<CGridPoint>(other)
         { }
 
-        const CWeatherGrid &CWeatherGrid::getCavokGrid()
+        CWeatherGrid CWeatherGrid::findWithinRange(const ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
+        {
+            return findBy([&](const CGridPoint & gridPoint)
+            {
+                return calculateGreatCircleDistance(gridPoint.getPosition(), coordinate) <= range;
+            });
+        }
+
+        CWeatherGrid CWeatherGrid::findClosest(int number, const ICoordinateGeodetic &coordinate) const
+        {
+            CWeatherGrid closest = partiallySorted(number, [ & ](const CGridPoint & a, const CGridPoint & b)
+            {
+                return calculateEuclideanDistanceSquared(a.getPosition(), coordinate) < calculateEuclideanDistanceSquared(b.getPosition(), coordinate);
+            });
+            closest.truncate(number);
+            return closest;
+        }
+
+        const CWeatherGrid &CWeatherGrid::getClearWeatherGrid()
         {
             static const CVisibilityLayer visibilityLayer(
                 CAltitude(0, CAltitude::MeanSeaLevel, CLengthUnit::m()),
