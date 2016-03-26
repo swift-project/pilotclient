@@ -97,7 +97,6 @@ namespace BlackMisc
      *
      * The implementation (ab)uses the QMetaType converter function registration mechanism
      * to store a type-erased representation of the set of operations supported by T.
-     * Unlike the singleton pattern, this approach means that CVariant can be used in plugins.
      */
     template <typename T>
     void registerMetaValueType()
