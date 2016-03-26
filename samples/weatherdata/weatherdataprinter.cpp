@@ -51,8 +51,8 @@ void CWeatherDataPrinter::ps_printWeatherData()
     CWeatherGrid weatherGrid = m_weatherData->getWeatherData();
     for (const CGridPoint &gridPoint : weatherGrid)
     {
-        qtout << "Latitude:" << gridPoint.getLatitude().toQString() << endl;
-        qtout << "Longitude:" << gridPoint.getLongitude().toQString() << endl;
+        qtout << "Latitude:" << gridPoint.getPosition().latitude().toQString() << endl;
+        qtout << "Longitude:" << gridPoint.getPosition().longitude().toQString() << endl;
 
         CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
         temperatureLayers.sort([](const CTemperatureLayer &a, const CTemperatureLayer &b) { return a.getLevel() < b.getLevel(); });

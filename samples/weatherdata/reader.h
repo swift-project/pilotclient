@@ -13,8 +13,7 @@
 //! \file
 //! \ingroup sampleweatherdata
 
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include <QThread>
 #include <QString>
 
@@ -35,7 +34,7 @@ protected:
 
 signals:
     //! User is asking for weather data
-    void weatherDataRequest(const BlackMisc::Geo::CLatitude &lat, const BlackMisc::Geo::CLongitude &lon);
+    void weatherDataRequest(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
     //! User is asking to quit
     void quit();

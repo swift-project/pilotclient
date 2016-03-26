@@ -15,8 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/temperaturelayerlist.h"
 #include "blackmisc/weather/visibilitylayerlist.h"
@@ -35,8 +34,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexLatitude = BlackMisc::CPropertyIndex::GlobalIndexCGridPoint,
-                IndexLongitude,
+                IndexPosition = BlackMisc::CPropertyIndex::GlobalIndexCGridPoint,
                 IndexCloudLayers,
                 IndexTemperatureLayers,
                 IndexWindLayers
@@ -46,23 +44,17 @@ namespace BlackMisc
             CGridPoint() = default;
 
             //! Constructor
-            CGridPoint(const Geo::CLatitude &latitude, const Geo::CLongitude longitude,
+            CGridPoint(const Geo::CCoordinateGeodetic &position,
                        const CCloudLayerList &cloudLayers,
                        const CTemperatureLayerList &temperatureLayers,
                        const CVisibilityLayerList &visibilityLayers,
                        const CWindLayerList &windLayers);
 
-            //! Set latitude
-            void setLatitude(const Geo::CLatitude &latitude) { m_latitude = latitude; }
+            //! Set position
+            void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { m_position = position; }
 
-            //! Get latitude
-            Geo::CLatitude getLatitude() const { return m_latitude; }
-
-            //! Set longitude
-            void setLongitude(const Geo::CLongitude &longitude) { m_longitude = longitude; }
-
-            //! Get longitude
-            Geo::CLongitude getLongitude() const { return m_longitude; }
+            //! Get position
+            const BlackMisc::Geo::CCoordinateGeodetic getPosition() const { return m_position; }
 
             //! Set cloud layers
             void setCloudLayers(const CCloudLayerList &cloudLayers) { m_cloudLayers = cloudLayers; }
@@ -98,8 +90,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            Geo::CLatitude m_latitude;
-            Geo::CLongitude m_longitude;
+            BlackMisc::Geo::CCoordinateGeodetic m_position;
             CCloudLayerList m_cloudLayers;
             CTemperatureLayerList m_temperatureLayers;
             CVisibilityLayerList m_visibilityLayers;
@@ -107,8 +98,7 @@ namespace BlackMisc
 
             BLACK_METACLASS(
                 CGridPoint,
-                BLACK_METAMEMBER(latitude),
-                BLACK_METAMEMBER(longitude),
+                BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(cloudLayers),
                 BLACK_METAMEMBER(temperatureLayers),
                 BLACK_METAMEMBER(visibilityLayers),

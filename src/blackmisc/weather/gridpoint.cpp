@@ -18,12 +18,12 @@ namespace BlackMisc
 {
     namespace Weather
     {
-        CGridPoint::CGridPoint(const Geo::CLatitude &latitude, const Geo::CLongitude longitude,
+        CGridPoint::CGridPoint(const Geo::CCoordinateGeodetic &position,
                                const CCloudLayerList &cloudLayers,
                                const CTemperatureLayerList &temperatureLayers,
                                const CVisibilityLayerList &visibilityLayers,
                                const CWindLayerList &windLayers) :
-            m_latitude(latitude), m_longitude(longitude), m_cloudLayers(cloudLayers),
+            m_position(position), m_cloudLayers(cloudLayers),
             m_temperatureLayers(temperatureLayers), m_visibilityLayers(visibilityLayers),
             m_windLayers(windLayers)
         { }
@@ -34,10 +34,8 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLatitude:
-                return CVariant::fromValue(m_latitude);
-            case IndexLongitude:
-                return CVariant::fromValue(m_longitude);
+            case IndexPosition:
+                return CVariant::fromValue(m_position);
             case IndexCloudLayers:
                 return CVariant::fromValue(m_cloudLayers);
             case IndexTemperatureLayers:
@@ -55,11 +53,9 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLatitude:
-                setLatitude(variant.value<CLatitude>());
+            case IndexPosition:
+                setPosition(variant.value<CCoordinateGeodetic>());
                 break;
-            case IndexLongitude:
-                setLongitude(variant.value<CLongitude>());
                 break;
             case IndexCloudLayers:
                 setCloudLayers(variant.value<CCloudLayerList>());

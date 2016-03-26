@@ -13,8 +13,7 @@
 #define BLACKCORE_WEATHERDATA_H
 
 #include "blackcoreexport.h"
-#include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/weather/weathergrid.h"
 #include <QObject>

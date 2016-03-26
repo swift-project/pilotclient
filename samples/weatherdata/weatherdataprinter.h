@@ -32,7 +32,7 @@ public:
 
 public slots:
     //! Fetch new weather data for given position and print it once received
-    void fetchAndPrintWetherData(const BlackMisc::Geo::CLatitude &lat, const BlackMisc::Geo::CLongitude &lon);
+    void fetchAndPrintWetherData(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
 private slots:
     //! Print weather data to stdout

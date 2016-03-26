@@ -270,7 +270,8 @@ namespace BlackWxPlugin
 
                 CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
                 CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
-                BlackMisc::Weather::CGridPoint gridPoint(latitude, longitude, cloudLayers, temperatureLayers, {}, windLayers);
+                auto position = CCoordinateGeodetic { latitude, longitude, {0} };
+                BlackMisc::Weather::CGridPoint gridPoint(position, cloudLayers, temperatureLayers, {}, windLayers);
                 m_weatherGrid.insert(gridPoint);
             }
         }

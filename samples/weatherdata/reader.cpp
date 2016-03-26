@@ -41,7 +41,8 @@ void CLineReader::run()
             longitudeValue += match.captured(4).toDouble() / 10;
             const CLatitude latitude(latitudeValue, CAngleUnit::deg());
             const CLongitude longitude(longitudeValue, CAngleUnit::deg());
-            emit weatherDataRequest(latitude, longitude);
+            const CCoordinateGeodetic position { latitude, longitude, {0} };
+            emit weatherDataRequest(position);
         }
         else
         {
