@@ -35,12 +35,14 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
             ui->tvp_OwnModelSet->addFilterDialog();
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
+            ui->tvp_OwnModelSet->setJsonLoad(CAircraftModelView::AllowOnlySingleSimulator | CAircraftModelView::ReduceToOneSimulator);
 
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(&this->m_modelSetLoader, &CModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::rowCountChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::ps_onJsonDataLoaded);
 
             this->ps_onRowCountChanged(ui->tvp_OwnModelSet->rowCount(), ui->tvp_OwnModelSet->hasFilter());
         }
@@ -163,7 +165,6 @@ namespace BlackGui
             }
             else if (sender == ui->pb_LoadExistingSet)
             {
-                this->ui->tvp_OwnModelSet->setLoadValidation(CAircraftModelView::AllowOnlySingeSimulator);
                 this->ui->tvp_OwnModelSet->showFileLoadDialog();
             }
             else if (sender == ui->pb_SaveAsSetForSimulator)
@@ -207,6 +208,14 @@ namespace BlackGui
             else
             {
                 ui->pb_SaveAsSetForSimulator->setText("save");
+            }
+        }
+
+        void CDbOwnModelSetComponent::ps_onJsonDataLoaded(const CSimulatorInfo &simulator)
+        {
+            if (simulator.isSingleSimulator())
+            {
+                this->setSimulator(simulator);
             }
         }
 

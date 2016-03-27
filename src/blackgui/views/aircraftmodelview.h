@@ -29,12 +29,13 @@ namespace BlackGui
 
         public:
             //! How to validate loaded JSON data
-            enum LoadValidationFlag
+            enum JsonLoadFlag
             {
-                NoValidation,
-                AllowOnlySingeSimulator
+                NotSet                   = 0,
+                AllowOnlySingleSimulator = 1 << 0,
+                ReduceToOneSimulator     = 1 << 1
             };
-            Q_DECLARE_FLAGS(LoadValidation, LoadValidationFlag)
+            Q_DECLARE_FLAGS(JsonLoad, JsonLoadFlag)
 
             //! Constructor
             explicit CAircraftModelView(QWidget *parent = nullptr);
@@ -88,7 +89,7 @@ namespace BlackGui
             bool highlightModelStrings() const;
 
             //! Load validation
-            void setLoadValidation(LoadValidation validation) { m_validation = validation; }
+            void setJsonLoad(JsonLoad jsonLoad) { m_jsonLoad = jsonLoad; }
 
         signals:
             //! Request to stash if applicable
@@ -100,6 +101,9 @@ namespace BlackGui
             //! Request further handling of drops I cannot handle on my own
             void requestHandlingOfStashDrop(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
+            //! Models for simulator loaded (JSON)
+            void jsonModelsForSimulatorLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         protected:
             //! \copydoc QTableView::dropEvent
             virtual void dropEvent(QDropEvent *event) override;
@@ -107,7 +111,9 @@ namespace BlackGui
             //! \name View base class overrides
             //! @{
             virtual void customMenu(QMenu &menu) const override;
-            virtual BlackMisc::CStatusMessage validateLoadedData(const BlackMisc::Simulation::CAircraftModelList &models) const override;
+            virtual BlackMisc::CStatusMessage modifyLoadedJsonData(BlackMisc::Simulation::CAircraftModelList &models) const override;
+            virtual BlackMisc::CStatusMessage validateLoadedJsonData(const BlackMisc::Simulation::CAircraftModelList &models) const override;
+            virtual void jsonLoadedAndModelUpdated(const BlackMisc::Simulation::CAircraftModelList &models) override;
             //! @}
 
         private slots:
@@ -124,14 +130,14 @@ namespace BlackGui
             void ps_requestStash();
 
         private:
-            bool           m_stashingClearsSelection = true;         //!< stashing unselects
-            LoadValidation m_validation              = NoValidation; //!< Loaded JSON validation
+            bool     m_stashingClearsSelection = true;   //!< stashing unselects
+            JsonLoad m_jsonLoad                = NotSet; //!< Loaded JSON validation
         };
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::LoadValidation)
-Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::LoadValidationFlag)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CAircraftModelView::LoadValidation)
+Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::JsonLoad)
+Q_DECLARE_METATYPE(BlackGui::Views::CAircraftModelView::JsonLoadFlag)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CAircraftModelView::JsonLoad)
 
 #endif // guard

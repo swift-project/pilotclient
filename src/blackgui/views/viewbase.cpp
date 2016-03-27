@@ -956,7 +956,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::modifyLoadedData(ContainerType &data) const
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::modifyLoadedJsonData(ContainerType &data) const
         {
             Q_UNUSED(data);
             static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "no modification", true);
@@ -964,7 +964,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::validateLoadedData(const ContainerType &data) const
+        CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::validateLoadedJsonData(const ContainerType &data) const
         {
             Q_UNUSED(data);
             static const CStatusMessage e(this, CStatusMessage::SeverityInfo, "no validation", true);
@@ -972,23 +972,46 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::jsonLoadedAndModelUpdated(const ContainerType &data)
+        {
+            Q_UNUSED(data);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
         CStatusMessage CViewBase<ModelClass, ContainerType, ObjectType>::ps_loadJson()
         {
-            const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                     tr("Load data file"), getDefaultFilename(true),
-                                     tr("swift (*.json *.txt)"));
-            if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Load canceled", true); }
-            QString json(CFileUtils::readFileToString(fileName));
-            if (json.isEmpty())
+            CStatusMessage m;
+            do
             {
-                return CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data", true);
+                const QString fileName = QFileDialog::getOpenFileName(nullptr,
+                                         tr("Load data file"), getDefaultFilename(true),
+                                         tr("swift (*.json *.txt)"));
+                if (fileName.isEmpty())
+                {
+                    m = CStatusMessage(this, CStatusMessage::SeverityDebug, "Load canceled", true);
+                    break;
+                }
+
+                QString json(CFileUtils::readFileToString(fileName));
+                if (json.isEmpty())
+                {
+                    m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data", true);
+                    break;
+                }
+                ContainerType container;
+                container.convertFromJson(json);
+                m = this->modifyLoadedJsonData(container);
+                if (m.isFailure()) { break; } // modification error
+                m = this->validateLoadedJsonData(container);
+                if (m.isFailure()) { break; } // validaton error
+                this->updateContainerMaybeAsync(container);
+                m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed", true);
+                this->jsonLoadedAndModelUpdated(container);
             }
-            ContainerType container;
-            container.convertFromJson(json);
-            const CStatusMessage s = this->validateLoadedData(container);
-            if (s.getSeverity() == CStatusMessage::SeverityError) { return s; }
-            this->updateContainerMaybeAsync(container);
-            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed", true);
+            while (false);
+
+            emit this->jsonLoadCompleted(m);
+            return m;
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

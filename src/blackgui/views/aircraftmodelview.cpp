@@ -11,7 +11,8 @@
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/simulation//distributorlist.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfolist.h"
 #include "blackgui/shortcut.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -292,17 +293,64 @@ namespace BlackGui
             CViewWithDbObjects::customMenu(menu);
         }
 
-        CStatusMessage CAircraftModelView::validateLoadedData(const CAircraftModelList &models) const
+        CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
+        {
+            if (!this->m_jsonLoad.testFlag(ReduceToOneSimulator)) { return {}; }
+            if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Empty models", true); }
+            const CSimulatorInfo maxSims = models.simulatorsWithMaxEntries();
+            if (maxSims.isNoSimulator())
+            {
+                return CStatusMessage(this, CStatusMessage::SeverityError, "No simulator with maximum, cannot reduce");
+            }
+
+            if (maxSims.isSingleSimulator())
+            {
+                int rm = models.removeIfNotMatchingSimulator(maxSims);
+                return rm < 1 ?
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Now only for " + maxSims.toQString(true), true) :
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Reduced by % 1 to only use %2", true) << rm << maxSims.toQString(true);
+            }
+
+            // one simulator dominating
+            if (maxSims.isSingleSimulator())
+            {
+                int rm = models.removeIfNotMatchingSimulator(maxSims);
+                return rm < 1 ?
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Now only for " + maxSims.toQString(true), true) :
+                       CStatusMessage(this, CStatusMessage::SeverityInfo, "Reduced by % 1 to only use %2", true) << rm << maxSims.toQString(true);
+            }
+
+            // multiple sims with same count
+            const CSimulatorInfo first = CSimulatorInfoList::splitIntoSingleSimulators(maxSims).front();
+            int d = models.removeIfNotMatchingSimulator(first);
+            return d < 1 ?
+                   CStatusMessage(this, CStatusMessage::SeverityInfo, "Now only for " + maxSims.toQString(true), true) :
+                   CStatusMessage(this, CStatusMessage::SeverityInfo, "Reduced by % 1 to only use %2", true) << d << maxSims.toQString(true);
+        }
+
+        CStatusMessage CAircraftModelView::validateLoadedJsonData(const CAircraftModelList &models) const
         {
             static const CStatusMessage ok(this, CStatusMessage::SeverityInfo, "model validation passed", true);
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "no data", true); }
-            if (this->m_validation == AllowOnlySingeSimulator)
+            if (this->m_jsonLoad == AllowOnlySingleSimulator)
             {
                 const CSimulatorInfo sim = models.simulatorsSupported();
                 if (sim.isSingleSimulator()) { return ok; }
                 return CStatusMessage(this, CStatusMessage::SeverityError, "data need to be from one simulator");
             }
-            return CViewWithDbObjects::validateLoadedData(models);
+            return CViewWithDbObjects::validateLoadedJsonData(models);
+        }
+
+        void CAircraftModelView::jsonLoadedAndModelUpdated(const CAircraftModelList &models)
+        {
+            if (models.isEmpty())
+            {
+                emit jsonModelsForSimulatorLoaded(CSimulatorInfo());
+            }
+            else
+            {
+                emit jsonModelsForSimulatorLoaded(models.simulatorsWithMaxEntries());
+            }
         }
 
         void CAircraftModelView::ps_toggleHighlightStashedModels()

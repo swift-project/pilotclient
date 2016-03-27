@@ -83,6 +83,9 @@ namespace BlackGui
             //! View has changed row count
             void ps_onRowCountChanged(int count, bool withFilter);
 
+            //! JSON data have been loaded from disk
+            void ps_onJsonDataLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         private:
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);

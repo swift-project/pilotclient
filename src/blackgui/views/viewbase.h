@@ -221,7 +221,7 @@ namespace BlackGui
             //! Number of elements changed
             void rowCountChanged(int count, bool withFilter);
 
-            //! Model bas been changed
+            //! Model bas been changed (means data in view have been changed)
             void modelChanged();
 
             //! Single object was changed in model
@@ -235,6 +235,9 @@ namespace BlackGui
 
             //! Object has been double clicked
             void objectSelected(const BlackMisc::CVariant &object);
+
+            //! JSON data load from disk completed, the BlackMisc::CStatusMessage represents the success
+            void jsonLoadCompleted(const BlackMisc::CStatusMessage &msg);
 
         public slots:
             //! Resize to contents, strategy depends on container size
@@ -401,7 +404,7 @@ namespace BlackGui
         //! Base class for views
         template <class ModelClass, class ContainerType, class ObjectType> class CViewBase : public CViewBaseNonTemplate
         {
-            // I cannot use Q_OBJECT here, because error: Template classes not supported by Q_OBJECT
+            // I cannot use Q_OBJECT here, because of error: Template classes not supported by Q_OBJECT
             // Cannot declare slots as SLOT because I have no Q_OBJECT macro
 
         public:
@@ -528,10 +531,14 @@ namespace BlackGui
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
-            virtual BlackMisc::CStatusMessage modifyLoadedData(ContainerType &data) const;
+            virtual BlackMisc::CStatusMessage modifyLoadedJsonData(ContainerType &data) const;
 
             //! Verify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
-            virtual BlackMisc::CStatusMessage validateLoadedData(const ContainerType &data) const;
+            virtual BlackMisc::CStatusMessage validateLoadedJsonData(const ContainerType &data) const;
+
+            //! In BlackGui::Views::CViewBaseNonTemplate::ps_loadJson the view has been updated because of loaded JSON data
+            //! \remark I cannot use a signal with a template parameter, so this functions serves as callback
+            virtual void jsonLoadedAndModelUpdated(const ContainerType &data);
 
             // --------------------------------------------- SLOTS start here -----------------------------------------
 
