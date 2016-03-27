@@ -280,13 +280,6 @@ namespace BlackGui
                 a->setCheckable(true);
                 a->setChecked(this->derivedModel()->highlightModelStrings());
             }
-            if (this->m_menus.testFlag(MenuHighlightInvalid))
-            {
-                // this function requires that someone provides the model strings to be highlighted
-                QAction *a = stashMenu->addAction(CIcons::appDbStash16(), "Highlight invalid models (on/off)", this, &CAircraftModelView::ps_toggleHighlightDbData);
-                a->setCheckable(true);
-                a->setChecked(this->derivedModel()->highlightDbData());
-            }
             if (stashMenu->isEmpty())
             {
                 stashMenu->deleteLater();

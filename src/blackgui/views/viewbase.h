@@ -91,7 +91,6 @@ namespace BlackGui
                 MenuHighlightStashed     = 1 << 10,  //!< highlight stashed models
                 MenuCanStashModels       = 1 << 11,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
-                MenuHighlightInvalid     = 1 << 12   //!< highlight invalid models
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
 

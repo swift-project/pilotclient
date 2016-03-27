@@ -52,7 +52,7 @@ namespace BlackGui
             connect(this->ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
             connect(this->ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
 
-            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuHighlightInvalid);
+            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
             ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
             this->enableButtonRow();
