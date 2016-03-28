@@ -34,7 +34,8 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexPosition = BlackMisc::CPropertyIndex::GlobalIndexCGridPoint,
+                IndexIdentifier = BlackMisc::CPropertyIndex::GlobalIndexCGridPoint,
+                IndexPosition,
                 IndexCloudLayers,
                 IndexTemperatureLayers,
                 IndexWindLayers
@@ -44,11 +45,22 @@ namespace BlackMisc
             CGridPoint() = default;
 
             //! Constructor
-            CGridPoint(const Geo::CCoordinateGeodetic &position,
+            CGridPoint(const QString &identifier,
+                       const Geo::CCoordinateGeodetic &position);
+
+            //! Constructor
+            CGridPoint(const QString &identifier,
+                       const Geo::CCoordinateGeodetic &position,
                        const CCloudLayerList &cloudLayers,
                        const CTemperatureLayerList &temperatureLayers,
                        const CVisibilityLayerList &visibilityLayers,
                        const CWindLayerList &windLayers);
+
+            //! Set identifier
+            void setIdentifier(const QString &identifier) { m_identifier = identifier; }
+
+            //! Get identifier
+            QString getIdentifier() const { return m_identifier; }
 
             //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { m_position = position; }
@@ -93,6 +105,8 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
+            // Identifier is intentionally string based. MSFS uses ICAO but others don't.
+            QString m_identifier;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
             CCloudLayerList m_cloudLayers;
             CTemperatureLayerList m_temperatureLayers;
@@ -101,6 +115,7 @@ namespace BlackMisc
 
             BLACK_METACLASS(
                 CGridPoint,
+                BLACK_METAMEMBER(identifier),
                 BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(cloudLayers),
                 BLACK_METAMEMBER(temperatureLayers),

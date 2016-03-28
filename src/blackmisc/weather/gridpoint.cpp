@@ -19,13 +19,23 @@ namespace BlackMisc
 {
     namespace Weather
     {
-        CGridPoint::CGridPoint(const Geo::CCoordinateGeodetic &position,
+        CGridPoint::CGridPoint(const QString &identifier,
+                               const Geo::CCoordinateGeodetic &position) :
+            m_identifier(identifier),
+            m_position(position)
+        { }
+
+        CGridPoint::CGridPoint(const QString &identifier,
+                               const Geo::CCoordinateGeodetic &position,
                                const CCloudLayerList &cloudLayers,
                                const CTemperatureLayerList &temperatureLayers,
                                const CVisibilityLayerList &visibilityLayers,
                                const CWindLayerList &windLayers) :
-            m_position(position), m_cloudLayers(cloudLayers),
-            m_temperatureLayers(temperatureLayers), m_visibilityLayers(visibilityLayers),
+            m_identifier(identifier),
+            m_position(position),
+            m_cloudLayers(cloudLayers),
+            m_temperatureLayers(temperatureLayers),
+            m_visibilityLayers(visibilityLayers),
             m_windLayers(windLayers)
         { }
 
@@ -43,6 +53,8 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexIdentifier:
+                return CVariant::fromValue(m_identifier);
             case IndexPosition:
                 return CVariant::fromValue(m_position);
             case IndexCloudLayers:
@@ -62,6 +74,9 @@ namespace BlackMisc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
+            case IndexIdentifier:
+                setIdentifier(variant.value<QString>());
+                break;
             case IndexPosition:
                 setPosition(variant.value<CCoordinateGeodetic>());
                 break;

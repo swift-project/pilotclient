@@ -47,6 +47,7 @@ namespace BlackMisc
 
             static const CGridPoint gridPointGLOB =
             {
+                "GLOB",
                 {},
                 CCloudLayerList { cloudLayer },
                 CTemperatureLayerList { temperatureLayer },
@@ -97,6 +98,7 @@ namespace BlackMisc
 
             static const CGridPoint gridPointGLOB
             {
+                "GLOB",
                 {},
                 CCloudLayerList { cloudLayer1, cloudLayer2 },
                 CTemperatureLayerList { temperatureLayer },
