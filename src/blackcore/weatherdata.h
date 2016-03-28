@@ -32,8 +32,9 @@ namespace BlackCore
         //! Destructor
         virtual ~IWeatherData() {}
 
-        //! Fetch new weather data
-        virtual void fetchWeatherData(const BlackMisc::Geo::CLatitude &latitude, const BlackMisc::Geo::CLongitude &longitude, double maxDistance = -1) = 0;
+        //! Fetch new weather data around grid
+        virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &grid,
+                                      const BlackMisc::PhysicalQuantities::CLength &range) = 0;
 
         //! Get fetched weather data
         virtual BlackMisc::Weather::CWeatherGrid getWeatherData() const = 0;

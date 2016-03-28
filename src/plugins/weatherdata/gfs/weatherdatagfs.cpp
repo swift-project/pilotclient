@@ -52,11 +52,10 @@ namespace BlackWxPlugin
             connect(&m_networkAccessManager, &QNetworkAccessManager::finished, this, &CWeatherDataGfs::ps_parseGfsFile);
         }
 
-        void CWeatherDataGfs::fetchWeatherData(const CLatitude &latitude, const CLongitude &longitude, double maxDistance)
+        void CWeatherDataGfs::fetchWeatherData(const CWeatherGrid &grid, const CLength &range)
         {
-            m_latitude = latitude;
-            m_longitude = longitude;
-            m_maxDistance = maxDistance;
+            m_grid = grid;
+            m_maxRange = range;
             if (m_gribData.isEmpty())
             {
                 CLogMessage(this).debug() << "Started to download GFS data...";
@@ -422,10 +421,22 @@ namespace BlackWxPlugin
                         if(gridPoint.longitude < 0.0) { gridPoint.longitude += 360.0; }
                         gridPoint.fieldPosition = ix + i;
                         CCoordinateGeodetic gridPointPosition(gridPoint.latitude, gridPoint.longitude, 0);
-                        CCoordinateGeodetic centralPosition(m_latitude, m_longitude, {0});
-                        if ((m_maxDistance == -1) || calculateEuclideanDistance(gridPointPosition, centralPosition) < m_maxDistance )
+                        if (m_maxRange == CLength())
                         {
                             m_gfsWeatherGrid.append(gridPoint);
+                        }
+                        else
+                        {
+                            for (const CGridPoint &fixedGridPoint : as_const(m_grid))
+                            {
+                                auto distance = calculateGreatCircleDistance(gridPointPosition, fixedGridPoint.getPosition()).value(CLengthUnit::m());
+                                auto maxRange = m_maxRange.value(CLengthUnit::m());
+                                if (distance < maxRange)
+                                {
+                                    m_gfsWeatherGrid.append(gridPoint);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }

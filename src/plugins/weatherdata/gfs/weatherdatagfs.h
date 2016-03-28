@@ -40,8 +40,9 @@ namespace BlackWxPlugin
             //! Constructor
             CWeatherDataGfs(QObject *parent = nullptr);
 
-            //! \copydoc BlackCore::IWeatherData::fetchWeatherData()
-            virtual void fetchWeatherData(const BlackMisc::Geo::CLatitude &latitude, const BlackMisc::Geo::CLongitude &longitude, double maxDistance = -1) override;
+            //! \copydoc BlackCore::IWeatherData::fetchWeatherData
+            virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &grid,
+                                          const BlackMisc::PhysicalQuantities::CLength &range) override;
 
             //! \copydoc BlackCore::IWeatherData::getWeatherData()
             virtual BlackMisc::Weather::CWeatherGrid getWeatherData() const override;
@@ -134,9 +135,8 @@ namespace BlackWxPlugin
             void setCloudCoverage(const g2float *fld, int level);
             void setCloudLevel(const g2float *fld, int surfaceType, int level);
 
-            BlackMisc::Geo::CLatitude m_latitude;
-            BlackMisc::Geo::CLongitude m_longitude;
-            double m_maxDistance = -1;
+            BlackMisc::Weather::CWeatherGrid m_grid;
+            BlackMisc::PhysicalQuantities::CLength m_maxRange;
 
             mutable QReadWriteLock m_lockData;
             QByteArray m_gribData;
