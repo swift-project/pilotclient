@@ -20,6 +20,7 @@
 #include "blackmisc/weather/temperaturelayerlist.h"
 #include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayerlist.h"
+#include "blackmisc/pq/pressure.h"
 
 namespace BlackMisc
 {
@@ -38,7 +39,8 @@ namespace BlackMisc
                 IndexPosition,
                 IndexCloudLayers,
                 IndexTemperatureLayers,
-                IndexWindLayers
+                IndexWindLayers,
+                IndexSurfacePressure
             };
 
             //! Default constructor.
@@ -54,7 +56,8 @@ namespace BlackMisc
                        const CCloudLayerList &cloudLayers,
                        const CTemperatureLayerList &temperatureLayers,
                        const CVisibilityLayerList &visibilityLayers,
-                       const CWindLayerList &windLayers);
+                       const CWindLayerList &windLayers,
+                       const PhysicalQuantities::CPressure &surfacePressure);
 
             //! Set identifier
             void setIdentifier(const QString &identifier) { m_identifier = identifier; }
@@ -95,6 +98,12 @@ namespace BlackMisc
             //! Copies all weather data from other without modifying identifier and position.
             void copyWeatherDataFrom(const CGridPoint &other);
 
+            //! Set surface pressure
+            void setSurfacePressure(const PhysicalQuantities::CPressure &pressure) { m_surfacePressure = pressure; }
+
+            //! Get surface pressure
+            PhysicalQuantities::CPressure getSurfacePressure() const { return m_surfacePressure; }
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -112,6 +121,7 @@ namespace BlackMisc
             CTemperatureLayerList m_temperatureLayers;
             CVisibilityLayerList m_visibilityLayers;
             CWindLayerList m_windLayers;
+            PhysicalQuantities::CPressure m_surfacePressure = { 1013.25, PhysicalQuantities::CPressureUnit::hPa() };
 
             BLACK_METACLASS(
                 CGridPoint,
@@ -120,7 +130,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(cloudLayers),
                 BLACK_METAMEMBER(temperatureLayers),
                 BLACK_METAMEMBER(visibilityLayers),
-                BLACK_METAMEMBER(windLayers)
+                BLACK_METAMEMBER(windLayers),
+                BLACK_METAMEMBER(surfacePressure)
             );
         };
     } // namespace

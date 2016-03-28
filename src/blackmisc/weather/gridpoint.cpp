@@ -30,13 +30,15 @@ namespace BlackMisc
                                const CCloudLayerList &cloudLayers,
                                const CTemperatureLayerList &temperatureLayers,
                                const CVisibilityLayerList &visibilityLayers,
-                               const CWindLayerList &windLayers) :
+                               const CWindLayerList &windLayers,
+                               const CPressure &surfacePressure) :
             m_identifier(identifier),
             m_position(position),
             m_cloudLayers(cloudLayers),
             m_temperatureLayers(temperatureLayers),
             m_visibilityLayers(visibilityLayers),
-            m_windLayers(windLayers)
+            m_windLayers(windLayers),
+            m_surfacePressure(surfacePressure)
         { }
 
         void CGridPoint::copyWeatherDataFrom(const CGridPoint &other)
@@ -45,6 +47,7 @@ namespace BlackMisc
             setTemperatureLayers(other.getTemperatureLayers());
             setVisibilityLayers(other.getVisibilityLayers());
             setWindLayers(other.getWindLayers());
+            setSurfacePressure(other.getSurfacePressure());
         }
 
         CVariant CGridPoint::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -63,6 +66,8 @@ namespace BlackMisc
                 return CVariant::fromValue(m_temperatureLayers);
             case IndexWindLayers:
                 return CVariant::fromValue(m_windLayers);
+            case IndexSurfacePressure:
+                return CVariant::fromValue(m_surfacePressure);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -80,7 +85,6 @@ namespace BlackMisc
             case IndexPosition:
                 setPosition(variant.value<CCoordinateGeodetic>());
                 break;
-                break;
             case IndexCloudLayers:
                 setCloudLayers(variant.value<CCloudLayerList>());
                 break;
@@ -89,6 +93,9 @@ namespace BlackMisc
                 break;
             case IndexWindLayers:
                 setWindLayers(variant.value<CWindLayerList>());
+                break;
+            case IndexSurfacePressure:
+                setSurfacePressure(variant.value<CPressure>());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

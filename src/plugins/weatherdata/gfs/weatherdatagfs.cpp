@@ -245,6 +245,11 @@ namespace BlackWxPlugin
             for (const GfsGridPoint &gfsGridPoint : m_gfsWeatherGrid)
             {
                 CTemperatureLayerList temperatureLayers;
+
+                CAltitude surfaceAltitude (0, CAltitude::AboveGround, CLengthUnit::defaultUnit());
+                CTemperatureLayer surfaceTemperature(surfaceAltitude, CTemperature(gfsGridPoint.surfaceTemperature, CTemperatureUnit::K()), {}, {});
+                temperatureLayers.insert(surfaceTemperature);
+
                 CWindLayerList windLayers;
                 for (auto isobaricLayerIt = gfsGridPoint.isobaricLayers.begin(); isobaricLayerIt != gfsGridPoint.isobaricLayers.end(); ++isobaricLayerIt)
                 {
@@ -283,10 +288,12 @@ namespace BlackWxPlugin
                     cloudLayers.insert(cloudLayer);
                 }
 
+                auto surfacePressure = PhysicalQuantities::CPressure { gfsGridPoint.surfacePressure, PhysicalQuantities::CPressureUnit::Pa() };
+
                 CLatitude latitude(gfsGridPoint.latitude, CAngleUnit::deg());
                 CLongitude longitude(gfsGridPoint.longitude, CAngleUnit::deg());
                 auto position = CCoordinateGeodetic { latitude, longitude, {0} };
-                BlackMisc::Weather::CGridPoint gridPoint(position, cloudLayers, temperatureLayers, {}, windLayers);
+                BlackMisc::Weather::CGridPoint gridPoint({}, position, cloudLayers, temperatureLayers, {}, windLayers, surfacePressure);
                 m_weatherGrid.insert(gridPoint);
             }
         }
@@ -467,8 +474,10 @@ namespace BlackWxPlugin
                 return;
             }
 
+            // http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_temp4-0.shtml
             g2int parameterCategory = gfld->ipdtmpl[0];
             g2int parameterNumber = gfld->ipdtmpl[1];
+            g2int typeFirstFixedSurface = gfld->ipdtmpl[9];
             g2int valueFirstFixedSurface = gfld->ipdtmpl[11];
 
             std::array<g2int, 2> key { { parameterCategory, parameterNumber } };
@@ -479,9 +488,21 @@ namespace BlackWxPlugin
                 return;
             }
 
-            double level = std::round(millibarToLevel(valueFirstFixedSurface));
-            auto parameterValue = m_grib2ParameterTable[key];
+            double level = 0;
+            switch (typeFirstFixedSurface)
+            {
+            case GroundOrWaterSurface:
+                level = 0;
+                break;
+            case IsobaricSurface:
+                level = std::round(millibarToLevel(valueFirstFixedSurface));
+                break;
+            default:
+                CLogMessage(this).warning("Unexpected first fixed surface type: %1") << typeFirstFixedSurface;
+                return;
+            }
 
+            auto parameterValue = m_grib2ParameterTable[key];
             switch (parameterValue.code)
             {
             case TMP:
@@ -499,6 +520,7 @@ namespace BlackWxPlugin
             case PRMSL:
                 break;
             case PRES:
+                setCloudPressure(gfld->fld, level);
                 break;
             default:
                 Q_ASSERT(false);
@@ -563,7 +585,8 @@ namespace BlackWxPlugin
         {
             for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
             {
-                gridPointIt->isobaricLayers[level].temperature = fld[gridPointIt->fieldPosition];
+                if (level > 0) { gridPointIt->isobaricLayers[level].temperature = fld[gridPointIt->fieldPosition]; }
+                else { gridPointIt->surfaceTemperature = fld[gridPointIt->fieldPosition]; }
             }
         }
 
@@ -620,6 +643,15 @@ namespace BlackWxPlugin
                     Q_ASSERT(false);
                     break;
                 }
+            }
+        }
+
+        void CWeatherDataGfs::setCloudPressure(const g2float *fld, double level)
+        {
+            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            {
+                if (level > 0) { /* todo */ }
+                else { gridPointIt->surfacePressure = fld[gridPointIt->fieldPosition];  }
             }
         }
 

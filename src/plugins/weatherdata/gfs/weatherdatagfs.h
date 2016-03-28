@@ -78,6 +78,7 @@ namespace BlackWxPlugin
 
             enum Grib2FixedSurfaceTypes
             {
+                GroundOrWaterSurface = 1,
                 IsobaricSurface = 100,
                 LowCloudBottomLevel = 212,
                 LowCloudTopLevel = 213,
@@ -123,6 +124,8 @@ namespace BlackWxPlugin
                 QHash<double, GfsIsobaricLayer> isobaricLayers;
                 double surfaceRainRate = 0;
                 double surfaceSnowRate = 0;
+                double surfacePressure = 0;
+                double surfaceTemperature = 0;
             };
 
             QUrl getDownloadUrl() const;
@@ -138,6 +141,7 @@ namespace BlackWxPlugin
             void setWindU(const g2float *fld, double level);
             void setCloudCoverage(const g2float *fld, int level);
             void setCloudLevel(const g2float *fld, int surfaceType, int level);
+            void setCloudPressure(const g2float *fld, double level);
             void setSurfaceRain(const g2float *fld);
             void setSurfaceSnow(const g2float *fld);
 

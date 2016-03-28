@@ -72,7 +72,8 @@ namespace BlackMisc
                 CCloudLayerList { cloudLayer },
                 CTemperatureLayerList { temperatureLayer },
                 CVisibilityLayerList { visibilityLayer } ,
-                CWindLayerList { windLayer }
+                CWindLayerList { windLayer },
+                { 1013.25, PhysicalQuantities::CPressureUnit::hPa() }
             };
 
             static const CWeatherGrid weatherGrid = { gridPointGLOB };
@@ -123,7 +124,8 @@ namespace BlackMisc
                 CCloudLayerList { cloudLayer1, cloudLayer2 },
                 CTemperatureLayerList { temperatureLayer },
                 CVisibilityLayerList { visibilityLayer },
-                CWindLayerList { windLayer1, windLayer2 }
+                CWindLayerList { windLayer1, windLayer2 },
+                { 1013.25, PhysicalQuantities::CPressureUnit::hPa() }
             };
 
             static const CWeatherGrid weatherGrid({ gridPointGLOB });
