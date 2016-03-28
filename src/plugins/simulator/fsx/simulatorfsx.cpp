@@ -97,10 +97,6 @@ namespace BlackSimPlugin
             m_simconnectTimerId = startTimer(10);
             m_simConnected = true;
             emitSimulatorCombinedStatus();
-
-            // Pull weather data from core.
-            // Since we don't get weather data from core yet, use hard coded weather.
-            injectWeatherGrid(CWeatherGrid::getCavokGrid());
             return true;
         }
 
@@ -430,6 +426,14 @@ namespace BlackSimPlugin
             else
             {
                 --m_skipCockpitUpdateCycles;
+            }
+
+            const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
+            if (calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
+            {
+                m_lastWeatherPosition = currentPosition;
+                const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                requestWeatherGrid(weatherGrid, { this, &CSimulatorFsx::injectWeatherGrid });
             }
         }
 

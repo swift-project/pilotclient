@@ -18,6 +18,7 @@
 #include <QDBusServiceWatcher>
 #include <QTimer>
 #include <QString>
+#include <functional>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -126,6 +127,14 @@ namespace BlackSimPlugin
                     Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)),
                     identifier()
                 );
+
+                const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude(), {0} };
+                if (calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
+                {
+                    m_lastWeatherPosition = currentPosition;
+                    const auto weatherGrid = CWeatherGrid { { "", currentPosition } };
+                    requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
+                }
             }
         }
 
@@ -210,10 +219,6 @@ namespace BlackSimPlugin
                 m_traffic->updateInstalledModels();
                 m_watcher->setConnection(m_conn);
                 emitSimulatorCombinedStatus();
-
-                // Pull weather data from core.
-                // Since we don't get weather data from core yet, use hard coded weather.
-                injectWeatherGrid(CWeatherGrid::getCavokGrid());
                 return true;
             }
             else
@@ -525,21 +530,30 @@ namespace BlackSimPlugin
             CGridPoint gridPoint = weatherGrid.front();
 
             // todo: find the closest
-            const CVisibilityLayer visibilityLayer = gridPoint.getVisibilityLayers().frontOrDefault();
+            auto visibilityLayers = gridPoint.getVisibilityLayers();
+            visibilityLayers.sortBy(&CVisibilityLayer::getBase);
+            const CVisibilityLayer visibilityLayer = visibilityLayers.frontOrDefault();
             m_weather->setVisibility(visibilityLayer.getVisibility().value(CLengthUnit::m()));
 
-            const CTemperatureLayer temperatureLayer = gridPoint.getTemperatureLayers().frontOrDefault();
+            CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
+            temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
+            const CTemperatureLayer temperatureLayer = temperatureLayers.frontOrDefault();
             m_weather->setTemperature(temperatureLayer.getTemperature().value(CTemperatureUnit::C()));
             m_weather->setDewPoint(temperatureLayer.getDewPoint().value(CTemperatureUnit::C()));
-
-            CPressure pressure(989.1875, CPressureUnit::hPa());
-            m_weather->setQNH(pressure.value(CPressureUnit::inHg()));
-
-            m_weather->setPrecipitationRatio(1.0);
-            m_weather->setThunderstormRatio(1.0);
+            m_weather->setQNH(gridPoint.getSurfacePressure().value(CPressureUnit::inHg()));
 
             int layerNumber = 0;
-            const CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+            CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+            auto numberOfLayers = cloudLayers.size();
+            // Fill cloud layers if less then 3
+            while (numberOfLayers < 3)
+            {
+                cloudLayers.push_back(CCloudLayer());
+                numberOfLayers++;
+            }
+            cloudLayers.sortBy(&CCloudLayer::getBase);
+            // todo: Instead of truncate, find the 3 vertical closest cloud layers
+            cloudLayers.truncate(3);
             for (const auto &cloudLayer : cloudLayers)
             {
                 int base = cloudLayer.getBase().value(CLengthUnit::m());
@@ -563,14 +577,36 @@ namespace BlackSimPlugin
                 case CCloudLayer::NoClouds: type = 0; break;
                 case CCloudLayer::Cirrus: type = 1; break;
                 case CCloudLayer::Stratus: type = 5; break;
-                //case CCloudLayer::Cumulus: cloud.Type = 9; break;
-                //case CCloudLayer::Thunderstorm: cloud.Type = 10; break;
                 default: type = 0;
                 }
 
                 m_weather->setCloudLayer(layerNumber, base, top, type, coverage);
                 layerNumber++;
             }
+
+            layerNumber = 0;
+            CWindLayerList windLayers = gridPoint.getWindLayers();
+            numberOfLayers = windLayers.size();
+            // Fill cloud layers if less then 3
+            while (numberOfLayers < 3)
+            {
+                windLayers.push_back(CWindLayer());
+                numberOfLayers++;
+            }
+            windLayers.sortBy(&CWindLayer::getLevel);
+            // todo: Instead of truncate, find the 3 vertical closest cloud layers
+            windLayers.truncate(3);
+            for (const auto &windLayer : windLayers)
+            {
+                int altitudeMeter = windLayer.getLevel().value(CLengthUnit::m());
+                double directionDeg = windLayer.getDirection().value(CAngleUnit::deg());
+                int speedKts = windLayer.getSpeed().value(CSpeedUnit::kts());
+                m_weather->setWindLayer(layerNumber, altitudeMeter, directionDeg, speedKts, 0, 0, 0);
+                layerNumber++;
+            }
+
+            m_weather->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
+            m_weather->setThunderstormRatio(0.0);
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

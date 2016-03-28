@@ -152,6 +152,8 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CAircraftModelList m_installedModels;
             BlackMisc::Simulation::CAircraftMatcher m_modelMatcher { BlackMisc::Simulation::CAircraftMatcher::AllModes, this }; //!< Model matcher
 
+            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
+
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks
             {

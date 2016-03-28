@@ -201,6 +201,8 @@ namespace BlackSimPlugin
             qint64 m_statsUpdateAircraftTimeTotal = 0;
             qint64 m_statsUpdateAircraftTimeAvg = 0;
             int    m_statsUpdateAircraftCount = 0;
+
+            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
         };
 
         //! Listener for FSX

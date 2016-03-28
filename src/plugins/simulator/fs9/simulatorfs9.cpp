@@ -133,11 +133,6 @@ namespace BlackSimPlugin
                 m_fsuipc->connect(); // connect FSUIPC too
             }
             m_dispatchTimerId = startTimer(50);
-
-            // Pull weather data from core.
-            // Since we don't get weather data from core yet, use hard coded weather.
-            injectWeatherGrid(CWeatherGrid::getCavokGrid());
-
             return true;
         }
 
@@ -333,7 +328,17 @@ namespace BlackSimPlugin
                 {
                     MPPositionVelocity mpPositionVelocity;
                     MultiPlayerPacketParser::readMessage(message, mpPositionVelocity);
-                    updateOwnSituation(aircraftSituationfromFS9(mpPositionVelocity));
+                    auto aircraftSituation = aircraftSituationfromFS9(mpPositionVelocity);
+                    updateOwnSituation(aircraftSituation);
+
+                    const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
+                    if (calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
+                    {
+                        m_lastWeatherPosition = currentPosition;
+                        const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                        requestWeatherGrid(weatherGrid, { this, &CSimulatorFs9::injectWeatherGrid });
+                    }
+
                     break;
                 }
             case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:

@@ -81,7 +81,7 @@ namespace BlackMisc
 
         private:
             BlackMisc::Aviation::CAltitude m_level;
-            PhysicalQuantities::CTemperature m_temperature;
+            PhysicalQuantities::CTemperature m_temperature = { 15.0, PhysicalQuantities::CTemperatureUnit::C() };
             PhysicalQuantities::CTemperature m_dewPoint;
             double m_relativeHumidity = 0;
 

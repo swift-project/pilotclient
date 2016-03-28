@@ -123,17 +123,26 @@ namespace BlackSimPlugin
             // todo: Take station from weather grid
             memcpy(nw.chICAO, "GLOB", 4);
 
-            const CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers();
+            CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers();
+            visibilityLayers.sortBy(&CVisibilityLayer::getBase);
+            auto surfaceVisibility = visibilityLayers.frontOrDefault();
+            NewVis vis;
+            vis.LowerAlt = surfaceVisibility.getBase().value(CLengthUnit::m());
+            vis.UpperAlt = surfaceVisibility.getTop().value(CLengthUnit::m());
+            // Range is measured in: 1/100ths sm
+            vis.Range = surfaceVisibility.getVisibility().value(CLengthUnit::SM()) * 100;
+            nw.Vis = vis;
+
             for (const auto &visibilityLayer : visibilityLayers)
             {
-                NewVis vis;
                 vis.LowerAlt = visibilityLayer.getBase().value(CLengthUnit::m());
                 vis.UpperAlt = visibilityLayer.getTop().value(CLengthUnit::m());
-                vis.Range = visibilityLayer.getVisibility().value(CLengthUnit::mi()) * 100;
-                nw.Vis = vis;
+                vis.Range = visibilityLayer.getVisibility().value(CLengthUnit::SM()) * 100;
+                nw.UpperVis[nw.nUpperVisCtr++] = vis;
             }
 
-            const CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
+            CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
+            temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
             for (const auto &temperatureLayer : temperatureLayers)
             {
                 NewTemp temp;
@@ -144,7 +153,8 @@ namespace BlackSimPlugin
                 nw.Temp[nw.nTempCtr++] = temp;
             }
 
-            const CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+            CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+            cloudLayers.sortBy(&CCloudLayer::getBase);
             for (const auto &cloudLayer : cloudLayers)
             {
                 NewCloud cloud;
@@ -184,12 +194,13 @@ namespace BlackSimPlugin
                 default: cloud.Type = 0;
                 }
 
-                cloud.UpperAlt = cloudLayer.getBase().value(CLengthUnit::m());
+                cloud.UpperAlt = cloudLayer.getTop().value(CLengthUnit::m());
                 nw.Cloud[nw.nCloudsCtr++] = cloud;
             }
 
-            const CWindLayerList windLayers = gridPoint.getWindLayers();
-            for (const auto &windLayer : windLayers)
+            CWindLayerList windLayers = gridPoint.getWindLayers();
+            windLayers.sortBy(&CWindLayer::getLevel);
+            for (const auto &windLayer : as_const(windLayers))
             {
                 NewWind wind;
                 wind.Direction = windLayer.getDirection().value(CAngleUnit::deg()) * 65536 / 360.0;
@@ -206,7 +217,8 @@ namespace BlackSimPlugin
 
             NewPress press;
             press.Drift = 0;
-            press.Pressure = 15827; // 16 x mb
+            // Pressure is measured in: 16 x mb
+            press.Pressure = gridPoint.getSurfacePressure().value(CPressureUnit::mbar()) * 16;
             nw.Press = press;
 
             QByteArray weatherData(reinterpret_cast<const char *>(&nw), sizeof(NewWeather));

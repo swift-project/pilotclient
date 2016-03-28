@@ -115,6 +115,8 @@ namespace BlackSimPlugin
             bool m_simConnected = false; //!< Is simulator connected?
             QSharedPointer<CFs9Host> m_fs9Host;
             QSharedPointer<CLobbyClient> m_lobbyClient;
+
+            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
         };
 
         //! Listener for FS9
