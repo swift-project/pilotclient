@@ -46,17 +46,26 @@ namespace BlackGui
             //! Own models
             BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
 
+            //! Own models selected in view
+            BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
+
             //! Own models for simulator
             const BlackMisc::Simulation::CSimulatorInfo &getOwnModelsSimulator() const;
 
             //! Number of own models
             int getOwnModelsCount() const;
 
+            //! Update view and cache
+            BlackMisc::CStatusMessage updateViewAndCache(const BlackMisc::Simulation::CAircraftModelList &models);
+
             //! Models view
             BlackGui::Views::CAircraftModelView *view() const;
 
             //! Access to aircraft model
             Models::CAircraftModelListModel *model() const;
+
+            //! Access to model loader
+            BlackMisc::Simulation::IAircraftModelLoader *modelLoader() const;
 
             //! Graceful shutdown
             void gracefulShutdown();

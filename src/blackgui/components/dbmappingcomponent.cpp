@@ -29,6 +29,7 @@ using namespace BlackGui;
 using namespace BlackGui::Editors;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
+using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
@@ -48,6 +49,7 @@ namespace BlackGui
             this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
 
             // own models
+            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CMergeWithVPilotMenu(this));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new COwnModelSetMenu(this, true));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new CModelStashToolsMenu(this, false));
 
@@ -104,8 +106,9 @@ namespace BlackGui
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
                 this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CModelStashToolsMenu(this, false));
                 this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
+
                 this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
-                const CAircraftModelList vPilotModels(m_cachedVPilotModels.get());
+                const CAircraftModelList vPilotModels(m_vPilotReader.getAsModelsFromCache());
                 this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(vPilotModels);
                 int noModels = vPilotModels.size();
                 CLogMessage(this).info("%1 cached vPilot models loaded") << noModels;
@@ -413,15 +416,6 @@ namespace BlackGui
                 {
                     this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(models);
                 }
-                CStatusMessage msg = m_cachedVPilotModels.set(models);
-                if (msg.isWarningOrAbove())
-                {
-                    CLogMessage::preformatted(msg);
-                }
-                else
-                {
-                    CLogMessage(this).info("Written %1 vPilot rules to cache") << models.size();
-                }
             }
             else
             {
@@ -434,7 +428,7 @@ namespace BlackGui
         {
             if (this->ui->tvp_AircraftModelsForVPilot->displayAutomatically())
             {
-                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(this->m_cachedVPilotModels.get());
+                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(this->m_vPilotReader.getAsModelsFromCache());
             }
         }
 
@@ -498,6 +492,48 @@ namespace BlackGui
             const CAircraftModelList models(this->currentModelView()->selectedObjects());
             const CStatusMessage m = this->addToOwnModelSet(models, this->getOwnModelsSimulator());
             CLogMessage::preformatted(m);
+        }
+
+        void CDbMappingComponent::ps_mergeWithVPilotModels()
+        {
+            if (!ui->comp_OwnAircraftModels->modelLoader()) { return; }
+            if (this->m_vPilotReader.getModelsCount() < 1) { return; }
+            const CSimulatorInfo sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator());
+            if (!sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator()) { return; }
+            CAircraftModelList ownModels(getOwnModels());
+            if (ownModels.isEmpty()) { return; }
+            ui->comp_OwnAircraftModels->view()->showLoadIndicator();
+            CAircraftModelUtilities::mergeWithVPilotData(ownModels, this->m_vPilotReader.getAsModelsFromCache(), true);
+            ui->comp_OwnAircraftModels->updateViewAndCache(ownModels);
+        }
+
+        void CDbMappingComponent::ps_mergeSelectedWithVPilotModels()
+        {
+            if (!ui->comp_OwnAircraftModels->modelLoader()) { return; }
+            if (this->m_vPilotReader.getModelsCount() < 1) { return; }
+            if (!ui->comp_OwnAircraftModels->view()->hasSelection()) { return; }
+            const CSimulatorInfo sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator());
+            if (!sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator()) { return; }
+            CAircraftModelList ownModels(getOwnSelectedModels()); // subset
+            if (ownModels.isEmpty()) { return; }
+            ui->comp_OwnAircraftModels->view()->showLoadIndicator();
+            CAircraftModelUtilities::mergeWithVPilotData(ownModels, this->m_vPilotReader.getAsModelsFromCache(), true);
+
+            // full models
+            CAircraftModelList allModels = this->m_vPilotReader.getAsModelsFromCache();
+            allModels.replaceOrAddModelsWithString(ownModels, Qt::CaseInsensitive);
+            ui->comp_OwnAircraftModels->updateViewAndCache(allModels);
+        }
+
+        void CDbMappingComponent::ps_onCustomContextMenu(const QPoint &point)
+        {
+            QPoint globalPos = this->mapToGlobal(point);
+            QScopedPointer<QMenu> contextMenu(new QMenu(this));
+
+            contextMenu->addAction("Max.data area", this, &CDbMappingComponent::resizeForSelect, QKeySequence(Qt::CTRL + Qt::Key_M, Qt::Key_D));
+            contextMenu->addAction("Max.mapping area", this, &CDbMappingComponent::resizeForMapping, QKeySequence(Qt::CTRL + Qt::Key_M, Qt::Key_M));
+            QAction *selectedItem = contextMenu.data()->exec(globalPos);
+            Q_UNUSED(selectedItem);
         }
 
         void CDbMappingComponent::ps_onStashCountChanged(int count, bool withFilter)
@@ -603,6 +639,11 @@ namespace BlackGui
             return this->ui->comp_OwnAircraftModels->getOwnModels();
         }
 
+        CAircraftModelList CDbMappingComponent::getOwnSelectedModels() const
+        {
+            return this->ui->comp_OwnAircraftModels->getOwnSelectedModels();
+        }
+
         CAircraftModel CDbMappingComponent::getOwnModelForModelString(const QString &modelString) const
         {
             return this->ui->comp_OwnAircraftModels->getOwnModelForModelString(modelString);
@@ -652,7 +693,7 @@ namespace BlackGui
             if (canUseVPilot)
             {
                 this->addSeparator(menu);
-                menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, SLOT(ps_loadVPilotData()));
+                menu.addAction(CIcons::appMappings16(), "Load vPilot Rules", mapComp, &CDbMappingComponent::ps_loadVPilotData);
             }
             this->nestedCustomMenu(menu);
         }
@@ -767,6 +808,36 @@ namespace BlackGui
         }
 
         CDbMappingComponent *CDbMappingComponent::CApplyDbDataMenu::mappingComponent() const
+        {
+            return qobject_cast<CDbMappingComponent *>(this->parent());
+        }
+
+        CDbMappingComponent::CMergeWithVPilotMenu::CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent, bool separator) :
+            IMenuDelegate(mappingComponent, separator)
+        {
+            Q_ASSERT_X(mappingComponent, Q_FUNC_INFO, "Missing vPilot reader");
+        }
+
+        void CDbMappingComponent::CMergeWithVPilotMenu::customMenu(QMenu &menu) const
+        {
+            const CAircraftModelView *mv = mappingComponent()->ui->comp_OwnAircraftModels->view();
+            const CSimulatorInfo sim = mappingComponent()->ui->comp_OwnAircraftModels->getOwnModelsSimulator();
+            if (!mappingComponent()->withVPilot() || mv->isEmpty() || !sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator())
+            {
+                this->nestedCustomMenu(menu);
+                return;
+            }
+            this->addSeparator(menu);
+            QMenu *mm = menu.addMenu("Merge with vPilot data");
+            mm->addAction("All", mappingComponent(), &CDbMappingComponent::ps_mergeWithVPilotModels);
+            if (mv->hasSelection())
+            {
+                mm->addAction("Selected only", mappingComponent(), &CDbMappingComponent::ps_mergeSelectedWithVPilotModels);
+            }
+            this->nestedCustomMenu(menu);
+        }
+
+        CDbMappingComponent *CDbMappingComponent::CMergeWithVPilotMenu::mappingComponent() const
         {
             return qobject_cast<CDbMappingComponent *>(this->parent());
         }

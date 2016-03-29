@@ -45,7 +45,7 @@ namespace BlackGui
                 this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
             }
 
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnAircraftModels, this->m_modelLoader.get(), false));
+            ui->tvp_OwnAircraftModels->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnAircraftModels, this->modelLoader(), false));
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
         }
 
@@ -64,6 +64,11 @@ namespace BlackGui
             return ui->tvp_OwnAircraftModels->derivedModel();
         }
 
+        IAircraftModelLoader *CDbOwnModelsComponent::modelLoader() const
+        {
+            return this->m_modelLoader.get();
+        }
+
         CAircraftModel CDbOwnModelsComponent::getOwnModelForModelString(const QString &modelString) const
         {
             if (!this->m_modelLoader) { return CAircraftModel(); }
@@ -77,6 +82,11 @@ namespace BlackGui
             return this->m_modelLoader->getAircraftModels();
         }
 
+        CAircraftModelList CDbOwnModelsComponent::getOwnSelectedModels() const
+        {
+            return ui->tvp_OwnAircraftModels->selectedObjects();
+        }
+
         const CSimulatorInfo &CDbOwnModelsComponent::getOwnModelsSimulator() const
         {
             static const CSimulatorInfo noSim;
@@ -88,6 +98,16 @@ namespace BlackGui
         {
             if (!this->m_modelLoader) { return 0; }
             return this->m_modelLoader->getAircraftModelsCount();
+        }
+
+        CStatusMessage CDbOwnModelsComponent::updateViewAndCache(const CAircraftModelList &models)
+        {
+            const CStatusMessage m  = this->m_modelLoader->setCachedModels(models, this->getOwnModelsSimulator());
+            if (m.isSuccess())
+            {
+                ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
+            }
+            return m;
         }
 
         void CDbOwnModelsComponent::gracefulShutdown()

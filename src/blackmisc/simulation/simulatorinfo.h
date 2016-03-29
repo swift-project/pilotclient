@@ -92,6 +92,12 @@ namespace BlackMisc
             //! Is all simulators?
             bool isAllSimulators() const;
 
+            //! Microsoft Simulator?
+            bool isMicrosoftSimulator() const;
+
+            //! Microsoft Simulator or P3D?
+            bool isMicrosoftOrPrepare3DSimulator() const;
+
             //! Number simulators selected
             int numberSimulators() const;
 

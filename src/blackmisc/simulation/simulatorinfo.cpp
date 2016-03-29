@@ -82,6 +82,16 @@ namespace BlackMisc
             return fsx() && fs9() && xplane() && p3d();
         }
 
+        bool CSimulatorInfo::isMicrosoftSimulator() const
+        {
+            return fsx() || fs9();
+        }
+
+        bool CSimulatorInfo::isMicrosoftOrPrepare3DSimulator() const
+        {
+            return isMicrosoftSimulator() || p3d();
+        }
+
         int CSimulatorInfo::numberSimulators() const
         {
             int c = fs9() ? 1 : 0;

@@ -92,20 +92,25 @@ namespace BlackMisc
             //! Shutdown
             void gracefulShutdown();
 
+            //! \name Implementations of the models interfaces
+            //! @{
+            virtual void setModels(const CAircraftModelList &models) override  { this->setCachedModels(models, this->m_simulatorInfo); }
+            virtual void updateModels(const CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->m_simulatorInfo); }
+            virtual void setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { this->setCachedModels(models, simulator); }
+            virtual void updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
+            //! @}
+
             //! Create a loader and syncronize caches
             static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
-
-            //! Merge with DB data if possible
-            static bool mergeWithDbData(BlackMisc::Simulation::CAircraftModelList &modelsFromSimulator, const BlackMisc::Simulation::CAircraftModelList &dbModels, bool force = false);
 
         public slots:
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
-            BlackMisc::CStatusMessage setModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
+            BlackMisc::CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
-            BlackMisc::CStatusMessage replaceOrAddModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
+            BlackMisc::CStatusMessage replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
         signals:
             //! Parsing is finished

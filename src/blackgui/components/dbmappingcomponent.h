@@ -104,6 +104,9 @@ namespace BlackGui
             //! Own models
             BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
 
+            //! Own selected models
+            BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
+
             //! Own (installed) model for given model string
             BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
@@ -222,13 +225,21 @@ namespace BlackGui
             //! Add to own model set
             void ps_addToOwnModelSet();
 
+            //! Merge with vPilot models
+            void ps_mergeWithVPilotModels();
+
+            //! Merge selected with vPilot models
+            void ps_mergeSelectedWithVPilotModels();
+
+            //! Custom menu
+            void ps_onCustomContextMenu(const QPoint &point);
+
         private:
-            QScopedPointer<Ui::CDbMappingComponent>                             ui;
-            QScopedPointer<CDbAutoStashingComponent>                            m_autoStashDialog;          //!< dialog auto stashing
-            QScopedPointer<CDbModelMappingModifyComponent>                      m_modelModifyDialog;        //!< dialog when modifying models
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader                 m_vPilotReader;             //!< read vPilot rules
-            BlackMisc::CData<BlackMisc::Simulation::Data::VPilotAircraftModels> m_cachedVPilotModels { this, &CDbMappingComponent::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
-            BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser>              m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
+            QScopedPointer<Ui::CDbMappingComponent>                ui;
+            QScopedPointer<CDbAutoStashingComponent>               m_autoStashDialog;    //!< dialog auto stashing
+            QScopedPointer<CDbModelMappingModifyComponent>         m_modelModifyDialog;  //!< dialog when modifying models
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader    m_vPilotReader;       //!< read vPilot rules
+            BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser> m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
             bool m_vPilot1stInit       = true;
             bool m_withVPilot          = false;
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
@@ -311,6 +322,20 @@ namespace BlackGui
                 virtual void customMenu(QMenu &menu) const override;
 
             private:
+                //! Mapping component
+                CDbMappingComponent *mappingComponent() const;
+            };
+
+            //! Merge with vPilot data
+            class CMergeWithVPilotMenu : public BlackGui::Menus::IMenuDelegate
+            {
+            public:
+                //! Constructor
+                CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent, bool separator = true);
+
+                //! \copydoc IMenuDelegate::customMenu
+                virtual void customMenu(QMenu &menu) const override;
+
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
             };

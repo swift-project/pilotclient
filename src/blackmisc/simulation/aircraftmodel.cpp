@@ -256,9 +256,9 @@ namespace BlackMisc
             m_livery.setAirlineIcaoCode(airlineIcaoCode);
         }
 
-        bool CAircraftModel::hasAircraftAndAirlineDesignator() const
+        bool CAircraftModel::hasValidAircraftAndAirlineDesignator() const
         {
-            return this->m_aircraftIcao.hasDesignator() && this->m_livery.hasValidAirlineDesignator();
+            return this->hasKnownAircraftDesignator() && this->m_livery.hasValidAirlineDesignator();
         }
 
         bool CAircraftModel::hasAircraftDesignator() const

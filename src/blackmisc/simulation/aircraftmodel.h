@@ -152,8 +152,8 @@ namespace BlackMisc
             //! Set ICAO codes
             void setAircraftIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode);
 
-            //! Airline and aircraft designator?
-            bool hasAircraftAndAirlineDesignator() const;
+            //! Valid airline and aircraft designator?
+            bool hasValidAircraftAndAirlineDesignator() const;
 
             //! Has aircraft designator?
             bool hasAircraftDesignator() const;

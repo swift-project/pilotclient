@@ -13,6 +13,7 @@
 #include "menudelegate.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
+#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include <QMenu>
 #include <QObject>
 
@@ -80,7 +81,9 @@ namespace BlackGui
             void ps_mergeSelectedData();
 
         private:
-            BlackMisc::Simulation::IAircraftModelLoader *m_loader = nullptr; //!< optional loader
+            BlackMisc::Simulation::IModelsSetable *modelsTargetSetable() const;
+            BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
+            QObject *m_modelsTarget = nullptr; //!< optional target for setting/updating the models
         };
     } // ns
 } // ns

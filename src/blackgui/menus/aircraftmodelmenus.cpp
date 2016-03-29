@@ -81,7 +81,7 @@ namespace BlackGui
         void CMergeWithDbDataMenu::customMenu(QMenu &menu) const
         {
             const CAircraftModelView *mv = modelView();
-            if (mv->isEmpty()) { return; }
+            if (mv->isEmpty()) { this->nestedCustomMenu(menu); return; }
             if (!sGui->hasWebDataServices()) { return; }
 
             this->addSeparator(menu);
