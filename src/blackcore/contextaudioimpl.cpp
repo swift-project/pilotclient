@@ -66,7 +66,7 @@ namespace BlackCore
         this->setVoiceOutputVolume(90);
 
         // Load sounds (init), not possible in own thread
-        QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
+        QTimer::singleShot(10 * 1000, this, &CContextAudio::ps_initNotificationSounds);
 
         m_unusedVoiceChannels.push_back(m_channel1);
         m_unusedVoiceChannels.push_back(m_channel2);
