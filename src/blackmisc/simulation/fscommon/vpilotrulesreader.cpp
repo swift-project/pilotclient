@@ -8,7 +8,7 @@
  */
 
 #include "vpilotrulesreader.h"
-
+#include "blackmisc/logmessage.h"
 #include <QtXml/QDomElement>
 #include <QFile>
 #include <QDir>
@@ -73,26 +73,26 @@ namespace BlackMisc
 
             int CVPilotRulesReader::getModelsCount() const
             {
-                QReadLocker l(&m_lockData);
-                return m_models.size();
+                return this->m_cachedVPilotModels.get().size();
             }
 
-            CAircraftModelList CVPilotRulesReader::getAsModels() const
+            CAircraftModelList CVPilotRulesReader::getAsModels()
             {
                 // already cached?
-                {
-                    QReadLocker l(&m_lockData);
-                    if (!m_models.isEmpty() || m_rules.isEmpty()) { return m_models; }
-                    if (m_shutdown) { return CAircraftModelList(); }
-                }
+                CAircraftModelList vPilotModels(this->m_cachedVPilotModels.getCopy());
+                if (!vPilotModels.isEmpty() || m_rules.isEmpty()) { return vPilotModels; }
 
                 // important: that can take a while and should normally
                 // run in background
-                CVPilotModelRuleSet rules(getRules()); // thread safe copy
-                CAircraftModelList models(rules.toAircraftModels()); // long lasting operation
-                QWriteLocker l(&m_lockData);
-                m_models = models;
-                return m_models;
+                const CVPilotModelRuleSet rules(getRules()); // thread safe copy
+                vPilotModels = rules.toAircraftModels(); // long lasting operation
+                this->ps_setCache(vPilotModels);
+                return vPilotModels;
+            }
+
+            CAircraftModelList CVPilotRulesReader::getAsModelsFromCache() const
+            {
+                return this->m_cachedVPilotModels.getCopy();
             }
 
             int CVPilotRulesReader::countRulesLoaded() const
@@ -137,14 +137,17 @@ namespace BlackMisc
                 }
 
                 {
-                    QWriteLocker l(&m_lockData);
-                    this->m_loadedFiles = loadedFiles;
-                    this->m_fileListWithProblems = filesWithProblems;
-                    this->m_rules = rules;
+                    {
+                        QWriteLocker l(&m_lockData);
+                        this->m_loadedFiles = loadedFiles;
+                        this->m_fileListWithProblems = filesWithProblems;
+                        this->m_rules = rules;
+                        if (m_shutdown) { return false; }
+                    }
                     if (convertToModels)
                     {
-                        if (m_shutdown) { return false; }
-                        this->m_models = rules.toAircraftModels(); // long lasting operation
+                        const CAircraftModelList vPilotModels(rules.toAircraftModels()); // long lasting operation
+                        this->ps_setCache(vPilotModels);
                     }
                 }
 
@@ -174,6 +177,31 @@ namespace BlackMisc
                 m_asyncLoadInProgress = false;
             }
 
+            void CVPilotRulesReader::ps_onVPilotCacheChanged()
+            {
+                // void
+            }
+
+            void CVPilotRulesReader::ps_setCache(const CAircraftModelList &models)
+            {
+                if (this->m_cachedVPilotModels.isOwnerThread())
+                {
+                    CStatusMessage m;
+                    {
+                        QWriteLocker l(&m_lockData);
+                        m = this->m_cachedVPilotModels.set(models);
+                    }
+                    if (m.isFailure())
+                    {
+                        CLogMessage::preformatted(m);
+                    }
+                }
+                else
+                {
+                    QTimer::singleShot(0, this, [this, models]() { this->ps_setCache(models); });
+                }
+            }
+
             bool CVPilotRulesReader::loadFile(const QString &fileName, CVPilotModelRuleSet &ruleSet)
             {
                 QFile f(fileName);
@@ -189,7 +217,7 @@ namespace BlackMisc
                 QDomNodeList mmRuleSet = doc.elementsByTagName("ModelMatchRuleSet");
                 if (mmRuleSet.size() < 1) { return true; }
 
-                QDomNamedNodeMap attributes = mmRuleSet.at(0).attributes();
+                const QDomNamedNodeMap attributes = mmRuleSet.at(0).attributes();
                 QString folder = attributes.namedItem("Folder").nodeValue().trimmed();
                 if (folder.isEmpty())
                 {
@@ -197,18 +225,18 @@ namespace BlackMisc
                 }
 
                 // "2/1/2014 12:00:00 AM", "5/26/2014 2:00:00 PM"
-                QString updated = attributes.namedItem("UpdatedOn").nodeValue();
+                const QString updated = attributes.namedItem("UpdatedOn").nodeValue();
                 QDateTime qt = QDateTime::fromString(updated, "M/d/yyyy h:mm:ss AP");
                 qint64 updatedTimestamp = qt.toMSecsSinceEpoch();
 
                 int rulesSize = rules.size();
                 for (int i = 0; i < rulesSize; i++)
                 {
-                    QDomNamedNodeMap attributes = rules.at(i).attributes();
-                    const QString typeCode = attributes.namedItem("TypeCode").nodeValue();
-                    const QString modelName = attributes.namedItem("ModelName").nodeValue();
+                    const QDomNamedNodeMap ruleAttributes = rules.at(i).attributes();
+                    const QString typeCode = ruleAttributes.namedItem("TypeCode").nodeValue();
+                    const QString modelName = ruleAttributes.namedItem("ModelName").nodeValue();
                     // remark, callsign prefix is airline ICAO code
-                    const QString callsignPrefix = attributes.namedItem("CallsignPrefix").nodeValue();
+                    const QString callsignPrefix = ruleAttributes.namedItem("CallsignPrefix").nodeValue();
                     if (modelName.isEmpty()) { continue; }
 
                     // split if we have multiple models

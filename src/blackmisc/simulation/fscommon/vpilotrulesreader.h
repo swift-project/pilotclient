@@ -16,6 +16,7 @@
 #include "blackmisc/worker.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include <QStringList>
 #include <QObject>
 #include <QReadWriteLock>
@@ -60,7 +61,11 @@ namespace BlackMisc
 
                 //! Get as models
                 //! \threadsafe
-                BlackMisc::Simulation::CAircraftModelList getAsModels() const;
+                BlackMisc::Simulation::CAircraftModelList getAsModels();
+
+                //! Get as models from cache
+                //! \threadsafe
+                BlackMisc::Simulation::CAircraftModelList getAsModelsFromCache() const;
 
                 //! Get model count
                 //! \threadsafe
@@ -95,6 +100,13 @@ namespace BlackMisc
                 //! \threadsafe
                 void ps_readInBackgroundFinished();
 
+                //! Cache changed
+                void ps_onVPilotCacheChanged();
+
+                //! Set cache (in main thread)
+                //! \threadsafe
+                void ps_setCache(const BlackMisc::Simulation::CAircraftModelList &models);
+
             private:
                 QStringList m_fileList;              //!< list of file names
                 QStringList m_fileListWithProblems;  //!< problems during parsing
@@ -102,13 +114,12 @@ namespace BlackMisc
                 CVPilotModelRuleSet m_rules;         //!< rules list
                 bool m_asyncLoadInProgress = false;  //!< Asynchronous load in progress
                 bool m_shutdown            = false;  //!< Shutdown
-                mutable BlackMisc::Simulation::CAircraftModelList m_models; //!< converted to models
+                BlackMisc::CData<BlackMisc::Simulation::Data::VPilotAircraftModels> m_cachedVPilotModels { this, &CVPilotRulesReader::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
                 mutable QReadWriteLock m_lockData;
 
                 //! Read single file and do parsing
                 //! \threadsafe
                 bool loadFile(const QString &fileName, CVPilotModelRuleSet &ruleSet);
-
             };
         } // namespace
     } // namespace

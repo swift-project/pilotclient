@@ -303,6 +303,9 @@ namespace BlackMisc
         //! Write and save in the same step. Must be called from the thread in which the owner lives.
         CStatusMessage setAndSave(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp, true); }
 
+        //! Is current thread the owner thread, so CCached::set is safe
+        bool isOwnerThread() const { return QThread::currentThread() == m_page.thread(); }
+
         //! Get the key string of this value.
         const QString &getKey() const { return m_page.getKey(m_element); }
 

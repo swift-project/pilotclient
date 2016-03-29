@@ -99,7 +99,7 @@ namespace BlackMisc
 
 
             //! Trait for vPilot derived models
-            struct VPilotAircraftModels : public BlackMisc::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
+            struct VPilotAircraftModels : public ModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "vpilot/models"; }
