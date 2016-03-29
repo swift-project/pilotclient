@@ -34,11 +34,10 @@ namespace BlackMisc
                 bool success = this->m_vPilotReader->read(false);
                 if (success)
                 {
-                    this->m_datastoreModels = this->m_vPilotReader->getAsModels();
+                    this->m_mappingModels = this->m_vPilotReader->getAsModels();
                 }
                 return success;
             }
-
         } // namespace
     } // namespace
 } // namespace

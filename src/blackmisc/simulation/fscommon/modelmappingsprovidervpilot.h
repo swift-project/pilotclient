@@ -34,12 +34,16 @@ namespace BlackMisc
                 //! Destructor
                 virtual ~CModelMappingsProviderVPilot() {}
 
+                //! \copydoc IModelMappingsProvider::getMatchingModels
+                virtual CAircraftModelList getMatchingModels() const override { return this->m_mappingModels; }
+
             public slots:
                 //! Load data
                 virtual bool read() override;
 
             private:
-                QScopedPointer<CVPilotRulesReader> m_vPilotReader; //!< used vPilot model reader
+                QScopedPointer<CVPilotRulesReader>        m_vPilotReader;  //!< used vPilot model reader
+                BlackMisc::Simulation::CAircraftModelList m_mappingModels; //!< models
             };
         } // namespace
     } // namespace

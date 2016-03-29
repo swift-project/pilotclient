@@ -65,7 +65,7 @@ namespace BlackSimPlugin
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
 
-            m_modelMatcher.setModelMappingProvider(std::make_unique<CModelMappingsProviderDummy>());
+            m_modelMatcher.setModelMappingProvider(std::make_unique<CachedModelSetProvider>(CSimulatorInfo::XPLANE, this));
             m_modelMatcher.setDefaultModel(CAircraftModel(
                                                "__XPFW_Jets/A320_a/A320_a_Austrian_Airlines.obj __XPFW_Jets/A320_a/A320_a_Austrian_Airlines.png",
                                                CAircraftModel::TypeModelMatchingDefaultModel,

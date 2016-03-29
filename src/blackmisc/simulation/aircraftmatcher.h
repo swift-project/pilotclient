@@ -27,7 +27,8 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        /*! Matcher for all models
+        /*!
+         * Matcher for all models.
          * \details Reads all the mapping rules and all the available flight simulator models.
          *          Then all rules for models not existing are eliminated ( \sa synchronize ).
          *          Thereafter all existing models and mappings can be obtained from here.
@@ -35,10 +36,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAircraftMatcher : public QObject
         {
             Q_OBJECT
-
-        signals:
-            //! Full init completed
-            void initializationFinished();
 
         public:
             //! Enabled matching mode flags
@@ -84,7 +81,7 @@ namespace BlackMisc
             CAircraftModel getClosestMatch(const CSimulatedAircraft &remoteAircraft);
 
             //! Get all mappings
-            const BlackMisc::Simulation::CAircraftModelList &getDatastoreModels() const { return m_mappingsProvider->getDatastoreModels(); }
+            BlackMisc::Simulation::CAircraftModelList getMappingModels() const { return m_mappingsProvider->getMappingModels(); }
 
             //! Number of mapping definitions
             int countMappingRules() const { return m_modelsFromDatastoreInstalled.size(); }
@@ -101,6 +98,10 @@ namespace BlackMisc
 
             //! Set default model
             void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
+
+        signals:
+            //! Full init completed
+            void initializationFinished();
 
         private slots:
             //! Set the datatstore models

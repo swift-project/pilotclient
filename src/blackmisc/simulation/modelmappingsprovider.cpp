@@ -18,9 +18,20 @@ namespace BlackMisc
     {
         IModelMappingsProvider::IModelMappingsProvider(QObject *parent) : QObject(parent) {}
 
-        const CAircraftModelList &IModelMappingsProvider::getDatastoreModels() const
+        CachedModelSetProvider::CachedModelSetProvider(const CSimulatorInfo &simulator, QObject *parent) :
+            IModelMappingsProvider(parent), m_simulator(simulator)
+        { }
+
+        CAircraftModelList CachedModelSetProvider::getMatchingModels() const
         {
-            return m_datastoreModels;
+            return this->m_modelSets.getModels(this->m_simulator);
         }
+
+        bool CachedModelSetProvider::read()
+        {
+            this->m_modelSets.syncronize(this->m_simulator);
+            return true;
+        }
+
     } // namespace
 } // namespace

@@ -29,10 +29,6 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackSample
 {
-
-    /*
-     * Samples
-     */
     void CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         BlackMisc::registerMetadata();
@@ -40,13 +36,15 @@ namespace BlackSample
         std::unique_ptr<IModelMappingsProvider> cvm(new CModelMappingsProviderVPilot(true));
         bool s = cvm->read();
         streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << endl;
-        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->getDatastoreModels().size() << endl;
+        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->getMatchingModels().size() << endl;
 
         // mapper with rule set, handing over ownership
-        QString fsxDir = CSampleUtils::selectDirectory({QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
-                         QStringLiteral("P:/Temp/SimObjects"),
-                         QStringLiteral("C:/Flight Simulator 9/Aircraft")
-                                                       }, streamOut, streamIn);
+        QString fsxDir = CSampleUtils::selectDirectory(
+        {
+            QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
+            QStringLiteral("P:/Temp/SimObjects"),
+            QStringLiteral("C:/Flight Simulator 9/Aircraft")
+        }, streamOut, streamIn);
 
         CAircraftCfgParser cfgParser(CSimulatorInfo(CSimulatorInfo::FSX), fsxDir);
         if (!cfgParser.changeRootDirectory(fsxDir))
@@ -63,14 +61,9 @@ namespace BlackSample
         // sync definitions, remove redundant ones
         CAircraftMatcher matcher(CAircraftMatcher::AllModes);
         matcher.setModelMappingProvider(std::move(cvm));
-        matcher.setInstalledModels(cfgParser.getAircraftCfgEntriesList().toAircraftModelList());
-        streamOut << "Now synchronizing defintions: " << matcher.getDatastoreModels().size() << endl;
-        int afterSync = matcher.synchronize();
-        streamOut << "After synchronizing definitions: " << afterSync << endl;
 
         CAircraftIcaoCode icao("C172");
         streamOut << "Searching for " << icao << endl;
-        streamOut << matcher.getDatastoreModels().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
+        streamOut << matcher.getMatchingModels().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
     }
-
 } // namespace

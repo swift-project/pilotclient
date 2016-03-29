@@ -152,89 +152,42 @@ namespace BlackMisc
             m_defaultModel.setModelType(CAircraftModel::TypeModelMatchingDefaultModel);
         }
 
-        void CAircraftMatcher::ps_setDatastoreModels(const CAircraftModelList &mappings)
+        CAircraftModel CAircraftMatcher::matchByExactModelString(const CSimulatedAircraft &remoteAircraft) const
         {
-            m_modelsFromDatastoreInstalled = mappings;
+            const CAircraftModelList models(this->m_models.read());
+            return models.findFirstByModelStringOrDefault(remoteAircraft.getModelString());
         }
 
-        void CAircraftMatcher::initImpl()
-        {
-            InitState e = NotInitialized;
-            InitState d = InitInProgress;
-            if (!m_initState.compare_exchange_strong(e, d)) { return; }
-
-            // sync
-            this->synchronize();
-            CLogMessage(this).debug() << "Mapping definitions after sync" << m_modelsFromDatastoreInstalled.size();
-
-            // finish
-            CLogMessage(this).info("Mapping system: %1 definitions for %2 installed models") << m_modelsFromDatastoreInstalled.size()
-                    << m_installedModels.size();
-            m_initState = InitFinished;
-            emit initializationFinished();
-        }
-
-        void CAircraftMatcher::initMappings()
-        {
-            Q_ASSERT(m_mappingsProvider);
-            int mappingsSize = m_mappingsProvider->getDatastoreModels().size();
-            if (mappingsSize < 1)
-            {
-                m_mappingsProvider->read();
-                m_modelsFromDatastoreInstalled = m_mappingsProvider->getDatastoreModels();
-                mappingsSize = m_modelsFromDatastoreInstalled.size();
-                if (mappingsSize < 1)
-                {
-                    CLogMessage(this).error("Reading mapping rules failed or empty!");
-                    // Turn off the model mapping mode
-                    m_matchingMode &= ~ModelMapping;
-                    return;
-                }
-            }
-            m_modelsFromDatastoreInstalled = m_mappingsProvider->getDatastoreModels();
-            CLogMessage(this).debug() << "Mapping definitions" << mappingsSize;
-        }
-
-        CAircraftModel CAircraftMatcher::matchByExactModelName(const CSimulatedAircraft &remoteAircraft)
-        {
-            return this->m_installedModels.findFirstByModelStringOrDefault(remoteAircraft.getModelString());
-        }
-
-        CAircraftModel CAircraftMatcher::matchInstalledModelsByIcaoData(const CSimulatedAircraft &remoteAircraft)
+        CAircraftModel CAircraftMatcher::matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, QString &log) const
         {
             CAircraftModel aircraftModel;
-            if (m_modelsFromDatastoreInstalled.isEmpty()) { return aircraftModel; }
-            BlackMisc::Simulation::CAircraftModelList datastoreModels(m_modelsFromDatastoreInstalled.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
-            if (!datastoreModels.isEmpty())
+            const CAircraftModelList models(this->m_models.read());
+            BlackMisc::Simulation::CAircraftModelList mappingModels(
+                models.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode())
+            );
+            if (!mappingModels.isEmpty())
             {
-                CAircraftModel aircraftModel(datastoreModels.front());
+                log = "Found by ICAO " + remoteAircraft.getAircraftIcaoCode().getDesignator() + " " + remoteAircraft.getAircraftIcaoCode().getDesignator();
+                log = log.trimmed();
+                CAircraftModel aircraftModel(mappingModels.front());
                 aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
             }
             return aircraftModel;
         }
 
-        CAircraftModel CAircraftMatcher::matchByAlgorithm(const CSimulatedAircraft & /** remoteAircraft **/)
+        CAircraftModel CAircraftMatcher::matchByFamily(const CSimulatedAircraft &remoteAircraft, QString &log) const
         {
             // Use an algorithm to find the best match
+            Q_UNUSED(remoteAircraft);
+            Q_UNUSED(log);
             return CAircraftModel();
         }
 
-        int CAircraftMatcher::synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs)
+        void CAircraftMatcher::logDetails(const CSimulatedAircraft &remoteAircraft, const QString &message) const
         {
-            if (modelNames.isEmpty() || m_modelsFromDatastoreInstalled.isEmpty()) { return 0; }
-            CAircraftModelList newList;
-            for (const CAircraftModel &modelDatastore : m_modelsFromDatastoreInstalled)
-            {
-                if (this->m_initState != InitInProgress) { return 0; } // canceled
-                QString modelString(modelDatastore.getModelString());
-                if (modelString.isEmpty()) { continue; }
-                if (modelNames.contains(modelString, cs))
-                {
-                    newList.push_back(modelDatastore);
-                }
-            }
-            this->m_modelsFromDatastoreInstalled = newList;
-            return this->m_modelsFromDatastoreInstalled.size();
+            if (!this->m_logDetails || message.isEmpty()) { return; }
+            const CCallsign callsign(remoteAircraft.getCallsign());
+            CLogMessage(this).info(callsign.toQString(true) + ": " + message);
         }
     }
 } // namespace

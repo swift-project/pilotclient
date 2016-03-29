@@ -13,7 +13,7 @@
 #define BLACKMISC_SIMULATION_MODELMAPPINGS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include <QObject>
 
 namespace BlackMisc
@@ -36,25 +36,29 @@ namespace BlackMisc
             //! Load data
             virtual bool read() = 0;
 
-            //! Get list
-            const CAircraftModelList &getDatastoreModels() const;
+            //! Get list of models used
+            virtual CAircraftModelList getMatchingModels() const = 0;
 
         protected:
-            BlackMisc::Simulation::CAircraftModelList m_datastoreModels; //!< models
+            BlackMisc::Simulation::CAircraftModelList m_mappingModels; //!< models
         };
 
-        //! Model mappings dummy
-        class BLACKMISC_EXPORT CModelMappingsProviderDummy : public IModelMappingsProvider
+        //! Implementation of a provider based on the model set cache
+        class BLACKMISC_EXPORT CachedModelSetProvider : public IModelMappingsProvider
         {
         public:
             //! Constructor
-            CModelMappingsProviderDummy(QObject *parent = nullptr) : IModelMappingsProvider(parent) {}
+            CachedModelSetProvider(const BlackMisc::Simulation::CSimulatorInfo &simulator, QObject *parent = nullptr);
 
-            //! Destructor
-            virtual ~CModelMappingsProviderDummy() {}
+            //! \copydoc IModelMappingsProvider::getMatchingModels
+            virtual CAircraftModelList getMatchingModels() const override;
 
-            //! Load data
-            virtual bool read() override { return true; }
+            //! \copydoc IModelMappingsProvider::read
+            virtual bool read() override;
+
+        private:
+            BlackMisc::Simulation::Data::CModelSetCaches m_modelSets { this };
+            BlackMisc::Simulation::CSimulatorInfo        m_simulator;
         };
     } // ns
 } // ns
