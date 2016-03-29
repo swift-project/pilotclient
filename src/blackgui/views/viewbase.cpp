@@ -13,6 +13,7 @@
 #include "blackgui/models/allmodels.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/shortcut.h"
 #include "blackcore/registermetadata.h"
 #include <QHeaderView>
@@ -183,8 +184,8 @@ namespace BlackGui
 
             // standard menus
             int items = menu.actions().size();
-            if (this->m_menus.testFlag(MenuRefresh)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
-            if (this->m_menus.testFlag(MenuBackend)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, SIGNAL(requestNewBackendData())); }
+            if (this->m_menus.testFlag(MenuRefresh)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, &CViewBaseNonTemplate::requestUpdate); }
+            if (this->m_menus.testFlag(MenuBackend)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, &CViewBaseNonTemplate::requestNewBackendData); }
             if (this->m_menus.testFlag(MenuClear)) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, &CViewBaseNonTemplate::ps_clear); }
             if (this->m_menus.testFlag(MenuRemoveSelectedRows))
             {
@@ -448,7 +449,7 @@ namespace BlackGui
             this->m_rowResizeMode = Content;
         }
 
-        void CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent)
+        void CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, bool processEvents)
         {
             if (!m_enabledLoadIndicator) { return; }
             if (this->m_showingLoadIndicator) { return; }
@@ -464,7 +465,6 @@ namespace BlackGui
             }
             this->m_showingLoadIndicator = true;
             emit loadIndicatorVisibilityChanged(this->m_showingLoadIndicator);
-            // this->setStyleSheet(styleSheet());
 
             if (!this->m_loadIndicator)
             {
@@ -472,6 +472,10 @@ namespace BlackGui
             }
             this->centerLoadIndicator();
             this->m_loadIndicator->startAnimation();
+            if (processEvents)
+            {
+                sGui->processEventsToRefreshGui();
+            }
         }
 
         void CViewBaseNonTemplate::centerLoadIndicator()
@@ -687,7 +691,7 @@ namespace BlackGui
             });
             worker->thenWithResult<ContainerType>(this, [this, resize](const ContainerType & sortedContainer)
             {
-                this->ps_updateContainer(CVariant::from(sortedContainer), false, resize);
+                this->updateContainer(sortedContainer, false, resize);
             });
             worker->then(this, &CViewBase::asyncUpdateFinished);
             return worker;

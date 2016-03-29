@@ -253,7 +253,9 @@ namespace BlackGui
             void rowsResizeModeToContent();
 
             //! Show loading indicator
-            void showLoadIndicator(int containerSizeDependent = -1);
+            //! \param containerSizeDependent check against resize threshold if indicator makes sense
+            //! \param processEvents force event processing to display indicator by updating GUI
+            void showLoadIndicator(int containerSizeDependent = -1, bool processEvents = true);
 
             //! Hide loading indicator
             void hideLoadIndicator();
