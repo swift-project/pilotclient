@@ -13,6 +13,8 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGENTRY_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
@@ -26,7 +28,9 @@ namespace BlackMisc
             //! Set of aircraft.cfg entries representing an aircraft (FSX)
             //! \remarks an entry in the aircraft.cfg is title, atc type, ...
             //!          This class already bundles relevant entries, hence the class is named Entries (plural)
-            class BLACKMISC_EXPORT CAircraftCfgEntries: public BlackMisc::CValueObject<CAircraftCfgEntries>
+            class BLACKMISC_EXPORT CAircraftCfgEntries:
+                public BlackMisc::CValueObject<CAircraftCfgEntries>,
+                public BlackMisc::ITimestampBased
             {
             public:
                 //! Properties by index
@@ -179,7 +183,15 @@ namespace BlackMisc
                     BLACK_METAMEMBER(title),
                     BLACK_METAMEMBER(atcType),
                     BLACK_METAMEMBER(atcModel),
-                    BLACK_METAMEMBER(atcParkingCode)
+                    BLACK_METAMEMBER(atcParkingCode),
+                    BLACK_METAMEMBER(description),
+                    BLACK_METAMEMBER(uiType),
+                    BLACK_METAMEMBER(uiManufacturer),
+                    BLACK_METAMEMBER(texture),
+                    BLACK_METAMEMBER(simName),
+                    BLACK_METAMEMBER(createdBy),
+                    BLACK_METAMEMBER(rotorcraft),
+                    BLACK_METAMEMBER(timestampMSecsSinceEpoch)
                 );
             };
         } // ns

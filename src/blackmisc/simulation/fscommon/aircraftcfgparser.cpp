@@ -201,12 +201,12 @@ namespace BlackMisc
 
                 // Dirs last is crucial,since I will break recursion on "aircraft.cfg" level
                 QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
-                for (const auto &file : files)
+                for (const auto &fileInfo : files)
                 {
                     if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
-                    if (file.isDir())
+                    if (fileInfo.isDir())
                     {
-                        const QString nextDir = file.absoluteFilePath();
+                        const QString nextDir = fileInfo.absoluteFilePath();
                         if (currentDir.startsWith(nextDir, Qt::CaseInsensitive)) { continue; } // do not go up
                         if (dir == currentDir) { continue; } // do not recursively call same directory
 
@@ -227,7 +227,7 @@ namespace BlackMisc
                         // remark: in a 1st version I have used QSettings to parse to file as ini file
                         // unfortunately some files are malformed which could end up in wrong data
 
-                        const QString fileName = file.absoluteFilePath();
+                        const QString fileName = fileInfo.absoluteFilePath();
                         QFile file(fileName);
                         if (!file.open(QFile::ReadOnly | QFile::Text))
                         {
@@ -344,6 +344,7 @@ namespace BlackMisc
                             CAircraftCfgEntries newEntries(e);
                             newEntries.setAtcModel(atcModel);
                             newEntries.setAtcType(atcType);
+                            newEntries.setUtcTimestamp(fileInfo.lastModified());
                             result.push_back(newEntries);
                         }
                         *ok = true;

@@ -22,7 +22,6 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-
             CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) :
                 m_index(index), m_fileName(fileName), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
                 m_atcModel(atcModel.trimmed()), m_atcParkingCode(atcParkingCode.trimmed()), m_description(description.trimmed())
@@ -120,6 +119,7 @@ namespace BlackMisc
                 model.setDescription(this->getUiCombinedDescription()); // Manufacturer and type
                 model.setFileName(this->getFileName());
                 model.setName(this->getSimName());
+                model.setUtcTimestamp(this->getUtcTimestamp()); // aircraft.cfg file last modified
 
                 const QString designator(CAircraftIcaoCode::normalizeDesignator(getAtcModel()));
                 CAircraftIcaoCode aircraft(
@@ -136,7 +136,7 @@ namespace BlackMisc
                 livery.setAirlineIcaoCode(airline);
                 model.setLivery(livery);
 
-                CDistributor distributor(this->getCreatedBy());
+                const CDistributor distributor(this->getCreatedBy());
                 model.setDistributor(distributor);
 
                 return model;
@@ -153,6 +153,7 @@ namespace BlackMisc
             CVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
             {
                 if (index.isMyself()) { return CVariant::from(*this); }
+                if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -180,6 +181,7 @@ namespace BlackMisc
             void CAircraftCfgEntries::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
             {
                 if (index.isMyself()) { (*this) = variant.to<CAircraftCfgEntries>(); return; }
+                if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -212,7 +214,6 @@ namespace BlackMisc
                     break;
                 }
             }
-
         } // namespace
     } // namespace
 } // namespace

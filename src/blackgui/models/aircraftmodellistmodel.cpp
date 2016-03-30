@@ -71,6 +71,7 @@ namespace BlackGui
                 // this->m_columns.addColumn(CColumn::standardString("ct", "combined type", { CAircraftModel::IndexIcao, CAircraftIcaoData::IndexCombinedAircraftType}));
                 this->m_columns.addColumn(CColumn::standardString("description",  CAircraftModel::IndexDescription));
                 this->m_columns.addColumn(CColumn::standardString("filename",  CAircraftModel::IndexFileName));
+                this->m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
 
                 // default sort order
                 this->setSortColumnByPropertyIndex(CAircraftModel::IndexModelString);
