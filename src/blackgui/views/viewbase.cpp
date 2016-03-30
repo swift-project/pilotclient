@@ -94,6 +94,7 @@ namespace BlackGui
             }
         }
 
+
         void CViewBaseNonTemplate::setFilterDialog(CFilterDialog *filterDialog)
         {
             this->setFilterWidgetImpl(filterDialog);
@@ -250,7 +251,7 @@ namespace BlackGui
             if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // resizing
-            menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, &CViewBaseNonTemplate::fullResizeToContents);
+            menu.addAction(BlackMisc::CIcons::resize16(), "Resize", this, &CViewBaseNonTemplate::presizeOrFullResizeToContents);
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
@@ -535,6 +536,11 @@ namespace BlackGui
             this->setVisible(true);
         }
 
+        void CViewBaseNonTemplate::presizeOrFullResizeToContents()
+        {
+
+        }
+
         void CViewBaseNonTemplate::ps_customMenuRequested(QPoint pos)
         {
             QMenu menu;
@@ -650,7 +656,7 @@ namespace BlackGui
             // when we will not resize, we might presize
             if (presizeThresholdReached)
             {
-                const int presizeRandomElements = container.size() > 1000 ? container.size() / 100 : container.size() / 40;
+                const int presizeRandomElements = this->getPresizeRandomElementsSize(container.size());
                 if (presizeRandomElements > 0)
                 {
                     this->m_model->update(container.sampleElements(presizeRandomElements), false);
@@ -675,6 +681,13 @@ namespace BlackGui
             }
             this->hideLoadIndicator();
             return c;
+        }
+
+        int CViewBaseNonTemplate::getPresizeRandomElementsSize(int containerSize) const
+        {
+            containerSize = containerSize >= 0 ? containerSize : this->rowCount();
+            const int presizeRandomElements = containerSize > 1000 ? containerSize / 100 : containerSize / 40;
+            return presizeRandomElements;
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -837,6 +850,27 @@ namespace BlackGui
             int delta = currentRows - newObjects.size();
             this->updateContainerMaybeAsync(newObjects);
             return delta;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::presizeOrFullResizeToContents()
+        {
+            const int rc = this->rowCount();
+            if (rc > ResizeSubsetThreshold)
+            {
+                const int presizeRandomElements = this->getPresizeRandomElementsSize(rc);
+                if (presizeRandomElements > 0)
+                {
+                    const ContainerType containerBackup(this->container());
+                    this->m_model->update(containerBackup.sampleElements(presizeRandomElements), false);
+                    this->fullResizeToContents();
+                    this->m_model->update(containerBackup, false);
+                }
+            }
+            else
+            {
+                this->fullResizeToContents();
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

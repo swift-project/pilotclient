@@ -118,6 +118,9 @@ namespace BlackGui
             //! \copydoc Components::CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
+            //! Elements in container
+            virtual int rowCount() const = 0;
+
             //! Resize mode
             ResizeMode getResizeMode() const { return m_resizeMode; }
 
@@ -246,6 +249,9 @@ namespace BlackGui
             //! Full resizing to content, might be slow
             virtual void fullResizeToContents();
 
+            //! Depending on CViewBaseNonTemplate::ResizeSubsetThreshold presize or fully resize
+            virtual void presizeOrFullResizeToContents() = 0;
+
             //! Init as interactive, as this allows manually resizing
             void rowsResizeModeToInteractive();
 
@@ -304,6 +310,9 @@ namespace BlackGui
 
             //! Resize or skip resize?
             virtual bool isResizeConditionMet(int containerSize = -1) const;
+
+            //! Calculate presize count
+            int getPresizeRandomElementsSize(int containerSize = -1) const;
 
             //! Center / re-center load indicator
             void centerLoadIndicator();
@@ -450,9 +459,11 @@ namespace BlackGui
             //! Selected objects
             ContainerType selectedObjects() const;
 
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::removeSelectedRows
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            //! \name Slot overrides from base class
+            //! @{
             virtual int removeSelectedRows() override;
+            virtual void presizeOrFullResizeToContents() override;
+            //! @}
 
             //! Update selected objects
             int updateSelected(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
@@ -484,8 +495,8 @@ namespace BlackGui
                 this->updateContainerMaybeAsync(copy);
             }
 
-            //! Row count
-            int rowCount() const;
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::rowCount
+            virtual int rowCount() const override;
 
             //! Column count
             int columnCount() const;
@@ -544,37 +555,17 @@ namespace BlackGui
 
             // --------------------------------------------- SLOTS start here -----------------------------------------
 
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_filterDialogFinished
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
+            //! \name Slot overrides from base class
+            //! @{
             virtual bool ps_filterDialogFinished(int status) override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_filterWidgetChangedFilter(bool)
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual bool ps_filterWidgetChangedFilter(bool enabled) override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_removeFilter
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_removeFilter() override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_clicked
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_clicked(const QModelIndex &index) override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_doubleClicked
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_doubleClicked(const QModelIndex &index) override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_rowSelected
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual void ps_rowSelected(const QModelIndex &index) override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual BlackMisc::CStatusMessage ps_loadJson() override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::ps_saveJson
-            //! \remarks Actually a slot, but not defined as such as the template does not support Q_OBJECT
             virtual BlackMisc::CStatusMessage ps_saveJson() const override;
+            //! @}
         };
     } // namespace
 } // namespace
