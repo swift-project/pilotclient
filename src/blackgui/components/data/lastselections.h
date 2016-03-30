@@ -35,6 +35,9 @@ namespace BlackGui
                     IndexLastSimulator = BlackMisc::CPropertyIndex::GlobalIndexCDbOwnModelsComponent
                 };
 
+                //! Constructor
+                CDbOwnModelsComponent() {}
+
                 //! Simulator last selected
                 const BlackMisc::Simulation::CSimulatorInfo &getLastSimulatorSelection() const { return m_simulator; }
 

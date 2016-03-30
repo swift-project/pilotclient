@@ -23,11 +23,7 @@
 namespace BlackMisc
 {
     class CIcon;
-
-    namespace PhysicalQuantities
-    {
-        class CAngle;
-    }
+    namespace PhysicalQuantities { class CAngle; }
 
     namespace Mixin
     {
@@ -73,7 +69,7 @@ namespace BlackMisc
     {
     public:
         //! Default constructor.
-        CIcon() = default;
+        CIcon() {}
 
         //! Constructor.
         CIcon(CIcons::IconIndex index, const QString &descriptiveText);

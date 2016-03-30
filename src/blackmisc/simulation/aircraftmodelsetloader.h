@@ -10,7 +10,7 @@
 //! \file
 
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODELSETLOADER_H
-#define BLACKMISC_SIMULATION_AIRCRAFTMODESETLLOADER_H
+#define BLACKMISC_SIMULATION_AIRCRAFTMODELSETLOADER_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
