@@ -14,6 +14,7 @@
 
 #include "blackmisc/valuecacheprivate.h"
 #include "blackmisc/range.h"
+#include <QThread>
 
 namespace BlackMisc
 {
