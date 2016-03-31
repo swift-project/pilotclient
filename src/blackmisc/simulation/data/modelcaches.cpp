@@ -85,10 +85,10 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.get();
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.get();
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.get();
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.get();
+                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.getCopy();
+                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.getCopy();
+                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.getCopy();
+                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.getCopy();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     return CAircraftModelList();

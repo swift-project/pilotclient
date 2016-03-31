@@ -116,12 +116,14 @@ namespace BlackMisc
                 CModelCaches(QObject *parent = nullptr);
 
                 //! Models
+                //! \threadsafe
                 CAircraftModelList getModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Set models
                 BlackMisc::CStatusMessage setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Cache timestamp
+                //! \threadsafe
                 QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Syncronize
@@ -146,12 +148,14 @@ namespace BlackMisc
                 CModelSetCaches(QObject *parent = nullptr);
 
                 //! Models
+                //! \threadsafe
                 CAircraftModelList getModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Set models
                 BlackMisc::CStatusMessage setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Cache timestamp
+                //! \threadsafe
                 QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Syncronize
