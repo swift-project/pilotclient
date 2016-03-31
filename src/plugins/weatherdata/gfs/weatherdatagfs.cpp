@@ -583,48 +583,48 @@ namespace BlackWxPlugin
 
         void CWeatherDataGfs::setTemperature(const g2float *fld, double level)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                if (level > 0) { gridPointIt->isobaricLayers[level].temperature = fld[gridPointIt->fieldPosition]; }
-                else { gridPointIt->surfaceTemperature = fld[gridPointIt->fieldPosition]; }
+                if (level > 0) { gridPoint.isobaricLayers[level].temperature = fld[gridPoint.fieldPosition]; }
+                else { gridPoint.surfaceTemperature = fld[gridPoint.fieldPosition]; }
             }
         }
 
         void CWeatherDataGfs::setHumidity(const g2float *fld, double level)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                gridPointIt->isobaricLayers[level].relativeHumidity = fld[gridPointIt->fieldPosition];
+                gridPoint.isobaricLayers[level].relativeHumidity = fld[gridPoint.fieldPosition];
             }
         }
 
         void CWeatherDataGfs::setWindV(const g2float *fld, double level)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                gridPointIt->isobaricLayers[level].windV = fld[gridPointIt->fieldPosition];
+                gridPoint.isobaricLayers[level].windV = fld[gridPoint.fieldPosition];
             }
         }
 
         void CWeatherDataGfs::setWindU(const g2float *fld, double level)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                gridPointIt->isobaricLayers[level].windU = fld[gridPointIt->fieldPosition];
+                gridPoint.isobaricLayers[level].windU = fld[gridPoint.fieldPosition];
             }
         }
 
         void CWeatherDataGfs::setCloudCoverage(const g2float *fld, int level)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                if(fld[gridPointIt->fieldPosition] > 0.0) { gridPointIt->cloudLayers[level].totalCoverage = fld[gridPointIt->fieldPosition]; }
+                if(fld[gridPoint.fieldPosition] > 0.0) { gridPoint.cloudLayers[level].totalCoverage = fld[gridPoint.fieldPosition]; }
             }
         }
 
         void CWeatherDataGfs::setCloudLevel(const g2float *fld, int surfaceType, int level)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
                 static const g2float minimumLayer = 0.0;
                 switch(surfaceType)
@@ -632,12 +632,12 @@ namespace BlackWxPlugin
                 case LowCloudBottomLevel:
                 case MiddleCloudBottomLevel:
                 case HighCloudBottomLevel:
-                    if (fld[gridPointIt->fieldPosition] > minimumLayer) { gridPointIt->cloudLayers[level].bottomLevel = millibarToLevel(fld[gridPointIt->fieldPosition]); }
+                    if (fld[gridPoint.fieldPosition] > minimumLayer) { gridPoint.cloudLayers[level].bottomLevel = millibarToLevel(fld[gridPoint.fieldPosition]); }
                     break;
                 case LowCloudTopLevel:
                 case MiddleCloudTopLevel:
                 case HighCloudTopLevel:
-                    if (fld[gridPointIt->fieldPosition] > minimumLayer) { gridPointIt->cloudLayers[level].topLevel = millibarToLevel(fld[gridPointIt->fieldPosition]); }
+                    if (fld[gridPoint.fieldPosition] > minimumLayer) { gridPoint.cloudLayers[level].topLevel = millibarToLevel(fld[gridPoint.fieldPosition]); }
                     break;
                 default:
                     Q_ASSERT(false);
@@ -648,26 +648,26 @@ namespace BlackWxPlugin
 
         void CWeatherDataGfs::setCloudPressure(const g2float *fld, double level)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
                 if (level > 0) { /* todo */ }
-                else { gridPointIt->surfacePressure = fld[gridPointIt->fieldPosition];  }
+                else { gridPoint.surfacePressure = fld[gridPoint.fieldPosition];  }
             }
         }
 
         void CWeatherDataGfs::setSurfaceRain(const g2float *fld)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                gridPointIt->surfaceRainRate = fld[gridPointIt->fieldPosition];
+                gridPoint.surfaceRainRate = fld[gridPoint.fieldPosition];
             }
         }
 
         void CWeatherDataGfs::setSurfaceSnow(const g2float *fld)
         {
-            for (auto gridPointIt = m_gfsWeatherGrid.begin(); gridPointIt < m_gfsWeatherGrid.end(); ++gridPointIt)
+            for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                gridPointIt->surfaceSnowRate = fld[gridPointIt->fieldPosition];
+                gridPoint.surfaceSnowRate = fld[gridPoint.fieldPosition];
             }
         }
 
