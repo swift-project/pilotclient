@@ -140,19 +140,17 @@ namespace BlackMisc
 
     void CDataCache::saveToStoreAsync(const BlackMisc::CValueCachePacket &values)
     {
-        auto baseline = getAllValuesWithTimestamps();
-        QTimer::singleShot(0, &m_serializer, [this, baseline, values]
+        QTimer::singleShot(0, &m_serializer, [this, values]
         {
-            m_serializer.saveToStore(values.toVariantMap(), baseline);
+            m_serializer.saveToStore(values.toVariantMap(), getAllValuesWithTimestamps());
         });
     }
 
     void CDataCache::loadFromStoreAsync()
     {
-        auto baseline = getAllValuesWithTimestamps();
-        QTimer::singleShot(0, &m_serializer, [this, baseline]
+        QTimer::singleShot(0, &m_serializer, [this]
         {
-            m_serializer.loadFromStore(baseline);
+            m_serializer.loadFromStore(getAllValuesWithTimestamps());
         });
     }
 
