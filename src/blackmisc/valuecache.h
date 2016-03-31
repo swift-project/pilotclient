@@ -310,6 +310,7 @@ namespace BlackMisc
         const QString &getKey() const { return m_page.getKey(m_element); }
 
         //! Return the time when this value was updated.
+        //! \threadsafe with tiny risk of mismatch of value and timestamp
         QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_page.getTimestamp(m_element)); }
 
         //! Return true if this value was already saved.
