@@ -8,7 +8,7 @@
  */
 
 #include "audioutils.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include <QProcess>
 
 namespace BlackMisc
@@ -17,7 +17,7 @@ namespace BlackMisc
     {
         bool startWindowsMixer()
         {
-            if (!CProject::isRunningOnWindowsNtPlatform()) { return false; }
+            if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
             QStringList parameterlist;
             return QProcess::startDetached("SndVol.exe", parameterlist);
         }

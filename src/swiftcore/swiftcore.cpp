@@ -11,7 +11,6 @@
 #include "ui_swiftcore.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/project.h"
 #include "blackmisc/dbusserver.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"

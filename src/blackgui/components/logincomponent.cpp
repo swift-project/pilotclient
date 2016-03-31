@@ -18,6 +18,7 @@
 #include "blackcore/network.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/buildconfig.h"
 #include <QIntValidator>
 
 using namespace BlackMisc;
@@ -106,7 +107,7 @@ namespace BlackGui
             CServerList otherServers(this->m_otherTrafficNetworkServers.get());
 
             // add a testserver when no servers can be loaded
-            if (otherServers.isEmpty() && (sGui->isRunningInDeveloperEnvironment() || CProject::isBetaTest()))
+            if (otherServers.isEmpty() && (sGui->isRunningInDeveloperEnvironment() || CBuildConfig::isBetaTest()))
             {
                 otherServers.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
                 CLogMessage(this).info("Added servers for testing");

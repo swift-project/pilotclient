@@ -10,8 +10,8 @@
 //! \cond PRIVATE
 
 #include "icons.h"
-#include "blackmisc/project.h"
 #include "blackmisc/fileutils.h"
+#include "buildconfig.h"
 #include <QImage>
 #include <QIcon>
 #include <QPainter>
@@ -1126,7 +1126,7 @@ namespace BlackMisc
         Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "missing filename");
         if (!getResourceFileCache().contains(fileName))
         {
-            QString path = CFileUtils::appendFilePaths(CProject::getImagesDir(), fileName);
+            QString path = CFileUtils::appendFilePaths(CBuildConfig::getImagesDir(), fileName);
             QPixmap pm;
             bool s = pm.load(path);
             if (s)

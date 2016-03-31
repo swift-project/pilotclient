@@ -16,7 +16,7 @@
 #include "blackcore/contextaudio.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/audio/audioutils.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/icons.h"
 
 #include <QPoint>
@@ -159,7 +159,7 @@ namespace BlackGui
             QMenu menuAudio(this);
             menuAudio.addAction("Toogle mute");
 
-            if (CProject::isRunningOnWindowsNtPlatform())
+            if (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
                 menuAudio.addAction("Mixer");
             }

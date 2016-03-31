@@ -17,8 +17,6 @@
 #include "blackcore/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/project.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include <QTimer>

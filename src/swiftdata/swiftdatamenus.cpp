@@ -18,7 +18,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/metadatautils.h"
 #include <QPoint>
 #include <QMenu>
@@ -58,7 +58,7 @@ void CSwiftData::initDynamicMenus()
     Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "missing main area");
     this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
 
-    QString resourceDir(CProject::getSwiftResourceDir());
+    QString resourceDir(CBuildConfig::getSwiftResourceDir());
     if (!resourceDir.isEmpty() && QDir(resourceDir).exists())
     {
         Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");

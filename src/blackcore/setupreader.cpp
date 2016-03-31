@@ -13,7 +13,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/json.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logmessage.h"
 #include "setupreader.h"
@@ -87,7 +87,7 @@ namespace BlackCore
             if (this->m_bootstrapUrls.isEmpty())
             {
                 CGlobalSetup resourceSetup(CGlobalSetup::fromJsonFile(
-                                               CProject::getBootstrapResourceFile()
+                                               CBuildConfig::getBootstrapResourceFile()
                                            ));
                 this->m_bootstrapUrls.push_back(resourceSetup.getBootstrapFileUrls());
             }

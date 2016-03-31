@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 #include "viewbase.h"
 #include "../models/atcstationlistmodel.h"
-#include "blackmisc/project.h"
 
 namespace BlackGui
 {

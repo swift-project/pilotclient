@@ -8,7 +8,7 @@
  */
 
 #include "updateinfo.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include <QStringList>
 
 using namespace BlackMisc;
@@ -22,20 +22,20 @@ namespace BlackCore
             ITimestampBased(0),
             m_downloadsStableUrls(QStringList {"http://swift-project.org/"}),
             m_downloadsBetaUrls(QStringList {"http://swift-project.org/"}),
-            m_latestVersionStable(CProject::version()),
+            m_latestVersionStable(CVersion::version()),
             m_lastSupportedVersionStable("0.6"),
-            m_latestVersionBeta(CProject::version()),
+            m_latestVersionBeta(CVersion::version()),
             m_lastSupportedVersionBeta("0.6")
         { }
 
         CUrlList CUpdateInfo::getDownloadUrls() const
         {
-            return CProject::isBetaTest() ? getDownloadUrlsBeta() : getDownloadUrlsStable();
+            return CBuildConfig::isBetaTest() ? getDownloadUrlsBeta() : getDownloadUrlsStable();
         }
 
         QString CUpdateInfo::getLatestVersion() const
         {
-            return CProject::isBetaTest() ? getLatestVersionBeta() : getLatestVersionStable();
+            return CBuildConfig::isBetaTest() ? getLatestVersionBeta() : getLatestVersionStable();
         }
 
         bool CUpdateInfo::hasSameType(const CUpdateInfo &otherDownload) const

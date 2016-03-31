@@ -8,7 +8,7 @@
  */
 
 #include "simulatorinfo.h"
-#include "blackmisc/project.h"
+#include "buildconfig.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include <algorithm>
@@ -170,15 +170,15 @@ namespace BlackMisc
             //! \todo add XP, ...
             CSimulatorInfo sim;
             bool fs9 =
-                CProject::isRunningOnWindowsNtPlatform() &&
+                CBuildConfig::isRunningOnWindowsNtPlatform() &&
                 !CFsCommonUtil::fs9AircraftDir().isEmpty() &&
                 !CFsCommonUtil::fs9Dir().isEmpty();
             bool fsx =
-                CProject::isRunningOnWindowsNtPlatform() &&
+                CBuildConfig::isRunningOnWindowsNtPlatform() &&
                 !CFsCommonUtil::fsxSimObjectsDir().isEmpty() &&
                 !CFsCommonUtil::fsxDir().isEmpty();
             bool p3d =
-                CProject::isRunningOnWindowsNtPlatform() &&
+                CBuildConfig::isRunningOnWindowsNtPlatform() &&
                 !CFsCommonUtil::p3dDir().isEmpty() &&
                 !CFsCommonUtil::p3dSimObjectsDir().isEmpty();
             bool xp = true; //! \todo XP resolution

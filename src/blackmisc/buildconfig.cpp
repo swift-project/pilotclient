@@ -9,7 +9,7 @@
 
 //! \cond PRIVATE
 
-#include "project.h"
+#include "buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/simulation/simulatorinfo.h"
@@ -19,17 +19,9 @@
 #include <QProcessEnvironment>
 #include <QStandardPaths>
 
-#if !defined(BLACK_VERSION)
-#error Missing version
-#endif
-
-#if !defined(BLACK_EOL)
-#error Missing EOL
-#endif
-
 namespace BlackMisc
 {
-    bool CProject::isCompiledWithBlackCore()
+    bool CBuildConfig::isCompiledWithBlackCore()
     {
 #ifdef WITH_BLACKCORE
         return true;
@@ -38,7 +30,7 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isCompiledWithBlackSound()
+    bool CBuildConfig::isCompiledWithBlackSound()
     {
 #ifdef WITH_BLACKSOUND
         return true;
@@ -47,7 +39,7 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isCompiledWithBlackInput()
+    bool CBuildConfig::isCompiledWithBlackInput()
     {
 #ifdef WITH_BLACKINPUT
         return true;
@@ -56,7 +48,7 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isCompiledWithFs9Support()
+    bool CBuildConfig::isCompiledWithFs9Support()
     {
 #ifdef WITH_FS9
         return true;
@@ -65,7 +57,7 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isCompiledWithFsxSupport()
+    bool CBuildConfig::isCompiledWithFsxSupport()
     {
 #ifdef WITH_FSX
         return true;
@@ -74,17 +66,17 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isCompiledWithP3DSupport()
+    bool CBuildConfig::isCompiledWithP3DSupport()
     {
         return isCompiledWithFsxSupport();
     }
 
-    bool CProject::isCompiledWithMsFlightSimulatorSupport()
+    bool CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
     {
         return isCompiledWithFs9Support() || isCompiledWithFsxSupport() || isCompiledWithP3DSupport();
     }
 
-    bool CProject::isCompiledWithXPlaneSupport()
+    bool CBuildConfig::isCompiledWithXPlaneSupport()
     {
 #ifdef WITH_XPLANE
         return true;
@@ -93,12 +85,12 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isCompiledWithFlightSimulatorSupport()
+    bool CBuildConfig::isCompiledWithFlightSimulatorSupport()
     {
         return isCompiledWithFsxSupport() || isCompiledWithXPlaneSupport();
     }
 
-    bool BlackMisc::CProject::isCompiledWithGui()
+    bool CBuildConfig::isCompiledWithGui()
     {
 #ifdef WITH_BLACKGUI
         return true;
@@ -107,60 +99,7 @@ namespace BlackMisc
 #endif
     }
 
-    const BlackMisc::Simulation::CSimulatorInfo &CProject::simulators()
-    {
-        static const BlackMisc::Simulation::CSimulatorInfo simInfo(
-            isCompiledWithFsxSupport(),
-            isCompiledWithFs9Support(),
-            isCompiledWithXPlaneSupport(),
-            isCompiledWithP3DSupport()
-        );
-        return simInfo;
-    }
-
-    const char *CProject::simulatorsChar()
-    {
-        static const QByteArray sims(simulators().toQString().toUtf8());
-        return sims.constData();
-    }
-
-    const QString &CProject::version()
-    {
-#ifdef BLACK_VERSION
-        static const QString v(BLACK_STRINGIFY(BLACK_VERSION));
-#else
-        static const QString v("?");
-#endif
-        return v;
-    }
-
-    int CProject::versionMajor()
-    {
-        return getMajorMinor(0);
-    }
-
-    int CProject::versionMinor()
-    {
-        return getMajorMinor(1);
-    }
-
-    bool CProject::isNewerVersion(const QString &versionString)
-    {
-        if (versionString.isEmpty()) { return false; }
-        if (CProject::version() == versionString) { return false; }
-
-        QList<int> newer(getVersionParts(versionString));
-        QList<int> current(getVersionParts(version()));
-        for (int i = 0; i < current.length(); i++)
-        {
-            if (newer.length() <= i) { return false; }
-            if (current.at(i) > newer.at(i)) { return false; }
-            if (current.at(i) < newer.at(i)) { return true; }
-        }
-        return false;
-    }
-
-    bool CProject::isDebugBuild()
+    bool CBuildConfig::isDebugBuild()
     {
 #ifdef QT_DEBUG
         return true;
@@ -169,7 +108,7 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isReleaseBuild()
+    bool CBuildConfig::isReleaseBuild()
     {
 #ifdef QT_NO_DEBUG
         return true;
@@ -178,7 +117,7 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isBetaTest()
+    bool CBuildConfig::isBetaTest()
     {
 #ifdef SWIFT_BETA
         return true;
@@ -187,13 +126,13 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::canRunInDeveloperEnvironment()
+    bool CBuildConfig::canRunInDeveloperEnvironment()
     {
         if (isBetaTest()) { return true; }
         return !isShippedVersion();
     }
 
-    bool CProject::isShippedVersion()
+    bool CBuildConfig::isShippedVersion()
     {
 #ifdef SWIFT_SHIPPED
         return true;
@@ -202,7 +141,7 @@ namespace BlackMisc
 #endif
     }
 
-    bool CProject::isRunningOnWindowsNtPlatform()
+    bool CBuildConfig::isRunningOnWindowsNtPlatform()
     {
 #ifdef Q_OS_WIN
         // QSysInfo::WindowsVersion only available on Win platforms
@@ -212,58 +151,32 @@ namespace BlackMisc
 #endif
     }
 
-    QList<int> CProject::getVersionParts(const QString &versionString)
-    {
-        QStringList parts = versionString.split('.');
-        QList<int> partsInt;
-        for (const QString &p : parts)
-        {
-            bool ok = false;
-            int pInt = p.toInt(&ok);
-            partsInt.append(ok ? pInt : -1);
-        }
-        return partsInt;
-    }
-
-    int CProject::getMajorMinor(int index)
-    {
-        QList<int> partsInt(getVersionParts(version()));
-        if (index >= partsInt.length()) { return -1; }
-        return partsInt[index];
-    }
-
-    const QString &CProject::swiftGuiExecutableName()
+    const QString &CBuildConfig::swiftGuiExecutableName()
     {
         static const QString s("swiftguistd");
         return s;
     }
 
-    const QString &CProject::swiftCoreExecutableName()
+    const QString &CBuildConfig::swiftCoreExecutableName()
     {
         static const QString s("swiftcore");
         return s;
     }
 
-    const QString &CProject::swiftDataExecutableName()
+    const QString &CBuildConfig::swiftDataExecutableName()
     {
         static const QString s("swiftdata");
         return s;
     }
 
-    const QStringList &CProject::swiftTeamDefaultServers()
+    const QStringList &CBuildConfig::swiftTeamDefaultServers()
     {
-        static const QStringList s({ "https://vatsim-germany.org:50443/mapping/public/shared", "http://ubuntu12/public/bootstrap/shared"});
+        static const QStringList s({ "https://vatsim-germany.org:50443/mapping/public/shared",
+                                     "http://ubuntu12/public/bootstrap/shared"});
         return s;
     }
 
-    const QDateTime &CProject::getEol()
-    {
-        static const QString eol(BLACK_STRINGIFY(BLACK_EOL));
-        static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, "yyyyMMdd"));
-        return dt;
-    }
-
-    bool CProject::isLifetimeExpired()
+    bool CBuildConfig::isLifetimeExpired()
     {
         if (getEol().isValid())
         {
@@ -282,7 +195,7 @@ namespace BlackMisc
         return p.absolutePath();
     }
 
-    const QString &CProject::getApplicationDir()
+    const QString &CBuildConfig::getApplicationDir()
     {
         static const QString s(getApplicationDirImpl());
         return s;
@@ -290,7 +203,7 @@ namespace BlackMisc
 
     QString getSwiftResourceDirImpl()
     {
-        QDir dir(CProject::getApplicationDir());
+        QDir dir(CBuildConfig::getApplicationDir());
         if (dir.cdUp())
         {
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
@@ -300,7 +213,7 @@ namespace BlackMisc
         return "";
     }
 
-    const QString &CProject::getSwiftResourceDir()
+    const QString &CBuildConfig::getSwiftResourceDir()
     {
         static const QString s(getSwiftResourceDirImpl());
         return s;
@@ -308,14 +221,14 @@ namespace BlackMisc
 
     const QString getBootstrapResourceFileImpl()
     {
-        const QString d(CProject::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
         const QFile file(CFileUtils::appendFilePaths(d, "shared/boostrap/boostrap.json"));
         Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing dir");
         return QFileInfo(file).absoluteFilePath();
     }
 
-    const QString &CProject::getBootstrapResourceFile()
+    const QString &CBuildConfig::getBootstrapResourceFile()
     {
         static const QString s(getBootstrapResourceFileImpl());
         return s;
@@ -323,14 +236,14 @@ namespace BlackMisc
 
     QString getSwiftStaticDbFilesDirImpl()
     {
-        const QString d(CProject::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
         QDir dir(CFileUtils::appendFilePaths(d, "shared/dbdata"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
 
-    const QString &CProject::getSwiftStaticDbFilesDir()
+    const QString &CBuildConfig::getSwiftStaticDbFilesDir()
     {
         static QString s(getSwiftStaticDbFilesDirImpl());
         return s;
@@ -338,13 +251,13 @@ namespace BlackMisc
 
     QString getImagesDirImpl()
     {
-        const QString d(CProject::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftResourceDir());
         QDir dir(CFileUtils::appendFilePaths(d, "data/images"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
 
-    const QString &CProject::getImagesDir()
+    const QString &CBuildConfig::getImagesDir()
     {
         static const QString s(getImagesDirImpl());
         return s;
@@ -360,13 +273,13 @@ namespace BlackMisc
         return pathes.first();
     }
 
-    const QString &CProject::getDocumentationDirectory()
+    const QString &CBuildConfig::getDocumentationDirectory()
     {
         static const QString d(getDocumentationDirectoryImpl());
         return d;
     }
 
-    const QString &CProject::compiledWithInfo(bool shortVersion)
+    const QString &CBuildConfig::compiledWithInfo(bool shortVersion)
     {
         if (shortVersion)
         {
@@ -405,6 +318,38 @@ namespace BlackMisc
             return infoLong;
         }
     }
+
+    bool CVersion::isNewerVersion(const QString &versionString)
+    {
+        if (versionString.isEmpty()) { return false; }
+        if (CVersion::version() == versionString) { return false; }
+
+        QList<int> newer(getVersionParts(versionString));
+        QList<int> current(getVersionParts(version()));
+        for (int i = 0; i < current.length(); i++)
+        {
+            if (newer.length() <= i) { return false; }
+            if (current.at(i) > newer.at(i)) { return false; }
+            if (current.at(i) < newer.at(i)) { return true; }
+        }
+        return false;
+    }
+
+
+
+    QList<int> CVersion::getVersionParts(const QString &versionString)
+    {
+        QStringList parts = versionString.split('.');
+        QList<int> partsInt;
+        for (const QString &p : parts)
+        {
+            bool ok = false;
+            int pInt = p.toInt(&ok);
+            partsInt.append(ok ? pInt : -1);
+        }
+        return partsInt;
+    }
+
 } // ns
 
 //! \endcond

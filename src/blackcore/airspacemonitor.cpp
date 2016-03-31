@@ -14,7 +14,6 @@
 #include "blackcore/vatsimbookingreader.h"
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/project.h"
 #include "blackmisc/testing.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/propertyindexallclasses.h"

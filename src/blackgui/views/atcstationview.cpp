@@ -10,6 +10,7 @@
 #include "atcstationview.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/testing.h"
+#include "blackmisc/buildconfig.h"
 #include <QHeaderView>
 
 using namespace BlackMisc;
@@ -41,7 +42,7 @@ namespace BlackGui
 
         void CAtcStationView::customMenu(QMenu &menu) const
         {
-            if (BlackMisc::CProject::isDebugBuild())
+            if (BlackMisc::CBuildConfig::isDebugBuild())
             {
                 menu.addAction(CIcons::tableSheet16(), "Test: 1k ATC online stations", this, SLOT(ps_testRequest1kAtcOnlineDummies()));
                 menu.addAction(CIcons::tableSheet16(), "Test: 3k ATC online stations", this, SLOT(ps_testRequest3kAtcOnlineDummies()));

@@ -1,5 +1,5 @@
-/* Copyright (C) 2013
- * swift Project Community / Contributors
+/* Copyright (C) 2016
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -9,19 +9,30 @@
 
 //! \file
 
-#ifndef BLACKMISC_CPROJECT_H
-#define BLACKMISC_CPROJECT_H
+#ifndef BLACKMISC_BUILDCONFIG_H
+#define BLACKMISC_BUILDCONFIG_H
 
-#include "blackmiscexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include \"blackmisc/blackmiscexport.h\"
 #include <QString>
+#include <QDateTime>
+
+$$DEFINE_WITH_BLACKCORE#define WITH_BLACKCORE
+$$DEFINE_WITH_BLACKSOUND#define WITH_BLACKSOUND
+$$DEFINE_WITH_BLACKINPUT#define WITH_BLACKINPUT
+$$DEFINE_WITH_BLACKGUI#define WITH_BLACKGUI
+$$DEFINE_WITH_SWIFTDATA#define WITH_SWIFTDATA
+$$DEFINE_WITH_SWIFTGUI#define WITH_SWIFTGUI
+$$DEFINE_WITH_SWIFTCORE#define WITH_SWIFTCORE
+$$DEFINE_WITH_FSX#define WITH_FSX
+$$DEFINE_WITH_FS9#define WITH_FS9
+$$DEFINE_WITH_XPLANE#define WITH_XPLANE
+$$DEFINE_SWIFT_BETA#define SWIFT_BETA
+$$DEFINE_SWIFT_SHIPPED#define SWIFT_SHIPPED
 
 namespace BlackMisc
 {
-    /*!
-     * Metadata about the project
-     */
-    class BLACKMISC_EXPORT CProject
+
+    class BLACKMISC_EXPORT CBuildConfig
     {
     public:
         //! with BlackCore?
@@ -54,24 +65,6 @@ namespace BlackMisc
         //! with GUI?
         static bool isCompiledWithGui();
 
-        //! Simulator String info
-        static const BlackMisc::Simulation::CSimulatorInfo &simulators();
-
-        //! Simulator String info
-        static const char *simulatorsChar();
-
-        //! Version info
-        static const QString &version();
-
-        //! Version major
-        static int versionMajor();
-
-        //! Version minor
-        static int versionMinor();
-
-        //! Is the given string representing a newer version?
-        static bool isNewerVersion(const QString &versionString);
-
         //! Debug build?
         static bool isDebugBuild();
 
@@ -91,6 +84,7 @@ namespace BlackMisc
         static bool isRunningOnWindowsNtPlatform();
 
         //! Application directory where current application is located
+        //! \todo Move to to CApplication
         static const QString &getApplicationDir();
 
         //! Where resource files (static DB files, ...) etc are located
@@ -111,9 +105,6 @@ namespace BlackMisc
         //! Info string about compilation
         static const QString &compiledWithInfo(bool shortVersion = true);
 
-        //! Whole info
-        static QString convertToQString(const QString &separator = QString("\n"));
-
         //! Executable name for swift GUI, no(!) appendix
         static const QString &swiftGuiExecutableName();
 
@@ -127,21 +118,61 @@ namespace BlackMisc
         static const QStringList &swiftTeamDefaultServers();
 
         //! End of lifetime
-        static const QDateTime &getEol();
+        static const QDateTime &getEol()
+        {
+            static const QString eol(\"$$BLACK_EOL\");
+            static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, \"yyyyMMdd\"));
+            return dt;
+        }
 
         //! Lifetime ended?
         static bool isLifetimeExpired();
 
-    private:
-        //! Constructor
-        CProject() {}
+        //! Vatsim client id
+        static int vatsimClientId()
+        {
+            static const int id { $$VATSIM_CLIENT_ID };
+            return id;
+        }
 
+        //! Vatsim client key
+        static const QString &vatsimPrivateKey()
+        {
+          static const auto pk = QString { \"$$VATSIM_CLIENT_PRIVATE_KEY\" };
+          return pk;
+        }
+
+    };
+
+    class BLACKMISC_EXPORT CVersion
+    {
+    public:
+        //! Version info
+        static const QString &version()
+        {
+            static const QString version(\"$$BLACK_VERSION\");
+            Q_ASSERT(!version.isEmpty());
+            return version;
+        }
+
+        //! Version major
+        static int versionMajor() { return $$BLACK_VER_MAJ; }
+
+        //! Version minor
+        static int versionMinor() { return $$BLACK_VER_MIN; }
+
+        //! Version patch
+        static int versionPatch() { return $$BLACK_VER_PAT; }
+
+        //! Is the given string representing a newer version?
+        static bool isNewerVersion(const QString &versionString);
+
+    private:
         //! Parts of version string 1.0.2
         static QList<int> getVersionParts(const QString &versionString);
 
-        //! Split version
-        static int getMajorMinor(int index);
     };
-} // ns
 
-#endif // guard
+}
+
+#endif // BLACKCONFIG_H

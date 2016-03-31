@@ -27,7 +27,6 @@
 #include "blackmisc/weather/metarset.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/countrylist.h"
-#include "blackmisc/project.h"
 #include "blackmisc/restricted.h"
 #include <QObject>
 

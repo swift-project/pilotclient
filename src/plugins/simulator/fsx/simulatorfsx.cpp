@@ -15,7 +15,6 @@
 #include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/project.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/threadutils.h"

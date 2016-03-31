@@ -12,7 +12,6 @@
 #include "blackcore/registermetadata.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/project.h"
 
 #include <QtGlobal>
 #include <QProcess>

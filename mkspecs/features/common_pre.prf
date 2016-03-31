@@ -99,12 +99,6 @@ linux-g++: QMAKE_LFLAGS_DEBUG *= -rdynamic
 include(warnings.pri)
 
 ################################
-# Preprocessor defines
-################################
-
-include(defines.pri)
-
-################################
 # Path to external dependencies
 ################################
 
@@ -138,6 +132,12 @@ macx: LIBS *= -F$$EXTERNALSDIR
 win32: LIBS *= -luser32
 
 INCLUDEPATH *= $$EXTERNALDIR/common/include
+
+################################
+# Includes
+################################
+
+INCLUDEPATH *= $$BuildRoot/src
 
 ################################
 # Platform extensions

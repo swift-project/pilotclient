@@ -9,7 +9,7 @@
 
 #include "blackmisc/worker.h"
 #include "fileutils.h"
-#include "project.h"
+#include "buildconfig.h"
 #include <QFile>
 #include <QCoreApplication>
 
@@ -113,7 +113,7 @@ namespace BlackMisc
 
     Qt::CaseSensitivity CFileUtils::osFileNameCaseSensitivity()
     {
-        return CProject::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
+        return CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
     }
 
     bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludeDirectory, Qt::CaseSensitivity cs)

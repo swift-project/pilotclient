@@ -8,7 +8,7 @@
  */
 
 #include "globalsetup.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/stringutils.h"
 #include <QStringList>
@@ -29,7 +29,7 @@ namespace BlackCore
             m_vatsimMetarsUrls( {"http://metar.vatsim.net/metar.php"}),
             m_vatsimStatusFileUrls({ "https://status.vatsim.net" }),
             m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" }),
-            m_sharedUrls(CProject::swiftTeamDefaultServers()),
+            m_sharedUrls(CBuildConfig::swiftTeamDefaultServers()),
             m_newsUrls(QStringList({ "http://swift-project.org/" }))
         { }
 

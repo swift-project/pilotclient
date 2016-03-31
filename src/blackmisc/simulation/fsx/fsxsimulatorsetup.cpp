@@ -9,7 +9,7 @@
 
 #include "fsxsimulatorsetup.h"
 
-#include "blackmisc/project.h"
+#include "buildconfig.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 
@@ -30,7 +30,7 @@ namespace BlackMisc
                 CSimulatorSetup s;
                 s.setValue(KeyLocalSimConnectCfgFilename(), CSimConnectUtilities::getLocalSimConnectCfgFilename());
 
-                if (CProject::isCompiledWithFsxSupport())
+                if (CBuildConfig::isCompiledWithFsxSupport())
                 {
                     // set FSX path
                     QString fsxPath = CFsCommonUtil::fsxDirFromRegistry();

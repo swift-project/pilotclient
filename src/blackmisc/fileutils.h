@@ -16,6 +16,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDir>
+#include <functional>
 
 namespace BlackMisc
 {

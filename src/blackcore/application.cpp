@@ -8,6 +8,7 @@
  */
 
 #include "application.h"
+#include "blackmisc/buildconfig.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/networkvatlib.h"
@@ -16,7 +17,6 @@
 #include "blackcore/registermetadata.h"
 #include "blackcore/cookiemanager.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/project.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/threadutils.h"
@@ -52,7 +52,7 @@ namespace BlackCore
         {
             CApplication::initEnvironment();
             QCoreApplication::setApplicationName(applicationName);
-            QCoreApplication::setApplicationVersion(CProject::version());
+            QCoreApplication::setApplicationVersion(CVersion::version());
             this->setObjectName(applicationName);
             this->initParser();
             this->initLogging();
@@ -103,7 +103,7 @@ namespace BlackCore
 
     const QString &CApplication::getApplicationNameAndVersion() const
     {
-        static const QString s(QCoreApplication::instance()->applicationName() + " " + CProject::version());
+        static const QString s(QCoreApplication::instance()->applicationName() + " " + CVersion::version());
         return s;
     }
 
@@ -210,22 +210,22 @@ namespace BlackCore
 
     const QString &CApplication::versionStringDevBetaInfo() const
     {
-        if (isRunningInDeveloperEnvironment() && CProject::isBetaTest())
+        if (isRunningInDeveloperEnvironment() && CBuildConfig::isBetaTest())
         {
-            static const QString s(CProject::version() + " [DEV, BETA]");
+            static const QString s(CVersion::version() + " [DEV, BETA]");
             return s;
         }
         if (isRunningInDeveloperEnvironment())
         {
-            static const QString s(CProject::version() + " [DEV]");
+            static const QString s(CVersion::version() + " [DEV]");
             return s;
         }
-        if (CProject::isBetaTest())
+        if (CBuildConfig::isBetaTest())
         {
-            static const QString s(CProject::version() + " [BETA]");
+            static const QString s(CVersion::version() + " [BETA]");
             return s;
         }
-        return CProject::version();
+        return CVersion::version();
     }
 
     const QString &CApplication::swiftVersionString() const
@@ -242,7 +242,7 @@ namespace BlackCore
 
     bool CApplication::isRunningInDeveloperEnvironment() const
     {
-        if (!CProject::canRunInDeveloperEnvironment()) { return false; }
+        if (!CBuildConfig::canRunInDeveloperEnvironment()) { return false; }
         if (!this->m_parser.value(this->m_cmdDevelopment).isEmpty())
         {
             // explicit value
@@ -265,21 +265,21 @@ namespace BlackCore
     QString CApplication::getEnvironmentInfoString(const QString &separator) const
     {
         QString env("Beta: ");
-        env.append(boolToYesNo(CProject::isBetaTest()));
+        env.append(boolToYesNo(CBuildConfig::isBetaTest()));
         env = env.append(" dev.env,: ").append(boolToYesNo(isRunningInDeveloperEnvironment()));
         env = env.append(separator);
-        env.append("Windows: ").append(boolToYesNo(CProject::isRunningOnWindowsNtPlatform()));
+        env.append("Windows: ").append(boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()));
         return env;
     }
 
     QString CApplication::getInfoString(const QString &separator) const
     {
-        QString str(CProject::version());
-        str = str.append(" ").append(CProject::isReleaseBuild() ? "Release build" : "Debug build");
+        QString str(CVersion::version());
+        str = str.append(" ").append(CBuildConfig::isReleaseBuild() ? "Release build" : "Debug build");
         str = str.append(separator);
         str = str.append(getEnvironmentInfoString(separator));
         str = str.append(separator);
-        str.append(CProject::compiledWithInfo(false));
+        str.append(CBuildConfig::compiledWithInfo(false));
         return str;
     }
 
@@ -661,9 +661,9 @@ namespace BlackCore
     bool CApplication::parse()
     {
         if (this->m_parsed) { return m_parsed; }
-        if (CProject::isLifetimeExpired())
+        if (CBuildConfig::isLifetimeExpired())
         {
-            this->cmdLineErrorMessage("Program exired " + CProject::getEol().toString());
+            this->cmdLineErrorMessage("Program exired " + CBuildConfig::getEol().toString());
             return false;
         }
 

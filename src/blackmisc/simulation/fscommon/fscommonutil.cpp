@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "fscommonutil.h"
 #include <QSettings>
 #include <QDir>
@@ -25,7 +25,7 @@ namespace BlackMisc
             QString CFsCommonUtil::fsxDirFromRegistry()
             {
                 QString fsxPath;
-                if (CProject::isCompiledWithFsxSupport())
+                if (CBuildConfig::isCompiledWithFsxSupport())
                 {
                     FsRegistryPathPair fsxRegistryPathPairs =
                     {
@@ -102,7 +102,7 @@ namespace BlackMisc
             QString CFsCommonUtil::fs9DirFromRegistry()
             {
                 QString fs9Path;
-                if (CProject::isCompiledWithFs9Support())
+                if (CBuildConfig::isCompiledWithFs9Support())
                 {
                     FsRegistryPathPair fs9RegistryPathPairs =
                     {

@@ -8,7 +8,7 @@
  */
 
 #include "simulatedaircraftview.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include <QHeaderView>
 
 using namespace BlackMisc;
@@ -41,7 +41,7 @@ namespace BlackGui
 
         void CSimulatedAircraftView::customMenu(QMenu &menu) const
         {
-            if (BlackMisc::CProject::isDebugBuild())
+            if (BlackMisc::CBuildConfig::isDebugBuild())
             {
                 // tbd
             }

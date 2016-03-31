@@ -38,16 +38,4 @@
 #  define BLACKMISC_EXPORT_TEMPLATE
 #endif
 
-
-//! \cond
-// helper define
-#define BLACK_STRINGIFY_X(v) #v
-//! \endcond
-
-/*!
- * \def BLACK_STRINGIFY
- * Value in quotes (normally to be used then with QString)
- */
-#define BLACK_STRINGIFY(v) BLACK_STRINGIFY_X(v)
-
 #endif // guard

@@ -18,7 +18,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/aviation/selcal.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/logmessage.h"
 #include <QSizeGrip>
 #include <QHBoxLayout>
@@ -112,7 +112,7 @@ void SwiftGuiStd::init()
 
     // info
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
-    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledWithInfo());
+    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CBuildConfig::compiledWithInfo());
 
     // update timers
     this->startUpdateTimersWhenConnected();

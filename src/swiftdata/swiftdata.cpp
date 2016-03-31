@@ -19,7 +19,6 @@
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/project.h"
 #include <QMenu>
 #include <QMessageBox>
 #include <QCloseEvent>

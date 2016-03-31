@@ -16,6 +16,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/buildconfig.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -78,7 +79,7 @@ namespace BlackGui
             }
 
             // write to disk
-            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CProject::getSwiftStaticDbFilesDir());
+            bool s = sGui->getWebDataServices()->writeDbDataToDisk(CBuildConfig::getSwiftStaticDbFilesDir());
             if (s)
             {
                 CLogMessage(this).info("Written DB data");
@@ -93,12 +94,12 @@ namespace BlackGui
         bool CDataInfoAreaComponent::readDbDataFromResourceDir()
         {
             bool s = sGui &&
-                     sGui->getWebDataServices()->readDbDataFromDisk(CProject::getSwiftStaticDbFilesDir(), true);
+                     sGui->getWebDataServices()->readDbDataFromDisk(CBuildConfig::getSwiftStaticDbFilesDir(), true);
 
             // info
             if (s)
             {
-                CLogMessage(this).info("Read DB data from directory: %1") << CProject::getSwiftStaticDbFilesDir();
+                CLogMessage(this).info("Read DB data from directory: %1") << CBuildConfig::getSwiftStaticDbFilesDir();
                 this->ui->comp_DbAircraftIcao->showLoadIndicator();
                 this->ui->comp_DbAirlineIcao->showLoadIndicator();
                 this->ui->comp_DbCountries->showLoadIndicator();

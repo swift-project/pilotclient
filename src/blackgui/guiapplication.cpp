@@ -12,7 +12,7 @@
 #include "stylesheetutility.h"
 #include "registermetadata.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/metadatautils.h"
 #include "blackmisc/settingscache.h"
@@ -215,7 +215,7 @@ namespace BlackGui
 
     void CGuiApplication::cmdLineErrorMessage(const QString &errorMessage) const
     {
-        if (CProject::isRunningOnWindowsNtPlatform())
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
             const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
             QMessageBox::warning(nullptr,
@@ -439,7 +439,7 @@ namespace BlackGui
 
     void CGuiApplication::cmdLineHelpMessage()
     {
-        if (CProject::isRunningOnWindowsNtPlatform())
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
             QMessageBox::information(nullptr,
                                      QGuiApplication::applicationDisplayName(),
@@ -453,7 +453,7 @@ namespace BlackGui
 
     void CGuiApplication::cmdLineVersionMessage() const
     {
-        if (CProject::isRunningOnWindowsNtPlatform())
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
             QMessageBox::information(nullptr,
                                      QGuiApplication::applicationDisplayName(),

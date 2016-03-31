@@ -12,7 +12,6 @@
 #include "blackcore/cookiemanager.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/project.h"
 #include "blackmisc/verify.h"
 #include <QMainWindow>
 #include <QApplication>

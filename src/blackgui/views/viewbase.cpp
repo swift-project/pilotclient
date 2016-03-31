@@ -9,7 +9,7 @@
 
 #include "viewbase.h"
 #include "blackmisc/fileutils.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackgui/models/allmodels.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
@@ -374,7 +374,7 @@ namespace BlackGui
         QString CViewBaseNonTemplate::getDefaultFilename(bool load) const
         {
             // some logic to find a useful default name
-            QString dir = CProject::getDocumentationDirectory();
+            QString dir = CBuildConfig::getDocumentationDirectory();
 
             if (load)
             {

@@ -13,7 +13,6 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/project.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/filelogger.h"
 #include "blackgui/stylesheetutility.h"

@@ -14,7 +14,7 @@
 #include "blackcore/setupreader.h"
 #include "blackcore/contextapplication.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include <QModelIndex>
 
 using namespace BlackCore;
@@ -53,7 +53,7 @@ namespace BlackGui
 
             // add swift test servers in case we have no servers:
             // this is debug/bootstrap feature we can continue to test when something goes wrong
-            if (serverList.isEmpty() && (CProject::isBetaTest() || sGui->isRunningInDeveloperEnvironment()))
+            if (serverList.isEmpty() && (CBuildConfig::isBetaTest() || sGui->isRunningInDeveloperEnvironment()))
             {
                 serverList.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
                 this->ui->tvp_Servers->updateContainer(serverList);

@@ -33,7 +33,7 @@
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/time.h"
 #include <QObject>
@@ -165,7 +165,7 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Simulator avialable (driver available)?
-        bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
+        bool isSimulatorAvailable() const { return BlackMisc::CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
 
         //! Icon representing the model
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;

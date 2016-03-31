@@ -15,7 +15,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include <QPixmap>
@@ -196,7 +196,7 @@ void CSwiftLauncher::startSwiftCore()
 
     // I set this for debug purpose only
     this->m_executableArgs = args;
-    this->m_executable = CProject::swiftCoreExecutableName();
+    this->m_executable = CBuildConfig::swiftCoreExecutableName();
     CLogMessage(this).info(this->getCmdLine());
 
     // start
@@ -205,7 +205,7 @@ void CSwiftLauncher::startSwiftCore()
 
 void CSwiftLauncher::setSwiftDataExecutable()
 {
-    m_executable = CProject::swiftDataExecutableName();
+    m_executable = CBuildConfig::swiftDataExecutableName();
     m_executableArgs.clear();
 }
 
@@ -214,7 +214,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
     QString msg;
     if (this->isStandaloneGuiSelected() || this->canConnectDBusServer(msg))
     {
-        m_executable = CProject::swiftGuiExecutableName();
+        m_executable = CBuildConfig::swiftGuiExecutableName();
         QStringList args
         {
             "--core", CoreModes::coreModeToString(getCoreMode()),
@@ -233,7 +233,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
     }
     else
     {
-        m_executable = CProject::swiftGuiExecutableName();
+        m_executable = CBuildConfig::swiftGuiExecutableName();
         m_executableArgs.clear();
         static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
         CStatusMessage m(cats, CStatusMessage::SeverityError,
@@ -303,7 +303,7 @@ void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
     const CUpdateInfo updateInfo(this->m_updateInfo.get());
     const QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
     CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
-    bool newVersionAvailable = CProject::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
+    bool newVersionAvailable = CVersion::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
     this->ui->wi_NewVersionAvailable->setVisible(newVersionAvailable);
     this->ui->wi_NoNewVersion->setVisible(!newVersionAvailable);
     this->ui->le_LatestVersion->setText(latestVersion);

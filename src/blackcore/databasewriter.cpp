@@ -12,7 +12,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/project.h"
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QHttpPart>

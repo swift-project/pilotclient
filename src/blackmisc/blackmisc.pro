@@ -10,6 +10,10 @@ contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib
 }
 
+buildconfig.input = buildconfig.h.in
+buildconfig.output = buildconfig.h
+QMAKE_SUBSTITUTES += buildconfig
+
 INCLUDEPATH += ..
 # DEPENDPATH += . .. // BlackMisc should be independent
 # PRECOMPILED_HEADER = stdpch.h
@@ -65,7 +69,7 @@ win32 {
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
-OTHER_FILES += $$TRANSLATIONS readme.txt
+OTHER_FILES += $$TRANSLATIONS readme.txt buildconfig.h.in
 
 win32 {
     dlltarget.path = $$PREFIX/bin

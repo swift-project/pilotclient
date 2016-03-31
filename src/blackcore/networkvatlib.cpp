@@ -11,22 +11,15 @@
 
 #include "networkvatlib.h"
 #include "application.h"
-#include "blackmisc/project.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/buildconfig.h"
 #include <QJsonDocument>
 #include <vector>
 #include <type_traits>
 
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
 static_assert(VAT_LIBVATLIB_VERSION == 905, "Wrong vatlib header installed");
-
-#if !defined(BLACK_CLIENT_PUBLIC_ID)
-#error Missing definition of id
-#endif
-
-#if !defined(BLACK_CLIENT_PRIVATE_KEY)
-#error Missing definition of pk
-#endif
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -71,11 +64,10 @@ namespace BlackCore
             clientCapabilities |= vatCapsStealth;
         }
 
-        static const QString pkDef(BLACK_STRINGIFY(BLACK_CLIENT_PRIVATE_KEY));
-        static const QByteArray pk(this->getCmdLineFsdKey().isEmpty() ? pkDef.toLocal8Bit() : this->getCmdLineFsdKey().toLocal8Bit());
+        static const QByteArray pk(this->getCmdLineFsdKey().isEmpty() ? CBuildConfig::vatsimPrivateKey().toLocal8Bit() : this->getCmdLineFsdKey().toLocal8Bit());
         m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, sApp->swiftVersionChar(),
-                                             CProject::versionMajor(), CProject::versionMinor(),
-                                             "None", BLACK_CLIENT_PUBLIC_ID, pk.constData(),
+                                             CVersion::versionMajor(), CVersion::versionMinor(),
+                                             "None", CBuildConfig::vatsimClientId(), pk.constData(),
                                              clientCapabilities));
 
         Vat_SetStateChangeHandler(m_net.data(), onConnectionStatusChanged, this);
@@ -599,7 +591,7 @@ namespace BlackCore
         };
 
         // only in not officially shipped versions
-        return (CProject::isShippedVersion() && !CProject::isBetaTest()) ? e : opts;
+        return (CBuildConfig::isShippedVersion() && !CBuildConfig::isBetaTest()) ? e : opts;
     }
 
     QString CNetworkVatlib::getCmdLineFsdKey() const
