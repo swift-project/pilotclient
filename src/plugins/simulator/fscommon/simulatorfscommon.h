@@ -73,9 +73,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::enableDebugMessages
             virtual void enableDebugMessages(bool driver, bool interpolator) override;
 
-            //! \copydoc BlackCore::ISimulator::unload
-            virtual void unload() override;
-
         protected:
             //! Constructor
             CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -91,15 +88,14 @@ namespace BlackSimPlugin
             bool m_simPaused = false;                               //!< Simulator paused?
             bool m_simTimeSynced = false;                           //!< Time synchronized?
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;  //!< time offset
-            BlackMisc::Aviation::CAirportList m_airportsInRange;    //!< aiports in range of own aircraft
+            BlackMisc::Aviation::CAirportList    m_airportsInRange; //!< airports in range of own aircraft
 
             // cockpit as set in SIM
-            BlackMisc::Aviation::CComSystem  m_simCom1;             //!< cockpit COM1 state in simulator
-            BlackMisc::Aviation::CComSystem  m_simCom2;             //!< cockpit COM2 state in simulator
+            BlackMisc::Aviation::CComSystem   m_simCom1;            //!< cockpit COM1 state in simulator
+            BlackMisc::Aviation::CComSystem   m_simCom2;            //!< cockpit COM2 state in simulator
             BlackMisc::Aviation::CTransponder m_simTransponder;     //!< cockpit xpdr state in simulator
 
             // parser / matcher
-            std::unique_ptr<BlackMisc::Simulation::FsCommon::CAircraftCfgParser> m_aircraftCfgParser; //!< aircraft.cfg parser
             BlackMisc::Simulation::CAircraftMatcher m_modelMatcher; //!< Model matcher
 
             //! Set own model
@@ -107,13 +103,6 @@ namespace BlackSimPlugin
 
             //! Set own model
             void setOwnAircraftModel(const QString &modelName);
-
-        protected slots:
-            //! Mapper has been initialized
-            void ps_mapperInitialized();
-
-            //! aircraft.cfg files parsing is finished
-            void ps_aircraftCfgParsingFinished(bool success);
         };
 
     } // namespace

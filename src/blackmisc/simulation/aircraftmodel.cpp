@@ -44,7 +44,7 @@ namespace BlackMisc
         QString CAircraftModel::convertToQString(bool i18n) const
         {
             QString s = this->m_modelString;
-            if (!s.isEmpty()) { s += ' '; }
+            if (!s.isEmpty()) { s += " tpye: "; }
             s += this->getModelTypeAsString();
             s += ' ';
             s += this->m_aircraftIcao.toQString(i18n);
@@ -339,6 +339,7 @@ namespace BlackMisc
                 return;
             }
 
+            if (this->m_callsign.isEmpty())    { this->setCallsign(otherModel.getCallsign()); }
             if (this->m_modelString.isEmpty()) { this->setModelString(otherModel.getModelString()); }
             if (this->m_description.isEmpty()) { this->setDescription(otherModel.getDescription()); }
             if (this->m_fileName.isEmpty())    { this->setFileName(otherModel.getFileName()); }

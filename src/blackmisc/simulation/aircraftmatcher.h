@@ -16,7 +16,6 @@
 #include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/worker.h"
 #include <QObject>
 #include <QPointer>
 #include <QThread>
@@ -48,29 +47,14 @@ namespace BlackMisc
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             CAircraftMatcher(MatchingMode matchingMode = ModelMatching, QObject *parent = nullptr);
 
             //! Destructor
-            ~CAircraftMatcher();
-
-            //! Initialize
-            void init();
-
-            //! Init completed?
-            bool isInitialized() const;
-
-            //! Get all models
-            const CAircraftModelList &getInstalledModelsList() const { return m_installedModels; }
-
-            //! Set the list of installed models
-            void setInstalledModels(const CAircraftModelList &models) { m_installedModels = models; }
-
-            //! Number of models
-            int countInstalledModels() const { return m_installedModels.size(); }
-
-            //! Set the model mapping provider. The CAircraftMatcher will move the object and take over ownership
-            void setModelMappingProvider(std::unique_ptr<IModelMappingsProvider> mappings);
+            virtual ~CAircraftMatcher();
 
             //! Set the enabled matching modes
             void setMatchingModes(MatchingMode matchingModes);
@@ -78,34 +62,26 @@ namespace BlackMisc
             //! Get the closest matching aircraft model.
             //! Result depends on enabled modes.
             //! \sa MatchingModeFlag
-            CAircraftModel getClosestMatch(const CSimulatedAircraft &remoteAircraft);
+            //! \threadsafe
+            CAircraftModel getClosestMatch(const CSimulatedAircraft &remoteAircraft) const;
 
             //! Get all mappings
-            BlackMisc::Simulation::CAircraftModelList getMappingModels() const { return m_mappingsProvider->getMappingModels(); }
+            BlackMisc::Simulation::CAircraftModelList getMatchingModels() const { return m_mappingsProvider->getMatchingModels(); }
 
-            //! Number of mapping definitions
-            int countMappingRules() const { return m_modelsFromDatastoreInstalled.size(); }
+            //! Set the model mapping provider. The CAircraftMatcher will move the object and take over ownership
+            void setModelMappingProvider(std::unique_ptr<IModelMappingsProvider> mappings);
 
-            //! Synchronize models and mappings
-            //! \remarks after this step, we only have mappings for which we have models
-            int synchronize();
+            //! Log.details?
+            void setLogDetails(bool log);
 
-            //! Shutdown
-            void cancelInit();
+            //! Reload
+            void reload();
 
-            //! default model
-            const BlackMisc::Simulation::CAircraftModel &getDefaultModel();
+            //! Default model
+            const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const;
 
             //! Set default model
             void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
-
-        signals:
-            //! Full init completed
-            void initializationFinished();
-
-        private slots:
-            //! Set the datatstore models
-            void ps_setDatastoreModels(const CAircraftModelList &mappings);
 
         private:
             //! Init state
@@ -116,27 +92,26 @@ namespace BlackMisc
                 InitFinished
             };
 
-            void initImpl();
-            void initMappings();
+            //! Search in models by key (aka model string)
+            //! \threadsafe
+            CAircraftModel matchByExactModelString(const CSimulatedAircraft &remoteAircraft) const;
 
-            //! Search in installed models by key (aka model string)
-            CAircraftModel matchByExactModelName(const CSimulatedAircraft &remoteAircraft);
+            //! Installed models by ICAO data
+            //! \threadsafe
+            CAircraftModel matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, QString &log) const;
 
-            //! Installed models by database ICAO data (requires DB entries)
-            CAircraftModel matchInstalledModelsByIcaoData(const CSimulatedAircraft &remoteAircraft);
+            //! Find model by aircraft family
+            CAircraftModel matchByFamily(const CSimulatedAircraft &remoteAircraft, QString &log) const;
 
-            CAircraftModel matchByAlgorithm(const CSimulatedAircraft &remoteAircraft);
+            //! Log. details about mapping of particular aircraft
+            //! threadsafe
+            void logDetails(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const QString &message) const;
 
-            //! Synchronize with existing model names, remove unneeded models
-            int synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
-
+            MatchingMode                           m_matchingMode = ModelMatching;
+            BlackMisc::Simulation::CAircraftModel  m_defaultModel;                             //!< model to be used as default model
+            BlackMisc::LockFree<BlackMisc::Simulation::CAircraftModelList> m_models;           //!< models used for model matching
             std::unique_ptr<BlackMisc::Simulation::IModelMappingsProvider> m_mappingsProvider; //!< Provides all mapping definitions
-            std::atomic<InitState> m_initState { NotInitialized };
-            QPointer<BlackMisc::CWorker> m_initWorker;
-            MatchingMode m_matchingMode = ModelMatching;
-            CAircraftModelList m_installedModels;                 //!< my simulator`s installed models
-            CAircraftModelList m_modelsFromDatastoreInstalled;    //!< models from datastore I do actually have installed
-            BlackMisc::Simulation::CAircraftModel m_defaultModel; //!< model to be used as default model
+            std::atomic<bool>                      m_logDetails { false };                     //!< log details
         };
     }
 } // namespace

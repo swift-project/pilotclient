@@ -215,6 +215,44 @@ namespace BlackMisc
             return c;
         }
 
+        int CAircraftModelList::removeAllWithoutModelString()
+        {
+            if (this->isEmpty()) { return 0; }
+            int c = 0;
+            for (auto it = this->begin(); it != this->end();)
+            {
+                if (it->hasModelString())
+                {
+                    ++it;
+                }
+                else
+                {
+                    c++;
+                    it = this->erase(it);
+                }
+            }
+            return c;
+        }
+
+        int CAircraftModelList::removeIfExcluded()
+        {
+            if (this->isEmpty()) { return 0; }
+            int c = 0;
+            for (auto it = this->begin(); it != this->end();)
+            {
+                if (it->getModelMode() != CAircraftModel::Exclude)
+                {
+                    ++it;
+                }
+                else
+                {
+                    c++;
+                    it = this->erase(it);
+                }
+            }
+            return c;
+        }
+
         int CAircraftModelList::replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity)
         {
             if (addOrReplaceList.isEmpty()) { return 0; }

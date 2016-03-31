@@ -22,6 +22,11 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        const CLogCategoryList &CAircraftMatcher::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::matching() };
+            return cats;
+        }
 
         CAircraftMatcher::CAircraftMatcher(MatchingMode matchingMode, QObject *parent) :
             QObject(parent),
@@ -29,99 +34,73 @@ namespace BlackMisc
         { }
 
         CAircraftMatcher::~CAircraftMatcher()
-        {
-            cancelInit();
-            if (this->m_initWorker) { this->m_initWorker->waitForFinished(); }
-        }
-
-        void CAircraftMatcher::init()
-        {
-            if (m_initState != NotInitialized) { return; }
-            m_initWorker = BlackMisc::CWorker::fromTask(this, "CAircraftMatcher::initImpl", [this]()
-            {
-                this->initImpl();
-            });
-        }
-
-        bool CAircraftMatcher::isInitialized() const
-        {
-            return m_initState == InitFinished;
-        }
+        { }
 
         void CAircraftMatcher::setModelMappingProvider(std::unique_ptr<IModelMappingsProvider> mappings)
         {
-            m_mappingsProvider = std::move(mappings);
-            if (m_matchingMode.testFlag(ModelMapping)) { initMappings(); }
+            this->m_mappingsProvider = std::move(mappings);
+            CAircraftModelList models = this->m_mappingsProvider->getMatchingModels();
+            int d = models.removeIfExcluded();
+            this->m_models.uniqueWrite() = models; // local copy
+            CLogMessage(this).info("Added %1 models for model matching, %2 removed") << models.size() << d;
         }
 
-        void CAircraftMatcher::setMatchingModes(MatchingMode matchingModes)
+        void CAircraftMatcher::setLogDetails(bool log)
         {
-            m_matchingMode = matchingModes;
-            if (m_matchingMode.testFlag(ModelMapping) && m_modelsFromDatastoreInstalled.isEmpty())
-            {
-                initMappings();
-            }
+            this->m_logDetails = log;
         }
 
-        CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft)
+        void CAircraftMatcher::reload()
+        {
+
+        }
+
+        CAircraftModel CAircraftMatcher::getClosestMatch(const CSimulatedAircraft &remoteAircraft) const
         {
             CAircraftModel aircraftModel(remoteAircraft.getModel()); // set defaults
 
             // Manually set string?
             if (remoteAircraft.getModel().hasManuallySetString())
             {
-                // manual set model, maybe update missing parts
-                aircraftModel.updateMissingParts(remoteAircraft.getModel());
-                aircraftModel.setCallsign(remoteAircraft.getCallsign());
-                return aircraftModel;
+                // the user did a manual mapping "by hand", so he really should know what he is doing
+                // no matching
+                this->logDetails(remoteAircraft, "Manually set model " + remoteAircraft.getModelString());
+                return remoteAircraft.getModel();
             }
 
-            // mapper ready?
-            if (!isInitialized())
-            {
-                // will be removed later, just for experimental version
-                aircraftModel = getDefaultModel();
-                aircraftModel.setCallsign(remoteAircraft.getCallsign());
-                CLogMessage(static_cast<CAircraftMatcher *>(nullptr)).warning("Matcher not initialized, set to default model");
-                return aircraftModel;
-            }
-
+            QString log;
             do
             {
-                //! \todo this code here is partially nuts and needs to be adjusted
-                //!       as soon as we have real DB data
-                //! things to change:
-                //! 1) instead of keeping two lists (DB data + own models) just
-                //!    update / enhance the list of installed models with the DB metadata
-                //!    then there is only one search required
-                //! 2) Keep a cache of installed models enriched by the DB metadata (that will eliminate all
-                //!    sync processes and can be done offline
-                //! 3) drivers which can assign reliable ICAO codes should do this as much as possible
-                //!    the sync process with DB will improve those information (by livery details, but in case
-                //!    of now metadata from DB we have the best matching data we can get
-                //!    Also such data can be used in the mapping tool as default values (Less values to type in)
-
                 // try to find in installed models by model string
-                aircraftModel = matchByExactModelName(remoteAircraft);
-                if (aircraftModel.hasModelString()) { break; }
+                aircraftModel = matchByExactModelString(remoteAircraft);
+                if (aircraftModel.hasModelString())
+                {
+                    if (this->m_logDetails) { log = "Matched by exact model string " + aircraftModel.getModelString(); }
+                    break;
+                }
 
                 // ------------ start parts depending on swift DB data -------------------
 
                 // by DB ICAO data
-                aircraftModel = matchInstalledModelsByIcaoData(remoteAircraft);
-                if (aircraftModel.hasModelString()) { break; }
+                aircraftModel = matchModelsByIcaoData(remoteAircraft, log);
+                if (aircraftModel.hasModelString())
+                {
+                    break;
+                }
 
                 // ------------ end parts depending on swift DB data -------------------
 
-                aircraftModel = matchByAlgorithm(remoteAircraft);
+                aircraftModel = matchByFamily(remoteAircraft, log);
                 if (aircraftModel.hasModelString()) { break; }
 
                 aircraftModel = getDefaultModel();
             }
             while (false);
 
-            // copy over callsign
+            // copy over callsign and other data
             aircraftModel.setCallsign(remoteAircraft.getCallsign());
+
+            this->logDetails(aircraftModel, log);
 
             Q_ASSERT_X(!aircraftModel.getCallsign().isEmpty(), Q_FUNC_INFO, "Missing callsign");
             Q_ASSERT_X(aircraftModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
@@ -130,18 +109,7 @@ namespace BlackMisc
             return aircraftModel;
         }
 
-        int CAircraftMatcher::synchronize()
-        {
-            return synchronizeWithExistingModels(m_installedModels.getModelStrings());
-        }
-
-        void CAircraftMatcher::cancelInit()
-        {
-            // when running, force re-init
-            this->m_initState = NotInitialized;
-        }
-
-        const CAircraftModel &CAircraftMatcher::getDefaultModel()
+        const CAircraftModel &CAircraftMatcher::getDefaultModel() const
         {
             return m_defaultModel;
         }

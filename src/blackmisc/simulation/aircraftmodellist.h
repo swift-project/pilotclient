@@ -102,7 +102,16 @@ namespace BlackMisc
             int removeModelsWithString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity);
 
             //! Remove if not matching simulator
+            //! \return number of elements removed
             int removeIfNotMatchingSimulator(const CSimulatorInfo &needToMatch);
+
+            //! Remove if having no model string
+            //! \return number of elements removed
+            int removeAllWithoutModelString();
+
+            //! Remove if excluded CAircraftModel::Exclude
+            //! \return number of elements removed
+            int removeIfExcluded();
 
             //! Replace or add based on model string
             //! \return number of elements removed

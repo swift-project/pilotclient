@@ -9,7 +9,7 @@
 
 #include "simulatorfscommon.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/fscommon/modelmappingsprovidervpilot.h"
+#include "blackmisc/simulation/modelmappingsprovider.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
@@ -33,40 +33,16 @@ namespace BlackSimPlugin
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, weatherGridProvider, parent),
             m_fsuipc(new CFsuipc()),
-            m_aircraftCfgParser(CAircraftCfgParser::createModelLoader(CSimulatorInfo(info.getIdentifier()))),
             m_modelMatcher(CAircraftMatcher::AllModes, this)
         {
-            // hack to init mapper
-            connect(&m_modelMatcher, &CAircraftMatcher::initializationFinished, this, &CSimulatorFsCommon::ps_mapperInitialized);
-            auto modelMappingsProvider = std::unique_ptr<IModelMappingsProvider> { std::make_unique<CModelMappingsProviderVPilot>(true) };
-            m_modelMatcher.setModelMappingProvider(std::move(modelMappingsProvider));
-
-            bool c = connect(m_aircraftCfgParser.get(), &CAircraftCfgParser::loadingFinished, this, &CSimulatorFsCommon::ps_aircraftCfgParsingFinished);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect signal");
-            Q_UNUSED(c);
-
-            //! \todo remove from plugin if data there are cached as well
-            /**
-            CVariant aircraftCfg = getPluginData(this, "aircraft_cfg");
-            if (aircraftCfg.isValid())
-            {
-                // will behave like parsing was finished
-                m_aircraftCfgParser->updateCfgEntriesList(aircraftCfg.value<CAircraftCfgEntriesList>());
-            }
-            else
-            {
-                m_aircraftCfgParser->startLoading(CAircraftCfgParser::LoadInBackground);
-            }
-            **/
-            m_aircraftCfgParser->startLoading(CAircraftCfgParser::InBackgroundWithCache);
+            // init mapper
+            CSimulatorInfo sim(info.getIdentifier());
+            this->m_modelMatcher.setModelMappingProvider(
+                std::make_unique<CachedModelSetProvider>(sim, this)
+            );
         }
 
         CSimulatorFsCommon::~CSimulatorFsCommon() { }
-
-        void CSimulatorFsCommon::ps_mapperInitialized()
-        {
-            emit this->installedAircraftModelsChanged();
-        }
 
         bool CSimulatorFsCommon::disconnectFrom()
         {
@@ -125,18 +101,19 @@ namespace BlackSimPlugin
 
         CAircraftModelList CSimulatorFsCommon::getInstalledModels() const
         {
-            return m_modelMatcher.getInstalledModelsList();
+            return m_modelMatcher.getMatchingModels();
         }
 
         void CSimulatorFsCommon::reloadInstalledModels()
         {
-            m_aircraftCfgParser->startLoading();
+            this->m_modelMatcher.reload();
         }
 
         CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
         {
             CStatusMessage msg;
-            CPixmap pm(m_aircraftCfgParser->iconForModel(modelString, msg));
+            // CPixmap pm(m_aircraftCfgParser->iconForModel(modelString, msg));
+            CPixmap pm;
             if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
             return pm;
         }
@@ -172,23 +149,5 @@ namespace BlackSimPlugin
             }
             CSimulatorCommon::enableDebugMessages(driver, interpolator);
         }
-
-        void CSimulatorFsCommon::unload()
-        {
-            this->m_aircraftCfgParser->cancelLoading();
-            this->m_modelMatcher.cancelInit();
-            CSimulatorCommon::unload();
-        }
-
-        void CSimulatorFsCommon::ps_aircraftCfgParsingFinished(bool success)
-        {
-            if (!success) { return; }
-            setPluginData(this, "aircraft_cfg", CVariant::from(m_aircraftCfgParser->getAircraftCfgEntriesList()));
-            m_modelMatcher.setInstalledModels(m_aircraftCfgParser->getAircraftCfgEntriesList().toAircraftModelList());
-
-            // Now the matcher has all required information to be initialized
-            m_modelMatcher.init();
-        }
-
     } // namespace
 } // namespace

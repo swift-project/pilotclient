@@ -191,9 +191,6 @@ namespace BlackSimPlugin
                 CAircraftModel aircraftModel(*modelStringsIt, CAircraftModel::TypeDatabaseEntry, QString(), aircraftIcao, livery);
                 m_installedModels.push_back(aircraftModel);
             }
-
-            m_modelMatcher.setInstalledModels(m_installedModels);
-            m_modelMatcher.init();
         }
 
         bool CSimulatorXPlane::isConnected() const
