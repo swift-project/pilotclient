@@ -26,7 +26,7 @@ namespace BlackCore
     {
     public:
         //! Destructor
-        ~CContext() {}
+        virtual ~CContext() {}
 
         //! Log categories
         static const BlackMisc::CLogCategoryList &getLogCategories();

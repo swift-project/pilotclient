@@ -14,7 +14,6 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/threadedreader.h"
-#include "blackmisc/lockfree.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include <QObject>

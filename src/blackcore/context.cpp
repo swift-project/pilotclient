@@ -14,7 +14,6 @@ using namespace BlackMisc;
 
 namespace BlackCore
 {
-
     const CLogCategoryList &CContext::getLogCategories()
     {
         static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::context() };
