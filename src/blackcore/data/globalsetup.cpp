@@ -114,7 +114,7 @@ namespace BlackCore
         CUrlList CGlobalSetup::getUpdateInfoFileUrls() const
         {
             const CUrlList urls(m_sharedUrls);
-            return urls.appendPath(CGlobalSetup::versionString() + "/development/updateinfo/updateinfo.json");
+            return urls.appendPath(CGlobalSetup::versionString() + "/updateinfo/updateinfo.json");
         }
 
         CUrlList CGlobalSetup::getSwiftDbDataFileLocationUrls() const

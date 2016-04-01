@@ -86,6 +86,9 @@ namespace BlackCore
             //! \todo do we want to keep this or use a cmd line flag to enable the behaviour. Risk here to use an undesired setup
             if (this->m_bootstrapUrls.isEmpty())
             {
+                // use file from disk delivered with swift
+                // there is a potential risk here, if the URL passed via cmd args is actually adressing an entirely diffent scenario,
+                // this would load a file for something else
                 CGlobalSetup resourceSetup(CGlobalSetup::fromJsonFile(
                                                CBuildConfig::getBootstrapResourceFile()
                                            ));
@@ -260,8 +263,7 @@ namespace BlackCore
             }
             else
             {
-                const CGlobalSetup currentSetup = m_setup.get();
-                this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls();
+                const CGlobalSetup currentSetup = m_setup.getCopy();
                 CGlobalSetup loadedSetup;
                 loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
                 loadedSetup.markAsLoaded(true);
@@ -269,37 +271,29 @@ namespace BlackCore
                 bool sameVersionLoaded = (loadedSetup == currentSetup);
                 if (sameVersionLoaded)
                 {
+                    this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls(); // defaults
                     CLogMessage(this).info("Same setup version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
                     emit setupSynchronized(true);
                     return; // success
                 }
 
-                qint64 currentVersionTimestamp = currentSetup.getMSecsSinceEpoch();
-                qint64 newVersionTimestamp = loadedSetup.getMSecsSinceEpoch();
-                bool outdatedVersionLoaded = (newVersionTimestamp  < currentVersionTimestamp);
-                if (this->m_bootstrapMode != Explicit && outdatedVersionLoaded)
+                // in the past I used to do a timestamp comparison here and skipped further laoding
+                // with changed files from a different URL this was wrongly assuming outdated loaded files and was removed
+                CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
+                if (m.isWarningOrAbove())
                 {
-                    CLogMessage(this).info("Setup loaded from %1 outdated, older than version in data cache %2") << urlString << m_setup.getFilename();
-                    // try next URL
+                    m.setCategories(getLogCategories());
+                    CLogMessage::preformatted(m);
+                    emit setupSynchronized(false);
+                    return; // issue with cache
                 }
                 else
                 {
-                    CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
-                    if (m.isWarningOrAbove())
-                    {
-                        m.setCategories(getLogCategories());
-                        CLogMessage::preformatted(m);
-                        emit setupSynchronized(false);
-                        return; // issue with cache
-                    }
-                    else
-                    {
-                        this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
-                        CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
-                        emit setupSynchronized(true);
-                        return; // success
-                    } // cache
-                } // outdated?
+                    this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
+                    CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
+                    emit setupSynchronized(true);
+                    return; // success
+                } // cache
 
             } // json empty
         } // no error
@@ -356,32 +350,20 @@ namespace BlackCore
                     return; // success
                 }
 
-                qint64 currentVersionTimestamp = currentUpdateInfo.getMSecsSinceEpoch();
-                qint64 newVersionTimestamp = loadedUpdateInfo.getMSecsSinceEpoch();
-                bool outdatedVersionLoaded = (newVersionTimestamp  < currentVersionTimestamp);
-                if (outdatedVersionLoaded)
+                CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
+                if (!m.isEmpty())
                 {
-                    CLogMessage(this).info("Update info loaded from %1 outdated, older than version in data cache %2") << urlString << m_updateInfo.getFilename();
-                    // try next URL
+                    m.setCategories(getLogCategories());
+                    CLogMessage::preformatted(m);
+                    emit updateInfoSynchronized(false);
+                    return; // issue with cache
                 }
                 else
                 {
-                    CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
-                    if (!m.isEmpty())
-                    {
-                        m.setCategories(getLogCategories());
-                        CLogMessage::preformatted(m);
-                        emit updateInfoSynchronized(false);
-                        return; // issue with cache
-                    }
-                    else
-                    {
-                        CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
-                        emit updateInfoSynchronized(true);
-                        return; // success
-                    } // cache
-                } // outdated
-
+                    CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
+                    emit updateInfoSynchronized(true);
+                    return; // success
+                } // cache
             } // json empty
         } // no error
         else
@@ -394,7 +376,7 @@ namespace BlackCore
         // try next one if any
         if (this->m_updateInfoUrls.addFailedUrl(url))
         {
-            QTimer::singleShot(500, this, &CSetupReader::ps_readSetup);
+            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
         }
         else
         {
