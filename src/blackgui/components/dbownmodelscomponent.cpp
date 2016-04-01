@@ -12,6 +12,7 @@
 #include "blackgui/menus/aircraftmodelmenus.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 #include "ui_dbownmodelscomponent.h"
 
 using namespace BlackMisc;
@@ -37,12 +38,16 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
 
             this->m_lastInteractions.synchronize();
-            const CSimulatorInfo sim = this->m_lastInteractions.get().getLastSimulatorSelection();
+            const CSimulatorInfo sim = this->m_lastInteractions.getCopy().getLastSimulatorSelection();
             if (sim.isSingleSimulator())
             {
                 // if we have already use this before, use it again, but only from cache
                 this->initModelLoader(sim);
                 this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
+            }
+            else
+            {
+                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing sim");
             }
 
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnAircraftModels, this->modelLoader(), false));
