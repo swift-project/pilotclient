@@ -39,11 +39,17 @@ namespace BlackMisc
                     IndexEntryIndex = BlackMisc::CPropertyIndex::GlobalIndexCAircraftCfgEntries,
                     IndexFileName,
                     IndexTitle,
+                    IndexAirline,
                     IndexAtcType,
                     IndexAtcModel,
                     IndexParkingCode,
                     IndexDescription,
-                    IndexTexture
+                    IndexUiType,
+                    IndexUiManufacturer,
+                    IndexTexture,
+                    IndexSimulatorName,
+                    IndexCreatedBy,
+                    IndexRotorcraft
                 };
 
                 //! Default constructor

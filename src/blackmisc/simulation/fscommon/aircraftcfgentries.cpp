@@ -157,24 +157,21 @@ namespace BlackMisc
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexFileName:
-                    return CVariant::from(this->m_fileName);
-                case IndexTitle:
-                    return CVariant::from(this->m_title);
-                case IndexAtcType:
-                    return CVariant::from(this->m_atcType);
-                case IndexAtcModel:
-                    return CVariant::from(this->m_atcModel);
-                case IndexParkingCode:
-                    return CVariant::from(this->m_atcParkingCode);
-                case IndexEntryIndex:
-                    return CVariant::from(this->m_index);
-                case IndexTexture:
-                    return CVariant::from(this->m_texture);
-                case IndexDescription:
-                    return CVariant::from(this->m_description);
-                default:
-                    return CValueObject::propertyByIndex(index);
+                case IndexEntryIndex: return CVariant::from(this->m_index);
+                case IndexFileName: return CVariant::from(this->m_fileName);
+                case IndexTitle: return CVariant::from(this->m_title);
+                case IndexAirline: return CVariant::from(this->m_atcAirline);
+                case IndexAtcType: return CVariant::from(this->m_atcType);
+                case IndexAtcModel: return CVariant::from(this->m_atcModel);
+                case IndexParkingCode: return CVariant::from(this->m_atcParkingCode);
+                case IndexDescription: return CVariant::from(this->m_description);
+                case IndexUiType: return CVariant::from(this->m_uiType);
+                case IndexUiManufacturer: return CVariant::from(this->m_uiManufacturer);
+                case IndexTexture: return CVariant::from(this->m_texture);
+                case IndexSimulatorName: return CVariant::from(this->m_simName);
+                case IndexCreatedBy: return CVariant::from(this->m_createdBy);
+                case IndexRotorcraft: return CVariant::from(this->m_rotorcraft);
+                default: return CValueObject::propertyByIndex(index);
                 }
             }
 
@@ -185,30 +182,20 @@ namespace BlackMisc
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
-                case IndexAtcModel:
-                    this->setAtcModel(variant.toQString());
-                    break;
-                case IndexAtcType:
-                    this->setAtcType(variant.toQString());
-                    break;
-                case IndexEntryIndex:
-                    this->setIndex(variant.toInt());
-                    break;
-                case IndexFileName:
-                    this->setFileName(variant.toQString());
-                    break;
-                case IndexParkingCode:
-                    this->setAtcParkingCode(variant.toQString());
-                    break;
-                case IndexTitle:
-                    this->setTitle(variant.toQString());
-                    break;
-                case IndexDescription:
-                    this->setDescription(variant.toQString());
-                    break;
-                case IndexTexture:
-                    this->setTexture(variant.toQString());
-                    break;
+                case IndexEntryIndex: this->setIndex(variant.toInt()); break;
+                case IndexFileName: this->setFileName(variant.toQString()); break;
+                case IndexTitle: this->setTitle(variant.toQString()); break;
+                case IndexAirline: this->setTitle(this->m_atcAirline); break;
+                case IndexAtcType: this->setAtcType(variant.toQString()); break;
+                case IndexAtcModel: this->setAtcModel(variant.toQString()); break;
+                case IndexParkingCode: this->setAtcParkingCode(variant.toQString()); break;
+                case IndexDescription: this->setDescription(variant.toQString()); break;
+                case IndexUiType: this->setUiType(variant.toQString()); break;
+                case IndexUiManufacturer: this->setUiManufacturer(variant.toQString()); break;
+                case IndexTexture: this->setTexture(variant.toQString()); break;
+                case IndexSimulatorName: this->setSimName(variant.toQString()); break;
+                case IndexCreatedBy: this->setCreatedBy(variant.toQString()); break;
+                case IndexRotorcraft: this->setRotorcraft(variant.toBool()); break;
                 default:
                     CValueObject::setPropertyByIndex(variant, index);
                     break;
