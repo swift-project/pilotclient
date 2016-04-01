@@ -26,6 +26,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackCore;
+using namespace BlackCore::Data;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 
@@ -80,6 +81,16 @@ void CSwiftData::init()
     this->initStyleSheet();
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);
     this->initMenu();
+
+    // update title
+    const CGlobalSetup s(sApp->getGlobalSetup());
+    if (!s.getDbHomePageUrl().isEmpty())
+    {
+        QString t(this->windowTitle());
+        t += " ";
+        t += s.getDbHomePageUrl().toQString(true);
+        this->setWindowTitle(t);
+    }
 }
 
 void CSwiftData::initLogDisplay()
