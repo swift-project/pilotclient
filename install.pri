@@ -1,4 +1,4 @@
-CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d
+win32: CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d
 
 ############### Readme, License etc. #####
 
@@ -11,37 +11,43 @@ INSTALLS += text_files_target
 ############### Install Qt5 ##############
 
 win32 {
+    QT5_LIBRARIES *= Qt5Core$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Gui$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Network$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5DBus$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Xml$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Multimedia$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Svg$${DLL_DEBUG_SUFFIX}.dll
+    QT5_LIBRARIES *= Qt5Widgets$${DLL_DEBUG_SUFFIX}.dll
+
     qt5_target.path = $${PREFIX}/bin
-} else {
-    qt5_target.path = $${PREFIX}/lib
+    QT5_LIBRARY_DIR = $$[QT_INSTALL_BINS]
 }
 
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Core$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Gui$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Network$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5DBus$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Xml$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Multimedia$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Svg$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/Qt5Widgets$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/icudt54.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/icuin54.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/icuuc54.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/libeay32.$${QMAKE_EXTENSION_SHLIB}
-qt5_target.files *= $$[QT_INSTALL_BINS]/ssleay32.$${QMAKE_EXTENSION_SHLIB}
+unix:!macx {
+    qt5_target.path = $${PREFIX}/lib
+    QT5_LIBRARY_DIR = $$[QT_INSTALL_LIBS]
+}
 
+for (LIBRARY, QT5_LIBRARIES) {
+    LIBRARY_PATH = $${QT5_LIBRARY_DIR}/$${LIBRARY}
+    !exists($$LIBRARY_PATH): error("Cannot find $${LIBRARY_PATH}")
+    qt5_target.files *= $${LIBRARY_PATH}
+}
 INSTALLS += qt5_target
 
 ############### Install Qt5 platform plugins ##############
 
 win32 {
-    QT5_PLATFORM_PLUGINS *= qwindows
+    QT5_PLATFORM_PLUGINS *= qwindows$${DLL_DEBUG_SUFFIX}.dll
 }
 
 qt5_plugin_target.path = $${PREFIX}/bin/platforms
 
-for (LIBRARY, QT5_PLATFORM_PLUGINS) {
-    qt5_plugin_target.files *= $$[QT_INSTALL_PLUGINS]/platforms/$${LIBRARY}$${DLL_DEBUG_SUFFIX}.$${QMAKE_EXTENSION_SHLIB}
+for (PLUGIN, QT5_PLATFORM_PLUGINS) {
+    PLUGIN_PATH = $$[QT_INSTALL_PLUGINS]/platforms/$${PLUGIN}
+    !exists($$PLUGIN_PATH): error("Cannot find $${PLUGIN_PATH}")
+    qt5_plugin_target.files *= $${PLUGIN_PATH}
 }
 
 INSTALLS += qt5_plugin_target
