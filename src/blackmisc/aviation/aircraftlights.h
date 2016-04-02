@@ -100,7 +100,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftLights)
             bool m_strobeOn = false;
             bool m_landingOn = false;
             bool m_taxiOn = false;
@@ -108,18 +107,18 @@ namespace BlackMisc
             bool m_navOn = false;
             bool m_logoOn = false;
 
+            BLACK_METACLASS(CAircraftLights,
+                BLACK_METAMEMBER_NAMED(strobeOn, "strobe_on"),
+                BLACK_METAMEMBER_NAMED(landingOn, "landing_on"),
+                BLACK_METAMEMBER_NAMED(taxiOn, "taxi_on"),
+                BLACK_METAMEMBER_NAMED(beaconOn, "beacon_on"),
+                BLACK_METAMEMBER_NAMED(navOn, "nav_on"),
+                BLACK_METAMEMBER_NAMED(logoOn, "logo_on")
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftLights)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftLights, (
-                                   attr(o.m_strobeOn, "strobe_on"),
-                                   attr(o.m_landingOn, "landing_on"),
-                                   attr(o.m_taxiOn, "taxi_on"),
-                                   attr(o.m_beaconOn, "beacon_on"),
-                                   attr(o.m_navOn, "nav_on"),
-                                   attr(o.m_logoOn, "logo_on")
-                               ))
 
 #endif // guard

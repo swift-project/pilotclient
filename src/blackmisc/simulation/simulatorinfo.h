@@ -138,8 +138,11 @@ namespace BlackMisc
             static const CSimulatorInfo getLocallyInstalledSimulators();
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorInfo)
             int m_simulator = static_cast<int>(None);
+
+            BLACK_METACLASS(CSimulatorInfo,
+                BLACK_METAMEMBER(simulator)
+            );
         };
 
         //! Count per simulator, small utility class allows to retrieve values as per simulator
@@ -181,7 +184,6 @@ namespace BlackMisc
     } // ns
 } // ns
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorInfo, (attr(o.m_simulator)))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInfo::SimulatorFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CSimulatorInfo::Simulator)

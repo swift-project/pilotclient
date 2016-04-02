@@ -104,16 +104,21 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CVoiceRoom)
             QString m_hostname;
             QString m_channel;
             bool m_connected;
             bool m_audioPlaying;
+
+            BLACK_METACLASS(CVoiceRoom,
+                BLACK_METAMEMBER(hostname),
+                BLACK_METAMEMBER(channel),
+                BLACK_METAMEMBER(connected),
+                BLACK_METAMEMBER(audioPlaying)
+            );
         };
     } // Voice
 } // BlackMisc
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Audio::CVoiceRoom, (o.m_hostname, o.m_channel, o.m_connected, o.m_audioPlaying))
 Q_DECLARE_METATYPE(BlackMisc::Audio::CVoiceRoom)
 
 #endif // guard

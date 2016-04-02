@@ -80,21 +80,21 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CTemperatureLayer)
             BlackMisc::Aviation::CAltitude m_level;
             PhysicalQuantities::CTemperature m_temperature;
             PhysicalQuantities::CTemperature m_dewPoint;
             double m_relativeHumidity = 0;
+
+            BLACK_METACLASS(CTemperatureLayer,
+                BLACK_METAMEMBER(level),
+                BLACK_METAMEMBER(temperature),
+                BLACK_METAMEMBER(dewPoint),
+                BLACK_METAMEMBER(relativeHumidity)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CTemperatureLayer)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CTemperatureLayer, (
-                                   attr(o.m_level),
-                                   attr(o.m_temperature),
-                                   attr(o.m_dewPoint),
-                                   attr(o.m_relativeHumidity)
-))
 
 #endif // guard

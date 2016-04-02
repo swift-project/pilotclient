@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/angle.h"
+#include "blackmisc/metaclass.h"
 
 namespace BlackMisc
 {
@@ -27,11 +28,11 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CHeading :
             public PhysicalQuantities::CAngle,
             public Mixin::MetaType<CHeading>,
-            public Mixin::EqualsByTuple<CHeading>,
-            public Mixin::CompareByTuple<CHeading>,
-            public Mixin::HashByTuple<CHeading>,
-            public Mixin::DBusByTuple<CHeading>,
-            public Mixin::JsonByTuple<CHeading>,
+            public Mixin::EqualsByMetaClass<CHeading>,
+            public Mixin::CompareByMetaClass<CHeading>,
+            public Mixin::HashByMetaClass<CHeading>,
+            public Mixin::DBusByMetaClass<CHeading>,
+            public Mixin::JsonByMetaClass<CHeading>,
             public Mixin::String<CHeading>,
             public Mixin::Index<CHeading>
         {
@@ -74,13 +75,15 @@ namespace BlackMisc
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CHeading)
             ReferenceNorth m_north; //!< magnetic or true?
+
+            BLACK_METACLASS(CHeading,
+                BLACK_METAMEMBER(north)
+            );
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CHeading, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)
 
 #endif // guard

@@ -131,7 +131,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CCloudLayer)
             BlackMisc::Aviation::CAltitude m_base;
             BlackMisc::Aviation::CAltitude m_top;
             int m_precipitationRate = 0;
@@ -139,20 +138,21 @@ namespace BlackMisc
             Clouds m_clouds = NoClouds;
             Coverage m_coverage;
             int m_coveragePercent;
+
+            BLACK_METACLASS(CCloudLayer,
+                BLACK_METAMEMBER(base),
+                BLACK_METAMEMBER(top),
+                BLACK_METAMEMBER(precipitationRate),
+                BLACK_METAMEMBER(precipitation),
+                BLACK_METAMEMBER(clouds),
+                BLACK_METAMEMBER(coverage),
+                BLACK_METAMEMBER(coveragePercent)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer)
 Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer::Coverage)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CCloudLayer, (
-                                   attr(o.m_base),
-                                   attr(o.m_top),
-                                   attr(o.m_precipitationRate),
-                                   attr(o.m_precipitation),
-                                   attr(o.m_clouds),
-                                   attr(o.m_coverage),
-                                   attr(o.m_coveragePercent)
-))
 
 #endif // guard

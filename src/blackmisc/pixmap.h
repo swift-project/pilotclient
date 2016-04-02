@@ -52,8 +52,6 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(BlackMisc::CPixmap)
-
         //! Init the byte array with data
         void fillByteArray();
 
@@ -61,12 +59,13 @@ namespace BlackMisc
         mutable QPixmap m_pixmap;               //!< cached pixmap, mutable because of lazy initialization
         mutable bool m_hasCachedPixmap = false; //!< pixmap? Mutable because of lazy initialization
         mutable QReadWriteLock m_lock;          //!< lock (because of mutable members)
+
+        BLACK_METACLASS(CPixmap,
+            BLACK_METAMEMBER(array)
+        );
     };
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CPixmap, (
-                                   attr(o.m_array)
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::CPixmap)
 
 #endif // guard

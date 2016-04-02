@@ -115,21 +115,20 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAirport)
             CAirportIcaoCode                    m_icao;
             QString                             m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
+
+            BLACK_METACLASS(CAirport,
+                BLACK_METAMEMBER(icao),
+                BLACK_METAMEMBER(descriptiveName),
+                BLACK_METAMEMBER(position),
+                BLACK_METAMEMBER(distanceToOwnAircraft),
+                BLACK_METAMEMBER(bearingToOwnAircraft)
+            );
         };
     } // namespace
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirport, (
-                                   o.m_icao,
-                                   o.m_descriptiveName,
-                                   o.m_position,
-                                   o.m_distanceToOwnAircraft,
-                                   o.m_bearingToOwnAircraft
-                                   ))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirport)
 

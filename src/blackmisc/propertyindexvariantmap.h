@@ -191,10 +191,10 @@ namespace BlackMisc
         bool m_wildcard; //!< wildcard
 
     public:
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;
 
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
 
     };

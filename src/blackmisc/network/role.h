@@ -67,15 +67,19 @@ namespace BlackMisc
             static CRole fromDatabaseJson(const QJsonObject &json);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CRole)
             QString m_name;
             QString m_description;
+
+            BLACK_METACLASS(CRole,
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(name),
+                BLACK_METAMEMBER(description)
+            );
         };
 
     } // ns
 } // ns
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CRole, (o.m_dbKey, o.m_name, o.m_description))
 Q_DECLARE_METATYPE(BlackMisc::Network::CRole)
 
 #endif // guard

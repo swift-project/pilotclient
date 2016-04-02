@@ -141,8 +141,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CUser)
-
             //! derive homebase from callsign
             void deriveHomeBaseFromCallsign();
 
@@ -152,11 +150,19 @@ namespace BlackMisc
             QString m_password;
             BlackMisc::Aviation::CCallsign m_callsign;
             BlackMisc::Aviation::CAirportIcaoCode m_homebase;
+
+            BLACK_METACLASS(CUser,
+                BLACK_METAMEMBER(id),
+                BLACK_METAMEMBER(realname),
+                BLACK_METAMEMBER(email),
+                BLACK_METAMEMBER(password),
+                BLACK_METAMEMBER(callsign),
+                BLACK_METAMEMBER(homebase)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CUser, (o.m_id, o.m_realname, o.m_email, o.m_password, o.m_callsign, o.m_homebase))
 Q_DECLARE_METATYPE(BlackMisc::Network::CUser)
 
 #endif // guard

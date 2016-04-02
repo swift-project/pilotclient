@@ -180,22 +180,22 @@ namespace BlackMisc
             //! Make value always negative
             void makeNegative();
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const;
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument);
 
-            //! \copydoc BlackMisc::Mixin::HashByTuple::qHash
+            //! \copydoc BlackMisc::Mixin::HashByMetaClass::qHash
             uint getValueHash() const;
 
             //! \copydoc CValueObject::qHash
             friend uint qHash(const PQ &pq) { return pq.getValueHash(); }
 
-            //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
+            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
             QJsonObject toJson() const;
 
-            //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
+            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
             void convertFromJson(const QJsonObject &json);
 
             //! Parse to string, with specified separator

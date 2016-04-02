@@ -92,23 +92,22 @@ namespace BlackMisc
         void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CIdentifier)
         QString m_name;            //!< object name
         QString m_machineIdBase64; //!< base 64 encoded machine id
         QString m_machineName;     //!< human readable machine name
         QString m_processName;     //!< process name
         qint64 m_processId;        //!< PID
+
+        BLACK_METACLASS(CIdentifier,
+            BLACK_METAMEMBER(name),
+            BLACK_METAMEMBER(machineIdBase64),
+            BLACK_METAMEMBER(machineName, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(processName),
+            BLACK_METAMEMBER(processId),
+            BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForComparison | DisabledForHashing)
+        );
     };
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CIdentifier, (
-                                   attr(o.m_name),
-                                   attr(o.m_machineIdBase64),
-                                   attr(o.m_machineName, flags <DisabledForComparison | DisabledForHashing> ()),
-                                   attr(o.m_processName),
-                                   attr(o.m_processId),
-                                   attr(o.m_timestampMSecsSinceEpoch, flags <DisabledForComparison | DisabledForHashing> ())
-                               ))
 
 Q_DECLARE_METATYPE(BlackMisc::CIdentifier)
 

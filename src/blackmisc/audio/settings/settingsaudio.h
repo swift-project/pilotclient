@@ -47,9 +47,12 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
             private:
-                BLACK_ENABLE_TUPLE_CONVERSION(CSettingsAudio)
                 QString m_notificationFlags;  //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
                 void initNotificationFlags(); //!< init flags
+
+                BLACK_METACLASS(CSettingsAudio,
+                    BLACK_METAMEMBER(notificationFlags)
+                );
             };
 
         } // namespace
@@ -57,6 +60,5 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Audio::Settings::CSettingsAudio)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Audio::Settings::CSettingsAudio, (o.m_notificationFlags))
 
 #endif // guard

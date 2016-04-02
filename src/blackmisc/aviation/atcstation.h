@@ -246,7 +246,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAtcStation)
             CCallsign                                 m_callsign;
             BlackMisc::Network::CUser                 m_controller;
             BlackMisc::PhysicalQuantities::CFrequency m_frequency;
@@ -258,25 +257,26 @@ namespace BlackMisc
             CInformationMessage m_atis  { CInformationMessage::ATIS };
             CInformationMessage m_metar { CInformationMessage::METAR };
             BlackMisc::Audio::CVoiceRoom              m_voiceRoom;
+
+            BLACK_METACLASS(CAtcStation,
+                BLACK_METAMEMBER(callsign),
+                BLACK_METAMEMBER(controller),
+                BLACK_METAMEMBER(frequency),
+                BLACK_METAMEMBER(position),
+                BLACK_METAMEMBER(range),
+                BLACK_METAMEMBER(isOnline),
+                BLACK_METAMEMBER(atis),
+                BLACK_METAMEMBER(bookedFromUtc),
+                BLACK_METAMEMBER(bookedUntilUtc),
+                BLACK_METAMEMBER(metar),
+                BLACK_METAMEMBER(voiceRoom),
+                BLACK_METAMEMBER(distanceToOwnAircraft),
+                BLACK_METAMEMBER(bearingToOwnAircraft)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (
-                                   o.m_callsign,
-                                   o.m_controller,
-                                   o.m_frequency,
-                                   o.m_position,
-                                   o.m_range,
-                                   o.m_isOnline,
-                                   o.m_atis,
-                                   o.m_bookedFromUtc,
-                                   o.m_bookedUntilUtc,
-                                   o.m_metar,
-                                   o.m_voiceRoom,
-                                   o.m_distanceToOwnAircraft,
-                                   o.m_bearingToOwnAircraft
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStation)
 
 #endif // guard

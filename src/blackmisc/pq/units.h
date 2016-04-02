@@ -143,7 +143,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -242,7 +242,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -332,7 +332,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -431,7 +431,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -547,7 +547,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -638,7 +638,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -747,7 +747,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -880,7 +880,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;
@@ -954,7 +954,7 @@ namespace BlackMisc
                 return u;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &argument)
             {
                 QString unitName;

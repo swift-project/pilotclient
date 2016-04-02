@@ -96,14 +96,22 @@ namespace BlackCore
             void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CVatsimSetup)
-
             BlackMisc::Network::CUrlList    m_serverFileUrls; //!< only the FSD servers
             BlackMisc::Network::CUrlList    m_dataFileUrls;   //!< Full VATSIM files
             BlackMisc::Network::CUrlList    m_metarFileUrls;  //!< METAR files
             BlackMisc::Network::CServerList m_fsdServers;     //!< FSD test servers
             BlackMisc::Network::CServerList m_voiceServers;   //!< voice servers
             BlackMisc::Network::CUser       m_lastLoginUser;  //!< last login user
+
+            BLACK_METACLASS(CVatsimSetup,
+                BLACK_METAMEMBER(serverFileUrls),
+                BLACK_METAMEMBER(dataFileUrls),
+                BLACK_METAMEMBER(metarFileUrls),
+                BLACK_METAMEMBER(fsdServers),
+                BLACK_METAMEMBER(voiceServers),
+                BLACK_METAMEMBER(lastLoginUser),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch)
+            );
         };
 
         //! Trait for global setup data
@@ -124,13 +132,5 @@ namespace BlackCore
 } // ns
 
 Q_DECLARE_METATYPE(BlackCore::Data::CVatsimSetup)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CVatsimSetup, (
-                                   attr(o.m_serverFileUrls),
-                                   attr(o.m_dataFileUrls),
-                                   attr(o.m_metarFileUrls),
-                                   attr(o.m_fsdServers),
-                                   attr(o.m_voiceServers),
-                                   attr(o.m_lastLoginUser),
-                                   attr(o.m_timestampMSecsSinceEpoch)
-                               ))
+
 #endif // guard

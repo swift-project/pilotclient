@@ -57,8 +57,11 @@ namespace BlackGui
                 int comparePropertyByIndex(const CDbOwnModelsComponent &compareValue, const BlackMisc::CPropertyIndex &index) const;
 
             private:
-                BLACK_ENABLE_TUPLE_CONVERSION(CDbOwnModelsComponent)
                 BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< Last simulator selection
+
+                BLACK_METACLASS(CDbOwnModelsComponent,
+                    BLACK_METAMEMBER(simulator)
+                );
             };
 
             //! Trait for model cache
@@ -79,9 +82,6 @@ namespace BlackGui
 } // ns
 
 Q_DECLARE_METATYPE(BlackGui::Components::Data::CDbOwnModelsComponent)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackGui::Components::Data::CDbOwnModelsComponent, (
-                                   attr(o.m_simulator)
-                               ))
 
 #endif // guard
 

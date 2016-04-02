@@ -81,17 +81,21 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAudioDeviceInfo)
-
             DeviceType m_type;    //!< Device type, @see CAudioDeviceInfo::DeviceType
             int m_deviceIndex;    //!< deviceIndex is the number is the reference for the VVL. The device is selected by this index. The managing class needs to take care, that indexes are valid.
             QString m_deviceName; //!< Device name
             QString m_hostName;   //!< We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
+
+            BLACK_METACLASS(CAudioDeviceInfo,
+                BLACK_METAMEMBER(type),
+                BLACK_METAMEMBER(deviceIndex),
+                BLACK_METAMEMBER(deviceName),
+                BLACK_METAMEMBER(hostName)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Audio::CAudioDeviceInfo, (o.m_type, o.m_deviceIndex, o.m_deviceName, o.m_hostName))
 Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceInfo)
 
 #endif // guard

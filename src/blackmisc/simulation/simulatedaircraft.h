@@ -358,7 +358,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CSimulatedAircraft)
             BlackMisc::Aviation::CCallsign          m_callsign;
             BlackMisc::Network::CUser               m_pilot;
             BlackMisc::Aviation::CAircraftSituation m_situation;
@@ -377,27 +376,27 @@ namespace BlackMisc
             //! Init, which syncronizes some denormalized values
             void init();
 
+            BLACK_METACLASS(CSimulatedAircraft,
+                BLACK_METAMEMBER(callsign),
+                BLACK_METAMEMBER(pilot),
+                BLACK_METAMEMBER(situation),
+                BLACK_METAMEMBER(com1system),
+                BLACK_METAMEMBER(com2system),
+                BLACK_METAMEMBER(transponder),
+                BLACK_METAMEMBER(parts),
+                BLACK_METAMEMBER(livery),
+                BLACK_METAMEMBER(distanceToOwnAircraft),
+                BLACK_METAMEMBER(bearingToOwnAircraft),
+                BLACK_METAMEMBER(model),
+                BLACK_METAMEMBER(enabled),
+                BLACK_METAMEMBER(rendered),
+                BLACK_METAMEMBER(partsSynchronized),
+                BLACK_METAMEMBER(fastPositionUpdates)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatedAircraft, (
-                                   attr(o.m_callsign),
-                                   attr(o.m_pilot),
-                                   attr(o.m_situation),
-                                   attr(o.m_com1system),
-                                   attr(o.m_com2system),
-                                   attr(o.m_transponder),
-                                   attr(o.m_parts),
-                                   attr(o.m_livery),
-                                   attr(o.m_distanceToOwnAircraft),
-                                   attr(o.m_bearingToOwnAircraft),
-                                   attr(o.m_model),
-                                   attr(o.m_enabled),
-                                   attr(o.m_rendered),
-                                   attr(o.m_partsSynchronized),
-                                   attr(o.m_fastPositionUpdates)
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatedAircraft)
 
 #endif // guard

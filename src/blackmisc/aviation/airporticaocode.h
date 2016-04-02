@@ -57,15 +57,15 @@ namespace BlackMisc
             int comparePropertyByIndex(const CAirportIcaoCode &compareValue, const CPropertyIndex &index) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAirportIcaoCode)
             QString m_icaoCode;
+
+            BLACK_METACLASS(CAirportIcaoCode,
+                BLACK_METAMEMBER(icaoCode, 0, CaseInsensitiveComparison)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirportIcaoCode, (
-                                   attr(o.m_icaoCode, flags<CaseInsensitiveComparison>())
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirportIcaoCode)
 
 #endif // guard

@@ -24,8 +24,8 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CValueCachePacket :
         public CDictionary<QString, std::pair<CVariant, qint64>, QMap>,
         public Mixin::MetaType<CValueCachePacket>,
-        public Mixin::DBusByTuple<CValueCachePacket>,
-        public Mixin::EqualsByTuple<CValueCachePacket>
+        public Mixin::DBusByMetaClass<CValueCachePacket>,
+        public Mixin::EqualsByMetaClass<CValueCachePacket>
     {
     public:
         BLACKMISC_DECLARE_USING_MIXIN_DBUS(CValueCachePacket)
@@ -88,8 +88,11 @@ namespace BlackMisc
         //! @}
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CValueCachePacket)
         bool m_saved = false;
+
+        BLACK_METACLASS(CValueCachePacket,
+            BLACK_METAMEMBER(saved)
+        );
     };
 
     /*!
@@ -364,6 +367,5 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CValueCachePacket)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CValueCachePacket, (attr(o.m_saved)))
 
 #endif

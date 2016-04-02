@@ -109,7 +109,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CWindLayer)
             BlackMisc::Aviation::CAltitude m_level;
             PhysicalQuantities::CAngle m_directionMain;
             PhysicalQuantities::CAngle m_directionFrom;
@@ -118,20 +117,20 @@ namespace BlackMisc
             PhysicalQuantities::CSpeed m_speed;
             PhysicalQuantities::CSpeed m_gustSpeed;
 
+            BLACK_METACLASS(CWindLayer,
+                BLACK_METAMEMBER(level),
+                BLACK_METAMEMBER(directionMain),
+                BLACK_METAMEMBER(directionFrom),
+                BLACK_METAMEMBER(directionTo),
+                BLACK_METAMEMBER(directionVariable),
+                BLACK_METAMEMBER(speed),
+                BLACK_METAMEMBER(gustSpeed)
+            );
         };
 
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWindLayer)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CWindLayer, (
-                                   attr(o.m_level),
-                                   attr(o.m_directionMain),
-                                   attr(o.m_directionFrom),
-                                   attr(o.m_directionTo),
-                                   attr(o.m_directionVariable),
-                                   attr(o.m_speed),
-                                   attr(o.m_gustSpeed)
-                               ))
 
 #endif // guard

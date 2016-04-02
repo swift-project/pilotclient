@@ -242,13 +242,13 @@ namespace BlackMisc
                 return this->getSymbol(i18n);
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
             void marshallToDbus(QDBusArgument &argument) const
             {
                 argument << this->m_symbol;
             }
 
-            //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+            //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
             void unmarshallFromDbus(const QDBusArgument &)
             {
                 // the concrete implementations will override this default

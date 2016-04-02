@@ -98,7 +98,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CGridPoint)
             Geo::CLatitude m_latitude;
             Geo::CLongitude m_longitude;
             CCloudLayerList m_cloudLayers;
@@ -106,18 +105,18 @@ namespace BlackMisc
             CVisibilityLayerList m_visibilityLayers;
             CWindLayerList m_windLayers;
 
+            BLACK_METACLASS(CGridPoint,
+                BLACK_METAMEMBER(latitude),
+                BLACK_METAMEMBER(longitude),
+                BLACK_METAMEMBER(cloudLayers),
+                BLACK_METAMEMBER(temperatureLayers),
+                BLACK_METAMEMBER(visibilityLayers),
+                BLACK_METAMEMBER(windLayers)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CGridPoint)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CGridPoint, (
-                                   attr(o.m_latitude),
-                                   attr(o.m_longitude),
-                                   attr(o.m_cloudLayers),
-                                   attr(o.m_temperatureLayers),
-                                   attr(o.m_visibilityLayers),
-                                   attr(o.m_windLayers)
-))
 
 #endif // guard

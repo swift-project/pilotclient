@@ -135,10 +135,10 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
-            //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
+            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
             QJsonObject toJson() const;
 
-            //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
+            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
             void convertFromJson(const QJsonObject &json);
 
             //! Protocol to default port
@@ -154,7 +154,6 @@ namespace BlackMisc
             operator QUrl() const { return this->toQUrl(); }
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CUrl)
             QString m_scheme;
             QString m_host;
             int     m_port = -1;
@@ -162,11 +161,18 @@ namespace BlackMisc
             QString m_query;
 
             static QString stripQueryString(const QString query);
+
+            BLACK_METACLASS(CUrl,
+                BLACK_METAMEMBER(scheme),
+                BLACK_METAMEMBER(host),
+                BLACK_METAMEMBER(port),
+                BLACK_METAMEMBER(path),
+                BLACK_METAMEMBER(query)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CUrl, (o.m_scheme, o.m_host, o.m_port, o.m_path, o.m_query))
 Q_DECLARE_METATYPE(BlackMisc::Network::CUrl)
 
 #endif // guard

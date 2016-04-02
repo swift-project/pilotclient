@@ -140,7 +140,6 @@ namespace BlackMisc
             static CMetar CAVOK();
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CMetar)
             QString m_metarMessage;
             ReportType m_reportType = METAR;
             BlackMisc::Aviation::CAirportIcaoCode m_airport;
@@ -154,25 +153,26 @@ namespace BlackMisc
             PhysicalQuantities::CTemperature m_temperature;
             PhysicalQuantities::CTemperature m_dewPoint;
             PhysicalQuantities::CPressure m_altimeter;
+
+            BLACK_METACLASS(CMetar,
+                BLACK_METAMEMBER(metarMessage),
+                BLACK_METAMEMBER(reportType),
+                BLACK_METAMEMBER(airport),
+                BLACK_METAMEMBER(reportDay),
+                BLACK_METAMEMBER(reportTime),
+                BLACK_METAMEMBER(isAutomated),
+                BLACK_METAMEMBER(windLayer),
+                BLACK_METAMEMBER(visibility),
+                BLACK_METAMEMBER(presentWeathers),
+                BLACK_METAMEMBER(cloudLayers),
+                BLACK_METAMEMBER(temperature),
+                BLACK_METAMEMBER(dewPoint),
+                BLACK_METAMEMBER(altimeter)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CMetar)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CMetar, (
-    attr(o.m_metarMessage),
-    attr(o.m_reportType),
-    attr(o.m_airport),
-    attr(o.m_reportDay),
-    attr(o.m_reportTime),
-    attr(o.m_isAutomated),
-    attr(o.m_windLayer),
-    attr(o.m_visibility),
-    attr(o.m_presentWeathers),
-    attr(o.m_cloudLayers),
-    attr(o.m_temperature),
-    attr(o.m_dewPoint),
-    attr(o.m_altimeter)
-))
 
 #endif // guard

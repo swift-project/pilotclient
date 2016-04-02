@@ -46,18 +46,17 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftEngine)
             int m_number = 1;
             bool m_on = true;
 
+            BLACK_METACLASS(CAircraftEngine,
+                BLACK_METAMEMBER(number, 0, DisabledForJson),
+                BLACK_METAMEMBER(on)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftEngine)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftEngine, (
-                                   attr(o.m_number, flags<DisabledForJson>()),
-                                   attr(o.m_on, "on")
-                               ))
 
 #endif // guard

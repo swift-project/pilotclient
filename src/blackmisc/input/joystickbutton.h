@@ -72,15 +72,17 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CJoystickButton)
             int m_buttonIndex = m_invalidIndex;
 
             static constexpr int m_invalidIndex = -1;
+
+            BLACK_METACLASS(CJoystickButton,
+                BLACK_METAMEMBER(buttonIndex)
+            );
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Input::CJoystickButton, (o.m_buttonIndex))
 Q_DECLARE_METATYPE(BlackMisc::Input::CJoystickButton)
 
 #endif // guard

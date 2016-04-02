@@ -74,14 +74,16 @@ namespace BlackMisc
             static double parseNumber(const QString &number, bool &success, SeparatorMode mode = SeparatorsCLocale);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CPqString)
             QString m_string;
+
+            BLACK_METACLASS(CPqString,
+                BLACK_METAMEMBER(string)
+            );
         };
 
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::PhysicalQuantities::CPqString, (o.m_string))
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPqString)
 
 #endif // guard

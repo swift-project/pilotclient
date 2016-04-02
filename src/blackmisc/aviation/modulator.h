@@ -136,7 +136,6 @@ namespace BlackMisc
             static const BlackMisc::PhysicalQuantities::CFrequency &FrequencyNotSet();
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CModulator)
             QString m_name; //!< name of the unit
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
@@ -149,6 +148,15 @@ namespace BlackMisc
 
             //! Easy access to derived class (CRTP template parameter)
             AVIO *derived();
+
+            BLACK_METACLASS(CModulator,
+                BLACK_METAMEMBER(name),
+                BLACK_METAMEMBER(frequencyActive),
+                BLACK_METAMEMBER(frequencyStandby),
+                BLACK_METAMEMBER(volumeInput),
+                BLACK_METAMEMBER(volumeOutput),
+                BLACK_METAMEMBER(enabled)
+            );
         };
 
         //! \cond PRIVATE
@@ -163,13 +171,5 @@ namespace BlackMisc
 
     } // namespace
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(BlackMisc::Aviation::CModulator, (
-        o.m_name,
-        o.m_frequencyActive,
-        o.m_frequencyStandby,
-        o.m_volumeInput ,
-        o.m_volumeOutput,
-        o.m_enabled))
 
 #endif // guard

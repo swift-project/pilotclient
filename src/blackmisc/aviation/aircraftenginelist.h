@@ -46,10 +46,10 @@ namespace BlackMisc
             //! Engine number 1..x on?
             bool isEngineOn(int engineNumber) const;
 
-            //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
+            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
             QJsonObject toJson() const;
 
-            //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
+            //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
             void convertFromJson(const QJsonObject &json);
 
         };

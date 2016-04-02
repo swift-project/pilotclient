@@ -148,8 +148,6 @@ namespace BlackCore
             static CGlobalSetup fromJsonFile(const QString &fileNameAndPath);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup)
-
             bool                            m_wasLoaded = false;    //!< Loaded from web
             int                             m_dbHttpPort = 80;      //!< port
             int                             m_dbHttpsPort = 443;    //!< SSL port
@@ -165,6 +163,23 @@ namespace BlackCore
 
             // transient members, to be switched on/off via GUI or set from reader
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
+
+            BLACK_METACLASS(CGlobalSetup,
+                BLACK_METAMEMBER(wasLoaded),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(dbRootDirectoryUrl),
+                BLACK_METAMEMBER(dbHttpPort),
+                BLACK_METAMEMBER(dbHttpsPort),
+                BLACK_METAMEMBER(vatsimStatusFileUrls),
+                BLACK_METAMEMBER(vatsimDataFileUrls),
+                BLACK_METAMEMBER(vatsimBookingsUrl),
+                BLACK_METAMEMBER(vatsimMetarsUrls),
+                BLACK_METAMEMBER(sharedUrls),
+                BLACK_METAMEMBER(newsUrls),
+                BLACK_METAMEMBER(fsdTestServers),
+                BLACK_METAMEMBER(development),
+                BLACK_METAMEMBER(dbDebugFlag, BlackMisc::DisabledForJson)
+            );
         };
 
         //! Trait for global setup data
@@ -185,20 +200,5 @@ namespace BlackCore
 } // ns
 
 Q_DECLARE_METATYPE(BlackCore::Data::CGlobalSetup)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CGlobalSetup, (
-                                   attr(o.m_wasLoaded),
-                                   attr(o.m_timestampMSecsSinceEpoch),
-                                   attr(o.m_dbRootDirectoryUrl),
-                                   attr(o.m_dbHttpPort),
-                                   attr(o.m_dbHttpsPort),
-                                   attr(o.m_vatsimStatusFileUrls),
-                                   attr(o.m_vatsimDataFileUrls),
-                                   attr(o.m_vatsimBookingsUrl),
-                                   attr(o.m_vatsimMetarsUrls),
-                                   attr(o.m_sharedUrls),
-                                   attr(o.m_newsUrls),
-                                   attr(o.m_fsdTestServers),
-                                   attr(o.m_development),
-                                   attr(o.m_dbDebugFlag, flags < DisabledForJson > ())
-                               ))
+
 #endif // guard

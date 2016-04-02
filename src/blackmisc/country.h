@@ -91,17 +91,16 @@ namespace BlackMisc
         static bool isValidIsoCode(const QString &isoCode);
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CCountry)
         QString m_name; //!< country name
 
+        BLACK_METACLASS(CCountry,
+            BLACK_METAMEMBER(dbKey),
+            BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+            BLACK_METAMEMBER(name)
+        );
     };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CCountry)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CCountry, (
-                                   attr(o.m_dbKey),
-                                   attr(o.m_timestampMSecsSinceEpoch),
-                                   attr(o.m_name)
-                               ))
 
 #endif // guard

@@ -84,13 +84,15 @@ namespace BlackMisc
         private:
             static const QList<KeyCode> &allModifiers();
 
-            BLACK_ENABLE_TUPLE_CONVERSION(CKeyboardKey)
             KeyCode m_keyCode; //!< Key code
+
+            BLACK_METACLASS(CKeyboardKey,
+                BLACK_METAMEMBER(keyCode)
+            );
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Input::CKeyboardKey, (o.m_keyCode))
 Q_DECLARE_METATYPE(BlackMisc::Input::CKeyboardKey)
 
 #endif // guard

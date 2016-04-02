@@ -186,7 +186,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CFlightPlan)
             QString m_equipmentIcao;
             CAirportIcaoCode m_originAirportIcao;
             CAirportIcaoCode m_destinationAirportIcao;
@@ -201,26 +200,27 @@ namespace BlackMisc
             QString m_route;
             QString m_remarks;
             QDateTime m_lastSentOrLoaded;
+
+            BLACK_METACLASS(CFlightPlan,
+                BLACK_METAMEMBER(equipmentIcao),
+                BLACK_METAMEMBER(originAirportIcao),
+                BLACK_METAMEMBER(destinationAirportIcao),
+                BLACK_METAMEMBER(alternateAirportIcao),
+                BLACK_METAMEMBER(takeoffTimePlanned),
+                BLACK_METAMEMBER(takeoffTimeActual),
+                BLACK_METAMEMBER(enrouteTime),
+                BLACK_METAMEMBER(fuelTime),
+                BLACK_METAMEMBER(cruiseAltitude),
+                BLACK_METAMEMBER(cruiseTrueAirspeed),
+                BLACK_METAMEMBER(flightRules),
+                BLACK_METAMEMBER(route),
+                BLACK_METAMEMBER(remarks),
+                BLACK_METAMEMBER(lastSentOrLoaded)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlan)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CFlightPlan, (
-                                   o.m_equipmentIcao,
-                                   o.m_originAirportIcao,
-                                   o.m_destinationAirportIcao,
-                                   o.m_alternateAirportIcao,
-                                   o.m_takeoffTimePlanned,
-                                   o.m_takeoffTimeActual,
-                                   o.m_enrouteTime,
-                                   o.m_fuelTime,
-                                   o.m_cruiseAltitude,
-                                   o.m_cruiseTrueAirspeed,
-                                   o.m_flightRules,
-                                   o.m_route,
-                                   o.m_remarks,
-                                   o.m_lastSentOrLoaded
-                               ))
 
 #endif // guard

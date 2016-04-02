@@ -146,8 +146,6 @@ namespace BlackMisc
             static CAuthenticatedUser fromDatabaseJson(const QJsonObject &json);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAuthenticatedUser)
-
             int                 m_vatsimId;
             QString             m_realname;
             QString             m_email;
@@ -156,20 +154,22 @@ namespace BlackMisc
             bool                m_enabled = false;
             bool                m_authenticated = false;
             CRoleList           m_roles;
+
+            BLACK_METACLASS(CAuthenticatedUser,
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(vatsimId),
+                BLACK_METAMEMBER(realname),
+                BLACK_METAMEMBER(email),
+                BLACK_METAMEMBER(password),
+                BLACK_METAMEMBER(country),
+                BLACK_METAMEMBER(enabled),
+                BLACK_METAMEMBER(authenticated),
+                BLACK_METAMEMBER(roles)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CAuthenticatedUser, (
-                                   o.m_dbKey,
-                                   o.m_vatsimId,
-                                   o.m_realname,
-                                   o.m_email,
-                                   o.m_password,
-                                   o.m_country,
-                                   o.m_enabled,
-                                   o.m_authenticated,
-                                   o.m_roles))
 Q_DECLARE_METATYPE(BlackMisc::Network::CAuthenticatedUser)
 
 #endif // guard

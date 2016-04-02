@@ -67,14 +67,18 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CNameVariantPair)
         QString  m_name;
         CVariant m_variant;
         CIcon    m_icon; //!< optional icon
+
+        BLACK_METACLASS(CNameVariantPair,
+            BLACK_METAMEMBER(name),
+            BLACK_METAMEMBER(variant),
+            BLACK_METAMEMBER(icon)
+        );
     };
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CNameVariantPair, (o.m_name, o.m_variant, o.m_icon))
 Q_DECLARE_METATYPE(BlackMisc::CNameVariantPair)
 
 #endif // guard

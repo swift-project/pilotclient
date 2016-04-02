@@ -163,17 +163,23 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CTextMessage)
             QString m_message;
             BlackMisc::Aviation::CCallsign m_senderCallsign;
             BlackMisc::Aviation::CCallsign m_recipientCallsign;
             BlackMisc::PhysicalQuantities::CFrequency m_frequency {0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()};
             bool m_wasSent = false;
+
+            BLACK_METACLASS(CTextMessage,
+                BLACK_METAMEMBER(message),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(senderCallsign),
+                BLACK_METAMEMBER(recipientCallsign),
+                BLACK_METAMEMBER(frequency)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CTextMessage, (o.m_message, o.m_timestampMSecsSinceEpoch, o.m_senderCallsign, o.m_recipientCallsign, o.m_frequency))
 Q_DECLARE_METATYPE(BlackMisc::Network::CTextMessage)
 
 #endif // guard

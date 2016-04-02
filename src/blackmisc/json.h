@@ -345,9 +345,9 @@ namespace BlackMisc
          * When a derived class and a base class both inherit from Mixin::JsonByTuple,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#       define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                          \
-        using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::toJson;                 \
-        using ::BlackMisc::Mixin::JsonByTuple<DERIVED>::convertFromJson;
+#       define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                      \
+        using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::toJson;             \
+        using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::convertFromJson;
 
     } // Mixin
 } // BlackMisc

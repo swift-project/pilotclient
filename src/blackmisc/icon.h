@@ -58,12 +58,12 @@ namespace BlackMisc
     //! identified by its index. It contains no(!) pyhsical data for the icon itself.
     class BLACKMISC_EXPORT CIcon :
         public Mixin::MetaType<CIcon>,
-        public Mixin::HashByTuple<CIcon>,
-        public Mixin::DBusByTuple<CIcon>,
-        public Mixin::JsonByTuple<CIcon>,
-        public Mixin::EqualsByTuple<CIcon>,
-        public Mixin::LessThanByTuple<CIcon>,
-        public Mixin::CompareByTuple<CIcon>,
+        public Mixin::HashByMetaClass<CIcon>,
+        public Mixin::DBusByMetaClass<CIcon>,
+        public Mixin::JsonByMetaClass<CIcon>,
+        public Mixin::EqualsByMetaClass<CIcon>,
+        public Mixin::LessThanByMetaClass<CIcon>,
+        public Mixin::CompareByMetaClass<CIcon>,
         public Mixin::String<CIcon>,
         public Mixin::Icon<CIcon>
     {
@@ -126,11 +126,16 @@ namespace BlackMisc
         static const CIcon &iconByIndex(int index);
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CIcon)
         CIcons::IconIndex m_index = CIcons::NotSet;
         int m_rotateDegrees = 0;    //!< Rotation
         QString m_descriptiveText;  //!< what does it represent?
         QPixmap m_pixmap;           //!< Used with generated pixmaps, when not used with index
+
+        BLACK_METACLASS(CIcon,
+            BLACK_METAMEMBER(index),
+            BLACK_METAMEMBER(rotateDegrees, 0, DisabledForComparison | DisabledForHashing),
+            BLACK_METAMEMBER(descriptiveText)
+        );
     };
 
     namespace Private
@@ -153,12 +158,6 @@ namespace BlackMisc
         }
     }
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CIcon, (
-                                   attr(o.m_index),
-                                   attr(o.m_rotateDegrees, flags < DisabledForComparison | DisabledForHashing > ()),
-                                   attr(o.m_descriptiveText)
-                               ))
 
 Q_DECLARE_METATYPE(BlackMisc::CIcon)
 

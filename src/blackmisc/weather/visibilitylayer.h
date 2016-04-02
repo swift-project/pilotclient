@@ -72,20 +72,20 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CVisibilityLayer)
             BlackMisc::Aviation::CAltitude m_base;
             BlackMisc::Aviation::CAltitude m_top;
             PhysicalQuantities::CLength m_visibility;
+
+            BLACK_METACLASS(CVisibilityLayer,
+                BLACK_METAMEMBER(base),
+                BLACK_METAMEMBER(top),
+                BLACK_METAMEMBER(visibility)
+            );
         };
 
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CVisibilityLayer)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CVisibilityLayer, (
-                                   attr(o.m_base),
-                                   attr(o.m_top),
-                                   attr(o.m_visibility)
-                               ))
 
 #endif // guard

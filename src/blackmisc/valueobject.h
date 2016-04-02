@@ -71,12 +71,12 @@ namespace BlackMisc
     template <class Derived, class Base /*= CEmpty*/> class CValueObject :
         public Base,
         public Mixin::MetaType<Derived>,
-        public Mixin::HashByTuple<Derived>,
-        public Mixin::DBusByTuple<Derived>,
-        public Mixin::JsonByTuple<Derived>,
-        public Mixin::EqualsByTuple<Derived>,
-        public Mixin::LessThanByTuple<Derived>,
-        public Mixin::CompareByTuple<Derived>,
+        public Mixin::HashByMetaClass<Derived>,
+        public Mixin::DBusByMetaClass<Derived>,
+        public Mixin::JsonByMetaClass<Derived>,
+        public Mixin::EqualsByMetaClass<Derived>,
+        public Mixin::LessThanByMetaClass<Derived>,
+        public Mixin::CompareByMetaClass<Derived>,
         public Mixin::String<Derived>,
         public Mixin::Index<Derived>,
         public Mixin::Icon<Derived>
@@ -97,14 +97,14 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::Index::apply
         using Mixin::Index<Derived>::apply;
 
-        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
-        using Mixin::JsonByTuple<Derived>::toJson;
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
+        using Mixin::JsonByMetaClass<Derived>::toJson;
 
-        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJsonString
-        using Mixin::JsonByTuple<Derived>::toJsonString;
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJsonString
+        using Mixin::JsonByMetaClass<Derived>::toJsonString;
 
-        //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
-        using Mixin::JsonByTuple<Derived>::convertFromJson;
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
+        using Mixin::JsonByMetaClass<Derived>::convertFromJson;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
         using Mixin::Index<Derived>::setPropertyByIndex;
@@ -153,11 +153,11 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::String::stringForStreaming
         using Mixin::String<Derived>::stringForStreaming;
 
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
-        using Mixin::DBusByTuple<Derived>::marshallToDbus;
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
+        using Mixin::DBusByMetaClass<Derived>::marshallToDbus;
 
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
-        using Mixin::DBusByTuple<Derived>::unmarshallFromDbus;
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
+        using Mixin::DBusByMetaClass<Derived>::unmarshallFromDbus;
     };
 
 } // namespace

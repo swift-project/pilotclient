@@ -158,26 +158,25 @@ namespace BlackMisc
             static const QString &colorLiveryMarker();
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CLivery)
             CAirlineIcaoCode m_airline; //!< corresponding airline, if any
             QString m_combinedCode;     //!< livery code and pseudo airline ICAO code
             QString m_description;      //!< describes the livery
             BlackMisc::CRgbColor m_colorFuselage; //! color of fuselage
             BlackMisc::CRgbColor m_colorTail;     //! color of tail
             bool m_military = false; //! Military livery?
+
+            BLACK_METACLASS(CLivery,
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(airline),
+                BLACK_METAMEMBER(combinedCode, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(description),
+                BLACK_METAMEMBER(colorFuselage),
+                BLACK_METAMEMBER(colorTail)
+            );
         };
     } // namespace
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CLivery, (
-                                   attr(o.m_dbKey),
-                                   attr(o.m_timestampMSecsSinceEpoch),
-                                   attr(o.m_airline),
-                                   attr(o.m_combinedCode, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_description),
-                                   attr(o.m_colorFuselage),
-                                   attr(o.m_colorTail)
-                               ))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CLivery)
 

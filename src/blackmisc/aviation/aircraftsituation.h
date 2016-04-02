@@ -147,7 +147,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftSituation)
             CCallsign m_correspondingCallsign;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
             BlackMisc::Aviation::CAltitude m_altitude;
@@ -155,20 +154,20 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_pitch;
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundspeed;
+
+            BLACK_METACLASS(CAircraftSituation,
+                BLACK_METAMEMBER(correspondingCallsign),
+                BLACK_METAMEMBER(position),
+                BLACK_METAMEMBER(altitude),
+                BLACK_METAMEMBER(heading),
+                BLACK_METAMEMBER(pitch),
+                BLACK_METAMEMBER(bank),
+                BLACK_METAMEMBER(groundspeed),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch)
+            );
         };
     } // namespace
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftSituation, (
-                                   o.m_correspondingCallsign,
-                                   o.m_position,
-                                   o.m_altitude,
-                                   o.m_heading,
-                                   o.m_pitch,
-                                   o.m_bank,
-                                   o.m_groundspeed,
-                                   o.m_timestampMSecsSinceEpoch
-                                   ))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
 

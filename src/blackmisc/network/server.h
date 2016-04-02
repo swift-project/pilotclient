@@ -107,18 +107,25 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CServer)
             QString m_name;
             QString m_description;
             QString m_address;
             int     m_port = -1;
             CUser   m_user;
             bool    m_isAcceptingConnections = true; //!< temp. disable server
+
+            BLACK_METACLASS(CServer,
+                BLACK_METAMEMBER(name),
+                BLACK_METAMEMBER(description),
+                BLACK_METAMEMBER(address),
+                BLACK_METAMEMBER(port),
+                BLACK_METAMEMBER(user),
+                BLACK_METAMEMBER(isAcceptingConnections)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CServer, (o.m_name, o.m_description, o.m_address, o.m_port, o.m_user, o.m_isAcceptingConnections))
 Q_DECLARE_METATYPE(BlackMisc::Network::CServer)
 
 #endif // guard

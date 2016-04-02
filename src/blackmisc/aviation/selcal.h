@@ -74,15 +74,17 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CSelcal)
             QString m_code;
             static QList<BlackMisc::PhysicalQuantities::CFrequency> frequencyEquivalents;
             static QStringList allCodePairs;
+
+            BLACK_METACLASS(CSelcal,
+                BLACK_METAMEMBER(code)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CSelcal, (o.m_code))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CSelcal)
 
 #endif // guard

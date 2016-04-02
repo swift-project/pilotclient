@@ -65,9 +65,13 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CTestValueObject)
         QString m_name;
         QString m_description;
+
+        BLACK_METACLASS(CTestValueObject,
+            BLACK_METAMEMBER(name),
+            BLACK_METAMEMBER(description)
+        );
     };
 
     //! \cond NO_DOXYGEN
@@ -85,7 +89,6 @@ namespace BlackMisc
 
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CTestValueObject, (o.m_name, o.m_description))
 Q_DECLARE_METATYPE(BlackMisc::CTestValueObject)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CTestValueObject>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CTestValueObject>)

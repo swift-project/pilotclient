@@ -154,21 +154,21 @@ namespace BlackMisc
             static QString unifyCallsign(const QString &callsign);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CCallsign)
             QString  m_callsignAsSet;
             QString  m_callsign;
             QString  m_telephonyDesignator;
             TypeHint m_typeHint = NoHint;
+
+            BLACK_METACLASS(CCallsign,
+                BLACK_METAMEMBER(callsign, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(callsignAsSet, 0, DisabledForComparison | DisabledForHashing),
+                BLACK_METAMEMBER(telephonyDesignator, 0, DisabledForComparison | DisabledForHashing),
+                BLACK_METAMEMBER(typeHint, 0, DisabledForComparison | DisabledForHashing)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CCallsign, (
-                                   attr(o.m_callsign, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_callsignAsSet, flags <DisabledForComparison | DisabledForHashing>()),
-                                   attr(o.m_telephonyDesignator, flags <DisabledForComparison | DisabledForHashing>()),
-                                   attr(o.m_typeHint, flags <DisabledForComparison | DisabledForHashing>())
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign)
 
 #endif // guard

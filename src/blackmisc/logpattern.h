@@ -27,8 +27,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CLogPattern :
         public Mixin::MetaType<CLogPattern>,
-        public Mixin::HashByTuple<CLogPattern>,
-        public Mixin::EqualsByTuple<CLogPattern>,
+        public Mixin::HashByMetaClass<CLogPattern>,
+        public Mixin::EqualsByMetaClass<CLogPattern>,
         public Mixin::DBusOperators<CLogPattern>,
         public Mixin::Index<CLogPattern>,
         public Mixin::String<CLogPattern>,
@@ -87,10 +87,10 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::String::toQString()
         QString convertToQString(bool i18n = false) const;
 
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus()
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus()
         void marshallToDbus(QDBusArgument &argument) const;
 
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus()
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus()
         void unmarshallFromDbus(const QDBusArgument &argument);
 
     private:
@@ -110,7 +110,6 @@ namespace BlackMisc
 
         CLogPattern(Strategy strategy, const QSet<QString> &strings);
 
-        BLACK_ENABLE_TUPLE_CONVERSION(CLogPattern)
         QSet<CStatusMessage::StatusSeverity> m_severities;
         Strategy m_strategy;
         QSet<QString> m_strings;
@@ -121,14 +120,15 @@ namespace BlackMisc
         const QString &getSubstring() const { Q_ASSERT(m_strategy == Contains && m_strings.size() == 1); return *m_strings.begin(); }
 
         static const QHash<QString, CLogPattern> &allHumanReadablePatterns();
+
+        BLACK_METACLASS(CLogPattern,
+            BLACK_METAMEMBER(severities),
+            BLACK_METAMEMBER(strategy),
+            BLACK_METAMEMBER(strings)
+        );
     };
 }
 
 Q_DECLARE_METATYPE(BlackMisc::CLogPattern)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CLogPattern, (
-    attr(o.m_severities),
-    attr(o.m_strategy),
-    attr(o.m_strings)
-))
 
 #endif

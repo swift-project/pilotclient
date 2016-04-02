@@ -158,12 +158,14 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CLogCategory)
         QString m_string;
+
+        BLACK_METACLASS(CLogCategory,
+            BLACK_METAMEMBER(string)
+        );
     };
 }
 
 Q_DECLARE_METATYPE(BlackMisc::CLogCategory)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CLogCategory, (o.m_string))
 
 #endif

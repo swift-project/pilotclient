@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/metaclass.h"
 
 namespace BlackMisc
 {
@@ -27,11 +28,11 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAltitude :
             public PhysicalQuantities::CLength,
             public Mixin::MetaType<CAltitude>,
-            public Mixin::EqualsByTuple<CAltitude>,
-            public Mixin::CompareByTuple<CAltitude>,
-            public Mixin::HashByTuple<CAltitude>,
-            public Mixin::DBusByTuple<CAltitude>,
-            public Mixin::JsonByTuple<CAltitude>,
+            public Mixin::EqualsByMetaClass<CAltitude>,
+            public Mixin::CompareByMetaClass<CAltitude>,
+            public Mixin::HashByMetaClass<CAltitude>,
+            public Mixin::DBusByMetaClass<CAltitude>,
+            public Mixin::JsonByMetaClass<CAltitude>,
             public Mixin::String<CAltitude>,
             public Mixin::Icon<CAltitude>,
             public Mixin::Index<CAltitude>
@@ -100,13 +101,15 @@ namespace BlackMisc
             BlackMisc::CIcon toIcon() const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAltitude)
             ReferenceDatum m_datum; //!< MSL or AGL?
+
+            BLACK_METACLASS(CAltitude,
+                BLACK_METAMEMBER(datum)
+            );
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAltitude, (o.m_datum))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
 
 #endif // guard

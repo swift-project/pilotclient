@@ -93,19 +93,18 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CInformationMessage)
             InformationType m_type;
             QString m_message;
             QDateTime m_receivedTimestamp;
+
+            BLACK_METACLASS(CInformationMessage,
+                BLACK_METAMEMBER(type),
+                BLACK_METAMEMBER(message),
+                BLACK_METAMEMBER(receivedTimestamp)
+            );
         };
     } // namespace
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CInformationMessage, (
-                                   o.m_type,
-                                   o.m_message,
-                                   o.m_receivedTimestamp
-                               ))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CInformationMessage)
 

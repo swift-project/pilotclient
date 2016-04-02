@@ -81,19 +81,19 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CActionHotkey)
             CIdentifier m_identifier; //!< Identifier to which machine this hotkey belongs to
             CHotkeyCombination m_combination; //!< hotkey combination
             QString m_action; //!< hotkey action
+
+            BLACK_METACLASS(CActionHotkey,
+                BLACK_METAMEMBER(identifier),
+                BLACK_METAMEMBER(combination),
+                BLACK_METAMEMBER(action)
+            );
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Input::CActionHotkey, (
-                                   attr(o.m_identifier),
-                                   attr(o.m_combination),
-                                   attr(o.m_action)
-                                   ))
 Q_DECLARE_METATYPE(BlackMisc::Input::CActionHotkey)
 
 #endif // guard

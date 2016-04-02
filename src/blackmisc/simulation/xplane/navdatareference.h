@@ -56,9 +56,13 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
             private:
-                BLACK_ENABLE_TUPLE_CONVERSION(CNavDataReference)
                 int m_id = 0;
                 Geo::CCoordinateGeodetic m_position;
+
+                BLACK_METACLASS(CNavDataReference,
+                    BLACK_METAMEMBER(id),
+                    BLACK_METAMEMBER(position)
+                );
             };
 
             /*!
@@ -86,10 +90,5 @@ Q_DECLARE_METATYPE(BlackMisc::Simulation::XPlane::CNavDataReference)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::XPlane::CNavDataReferenceList)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::XPlane::CNavDataReference>)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::XPlane::CNavDataReference>)
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::XPlane::CNavDataReference, (
-    attr(o.m_id),
-    attr(o.m_position)
-))
 
 #endif

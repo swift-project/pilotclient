@@ -124,10 +124,15 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CPresentWeather)
             Intensity m_intensity = Moderate;
             Descriptor m_descriptor = None;
             int m_weatherPhenomena;
+
+            BLACK_METACLASS(CPresentWeather,
+                BLACK_METAMEMBER(intensity),
+                BLACK_METAMEMBER(descriptor),
+                BLACK_METAMEMBER(weatherPhenomena)
+            );
         };
 
     } // namespace
@@ -136,10 +141,5 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeather)
 Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeather::Intensity)
 Q_DECLARE_METATYPE(BlackMisc::Weather::CPresentWeather::Descriptor)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CPresentWeather, (
-                                   attr(o.m_intensity),
-                                   attr(o.m_descriptor),
-                                   attr(o.m_weatherPhenomena)
-                               ))
 
 #endif // guard

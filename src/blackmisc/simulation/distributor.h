@@ -103,22 +103,22 @@ namespace BlackMisc
             static CDistributor fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CDistributor)
             QString m_description; //!< description
             QString m_alias1;      //!< alias name
             QString m_alias2;      //!< alias name
+
+            BLACK_METACLASS(CDistributor,
+                BLACK_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(description),
+                BLACK_METAMEMBER(alias1, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(alias2, 0, CaseInsensitiveComparison)
+            );
         };
 
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CDistributor)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CDistributor, (
-                                   attr(o.m_dbKey, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_timestampMSecsSinceEpoch),
-                                   attr(o.m_description),
-                                   attr(o.m_alias1, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_alias2, flags <CaseInsensitiveComparison> ())
-                               ))
 
 #endif // guard

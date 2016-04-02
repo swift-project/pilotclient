@@ -91,8 +91,6 @@ namespace BlackCore
             void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(BlackCore::Data::CUpdateInfo)
-
             bool                            m_development = false;        //!< for development
             BlackMisc::Network::CUrlList    m_downloadsStableUrls;        //!< Download URLs, here I get the installer
             BlackMisc::Network::CUrlList    m_downloadsBetaUrls;          //!< Download URLs, here I get the installer
@@ -100,6 +98,17 @@ namespace BlackCore
             QString                         m_lastSupportedVersionStable; //!< last supported version
             QString                         m_latestVersionBeta;          //!< latest version
             QString                         m_lastSupportedVersionBeta;   //!< last supported version
+
+            BLACK_METACLASS(CUpdateInfo,
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(development),
+                BLACK_METAMEMBER(downloadsStableUrls),
+                BLACK_METAMEMBER(downloadsBetaUrls),
+                BLACK_METAMEMBER(latestVersionStable),
+                BLACK_METAMEMBER(lastSupportedVersionStable),
+                BLACK_METAMEMBER(latestVersionBeta),
+                BLACK_METAMEMBER(lastSupportedVersionBeta)
+            );
         };
 
         //! Trait for global setup data
@@ -120,14 +129,5 @@ namespace BlackCore
 } // ns
 
 Q_DECLARE_METATYPE(BlackCore::Data::CUpdateInfo)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackCore::Data::CUpdateInfo, (
-                                   attr(o.m_timestampMSecsSinceEpoch),
-                                   attr(o.m_development),
-                                   attr(o.m_downloadsStableUrls),
-                                   attr(o.m_downloadsBetaUrls),
-                                   attr(o.m_latestVersionStable),
-                                   attr(o.m_lastSupportedVersionStable),
-                                   attr(o.m_latestVersionBeta),
-                                   attr(o.m_lastSupportedVersionBeta)
-                               ))
+
 #endif // guard

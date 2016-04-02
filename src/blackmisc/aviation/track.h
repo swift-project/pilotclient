@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/angle.h"
+#include "blackmisc/metaclass.h"
 
 namespace BlackMisc
 {
@@ -28,11 +29,11 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CTrack :
             public PhysicalQuantities::CAngle,
             public Mixin::MetaType<CTrack>,
-            public Mixin::EqualsByTuple<CTrack>,
-            public Mixin::CompareByTuple<CTrack>,
-            public Mixin::HashByTuple<CTrack>,
-            public Mixin::DBusByTuple<CTrack>,
-            public Mixin::JsonByTuple<CTrack>,
+            public Mixin::EqualsByMetaClass<CTrack>,
+            public Mixin::CompareByMetaClass<CTrack>,
+            public Mixin::HashByMetaClass<CTrack>,
+            public Mixin::DBusByMetaClass<CTrack>,
+            public Mixin::JsonByMetaClass<CTrack>,
             public Mixin::String<CTrack>,
             public Mixin::Index<CTrack>
         {
@@ -85,13 +86,15 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CTrack)
             ReferenceNorth m_north; //!< magnetic or true?
+
+            BLACK_METACLASS(CTrack,
+                BLACK_METAMEMBER(north)
+            );
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTrack, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTrack)
 
 #endif // guard

@@ -173,18 +173,17 @@ namespace BlackMisc
             //! Default value?
             bool isDefaultValue() const { return this->m_transponderCode == 0; }
 
-            BLACK_ENABLE_TUPLE_CONVERSION(CTransponder)
             int m_transponderCode;             //!< Transponder code
             TransponderMode m_transponderMode; //!< Transponder mode
+
+            BLACK_METACLASS(CTransponder,
+                BLACK_METAMEMBER(transponderCode),
+                BLACK_METAMEMBER(transponderMode)
+            );
         };
 
     } // ns
 } // ns
-
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTransponder, (
-                                   o.m_transponderCode,
-                                   o.m_transponderMode
-                               ))
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder::TransponderMode)

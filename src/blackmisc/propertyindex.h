@@ -29,12 +29,12 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CPropertyIndex :
         public Mixin::MetaType<CPropertyIndex>,
-        public Mixin::HashByTuple<CPropertyIndex>,
-        public Mixin::DBusByTuple<CPropertyIndex>,
-        public Mixin::JsonByTuple<CPropertyIndex>,
-        public Mixin::EqualsByTuple<CPropertyIndex>,
-        public Mixin::LessThanByTuple<CPropertyIndex>,
-        public Mixin::CompareByTuple<CPropertyIndex>,
+        public Mixin::HashByMetaClass<CPropertyIndex>,
+        public Mixin::DBusByMetaClass<CPropertyIndex>,
+        public Mixin::JsonByMetaClass<CPropertyIndex>,
+        public Mixin::EqualsByMetaClass<CPropertyIndex>,
+        public Mixin::LessThanByMetaClass<CPropertyIndex>,
+        public Mixin::CompareByMetaClass<CPropertyIndex>,
         public Mixin::String<CPropertyIndex>
     {
         // In the first trial I have used CSequence<int> as base class
@@ -169,16 +169,17 @@ namespace BlackMisc
         void parseFromString(const QString &indexes);
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CPropertyIndex)
         QString m_indexString; //! I use a little trick here, the string is used with the tupel system, as it provides all operators, hash ..
 
         //! Convert list to string
         void setIndexStringByList(const QList<int> &list);
 
+        BLACK_METACLASS(CPropertyIndex,
+            BLACK_METAMEMBER(indexString)
+        );
     };
 } //namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CPropertyIndex, (o.m_indexString))
 Q_DECLARE_METATYPE(BlackMisc::CPropertyIndex)
 
 #endif //guard

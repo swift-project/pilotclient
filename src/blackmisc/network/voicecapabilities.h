@@ -69,16 +69,18 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CVoiceCapabilities)
             VoiceCapabilities m_voiceCapabilities = Unknown;
 
             //! Capabilites from flight plans remarks such as "/V/"
             void setFromFlightPlanRemarks(const QString &flightPlanRemarks);
+
+            BLACK_METACLASS(CVoiceCapabilities,
+                BLACK_METAMEMBER(voiceCapabilities)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CVoiceCapabilities, (o.m_voiceCapabilities))
 Q_DECLARE_METATYPE(BlackMisc::Network::CVoiceCapabilities)
 
 #endif // guard

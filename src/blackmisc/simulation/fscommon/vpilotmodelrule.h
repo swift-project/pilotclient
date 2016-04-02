@@ -86,12 +86,19 @@ namespace BlackMisc
                 CAircraftModel toAircraftModel() const;
 
             private:
-                BLACK_ENABLE_TUPLE_CONVERSION(CVPilotModelRule)
                 QString m_modelName;           //!< model name
                 QString m_folder;              //!< folder
                 QString m_typeCode;            //!< type code, aka aircraft ICAO
                 QString m_callsignPrefix;      //!< callsign prefix, aka airline ICAO
                 qint64  m_updatedMsSinceEpoch; //!< updated when
+
+                BLACK_METACLASS(CVPilotModelRule,
+                    BLACK_METAMEMBER(typeCode, 0, CaseInsensitiveComparison),
+                    BLACK_METAMEMBER(callsignPrefix, 0, CaseInsensitiveComparison),
+                    BLACK_METAMEMBER(modelName, 0, CaseInsensitiveComparison),
+                    BLACK_METAMEMBER(folder, 0, CaseInsensitiveComparison),
+                    BLACK_METAMEMBER(updatedMsSinceEpoch)
+                );
             };
 
         } // namespace
@@ -99,11 +106,5 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::FsCommon::CVPilotModelRule)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::FsCommon::CVPilotModelRule, (
-                                   attr(o.m_typeCode, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_callsignPrefix, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_modelName, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_folder, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_updatedMsSinceEpoch)
-                               ))
+
 #endif // guard

@@ -266,16 +266,16 @@ namespace BlackMisc
         //! Return the metatype ID of the value in this variant.
         int userType() const { return m_v.userType(); }
 
-        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const;
 
-        //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
         void convertFromJson(const QJsonObject &json);
 
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::marshallToDbus
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;
 
-        //! \copydoc BlackMisc::Mixin::DBusByTuple::unmarshallFromDbus
+        //! \copydoc BlackMisc::Mixin::DBusByMetaClass::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument);
 
         //! \copydoc CValueObject::compare

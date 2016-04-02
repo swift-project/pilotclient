@@ -72,14 +72,15 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorSetup)
             BlackMisc::CNameVariantPairList m_data;
 
+            BLACK_METACLASS(CSimulatorSetup,
+                BLACK_METAMEMBER(data)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::CSimulatorSetup, (o.m_data))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorSetup)
 
 #endif // guard

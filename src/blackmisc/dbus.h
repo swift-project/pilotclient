@@ -131,8 +131,8 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_DBUS(DERIVED)                          \
-            using ::BlackMisc::Mixin::DBusByTuple<DERIVED>::marshallToDbus;         \
-            using ::BlackMisc::Mixin::DBusByTuple<DERIVED>::unmarshallFromDbus;
+            using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED>::marshallToDbus;     \
+            using ::BlackMisc::Mixin::DBusByMetaClass<DERIVED>::unmarshallFromDbus;
 
     } // Mixin
 } // BlackMisc

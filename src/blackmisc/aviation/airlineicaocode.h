@@ -177,7 +177,6 @@ namespace BlackMisc
             static CAirlineIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAirlineIcaoCode)
             QString m_designator;           //!< "DLH"
             QString m_iataCode;             //!< "LH"
             QString m_name;                 //!< "Lufthansa"
@@ -186,21 +185,22 @@ namespace BlackMisc
             bool m_isVa = false;            //!< virtual airline
             bool m_isOperating = true;      //!< still operating?
             bool m_isMilitary = false;      //!< air force or such
+
+            BLACK_METACLASS(CAirlineIcaoCode,
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(designator),
+                BLACK_METAMEMBER(name),
+                BLACK_METAMEMBER(country),
+                BLACK_METAMEMBER(telephonyDesignator),
+                BLACK_METAMEMBER(isVa),
+                BLACK_METAMEMBER(isOperating),
+                BLACK_METAMEMBER(isMilitary)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirlineIcaoCode)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirlineIcaoCode, (
-                                   o.m_dbKey,
-                                   o.m_timestampMSecsSinceEpoch,
-                                   o.m_designator,
-                                   o.m_name,
-                                   o.m_country,
-                                   o.m_telephonyDesignator,
-                                   o.m_isVa,
-                                   o.m_isOperating,
-                                   o.m_isMilitary
-                               ))
 
 #endif // guard

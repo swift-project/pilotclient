@@ -110,7 +110,6 @@ namespace BlackMisc
         int comparePropertyByIndex(const CRgbColor &compareValue, const CPropertyIndex &index) const;
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CRgbColor)
         int m_r = -1;
         int m_g = -1;
         int m_b = -1;
@@ -119,14 +118,15 @@ namespace BlackMisc
         double colorRange() const;
 
         static QString intToHex(int h, int digits = 2);
+
+        BLACK_METACLASS(CRgbColor,
+            BLACK_METAMEMBER(r),
+            BLACK_METAMEMBER(g),
+            BLACK_METAMEMBER(b)
+        );
     };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CRgbColor)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CRgbColor, (
-                                   attr(o.m_r),
-                                   attr(o.m_g),
-                                   attr(o.m_b)
-                               ))
 
 #endif // guard

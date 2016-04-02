@@ -288,7 +288,6 @@ namespace BlackMisc
             static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString prefix = QString("mod_"));
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftModel)
             BlackMisc::Aviation::CCallsign m_callsign;             //!< aircraft's callsign if any
             BlackMisc::Aviation::CAircraftIcaoCode m_aircraftIcao; //!< ICAO code if available
             BlackMisc::Aviation::CLivery m_livery;                 //!< livery information
@@ -300,26 +299,25 @@ namespace BlackMisc
             QString        m_fileName;                             //!< file name
             ModelType      m_modelType = TypeUnknown;              //!< model string is coming representing ...?
             ModelMode      m_modelMode = Include;                  //!< model mode (include / exclude)
+
+            BLACK_METACLASS(CAircraftModel,
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(callsign),
+                BLACK_METAMEMBER(aircraftIcao),
+                BLACK_METAMEMBER(livery),
+                BLACK_METAMEMBER(simulator),
+                BLACK_METAMEMBER(distributor),
+                BLACK_METAMEMBER(modelString, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(name),
+                BLACK_METAMEMBER(description, 0, DisabledForComparison),
+                BLACK_METAMEMBER(fileName, 0, DisabledForComparison),
+                BLACK_METAMEMBER(modelType),
+                BLACK_METAMEMBER(modelMode)
+            );
         };
     } // namespace
 } // namespace
-
-BLACK_DECLARE_TUPLE_CONVERSION(
-    BlackMisc::Simulation::CAircraftModel, (
-        attr(o.m_dbKey),
-        attr(o.m_timestampMSecsSinceEpoch),
-        attr(o.m_callsign),
-        attr(o.m_aircraftIcao),
-        attr(o.m_livery),
-        attr(o.m_simulator),
-        attr(o.m_distributor),
-        attr(o.m_modelString, flags<CaseInsensitiveComparison>()),
-        attr(o.m_name),
-        attr(o.m_description, flags<DisabledForComparison>()),
-        attr(o.m_fileName, flags <DisabledForComparison> ()),
-        attr(o.m_modelType),
-        attr(o.m_modelMode)
-    ))
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModel::ModelType)

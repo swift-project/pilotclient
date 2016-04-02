@@ -307,20 +307,20 @@ namespace BlackMisc
         static void registerMetadata();
 
     private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
         mutable QVector<quintptr> m_handledByObjects;
         mutable QReadWriteLock    m_lock;  //!< lock (because of mutable members)
+
+        BLACK_METACLASS(CStatusMessage,
+            BLACK_METAMEMBER(categories),
+            BLACK_METAMEMBER(severity),
+            BLACK_METAMEMBER(message),
+            BLACK_METAMEMBER(args),
+            BLACK_METAMEMBER(timestampMSecsSinceEpoch)
+        );
     };
 } // namespace
 
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
-                                   o.m_categories,
-                                   o.m_severity,
-                                   o.m_message,
-                                   o.m_args,
-                                   o.m_timestampMSecsSinceEpoch
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage::StatusSeverity)
 

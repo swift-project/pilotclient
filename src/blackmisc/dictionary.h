@@ -221,7 +221,7 @@ namespace BlackMisc
             }
         }
 
-        //! \copydoc BlackMisc::Mixin::JsonByTuple::toJson
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const
         {
             QJsonArray array;
@@ -235,7 +235,7 @@ namespace BlackMisc
             return json;
         }
 
-        //! \copydoc BlackMisc::Mixin::JsonByTuple::convertFromJson
+        //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
         void convertFromJson(const QJsonObject &json)
         {
             QJsonArray array = json.value("associativecontainerbase").toArray();

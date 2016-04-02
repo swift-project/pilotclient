@@ -157,7 +157,6 @@ namespace BlackMisc
                 QString convertToQString(bool i18n = false) const;
 
             private:
-                BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)
                 int m_index;               //!< current index in given config
                 QString m_fileName;        //!< file name of .cfg
                 QString m_title;           //!< Title in .cfg
@@ -172,12 +171,20 @@ namespace BlackMisc
                 QString m_simName;         //!< name in simulator
                 QString m_createdBy;       //!< created by, "distributor"
                 bool m_rotorcraft = false; //!< hint if rotorcraft
+
+                BLACK_METACLASS(CAircraftCfgEntries,
+                    BLACK_METAMEMBER(index),
+                    BLACK_METAMEMBER(fileName),
+                    BLACK_METAMEMBER(title),
+                    BLACK_METAMEMBER(atcType),
+                    BLACK_METAMEMBER(atcModel),
+                    BLACK_METAMEMBER(atcParkingCode)
+                );
             };
         } // ns
     } // ns
 } // ns
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Simulation::FsCommon::CAircraftCfgEntries, (o.m_index, o.m_fileName, o.m_title, o.m_atcType, o.m_atcModel, o.m_atcParkingCode))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::FsCommon::CAircraftCfgEntries)
 
 #endif // guard

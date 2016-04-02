@@ -52,21 +52,21 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CWeatherDataPluginInfo)
             QString m_identifier;
             QString m_name;
             QString m_description;
             bool m_valid { false };
+
+            BLACK_METACLASS(CWeatherDataPluginInfo,
+                BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
+                BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),
+                BLACK_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing)
+            );
         };
     } // ns
 } // ns
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Weather::CWeatherDataPluginInfo, (
-                                   attr(o.m_identifier, flags <CaseInsensitiveComparison> ()),
-                                   attr(o.m_name, flags < DisabledForComparison | DisabledForHashing > ()),
-                                   attr(o.m_description, flags < DisabledForComparison | DisabledForHashing > ()),
-                                   attr(o.m_valid, flags < DisabledForComparison | DisabledForHashing > ())
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Weather::CWeatherDataPluginInfo)
 
 #endif // guard

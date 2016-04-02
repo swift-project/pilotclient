@@ -130,23 +130,23 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CClient)
             BlackMisc::Network::CUser              m_user;
             BlackMisc::Simulation::CAircraftModel  m_model;
             BlackMisc::CPropertyIndexVariantMap    m_capabilities;
             QString                                m_server;
             BlackMisc::Network::CVoiceCapabilities m_voiceCapabilities;
+
+            BLACK_METACLASS(CClient,
+                BLACK_METAMEMBER(user),
+                BLACK_METAMEMBER(model),
+                BLACK_METAMEMBER(capabilities, 0, DisabledForComparison | DisabledForJson),
+                BLACK_METAMEMBER(server),
+                BLACK_METAMEMBER(voiceCapabilities)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (
-                                   o.m_user,
-                                   o.m_model,
-                                   attr(o.m_capabilities, flags < DisabledForComparison | DisabledForJson > ()),
-                                   o.m_server,
-                                   o.m_voiceCapabilities
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Network::CClient)
 
 #endif // guard

@@ -255,7 +255,6 @@ namespace BlackMisc
             static CAircraftIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcaoCode)
             QString m_designator;         //!< "B737"
             QString m_iataCode;           //!< "320"
             QString m_family;             //!< "A350" (not a real ICAO code, but a family)
@@ -273,25 +272,26 @@ namespace BlackMisc
 
             //! Create a combined string like L2J
             static QString createdCombinedString(const QString &type, int engineCount, const QString &engine);
+
+            BLACK_METACLASS(CAircraftIcaoCode,
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(designator),
+                BLACK_METAMEMBER(iataCode),
+                BLACK_METAMEMBER(family),
+                BLACK_METAMEMBER(combinedType),
+                BLACK_METAMEMBER(manufacturer),
+                BLACK_METAMEMBER(modelDescription),
+                BLACK_METAMEMBER(wtc),
+                BLACK_METAMEMBER(military),
+                BLACK_METAMEMBER(realWorld),
+                BLACK_METAMEMBER(legacy),
+                BLACK_METAMEMBER(rank)
+            );
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcaoCode)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcaoCode, (
-                                   o.m_dbKey,
-                                   o.m_timestampMSecsSinceEpoch,
-                                   o.m_designator,
-                                   o.m_iataCode,
-                                   o.m_family,
-                                   o.m_combinedType,
-                                   o.m_manufacturer,
-                                   o.m_modelDescription,
-                                   o.m_wtc,
-                                   o.m_military,
-                                   o.m_realWorld,
-                                   o.m_legacy,
-                                   o.m_rank
-                               ))
 
 #endif // guard

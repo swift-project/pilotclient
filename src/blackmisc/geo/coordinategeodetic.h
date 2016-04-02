@@ -208,17 +208,22 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
             double m_x = 0; //!< normal vector
             double m_y = 0; //!< normal vector
             double m_z = 0; //!< normal vector
             BlackMisc::PhysicalQuantities::CLength m_geodeticHeight { 0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() }; //!< height, ellipsoidal or geodetic height
+
+            BLACK_METACLASS(CCoordinateGeodetic,
+                BLACK_METAMEMBER(x),
+                BLACK_METAMEMBER(y),
+                BLACK_METAMEMBER(z),
+                BLACK_METAMEMBER(geodeticHeight)
+            );
         };
 
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_x, o.m_y, o.m_z, o.m_geodeticHeight))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)
 
 #endif // guard

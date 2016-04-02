@@ -88,7 +88,6 @@ namespace BlackMisc
             const QString &generatingThreadName() const { return m_threadName; }
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAirspaceAircraftSnapshot)
             qint64 m_timestampMsSinceEpoch = -1;
             bool m_restricted = false;
             bool m_renderingEnabled = true;
@@ -103,19 +102,19 @@ namespace BlackMisc
 
             BlackMisc::Aviation::CCallsignSet m_vtolAircraftCallsignsByDistance;
             BlackMisc::Aviation::CCallsignSet m_enabledVtolAircraftCallsignsByDistance;
+
+            BLACK_METACLASS(CAirspaceAircraftSnapshot,
+                BLACK_METAMEMBER(timestampMsSinceEpoch),
+                BLACK_METAMEMBER(aircraftCallsignsByDistance, 0, DisabledForComparison),
+                BLACK_METAMEMBER(enabledAircraftCallsignsByDistance, 0, DisabledForComparison),
+                BLACK_METAMEMBER(disabledAircraftCallsignsByDistance, 0, DisabledForComparison),
+                BLACK_METAMEMBER(vtolAircraftCallsignsByDistance, 0, DisabledForComparison),
+                BLACK_METAMEMBER(enabledVtolAircraftCallsignsByDistance, 0, DisabledForComparison)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(
-    BlackMisc::Simulation::CAirspaceAircraftSnapshot, (
-        attr(o.m_timestampMsSinceEpoch),
-        attr(o.m_aircraftCallsignsByDistance, flags<DisabledForComparison>()),
-        attr(o.m_enabledAircraftCallsignsByDistance, flags <DisabledForComparison> ()),
-        attr(o.m_disabledAircraftCallsignsByDistance, flags<DisabledForComparison>()),
-        attr(o.m_vtolAircraftCallsignsByDistance, flags <DisabledForComparison> ()),
-        attr(o.m_enabledVtolAircraftCallsignsByDistance, flags<DisabledForComparison>())
-    ))
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAirspaceAircraftSnapshot)
 
 #endif

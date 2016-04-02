@@ -166,13 +166,14 @@ namespace BlackMisc
             //! \remarks Just a helper method, that is why no CFrequency is returned
             static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
 
-            BLACK_ENABLE_TUPLE_CONVERSION(CComSystem)
-
+            BLACK_METACLASS(CComSystem,
+                BLACK_METAMEMBER(channelSpacing)
+            );
         };
+
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CComSystem, (o.m_channelSpacing))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem::ChannelSpacing)
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem::ComUnit)

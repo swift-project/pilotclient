@@ -73,17 +73,17 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CHotkeyCombination)
             CKeyboardKeyList m_keyboardKeys;
             CJoystickButtonList m_joystickButtons;
+
+            BLACK_METACLASS(CHotkeyCombination,
+                BLACK_METAMEMBER(keyboardKeys),
+                BLACK_METAMEMBER(joystickButtons)
+            );
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Input::CHotkeyCombination, (
-                                   attr(o.m_keyboardKeys),
-                                   attr(o.m_joystickButtons)
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Input::CHotkeyCombination)
 
 #endif // guard

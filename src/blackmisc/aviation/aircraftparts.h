@@ -114,7 +114,6 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftParts)
             CAircraftLights m_lights;
             CAircraftEngineList m_engines;
             int m_flapsPercentage  = 0;
@@ -122,19 +121,19 @@ namespace BlackMisc
             bool m_spoilersOut  = false;
             bool m_isOnGround   = false;
 
+            BLACK_METACLASS(CAircraftParts,
+                BLACK_METAMEMBER_NAMED(lights, "lights"),
+                BLACK_METAMEMBER_NAMED(gearDown, "gear_down"),
+                BLACK_METAMEMBER_NAMED(flapsPercentage, "flaps_pct"),
+                BLACK_METAMEMBER_NAMED(spoilersOut, "spoilers_out"),
+                BLACK_METAMEMBER_NAMED(engines, "engines"),
+                BLACK_METAMEMBER_NAMED(isOnGround, "on_ground"),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison)
+            );
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftParts, (
-                                   attr(o.m_lights, "lights"),
-                                   attr(o.m_gearDown, "gear_down"),
-                                   attr(o.m_flapsPercentage, "flaps_pct"),
-                                   attr(o.m_spoilersOut, "spoilers_out"),
-                                   attr(o.m_engines, "engines"),
-                                   attr(o.m_isOnGround, "on_ground"),
-                                   attr(o.m_timestampMSecsSinceEpoch, flags < DisabledForJson | DisabledForComparison > ())
-                               ))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftParts)
 
 #endif // guard
