@@ -145,7 +145,7 @@ namespace BlackMisc
 
         switch (typeId)
         {
-        case QVariant::Invalid:     m_v.clear(); break;
+        case QVariant::Invalid:     CLogMessage(this).warning("Invalid type for fromJson: %1") << typeName; m_v.clear(); break;
         case QVariant::Int:         m_v.setValue(json.value("value").toInt()); break;
         case QVariant::UInt:        m_v.setValue<uint>(json.value("value").toInt()); break;
         case QVariant::Bool:        m_v.setValue(json.value("value").toBool()); break;
@@ -244,7 +244,7 @@ namespace BlackMisc
      * \internal
      */
     //! @{
-    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
+    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType, const QString &typeName);
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
     //! @}
 
@@ -260,7 +260,7 @@ namespace BlackMisc
         }
         else
         {
-            *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)));
+            *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)), typeName);
         }
     }
 
@@ -347,8 +347,13 @@ namespace BlackMisc
         return toIcon().toPixmap();
     }
 
-    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType)
+    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType, const QString &typeName)
     {
+        if (localUserType == static_cast<int>(QVariant::Invalid))
+        {
+            CLogMessage(&variant).warning("Invalid type for unmarshall: %1") << typeName;
+        }
+
         // my business?
         if (!variant.canConvert<QDBusArgument>()) { return variant; }
 
