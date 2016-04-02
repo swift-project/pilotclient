@@ -56,8 +56,8 @@ RESOURCES +=
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
-OTHER_FILES += ./qss/*.qss ./qss/*.css ./qss/*.ini *.ico *.rc
-COPY_FILES += $$PWD/qss/*
+OTHER_FILES += ./data/qss/*.qss ./data/qss/*.css ./data/qss/*.ini *.ico *.rc
+COPY_FILES += $$PWD/data/qss/*
 
 win32 {
     dlltarget.path = $$PREFIX/bin
@@ -67,10 +67,10 @@ win32 {
     INSTALLS += target
 }
 
-package_utils.path = $$PREFIX/qss
-package_utils.files += qss/*.qss
-package_utils.files += qss/*.css
-package_utils.files += qss/*.ini
+package_utils.path = $$PREFIX/data/qss
+package_utils.files += data/qss/*.qss
+package_utils.files += data/qss/*.css
+package_utils.files += data/qss/*.ini
 INSTALLS += package_utils
 
 load(common_post)

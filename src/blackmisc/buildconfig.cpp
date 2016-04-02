@@ -122,7 +122,7 @@ namespace BlackMisc
     QString getSwiftResourceDirImpl()
     {
         QDir dir(CBuildConfig::getApplicationDir());
-        if (dir.cdUp())
+        if (dir.cdUp() && dir.cd("data"))
         {
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
             return dir.absolutePath();

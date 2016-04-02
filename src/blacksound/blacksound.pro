@@ -26,8 +26,8 @@ SOURCES += *.cpp
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
-OTHER_FILES += ./sounds/*.wav sounds/readme.txt
-COPY_FILES += $$PWD/sounds/*
+OTHER_FILES += ./data/sounds/*.wav ./data/sounds/readme.txt
+COPY_FILES += $$PWD/data/sounds/*
 RESOURCES +=
 
 win32 {
@@ -38,9 +38,9 @@ win32 {
     INSTALLS += target
 }
 
-package_sounds.path = $$PREFIX/sounds
-package_sounds.files += sounds/*.wav
-package_sounds.files += sounds/readme.txt
+package_sounds.path = $$PREFIX/data/sounds
+package_sounds.files += data/sounds/*.wav
+package_sounds.files += data/sounds/readme.txt
 INSTALLS += package_sounds
 
 load(common_post)
