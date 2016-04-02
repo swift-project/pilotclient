@@ -49,20 +49,40 @@ INSTALLS += qt5_plugin_target
 
 ############### Install DBus ##############
 
-dbus_target.path = $${PREFIX}/bin
-dbus_target.files *= $$[QT_INSTALL_BINS]/expat.$${QMAKE_EXTENSION_SHLIB}
-dbus_target.files *= $$[QT_INSTALL_BINS]/dbus-1.$${QMAKE_EXTENSION_SHLIB}
-dbus_target.files *= $$[QT_INSTALL_BINS]/dbus-1-3.$${QMAKE_EXTENSION_SHLIB}
-dbus_target.files *= $$[QT_INSTALL_BINS]/dbus-daemon.$${QMAKE_EXTENSION_EXE}
+win32-g++ {
+    DBUS_BINARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
+    DBUS_BINARIES *= libdbus-1-3.dll
+    DBUS_BINARIES *= dbus-daemon.exe
+    dbus_target.path = $${PREFIX}/bin
 
-dbus_config_target.path = $${PREFIX}/share/dbus-1
+    DBUS_CONFIG_SOURCE_DIR = $$[QT_INSTALL_BINS]/..
+    DBUS_CONFIG_FILES *= share/dbus-1/*
+    dbus_config_target.path = $${PREFIX}/share/dbus-1
+}
 
-# Order is important here. Newer builds of dbus have the config
-# file in share rather and etc has an empty one. In case we have a newer
-# build the empty one will be installed first and the full one from
-# share overwritten later.
-dbus_config_target.files *= $$[QT_INSTALL_BINS]/../etc/dbus-1/*
-dbus_config_target.files *= $$[QT_INSTALL_BINS]/../share/dbus-1/*
+win32-msvc2015 {
+    DBUS_BINARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
+    DBUS_BINARIES *= expat.dll
+    DBUS_BINARIES *= dbus-1-3.dll
+    DBUS_BINARIES *= dbus-daemon.exe
+    dbus_target.path = $${PREFIX}/bin
+
+    DBUS_CONFIG_SOURCE_DIR = $$[QT_INSTALL_BINS]/..
+    DBUS_CONFIG_FILES *= share/dbus-1/*
+    dbus_config_target.path = $${PREFIX}/share/dbus-1
+}
+
+for (BINARY, DBUS_BINARIES) {
+    BINARY_PATH = $${DBUS_BINARY_SOURCE_DIR}/$${BINARY}
+    !exists($$BINARY_PATH): error("Cannot find $${BINARY_PATH}")
+    dbus_target.files *= $${BINARY_PATH}
+}
+
+for (DBUS_CONFIG_FILE, DBUS_CONFIG_FILES) {
+    DBUS_CONFIG_FILE_PATH = $${DBUS_CONFIG_SOURCE_DIR}/$${DBUS_CONFIG_FILE}
+    !exists($$DBUS_CONFIG_FILE_PATH): error("Cannot find $${DBUS_CONFIG_FILE_PATH}")
+    dbus_config_target.files *= $${DBUS_CONFIG_FILE_PATH}
+}
 
 INSTALLS += dbus_target dbus_config_target
 
