@@ -247,6 +247,21 @@ namespace BlackGui
         return Qt::WindowStaysOnTopHint & flags;
     }
 
+    QTabWidget *CGuiUtility::parentTabWidget(QWidget *widget, int maxLevels)
+    {
+        int level = 0;
+        do
+        {
+            widget = widget->parentWidget();
+            if (!widget) { return nullptr; }
+            QTabWidget *tw = qobject_cast<QTabWidget *>(widget);
+            if (tw) { return tw; }
+            level++;
+        }
+        while (level < maxLevels);
+        return nullptr;
+    }
+
     bool CGuiUtility::toggleStayOnTop(QWidget *widget)
     {
         if (!widget) { return false; }

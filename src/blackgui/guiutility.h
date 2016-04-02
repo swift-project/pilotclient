@@ -77,6 +77,9 @@ namespace BlackGui
         //! Window on top?
         static bool staysOnTop(QWidget *widget);
 
+        //! From a given widget try to find parent tab widget (where widget is embedded)
+        static QTabWidget *parentTabWidget(QWidget *widget, int maxLevels = 5);
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}
