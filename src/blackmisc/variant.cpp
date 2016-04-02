@@ -76,13 +76,14 @@ namespace BlackMisc
                 }
                 else
                 {
-                    qWarning() << "Comparing two CVariants containing unrelated value objects";
+                    CLogMessage(&a).warning("Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
+                        << a.typeName() << a.userType() << b.typeName() << b.userType();
                     return 0;
                 }
             }
             catch (const Private::CVariantException &ex)
             {
-                CLogMessage().debug() << ex.what();
+                CLogMessage(&a).debug() << ex.what();
                 return 0;
             }
         }
@@ -125,12 +126,12 @@ namespace BlackMisc
                 }
                 else
                 {
-                    qWarning() << "Unsupported CVariant type for toJson:" << m_v.typeName() << "(" << m_v.userType() << ")";
+                    CLogMessage(this).warning("Unsupported CVariant type for toJson: %1 (%2)") << typeName() << userType();
                 }
             }
             catch (const Private::CVariantException &ex)
             {
-                CLogMessage().debug() << ex.what();
+                CLogMessage(this).debug() << ex.what();
             }
         }
         return json;
@@ -172,17 +173,17 @@ namespace BlackMisc
                     m_v.setValue(json.value("value").toString());
                     if (! m_v.convert(typeId))
                     {
-                        qWarning() << "Failed to convert from JSON string";
+                        CLogMessage(this).warning("Failed to convert from JSON string");
                     }
                 }
                 else
                 {
-                    qWarning() << "Unsupported CVariant type for fromJson";
+                    CLogMessage(this).warning("Unsupported CVariant type for fromJson: %1 (%2)") << typeName << typeId;
                 }
             }
             catch (const Private::CVariantException &ex)
             {
-                CLogMessage().debug() << ex.what();
+                CLogMessage(this).debug() << ex.what();
             }
         }
     }
@@ -215,13 +216,13 @@ namespace BlackMisc
                 }
                 else
                 {
-                    qWarning() << "Unsupported CVariant type for getValueHash";
+                    CLogMessage(this).warning("Unsupported CVariant type for getValueHash: %1 (%2)") << typeName() << userType();
                     return 0;
                 }
             }
             catch (const Private::CVariantException &ex)
             {
-                CLogMessage().debug() << ex.what();
+                CLogMessage(this).debug() << ex.what();
                 return 0;
             }
         }
@@ -274,7 +275,7 @@ namespace BlackMisc
         }
         catch (const Private::CVariantException &ex)
         {
-            CLogMessage().debug() << ex.what();
+            CLogMessage(this).debug() << ex.what();
         }
     }
 
@@ -290,7 +291,7 @@ namespace BlackMisc
         }
         catch (const Private::CVariantException &ex)
         {
-            CLogMessage().debug() << ex.what();
+            CLogMessage(this).debug() << ex.what();
             return {};
         }
     }
@@ -305,7 +306,7 @@ namespace BlackMisc
         }
         catch (const Private::CVariantException &ex)
         {
-            CLogMessage().debug() << ex.what();
+            CLogMessage(this).debug() << ex.what();
             return {};
         }
     }
@@ -320,7 +321,7 @@ namespace BlackMisc
         }
         catch (const Private::CVariantException &ex)
         {
-            CLogMessage().debug() << ex.what();
+            CLogMessage(this).debug() << ex.what();
             return false;
         }
     }
@@ -337,7 +338,7 @@ namespace BlackMisc
         }
         catch (const Private::CVariantException &ex)
         {
-            CLogMessage().debug() << ex.what();
+            CLogMessage(this).debug() << ex.what();
             return {};
         }
     }
@@ -360,7 +361,7 @@ namespace BlackMisc
         // complex, user type
         // it has to be made sure, that the cast works
         const QDBusArgument arg = variant.value<QDBusArgument>();
-        const int userType = static_cast<int>(QVariant::UserType);
+        constexpr int userType = static_cast<int>(QVariant::UserType);
         if (localUserType < userType)
         {
             // complex Qt type, e.g. QDateTime
