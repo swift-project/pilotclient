@@ -17,7 +17,6 @@
 #include "testvariantandmap.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/propertyindexallclasses.h"
-#include "blackmisc/tuple.h"
 #include <QList>
 #include <QString>
 #include <vector>

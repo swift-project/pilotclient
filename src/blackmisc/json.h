@@ -13,7 +13,6 @@
 #define BLACKMISC_JSON_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/tuple.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/fileutils.h"
@@ -146,6 +145,8 @@ BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QStr
 
 namespace BlackMisc
 {
+    class CEmpty;
+
     namespace Json
     {
         //! Append to first JSON object (concatenate)
@@ -235,56 +236,6 @@ namespace BlackMisc
                 json.insert(value.first, QJsonValue(value.second.toJson()));
                 return json;
             }
-        };
-
-        /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with JSON by metatuple.
-         *
-         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
-         *
-         * \see BLACKMISC_DECLARE_USING_MIXIN_JSON
-         */
-        template <class Derived>
-        class JsonByTuple : public JsonOperators<Derived>, private Private::EncapsulationBreaker
-        {
-        public:
-            //! Cast to JSON object
-            QJsonObject toJson() const
-            {
-                QJsonObject json = BlackMisc::serializeJson(Private::EncapsulationBreaker::toMetaTuple(*derived()));
-                return Json::appendJsonObject(json, baseToJson(static_cast<const BaseOfT<Derived> *>(derived())));
-            }
-
-            //! Convenience function JSON as string
-            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const
-            {
-                QJsonDocument jsonDoc(toJson());
-                return jsonDoc.toJson(format);
-            }
-
-            //! Assign from JSON object
-            void convertFromJson(const QJsonObject &json)
-            {
-                baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
-                BlackMisc::deserializeJson(json, Private::EncapsulationBreaker::toMetaTuple(*derived()));
-            }
-
-            //! Assign from JSON object string
-            void convertFromJson(const QString &jsonString)
-            {
-                convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
-            }
-
-        private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
-
-            template <typename T> static QJsonObject baseToJson(const T *base) { return base->toJson(); }
-            template <typename T> static void baseConvertFromJson(T *base, const QJsonObject &json) { base->convertFromJson(json); }
-            static QJsonObject baseToJson(const void *) { return {}; }
-            static void baseConvertFromJson(void *, const QJsonObject &) {}
-            static QJsonObject baseToJson(const CEmpty *) { return {}; }
-            static void baseConvertFromJson(CEmpty *, const QJsonObject &) {}
         };
 
         /*!

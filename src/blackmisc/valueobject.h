@@ -15,7 +15,6 @@
 #include "blackmiscexport.h"
 #include "dbus.h"
 #include "metaclass.h"
-#include "tuple.h"
 #include "json.h"
 #include "compare.h"
 #include "variant.h"
@@ -68,7 +67,7 @@ namespace BlackMisc
      * \tparam Base     The class which this one shall inherit from (default is CEmpty,
      *                  but this can be changed to create a deeper inheritance hierarchy).
      */
-    template <class Derived, class Base /*= CEmpty*/> class CValueObject :
+    template <class Derived, class Base = CEmpty> class CValueObject :
         public Base,
         public Mixin::MetaType<Derived>,
         public Mixin::HashByMetaClass<Derived>,

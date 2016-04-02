@@ -14,7 +14,6 @@
 
 #include "blackmisc/metaclassprivate.h"
 #include "blackmisc/invoke.h"
-#include "blackmisc/tuple.h" // just for TupleConverterFlags
 
 /*!
  * \defgroup MetaClass Metaclass system
@@ -77,19 +76,17 @@ namespace BlackMisc
 
     /*!
     * Metadata flags attached to members of a meta class.
-    * \todo Remove TupleConverterFlags and change MetaFlag to a full enum.
     * \ingroup MetaClass
     */
-    using MetaFlag = TupleConverterFlags;
-    //enum MetaFlag
-    //{
-    //    DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare() and comparison operators
-    //    DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
-    //    DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
-    //    DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
-    //    DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
-    //    CaseInsensitiveComparison = 1 << 5  //!< Element will be compared case insensitively (must be a QString)
-    //};
+    enum MetaFlag
+    {
+        DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare() and comparison operators
+        DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
+        DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
+        DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
+        DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
+        CaseInsensitiveComparison = 1 << 5  //!< Element will be compared case insensitively (must be a QString)
+    };
 
     /*!
      * Type wrapper for passing MetaFlag to CMetaClassIntrospector::with and CMetaClassIntrospector::without.

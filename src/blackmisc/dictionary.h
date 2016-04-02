@@ -26,6 +26,11 @@
 
 namespace BlackMisc
 {
+    // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
+    // This will be safe as long as no global qHash has the same signature as ours.
+    // Alternative would be to qualify all our invokations of the global qHash as ::qHash.
+    using ::qHash;
+
     namespace Private
     {
         //! \cond PRIVATE
@@ -459,32 +464,6 @@ namespace BlackMisc
 
     namespace Mixin
     {
-        /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metatuple.
-         *
-         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
-         */
-        template <class Derived>
-        class HashByTuple : private Private::EncapsulationBreaker
-        {
-        public:
-            //! qHash overload, needed for storing value in a QSet.
-            friend uint qHash(const Derived &value, uint seed = 0)
-            {
-                return ::qHash(hashImpl(value), seed);
-            }
-
-        private:
-            static uint hashImpl(const Derived &value)
-            {
-                return BlackMisc::qHash(toMetaTuple(value)) ^ baseHash(static_cast<const BaseOfT<Derived> *>(&value));
-            }
-
-            template <typename T> static uint baseHash(const T *base) { return qHash(*base); }
-            static uint baseHash(const void *) { return 0; }
-            static uint baseHash(const CEmpty *) { return 0; }
-        };
-
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metaclass.
          *

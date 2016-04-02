@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/pq/pqstring.h"
-#include "blackmisc/tuple.h"
 #include "blackmisc/pq/pq.h"
 #include <QThreadStorage>
 

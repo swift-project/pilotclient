@@ -12,7 +12,6 @@
 #ifndef BLACKMISC_DBUS_H
 #define BLACKMISC_DBUS_H
 
-#include "blackmisc/tuple.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"
 #include <QDBusArgument>
@@ -20,6 +19,8 @@
 
 namespace BlackMisc
 {
+    class CEmpty;
+
     namespace Mixin
     {
         /*!
@@ -48,45 +49,6 @@ namespace BlackMisc
                 arg.endStructure();
                 return arg;
             }
-        };
-
-        /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances by metatuple.
-         *
-         * \tparam Derived Must be registered with BLACK_DECLARE_TUPLE_CONVERSION.
-         *
-         * \see BLACKMISC_DECLARE_USING_MIXIN_DBUS
-         */
-        template <class Derived>
-        class DBusByTuple : public DBusOperators<Derived>, private Private::EncapsulationBreaker
-        {
-        public:
-            //! Marshall without begin/endStructure, for when composed within another object
-            void marshallToDbus(QDBusArgument &arg) const
-            {
-                baseMarshall(static_cast<const BaseOfT<Derived> *>(derived()), arg);
-                using BlackMisc::operator<<;
-                arg << Private::EncapsulationBreaker::toMetaTuple(*derived());
-            }
-
-            //! Unmarshall without begin/endStructure, for when composed within another object
-            void unmarshallFromDbus(const QDBusArgument &arg)
-            {
-                baseUnmarshall(static_cast<BaseOfT<Derived> *>(derived()), arg);
-                using BlackMisc::operator>>;
-                arg >> Private::EncapsulationBreaker::toMetaTuple(*derived());
-            }
-
-        private:
-            const Derived *derived() const { return static_cast<const Derived *>(this); }
-            Derived *derived() { return static_cast<Derived *>(this); }
-
-            template <typename T> static void baseMarshall(const T *base, QDBusArgument &arg) { base->marshallToDbus(arg); }
-            template <typename T> static void baseUnmarshall(T *base, const QDBusArgument &arg) { base->unmarshallFromDbus(arg); }
-            static void baseMarshall(const void *, QDBusArgument &) {}
-            static void baseUnmarshall(void *, const QDBusArgument &) {}
-            static void baseMarshall(const CEmpty *, QDBusArgument &) {}
-            static void baseUnmarshall(CEmpty *, const QDBusArgument &) {}
         };
 
         /*!
