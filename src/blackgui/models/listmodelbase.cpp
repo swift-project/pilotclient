@@ -587,13 +587,7 @@ namespace BlackGui
                 return Private::compareForModelSort<ObjectType>(a, b, order, propertyIndex, marker);
             };
 
-            //! \todo Time measurement will be removed
-            QTime t;
-            t.start();
-            const ContainerType sorted = container.sorted(p);
-            int te = t.elapsed();
-            CLogMessage(this).info("Sorted %1 in %2") << typeid(ObjectType).name() <<  te;
-            return sorted;
+            return container.sorted(p);
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>

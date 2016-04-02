@@ -76,6 +76,9 @@ namespace BlackCore
             operator QJsonArray() const { return m_jsonArray; }
         };
 
+        //! Log categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
+
         //! Start reading in own thread
         void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 

@@ -24,6 +24,12 @@ namespace BlackCore
         connect(&m_watchdogTimer, &QTimer::timeout, this, &CDatabaseReader::ps_watchdog);
     }
 
+    const CLogCategoryList &CDatabaseReader::getLogCategories()
+    {
+        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::swiftDbWebservice(), BlackMisc::CLogCategory::mapping() };
+        return cats;
+    }
+
     void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
     {
         if (isAbandoned()) { return; }

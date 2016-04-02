@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_MAPPINGCOMPONENT_H
-#define BLACKGUI_MAPPINGCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
+#define BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
