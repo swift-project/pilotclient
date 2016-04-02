@@ -7,7 +7,6 @@
     <leftImage>../images/leftimage.png</leftImage>
     <logoImage>../images/logo.png</logoImage>
     <splashImage>../images/splashscreen.png</splashImage>
-    <outputDirectory>.</outputDirectory>
     <componentList>
         <include>
             <file>swift.xml</file>
@@ -51,6 +50,7 @@ check_for_updates = 1
     <!-- <osxApplicationBundleIcon>TODO</osxApplicationBundleIcon>  
   <wmImage>TODO</wmImage>  -->
     <osxApplicationBundleIdentifier>org.swift-project.macinstaller</osxApplicationBundleIdentifier>
+    <outputDirectory>.</outputDirectory>
     <productDisplayIcon>../images/icon.ico</productDisplayIcon>
     <saveRelativePaths>1</saveRelativePaths>
     <vendor>swift Project</vendor>
@@ -62,10 +62,10 @@ check_for_updates = 1
     <windowsSigningTimestampServer>http://timestamp.digicert.com</windowsSigningTimestampServer>
     <customLanguageFileList>
         <!-- <language> 
-        <code>en</code> 
-        <encoding>utf-8</encoding>
-        <file>${build_project_directory}/lang/alf-en.po</file>
-    </language> -->
+            <code>en</code>
+            <encoding>utf-8</encoding>
+            <file>${build_project_directory}/lang/alf-en.po</file>
+        </language> -->
     </customLanguageFileList>
     <finalPageActionList>
         <runProgram>

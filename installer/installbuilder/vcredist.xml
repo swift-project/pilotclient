@@ -1,6 +1,6 @@
 <component>
     <name>vcruntime</name>
-    <description>Visual Studio 2013 Redistributables</description>
+    <description>Visual Studio 2015 Redistributables</description>
     <canBeEdited>0</canBeEdited>
     <selected>1</selected>
     <show>1</show>

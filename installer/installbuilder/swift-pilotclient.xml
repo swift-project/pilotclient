@@ -72,16 +72,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
                     <origin>../../dist/data</origin>
                 </distributionDirectory>
                 <distributionDirectory>
-                    <origin>../../dist/local.env.template</origin>
-                </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/qss</origin>
-                </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/shared</origin>
-                </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/sounds</origin>
+                    <origin>../../dist/share</origin>
                 </distributionDirectory>
             </distributionFileList>
         </folder>
@@ -89,7 +80,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
     <startMenuShortcutList>
         <startMenuShortcut>
             <comment></comment>
-            <name>swift gui</name>
+            <name>swiftgui</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftguistd.exe</windowsExec>
@@ -99,7 +90,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment></comment>
-            <name>swift core</name>
+            <name>swiftcore</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftcore.exe</windowsExec>
@@ -109,7 +100,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment></comment>
-            <name>swift data</name>
+            <name>swiftdata</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftdata.exe</windowsExec>

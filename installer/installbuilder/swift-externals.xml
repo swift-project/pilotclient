@@ -21,7 +21,8 @@
                     <origin>../../dist/bin/vatlib.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/portaudio.dll</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/*portaudio*.dll</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/SimConnect.dll</origin>
@@ -33,7 +34,8 @@
                     <origin>../../dist/bin/speexdsp.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/opus.dll</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/*opus*.dll</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>

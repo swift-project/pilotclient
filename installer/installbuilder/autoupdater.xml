@@ -6,14 +6,16 @@
     <show>0</show>
     <folderList>
         <folder>
+            <description>Auto Updater</description>
             <destination>${installdir}</destination>
             <name>autoupdaterwin</name>
             <platforms>windows</platforms>
             <distributionFileList>
                 <distributionFile origin="../../dist/autoupdate-windows.exe"/>
-</distributionFileList>
+            </distributionFileList>
         </folder>
         <folder>
+            <description>Auto Updater</description>
             <destination>${installdir}</destination>
             <name>autoupdaterlinux</name>
             <platforms>linux</platforms>

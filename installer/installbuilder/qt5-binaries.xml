@@ -13,9 +13,6 @@
             <platforms>windows</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/bin/icuuc54.dll</origin>
-                </distributionFile>
-                <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/Qt5Core*.dll</origin>
                 </distributionFile>
@@ -54,20 +51,12 @@
                 <distributionFile>
                     <origin>../../dist/bin/dbus-daemon.exe</origin>
                 </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/bin/icudt54.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/bin/icuin54.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/bin/icuuc54.dll</origin>
-                </distributionFile>
                 <distributionDirectory>
                     <origin>../../dist/bin/platforms</origin>
                 </distributionDirectory>
                 <distributionFile>
-                    <origin>../../dist/bin/expat.dll</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/expat.dll*</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/libeay32.dll</origin>

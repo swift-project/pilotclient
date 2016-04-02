@@ -163,6 +163,7 @@ win32:!isEmpty(bitrock_customize_bin):!isEmpty(bitrock_builder_bin) {
     QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = create_updater
-    create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows --setvars project.outputDirectory=$${PREFIX}/..
+    create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows \
+                                --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
     QMAKE_EXTRA_TARGETS += create_installer
 }
