@@ -68,12 +68,12 @@ INSTALLS += dbus_target dbus_config_target
 
 ############### Install VC runtime ##############
 
-win32-msvc2013 {
+win32-msvc2015 {
     equals(WORD_SIZE,64) {
-         vc_redist_target.files *= $$(VS120COMNTOOLS)../../VC/redist/1033/vcredist_x64.exe
+         vc_redist_target.files *= $$(VS140COMNTOOLS)../../VC/redist/1033/vcredist_x64.exe
     }
     equals(WORD_SIZE,32) {
-        vc_redist_target.files *= $$(VS120COMNTOOLS)../../VC/redist/1033/vcredist_x86.exe
+        vc_redist_target.files *= $$(VS140COMNTOOLS)../../VC/redist/1033/vcredist_x86.exe
     }
     vc_redist_target.path *= $${PREFIX}/vcredist
     INSTALLS += vc_redist_target
