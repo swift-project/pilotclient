@@ -120,16 +120,17 @@ namespace BlackMisc
             static const QList<CLogCategory> cats
             {
                 uncategorized(),
-                services(),
-                validation(),
                 context(),
                 contextSlot(),
-                guiComponent(),
                 download(),
-                webservice(),
+                guiComponent(),
                 mapping(),
                 matching(),
                 swiftDbWebservice(),
+                services(),
+                validation(),
+                verification(),
+                webservice()
             };
             return cats;
         }

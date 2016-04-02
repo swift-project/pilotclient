@@ -170,8 +170,8 @@ namespace BlackMisc
         //! Constructor
         CStatusMessage(StatusSeverity severity, const QString &message);
 
-        //! Constructor, also a verification messsage can be directly created
-        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool verification = false);
+        //! Constructor, also a validation messsage can be directly created
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation = false);
 
         //! Construct from a Qt logging triple
         //! \sa QtMessageHandler
@@ -249,8 +249,8 @@ namespace BlackMisc
         //! Add category
         void addCategory(const CLogCategory &category) { this->m_categories.push_back(category); }
 
-        //! Adds verification as category
-        void addVerificationCategory();
+        //! Adds validation as category
+        void addValidationCategory();
 
         //! Add categories
         void addCategories(const CLogCategoryList &categories) { this->m_categories.push_back(categories); }

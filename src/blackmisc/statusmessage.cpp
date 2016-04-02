@@ -96,13 +96,13 @@ namespace BlackMisc
         m_severity = severity;
     }
 
-    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool verification)
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation)
         : CStatusMessage(severity, message)
     {
         m_categories = categories;
-        if (verification)
+        if (validation)
         {
-            this->addVerificationCategory();
+            this->addValidationCategory();
         }
     }
 
@@ -231,14 +231,13 @@ namespace BlackMisc
         return this->m_handledByObjects.contains(quintptr(object));
     }
 
-    void CStatusMessage::addVerificationCategory()
+    void CStatusMessage::addValidationCategory()
     {
-        this->addCategory(CLogCategory::verification());
+        this->addCategory(CLogCategory::validation());
     }
 
     QString CStatusMessage::convertToQString(bool /** i18n */) const
     {
-
         QString s("Category: ");
         s.append(this->m_categories.toQString());
 
