@@ -8,6 +8,7 @@
  */
 
 #include "blackgui/stylesheetutility.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/restricted.h"
 
@@ -34,7 +35,7 @@ namespace BlackGui
     CStyleSheetUtility::CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent) : QObject(parent)
     {
         this->read();
-        this->m_fileWatcher.addPath(qssDirectory());
+        this->m_fileWatcher.addPath(CBuildConfig::getStylesheetsDir());
         connect(&this->m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::ps_qssDirectoryChanged);
     }
 
@@ -107,7 +108,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::read()
     {
-        QDir directory(qssDirectory());
+        QDir directory(CBuildConfig::getStylesheetsDir());
         if (!directory.exists()) { return false; }
 
         // ini file
@@ -210,7 +211,7 @@ namespace BlackGui
         qss.append(fontStyleSheet);
         qss.append("}\n");
 
-        QFile fontFile(qssDirectory().append("/").append(fileNameFontsModified()));
+        QFile fontFile(CBuildConfig::getStylesheetsDir() + "/" + fileNameFontsModified());
         bool ok = fontFile.open(QFile::Text | QFile::WriteOnly);
         if (ok)
         {
@@ -264,7 +265,7 @@ namespace BlackGui
 
     bool CStyleSheetUtility::deleteModifiedFontFile()
     {
-        const QString fn = CFileUtils::appendFilePaths(qssDirectory(), fileNameFontsModified());
+        const QString fn = CFileUtils::appendFilePaths(CBuildConfig::getStylesheetsDir(), fileNameFontsModified());
         QFile file(fn);
         if (!file.exists()) { return false; }
         bool r = file.remove();
@@ -355,19 +356,6 @@ namespace BlackGui
     {
         static const QString t = "background-color: transparent;";
         return t;
-    }
-
-    QString CStyleSheetUtility::qssDirectory()
-    {
-        static QString dirPath;
-        if (!dirPath.isEmpty()) { return dirPath; }
-        QDir dir(QCoreApplication::applicationDirPath());
-        bool ok = dir.cdUp();
-        Q_ASSERT_X(ok, Q_FUNC_INFO, "Wrong directory structure");
-        if (!ok) { return ""; }
-        dirPath = CFileUtils::appendFilePaths(dir.absolutePath(), "qss");
-        Q_ASSERT_X(QDir(dirPath).exists(), Q_FUNC_INFO, "Wrong directory structure");
-        return dirPath;
     }
 
     bool CStyleSheetUtility::useStyleSheetInDerivedWidget(QWidget *usedWidget, QStyle::PrimitiveElement element)

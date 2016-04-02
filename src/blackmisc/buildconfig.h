@@ -87,6 +87,12 @@ namespace BlackMisc
         //! Where static DB files are located
         static const QString &getSwiftStaticDbFilesDir();
 
+        //! Where sound files are located
+        static const QString &getSoundFilesDir();
+
+        //! Where qss files are located
+        static const QString &getStylesheetsDir();
+
         //! Where images are located
         static const QString &getImagesDir();
 

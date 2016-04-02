@@ -167,10 +167,40 @@ namespace BlackMisc
         return s;
     }
 
+    QString getSoundFilesDirImpl()
+    {
+        const QString d(CBuildConfig::getSwiftResourceDir());
+        if (d.isEmpty()) { return ""; }
+        QDir dir(CFileUtils::appendFilePaths(d, "sounds"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CBuildConfig::getSoundFilesDir()
+    {
+        static QString s(getSoundFilesDirImpl());
+        return s;
+    }
+
+    QString getStylesheetsDirImpl()
+    {
+        const QString d(CBuildConfig::getSwiftResourceDir());
+        if (d.isEmpty()) { return ""; }
+        QDir dir(CFileUtils::appendFilePaths(d, "qss"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CBuildConfig::getStylesheetsDir()
+    {
+        static QString s(getStylesheetsDirImpl());
+        return s;
+    }
+
     QString getImagesDirImpl()
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
-        QDir dir(CFileUtils::appendFilePaths(d, "data/images"));
+        QDir dir(CFileUtils::appendFilePaths(d, "images"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }

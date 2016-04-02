@@ -121,9 +121,6 @@ namespace BlackGui
         //! Transparent background color
         static const QString &transparentBackgroundColor();
 
-        //! qss directory
-        static QString qssDirectory();
-
         //! Font style as string
         static const QString &fontStyleAsString(const QFont &font);
 

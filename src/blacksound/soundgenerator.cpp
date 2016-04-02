@@ -9,6 +9,7 @@
 
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/filedeleter.h"
+#include "blackmisc/buildconfig.h"
 #include <QtCore/qendian.h>
 #include <math.h>
 #include <qmath.h>
@@ -492,12 +493,12 @@ namespace BlackSound
             // order here is crucial, needs to be the same as in CSoundGenerator::Notification
             if (!playlist) playlist = new QMediaPlaylist(mediaPlayer);
             bool success = true;
-            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/../sounds/error.wav"))) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/../sounds/login.wav"))) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/../sounds/logoff.wav"))) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/../sounds/privatemessage.wav"))) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/../sounds/voiceroomjoined.wav"))) && success;
-            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/../sounds/voiceroomleft.wav"))) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/error.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/login.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/logoff.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/privatemessage.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/voiceroomjoined.wav")) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(CBuildConfig::getSoundFilesDir() + "/voiceroomleft.wav")) && success;
 
             Q_ASSERT(success);
             playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
