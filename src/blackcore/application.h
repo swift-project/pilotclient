@@ -67,7 +67,7 @@ namespace BlackCore
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
-        CApplication(const QString &applicationName = executable());
+        CApplication(const QString &applicationName = executable(), bool init = true);
 
         //! Destructor
         virtual ~CApplication();
@@ -282,6 +282,9 @@ namespace BlackCore
         virtual void ps_startupCompleted();
 
     protected:
+        //! Init class, allows to init from BlackGui::CGuiApplication as well (pseudo virtual)
+        void init(bool withMetadata);
+
         //! Display help message
         virtual void cmdLineHelpMessage();
 
@@ -310,6 +313,9 @@ namespace BlackCore
         //! executable name
         static const QString &executable();
 
+        //! Register metadata
+        static void registerMetadata();
+
         // cmd parsing
         QCommandLineParser m_parser;                    //!< cmd parser
         QCommandLineOption m_cmdHelp {"help"};          //!< help option
@@ -332,9 +338,6 @@ namespace BlackCore
 
         //! Async. start when setup is loaded
         bool asyncWebAndContextStart();
-
-        //! static init part
-        static void initEnvironment();
 
         QScopedPointer<CCoreFacade>            m_coreFacade;             //!< core facade if any
         QScopedPointer<CSetupReader>           m_setupReader;            //!< setup reader

@@ -39,12 +39,14 @@ namespace BlackGui
         return l;
     }
 
-    CGuiApplication::CGuiApplication(const QString &applicationName, const QPixmap &icon) : CApplication(applicationName)
+    CGuiApplication::CGuiApplication(const QString &applicationName, const QPixmap &icon) :
+        CApplication(applicationName, false)
     {
         if (!sGui)
         {
-            registerMetadata();
-            setWindowIcon(icon);
+            CGuiApplication::registerMetadata();
+            CApplication::init(false); // base class without metadata
+            this->setWindowIcon(icon);
             sGui = this;
             connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
         }
@@ -53,6 +55,12 @@ namespace BlackGui
     CGuiApplication::~CGuiApplication()
     {
         sGui = nullptr;
+    }
+
+    void CGuiApplication::registerMetadata()
+    {
+        CApplication::registerMetadata();
+        BlackGui::registerMetadata();
     }
 
     void CGuiApplication::addWindowModeOption()

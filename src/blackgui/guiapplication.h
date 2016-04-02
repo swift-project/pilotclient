@@ -158,6 +158,9 @@ namespace BlackGui
         //! Handle paring of special GUI cmd arguments
         virtual bool parsingHookIn() override;
 
+        //! Register metadata
+        static void registerMetadata();
+
     private:
         QPixmap m_windowIcon;
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)

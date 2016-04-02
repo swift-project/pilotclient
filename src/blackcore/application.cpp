@@ -41,19 +41,29 @@ BlackCore::CApplication *sApp = nullptr; // set by constructor
 
 namespace BlackCore
 {
-    CApplication::CApplication(const QString &applicationName) :
+    CApplication::CApplication(const QString &applicationName, bool init) :
         m_cookieManager( {}, this),
-        m_applicationName(applicationName),
-        m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+                     m_applicationName(applicationName),
+                     m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
+
+        // init skiped when called from CGuiApplication
+        if (init)
+        {
+            this->init(true);
+        }
+    }
+
+    void CApplication::init(bool withMetadata)
+    {
         if (!sApp)
         {
-            CApplication::initEnvironment();
-            QCoreApplication::setApplicationName(applicationName);
-            QCoreApplication::setApplicationVersion(CVersion::version());
-            this->setObjectName(applicationName);
+            if (withMetadata) { CApplication::registerMetadata(); }
+            QCoreApplication::setApplicationName(this->m_applicationName);
+            QCoreApplication::setApplicationVersion(CProject::version());
+            this->setObjectName(this->m_applicationName);
             this->initParser();
             this->initLogging();
 
@@ -95,6 +105,7 @@ namespace BlackCore
             connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
         }
     }
+
 
     CApplication::~CApplication()
     {
@@ -485,7 +496,7 @@ namespace BlackCore
         this->addParserOption(this->m_cmdSharedDir);
     }
 
-    void CApplication::initEnvironment()
+    void CApplication::registerMetadata()
     {
         BlackMisc::registerMetadata();
         BlackCore::registerMetadata();
