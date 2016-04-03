@@ -161,7 +161,7 @@ namespace BlackMisc
         template <typename... Members>
         constexpr static CMetaMemberList<Members...> makeMetaMemberList(Members... members)
         {
-            return { { members... } };
+            return { Private::tuple<Members...>(members...) };
         }
 
         //! Return a CMetaMethod of type deduced from the type of the member.
