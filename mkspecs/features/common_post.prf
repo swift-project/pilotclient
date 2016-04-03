@@ -1,4 +1,18 @@
 ################################
+# Unix rpath
+################################
+
+equals (TEMPLATE, lib) {
+    # Uncomment line below to supress the default RPATH
+    # QMAKE_LFLAGS_RPATH =
+    QMAKE_LFLAGS *= '-Wl,-rpath,\'\$$ORIGIN\''
+}
+
+equals (TEMPLATE, app) {
+    QMAKE_LFLAGS *= '-Wl,-rpath,\'\$$ORIGIN/../lib\''
+}
+
+################################
 # Copy data files to build dir
 ################################
 

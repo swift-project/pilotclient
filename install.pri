@@ -25,6 +25,24 @@ win32 {
 }
 
 unix:!macx {
+    QT5_LIBRARIES *= libQt5Core.so.5
+    QT5_LIBRARIES *= libQt5DBus.so.5
+    QT5_LIBRARIES *= libQt5Gui.so.5
+    QT5_LIBRARIES *= libQt5Multimedia.so.5
+    QT5_LIBRARIES *= libQt5MultimediaWidgets.so.5
+    QT5_LIBRARIES *= libQt5Network.so.5
+    QT5_LIBRARIES *= libQt5OpenGL.so.5
+    QT5_LIBRARIES *= libQt5Svg.so.5
+    QT5_LIBRARIES *= libQt5Widgets.so.5
+    QT5_LIBRARIES *= libQt5XcbQpa.so.5
+    QT5_LIBRARIES *= libQt5Xml.so.5
+    QT5_LIBRARIES *= libqgsttools_p.so.1
+
+# Todo: ICU is necessary on Linux. Uncomment lines below when 5.6.1 is built with ICU enabled on Jenkins
+#    QT5_LIBRARIES *= libicui18n.so.56
+#    QT5_LIBRARIES *= libicuuc.so.56
+#    QT5_LIBRARIES *= libicudata.so.56
+
     qt5_target.path = $${PREFIX}/lib
     QT5_LIBRARY_DIR = $$[QT_INSTALL_LIBS]
 }
@@ -40,6 +58,10 @@ INSTALLS += qt5_target
 
 win32 {
     QT5_PLATFORM_PLUGINS *= qwindows$${DLL_DEBUG_SUFFIX}.dll
+}
+
+unix:!macx {
+    QT5_PLATFORM_PLUGINS *= libqxcb.so
 }
 
 qt5_plugin_target.path = $${PREFIX}/bin/platforms
@@ -90,7 +112,7 @@ for (DBUS_CONFIG_FILE, DBUS_CONFIG_FILES) {
     dbus_config_target.files *= $${DBUS_CONFIG_FILE_PATH}
 }
 
-INSTALLS += dbus_target dbus_config_target
+win32: INSTALLS += dbus_target dbus_config_target
 
 ############### Install VC runtime ##############
 
@@ -149,21 +171,23 @@ win32-g++ {
 
 bitrock_customize_bin = $$(BITROCK_CUSTOMIZE)
 bitrock_builder_bin = $$(BITROCK_BUILDER)
-win32:!isEmpty(bitrock_customize_bin):!isEmpty(bitrock_builder_bin) {
+!isEmpty(bitrock_customize_bin):!isEmpty(bitrock_builder_bin) {
 
     copy_installer_project.depends = install
-    copy_installer_project.commands = xcopy /Y /E /I $$shell_path($$SourceRoot/installer) $$shell_path($$DestRoot/../../installer)
+    win32: copy_installer_project.commands = xcopy /Y /E /I $$shell_path($$SourceRoot/installer) $$shell_path($$DestRoot/../../installer)
+    else: copy_installer_project.commands = cp -R $$shell_path($$SourceRoot/installer) $$shell_path($$DestRoot/../../)
     QMAKE_EXTRA_TARGETS += copy_installer_project
 
     bitrock_autoupdateproject = "$${PREFIX}/../installer/installbuilder/autoupdateproject.xml"
     bitrock_project = $${PREFIX}/../installer/installbuilder/project.xml
 
     create_updater.depends = copy_installer_project
-    create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} windows
+    win32: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} windows
+    unix:!macx: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} linux
     QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = create_updater
-    create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows \
-                                --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
+    win32: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
+    unix:!macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
     QMAKE_EXTRA_TARGETS += create_installer
 }
