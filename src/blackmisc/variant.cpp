@@ -142,6 +142,7 @@ namespace BlackMisc
         // Remark: Names "type" and "value" are also used for drag and drop
         // Changing the names here requires the change for drag and drop too
         QString typeName = json.value("type").toString();
+        if (typeName.isEmpty()) { m_v.clear(); return; }
         int typeId = QMetaType::type(qPrintable(typeName));
 
         switch (typeId)
