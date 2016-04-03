@@ -54,4 +54,9 @@
             </distributionFileList>
         </folder>
     </folderList>
+    <shouldPackRuleList>
+        <platformTest>
+            <type>windows</type>
+        </platformTest>
+    </shouldPackRuleList>
 </component>

@@ -1,7 +1,7 @@
 <project>
     <shortName>swift</shortName>
     <fullName>swift</fullName>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
     <readmeFile>../../dist/bin/README.md</readmeFile>
     <licenseFile>../../dist/bin/LICENSE</licenseFile>
     <leftImage>../images/leftimage.png</leftImage>
@@ -66,10 +66,10 @@ check_for_updates = 1
             <encoding>utf-8</encoding>
             <file>${build_project_directory}/lang/alf-en.po</file>
         </language> -->
-    </customLanguageFileList>
+</customLanguageFileList>
     <finalPageActionList>
         <runProgram>
-            <program>${installdir}/bin/swiftlauncher.exe</program>
+            <program>${installdir}/bin/swiftlauncher</program>
             <programArguments></programArguments>
             <progressText>Run swift launcher</progressText>
         </runProgram>

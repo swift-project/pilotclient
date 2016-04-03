@@ -67,14 +67,60 @@
             </distributionFileList>
         </folder>
         <folder>
-            <description>/</description>
+            <description>share</description>
             <destination>${installdir}/</destination>
-            <name>root</name>
-            <platforms>all</platforms>
+            <name>share</name>
+            <platforms>windows</platforms>
             <distributionFileList>
                 <distributionDirectory>
                     <origin>../../dist/share</origin>
                 </distributionDirectory>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>lib</description>
+            <destination>${installdir}/lib</destination>
+            <name>lib_linux</name>
+            <platforms>linux linux-x64</platforms>
+            <distributionFileList>
+            <!-- Disable icu until Jenkins Qt5 is linked against it.
+                <distributionFile>
+                    <origin>../../dist/lib/libicudata.so.56</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libicui18n.so.56</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libicuuc.so.56</origin>
+                </distributionFile>
+				-->
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5Core.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5DBus.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5Gui.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5Multimedia.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5Network.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5Svg.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5Widgets.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5XcbQpa.so.5</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libQt5Xml.so.5</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
     </folderList>

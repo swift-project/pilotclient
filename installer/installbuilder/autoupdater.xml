@@ -18,9 +18,9 @@
             <description>Auto Updater</description>
             <destination>${installdir}</destination>
             <name>autoupdaterlinux</name>
-            <platforms>linux</platforms>
+            <platforms>linux linux-x64</platforms>
             <distributionFileList>
-                <distributionFile origin="../../dist/autoupdate-linux.run"/>
+                <distributionFile origin="../../dist/autoupdate-linux-x64.run"/>
             </distributionFileList>
         </folder>
     </folderList>

@@ -39,5 +39,16 @@
                 </distributionFile>
             </distributionFileList>
         </folder>
+        <folder>
+            <description>lib</description>
+            <destination>${installdir}/lib</destination>
+            <name>lib_linux</name>
+            <platforms>linux linux-x64</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/lib/libvatlib.so</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
     </folderList>
 </component>

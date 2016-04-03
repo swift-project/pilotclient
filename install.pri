@@ -183,11 +183,11 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
 
     create_updater.depends = copy_installer_project
     win32: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} windows
-    unix:!macx: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} linux
+    unix:!macx: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} linux-x64
     QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = create_updater
     win32: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
-    unix:!macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
+    unix:!macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux-x64 --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
     QMAKE_EXTRA_TARGETS += create_installer
 }

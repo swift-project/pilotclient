@@ -11,7 +11,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <description>bin</description>
             <destination>${installdir}/bin</destination>
             <name>bin_linux</name>
-            <platforms>linux</platforms>
+            <platforms>linux linux-x64</platforms>
             <distributionFileList>
                 <distributionFile>
                     <origin>../../dist/bin/swiftcore</origin>
@@ -63,24 +63,89 @@ This installs the binaries to run all swift applications.</detailedDescription>
             </distributionFileList>
         </folder>
         <folder>
-            <description>/</description>
+            <description>data</description>
             <destination>${installdir}/</destination>
-            <name>root</name>
+            <name>data</name>
             <platforms>all</platforms>
             <distributionFileList>
                 <distributionDirectory>
                     <origin>../../dist/data</origin>
                 </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/share</origin>
-                </distributionDirectory>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>lib</description>
+            <destination>${installdir}/lib</destination>
+            <name>lib_linux</name>
+            <platforms>linux linux-x64</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackcore.so</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackcore.so.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackcore.so.0.7</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackcore.so.0.7.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackgui.so</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackgui.so.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackgui.so.0.7</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackgui.so.0.7.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackinput.so</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackinput.so.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackinput.so.0.7</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackinput.so.0.7.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackmisc.so</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackmisc.so.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackmisc.so.0.7</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblackmisc.so.0.7.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblacksound.so</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblacksound.so.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblacksound.so.0.7</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libblacksound.so.0.7.0</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
     </folderList>
     <startMenuShortcutList>
         <startMenuShortcut>
             <comment></comment>
-            <name>swiftgui</name>
+            <name>swift gui</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftguistd.exe</windowsExec>
@@ -90,7 +155,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment></comment>
-            <name>swiftcore</name>
+            <name>swift core</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftcore.exe</windowsExec>
@@ -100,7 +165,7 @@ This installs the binaries to run all swift applications.</detailedDescription>
         </startMenuShortcut>
         <startMenuShortcut>
             <comment></comment>
-            <name>swiftdata</name>
+            <name>swift data</name>
             <runAsAdmin>0</runAsAdmin>
             <runInTerminal>0</runInTerminal>
             <windowsExec>${installdir}/bin/swiftdata.exe</windowsExec>

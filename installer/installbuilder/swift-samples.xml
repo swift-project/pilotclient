@@ -18,5 +18,17 @@
                 </distributionFile>
             </distributionFileList>
         </folder>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/bin</destination>
+            <name>bin_linux</name>
+            <platforms>linux linux-x64</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/sample*</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
     </folderList>
 </component>
