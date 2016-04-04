@@ -31,6 +31,7 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
                 translations/blackmisc_i18n_en.ts
 
 HEADERS +=  *.h \
+            buildconfig.h.in \
             $$PWD/pq/*.h \
             $$PWD/aviation/*.h \
             $$PWD/math/*.h \
@@ -69,7 +70,7 @@ win32 {
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
-OTHER_FILES += $$TRANSLATIONS readme.txt buildconfig.h.in
+OTHER_FILES += $$TRANSLATIONS readme.txt
 
 win32 {
     dlltarget.path = $$PREFIX/bin

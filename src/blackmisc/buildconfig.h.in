@@ -31,7 +31,7 @@ $$DEFINE_SWIFT_SHIPPED#define SWIFT_SHIPPED
 
 namespace BlackMisc
 {
-
+    //! Build configuration
     class BLACKMISC_EXPORT CBuildConfig
     {
     public:
@@ -141,9 +141,9 @@ namespace BlackMisc
           static const auto pk = QString { \"$$VATSIM_CLIENT_PRIVATE_KEY\" };
           return pk;
         }
-
     };
 
+    //! Version
     class BLACKMISC_EXPORT CVersion
     {
     public:
@@ -170,9 +170,7 @@ namespace BlackMisc
     private:
         //! Parts of version string 1.0.2
         static QList<int> getVersionParts(const QString &versionString);
-
     };
-
 }
 
-#endif // BLACKCONFIG_H
+#endif // guard

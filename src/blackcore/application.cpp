@@ -62,7 +62,7 @@ namespace BlackCore
         {
             if (withMetadata) { CApplication::registerMetadata(); }
             QCoreApplication::setApplicationName(this->m_applicationName);
-            QCoreApplication::setApplicationVersion(CProject::version());
+            QCoreApplication::setApplicationVersion(CVersion::version());
             this->setObjectName(this->m_applicationName);
             this->initParser();
             this->initLogging();
