@@ -12,6 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/datastoreutility.h"
+#include "blackmisc/stringutils.h"
 #include <QMimeData>
 
 using namespace BlackCore;
@@ -62,9 +63,14 @@ namespace BlackGui
             this->ui->lbl_Description->clear();
         }
 
+        QString CDbAirlineIcaoSelectorComponent::getRawDesignator() const
+        {
+            return stripDesignatorFromCompleterString(ui->le_Airline->text());
+        }
+
         QCompleter *CDbAirlineIcaoSelectorComponent::createCompleter()
         {
-            QCompleter *c = new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(), this);
+            QCompleter *c = new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(true, true), this);
             c->setCaseSensitivity(Qt::CaseInsensitive);
             c->setCompletionMode(QCompleter::PopupCompletion);
             c->setMaxVisibleItems(10);

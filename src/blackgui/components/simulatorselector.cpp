@@ -69,21 +69,24 @@ namespace BlackGui
                                       this->ui->cb_XPlane->isChecked(), this->ui->cb_P3D->isChecked());
             case RadioButtons:
                 return CSimulatorInfo(this->ui->rb_FSX->isChecked(), this->ui->rb_FS9->isChecked(),
-                                      this->ui->rb_XPlane->isChecked(), this->ui->cb_P3D->isChecked());
+                                      this->ui->rb_XPlane->isChecked(), this->ui->rb_P3D->isChecked());
             }
         }
 
-        void CSimulatorSelector::setValue(const CSimulatorInfo &info)
+        void CSimulatorSelector::setValue(const CSimulatorInfo &simulator)
         {
-            this->ui->cb_FSX->setChecked(info.fsx());
-            this->ui->cb_FS9->setChecked(info.fs9());
-            this->ui->cb_XPlane->setChecked(info.xplane());
-            this->ui->cb_P3D->setChecked(info.p3d());
+            const CSimulatorInfo current(getValue());
+            if (simulator == current) { return; } // avoid unnecessary signals
 
-            if (info.fsx()) { this->ui->cb_FSX->setChecked(info.fsx()); return; }
-            if (info.fs9()) { this->ui->cb_FS9->setChecked(info.fs9()); return; }
-            if (info.xplane()) { this->ui->cb_XPlane->setChecked(info.xplane()); return; }
-            if (info.p3d()) { this->ui->cb_P3D->setChecked(info.p3d()); return; }
+            this->ui->cb_FSX->setChecked(simulator.fsx());
+            this->ui->cb_FS9->setChecked(simulator.fs9());
+            this->ui->cb_XPlane->setChecked(simulator.xplane());
+            this->ui->cb_P3D->setChecked(simulator.p3d());
+
+            if (simulator.fsx()) { this->ui->cb_FSX->setChecked(simulator.fsx()); return; }
+            if (simulator.fs9()) { this->ui->cb_FS9->setChecked(simulator.fs9()); return; }
+            if (simulator.xplane()) { this->ui->cb_XPlane->setChecked(simulator.xplane()); return; }
+            if (simulator.p3d()) { this->ui->cb_P3D->setChecked(simulator.p3d()); return; }
         }
 
         void CSimulatorSelector::setAll()

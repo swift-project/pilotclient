@@ -52,7 +52,7 @@ namespace BlackGui
             BlackMisc::Simulation::CSimulatorInfo getValue() const;
 
             //! Set the value
-            void setValue(const BlackMisc::Simulation::CSimulatorInfo &info);
+            void setValue(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Set all, only making sense with checkboxes
             void setAll();
@@ -65,7 +65,7 @@ namespace BlackGui
 
         signals:
             //! Value has been changed
-            void changed(const BlackMisc::Simulation::CSimulatorInfo &info);
+            void changed(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         private slots:
             //! Radio button changed

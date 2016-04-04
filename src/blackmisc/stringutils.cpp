@@ -77,3 +77,17 @@ QByteArray BlackMisc::byteArrayFromHexString(const QString &hexString)
     }
     return ba;
 }
+
+QString BlackMisc::stripDesignatorFromCompleterString(const QString &candidate)
+{
+    const QString s(candidate.trimmed().toUpper());
+    if (s.isEmpty()) { return QString(); }
+    if (s.contains(' '))
+    {
+        return s.left(s.indexOf(' '));
+    }
+    else
+    {
+        return s;
+    }
+}

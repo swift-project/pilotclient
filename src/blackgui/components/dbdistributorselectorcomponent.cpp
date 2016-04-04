@@ -158,8 +158,7 @@ namespace BlackGui
             {
                 if (count > 0)
                 {
-                    QStringList keysAndAliases(sGui->getWebDataServices()->getDistributors().getDbKeysAndAliases());
-                    keysAndAliases.sort(Qt::CaseInsensitive);
+                    const QStringList keysAndAliases(sGui->getWebDataServices()->getDistributors().getDbKeysAndAliases(true));
                     QCompleter *c = new QCompleter(keysAndAliases, this);
                     c->setCaseSensitivity(Qt::CaseInsensitive);
                     c->setCompletionMode(QCompleter::PopupCompletion);

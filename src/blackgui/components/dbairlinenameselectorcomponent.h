@@ -37,14 +37,12 @@ namespace BlackGui
             //! \note needed for forward declared QScopedPointer and needs to be in .cpp
             virtual ~CDbAirlineNameSelectorComponent();
 
-            //! \copydoc CDbAirlineIcaoSelectorBase::setReadOnly
+            //! \name Base class overrides
+            //! @{
             virtual void setReadOnly(bool readOnly) override;
-
-            //! \copydoc CDbAirlineIcaoSelectorBase::setAirlineIcao
             virtual void setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
-
-            //! \copydoc CDbAirlineIcaoSelectorBase::clear
             virtual void clear() override;
+            //! @}
 
         protected:
             //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter

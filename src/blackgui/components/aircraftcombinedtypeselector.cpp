@@ -10,6 +10,7 @@
 #include "aircraftcombinedtypeselector.h"
 #include "ui_aircraftcombinedtypeselector.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/uppercasevalidator.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -28,6 +29,8 @@ namespace BlackGui
             this->connect(ui->cb_EngineCount, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
             this->connect(ui->cb_EngineType, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
             this->connect(ui->cb_Type, &QComboBox::currentTextChanged, this, &CAircraftCombinedTypeSelector::ps_ChangedComboBox);
+
+            ui->le_CombinedType->setValidator(new CUpperCaseValidator(this));
         }
 
         CAircraftCombinedTypeSelector::~CAircraftCombinedTypeSelector()

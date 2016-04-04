@@ -58,6 +58,9 @@ namespace BlackMisc
     //! Byte array from hex value string per byte, 2 digits
     BLACKMISC_EXPORT QByteArray byteArrayFromHexString(const QString &hexString);
 
+    //! Strip a designator from a combined string
+    BLACKMISC_EXPORT QString stripDesignatorFromCompleterString(const QString &candidate);
+
     namespace Mixin
     {
         /*!

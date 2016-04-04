@@ -51,6 +51,9 @@ namespace BlackGui
             //! Distributor
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcao() const;
 
+            //! Raw designator
+            QString getRawDesignator() const;
+
             //! Read only
             void setReadOnly(bool readOnly);
 

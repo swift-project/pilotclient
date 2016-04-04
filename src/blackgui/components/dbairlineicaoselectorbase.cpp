@@ -35,9 +35,7 @@ namespace BlackGui
         }
 
         CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase()
-        {
-            //
-        }
+        { }
 
         void CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
         {
