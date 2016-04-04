@@ -13,7 +13,6 @@
 #define BLACKMISC_SIMULATION_AIRCRAFTMATCHER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include <QObject>
@@ -40,10 +39,10 @@ namespace BlackMisc
             //! Enabled matching mode flags
             enum MatchingModeFlag
             {
-                ExactMatch    = 1 << 0,
-                ModelMapping  = 1 << 1,
-                ModelMatching = 1 << 2,
-                AllModes = ExactMatch | ModelMapping | ModelMatching
+                ByModelString    = 1 << 0,
+                ByIcaoData       = 1 << 1,
+                ByFamily         = 1 << 2,
+                All              = ByModelString | ByIcaoData | ByFamily
             };
             Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -51,7 +50,7 @@ namespace BlackMisc
             static const BlackMisc::CLogCategoryList &getLogCategories();
 
             //! Constructor
-            CAircraftMatcher(MatchingMode matchingMode = ModelMatching, QObject *parent = nullptr);
+            CAircraftMatcher(MatchingMode matchingMode = All, QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CAircraftMatcher();
@@ -63,19 +62,15 @@ namespace BlackMisc
             //! Result depends on enabled modes.
             //! \sa MatchingModeFlag
             //! \threadsafe
-            CAircraftModel getClosestMatch(const CSimulatedAircraft &remoteAircraft) const;
+            CAircraftModel getClosestMatch(const CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
 
-            //! Get all mappings
-            BlackMisc::Simulation::CAircraftModelList getMatchingModels() const { return m_mappingsProvider->getMatchingModels(); }
+            //! Get the models
+            //! \threadsafe
+            BlackMisc::Simulation::CAircraftModelList getModels() const { return m_models.read(); }
 
-            //! Set the model mapping provider. The CAircraftMatcher will move the object and take over ownership
-            void setModelMappingProvider(std::unique_ptr<IModelMappingsProvider> mappings);
-
-            //! Log.details?
-            void setLogDetails(bool log);
-
-            //! Reload
-            void reload();
+            //! Set the models we want to use
+            //! \threadsafe
+            int setModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
             //! Default model
             const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const;
@@ -94,24 +89,24 @@ namespace BlackMisc
 
             //! Search in models by key (aka model string)
             //! \threadsafe
-            CAircraftModel matchByExactModelString(const CSimulatedAircraft &remoteAircraft) const;
+            CAircraftModel matchByExactModelString(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, CStatusMessageList *log) const;
 
             //! Installed models by ICAO data
             //! \threadsafe
-            CAircraftModel matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, QString &log) const;
+            CAircraftModel matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, bool ignoreAirline, CStatusMessageList *log) const;
 
             //! Find model by aircraft family
-            CAircraftModel matchByFamily(const CSimulatedAircraft &remoteAircraft, QString &log) const;
+            CAircraftModel matchByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, const CAircraftModelList &models, CStatusMessageList *log) const;
 
-            //! Log. details about mapping of particular aircraft
-            //! threadsafe
-            void logDetails(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const QString &message) const;
+            //! Add to log. if applicable
+            void logDetails(BlackMisc::CStatusMessageList *log,
+                            const CSimulatedAircraft &remoteAircraft,
+                            const QString &message,
+                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo) const;
 
-            MatchingMode                           m_matchingMode = ModelMatching;
+            MatchingMode                           m_matchingMode = All;
             BlackMisc::Simulation::CAircraftModel  m_defaultModel;                             //!< model to be used as default model
             BlackMisc::LockFree<BlackMisc::Simulation::CAircraftModelList> m_models;           //!< models used for model matching
-            std::unique_ptr<BlackMisc::Simulation::IModelMappingsProvider> m_mappingsProvider; //!< Provides all mapping definitions
-            std::atomic<bool>                      m_logDetails { false };                     //!< log details
         };
     }
 } // namespace
