@@ -96,21 +96,42 @@ namespace BlackMisc
             this->sortBy(&CAircraftIcaoCode::getRank);
         }
 
-        QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily) const
+        void CAircraftIcaoCodeList::sortByDesignatorAndRank()
+        {
+            this->sortBy(&CAircraftIcaoCode::getDesignator, &CAircraftIcaoCode::getRank);
+        }
+
+        QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool sort) const
         {
             QStringList c;
-            for (const CAircraftIcaoCode &icao : *this)
+            CAircraftIcaoCodeList icaos(*this);
+            if (sort) { icaos.sortByDesignatorAndRank(); }
+
+            // 3 steps to get a proper sort order
+            for (const CAircraftIcaoCode &icao : as_const(icaos))
             {
                 c.append(icao.getCombinedIcaoStringWithKey());
-                if (withIataCodes && icao.hasIataCode() && !icao.isIataSameAsDesignator())
-                {
-                    c.append(icao.getCombinedIataStringWithKey());
-                }
-                if (withFamily && icao.hasFamily() && !icao.isFamilySameAsDesignator())
+            }
+
+            if (withFamily)
+            {
+                icaos = this->findWithFamily(true);
+                for (const CAircraftIcaoCode &icao : as_const(icaos))
                 {
                     c.append(icao.getCombinedFamilyStringWithKey());
                 }
             }
+
+            if (withIataCodes)
+            {
+                icaos = icaos.findWithIataCode(true);
+                if (sort) { icaos.sortBy(&CAircraftIcaoCode::getIataCode, &CAircraftIcaoCode::getRank); }
+                for (const CAircraftIcaoCode &icao : as_const(icaos))
+                {
+                    c.append(icao.getCombinedIataStringWithKey());
+                }
+            }
+
             return c;
         }
 

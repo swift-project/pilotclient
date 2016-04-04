@@ -151,19 +151,19 @@ namespace BlackMisc
             //! Valid combined code string?
             static bool isValidCombinedCode(const QString &candidate);
 
-            //! Standard livery marker
+            //! Standard livery marker string
             static const QString &standardLiveryMarker();
 
             //! Color livery marker
             static const QString &colorLiveryMarker();
 
         private:
-            CAirlineIcaoCode m_airline; //!< corresponding airline, if any
-            QString m_combinedCode;     //!< livery code and pseudo airline ICAO code
-            QString m_description;      //!< describes the livery
+            CAirlineIcaoCode m_airline;           //!< corresponding airline, if any
+            QString m_combinedCode;               //!< livery code and pseudo airline ICAO code
+            QString m_description;                //!< describes the livery
             BlackMisc::CRgbColor m_colorFuselage; //! color of fuselage
             BlackMisc::CRgbColor m_colorTail;     //! color of tail
-            bool m_military = false; //! Military livery?
+            bool m_military = false;              //! Military livery?
 
             BLACK_METACLASS(
                 CLivery,

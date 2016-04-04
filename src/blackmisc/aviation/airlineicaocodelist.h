@@ -66,10 +66,10 @@ namespace BlackMisc
             CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const;
 
             //! String list for completion by ICAO designator
-            QStringList toIcaoDesignatorCompleterStrings() const;
+            QStringList toIcaoDesignatorCompleterStrings(bool combinedString = true, bool sort = true) const;
 
             //! String list for completion by name
-            QStringList toNameCompleterStrings() const;
+            QStringList toNameCompleterStrings(bool sort = true) const;
 
             //! From our DB JSON
             static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);

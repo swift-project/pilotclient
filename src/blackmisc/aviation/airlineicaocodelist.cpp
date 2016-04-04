@@ -123,20 +123,30 @@ namespace BlackMisc
             return codes;
         }
 
-        QStringList CAirlineIcaoCodeList::toIcaoDesignatorCompleterStrings() const
+        QStringList CAirlineIcaoCodeList::toIcaoDesignatorCompleterStrings(bool combinedString, bool sort) const
         {
             QStringList c;
             for (const CAirlineIcaoCode &icao : *this)
             {
-                if (!icao.hasValidDbKey()) { continue; }
-                const QString cs(icao.getCombinedStringWithKey());
-                if (cs.isEmpty()) { continue; }
-                c.append(cs);
+                if (combinedString)
+                {
+                    if (!icao.hasValidDbKey()) { continue; }
+                    const QString cs(icao.getCombinedStringWithKey());
+                    if (cs.isEmpty()) { continue; }
+                    c.append(cs);
+                }
+                else
+                {
+                    const QString d(icao.getDesignator());
+                    if (c.contains(d)) { continue; }
+                    c.append(d);
+                }
             }
+            if (sort) { c.sort(); }
             return c;
         }
 
-        QStringList CAirlineIcaoCodeList::toNameCompleterStrings() const
+        QStringList CAirlineIcaoCodeList::toNameCompleterStrings(bool sort) const
         {
             QStringList c;
             for (const CAirlineIcaoCode &icao : *this)
@@ -146,6 +156,7 @@ namespace BlackMisc
                 if (cs.isEmpty()) { continue; }
                 c.append(cs);
             }
+            if (sort) { c.sort(); }
             return c;
         }
     } // namespace

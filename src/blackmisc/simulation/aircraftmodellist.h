@@ -66,6 +66,9 @@ namespace BlackMisc
             //! Find by model string
             CAircraftModelList findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
 
+            //! Find by livery code
+            CAircraftModelList findByLiveryCode(const BlackMisc::Aviation::CLivery &livery) const;
+
             //! With file name
             CAircraftModelList findWithFileName() const;
 
@@ -80,6 +83,21 @@ namespace BlackMisc
 
             //! Models with a known aircraft ICAO code set
             CAircraftModelList findWithKnownAircraftDesignator() const;
+
+            //! Find by manufacturer
+            CAircraftModelList findByManunfacturer(const QString &manufacturer) const;
+
+            //! Models with aircraft family
+            CAircraftModelList findByFamily(const QString &family) const;
+
+            //! Find by combined code, wildcards possible e.g. L*P, *2J
+            CAircraftModelList findByCombinedCode(const QString &combinedCode) const;
+
+            //! Find by military flag
+            CAircraftModelList findByMilitaryFlag(bool military) const;
+
+            //! Take a designator and find its family
+            QString designatorToFamily(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) const;
 
             //! Find for given simulator
             CAircraftModelList matchesSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
@@ -134,6 +152,9 @@ namespace BlackMisc
 
             //! Update livery
             void updateLivery(const BlackMisc::Aviation::CLivery &livery);
+
+            //! Completer strings
+            QStringList toCompleterStrings(bool sorted = true) const;
 
             //! Validate for publishing
             CStatusMessageList validateForPublishing() const;

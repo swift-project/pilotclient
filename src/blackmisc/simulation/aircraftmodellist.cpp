@@ -52,6 +52,7 @@ namespace BlackMisc
 
         CAircraftModel CAircraftModelList::findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
+            if (modelString.isEmpty()) { return CAircraftModel(); }
             return this->findFirstByOrDefault([ = ](const CAircraftModel & model)
             {
                 return model.matchesModelString(modelString, sensitivity);
@@ -94,6 +95,17 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByLiveryCode(const CLivery &livery) const
+        {
+            if (!livery.hasCombinedCode()) { return CAircraftModelList(); }
+            const QString code(livery.getCombinedCode());
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                if (!model.getLivery().hasCombinedCode()) return false;
+                return model.getLivery().getCombinedCode() == code;
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findWithFileName() const
         {
             return this->findBy([ = ](const CAircraftModel & model)
@@ -127,9 +139,65 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::findByManunfacturer(const QString &manufacturer) const
+        {
+            if (manufacturer.isEmpty()) { return CAircraftModelList(); }
+            const QString m(manufacturer.toUpper().trimmed());
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return model.getAircraftIcaoCode().getManufacturer() == m;
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByFamily(const QString &family) const
+        {
+            if (family.isEmpty()) { return CAircraftModelList(); }
+            const QString f(family.toUpper().trimmed());
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
+                if (!icao.hasFamily()) { return false; }
+                return icao.getFamily() == f;
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByCombinedCode(const QString &combinedCode) const
+        {
+            const QString cc(combinedCode.trimmed().toUpper());
+            if (combinedCode.length() != 3) { return CAircraftModelList(); }
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
+                return icao.matchesCombinedCode(cc);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::findByMilitaryFlag(bool military) const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return (model.isMilitary() == military);
+            });
+        }
+
+        QString CAircraftModelList::designatorToFamily(const CAircraftIcaoCode &aircraftIcaoCode) const
+        {
+            if (aircraftIcaoCode.hasFamily()) { return aircraftIcaoCode.getFamily(); }
+            for (const CAircraftModel &model : (*this))
+            {
+                const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
+                if (!icao.hasFamily()) continue;
+                if (icao.matchesDesignator(aircraftIcaoCode.getDesignator()))
+                {
+                    return icao.getFamily();
+                }
+            }
+            return QString();
+        }
+
         CAircraftModelList CAircraftModelList::matchesSimulator(const CSimulatorInfo &simulator) const
         {
-            return this->findBy([ = ](const CAircraftModel &model)
+            return this->findBy([ = ](const CAircraftModel & model)
             {
                 return model.matchesSimulator(simulator);
             });
@@ -362,6 +430,17 @@ namespace BlackMisc
             {
                 model.setLivery(livery);
             }
+        }
+
+        QStringList CAircraftModelList::toCompleterStrings(bool sorted) const
+        {
+            QStringList c;
+            for (const CAircraftModel &model : *this)
+            {
+                c.append(model.getModelString());
+            }
+            if (sorted) { c.sort(); }
+            return c;
         }
 
         CStatusMessageList CAircraftModelList::validateForPublishing() const

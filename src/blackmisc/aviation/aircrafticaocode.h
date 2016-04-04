@@ -128,6 +128,10 @@ namespace BlackMisc
             //! Get model description, e.g. "A-330-200"
             const QString &getModelDescription() const { return m_modelDescription; }
 
+            //! Matches given combined code
+            //! \remark * can be used as wildcard, e.g. L*J, L**
+            bool matchesCombinedCode(const QString &combinedCode) const;
+
             //! Designator + Manufacturer
             QString getDesignatorManufacturer() const;
 

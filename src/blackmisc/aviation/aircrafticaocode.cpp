@@ -149,6 +149,31 @@ namespace BlackMisc
             return c;
         }
 
+        bool CAircraftIcaoCode::matchesCombinedCode(const QString &combinedCode) const
+        {
+            const QString cc(combinedCode.toUpper().trimmed().replace(' ', '*').replace('-', '*'));
+            if (combinedCode.length() != 3) { return false; }
+            if (cc == this->getCombinedType()) { return true; }
+
+            const bool wildcard = cc.contains('*');
+            if (!wildcard) { return false; }
+            QChar at = cc.at(0);
+            QChar c = cc.at(1);
+            QChar et = cc.at(2);
+            if (at != '*')
+            {
+                const QString cat = getAircraftType();
+                if (cat.isEmpty() || cat.at(0) != at) { return false; }
+            }
+            if (c != '*')
+            {
+                if (getEngineCount() != c.digitValue()) { return false; }
+            }
+            if (et == '*') { return true; }
+            const QString cet = getEngineType();
+            return cet.length() == 1 && cet.at(0) == et;
+        }
+
         QString CAircraftIcaoCode::getDesignatorManufacturer() const
         {
             QString d(getDesignator());

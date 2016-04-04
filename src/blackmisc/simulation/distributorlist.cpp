@@ -53,7 +53,7 @@ namespace BlackMisc
             return false;
         }
 
-        QStringList CDistributorList::getDbKeysAndAliases() const
+        QStringList CDistributorList::getDbKeysAndAliases(bool sort) const
         {
             if (this->isEmpty()) { return QStringList(); }
             QStringList sl;
@@ -70,6 +70,7 @@ namespace BlackMisc
                     sl.append(d.getAlias2());
                 }
             }
+            if (sort) { sl.sort(); }
             return sl;
         }
 

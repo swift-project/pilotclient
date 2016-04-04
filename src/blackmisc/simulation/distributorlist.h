@@ -50,7 +50,7 @@ namespace BlackMisc
             bool matchesAnyKeyOrAlias(const QString &keyOrAlias) const;
 
             //! All DB keys and aliases
-            QStringList getDbKeysAndAliases() const;
+            QStringList getDbKeysAndAliases(bool sort) const;
         };
     } //namespace
 } // namespace

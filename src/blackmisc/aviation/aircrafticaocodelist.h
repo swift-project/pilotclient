@@ -69,7 +69,7 @@ namespace BlackMisc
             void sortByRank();
 
             //! For selection completion
-            QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false) const;
+            QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;
 
             //! All ICAO codes, no duplicates
             QStringList allIcaoCodes(bool noUnspecified = true) const;
