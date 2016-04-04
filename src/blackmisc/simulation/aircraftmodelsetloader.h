@@ -26,16 +26,25 @@ namespace BlackMisc
         /*!
          * Handling of current set for simulator
          */
-        class BLACKMISC_EXPORT CModelSetLoader : public QObject
+        class BLACKMISC_EXPORT CAircraftModelSetLoader :
+            public QObject,
+            public BlackMisc::Simulation::IModelsSetable,
+            public BlackMisc::Simulation::IModelsUpdatable,
+            public BlackMisc::Simulation::IModelsPerSimulatorSetable,
+            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
         {
             Q_OBJECT
+            Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
 
         public:
             //! Constructor
-            CModelSetLoader(const CSimulatorInfo &info, QObject *parent = nullptr);
+            CAircraftModelSetLoader(const CSimulatorInfo &info, QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CModelSetLoader();
+            virtual ~CAircraftModelSetLoader();
 
             //! The loaded models
             //! \threadsafe
@@ -59,6 +68,9 @@ namespace BlackMisc
         signals:
             //! Simulator has been changed
             void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Cache changed
+            void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         public slots:
             //! Set cache from outside, this should only be used in special cases.
@@ -85,7 +97,7 @@ namespace BlackMisc
             //! Clear cache
             BlackMisc::CStatusMessage clearCache();
 
-            BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo; //!< Corresponding simulator
+            BlackMisc::Simulation::CSimulatorInfo        m_simulatorInfo;   //!< Corresponding simulator
             BlackMisc::Simulation::Data::CModelSetCaches m_caches { this }; //!< caches
         };
     } // namespace

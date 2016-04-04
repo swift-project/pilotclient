@@ -161,11 +161,21 @@ namespace BlackMisc
                 //! Syncronize
                 void syncronize(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            signals:
+                //! Cache has been changed
+                void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            private slots:
+                void ps_changedFsx() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
+                void ps_changedFs9() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FS9)); }
+                void ps_changedP3D() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::P3D)); }
+                void ps_changedXP()  { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
+
             private:
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFsx> m_modelCacheFsx {this };  //!< FSX cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFs9> m_modelCacheFs9 {this };  //!< FS9 cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheP3D> m_modelCacheP3D {this };  //!< P3D cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheXP>  m_modelCacheXP  {this };  //!< XP cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFsx> m_modelCacheFsx {this, &CModelSetCaches::ps_changedFsx };  //!< FSX cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::ps_changedFs9};   //!< FS9 cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::ps_changedP3D };  //!< P3D cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::ps_changedXP };   //!< XP cache
             };
 
         } // ns
