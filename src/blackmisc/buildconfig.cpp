@@ -1,5 +1,5 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift Project Community/Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -21,79 +21,44 @@
 
 namespace BlackMisc
 {
-    bool CBuildConfig::isCompiledWithBlackCore()
-    {
-#ifdef WITH_BLACKCORE
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isCompiledWithBlackSound()
-    {
-#ifdef WITH_BLACKSOUND
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isCompiledWithBlackInput()
-    {
-#ifdef WITH_BLACKINPUT
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isCompiledWithFs9Support()
-    {
-#ifdef WITH_FS9
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isCompiledWithFsxSupport()
-    {
-#ifdef WITH_FSX
-        return true;
-#else
-        return false;
-#endif
-    }
-
     bool CBuildConfig::isCompiledWithP3DSupport()
     {
-        return isCompiledWithFsxSupport();
+        return CBuildConfig::isCompiledWithFsxSupport();
     }
 
     bool CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
     {
-        return isCompiledWithFs9Support() || isCompiledWithFsxSupport() || isCompiledWithP3DSupport();
-    }
-
-    bool CBuildConfig::isCompiledWithXPlaneSupport()
-    {
-#ifdef WITH_XPLANE
-        return true;
-#else
-        return false;
-#endif
+        return CBuildConfig::isCompiledWithFs9Support() || CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithP3DSupport();
     }
 
     bool CBuildConfig::isCompiledWithFlightSimulatorSupport()
     {
-        return isCompiledWithFsxSupport() || isCompiledWithXPlaneSupport();
+        return CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithXPlaneSupport();
     }
 
-    bool CBuildConfig::isCompiledWithGui()
+    const QString &CBuildConfig::swiftGuiExecutableName()
     {
-#ifdef WITH_BLACKGUI
-        return true;
+        static const QString s("swiftguistd");
+        return s;
+    }
+
+    const QString &CBuildConfig::swiftCoreExecutableName()
+    {
+        static const QString s("swiftcore");
+        return s;
+    }
+
+    const QString &CBuildConfig::swiftDataExecutableName()
+    {
+        static const QString s("swiftdata");
+        return s;
+    }
+
+    bool CBuildConfig::isRunningOnWindowsNtPlatform()
+    {
+#ifdef Q_OS_WIN
+        // QSysInfo::WindowsVersion only available on Win platforms
+        return (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based);
 #else
         return false;
 #endif
@@ -117,62 +82,11 @@ namespace BlackMisc
 #endif
     }
 
-    bool CBuildConfig::isBetaTest()
-    {
-#ifdef SWIFT_BETA
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::canRunInDeveloperEnvironment()
-    {
-        if (isBetaTest()) { return true; }
-        return !isShippedVersion();
-    }
-
-    bool CBuildConfig::isShippedVersion()
-    {
-#ifdef SWIFT_SHIPPED
-        return true;
-#else
-        return false;
-#endif
-    }
-
-    bool CBuildConfig::isRunningOnWindowsNtPlatform()
-    {
-#ifdef Q_OS_WIN
-        // QSysInfo::WindowsVersion only available on Win platforms
-        return (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based);
-#else
-        return false;
-#endif
-    }
-
-    const QString &CBuildConfig::swiftGuiExecutableName()
-    {
-        static const QString s("swiftguistd");
-        return s;
-    }
-
-    const QString &CBuildConfig::swiftCoreExecutableName()
-    {
-        static const QString s("swiftcore");
-        return s;
-    }
-
-    const QString &CBuildConfig::swiftDataExecutableName()
-    {
-        static const QString s("swiftdata");
-        return s;
-    }
-
     const QStringList &CBuildConfig::swiftTeamDefaultServers()
     {
         static const QStringList s({ "https://vatsim-germany.org:50443/mapping/public/shared",
-                                     "http://ubuntu12/public/bootstrap/shared"});
+            "http://ubuntu12/public/bootstrap/shared"
+        });
         return s;
     }
 
@@ -263,6 +177,12 @@ namespace BlackMisc
         return s;
     }
 
+    bool CBuildConfig::canRunInDeveloperEnvironment()
+    {
+        if (CBuildConfig::isBetaTest()) { return true; }
+        return !CBuildConfig::isShippedVersion();
+    }
+
     QString getDocumentationDirectoryImpl()
     {
         QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
@@ -287,14 +207,14 @@ namespace BlackMisc
             if (infoShort.isEmpty())
             {
                 QStringList sl;
-                if (isCompiledWithBlackCore())     { sl << "BlackCore"; }
-                if (isCompiledWithBlackSound())    { sl << "BlackSound"; }
-                if (isCompiledWithBlackInput())    { sl << "BlackInput"; }
-                if (isCompiledWithGui())           { sl << "BlackGui"; }
-                if (isCompiledWithFs9Support())    { sl << "FS9"; }
-                if (isCompiledWithFsxSupport())    { sl << "FSX"; }
-                if (isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
-                if (isCompiledWithP3DSupport())    { sl << "P3D"; }
+                if (CBuildConfig::isCompiledWithBlackCore())     { sl << "BlackCore"; }
+                if (CBuildConfig::isCompiledWithBlackSound())    { sl << "BlackSound"; }
+                if (CBuildConfig::isCompiledWithBlackInput())    { sl << "BlackInput"; }
+                if (CBuildConfig::isCompiledWithGui())           { sl << "BlackGui"; }
+                if (CBuildConfig::isCompiledWithFs9Support())    { sl << "FS9"; }
+                if (CBuildConfig::isCompiledWithFsxSupport())    { sl << "FSX"; }
+                if (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
+                if (CBuildConfig::isCompiledWithP3DSupport())    { sl << "P3D"; }
                 infoShort = sl.join(", ");
                 if (infoShort.isEmpty()) { infoShort = "<none>"; }
             }
@@ -335,8 +255,6 @@ namespace BlackMisc
         return false;
     }
 
-
-
     QList<int> CVersion::getVersionParts(const QString &versionString)
     {
         QStringList parts = versionString.split('.');
@@ -349,7 +267,6 @@ namespace BlackMisc
         }
         return partsInt;
     }
-
 } // ns
 
 //! \endcond

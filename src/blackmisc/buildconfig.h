@@ -12,22 +12,9 @@
 #ifndef BLACKMISC_BUILDCONFIG_H
 #define BLACKMISC_BUILDCONFIG_H
 
-#include \"blackmisc/blackmiscexport.h\"
+#include "blackmisc/blackmiscexport.h"
 #include <QString>
 #include <QDateTime>
-
-$$DEFINE_WITH_BLACKCORE#define WITH_BLACKCORE
-$$DEFINE_WITH_BLACKSOUND#define WITH_BLACKSOUND
-$$DEFINE_WITH_BLACKINPUT#define WITH_BLACKINPUT
-$$DEFINE_WITH_BLACKGUI#define WITH_BLACKGUI
-$$DEFINE_WITH_SWIFTDATA#define WITH_SWIFTDATA
-$$DEFINE_WITH_SWIFTGUI#define WITH_SWIFTGUI
-$$DEFINE_WITH_SWIFTCORE#define WITH_SWIFTCORE
-$$DEFINE_WITH_FSX#define WITH_FSX
-$$DEFINE_WITH_FS9#define WITH_FS9
-$$DEFINE_WITH_XPLANE#define WITH_XPLANE
-$$DEFINE_SWIFT_BETA#define SWIFT_BETA
-$$DEFINE_SWIFT_SHIPPED#define SWIFT_SHIPPED
 
 namespace BlackMisc
 {
@@ -118,29 +105,16 @@ namespace BlackMisc
         static const QStringList &swiftTeamDefaultServers();
 
         //! End of lifetime
-        static const QDateTime &getEol()
-        {
-            static const QString eol(\"$$BLACK_EOL\");
-            static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, \"yyyyMMdd\"));
-            return dt;
-        }
+        static const QDateTime &getEol();
 
         //! Lifetime ended?
         static bool isLifetimeExpired();
 
         //! Vatsim client id
-        static int vatsimClientId()
-        {
-            static const int id { $$VATSIM_CLIENT_ID };
-            return id;
-        }
+        static int vatsimClientId();
 
         //! Vatsim client key
-        static const QString &vatsimPrivateKey()
-        {
-          static const auto pk = QString { \"$$VATSIM_CLIENT_PRIVATE_KEY\" };
-          return pk;
-        }
+        static const QString &vatsimPrivateKey();
     };
 
     //! Version
@@ -148,21 +122,16 @@ namespace BlackMisc
     {
     public:
         //! Version info
-        static const QString &version()
-        {
-            static const QString version(\"$$BLACK_VERSION\");
-            Q_ASSERT(!version.isEmpty());
-            return version;
-        }
+        static const QString &version();
 
         //! Version major
-        static int versionMajor() { return $$BLACK_VER_MAJ; }
+        static int versionMajor();
 
         //! Version minor
-        static int versionMinor() { return $$BLACK_VER_MIN; }
+        static int versionMinor();
 
         //! Version patch
-        static int versionPatch() { return $$BLACK_VER_PAT; }
+        static int versionPatch();
 
         //! Is the given string representing a newer version?
         static bool isNewerVersion(const QString &versionString);

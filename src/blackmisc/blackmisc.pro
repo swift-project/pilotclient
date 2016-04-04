@@ -10,8 +10,15 @@ contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib
 }
 
-buildconfig.input = buildconfig.h.in
-buildconfig.output = buildconfig.h
+buildconfig.input = buildconfig.cpp.in
+CONFIG(debug, debug|release) {
+    buildconfig.output = $$OUT_PWD/debug/buildconfig_gen.cpp
+    GENERATED_SOURCES += $$OUT_PWD/debug/buildconfig_gen.cpp
+
+} else {
+    buildconfig.output = $$OUT_PWD/release/buildconfig_gen.cpp
+    GENERATED_SOURCES += $$OUT_PWD/release/buildconfig_gen.cpp
+}
 QMAKE_SUBSTITUTES += buildconfig
 
 INCLUDEPATH += ..
@@ -31,7 +38,6 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
                 translations/blackmisc_i18n_en.ts
 
 HEADERS +=  *.h \
-            buildconfig.h.in \
             $$PWD/pq/*.h \
             $$PWD/aviation/*.h \
             $$PWD/math/*.h \
@@ -70,7 +76,7 @@ win32 {
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
-OTHER_FILES += $$TRANSLATIONS readme.txt
+OTHER_FILES += $$TRANSLATIONS readme.txt buildconfig.cpp.in
 
 win32 {
     dlltarget.path = $$PREFIX/bin

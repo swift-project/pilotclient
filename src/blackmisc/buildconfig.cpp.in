@@ -1,0 +1,136 @@
+/* Copyright (C) 2016
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#include \"blackmisc/buildconfig.h\"
+#include <QString>
+#include <QDateTime>
+
+$$DEFINE_WITH_BLACKCORE#define WITH_BLACKCORE
+$$DEFINE_WITH_BLACKSOUND#define WITH_BLACKSOUND
+$$DEFINE_WITH_BLACKINPUT#define WITH_BLACKINPUT
+$$DEFINE_WITH_BLACKGUI#define WITH_BLACKGUI
+$$DEFINE_WITH_SWIFTDATA#define WITH_SWIFTDATA
+$$DEFINE_WITH_SWIFTGUI#define WITH_SWIFTGUI
+$$DEFINE_WITH_SWIFTCORE#define WITH_SWIFTCORE
+$$DEFINE_WITH_FSX#define WITH_FSX
+$$DEFINE_WITH_FS9#define WITH_FS9
+$$DEFINE_WITH_XPLANE#define WITH_XPLANE
+$$DEFINE_SWIFT_BETA#define SWIFT_BETA
+$$DEFINE_SWIFT_SHIPPED#define SWIFT_SHIPPED
+
+bool BlackMisc::CBuildConfig::isCompiledWithBlackCore()
+{
+#ifdef WITH_BLACKCORE
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isCompiledWithBlackSound()
+{
+#ifdef WITH_BLACKSOUND
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isCompiledWithBlackInput()
+{
+#ifdef WITH_BLACKINPUT
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isCompiledWithFs9Support()
+{
+#ifdef WITH_FS9
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isCompiledWithFsxSupport()
+{
+#ifdef WITH_FSX
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isCompiledWithXPlaneSupport()
+{
+#ifdef WITH_XPLANE
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isCompiledWithGui()
+{
+#ifdef WITH_BLACKGUI
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isBetaTest()
+{
+#ifdef SWIFT_BETA
+        return true;
+#else
+        return false;
+#endif
+}
+
+bool BlackMisc::CBuildConfig::isShippedVersion()
+{
+#ifdef SWIFT_SHIPPED
+    return true;
+#else
+    return false;
+#endif
+}
+
+const QDateTime &BlackMisc::CBuildConfig::getEol()
+{
+    static const QString eol(\"$$BLACK_EOL\");
+    static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, \"yyyyMMdd\"));
+    return dt;
+}
+
+int BlackMisc::CBuildConfig::vatsimClientId()
+{
+    static const int id { $$VATSIM_CLIENT_ID };
+    return id;
+}
+
+const QString &BlackMisc::CBuildConfig::vatsimPrivateKey()
+{
+    static const auto pk = QString { \"$$VATSIM_CLIENT_PRIVATE_KEY\" };
+    return pk;
+}
+
+const QString &BlackMisc::CVersion::version()
+{
+    static const QString version(\"$$BLACK_VERSION\");
+    Q_ASSERT(!version.isEmpty());
+    return version;
+}
+
+int BlackMisc::CVersion::versionMajor() { return $$BLACK_VER_MAJ; }
+int BlackMisc::CVersion::versionMinor() { return $$BLACK_VER_MIN; }
+int BlackMisc::CVersion::versionPatch() { return $$BLACK_VER_PAT; }
