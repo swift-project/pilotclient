@@ -18,7 +18,8 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorsetup.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodelsetloader.h"
+#include "blackmisc/simulation/aircraftmatcher.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/pluginstorageprovider.h"
@@ -47,56 +48,27 @@ namespace BlackCore
         //! Destructor
         virtual ~CSimulatorCommon();
 
-        //! \copydoc ISimulator::getMaxRenderedAircraft
+        //! \name ISimulator implementations
+        //! @{
         virtual int getMaxRenderedAircraft() const override;
-
-        //! \copydoc ISimulator::setMaxRenderedAircraft
         virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
-
-        //! \copydoc ISimulator::setMaxRenderedDistance
         virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
-
-        //! \copydoc ISimulator::getMaxRenderedDistance
         virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
-
-        //! \copydoc ISimulator::getRenderedDistanceBoundary
         virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
-
-        //! \copydoc ISimulator::isMaxAircraftRestricted
         virtual bool isMaxAircraftRestricted() const override;
-
-        //! \copydoc ISimulator::isMaxDistanceRestricted
         virtual bool isMaxDistanceRestricted() const override;
-
-        //! \copydoc ISimulator::enableDebugMessages
         virtual void enableDebugMessages(bool driverMessages, bool interpolatorMessages) override;
-
-        //! \copydoc ISimulator::getInstalledModelsCount
         virtual int getInstalledModelsCount() const override;
-
-        //! \copydoc ISimulator::highlightAircraft
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
-
-        //! \copydoc ISimulator::isRenderingEnabled
         virtual bool isRenderingEnabled() const override;
-
-        //! \copydoc ISimulator::isRenderingRestricted
         virtual bool isRenderingRestricted() const override;
-
-        //! \copydoc ISimulator::getSimulatorPluginInfo
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
-
-        //! \copydoc ISimulator::getSimulatorSetup
         virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
-
-        //! \copydoc ISimulator::unload
         virtual void unload() override;
-
-        //! \copydoc IContextSimulator::deleteAllRenderingRestrictions
+        virtual void reloadInstalledModels() override;
         virtual void deleteAllRenderingRestrictions() override;
-
-        //! \copydoc ISimulator::physicallyRemoveMultipleRemoteAircraft
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
+        //! @}
 
     protected slots:
         //! Slow timer used to highlight aircraft, can be used for other things too
@@ -143,13 +115,17 @@ namespace BlackCore
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
 
+        //! \todo unclear if this is valid for all simulators or for MS/P3D simulators only
+        BlackMisc::Simulation::CAircraftMatcher m_modelMatcher;  //!< Model matcher
+        BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this }; //!< load model set from caches
+
     private:
         bool m_debugMessages = false;             //!< Display debug messages
         bool m_blinkCycle = false;                //!< use for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0;     //!< end highlighting
         int m_timerCounter = 0;                   //!< allows to calculate n seconds
-        QTimer m_oneSecondTimer {this};           //!< timer
-        BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorPluginInfo;   //!< info object
+        QTimer m_oneSecondTimer {this};           //!< multi purpose timer
+        BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo; //!< info object
         BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft; //!< all other aircraft are to be ignored
         BlackMisc::Aviation::CCallsignSet m_callsignsToBeRendered;           //!< callsigns which will be rendered
         int m_maxRenderedAircraft = MaxAircraftInfinite;                     //!< max.rendered aircraft

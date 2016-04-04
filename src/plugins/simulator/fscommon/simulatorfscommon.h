@@ -58,9 +58,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! \copydoc BlackCore::ISimulator::reloadInstalledModels
-            virtual void reloadInstalledModels() override;
-
             //! \copydoc BlackCore::IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
@@ -94,9 +91,6 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CComSystem   m_simCom1;            //!< cockpit COM1 state in simulator
             BlackMisc::Aviation::CComSystem   m_simCom2;            //!< cockpit COM2 state in simulator
             BlackMisc::Aviation::CTransponder m_simTransponder;     //!< cockpit xpdr state in simulator
-
-            // parser / matcher
-            BlackMisc::Simulation::CAircraftMatcher m_modelMatcher; //!< Model matcher
 
             //! Set own model
             void setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);

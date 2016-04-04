@@ -45,62 +45,27 @@ namespace BlackSimPlugin
                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                              QObject *parent = nullptr);
 
-            //! \copydoc BlackCore::ISimulator::isTimeSynchronized
+            //! ISimulator implementations
+            //! @{
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
-
-            //! \copydoc BlackCore::ISimulator::connectTo
             virtual bool connectTo() override;
-
-            //! \copydoc BlackCore::ISimulator::disconnectFrom
             virtual bool disconnectFrom() override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyAddRemoteAircraft()
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRemoveRemoteAircraft
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
             virtual int physicallyRemoveAllRemoteAircraft() override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRenderedAircraft
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
-
-            //! \copydoc BlackCore::ISimulator::isPhysicallyRenderedAircraft
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftEnabled
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc BlackCore::ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
-
-            //! \copydoc BlackCore::ISimulator::displayTextMessage
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
-
-            //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
-
-            //! \copydoc BlackCore::ISimulator::reloadInstalledModels
-            virtual void reloadInstalledModels() override;
-
-            //! \copydoc BlackCore::ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
-
-            //! \copydoc BlackCore::ISimulator::setTimeSynchronization
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
-
-            //! \copydoc BlackCore::ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
-
-            //! \copydoc BlackCore::ISimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
+            //! @}
 
             //! Creates an appropriate dbus connection from the string describing it
             static QDBusConnection connectionFromString(const QString &str);
@@ -148,9 +113,8 @@ namespace BlackSimPlugin
             CXBusWeatherProxy *m_weather { nullptr };
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
-            BlackMisc::Aviation::CAirportList m_airportsInRange;   //!< aiports in range of own aircraft
-            BlackMisc::Simulation::CAircraftModelList m_installedModels;
-            BlackMisc::Simulation::CAircraftMatcher m_modelMatcher { BlackMisc::Simulation::CAircraftMatcher::AllModes, this }; //!< Model matcher
+            BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
+            BlackMisc::Simulation::CAircraftModelList m_installedModels; //!< \todo Do we still need this, as we now focus on model set
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
 

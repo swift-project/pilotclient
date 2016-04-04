@@ -54,6 +54,11 @@ namespace BlackCore
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
         this->m_oneSecondTimer.start(1000);
 
+        // init mapper
+        const CSimulatorInfo sim(info.getIdentifier());
+        this->m_modelSetLoader.changeSimulator(sim);
+        this->m_modelMatcher.setModelSet(this->m_modelSetLoader.getAircraftModels());
+
         // info
         CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
     }
@@ -227,6 +232,11 @@ namespace BlackCore
     {
         this->disconnectFrom(); // disconnect from simulator
         this->m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
+    }
+
+    void CSimulatorCommon::reloadInstalledModels()
+    {
+        // currently we do nothing here
     }
 
     CLength CSimulatorCommon::getRenderedDistanceBoundary() const

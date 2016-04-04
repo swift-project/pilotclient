@@ -9,7 +9,6 @@
 
 #include "simulatorfscommon.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/modelmappingsprovider.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
@@ -32,15 +31,8 @@ namespace BlackSimPlugin
             Weather::IWeatherGridProvider *weatherGridProvider,
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, weatherGridProvider, parent),
-            m_fsuipc(new CFsuipc()),
-            m_modelMatcher(CAircraftMatcher::AllModes, this)
-        {
-            // init mapper
-            CSimulatorInfo sim(info.getIdentifier());
-            this->m_modelMatcher.setModelMappingProvider(
-                std::make_unique<CachedModelSetProvider>(sim, this)
-            );
-        }
+            m_fsuipc(new CFsuipc())
+        { }
 
         CSimulatorFsCommon::~CSimulatorFsCommon() { }
 
@@ -101,12 +93,7 @@ namespace BlackSimPlugin
 
         CAircraftModelList CSimulatorFsCommon::getInstalledModels() const
         {
-            return m_modelMatcher.getMatchingModels();
-        }
-
-        void CSimulatorFsCommon::reloadInstalledModels()
-        {
-            this->m_modelMatcher.reload();
+            return m_modelMatcher.getModelSet();
         }
 
         CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const

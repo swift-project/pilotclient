@@ -13,7 +13,6 @@
 #include "xbusweatherproxy.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/modelmappingsprovider.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
@@ -65,7 +64,6 @@ namespace BlackSimPlugin
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
 
-            m_modelMatcher.setModelMappingProvider(std::make_unique<CachedModelSetProvider>(CSimulatorInfo::XPLANE, this));
             m_modelMatcher.setDefaultModel(CAircraftModel(
                                                "__XPFW_Jets/A320_a/A320_a_Austrian_Airlines.obj __XPFW_Jets/A320_a/A320_a_Austrian_Airlines.png",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
@@ -317,12 +315,6 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
             return m_installedModels;
-        }
-
-        void CSimulatorXPlane::reloadInstalledModels()
-        {
-            //! \todo XP driver, function not available
-            CLogMessage(this).error("Function not avialable");
         }
 
         void CSimulatorXPlane::ps_setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
