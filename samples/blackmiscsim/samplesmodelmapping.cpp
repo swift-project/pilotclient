@@ -15,7 +15,7 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
-#include "blackmisc/simulation/fscommon/modelmappingsprovidervpilot.h"
+#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/simulation/aircraftmatcher.h"
 
 #include <QDebug>
@@ -32,11 +32,10 @@ namespace BlackSample
     void CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
         BlackMisc::registerMetadata();
-
-        std::unique_ptr<IModelMappingsProvider> cvm(new CModelMappingsProviderVPilot(true));
-        bool s = cvm->read();
+        CVPilotRulesReader vpRulesReader;
+        bool s = vpRulesReader.read(true);
         streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << endl;
-        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << cvm->getMatchingModels().size() << endl;
+        streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << vpRulesReader.getAsModelsFromCache().size() << endl;
 
         // mapper with rule set, handing over ownership
         QString fsxDir = CSampleUtils::selectDirectory(
@@ -59,11 +58,11 @@ namespace BlackSample
         streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << endl;
 
         // sync definitions, remove redundant ones
-        CAircraftMatcher matcher(CAircraftMatcher::AllModes);
-        matcher.setModelMappingProvider(std::move(cvm));
+        CAircraftMatcher matcher(CAircraftMatcher::All);
+        matcher.setModelSet(vpRulesReader.getAsModelsFromCache());
 
         CAircraftIcaoCode icao("C172");
         streamOut << "Searching for " << icao << endl;
-        streamOut << matcher.getMatchingModels().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
+        streamOut << matcher.getModelSet().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
     }
 } // namespace
