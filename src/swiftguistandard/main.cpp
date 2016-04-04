@@ -23,6 +23,7 @@ using namespace BlackCore;
 int main(int argc, char *argv[])
 {
     //! [CSwiftGuiStdApplication]
+    CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CSwiftGuiStdApplication a;
     a.signalStartupAutomatically(); // application will signal startup on its own
