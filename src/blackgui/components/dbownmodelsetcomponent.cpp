@@ -40,7 +40,7 @@ namespace BlackGui
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
-            connect(&this->m_modelSetLoader, &CModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
+            connect(&this->m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::rowCountChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::ps_onJsonDataLoaded);
 
@@ -120,18 +120,13 @@ namespace BlackGui
             CDbMappingComponentAware::setMappingComponent(component);
             if (component)
             {
-                connect(this->getMappingComponent(), &CDbMappingComponent::tabIndexChanged, this, &CDbOwnModelSetComponent::ps_tabChanged);
+                connect(this->getMappingComponent(), &CDbMappingComponent::tabIndexChanged, this, &CDbOwnModelSetComponent::ps_tabIndexChanged);
             }
         }
 
-        void CDbOwnModelSetComponent::ps_tabChanged(int index)
+        void CDbOwnModelSetComponent::ps_tabIndexChanged(int index)
         {
-            CDbMappingComponent::TabIndex ti = static_cast<CDbMappingComponent::TabIndex>(index);
-            if (ti == CDbMappingComponent::TabOwnModelSet)
-            {
-                // myself
-                this->getMappingComponent()->resizeForSelect();
-            }
+            Q_UNUSED(index);
         }
 
         void CDbOwnModelSetComponent::ps_buttonClicked()

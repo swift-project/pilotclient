@@ -52,11 +52,12 @@ namespace BlackGui
             //! Must match real tab index
             enum TabIndex
             {
-                NoValidTab     =  -1,
-                TabStash       =   0,
-                TabOwnModels   =   1,
-                TabOwnModelSet =   2,
-                TabVPilot      =   3
+                NoValidTab      =  -1,
+                TabStash        =   0,
+                TabOwnModels    =   1,
+                TabOwnModelSet  =   2,
+                TabModelMatcher =   3,
+                TabVPilot      =    4
             };
 
             //! Constructor
@@ -179,6 +180,9 @@ namespace BlackGui
 
             //! Stashed models changed
             void ps_onStashedModelsChanged();
+
+            //! Tab index changed
+            void ps_tabIndexChanged(int index);
 
             //! Models have been published successfully
             void ps_onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models);

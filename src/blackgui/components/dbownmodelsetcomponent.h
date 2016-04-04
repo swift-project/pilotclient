@@ -69,7 +69,7 @@ namespace BlackGui
 
         private slots:
             //! Tab has been changed
-            void ps_tabChanged(int index);
+            void ps_tabIndexChanged(int index);
 
             //! Button was clicked
             void ps_buttonClicked();
@@ -94,9 +94,9 @@ namespace BlackGui
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
-            QScopedPointer<CDbOwnModelSetDialog>        m_modelSetDialog;
-            BlackMisc::Simulation::CSimulatorInfo       m_simulator;
-            BlackMisc::Simulation::CModelSetLoader      m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
+            QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
+            BlackMisc::Simulation::CSimulatorInfo          m_simulator;
+            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component

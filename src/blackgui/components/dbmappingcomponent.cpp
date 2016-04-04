@@ -11,6 +11,7 @@
 #include "ui_dbmappingcomponent.h"
 #include "blackgui/components/dbautostashingcomponent.h"
 #include "blackgui/components/dbmodelmappingmodifycomponent.h"
+#include "blackgui/components/modelmatchercomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/shortcut.h"
@@ -68,7 +69,8 @@ namespace BlackGui
             connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::ps_onModelsSuccessfullyPublished);
 
             connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onModelSetCountChanged);
-            connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::tabIndexChanged);
+            connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::ps_tabIndexChanged);
+            connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher , &CModelMatcherComponent::tabIndexChanged);
 
             // how to display forms
             ui->editor_AircraftIcao->setSelectOnly();
@@ -452,6 +454,30 @@ namespace BlackGui
             {
                 this->ui->comp_OwnAircraftModels->view()->derivedModel()->setHighlightModelStrings(stashedModels);
             }
+        }
+
+        void CDbMappingComponent::ps_tabIndexChanged(int index)
+        {
+            TabIndex ti = static_cast<CDbMappingComponent::TabIndex>(index);
+
+            switch (ti)
+            {
+            case CDbMappingComponent::TabOwnModelSet:
+                ui->frp_Editors->setVisible(true);
+                ui->editor_Model->setVisible(true);
+                this->resizeForSelect();
+                break;
+            case CDbMappingComponent::TabModelMatcher:
+                ui->editor_Model->setVisible(false);
+                ui->frp_Editors->setVisible(false);
+                this->resizeForSelect();
+                break;
+            default:
+                ui->frp_Editors->setVisible(true);
+                ui->editor_Model->setVisible(true);
+                break;
+            }
+            emit this->tabIndexChanged(index);
         }
 
         void CDbMappingComponent::ps_onModelsSuccessfullyPublished(const CAircraftModelList &models)
