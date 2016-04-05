@@ -8,6 +8,7 @@
  */
 
 #include "stylesheetutility.h"
+#include "blackmisc/fileutils.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QTextStream>
@@ -17,11 +18,15 @@
 #include <QStylePainter>
 #include <QAbstractScrollArea>
 
+using namespace BlackMisc;
+
 namespace BlackGui
 {
     CStyleSheetUtility::CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent) : QObject(parent)
     {
         this->read();
+        this->m_fileWatcher.addPath(qssDirectory());
+        connect(&this->m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::ps_qssDirectoryChanged);
     }
 
     const QString &CStyleSheetUtility::fontStyleAsString(const QFont &font)
@@ -97,24 +102,23 @@ namespace BlackGui
         if (!directory.exists()) { return false; }
 
         // ini file
-        QString iniFile = directory.absolutePath().append("/").append(fileNameIniFile());
+        const QString iniFile = CFileUtils::appendFilePaths(directory.absolutePath(), fileNameIniFile());
         m_iniFile.reset(new QSettings(iniFile, QSettings::IniFormat));
 
         // qss/css files
         directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
-        QFileInfoList fileInfoList = directory.entryInfoList();
-
-        for (int i = 0; i < fileInfoList.size(); ++i)
+        this->m_styleSheets.clear();
+        const QFileInfoList fileInfoList = directory.entryInfoList();
+        for (const QFileInfo &fileInfo : fileInfoList)
         {
-            QFileInfo fileInfo = fileInfoList.at(i);
             QFile file(fileInfo.absoluteFilePath());
             if (file.open(QFile::QIODevice::ReadOnly | QIODevice::Text))
             {
                 QTextStream in(&file);
-                QString c = in.readAll();
-                QString f = fileInfo.fileName().toLower();
+                const QString c = in.readAll();
+                const QString f = fileInfo.fileName().toLower();
 
                 // keep even empty files as placeholders
                 this->m_styleSheets.insert(f, c);
@@ -133,11 +137,28 @@ namespace BlackGui
 
     QString CStyleSheetUtility::styles(const QStringList &fileNames) const
     {
+        const bool hasModifiedFont = this->containsStyle(fileNameFontsModified());
+        bool fontAdded = false;
+
         QString style;
         for (const QString &fileName : fileNames)
         {
-            if (!this->containsStyle(fileName)) { continue; }
-            QString s = this->m_styleSheets[fileName.toLower()].trimmed();
+            const QString key = fileName.toLower().trimmed();
+            if (!this->containsStyle(key)) { continue; }
+
+            QString s;
+            if (fileName == fileNameFonts() || fileName == fileNameFontsModified())
+            {
+                if (fontAdded) { continue; }
+                fontAdded = true;
+                s = hasModifiedFont ?
+                    this->m_styleSheets[fileNameFontsModified().toLower()] :
+                    this->m_styleSheets[fileNameFonts()];
+            }
+            else
+            {
+                s = this->m_styleSheets[key];
+            }
             if (s.isEmpty()) continue;
             if (!style.isEmpty()) style.append("\n\n");
             style.append("/** file: ").append(fileName).append(" **/\n");
@@ -149,7 +170,7 @@ namespace BlackGui
     bool CStyleSheetUtility::containsStyle(const QString &fileName) const
     {
         if (fileName.isEmpty()) return false;
-        return this->m_styleSheets.contains(fileName.toLower());
+        return this->m_styleSheets.contains(fileName.toLower().trimmed());
     }
 
     bool CStyleSheetUtility::updateFonts(const QFont &font)
@@ -180,7 +201,7 @@ namespace BlackGui
         qss.append(fontStyleSheet);
         qss.append("}\n");
 
-        QFile fontFile(qssDirectory().append("/").append(fileNameFonts()));
+        QFile fontFile(qssDirectory().append("/").append(fileNameFontsModified()));
         bool ok = fontFile.open(QFile::Text | QFile::WriteOnly);
         if (ok)
         {
@@ -196,7 +217,7 @@ namespace BlackGui
     {
         static const QString n("normal");
         QString c = combinedStyleAndWeight.toLower();
-        foreach (QString s, fontStyles())
+        for (const QString &s : fontStyles())
         {
             if (c.contains(s))
             {
@@ -210,7 +231,7 @@ namespace BlackGui
     {
         static const QString n("normal");
         QString c = combinedStyleAndWeight.toLower();
-        foreach (QString w, fontWeights())
+        for (const QString &w : fontWeights())
         {
             if (c.contains(w))
             {
@@ -224,6 +245,23 @@ namespace BlackGui
     {
         static const QString f("fonts.qss");
         return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameFontsModified()
+    {
+        static const QString f("fonts.modified.qss");
+        return f;
+    }
+
+    bool CStyleSheetUtility::deleteModifiedFontFile()
+    {
+        const QString fn = CFileUtils::appendFilePaths(qssDirectory(), fileNameFontsModified());
+        QFile file(fn);
+        if (!file.exists()) { return false; }
+        bool r = file.remove();
+        if (!r) { return false; }
+        this->read();
+        return true;
     }
 
     const QString &CStyleSheetUtility::fileNameSwiftStandardGui()
@@ -312,9 +350,14 @@ namespace BlackGui
 
     QString CStyleSheetUtility::qssDirectory()
     {
-        QString dirPath = QCoreApplication::applicationDirPath();
-        if (!dirPath.endsWith('/')) dirPath.append('/');
-        dirPath.append("../qss");
+        static QString dirPath;
+        if (!dirPath.isEmpty()) { return dirPath; }
+        QDir dir(QCoreApplication::applicationDirPath());
+        bool ok = dir.cdUp();
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "Wrong directory structure");
+        if (!ok) { return ""; }
+        dirPath = CFileUtils::appendFilePaths(dir.absolutePath(), "qss");
+        Q_ASSERT_X(QDir(dirPath).exists(), Q_FUNC_INFO, "Wrong directory structure");
         return dirPath;
     }
 
@@ -361,5 +404,11 @@ namespace BlackGui
         s1.append(s2);
         if (!s1.endsWith(";")) { s1 = s1.append(";"); }
         return s1;
+    }
+
+    void CStyleSheetUtility::ps_qssDirectoryChanged(const QString &file)
+    {
+        Q_UNUSED(file);
+        this->read();
     }
 }

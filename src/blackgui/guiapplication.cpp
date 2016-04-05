@@ -48,7 +48,7 @@ namespace BlackGui
             CApplication::init(false); // base class without metadata
             this->setWindowIcon(icon);
             sGui = this;
-            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
+            connect(&this->m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
         }
     }
 

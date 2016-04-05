@@ -12,7 +12,6 @@
 #include "blackcore/contextallinterfaces.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackgui/stylesheetutility.h"
 #include "blackgui/components/allmaininfoareacomponents.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackmisc/dbusserver.h"

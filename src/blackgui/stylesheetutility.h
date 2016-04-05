@@ -21,6 +21,7 @@
 #include <QStyle>
 #include <QScopedPointer>
 #include <QSettings>
+#include <QFileSystemWatcher>
 
 namespace BlackGui
 {
@@ -67,6 +68,12 @@ namespace BlackGui
 
         //! File name fonts.qss
         static const QString &fileNameFonts();
+
+        //! Name for user modified file
+        static const QString &fileNameFontsModified();
+
+        //! Delete the modified file for fonts
+        bool deleteModifiedFontFile();
 
         //! File name infobar.qss
         static const QString &fileNameInfoBar();
@@ -137,9 +144,14 @@ namespace BlackGui
         //! \deprecated use BlackGui::CGuiApplication::styleSheetsChanged
         void styleSheetsChanged();
 
+    private slots:
+        //! File changed
+        void ps_qssDirectoryChanged(const QString &file);
+
     private:
-        QMap<QString, QString> m_styleSheets; //!< filename, stylesheet
+        QMap<QString, QString>    m_styleSheets;         //!< filename, stylesheet
         QScopedPointer<QSettings> m_iniFile;
+        QFileSystemWatcher        m_fileWatcher {this};  //!< Monitor my qss files
     };
 }
 #endif // guard
