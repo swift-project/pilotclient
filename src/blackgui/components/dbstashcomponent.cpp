@@ -70,7 +70,7 @@ namespace BlackGui
 
         CStatusMessage CDbStashComponent::validateStashModel(const CAircraftModel &model, bool allowReplace) const
         {
-            if (!allowReplace && this->ui->tvp_StashAircraftModels->container().containsModelStringOrId(model))
+            if (!allowReplace && this->ui->tvp_StashAircraftModels->container().containsModelStringOrDbKey(model))
             {
                 const QString msg("Model \"%1\" already stashed");
                 return CStatusMessage(validationCategories(), CStatusMessage::SeverityError, msg.arg(model.getModelString()));

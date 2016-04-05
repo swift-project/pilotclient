@@ -32,7 +32,7 @@ namespace BlackMisc
             return false;
         }
 
-        bool CAircraftModelList::containsModelStringOrId(const CAircraftModel &model, Qt::CaseSensitivity sensitivity) const
+        bool CAircraftModelList::containsModelStringOrDbKey(const CAircraftModel &model, Qt::CaseSensitivity sensitivity) const
         {
             for (const CAircraftModel &m : (*this))
             {

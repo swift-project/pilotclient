@@ -42,7 +42,7 @@ namespace BlackMisc
             bool containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Contains model with model string or id
-            bool containsModelStringOrId(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            bool containsModelStringOrDbKey(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find by model string
             //! \remark normally CAircraftModelList::findFirstByModelString would be used

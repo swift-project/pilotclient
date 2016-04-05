@@ -154,6 +154,9 @@ namespace BlackMisc
             //! Standard livery marker string
             static const QString &standardLiveryMarker();
 
+            //! Standard code for
+            static const QString getStandardCode(const BlackMisc::Aviation::CAirlineIcaoCode &airline);
+
             //! Color livery marker
             static const QString &colorLiveryMarker();
 
