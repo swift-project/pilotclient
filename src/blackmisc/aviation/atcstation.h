@@ -258,7 +258,8 @@ namespace BlackMisc
             CInformationMessage m_metar { CInformationMessage::METAR };
             BlackMisc::Audio::CVoiceRoom              m_voiceRoom;
 
-            BLACK_METACLASS(CAtcStation,
+            BLACK_METACLASS(
+                CAtcStation,
                 BLACK_METAMEMBER(callsign),
                 BLACK_METAMEMBER(controller),
                 BLACK_METAMEMBER(frequency),

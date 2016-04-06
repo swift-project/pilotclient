@@ -172,7 +172,8 @@ namespace BlackMisc
                 QString m_createdBy;       //!< created by, "distributor"
                 bool m_rotorcraft = false; //!< hint if rotorcraft
 
-                BLACK_METACLASS(CAircraftCfgEntries,
+                BLACK_METACLASS(
+                    CAircraftCfgEntries,
                     BLACK_METAMEMBER(index),
                     BLACK_METAMEMBER(fileName),
                     BLACK_METAMEMBER(title),

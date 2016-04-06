@@ -103,7 +103,8 @@ namespace BlackMisc
             BlackMisc::Aviation::CCallsignSet m_vtolAircraftCallsignsByDistance;
             BlackMisc::Aviation::CCallsignSet m_enabledVtolAircraftCallsignsByDistance;
 
-            BLACK_METACLASS(CAirspaceAircraftSnapshot,
+            BLACK_METACLASS(
+                CAirspaceAircraftSnapshot,
                 BLACK_METAMEMBER(timestampMsSinceEpoch),
                 BLACK_METAMEMBER(aircraftCallsignsByDistance, 0, DisabledForComparison),
                 BLACK_METAMEMBER(enabledAircraftCallsignsByDistance, 0, DisabledForComparison),

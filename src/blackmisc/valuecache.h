@@ -90,7 +90,8 @@ namespace BlackMisc
     private:
         bool m_saved = false;
 
-        BLACK_METACLASS(CValueCachePacket,
+        BLACK_METACLASS(
+            CValueCachePacket,
             BLACK_METAMEMBER(saved)
         );
     };

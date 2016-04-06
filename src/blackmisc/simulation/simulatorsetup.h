@@ -74,7 +74,8 @@ namespace BlackMisc
         private:
             BlackMisc::CNameVariantPairList m_data;
 
-            BLACK_METACLASS(CSimulatorSetup,
+            BLACK_METACLASS(
+                CSimulatorSetup,
                 BLACK_METAMEMBER(data)
             );
         };

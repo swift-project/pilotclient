@@ -121,7 +121,8 @@ namespace BlackMisc
 
         static const QHash<QString, CLogPattern> &allHumanReadablePatterns();
 
-        BLACK_METACLASS(CLogPattern,
+        BLACK_METACLASS(
+            CLogPattern,
             BLACK_METAMEMBER(severities),
             BLACK_METAMEMBER(strategy),
             BLACK_METAMEMBER(strings)

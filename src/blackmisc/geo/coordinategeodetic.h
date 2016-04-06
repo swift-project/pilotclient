@@ -213,7 +213,8 @@ namespace BlackMisc
             double m_z = 0; //!< normal vector
             BlackMisc::PhysicalQuantities::CLength m_geodeticHeight { 0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() }; //!< height, ellipsoidal or geodetic height
 
-            BLACK_METACLASS(CCoordinateGeodetic,
+            BLACK_METACLASS(
+                CCoordinateGeodetic,
                 BLACK_METAMEMBER(x),
                 BLACK_METAMEMBER(y),
                 BLACK_METAMEMBER(z),

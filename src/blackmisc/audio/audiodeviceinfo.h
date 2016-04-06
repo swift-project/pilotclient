@@ -86,7 +86,8 @@ namespace BlackMisc
             QString m_deviceName; //!< Device name
             QString m_hostName;   //!< We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
 
-            BLACK_METACLASS(CAudioDeviceInfo,
+            BLACK_METACLASS(
+                CAudioDeviceInfo,
                 BLACK_METAMEMBER(type),
                 BLACK_METAMEMBER(deviceIndex),
                 BLACK_METAMEMBER(deviceName),

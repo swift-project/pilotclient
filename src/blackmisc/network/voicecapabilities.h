@@ -74,7 +74,8 @@ namespace BlackMisc
             //! Capabilites from flight plans remarks such as "/V/"
             void setFromFlightPlanRemarks(const QString &flightPlanRemarks);
 
-            BLACK_METACLASS(CVoiceCapabilities,
+            BLACK_METACLASS(
+                CVoiceCapabilities,
                 BLACK_METAMEMBER(voiceCapabilities)
             );
         };

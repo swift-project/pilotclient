@@ -117,7 +117,8 @@ namespace BlackMisc
             PhysicalQuantities::CSpeed m_speed;
             PhysicalQuantities::CSpeed m_gustSpeed;
 
-            BLACK_METACLASS(CWindLayer,
+            BLACK_METACLASS(
+                CWindLayer,
                 BLACK_METAMEMBER(level),
                 BLACK_METAMEMBER(directionMain),
                 BLACK_METAMEMBER(directionFrom),

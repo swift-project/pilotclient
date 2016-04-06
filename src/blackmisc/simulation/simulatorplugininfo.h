@@ -66,7 +66,8 @@ namespace BlackMisc
             QString m_description;
             bool m_valid { false };
 
-            BLACK_METACLASS(CSimulatorPluginInfo,
+            BLACK_METACLASS(
+                CSimulatorPluginInfo,
                 BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
                 BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
                 BLACK_METAMEMBER(simulator, 0, DisabledForComparison | DisabledForHashing),

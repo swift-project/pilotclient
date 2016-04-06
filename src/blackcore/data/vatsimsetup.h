@@ -103,7 +103,8 @@ namespace BlackCore
             BlackMisc::Network::CServerList m_voiceServers;   //!< voice servers
             BlackMisc::Network::CUser       m_lastLoginUser;  //!< last login user
 
-            BLACK_METACLASS(CVatsimSetup,
+            BLACK_METACLASS(
+                CVatsimSetup,
                 BLACK_METAMEMBER(serverFileUrls),
                 BLACK_METAMEMBER(dataFileUrls),
                 BLACK_METAMEMBER(metarFileUrls),

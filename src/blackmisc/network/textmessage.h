@@ -169,7 +169,8 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CFrequency m_frequency {0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()};
             bool m_wasSent = false;
 
-            BLACK_METACLASS(CTextMessage,
+            BLACK_METACLASS(
+                CTextMessage,
                 BLACK_METAMEMBER(message),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(senderCallsign),

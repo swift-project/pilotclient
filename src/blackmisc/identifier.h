@@ -98,7 +98,8 @@ namespace BlackMisc
         QString m_processName;     //!< process name
         qint64 m_processId;        //!< PID
 
-        BLACK_METACLASS(CIdentifier,
+        BLACK_METACLASS(
+            CIdentifier,
             BLACK_METAMEMBER(name),
             BLACK_METAMEMBER(machineIdBase64),
             BLACK_METAMEMBER(machineName, 0, DisabledForComparison | DisabledForHashing),

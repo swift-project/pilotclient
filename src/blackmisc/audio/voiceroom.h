@@ -109,7 +109,8 @@ namespace BlackMisc
             bool m_connected;
             bool m_audioPlaying;
 
-            BLACK_METACLASS(CVoiceRoom,
+            BLACK_METACLASS(
+                CVoiceRoom,
                 BLACK_METAMEMBER(hostname),
                 BLACK_METAMEMBER(channel),
                 BLACK_METAMEMBER(connected),

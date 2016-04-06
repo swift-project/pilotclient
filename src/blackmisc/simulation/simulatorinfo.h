@@ -140,7 +140,8 @@ namespace BlackMisc
         private:
             int m_simulator = static_cast<int>(None);
 
-            BLACK_METACLASS(CSimulatorInfo,
+            BLACK_METACLASS(
+                CSimulatorInfo,
                 BLACK_METAMEMBER(simulator)
             );
         };

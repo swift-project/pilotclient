@@ -59,7 +59,8 @@ namespace BlackGui
             private:
                 BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< Last simulator selection
 
-                BLACK_METACLASS(CDbOwnModelsComponent,
+                BLACK_METACLASS(
+                    CDbOwnModelsComponent,
                     BLACK_METAMEMBER(simulator)
                 );
             };

@@ -136,7 +136,8 @@ namespace BlackMisc
             QString                                m_server;
             BlackMisc::Network::CVoiceCapabilities m_voiceCapabilities;
 
-            BLACK_METACLASS(CClient,
+            BLACK_METACLASS(
+                CClient,
                 BLACK_METAMEMBER(user),
                 BLACK_METAMEMBER(model),
                 BLACK_METAMEMBER(capabilities, 0, DisabledForComparison | DisabledForJson),

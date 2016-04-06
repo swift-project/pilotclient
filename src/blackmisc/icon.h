@@ -130,7 +130,8 @@ namespace BlackMisc
         QString m_descriptiveText;  //!< what does it represent?
         QPixmap m_pixmap;           //!< Used with generated pixmaps, when not used with index
 
-        BLACK_METACLASS(CIcon,
+        BLACK_METACLASS(
+            CIcon,
             BLACK_METAMEMBER(index),
             BLACK_METAMEMBER(rotateDegrees, 0, DisabledForComparison | DisabledForHashing),
             BLACK_METAMEMBER(descriptiveText)

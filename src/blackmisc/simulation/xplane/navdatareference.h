@@ -59,7 +59,8 @@ namespace BlackMisc
                 int m_id = 0;
                 Geo::CCoordinateGeodetic m_position;
 
-                BLACK_METACLASS(CNavDataReference,
+                BLACK_METACLASS(
+                    CNavDataReference,
                     BLACK_METAMEMBER(id),
                     BLACK_METAMEMBER(position)
                 );

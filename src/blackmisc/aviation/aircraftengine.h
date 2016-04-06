@@ -49,7 +49,8 @@ namespace BlackMisc
             int m_number = 1;
             bool m_on = true;
 
-            BLACK_METACLASS(CAircraftEngine,
+            BLACK_METACLASS(
+                CAircraftEngine,
                 BLACK_METAMEMBER(number, 0, DisabledForJson),
                 BLACK_METAMEMBER(on)
             );

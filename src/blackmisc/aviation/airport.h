@@ -119,7 +119,8 @@ namespace BlackMisc
             QString                             m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
 
-            BLACK_METACLASS(CAirport,
+            BLACK_METACLASS(
+                CAirport,
                 BLACK_METAMEMBER(icao),
                 BLACK_METAMEMBER(descriptiveName),
                 BLACK_METAMEMBER(position),

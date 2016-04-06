@@ -97,7 +97,8 @@ namespace BlackMisc
             QString m_message;
             QDateTime m_receivedTimestamp;
 
-            BLACK_METACLASS(CInformationMessage,
+            BLACK_METACLASS(
+                CInformationMessage,
                 BLACK_METAMEMBER(type),
                 BLACK_METAMEMBER(message),
                 BLACK_METAMEMBER(receivedTimestamp)

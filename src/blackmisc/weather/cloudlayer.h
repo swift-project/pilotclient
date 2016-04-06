@@ -139,7 +139,8 @@ namespace BlackMisc
             Coverage m_coverage;
             int m_coveragePercent;
 
-            BLACK_METACLASS(CCloudLayer,
+            BLACK_METACLASS(
+                CCloudLayer,
                 BLACK_METAMEMBER(base),
                 BLACK_METAMEMBER(top),
                 BLACK_METAMEMBER(precipitationRate),

@@ -151,7 +151,8 @@ namespace BlackMisc
             BlackMisc::Aviation::CCallsign m_callsign;
             BlackMisc::Aviation::CAirportIcaoCode m_homebase;
 
-            BLACK_METACLASS(CUser,
+            BLACK_METACLASS(
+                CUser,
                 BLACK_METAMEMBER(id),
                 BLACK_METAMEMBER(realname),
                 BLACK_METAMEMBER(email),

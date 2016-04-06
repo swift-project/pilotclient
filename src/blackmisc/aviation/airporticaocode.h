@@ -59,7 +59,8 @@ namespace BlackMisc
         private:
             QString m_icaoCode;
 
-            BLACK_METACLASS(CAirportIcaoCode,
+            BLACK_METACLASS(
+                CAirportIcaoCode,
                 BLACK_METAMEMBER(icaoCode, 0, CaseInsensitiveComparison)
             );
         };

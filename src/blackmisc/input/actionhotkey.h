@@ -85,7 +85,8 @@ namespace BlackMisc
             CHotkeyCombination m_combination; //!< hotkey combination
             QString m_action; //!< hotkey action
 
-            BLACK_METACLASS(CActionHotkey,
+            BLACK_METACLASS(
+                CActionHotkey,
                 BLACK_METAMEMBER(identifier),
                 BLACK_METAMEMBER(combination),
                 BLACK_METAMEMBER(action)

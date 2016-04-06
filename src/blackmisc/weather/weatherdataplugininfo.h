@@ -57,7 +57,8 @@ namespace BlackMisc
             QString m_description;
             bool m_valid { false };
 
-            BLACK_METACLASS(CWeatherDataPluginInfo,
+            BLACK_METACLASS(
+                CWeatherDataPluginInfo,
                 BLACK_METAMEMBER(identifier, 0, CaseInsensitiveComparison),
                 BLACK_METAMEMBER(name, 0, DisabledForComparison | DisabledForHashing),
                 BLACK_METAMEMBER(description, 0, DisabledForComparison | DisabledForHashing),

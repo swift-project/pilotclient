@@ -76,7 +76,8 @@ namespace BlackMisc
 
             static constexpr int m_invalidIndex = -1;
 
-            BLACK_METACLASS(CJoystickButton,
+            BLACK_METACLASS(
+                CJoystickButton,
                 BLACK_METAMEMBER(buttonIndex)
             );
         };

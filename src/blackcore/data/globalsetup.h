@@ -164,7 +164,8 @@ namespace BlackCore
             // transient members, to be switched on/off via GUI or set from reader
             bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing
 
-            BLACK_METACLASS(CGlobalSetup,
+            BLACK_METACLASS(
+                CGlobalSetup,
                 BLACK_METAMEMBER(wasLoaded),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(dbRootDirectoryUrl),

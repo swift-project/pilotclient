@@ -176,7 +176,8 @@ namespace BlackMisc
             int m_transponderCode;             //!< Transponder code
             TransponderMode m_transponderMode; //!< Transponder mode
 
-            BLACK_METACLASS(CTransponder,
+            BLACK_METACLASS(
+                CTransponder,
                 BLACK_METAMEMBER(transponderCode),
                 BLACK_METAMEMBER(transponderMode)
             );

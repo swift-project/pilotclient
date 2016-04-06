@@ -114,7 +114,8 @@ namespace BlackMisc
             CUser   m_user;
             bool    m_isAcceptingConnections = true; //!< temp. disable server
 
-            BLACK_METACLASS(CServer,
+            BLACK_METACLASS(
+                CServer,
                 BLACK_METAMEMBER(name),
                 BLACK_METAMEMBER(description),
                 BLACK_METAMEMBER(address),

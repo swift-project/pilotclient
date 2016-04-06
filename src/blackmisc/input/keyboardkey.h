@@ -86,7 +86,8 @@ namespace BlackMisc
 
             KeyCode m_keyCode; //!< Key code
 
-            BLACK_METACLASS(CKeyboardKey,
+            BLACK_METACLASS(
+                CKeyboardKey,
                 BLACK_METAMEMBER(keyCode)
             );
         };

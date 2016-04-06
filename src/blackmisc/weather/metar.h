@@ -154,7 +154,8 @@ namespace BlackMisc
             PhysicalQuantities::CTemperature m_dewPoint;
             PhysicalQuantities::CPressure m_altimeter;
 
-            BLACK_METACLASS(CMetar,
+            BLACK_METACLASS(
+                CMetar,
                 BLACK_METAMEMBER(metarMessage),
                 BLACK_METAMEMBER(reportType),
                 BLACK_METAMEMBER(airport),

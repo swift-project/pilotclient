@@ -92,7 +92,8 @@ namespace BlackMisc
                 QString m_callsignPrefix;      //!< callsign prefix, aka airline ICAO
                 qint64  m_updatedMsSinceEpoch; //!< updated when
 
-                BLACK_METACLASS(CVPilotModelRule,
+                BLACK_METACLASS(
+                    CVPilotModelRule,
                     BLACK_METAMEMBER(typeCode, 0, CaseInsensitiveComparison),
                     BLACK_METAMEMBER(callsignPrefix, 0, CaseInsensitiveComparison),
                     BLACK_METAMEMBER(modelName, 0, CaseInsensitiveComparison),

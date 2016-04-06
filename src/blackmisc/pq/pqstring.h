@@ -76,7 +76,8 @@ namespace BlackMisc
         private:
             QString m_string;
 
-            BLACK_METACLASS(CPqString,
+            BLACK_METACLASS(
+                CPqString,
                 BLACK_METAMEMBER(string)
             );
         };

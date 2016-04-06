@@ -85,7 +85,8 @@ namespace BlackMisc
             PhysicalQuantities::CTemperature m_dewPoint;
             double m_relativeHumidity = 0;
 
-            BLACK_METACLASS(CTemperatureLayer,
+            BLACK_METACLASS(
+                CTemperatureLayer,
                 BLACK_METAMEMBER(level),
                 BLACK_METAMEMBER(temperature),
                 BLACK_METAMEMBER(dewPoint),

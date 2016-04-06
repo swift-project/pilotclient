@@ -121,7 +121,8 @@ namespace BlackMisc
             bool m_spoilersOut  = false;
             bool m_isOnGround   = false;
 
-            BLACK_METACLASS(CAircraftParts,
+            BLACK_METACLASS(
+                CAircraftParts,
                 BLACK_METAMEMBER_NAMED(lights, "lights"),
                 BLACK_METAMEMBER_NAMED(gearDown, "gear_down"),
                 BLACK_METAMEMBER_NAMED(flapsPercentage, "flaps_pct"),

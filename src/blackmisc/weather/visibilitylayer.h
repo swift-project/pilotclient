@@ -76,7 +76,8 @@ namespace BlackMisc
             BlackMisc::Aviation::CAltitude m_top;
             PhysicalQuantities::CLength m_visibility;
 
-            BLACK_METACLASS(CVisibilityLayer,
+            BLACK_METACLASS(
+                CVisibilityLayer,
                 BLACK_METAMEMBER(base),
                 BLACK_METAMEMBER(top),
                 BLACK_METAMEMBER(visibility)

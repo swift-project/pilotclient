@@ -165,7 +165,8 @@ namespace BlackMisc
             BlackMisc::CRgbColor m_colorTail;     //! color of tail
             bool m_military = false; //! Military livery?
 
-            BLACK_METACLASS(CLivery,
+            BLACK_METACLASS(
+                CLivery,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(airline),

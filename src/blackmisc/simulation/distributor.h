@@ -107,7 +107,8 @@ namespace BlackMisc
             QString m_alias1;      //!< alias name
             QString m_alias2;      //!< alias name
 
-            BLACK_METACLASS(CDistributor,
+            BLACK_METACLASS(
+                CDistributor,
                 BLACK_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(description),

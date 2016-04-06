@@ -155,7 +155,8 @@ namespace BlackMisc
             bool                m_authenticated = false;
             CRoleList           m_roles;
 
-            BLACK_METACLASS(CAuthenticatedUser,
+            BLACK_METACLASS(
+                CAuthenticatedUser,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(vatsimId),
                 BLACK_METAMEMBER(realname),

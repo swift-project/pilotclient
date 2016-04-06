@@ -376,7 +376,8 @@ namespace BlackMisc
             //! Init, which syncronizes some denormalized values
             void init();
 
-            BLACK_METACLASS(CSimulatedAircraft,
+            BLACK_METACLASS(
+                CSimulatedAircraft,
                 BLACK_METAMEMBER(callsign),
                 BLACK_METAMEMBER(pilot),
                 BLACK_METAMEMBER(situation),

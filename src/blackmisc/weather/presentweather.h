@@ -128,7 +128,8 @@ namespace BlackMisc
             Descriptor m_descriptor = None;
             int m_weatherPhenomena;
 
-            BLACK_METACLASS(CPresentWeather,
+            BLACK_METACLASS(
+                CPresentWeather,
                 BLACK_METAMEMBER(intensity),
                 BLACK_METAMEMBER(descriptor),
                 BLACK_METAMEMBER(weatherPhenomena)

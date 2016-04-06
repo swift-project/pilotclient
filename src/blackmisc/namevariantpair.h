@@ -71,7 +71,8 @@ namespace BlackMisc
         CVariant m_variant;
         CIcon    m_icon; //!< optional icon
 
-        BLACK_METACLASS(CNameVariantPair,
+        BLACK_METACLASS(
+            CNameVariantPair,
             BLACK_METAMEMBER(name),
             BLACK_METAMEMBER(variant),
             BLACK_METAMEMBER(icon)

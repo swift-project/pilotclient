@@ -162,7 +162,8 @@ namespace BlackMisc
 
             static QString stripQueryString(const QString query);
 
-            BLACK_METACLASS(CUrl,
+            BLACK_METACLASS(
+                CUrl,
                 BLACK_METAMEMBER(scheme),
                 BLACK_METAMEMBER(host),
                 BLACK_METAMEMBER(port),

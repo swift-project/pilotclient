@@ -310,7 +310,8 @@ namespace BlackMisc
         mutable QVector<quintptr> m_handledByObjects;
         mutable QReadWriteLock    m_lock;  //!< lock (because of mutable members)
 
-        BLACK_METACLASS(CStatusMessage,
+        BLACK_METACLASS(
+            CStatusMessage,
             BLACK_METAMEMBER(categories),
             BLACK_METAMEMBER(severity),
             BLACK_METAMEMBER(message),

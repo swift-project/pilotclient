@@ -99,7 +99,8 @@ namespace BlackCore
             QString                         m_latestVersionBeta;          //!< latest version
             QString                         m_lastSupportedVersionBeta;   //!< last supported version
 
-            BLACK_METACLASS(CUpdateInfo,
+            BLACK_METACLASS(
+                CUpdateInfo,
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(development),
                 BLACK_METAMEMBER(downloadsStableUrls),

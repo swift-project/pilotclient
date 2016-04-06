@@ -76,7 +76,8 @@ namespace BlackMisc
             CKeyboardKeyList m_keyboardKeys;
             CJoystickButtonList m_joystickButtons;
 
-            BLACK_METACLASS(CHotkeyCombination,
+            BLACK_METACLASS(
+                CHotkeyCombination,
                 BLACK_METAMEMBER(keyboardKeys),
                 BLACK_METAMEMBER(joystickButtons)
             );

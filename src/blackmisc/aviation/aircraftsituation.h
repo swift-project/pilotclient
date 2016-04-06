@@ -155,7 +155,8 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundspeed;
 
-            BLACK_METACLASS(CAircraftSituation,
+            BLACK_METACLASS(
+                CAircraftSituation,
                 BLACK_METAMEMBER(correspondingCallsign),
                 BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(altitude),

@@ -68,7 +68,8 @@ namespace BlackMisc
         QString m_name;
         QString m_description;
 
-        BLACK_METACLASS(CTestValueObject,
+        BLACK_METACLASS(
+            CTestValueObject,
             BLACK_METAMEMBER(name),
             BLACK_METAMEMBER(description)
         );

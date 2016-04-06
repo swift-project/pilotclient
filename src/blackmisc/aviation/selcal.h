@@ -78,7 +78,8 @@ namespace BlackMisc
             static QList<BlackMisc::PhysicalQuantities::CFrequency> frequencyEquivalents;
             static QStringList allCodePairs;
 
-            BLACK_METACLASS(CSelcal,
+            BLACK_METACLASS(
+                CSelcal,
                 BLACK_METAMEMBER(code)
             );
         };

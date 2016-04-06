@@ -93,7 +93,8 @@ namespace BlackMisc
     private:
         QString m_name; //!< country name
 
-        BLACK_METACLASS(CCountry,
+        BLACK_METACLASS(
+            CCountry,
             BLACK_METAMEMBER(dbKey),
             BLACK_METAMEMBER(timestampMSecsSinceEpoch),
             BLACK_METAMEMBER(name)

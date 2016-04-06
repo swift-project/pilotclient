@@ -105,7 +105,8 @@ namespace BlackMisc
             CVisibilityLayerList m_visibilityLayers;
             CWindLayerList m_windLayers;
 
-            BLACK_METACLASS(CGridPoint,
+            BLACK_METACLASS(
+                CGridPoint,
                 BLACK_METAMEMBER(latitude),
                 BLACK_METAMEMBER(longitude),
                 BLACK_METAMEMBER(cloudLayers),

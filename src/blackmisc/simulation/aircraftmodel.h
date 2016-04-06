@@ -300,7 +300,8 @@ namespace BlackMisc
             ModelType      m_modelType = TypeUnknown;              //!< model string is coming representing ...?
             ModelMode      m_modelMode = Include;                  //!< model mode (include / exclude)
 
-            BLACK_METACLASS(CAircraftModel,
+            BLACK_METACLASS(
+                CAircraftModel,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(callsign),

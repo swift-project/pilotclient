@@ -50,7 +50,8 @@ namespace BlackMisc
                 QString m_notificationFlags;  //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
                 void initNotificationFlags(); //!< init flags
 
-                BLACK_METACLASS(CSettingsAudio,
+                BLACK_METACLASS(
+                    CSettingsAudio,
                     BLACK_METAMEMBER(notificationFlags)
                 );
             };

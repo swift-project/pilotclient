@@ -119,7 +119,8 @@ namespace BlackMisc
 
         static QString intToHex(int h, int digits = 2);
 
-        BLACK_METACLASS(CRgbColor,
+        BLACK_METACLASS(
+            CRgbColor,
             BLACK_METAMEMBER(r),
             BLACK_METAMEMBER(g),
             BLACK_METAMEMBER(b)

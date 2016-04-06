@@ -273,7 +273,8 @@ namespace BlackMisc
             //! Create a combined string like L2J
             static QString createdCombinedString(const QString &type, int engineCount, const QString &engine);
 
-            BLACK_METACLASS(CAircraftIcaoCode,
+            BLACK_METACLASS(
+                CAircraftIcaoCode,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(designator),

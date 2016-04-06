@@ -88,7 +88,8 @@ namespace BlackMisc
         private:
             ReferenceNorth m_north; //!< magnetic or true?
 
-            BLACK_METACLASS(CTrack,
+            BLACK_METACLASS(
+                CTrack,
                 BLACK_METAMEMBER(north)
             );
         };

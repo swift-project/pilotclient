@@ -107,7 +107,8 @@ namespace BlackMisc
             bool m_navOn = false;
             bool m_logoOn = false;
 
-            BLACK_METACLASS(CAircraftLights,
+            BLACK_METACLASS(
+                CAircraftLights,
                 BLACK_METAMEMBER_NAMED(strobeOn, "strobe_on"),
                 BLACK_METAMEMBER_NAMED(landingOn, "landing_on"),
                 BLACK_METAMEMBER_NAMED(taxiOn, "taxi_on"),

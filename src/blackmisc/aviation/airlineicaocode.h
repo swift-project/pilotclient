@@ -186,7 +186,8 @@ namespace BlackMisc
             bool m_isOperating = true;      //!< still operating?
             bool m_isMilitary = false;      //!< air force or such
 
-            BLACK_METACLASS(CAirlineIcaoCode,
+            BLACK_METACLASS(
+                CAirlineIcaoCode,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(designator),

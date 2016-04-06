@@ -160,7 +160,8 @@ namespace BlackMisc
     private:
         QString m_string;
 
-        BLACK_METACLASS(CLogCategory,
+        BLACK_METACLASS(
+            CLogCategory,
             BLACK_METAMEMBER(string)
         );
     };

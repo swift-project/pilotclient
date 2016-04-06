@@ -201,7 +201,8 @@ namespace BlackMisc
             QString m_remarks;
             QDateTime m_lastSentOrLoaded;
 
-            BLACK_METACLASS(CFlightPlan,
+            BLACK_METACLASS(
+                CFlightPlan,
                 BLACK_METAMEMBER(equipmentIcao),
                 BLACK_METAMEMBER(originAirportIcao),
                 BLACK_METAMEMBER(destinationAirportIcao),

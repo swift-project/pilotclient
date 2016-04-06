@@ -166,7 +166,8 @@ namespace BlackMisc
             //! \remarks Just a helper method, that is why no CFrequency is returned
             static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
 
-            BLACK_METACLASS(CComSystem,
+            BLACK_METACLASS(
+                CComSystem,
                 BLACK_METAMEMBER(channelSpacing)
             );
         };

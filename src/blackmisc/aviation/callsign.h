@@ -159,7 +159,8 @@ namespace BlackMisc
             QString  m_telephonyDesignator;
             TypeHint m_typeHint = NoHint;
 
-            BLACK_METACLASS(CCallsign,
+            BLACK_METACLASS(
+                CCallsign,
                 BLACK_METAMEMBER(callsign, 0, CaseInsensitiveComparison),
                 BLACK_METAMEMBER(callsignAsSet, 0, DisabledForComparison | DisabledForHashing),
                 BLACK_METAMEMBER(telephonyDesignator, 0, DisabledForComparison | DisabledForHashing),

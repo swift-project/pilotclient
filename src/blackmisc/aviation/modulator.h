@@ -149,7 +149,8 @@ namespace BlackMisc
             //! Easy access to derived class (CRTP template parameter)
             AVIO *derived();
 
-            BLACK_METACLASS(CModulator,
+            BLACK_METACLASS(
+                CModulator,
                 BLACK_METAMEMBER(name),
                 BLACK_METAMEMBER(frequencyActive),
                 BLACK_METAMEMBER(frequencyStandby),

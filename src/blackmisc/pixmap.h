@@ -60,7 +60,8 @@ namespace BlackMisc
         mutable bool m_hasCachedPixmap = false; //!< pixmap? Mutable because of lazy initialization
         mutable QReadWriteLock m_lock;          //!< lock (because of mutable members)
 
-        BLACK_METACLASS(CPixmap,
+        BLACK_METACLASS(
+            CPixmap,
             BLACK_METAMEMBER(array)
         );
     };

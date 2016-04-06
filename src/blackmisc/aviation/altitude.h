@@ -103,7 +103,8 @@ namespace BlackMisc
         private:
             ReferenceDatum m_datum; //!< MSL or AGL?
 
-            BLACK_METACLASS(CAltitude,
+            BLACK_METACLASS(
+                CAltitude,
                 BLACK_METAMEMBER(datum)
             );
         };

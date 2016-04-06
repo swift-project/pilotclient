@@ -174,7 +174,8 @@ namespace BlackMisc
         //! Convert list to string
         void setIndexStringByList(const QList<int> &list);
 
-        BLACK_METACLASS(CPropertyIndex,
+        BLACK_METACLASS(
+            CPropertyIndex,
             BLACK_METAMEMBER(indexString)
         );
     };
