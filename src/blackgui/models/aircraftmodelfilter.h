@@ -36,9 +36,6 @@ namespace BlackGui
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Simulation::CAircraftModelList filter(const BlackMisc::Simulation::CAircraftModelList &inContainer) const override;
 
-            //! \copydoc IModelFilter::isValid
-            virtual bool isValid() const override;
-
         private:
             QString m_modelKey;
             QString m_description;
@@ -49,9 +46,9 @@ namespace BlackGui
             QString m_airlineName;
             QString m_liveryCode;
             BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
-            BlackMisc::Simulation::CDistributor m_distributor;
+            BlackMisc::Simulation::CDistributor   m_distributor;
+            bool valid() const;
         };
-
     } // namespace
 } // namespace
 

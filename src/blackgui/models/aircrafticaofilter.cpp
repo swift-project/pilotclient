@@ -21,7 +21,10 @@ namespace BlackGui
             const QString &description, const QString &combinedType) :
             m_designator(designator.trimmed().toUpper()), m_manufacturer(name.trimmed()),
             m_description(description.trimmed()),  m_combinedType(combinedType.trimmed().toUpper())
-        {  }
+        {
+            this->m_valid = !(this->m_combinedType.isEmpty() && this->m_designator.isEmpty() &&
+                              this->m_description.isEmpty() && this->m_manufacturer.isEmpty());
+        }
 
         CAircraftIcaoCodeList CAircraftIcaoFilter::filter(const CAircraftIcaoCodeList &inContainer) const
         {
@@ -51,12 +54,5 @@ namespace BlackGui
             }
             return outContainer;
         }
-
-        bool CAircraftIcaoFilter::isValid() const
-        {
-            return !(this->m_combinedType.isEmpty() && this->m_designator.isEmpty() &&
-                     this->m_description.isEmpty() && this->m_manufacturer.isEmpty());
-        }
-
     } // namespace
 } // namespace

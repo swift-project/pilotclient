@@ -39,9 +39,6 @@ namespace BlackGui
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Aviation::CLiveryList filter(const BlackMisc::Aviation::CLiveryList &inContainer) const override;
 
-            //! \copydoc IModelFilter::isValid
-            virtual bool isValid() const override;
-
         private:
             QString m_combinedCode;
             QString m_description;
@@ -54,6 +51,9 @@ namespace BlackGui
 
             //! Filter by livery type such as color or airline liveries
             bool filterByLiveryType() const;
+
+            //! Valid filter?
+            bool valid() const;
         };
 
     } // namespace

@@ -31,9 +31,6 @@ namespace BlackGui
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::Aviation::CAirlineIcaoCodeList filter(const BlackMisc::Aviation::CAirlineIcaoCodeList &inContainer) const override;
 
-            //! \copydoc IModelFilter::isValid
-            virtual bool isValid() const override;
-
         private:
             QString m_vDesignator;
             QString m_name;

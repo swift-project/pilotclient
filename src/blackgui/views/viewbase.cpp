@@ -1094,7 +1094,14 @@ namespace BlackGui
                     Q_ASSERT_X(provider, Q_FUNC_INFO, "Filter widget does not provide interface");
                     if (!provider) { return false; }
                     std::unique_ptr<IModelFilter<ContainerType>> f(provider->createModelFilter());
-                    this->takeFilterOwnership(f);
+                    if (f->isValid())
+                    {
+                        this->takeFilterOwnership(f);
+                    }
+                    else
+                    {
+                        this->removeFilter();
+                    }
                 }
             }
             else

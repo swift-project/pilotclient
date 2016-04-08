@@ -20,7 +20,11 @@ namespace BlackGui
                                                const QString &countryIso, bool isReal, bool isVa) :
             m_vDesignator(vDesignator.trimmed().toUpper()), m_name(name.trimmed()),
             m_countryIso(countryIso.trimmed().toUpper()), m_real(isReal), m_va(isVa)
-        {  }
+        {
+            this->m_valid =  !(this->m_countryIso.isEmpty() && this->m_vDesignator.isEmpty() &&
+                               this->m_name.isEmpty() &&
+                               !m_va && !m_real);
+        }
 
         CAirlineIcaoCodeList CAirlineIcaoFilter::filter(const CAirlineIcaoCodeList &inContainer) const
         {
@@ -59,13 +63,5 @@ namespace BlackGui
             }
             return outContainer;
         }
-
-        bool CAirlineIcaoFilter::isValid() const
-        {
-            return !(this->m_countryIso.isEmpty() && this->m_vDesignator.isEmpty() &&
-                     this->m_name.isEmpty() &&
-                     !m_va && !m_real);
-        }
-
     } // namespace
 } // namespace

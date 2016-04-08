@@ -43,6 +43,9 @@ namespace BlackGui
             //! Change the filter by enabling or disabling it
             void changeFilter(bool enable);
 
+            //! A filter dialog is supposed to close
+            void rejectDialog();
+
         protected:
             //! Set and connect filter bar buttonsd
             void setButtonsAndCount(CFilterBarButtons *buttons);

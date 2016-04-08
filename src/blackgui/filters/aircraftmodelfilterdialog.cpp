@@ -11,6 +11,7 @@
 #include "ui_aircraftmodelfilterdialog.h"
 
 using namespace BlackGui::Models;
+using namespace BlackGui::Filters;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 
@@ -25,6 +26,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setWindowTitle("Filter models");
             this->resize(640, 100);
+            connect(ui->filter_Models, &CAircraftModelFilterBar::rejectDialog, this, &CAircraftModelFilterDialog::reject);
         }
 
         CAircraftModelFilterDialog::~CAircraftModelFilterDialog()

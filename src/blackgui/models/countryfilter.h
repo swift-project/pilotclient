@@ -30,9 +30,6 @@ namespace BlackGui
             //! \copydoc IModelFilter::filter
             virtual BlackMisc::CCountryList filter(const BlackMisc::CCountryList &inContainer) const override;
 
-            //! \copydoc IModelFilter::isValid
-            virtual bool isValid() const override;
-
         private:
             QString m_isoCode;
             QString m_name;

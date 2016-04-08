@@ -23,7 +23,9 @@ namespace BlackGui
             m_airlineIcaoDesignator(airlineDesignator.trimmed().toUpper()),
             m_fuselageColor(fuselageColor), m_tailColor(tailColor), m_maxColorDistance(maxColorDistance),
             m_colorLiveries(colorLiveries), m_airlineLiveries(airlineLiveries)
-        {  }
+        {
+            this->m_valid = valid();
+        }
 
         CLiveryList CLiveryFilter::filter(const CLiveryList &inContainer) const
         {
@@ -63,7 +65,7 @@ namespace BlackGui
             return outContainer;
         }
 
-        bool CLiveryFilter::isValid() const
+        bool CLiveryFilter::valid() const
         {
             if (filterByLiveryType()) { return true; }
             if (m_fuselageColor.isValid() || m_tailColor.isValid()) { return true; }

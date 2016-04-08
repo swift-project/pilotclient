@@ -350,7 +350,8 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         bool CListModelBase<ObjectType, ContainerType, UseCompare>::hasFilter() const
         {
-            return m_filter && m_filter->isValid() ? true : false;
+            const bool f =  m_filter && m_filter->isValid();
+            return f;
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>

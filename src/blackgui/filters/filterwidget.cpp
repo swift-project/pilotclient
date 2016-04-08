@@ -55,6 +55,7 @@ namespace BlackGui
                 break;
             case CFilterBarButtons::RemoveFilter:
                 emit changeFilter(false);
+                emit rejectDialog();
                 break;
             case CFilterBarButtons::ClearForm:
                 clearForm();

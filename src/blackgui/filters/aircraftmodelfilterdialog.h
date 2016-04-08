@@ -12,8 +12,8 @@
 #ifndef BLACKGUI_FILTERS_AIRCRAFTMODELFILTERFORM_H
 #define BLACKGUI_FILTERS_AIRCRAFTMODELFILTERFORM_H
 
-#include "blackgui/blackguiexport.h"
 #include "filterdialog.h"
+#include "blackgui/blackguiexport.h"
 #include "blackgui/models/aircraftmodelfilter.h"
 #include <QDialog>
 #include <QScopedPointer>

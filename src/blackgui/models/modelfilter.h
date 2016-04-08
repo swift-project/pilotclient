@@ -34,7 +34,7 @@ namespace BlackGui
             virtual ContainerType filter(const ContainerType &container) const = 0;
 
             //! Anything to do?
-            virtual bool isValid() const = 0;
+            bool isValid() const { return this->m_valid; }
 
             //! Enabled?
             virtual bool isEnabled() const { return m_enabled && isValid(); }
@@ -48,6 +48,8 @@ namespace BlackGui
 
             //! Remove the * wildcards
             QString stripWildcard(const QString &value) const;
+
+            bool m_valid = false; //!< is filter valid
 
         private:
             bool m_enabled = true;
