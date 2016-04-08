@@ -15,10 +15,10 @@ namespace BlackMisc
     {
         namespace Data
         {
-            CModelCaches::CModelCaches(QObject *parent) : QObject(parent)
+            CModelCaches::CModelCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             { }
 
-            CAircraftModelList CModelCaches::getModels(const CSimulatorInfo &simulator) const
+            CAircraftModelList CModelCaches::getCachedModels(const CSimulatorInfo &simulator) const
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
@@ -33,7 +33,7 @@ namespace BlackMisc
                 }
             }
 
-            CStatusMessage CModelCaches::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+            CStatusMessage CModelCaches::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
@@ -63,7 +63,7 @@ namespace BlackMisc
                 }
             }
 
-            void CModelCaches::syncronize(const CSimulatorInfo &simulator)
+            void CModelCaches::syncronizeCache(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
@@ -77,10 +77,10 @@ namespace BlackMisc
                 }
             }
 
-            CModelSetCaches::CModelSetCaches(QObject *parent) : QObject(parent)
+            CModelSetCaches::CModelSetCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             { }
 
-            CAircraftModelList CModelSetCaches::getModels(const CSimulatorInfo &simulator) const
+            CAircraftModelList CModelSetCaches::getCachedModels(const CSimulatorInfo &simulator) const
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
@@ -95,7 +95,7 @@ namespace BlackMisc
                 }
             }
 
-            CStatusMessage CModelSetCaches::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+            CStatusMessage CModelSetCaches::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
@@ -125,7 +125,7 @@ namespace BlackMisc
                 }
             }
 
-            void CModelSetCaches::syncronize(const CSimulatorInfo &simulator)
+            void CModelSetCaches::syncronizeCache(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())

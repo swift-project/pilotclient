@@ -14,6 +14,7 @@
 
 #include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 
 namespace BlackMisc
 {
@@ -105,9 +106,47 @@ namespace BlackMisc
                 static const char *key() { return "vpilot/models"; }
             };
 
+            //! Cache for multiple simulators specified by BlackMisc::Simulation::CSimulatorInfo
+            class IMultiSimulatorModelCaches :
+                public QObject,
+                public IModelsPerSimulatorSetable
+            {
+                Q_OBJECT
+
+            public:
+                //! Construtor
+                IMultiSimulatorModelCaches(QObject *parent = nullptr) : QObject(parent)
+                { }
+
+                //! Models
+                //! \threadsafe
+                virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
+
+                //! Cache timestamp
+                //! \threadsafe
+                virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
+
+                //! Set cache
+                virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+
+                //! Syncronize
+                virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+
+                //! \copydoc IModelsPerSimulatorSetable::setModels
+                virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override
+                {
+                    this->setCachedModels(models, simulator);
+                }
+
+            signals:
+                //! Cache has been changed
+                void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            };
+
+
             //! Bundle of caches for all simulators
             //! \remark Temp. workaround
-            class CModelCaches : public QObject
+            class CModelCaches : public IMultiSimulatorModelCaches
             {
                 Q_OBJECT
 
@@ -115,31 +154,33 @@ namespace BlackMisc
                 //! Construtor
                 CModelCaches(QObject *parent = nullptr);
 
-                //! Models
-                //! \threadsafe
-                CAircraftModelList getModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
-
-                //! Set models
-                BlackMisc::CStatusMessage setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-                //! Cache timestamp
-                //! \threadsafe
-                QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
-
-                //! Syncronize
-                void syncronize(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                //! \name Interface implementations
+                //! @{
+                virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                //! @}
 
             private:
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFsx> m_modelCacheFsx {this };  //!< FSX cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this };  //!< FS9 cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this };  //!< P3D cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheXP>  m_modelCacheXP  {this };  //!< XP cache
-            };
+                //! \todo Why can`t I keep the changed functions in IMultiSimulatorModelCaches -> C2039 not a member
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFsx> m_modelCacheFsx {this, &CModelCaches::changedFsx }; //!< FSX cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this, &CModelCaches::changedFs9 };  //!< FS9 cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this, &CModelCaches::changedP3D };  //!< P3D cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
 
+                //! \name Cache has been changed
+                //! @{
+                void changedFsx() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
+                void changedFs9() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FS9)); }
+                void changedP3D() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::P3D)); }
+                void changedXP()  { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
+                //! @}
+            };
 
             //! Bundle of caches for model sets of all simulators
             //! \remark Temp. workaround
-            class CModelSetCaches : public QObject
+            class CModelSetCaches : public IMultiSimulatorModelCaches
             {
                 Q_OBJECT
 
@@ -147,37 +188,29 @@ namespace BlackMisc
                 //! Construtor
                 CModelSetCaches(QObject *parent = nullptr);
 
-                //! Models
-                //! \threadsafe
-                CAircraftModelList getModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
-
-                //! Set models
-                BlackMisc::CStatusMessage setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-                //! Cache timestamp
-                //! \threadsafe
-                QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
-
-                //! Syncronize
-                void syncronize(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-            signals:
-                //! Cache has been changed
-                void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
-
-            private slots:
-                void ps_changedFsx() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
-                void ps_changedFs9() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FS9)); }
-                void ps_changedP3D() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::P3D)); }
-                void ps_changedXP()  { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
+                //! \name Interface implementations
+                //! @{
+                virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                //! @}
 
             private:
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFsx> m_modelCacheFsx {this, &CModelSetCaches::ps_changedFsx };  //!< FSX cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::ps_changedFs9};   //!< FS9 cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::ps_changedP3D };  //!< P3D cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::ps_changedXP };   //!< XP cache
-            };
+                //! \todo Why can`t I keep the changed functions in IMultiSimulatorModelCaches -> C2039 not a member
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFsx> m_modelCacheFsx {this, &CModelSetCaches::changedFsx };  //!< FSX cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::changedFs9};   //!< FS9 cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
 
+                //! \name Cache has been changed
+                //! @{
+                void changedFsx() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
+                void changedFs9() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FS9)); }
+                void changedP3D() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::P3D)); }
+                void changedXP()  { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
+                //! @}
+            };
         } // ns
     } // ns
 } // ns
