@@ -113,6 +113,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! VATSIM specific
+        static const CLogCategory &vatsimSpecific()
+        {
+            static const CLogCategory cat { "swift.vatsim" };
+            return cat;
+        }
+
         //! All predefined special categories
         //! \note Human readable patterns are defined in CLogPattern::allHumanReadablePatterns
         static const QList<CLogCategory> &allSpecialCategories()
@@ -129,6 +136,7 @@ namespace BlackMisc
                 swiftDbWebservice(),
                 services(),
                 validation(),
+                vatsimSpecific(),
                 verification(),
                 webservice()
             };

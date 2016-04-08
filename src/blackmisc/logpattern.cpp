@@ -16,19 +16,21 @@ namespace BlackMisc
     {
         static const QHash<QString, CLogPattern> patterns
         {
-            { "uncategorized (swift)",  exactMatch(CLogCategory::uncategorized()) },
-            { "validation",             exactMatch(CLogCategory::validation()) },
-            { "verification",           exactMatch(CLogCategory::verification()) },
-            { "services",               exactMatch(CLogCategory::services()) },
-            { "model mapping",          exactMatch(CLogCategory::mapping()) },
-            { "swift contexts",         exactMatch(CLogCategory::context()) },
-            { "swift context slots",    exactMatch(CLogCategory::contextSlot()) },
-            { "swift GUI",              exactMatch(CLogCategory::guiComponent()) },
-            { "downloading data",       exactMatch(CLogCategory::download()) },
-            { "webservice related",     exactMatch(CLogCategory::webservice()) },
+            { "uncategorized (swift)",       exactMatch(CLogCategory::uncategorized()) },
+            { "validation",                  exactMatch(CLogCategory::validation()) },
+            { "verification",                exactMatch(CLogCategory::verification()) },
+            { "services",                    exactMatch(CLogCategory::services()) },
+            { "model mapping",               exactMatch(CLogCategory::mapping()) },
+            { "model matching",              exactMatch(CLogCategory::matching()) },
+            { "swift contexts",              exactMatch(CLogCategory::context()) },
+            { "swift context slots",         exactMatch(CLogCategory::contextSlot()) },
+            { "swift GUI",                   exactMatch(CLogCategory::guiComponent()) },
+            { "downloading data",            exactMatch(CLogCategory::download()) },
+            { "VASTIM specific",             exactMatch(CLogCategory::vatsimSpecific()) },
+            { "webservice related",          exactMatch(CLogCategory::webservice()) },
             { "swift DB webservice related", exactMatch(CLogCategory::swiftDbWebservice()) },
-            { "Qt library",             startsWith("qt.") },
-            { "uncategorized (other)",  empty() }
+            { "Qt library",                  startsWith("qt.") },
+            { "uncategorized (other)",       empty() }
         };
         return patterns;
     }
