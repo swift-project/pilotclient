@@ -67,6 +67,7 @@ namespace BlackGui
                 // this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraftModel::IndexCallsign));
                 this->m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey}));
                 this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator}));
+                this->m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily}));
                 this->m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator}));
                 // this->m_columns.addColumn(CColumn::standardString("ct", "combined type", { CAircraftModel::IndexIcao, CAircraftIcaoData::IndexCombinedAircraftType}));
                 this->m_columns.addColumn(CColumn::standardString("description",  CAircraftModel::IndexDescription));
@@ -89,6 +90,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
 
                 this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator}));
+                this->m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily}));
                 this->m_columns.addColumn(CColumn::standardString("manufacturer", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexManufacturer}));
 
                 this->m_columns.addColumn(CColumn::standardString("code", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode}));
