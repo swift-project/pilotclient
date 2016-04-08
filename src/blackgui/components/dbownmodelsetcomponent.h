@@ -34,9 +34,17 @@ namespace BlackGui
          */
         class CDbOwnModelSetComponent :
             public QFrame,
-            public CDbMappingComponentAware
+            public CDbMappingComponentAware,
+            public BlackMisc::Simulation::IModelsSetable,
+            public BlackMisc::Simulation::IModelsUpdatable,
+            public BlackMisc::Simulation::IModelsPerSimulatorSetable,
+            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
         {
             Q_OBJECT
+            Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
 
         public:
             //! Constructor
@@ -63,9 +71,20 @@ namespace BlackGui
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;
 
+            //! \name Implementations of the models interfaces
+            //! @{
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelSet(models, this->m_simulator); }
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddModelSet(models, this->m_simulator); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->setModelSet(models, simulator); }
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->replaceOrAddModelSet(models, simulator); }
+            //! @}
+
         public slots:
             //! Set the model set
             void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Replace or add models provided
+            void replaceOrAddModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         private slots:
             //! Tab has been changed

@@ -13,8 +13,7 @@
 #define BLACKMISC_SIMULATION_AIRCRAFTMODELSETLOADER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/pixmap.h"
 #include <QObject>
@@ -65,6 +64,14 @@ namespace BlackMisc
             //! Shutdown
             void gracefulShutdown();
 
+            //! \name Implementations of the models interfaces
+            //! @{
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setCachedModels(models, this->m_simulatorInfo); }
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->m_simulatorInfo); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->setCachedModels(models, simulator); }
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
+            //! @}
+
         signals:
             //! Simulator has been changed
             void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -75,11 +82,11 @@ namespace BlackMisc
         public slots:
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
-            BlackMisc::CStatusMessage setModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
+            BlackMisc::CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
-            BlackMisc::CStatusMessage replaceOrAddModelsInCache(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
+            BlackMisc::CStatusMessage replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
             //! Change the simulator
             void changeSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);

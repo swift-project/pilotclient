@@ -8,8 +8,9 @@
  */
 
 #include "dbownmodelsetcomponent.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackgui/models/aircrafticaolistmodel.h"
+#include "blackgui/menus/aircraftmodelmenus.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/logmessage.h"
 #include "dbmappingcomponent.h"
 #include "dbownmodelsetdialog.h"
@@ -18,6 +19,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Models;
+using namespace BlackGui::Menus;
 using namespace BlackGui::Views;
 
 namespace BlackGui
@@ -36,6 +38,7 @@ namespace BlackGui
             ui->tvp_OwnModelSet->addFilterDialog();
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
             ui->tvp_OwnModelSet->setJsonLoad(CAircraftModelView::AllowOnlySingleSimulator | CAircraftModelView::ReduceToOneSimulator);
+            ui->tvp_OwnModelSet->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnModelSet, this, false));
 
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
@@ -72,9 +75,25 @@ namespace BlackGui
             const int diff = models.size() - cleanModelList.size();
             if (diff > 0)
             {
-                CLogMessage(this).warning("Removed models from set because not matching " + simulator.toQString(true));
+                CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
             }
             this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
+        }
+
+        void CDbOwnModelSetComponent::replaceOrAddModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            if (models.isEmpty()) { return; }
+            CAircraftModelList cleanModelList(models.matchesSimulator(simulator)); // remove those not matching the simulator
+            const int diff = models.size() - cleanModelList.size();
+            if (diff > 0)
+            {
+                CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
+            }
+            if (cleanModelList.isEmpty()) { return; }
+            CAircraftModelList updatedModels(this->ui->tvp_OwnModelSet->container());
+            updatedModels.replaceOrAddModelsWithString(cleanModelList, Qt::CaseInsensitive);
+            this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(updatedModels);
         }
 
         const CAircraftModelList &CDbOwnModelSetComponent::getModelSet() const
@@ -167,7 +186,7 @@ namespace BlackGui
                 const CAircraftModelList ml(ui->tvp_OwnModelSet->container());
                 if (!ml.isEmpty())
                 {
-                    const CStatusMessage m = this->m_modelSetLoader.setModelsInCache(ml);
+                    const CStatusMessage m = this->m_modelSetLoader.setCachedModels(ml);
                     CLogMessage::preformatted(m);
                 }
             }

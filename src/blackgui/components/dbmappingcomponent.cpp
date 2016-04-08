@@ -16,6 +16,7 @@
 #include "blackgui/guiutility.h"
 #include "blackgui/shortcut.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/logmessage.h"
 #include <QFile>
 #include <QShortcut>
@@ -579,7 +580,7 @@ namespace BlackGui
             Q_UNUSED(withFilter);
             int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_OwnModelSet);
             QString o = "Model set " + ui->comp_OwnModelSet->getModelSetSimulator().toQString(true);
-            const QString f = this->ui->comp_StashAircraft->view()->hasFilter() ? "F" : "";
+            const QString f = this->ui->comp_OwnModelSet->view()->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, this->ui->comp_OwnModelSet->view()->rowCount()) + f;
             this->ui->tw_ModelsToBeMapped->setTabText(i, o);
         }

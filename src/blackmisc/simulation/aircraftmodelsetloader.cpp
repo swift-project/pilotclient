@@ -56,14 +56,14 @@ namespace BlackMisc
         void CAircraftModelSetLoader::changeSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-            this->m_caches.syncronize(simulator);
             this->m_simulatorInfo = simulator;
+            this->m_caches.syncronizeCache(simulator);
             emit simulatorChanged(simulator);
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels() const
         {
-            return this->m_caches.getModels(this->m_simulatorInfo);
+            return this->m_caches.getCachedModels(this->m_simulatorInfo);
         }
 
         QDateTime CAircraftModelSetLoader::getCacheTimestamp() const
@@ -73,17 +73,17 @@ namespace BlackMisc
 
         void CAircraftModelSetLoader::syncronizeCache()
         {
-            return this->m_caches.syncronize(this->m_simulatorInfo);
+            return this->m_caches.syncronizeCache(this->m_simulatorInfo);
         }
 
         bool CAircraftModelSetLoader::hasCachedData() const
         {
-            return !this->m_caches.getModels(this->m_simulatorInfo).isEmpty();
+            return !this->m_caches.getCachedModels(this->m_simulatorInfo).isEmpty();
         }
 
         CStatusMessage CAircraftModelSetLoader::clearCache()
         {
-            return this->setModelsInCache(CAircraftModelList());
+            return this->setCachedModels(CAircraftModelList());
         }
 
         const CSimulatorInfo &CAircraftModelSetLoader::getSimulator() const

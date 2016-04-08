@@ -9,6 +9,7 @@
 
 #include "aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
@@ -110,7 +111,7 @@ namespace BlackMisc
                         if (ok)
                         {
                             models = (aircraftCfgEntriesList.toAircraftModelList(this->getSimulator()));
-                            this->mergeWithDbData(models, dbModels);
+                            CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                         }
                         return std::make_tuple(aircraftCfgEntriesList, models, ok);
                     });
@@ -124,7 +125,7 @@ namespace BlackMisc
                             const bool hasData = !models.isEmpty();
                             if (hasData)
                             {
-                                this->setModelsInCache(models); // not thread safe
+                                this->setCachedModels(models); // not thread safe
                             }
                             // currently I treat no data as error
                             emit this->loadingFinished(hasData, this->m_simulatorInfo);
@@ -140,11 +141,11 @@ namespace BlackMisc
                     bool ok;
                     this->m_parsedCfgEntriesList = performParsing(m_rootDirectory, m_excludedDirectories, &ok);
                     CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(this->getSimulator()));
-                    this->mergeWithDbData(models, dbModels);
+                    CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                     const bool hasData = !models.isEmpty();
                     if (hasData)
                     {
-                        this->setModelsInCache(models); // not thread safe
+                        this->setCachedModels(models); // not thread safe
                     }
                     // currently I treat no data as error
                     emit this->loadingFinished(hasData, this->m_simulatorInfo);

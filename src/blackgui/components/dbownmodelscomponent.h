@@ -20,7 +20,6 @@
 #include <QScopedPointer>
 
 namespace Ui { class CDbOwnModelsComponent; }
-
 namespace BlackGui
 {
     namespace Views { class CAircraftModelView; }

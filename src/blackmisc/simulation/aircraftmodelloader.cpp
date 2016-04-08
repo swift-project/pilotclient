@@ -80,7 +80,7 @@ namespace BlackMisc
 
         CAircraftModelList IAircraftModelLoader::getAircraftModels() const
         {
-            return this->m_caches.getModels(this->m_simulatorInfo);
+            return this->m_caches.getCachedModels(this->m_simulatorInfo);
         }
 
         QDateTime IAircraftModelLoader::getCacheTimestamp() const
@@ -90,17 +90,17 @@ namespace BlackMisc
 
         void IAircraftModelLoader::syncronizeCache()
         {
-            return this->m_caches.syncronize(this->m_simulatorInfo);
+            return this->m_caches.syncronizeCache(this->m_simulatorInfo);
         }
 
         bool IAircraftModelLoader::hasCachedData() const
         {
-            return !this->m_caches.getModels(this->m_simulatorInfo).isEmpty();
+            return !this->m_caches.getCachedModels(this->m_simulatorInfo).isEmpty();
         }
 
         CStatusMessage IAircraftModelLoader::clearCache()
         {
-            return this->setModelsInCache(CAircraftModelList());
+            return this->setCachedModels(CAircraftModelList());
         }
 
         void IAircraftModelLoader::startLoading(LoadMode mode, const CAircraftModelList &dbModels)

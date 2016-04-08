@@ -13,7 +13,7 @@
 #define BLACKMISC_SIMULATION_IAIRCRAFTMODELLOADER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/pixmap.h"
@@ -28,9 +28,18 @@ namespace BlackMisc
         /*!
          * Load the aircraft for a simulator
          */
-        class BLACKMISC_EXPORT IAircraftModelLoader : public QObject
+        class BLACKMISC_EXPORT IAircraftModelLoader :
+            public QObject,
+            public BlackMisc::Simulation::IModelsSetable,
+            public BlackMisc::Simulation::IModelsUpdatable,
+            public BlackMisc::Simulation::IModelsPerSimulatorSetable,
+            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
         {
             Q_OBJECT
+            Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
 
         public:
             //! Parser mode

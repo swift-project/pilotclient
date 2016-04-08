@@ -9,6 +9,7 @@
 
 #include "aircraftmodelloaderxplane.h"
 #include "xplaneutil.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/fileutils.h"
@@ -80,7 +81,7 @@ namespace BlackMisc
                                      [this, rootDirectory, excludedDirectories, dbModels]()
                     {
                         auto models = performParsing(rootDirectory, excludedDirectories);
-                        mergeWithDbData(models, dbModels);
+                        CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                         return models;
                     });
                     m_parserWorker->thenWithResult<CAircraftModelList>(this, [this](const auto & models)
@@ -91,7 +92,7 @@ namespace BlackMisc
                 else if (mode.testFlag(LoadDirectly))
                 {
                     CAircraftModelList models(performParsing(m_rootDirectory, m_excludedDirectories));
-                    mergeWithDbData(models, dbModels);
+                    CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                     updateInstalledModels(models);
                 }
             }
@@ -111,7 +112,7 @@ namespace BlackMisc
 
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
-                this->setModelsInCache(models);
+                this->setCachedModels(models);
                 emit loadingFinished(true, this->m_simulatorInfo);
             }
 

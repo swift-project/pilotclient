@@ -12,7 +12,7 @@
 
 #include "menudelegate.h"
 #include "blackgui/views/aircraftmodelview.h"
-#include "blackmisc/simulation/aircraftmodelloader.h"
+#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include <QMenu>
 #include <QObject>
@@ -68,10 +68,7 @@ namespace BlackGui
             using IAircraftModelViewMenu::IAircraftModelViewMenu;
 
             //! Constructor
-            CMergeWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView,
-                                 BlackMisc::Simulation::IAircraftModelLoader *modelLoader, bool separator = true) :
-                IAircraftModelViewMenu(modelView, separator), m_loader(modelLoader)
-            {}
+            CMergeWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget, bool separator = true);
 
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(QMenu &menu) const override;
