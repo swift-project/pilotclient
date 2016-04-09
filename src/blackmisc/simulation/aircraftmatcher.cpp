@@ -144,79 +144,129 @@ namespace BlackMisc
             {
                 if (model.hasModelString())
                 {
-                    this->logDetails(log, remoteAircraft, "Found exact match for " + model.getModelString());
+                    logDetails(log, remoteAircraft, "Found exact match for " + model.getModelString());
                 }
                 else
                 {
-                    this->logDetails(log, remoteAircraft, "No exact match for " + model.getModelString());
+                    logDetails(log, remoteAircraft, "No exact match for " + model.getModelString());
                 }
             }
             model.setModelType(CAircraftModel::TypeModelMatching);
             return model;
         }
 
-        CAircraftModel CAircraftMatcher::matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, bool ignoreAirline, CStatusMessageList *log) const
+        CAircraftModel CAircraftMatcher::matchByLiveryAndIcaoCode(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, CStatusMessageList *log)
+        {
+            if (!remoteAircraft.getLivery().hasCombinedCode())
+            {
+                if (log) { logDetails(log, remoteAircraft, "No livery code, no match possible"); }
+                return CAircraftModel();
+            }
+
+            const CAircraftModelList byLivery(models.findByLiveryCode(remoteAircraft.getLivery()));
+            if (byLivery.isEmpty())
+            {
+                if (log) { logDetails(log, remoteAircraft, "Not found by livery code " + remoteAircraft.getLivery().getCombinedCode()); }
+                return CAircraftModel();
+            }
+            return matchModelsByIcaoData(remoteAircraft, byLivery, true, log);
+        }
+
+        CAircraftModel CAircraftMatcher::matchByCombinedCode(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, bool relaxIfNotFound, CStatusMessageList *log)
+        {
+            CAircraftModel aircraftModel;
+            if (!remoteAircraft.getAircraftIcaoCode().hasValidCombinedType())
+            {
+                if (log) { logDetails(log, remoteAircraft, "No valid combined code"); }
+                return aircraftModel;
+            }
+
+            const QString cc = remoteAircraft.getAircraftIcaoCode().getCombinedType();
+            CAircraftModelList byCombinedCode(models.findByCombinedCode(cc));
+            if (byCombinedCode.isEmpty())
+            {
+                if (log) { logDetails(log, remoteAircraft, "Not found by combined code " + cc); }
+                return CAircraftModel();
+            }
+
+            if (log) { logDetails(log, remoteAircraft, "Found by combined code " + cc + ", possible " + QString::number(byCombinedCode.size())); }
+            if (byCombinedCode.size() > 1)
+            {
+                byCombinedCode = ifPossibleReduceByAirline(remoteAircraft, byCombinedCode, "Combined code", log);
+                byCombinedCode = ifPossibleReduceByManufacturer(remoteAircraft, byCombinedCode, "Combined code", log);
+            }
+            aircraftModel = byCombinedCode.front();
+            aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
+            return aircraftModel;
+        }
+
+        CAircraftModel CAircraftMatcher::matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, bool ignoreAirline, CStatusMessageList *log)
         {
             CAircraftModel aircraftModel;
             if (!remoteAircraft.hasAircraftDesignator())
             {
-                if (log) { this->logDetails(log, remoteAircraft, "No aircraft designator, skipping step"); }
+                if (log) { logDetails(log, remoteAircraft, "No aircraft designator, skipping step"); }
                 return aircraftModel;
             }
 
-            BlackMisc::Simulation::CAircraftModelList mappingModels(
-                models.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(),
-                                             ignoreAirline ? CAirlineIcaoCode() : remoteAircraft.getAirlineIcaoCode()));
-            if (!mappingModels.isEmpty())
+            BlackMisc::Simulation::CAircraftModelList searchModels(models.findByIcaoDesignators(
+                        remoteAircraft.getAircraftIcaoCode(),
+                        ignoreAirline ? CAirlineIcaoCode() : remoteAircraft.getAirlineIcaoCode()));
+
+            if (!searchModels.isEmpty())
             {
-                aircraftModel = mappingModels.front();
-                aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
                 if (log)
                 {
-                    this->logDetails(log, remoteAircraft,
-                                     "Possible aircraft " + QString::number(mappingModels.size()) +
-                                     ", found by ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator() + " " +
-                                     (ignoreAirline ? "" : remoteAircraft.getAirlineIcaoCodeDesignator()));
+                    logDetails(log, remoteAircraft,
+                               "Possible aircraft " + QString::number(searchModels.size()) +
+                               ", found by ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator() + " " +
+                               (ignoreAirline ? "" : remoteAircraft.getAirlineIcaoCodeDesignator()));
                 }
+                if (searchModels.size() > 1)
+                {
+                    searchModels = ifPossibleReduceByManufacturer(remoteAircraft, searchModels, "Match by ICAO", log);
+                }
+                aircraftModel = searchModels.front();
+                aircraftModel.setModelType(CAircraftModel::TypeModelMatching);
             }
             else
             {
-                if (remoteAircraft.hasAircraftAndAirlineDesignator())
+                if (!ignoreAirline && remoteAircraft.hasAircraftAndAirlineDesignator())
                 {
                     // we have searched by aircraft and airline, bout not found anything
                     if (log)
                     {
-                        this->logDetails(log, remoteAircraft,
-                                         "Not found by ICAO " +
-                                         remoteAircraft.getAircraftIcaoCodeDesignator() + " " + remoteAircraft.getAirlineIcaoCodeDesignator() +
-                                         " relaxing to only ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator());
+                        logDetails(log, remoteAircraft,
+                                   "Not found by ICAO " +
+                                   remoteAircraft.getAircraftIcaoCodeDesignator() + " " + remoteAircraft.getAirlineIcaoCodeDesignator() +
+                                   " relaxing to only ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator());
                     }
                     // recursive lookup by ignoring airline
-                    return this->matchModelsByIcaoData(remoteAircraft, models, true, log);
+                    return matchModelsByIcaoData(remoteAircraft, models, true, log);
                 }
-                if (log) { this->logDetails(log, remoteAircraft, "Not found by ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator() + " " + remoteAircraft.getAirlineIcaoCodeDesignator()); }
+                if (log) { logDetails(log, remoteAircraft, "Not found by ICAO " + remoteAircraft.getAircraftIcaoCodeDesignator() + " " + remoteAircraft.getAirlineIcaoCodeDesignator()); }
             }
             return aircraftModel;
         }
 
-        CAircraftModel CAircraftMatcher::matchByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, const CAircraftModelList &models, const QString &modelSource, CStatusMessageList *log) const
+        CAircraftModel CAircraftMatcher::matchByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, const CAircraftModelList &models, const QString &hint, CStatusMessageList *log)
         {
             // Use an algorithm to find the best match
             if (family.isEmpty())
             {
-                if (log) { this->logDetails(log, remoteAircraft, "No family, skipping step"); }
+                if (log) { logDetails(log, remoteAircraft, "No family, skipping step (" + hint + ")"); }
                 return CAircraftModel();
             }
             if (models.isEmpty())
             {
-                if (log) { this->logDetails(log, remoteAircraft, "No models in " + modelSource + " for family match"); }
+                if (log) { logDetails(log, remoteAircraft, "No models for family match (" + hint + ")"); }
                 return CAircraftModel();
             }
 
             CAircraftModelList found(models.findByFamily(family));
             if (found.isEmpty())
             {
-                if (log) { this->logDetails(log, remoteAircraft, "Not found by family " + family + " in " + modelSource); }
+                if (log) { logDetails(log, remoteAircraft, "Not found by family " + family + " (" + hint + ")"); }
                 return CAircraftModel();
             }
 

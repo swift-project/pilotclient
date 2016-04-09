@@ -61,16 +61,13 @@ namespace BlackMisc
             //! Get the closest matching aircraft model.
             //! Result depends on enabled modes.
             //! \sa MatchingModeFlag
-            //! \threadsafe
             CAircraftModel getClosestMatch(const CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
 
             //! Get the models
-            //! \threadsafe
-            BlackMisc::Simulation::CAircraftModelList getModels() const { return m_models.read(); }
+            BlackMisc::Simulation::CAircraftModelList getModelSet() const { return m_modelSet; }
 
             //! Set the models we want to use
-            //! \threadsafe
-            int setModels(const BlackMisc::Simulation::CAircraftModelList &models);
+            int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models);
 
             //! Default model
             const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const;
@@ -79,34 +76,44 @@ namespace BlackMisc
             void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
 
         private:
-            //! Init state
-            enum InitState
-            {
-                NotInitialized,
-                InitInProgress,
-                InitFinished
-            };
-
             //! Search in models by key (aka model string)
             //! \threadsafe
-            CAircraftModel matchByExactModelString(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, CStatusMessageList *log) const;
+            static CAircraftModel matchByExactModelString(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, CStatusMessageList *log);
+
+            //! Search for exact livery
+            //! \threadsafe
+            static CAircraftModel matchByLiveryAndIcaoCode(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, CStatusMessageList *log);
 
             //! Installed models by ICAO data
             //! \threadsafe
-            CAircraftModel matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, bool ignoreAirline, CStatusMessageList *log) const;
+            static CAircraftModel matchModelsByIcaoData(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, bool ignoreAirline, CStatusMessageList *log);
+
+            //! Installed models by combined code (ie L2J, L1P, ...)
+            //! \threadsafe
+            static CAircraftModel matchByCombinedCode(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &models, bool relaxIfNotFound, CStatusMessageList *log);
 
             //! Find model by aircraft family
-            CAircraftModel matchByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, const CAircraftModelList &models, CStatusMessageList *log) const;
+            //! \threadsafe
+            static CAircraftModel matchByFamily(const CSimulatedAircraft &remoteAircraft, const QString &family, const CAircraftModelList &models, const QString &modelSource, CStatusMessageList *log);
+
+            //! Reduce by manufacturer
+            //! \threadsafe
+            static CAircraftModelList ifPossibleReduceByManufacturer(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const QString &info, CStatusMessageList *log);
+
+            //! Reduce by airline ICAO
+            //! \threadsafe
+            static CAircraftModelList ifPossibleReduceByAirline(const CSimulatedAircraft &remoteAircraft, const CAircraftModelList &inList, const QString &info, CStatusMessageList *log);
 
             //! Add to log. if applicable
-            void logDetails(BlackMisc::CStatusMessageList *log,
-                            const CSimulatedAircraft &remoteAircraft,
-                            const QString &message,
-                            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo) const;
+            //! \treadsafe
+            static void logDetails(BlackMisc::CStatusMessageList *log,
+                                   const CSimulatedAircraft &remoteAircraft,
+                                   const QString &message,
+                                   CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
-            MatchingMode                           m_matchingMode = All;
-            BlackMisc::Simulation::CAircraftModel  m_defaultModel;                             //!< model to be used as default model
-            BlackMisc::LockFree<BlackMisc::Simulation::CAircraftModelList> m_models;           //!< models used for model matching
+            MatchingMode                              m_matchingMode = All;
+            BlackMisc::Simulation::CAircraftModel     m_defaultModel;         //!< model to be used as default model
+            BlackMisc::Simulation::CAircraftModelList m_modelSet;             //!< models used for model matching
         };
     }
 } // namespace
