@@ -15,11 +15,11 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/interpolator.h"
 #include "blackcore/simulator.h"
+#include "blackcore/aircraftmatcher.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorsetup.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
-#include "blackmisc/simulation/aircraftmatcher.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/pluginstorageprovider.h"
@@ -116,7 +116,7 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
 
         //! \todo unclear if this is valid for all simulators or for MS/P3D simulators only
-        BlackMisc::Simulation::CAircraftMatcher m_modelMatcher;  //!< Model matcher
+        BlackCore::CAircraftMatcher m_modelMatcher;              //!< Model matcher
         BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this }; //!< load model set from caches
 
     private:

@@ -13,9 +13,9 @@
 #define BLACKGUI_COMPONENT_MODELMATCHERCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackcore/aircraftmatcher.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/aircraftmatcher.h"
 #include "blackmisc/network/entityflags.h"
 
 #include <QFrame>
@@ -70,7 +70,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CModelMatcherComponent>     ui;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
-            BlackMisc::Simulation::CAircraftMatcher        m_matcher { BlackMisc::Simulation::CAircraftMatcher::All, this };
+            BlackCore::CAircraftMatcher                    m_matcher { BlackCore::CAircraftMatcher::All, this };
         };
     } // ns
 } // ns

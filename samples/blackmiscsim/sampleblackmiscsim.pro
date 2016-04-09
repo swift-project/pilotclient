@@ -7,10 +7,11 @@ TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc blacksim
+CONFIG   += blackmisc blacksim blackcore
 CONFIG  -= app_bundle
 
 DEPENDPATH += . ../../src/blackmisc
+DEPENDPATH += . ../../src/blackcore
 INCLUDEPATH += . ../../src
 
 DESTDIR = $$DestRoot/bin

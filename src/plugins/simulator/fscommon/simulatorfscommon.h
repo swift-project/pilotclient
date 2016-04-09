@@ -14,7 +14,6 @@
 
 #include "blackcore/simulatorcommon.h"
 #include "blackcore/interpolator.h"
-#include "blackmisc/simulation/aircraftmatcher.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "fsuipc.h"
 

@@ -11,17 +11,18 @@
 //! \ingroup sampleblackmiscsim
 
 #include "samplesmodelmapping.h"
+#include "blackcore/aircraftmatcher.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
-#include "blackmisc/simulation/aircraftmatcher.h"
 
 #include <QDebug>
 #include <memory>
 #include <utility>
 
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
@@ -31,7 +32,6 @@ namespace BlackSample
 {
     void CSamplesModelMapping::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
-        BlackMisc::registerMetadata();
         CVPilotRulesReader vpRulesReader;
         bool s = vpRulesReader.read(true);
         streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << endl;

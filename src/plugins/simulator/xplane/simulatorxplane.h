@@ -13,7 +13,6 @@
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
 #include "blackcore/simulatorcommon.h"
-#include "blackmisc/simulation/aircraftmatcher.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/pixmap.h"

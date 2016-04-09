@@ -7,12 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/registermetadata.h"
+#include "blackcore/application.h"
 #include "samplesfscommon.h"
 #include "samplesfsx.h"
 #include "samplesmodelmapping.h"
 #include "samplesvpilotrules.h"
 
+#include <QCoreApplication>
 #include <QTextStream>
 #include <QDebug>
 #include <QTime>
@@ -23,12 +24,14 @@
 //! main
 int main(int argc, char *argv[])
 {
-    Q_UNUSED(argc);
-    Q_UNUSED(argv);
+
+    QCoreApplication qa(argc, argv);
+    BlackCore::CApplication a;
+    Q_UNUSED(a);
+    Q_UNUSED(qa);
 
     QTextStream streamIn(stdin);
     QTextStream streamOut(stdout);
-    BlackMisc::registerMetadata();
 
     streamOut << "Run samples:" << endl;
     streamOut << "1 .. FS common / Simulation (with cfg files reading)" << endl;
