@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
-    <height>318</height>
+    <width>356</width>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,6 +32,26 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
+   <item row="0" column="1">
+    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="BlackGui::Components::CAircraftCombinedTypeSelector" name="comp_CombinedCode">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="1">
     <widget class="BlackGui::Components::CDbAircraftIcaoSelectorComponent" name="comp_AircraftSelector">
      <property name="minimumSize">
@@ -106,24 +126,62 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="BlackGui::Components::CAircraftCombinedTypeSelector" name="comp_CombinedCode">
+   <item row="6" column="1" colspan="3">
+    <widget class="QFrame" name="fr_Buttons">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="hs_Buttons">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_ReverseLookup">
+        <property name="text">
+         <string>reverse</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_ModelMatching">
+        <property name="text">
+         <string>matching</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cb_withReverseLookup">
+        <property name="toolTip">
+         <string>use reverse lookup for model matching</string>
+        </property>
+        <property name="text">
+         <string>with lookup</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item row="5" column="0">
@@ -147,20 +205,6 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="3">
-    <widget class="QLineEdit" name="le_ModelString">
-     <property name="placeholderText">
-      <string>model string</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_Simulator">
-     <property name="text">
-      <string>Simulator:</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0">
     <widget class="QLabel" name="lbl_Combined">
      <property name="text">
@@ -175,17 +219,27 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="3">
-    <widget class="QPushButton" name="pb_Test">
-     <property name="text">
-      <string>Run</string>
+   <item row="5" column="1" colspan="3">
+    <widget class="QLineEdit" name="le_ModelString">
+     <property name="placeholderText">
+      <string>model string</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
-    <widget class="QLineEdit" name="le_ModelSetCount">
-     <property name="readOnly">
-      <bool>true</bool>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_Simulator">
+     <property name="text">
+      <string>Simulator:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="le_Manufacturer"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="lbl_Manufacturer">
+     <property name="text">
+      <string>Manufacturer:</string>
      </property>
     </widget>
    </item>
@@ -196,15 +250,12 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="lbl_Manufacturer">
-     <property name="text">
-      <string>Manufacturer:</string>
+   <item row="0" column="3">
+    <widget class="QLineEdit" name="le_ModelSetCount">
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QLineEdit" name="le_Manufacturer"/>
    </item>
   </layout>
  </widget>

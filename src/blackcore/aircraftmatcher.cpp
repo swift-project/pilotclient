@@ -138,29 +138,36 @@ namespace BlackCore
 
         // only if not yet matched with DB
         const QString aircraftIcaoDesignator(model.getAircraftIcaoCodeDesignator());
-        const QString airlineIcaoDesignator(model.getAircraftIcaoCodeDesignator());
+        const QString airlineIcaoDesignator(model.getAirlineIcaoCodeDesignator());
         if (!model.hasValidDbKey())
         {
             // try to match by livery
-            const QString livery(liveryInfo);
-            if (CLivery::isValidCombinedCode(livery))
+            if (liveryCode.isEmpty() && !airlineIcaoDesignator.isEmpty())
+            {
+                // we create a standard livery code, then we try to find based on this
+                liveryCode = CLivery::getStandardCode(model.getAirlineIcaoCode());
+            }
+
+            if (CLivery::isValidCombinedCode(liveryCode))
             {
                 // search DB model by livery
-                const CAircraftModelList models(sApp->getWebDataServices()->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, livery));
+                const CAircraftModelList models(sApp->getWebDataServices()->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, liveryCode));
                 if (models.isEmpty())
                 {
                     // no models for that livery, search for livery only
-                    const CLivery databaseLivery(sApp->getWebDataServices()->getLiveryForCombinedCode(livery));
+                    const CLivery databaseLivery(sApp->getWebDataServices()->getLiveryForCombinedCode(liveryCode));
                     if (databaseLivery.hasValidDbKey())
                     {
                         // we have found a livery in the DB
                         model.setLivery(databaseLivery);
+                        if (log) { logDetails(log, callsign, QString("Reverse lookup, set livery `%1`").arg(databaseLivery.getCombinedCodePlusInfo())); }
                     }
                 }
                 else
                 {
                     // model by livery data found
                     model = models.front();
+                    if (log) { logDetails(log, callsign, QString("Reverse lookup, DB model `%1` for %2/%3, found %4").arg(model.getDbKey()).arg(aircraftIcaoDesignator).arg(liveryCode).arg(models.size())); }
                 }
             }
 
@@ -175,8 +182,12 @@ namespace BlackCore
                     airlineIcao = model.getAirlineIcaoCode();
                     airlineIcao.updateMissingParts(CAirlineIcaoCode(airlineIcaoDesignator));
                 }
-                const CLivery liveryDummy(livery, airlineIcao, "Generated");
-                model.setLivery(liveryDummy);
+                if (!airlineIcaoDesignator.isEmpty())
+                {
+                    const CLivery liveryDummy(CLivery::getStandardCode(airlineIcao), airlineIcao, "Generated");
+                    model.setLivery(liveryDummy);
+                    if (log) { logDetails(log, callsign, QString("Reverse lookup, set dummy livery `%1`").arg(liveryDummy.getCombinedCodePlusInfo())); }
+                }
             }
 
             if (!model.getAircraftIcaoCode().hasValidDbKey())
@@ -187,11 +198,15 @@ namespace BlackCore
                     // no DB data, we update as much as possible
                     aircraftIcao = model.getAircraftIcaoCode();
                     aircraftIcao.updateMissingParts(CAircraftIcaoCode(aircraftIcaoDesignator));
+                    if (log) { logDetails(log, callsign, QString("Reverse lookup, aircraft `%1` not found in DB").arg(aircraftIcaoDesignator)); }
                 }
                 model.setAircraftIcaoCode(aircraftIcao);
+                if (log) { logDetails(log, callsign, QString("Reverse lookup, set aircraft `%1`").arg(aircraftIcao.getCombinedIcaoStringWithKey())); }
             }
         } // model from DB
 
+        if (model.getModelType() != CAircraftModel::TypeUnknown) { model.setModelType(modelToLookup.getModelType()); }
+        model.setCallsign(modelToLookup.getCallsign());
         return model;
     }
 

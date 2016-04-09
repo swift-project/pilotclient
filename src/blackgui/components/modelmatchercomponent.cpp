@@ -43,7 +43,8 @@ namespace BlackGui
             ui->le_Manufacturer->setValidator(validator);
 
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::ps_simulatorChanged);
-            connect(ui->pb_Test, &QPushButton::pressed, this, &CModelMatcherComponent::ps_test);
+            connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::ps_testModelMatching);
+            connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::ps_reverseLookup);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::ps_webDataRed);
 
             const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
@@ -79,15 +80,33 @@ namespace BlackGui
             this->redisplay();
         }
 
-        void CModelMatcherComponent::ps_test()
+        void CModelMatcherComponent::ps_testModelMatching()
+        {
+            ui->te_Results->clear();
+            CStatusMessageList msgs;
+            CSimulatedAircraft remoteAircraft(createAircraft());
+            if (this->ui->cb_withReverseLookup->isChecked())
+            {
+                const QString liveryString(ui->comp_LiverySelector->getRawCombinedCode());
+                const CAircraftModel reverseModel = CAircraftMatcher::reverseLookup(remoteAircraft.getModel(), liveryString, &msgs);
+                remoteAircraft.setModel(reverseModel);
+            }
+
+            this->m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
+            const CAircraftModel matched = this->m_matcher.getClosestMatch(remoteAircraft, &msgs);
+            ui->te_Results->setText(matched.toQString(true));
+            ui->tvp_ResultMessages->updateContainer(msgs);
+        }
+
+        void CModelMatcherComponent::ps_reverseLookup()
         {
             ui->te_Results->clear();
             CStatusMessageList msgs;
             this->m_matcher.setDefaultModel(CModelMatcherComponent::defaultModel());
-            CSimulatedAircraft remoteAircraft(createAircraft());
-            const CAircraftModel matched = this->m_matcher.getClosestMatch(remoteAircraft, &msgs);
-            remoteAircraft.setModel(matched);
-            ui->te_Results->setText(remoteAircraft.toQString(true));
+            const CSimulatedAircraft remoteAircraft(createAircraft());
+            const QString livery(ui->comp_LiverySelector->getRawCombinedCode());
+            const CAircraftModel matched = CAircraftMatcher::reverseLookup(remoteAircraft.getModel(), livery, &msgs);
+            ui->te_Results->setText(matched.toQString(true));
             ui->tvp_ResultMessages->updateContainer(msgs);
         }
 
@@ -111,31 +130,28 @@ namespace BlackGui
         {
             const QString airline(ui->comp_AirlineSelector->getRawDesignator());
             const QString aircraft(ui->comp_AircraftSelector->getRawDesignator());
-            const QString model(ui->le_ModelString->text().trimmed().toUpper());
+            const QString modelString(ui->le_ModelString->text().trimmed().toUpper());
             const QString combined(ui->comp_CombinedCode->getCombinedType());
             const QString manufacturer(ui->le_Manufacturer->text().trimmed().toUpper());
             const QString liveryCombinedCode(ui->comp_LiverySelector->getRawCombinedCode());
 
             static const CCallsign cs("SWIFT");
             static const CUser pilot("123456", "swift Test", cs);
-            CSimulatedAircraft sa;
-            if (!model.isEmpty())
-            {
-                const CAircraftModel m(model, CAircraftModel::TypeFsdData);
-                sa = CSimulatedAircraft(m);
-            }
-            sa.setCallsign(cs);
 
             CAircraftIcaoCode icao(aircraft, combined);
             icao.setManufacturer(manufacturer);
-            sa.setAircraftIcaoCode(icao);
 
             const CAirlineIcaoCode al(airline);
             const CLivery l(liveryCombinedCode.isEmpty() ? CLivery::getStandardCode(al) : liveryCombinedCode,
                             al,
                             "Standard");
-            sa.setLivery(l);
+            CAircraftModel m(modelString, CAircraftModel::TypeFsdData);
+            m.setLivery(l);
+            m.setCallsign(cs);
+            m.setModelType(CAircraftModel::TypeFsdData);
+            CSimulatedAircraft sa(m);
             sa.setPilot(pilot);
+            sa.setAircraftIcaoCode(icao);
             return sa;
         }
 

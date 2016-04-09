@@ -53,7 +53,10 @@ namespace BlackGui
             void ps_cacheChanged(BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Run the matcher
-            void ps_test();
+            void ps_testModelMatching();
+
+            //! Reverse lookup
+            void ps_reverseLookup();
 
             //! Web data have been read
             void ps_webDataRed(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
