@@ -40,7 +40,9 @@ namespace BlackCore
             ByModelString    = 1 << 0,
             ByIcaoData       = 1 << 1,
             ByFamily         = 1 << 2,
-            All              = ByModelString | ByIcaoData | ByFamily
+            ByLivery         = 1 << 3,
+            ByCombinedCode   = 1 << 4,
+            All              = ByModelString | ByIcaoData | ByFamily | ByLivery | ByCombinedCode
         };
         Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -59,7 +61,12 @@ namespace BlackCore
         //! Get the closest matching aircraft model.
         //! Result depends on enabled modes.
         //! \sa MatchingModeFlag
+        //! \threadsafe
         BlackMisc::Simulation::CAircraftModel getClosestMatch(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
+
+        //! Try to find the corresponding data in DB and get best information for following matching
+        //! \threadsafe
+        static BlackMisc::Simulation::CAircraftModel reverseLookup(const BlackMisc::Simulation::CAircraftModel &modelToLookup, const QString &liveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Get the models
         BlackMisc::Simulation::CAircraftModelList getModelSet() const { return m_modelSet; }
@@ -110,6 +117,13 @@ namespace BlackCore
         //! \treadsafe
         static void logDetails(BlackMisc::CStatusMessageList *log,
                                const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
+                               const QString &message,
+                               BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
+
+        //! Add to log. if applicable
+        //! \treadsafe
+        static void logDetails(BlackMisc::CStatusMessageList *log,
+                               const BlackMisc::Aviation::CCallsign &callsign,
                                const QString &message,
                                BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
 

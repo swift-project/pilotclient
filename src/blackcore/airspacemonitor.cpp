@@ -9,6 +9,7 @@
 
 #include "airspacemonitor.h"
 #include "blackcore/application.h"
+#include "blackcore/aircraftmatcher.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/vatsimbookingreader.h"
@@ -793,6 +794,7 @@ namespace BlackCore
         bool existingAircraft = !remoteAircraft.getCallsign().isEmpty();
 
         CAircraftModel model; // generate a model for that aircraft
+        model.setCallsign(callsign);
         if (existingAircraft)
         {
             model = remoteAircraft.getModel();
@@ -814,70 +816,10 @@ namespace BlackCore
 
         // we have no DB model yet, but do we have model string?
         if (!model.hasModelString() && !modelString.isEmpty()) { model.setModelString(modelString); }
-        if (model.hasModelString())
-        {
-            // if we find the model here we have a fully defined DB model
-            const CAircraftModel modelFromDb(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
-            if (modelFromDb.hasValidDbKey())
-            {
-                model = modelFromDb;
-                this->logMatching(QString("Reverse looked up DB model `%1` for %2").arg(modelFromDb.getDbKey()).arg(callsign.toQString()));
-            }
-        }
 
-        // only if not yet matched with DB
-        if (!model.hasValidDbKey())
-        {
-            // try to match by livery
-            if (CLivery::isValidCombinedCode(livery))
-            {
-                // search DB model by livery
-                const CAircraftModelList models(sApp->getWebDataServices()->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, livery));
-                if (models.isEmpty())
-                {
-                    // no models for that livery, search for livery only
-                    const CLivery databaseLivery(sApp->getWebDataServices()->getLiveryForCombinedCode(livery));
-                    if (databaseLivery.hasValidDbKey())
-                    {
-                        // we have found a livery in the DB
-                        model.setLivery(databaseLivery);
-                    }
-                }
-                else
-                {
-                    // model by livery data found
-                    model = models.front();
-                }
-            }
-
-            // if no DB livery, create own dummy livery
-            if (!model.hasValidDbKey() && !model.getLivery().hasValidDbKey())
-            {
-                // create a pseudo livery, try to find airline first
-                CAirlineIcaoCode airlineIcao(sApp->getWebDataServices()->smartAirlineIcaoSelector(CAirlineIcaoCode(airlineIcaoDesignator)));
-                if (!airlineIcao.hasValidDbKey())
-                {
-                    // no DB data, we update as much as possible
-                    airlineIcao = model.getAirlineIcaoCode();
-                    airlineIcao.updateMissingParts(CAirlineIcaoCode(airlineIcaoDesignator));
-                }
-                CLivery liveryDummy(livery, airlineIcao, "Generated");
-                model.setLivery(liveryDummy);
-            }
-
-            if (!model.getAircraftIcaoCode().hasValidDbKey())
-            {
-                CAircraftIcaoCode aircraftIcao(sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(aircraftIcaoDesignator));
-                if (!aircraftIcao.hasValidDbKey())
-                {
-                    // no DB data, we update as much as possible
-                    aircraftIcao = model.getAircraftIcaoCode();
-                    aircraftIcao.updateMissingParts(CAircraftIcaoCode(aircraftIcaoDesignator));
-                }
-                model.setAircraftIcaoCode(aircraftIcao);
-            }
-        } // model from DB
-
+        CStatusMessageList reverseLookup;
+        model = CAircraftMatcher::reverseLookup(model, livery, &reverseLookup);
+        if (this->m_logMatchingProcess && !reverseLookup.isEmpty()) { CLogMessage::preformatted(reverseLookup); }
         {
             QWriteLocker l(&m_lockAircraft);
             if (this->m_aircraftInRange.containsCallsign(callsign))
