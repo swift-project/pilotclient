@@ -64,7 +64,7 @@ namespace BlackMisc
             CSimulatedAircraft();
 
             //! Constructor.
-            CSimulatedAircraft(const BlackMisc::Simulation::CAircraftModel &model);
+            explicit CSimulatedAircraft(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Constructor.
             CSimulatedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Network::CUser &user, const BlackMisc::Aviation::CAircraftSituation &situation);
