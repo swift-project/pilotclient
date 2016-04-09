@@ -12,6 +12,7 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/stringutils.h"
 #include <QDragEnterEvent>
 
 using namespace BlackGui;
@@ -99,6 +100,12 @@ namespace BlackGui
             {
                 return this->m_currentLivery;
             }
+        }
+
+        QString CDbLiverySelectorComponent::getRawCombinedCode() const
+        {
+            const QString cc(this->ui->le_Livery->text().trimmed().toUpper());
+            return stripDesignatorFromCompleterString(cc);
         }
 
         void CDbLiverySelectorComponent::setReadOnly(bool readOnly)
@@ -211,6 +218,5 @@ namespace BlackGui
             if (i < 0) { return l; }
             return l.left(i);
         }
-
     } // ns
 } // ns

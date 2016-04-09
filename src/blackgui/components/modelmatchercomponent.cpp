@@ -114,8 +114,10 @@ namespace BlackGui
             const QString model(ui->le_ModelString->text().trimmed().toUpper());
             const QString combined(ui->comp_CombinedCode->getCombinedType());
             const QString manufacturer(ui->le_Manufacturer->text().trimmed().toUpper());
+            const QString liveryCombinedCode(ui->comp_LiverySelector->getRawCombinedCode());
 
-            CCallsign cs("SWIFT");
+            static const CCallsign cs("SWIFT");
+            static const CUser pilot("123456", "swift Test", cs);
             CSimulatedAircraft sa;
             if (!model.isEmpty())
             {
@@ -124,18 +126,16 @@ namespace BlackGui
             }
             sa.setCallsign(cs);
 
-            if (!aircraft.isEmpty())
-            {
-                CAircraftIcaoCode icao(aircraft, combined);
-                icao.setManufacturer(manufacturer);
-                sa.setAircraftIcaoCode(icao);
-            }
-            if (!airline.isEmpty())
-            {
-                const CAirlineIcaoCode al(airline);
-                const CLivery l(CLivery::getStandardCode(al), al, "Standard");
-                sa.setLivery(l);
-            }
+            CAircraftIcaoCode icao(aircraft, combined);
+            icao.setManufacturer(manufacturer);
+            sa.setAircraftIcaoCode(icao);
+
+            const CAirlineIcaoCode al(airline);
+            const CLivery l(liveryCombinedCode.isEmpty() ? CLivery::getStandardCode(al) : liveryCombinedCode,
+                            al,
+                            "Standard");
+            sa.setLivery(l);
+            sa.setPilot(pilot);
             return sa;
         }
 

@@ -52,6 +52,9 @@ namespace BlackGui
             //! Livery
             BlackMisc::Aviation::CLivery getLivery() const;
 
+            //! Livery combined code
+            QString getRawCombinedCode() const;
+
             //! Show description
             void withLiveryDescription(bool description);
 
@@ -63,7 +66,6 @@ namespace BlackGui
 
             //! Clear selection
             void clear();
-
 
         signals:
             //! Distributor was changed
