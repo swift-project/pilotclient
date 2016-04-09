@@ -91,11 +91,18 @@ namespace BlackMisc
         QString CLivery::convertToQString(bool i18n) const
         {
             QString s(i18n ? QCoreApplication::translate("Aviation", "Livery") : "Livery");
-            s.append(m_combinedCode);
+            if (this->hasCombinedCode())
+            {
+                s.append(' ');
+                s.append(m_combinedCode);
+            }
+            s.append(' ');
+            s.append(this->m_airline.toQString(i18n));
+            s.append(' ');
             if (!this->m_description.isEmpty()) { s.append(' ').append(this->m_description); }
             if (this->m_colorFuselage.isValid()) { s.append(" F: ").append(this->m_colorFuselage.hex()); }
             if (this->m_colorTail.isValid()) { s.append(" T: ").append(this->m_colorTail.hex()); }
-            if (this->isMilitary()) { s.append(" Military");}
+            s.append(" Mil: ").append(boolToYesNo(this->isMilitary()));
             return s;
 
             // force strings for translation in resource files

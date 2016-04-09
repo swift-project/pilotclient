@@ -28,6 +28,7 @@ namespace BlackMisc
 
         CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_model(model)
         {
+            this->setCallsign(model.getCallsign());
             init();
         }
 
@@ -43,7 +44,6 @@ namespace BlackMisc
             // set get/set thing here updates the redundant data (e.g. livery / model.livery)
             this->setCallsign(this->getCallsign());
             this->setIcaoCodes(this->getAircraftIcaoCode(), this->getAirlineIcaoCode());
-            this->setLivery(this->getLivery());
             this->setModel(this->getModel());
         }
 
@@ -108,13 +108,20 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::setIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
         {
-            bool c = this->m_model.setAircraftIcaoCode(aircraftIcaoCode);
-            return m_livery.setAirlineIcaoCode(airlineIcaoCode) || c;
+            //! \note to be compatible with old version I still allow to set airline here but I should actually set a livery
+
+            if (this->getLivery().getAirlineIcaoCode() != airlineIcaoCode)
+            {
+                // create a dummy livery for given ICAO code
+                CLivery newLivery(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Standard auto generated");
+                this->m_model.setLivery(newLivery);
+            }
+            return this->m_model.setAircraftIcaoCode(aircraftIcaoCode);
         }
 
         const CAirlineIcaoCode &CSimulatedAircraft::getAirlineIcaoCode() const
         {
-            return m_livery.getAirlineIcaoCode();
+            return this->m_model.getAirlineIcaoCode();
         }
 
         const QString &CSimulatedAircraft::getAirlineIcaoCodeDesignator() const
@@ -134,7 +141,7 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::hasAircraftAndAirlineDesignator() const
         {
-            return this->getAircraftIcaoCode().hasDesignator() && m_livery.hasValidAirlineDesignator();
+            return this->getAircraftIcaoCode().hasDesignator() && this->m_model.getLivery().hasValidAirlineDesignator();
         }
 
         const CComSystem CSimulatedAircraft::getComSystem(CComSystem::ComUnit unit) const
@@ -289,7 +296,7 @@ namespace BlackMisc
             case IndexAircraftIcaoCode:
                 return this->getAircraftIcaoCode().propertyByIndex(index.copyFrontRemoved());
             case IndexLivery:
-                return this->m_livery.propertyByIndex(index.copyFrontRemoved());
+                return this->getLivery().propertyByIndex(index.copyFrontRemoved());
             case IndexParts:
                 return this->m_parts.propertyByIndex(index.copyFrontRemoved());
             case IndexIsVtol:
@@ -327,13 +334,6 @@ namespace BlackMisc
             case IndexTransponder:
                 this->m_transponder.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexAircraftIcaoCode:
-                // intentionally not removing front, delegating
-                this->m_livery.setPropertyByIndex(variant, index);
-                break;
-            case IndexLivery:
-                this->m_livery.setPropertyByIndex(variant, index.copyFrontRemoved());
-                break;
             case IndexSituation:
                 this->m_situation.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
@@ -355,6 +355,9 @@ namespace BlackMisc
                 break;
             case IndexFastPositionUpdates:
                 this->m_fastPositionUpdates = variant.toBool();
+                break;
+            case IndexLivery:
+                Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported");
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
@@ -382,7 +385,7 @@ namespace BlackMisc
             case IndexTransponder:
                 return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
             case IndexLivery:
-                return this->m_livery.comparePropertyByIndex(compareValue.getLivery(), index.copyFrontRemoved());
+                return this->getLivery().comparePropertyByIndex(compareValue.getLivery(), index.copyFrontRemoved());
             case IndexParts:
                 return this->m_parts.comparePropertyByIndex(compareValue.getParts(), index.copyFrontRemoved());
             case IndexModel:

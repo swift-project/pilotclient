@@ -106,10 +106,11 @@ namespace BlackMisc
             bool setAircraftIcaoCode(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) { return m_model.setAircraftIcaoCode(aircraftIcaoCode);}
 
             //! Set ICAO info
+            //! \deprecated
             bool setIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! Get livery
-            const BlackMisc::Aviation::CLivery &getLivery() const { return m_livery; }
+            const BlackMisc::Aviation::CLivery &getLivery() const { return m_model.getLivery(); }
 
             //! Airline ICAO code if any
             const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const;
@@ -117,11 +118,8 @@ namespace BlackMisc
             //! Airline ICAO code designator
             const QString &getAirlineIcaoCodeDesignator() const;
 
-            //! Livery
-            virtual void setLivery(const BlackMisc::Aviation::CLivery &livery) { this->m_livery = livery; }
-
             //! Set aircraft ICAO designator
-            virtual void setAircraftIcaoDesignator(const QString &designator);
+            void setAircraftIcaoDesignator(const QString &designator);
 
             //! Has valid realname?
             bool hasValidRealName() const { return this->m_pilot.hasValidRealName(); }
@@ -133,7 +131,7 @@ namespace BlackMisc
             bool hasAircraftDesignator() const;
 
             //! Valid airline designator
-            bool hasAirlineDesignator() const { return this->m_livery.hasValidAirlineDesignator(); }
+            bool hasAirlineDesignator() const { return this->m_model.getLivery().hasValidAirlineDesignator(); }
 
             //! Valid designators?
             bool hasAircraftAndAirlineDesignator() const;
@@ -366,9 +364,8 @@ namespace BlackMisc
             BlackMisc::Aviation::CTransponder       m_transponder;
             BlackMisc::Aviation::CAircraftParts     m_parts;
             BlackMisc::Aviation::CSelcal            m_selcal;
-            BlackMisc::Aviation::CLivery            m_livery;
             BlackMisc::Simulation::CAircraftModel   m_model;
-            bool m_enabled = true;              //!< to be displayed in sim
+            bool m_enabled = true;              //!< to be displayed in simulator
             bool m_rendered = false;            //!< really shown in simulator
             bool m_partsSynchronized = false;   //!< sync.parts
             bool m_fastPositionUpdates = false; //!<use fast position updates
@@ -385,7 +382,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(com2system),
                 BLACK_METAMEMBER(transponder),
                 BLACK_METAMEMBER(parts),
-                BLACK_METAMEMBER(livery),
                 BLACK_METAMEMBER(distanceToOwnAircraft),
                 BLACK_METAMEMBER(bearingToOwnAircraft),
                 BLACK_METAMEMBER(model),

@@ -44,10 +44,12 @@ namespace BlackMisc
         QString CAircraftModel::convertToQString(bool i18n) const
         {
             QString s = this->m_modelString;
-            if (!s.isEmpty()) { s += " tpye: "; }
+            if (!s.isEmpty()) { s += " type: "; }
             s += this->getModelTypeAsString();
             s += ' ';
-            s += this->m_aircraftIcao.toQString(i18n);
+            s += this->getAircraftIcaoCode().toQString(i18n);
+            s += ' ';
+            s += this->m_livery.toQString(i18n);
             if (!this->m_fileName.isEmpty())
             {
                 s += ' ';
@@ -417,6 +419,7 @@ namespace BlackMisc
             case TypeModelMatchingDefaultModel: return "map. default";
             case TypeOwnSimulatorModel: return "own simulator";
             case TypeManuallySet: return "set";
+            case TypeFsdData: return "FSD";
             case TypeUnknown:
             default: return "unknown";
             }
