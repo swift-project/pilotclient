@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>191</width>
-    <height>22</height>
+    <height>24</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Distributor selector</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>

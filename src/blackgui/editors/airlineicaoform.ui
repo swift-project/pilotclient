@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="vl_AirlineIcaoCode">
    <property name="spacing">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="leftMargin">
     <number>0</number>
@@ -265,11 +265,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CDropSite</class>
-   <extends>QLabel</extends>
-   <header>blackgui/dropsite.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CLabelAndIcon</class>
    <extends>QFrame</extends>
    <header>blackgui/labelandicon.h</header>
@@ -280,6 +275,11 @@
    <extends>QFrame</extends>
    <header>blackgui/editors/validationindicator.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CDropSite</class>
+   <extends>QLabel</extends>
+   <header>blackgui/dropsite.h</header>
   </customwidget>
   <customwidget>
    <class>BlackGui::Components::CDbCountrySelectorComponent</class>
