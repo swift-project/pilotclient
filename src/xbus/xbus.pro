@@ -71,10 +71,12 @@ linux:TARGET = lin
 macx:TARGET = mac
 macx {
     # a single dylib file contains both 32bit and 64bit binaries
-    XBUS_DESTDIR = $$DestRoot/xbus
+    XBUS_DIR = xbus
+    XBUS_DESTDIR = $$DestRoot/$$XBUS_DIR
 } else {
-    equals(WORD_SIZE,64): XBUS_DESTDIR = $$DestRoot/xbus/64
-    equals(WORD_SIZE,32): XBUS_DESTDIR = $$DestRoot/xbus
+    equals(WORD_SIZE,64): XBUS_DIR = xbus/64
+    equals(WORD_SIZE,32): XBUS_DIR = xbus
+    XBUS_DESTDIR = $$DestRoot/$$XBUS_DIR
 }
 
 # Default MSVC project name is $$TARGET, so use a better name
@@ -84,5 +86,10 @@ QMAKE_PROJECT_NAME = xbus
      macx: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.dylib $$XBUS_DESTDIR/$${TARGET}.xpl
 else:unix: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.so    $$XBUS_DESTDIR/$${TARGET}.xpl
 else:      DESTDIR = $$XBUS_DESTDIR
+
+target.path = $$PREFIX/$$XBUS_DIR
+target.files *= $$XBUS_DESTDIR/$${TARGET}.xpl
+target.CONFIG += no_check_exist
+INSTALLS += target
 
 load(common_post)
