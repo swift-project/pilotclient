@@ -28,9 +28,6 @@
                     <origin>../../dist/bin/SimConnect.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/speex.dll</origin>
-                </distributionFile>
-                <distributionFile>
                     <origin>../../dist/bin/speexdsp.dll</origin>
                 </distributionFile>
                 <distributionFile>
