@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/pluginmanager.h"
+#include "blackcore/application.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 
@@ -54,7 +55,7 @@ namespace BlackCore
 
     QString IPluginManager::pluginDirectory() const
     {
-        return qApp->applicationDirPath() % QStringLiteral("/plugins");
+        return sApp->applicationDirPath() % QStringLiteral("/plugins");
     }
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const

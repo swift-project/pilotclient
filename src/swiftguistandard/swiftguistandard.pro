@@ -11,13 +11,6 @@ SOURCES += *.cpp
 HEADERS += *.h
 FORMS   += *.ui
 CONFIG  += blackmisc blacksound blackinput blackcore blackgui
-CONFIG  -= app_bundle
-
-macx {
-    deployment.files = ../blackgui/qss
-    deployment.path = Contents/MacOS
-    QMAKE_BUNDLE_DATA += deployment
-}
 
 DEPENDPATH += . $$SourceRoot/src/blackmisc \
                 $$SourceRoot/src/blacksound \

@@ -7,9 +7,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = samplehotkey
 TEMPLATE = app
 
-CONFIG   -= app_bundle
 CONFIG   += blackmisc blackinput blackcore blackgui
-CONFIG  -= app_bundle
 
 DEPENDPATH += . $$SourceRoot/src
 INCLUDEPATH += . $$SourceRoot/src

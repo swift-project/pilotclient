@@ -158,6 +158,10 @@ namespace BlackCore
         //! Clear the caches
         static QStringList clearCaches();
 
+        //! Returns the directory of the application. In contrast to QCoreApplication::applicationDirPath()
+        //! it takes Mac OS X app bundles into account and returns the directory of the bundle.
+        static QString applicationDirPath();
+
         // ----------------------- parsing ----------------------------------------
 
         //! \name parsing of command line options

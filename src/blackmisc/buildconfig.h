@@ -74,6 +74,9 @@ namespace BlackMisc
         //! Running on Windows NT platform?
         static bool isRunningOnWindowsNtPlatform();
 
+        //! Running on Mac OS X platform?
+        static bool isRunningOnMacOSXPlatform();
+
         //! Application directory where current application is located
         //! \todo Move to to CApplication
         static const QString &getApplicationDir();

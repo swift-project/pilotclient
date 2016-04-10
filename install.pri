@@ -23,8 +23,19 @@ win32 {
     qt5_target.path = $${PREFIX}/bin
     QT5_LIBRARY_DIR = $$[QT_INSTALL_BINS]
 }
-
-unix:!macx {
+else:macx {
+    # OSX workaround using rsync. Otherwise all headers are also copied.
+    qt5_target.path = $${PREFIX}/lib/QtCore.framework
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/lib/QtCore.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/lib/QtGui.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/lib/QtNetwork.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtDBus.framework/ $${PREFIX}/lib/QtDBus.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/lib/QtXml.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtMultimedia.framework/ $${PREFIX}/lib/QtMultimedia.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtSvg.framework/ $${PREFIX}/lib/QtSvg.framework/ &&
+    qt5_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/lib/QtWidgets.framework/
+}
+else:unix: {
     QT5_LIBRARIES *= libQt5Core.so.5
     QT5_LIBRARIES *= libQt5DBus.so.5
     QT5_LIBRARIES *= libQt5Gui.so.5
@@ -56,13 +67,9 @@ INSTALLS += qt5_target
 
 ############### Install Qt5 platform plugins ##############
 
-win32 {
-    QT5_PLATFORM_PLUGINS *= qwindows$${DLL_DEBUG_SUFFIX}.dll
-}
-
-unix:!macx {
-    QT5_PLATFORM_PLUGINS *= libqxcb.so
-}
+win32: QT5_PLATFORM_PLUGINS *= qwindows$${DLL_DEBUG_SUFFIX}.dll
+else:macx: QT5_PLATFORM_PLUGINS *= libqcocoa.dylib
+else:unix:QT5_PLATFORM_PLUGINS *= libqxcb.so
 
 qt5_plugin_target.path = $${PREFIX}/bin/platforms
 
@@ -74,14 +81,16 @@ for (PLUGIN, QT5_PLATFORM_PLUGINS) {
 
 INSTALLS += qt5_plugin_target
 
-
 ############### Install DBus ##############
 
 win32-g++ {
     DBUS_BINARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
-    DBUS_BINARIES *= libdbus-1-3.dll
     DBUS_BINARIES *= dbus-daemon.exe
-    dbus_target.path = $${PREFIX}/bin
+    dbus_binary_target.path = $${PREFIX}/bin
+
+    DBUS_LIBARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
+    DBUS_LIBRARIES *= libdbus-1-3.dll
+    dbus_library_target.path = $${PREFIX}/bin
 
     DBUS_CONFIG_SOURCE_DIR = $$[QT_INSTALL_BINS]/..
     DBUS_CONFIG_FILES *= share/dbus-1/*
@@ -90,20 +99,44 @@ win32-g++ {
 
 win32-msvc2015 {
     DBUS_BINARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
-    DBUS_BINARIES *= expat.dll
-    DBUS_BINARIES *= dbus-1-3.dll
     DBUS_BINARIES *= dbus-daemon.exe
-    dbus_target.path = $${PREFIX}/bin
+    dbus_binary_target.path = $${PREFIX}/bin
+
+    DBUS_LIBARY_SOURCE_DIR = $$[QT_INSTALL_BINS]
+    DBUS_LIBRARIES *= expat.dll
+    DBUS_LIBRARIES *= dbus-1-3.dll
+    dbus_library_target.path = $${PREFIX}/bin
 
     DBUS_CONFIG_SOURCE_DIR = $$[QT_INSTALL_BINS]/..
     DBUS_CONFIG_FILES *= share/dbus-1/*
     dbus_config_target.path = $${PREFIX}/share/dbus-1
 }
 
+macx {
+    DBUS_BINARY_SOURCE_DIR = /usr/local/bin
+    DBUS_BINARIES *= dbus-daemon
+    dbus_binary_target.path = $${PREFIX}/bin
+
+    DBUS_LIBARY_SOURCE_DIR = /usr/local/lib
+    DBUS_LIBRARIES *= libdbus-1.3.dylib
+    dbus_library_target.path = $${PREFIX}/lib
+
+    DBUS_CONFIG_SOURCE_DIR = /usr/local/share/dbus-1
+    DBUS_CONFIG_FILES *= session.conf
+    DBUS_CONFIG_FILES *= system.conf
+    dbus_config_target.path = $${PREFIX}/share/dbus-1
+}
+
 for (BINARY, DBUS_BINARIES) {
     BINARY_PATH = $${DBUS_BINARY_SOURCE_DIR}/$${BINARY}
     !exists($$BINARY_PATH): error("Cannot find $${BINARY_PATH}")
-    dbus_target.files *= $${BINARY_PATH}
+    dbus_binary_target.files *= $${BINARY_PATH}
+}
+
+for (LIBRARY, DBUS_LIBRARIES) {
+    LIBRARY_PATH = $${DBUS_LIBARY_SOURCE_DIR}/$${LIBRARY}
+    !exists($$LIBRARY_PATH): error("Cannot find $${LIBRARY_PATH}")
+    dbus_library_target.files *= $${LIBRARY_PATH}
 }
 
 for (DBUS_CONFIG_FILE, DBUS_CONFIG_FILES) {
@@ -112,7 +145,7 @@ for (DBUS_CONFIG_FILE, DBUS_CONFIG_FILES) {
     dbus_config_target.files *= $${DBUS_CONFIG_FILE_PATH}
 }
 
-win32: INSTALLS += dbus_target dbus_config_target
+win32|macx: INSTALLS += dbus_binary_target dbus_library_target dbus_config_target
 
 ############### Install VC runtime ##############
 
@@ -183,11 +216,13 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
 
     create_updater.depends = copy_installer_project
     win32: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} windows
-    unix:!macx: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} linux-x64
+    else:macx: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} osx
+    else:unix: create_updater.commands = $${bitrock_customize_bin} build $${bitrock_autoupdateproject} linux-x64
     QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = create_updater
     win32: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
-    unix:!macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux-x64 --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
+    else:macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} osx --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
+    else:unix: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux-x64 --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
     QMAKE_EXTRA_TARGETS += create_installer
 }

@@ -68,6 +68,15 @@ namespace BlackMisc
 #endif
     }
 
+    bool CBuildConfig::isRunningOnMacOSXPlatform()
+    {
+#ifdef Q_OS_OSX
+        return true;
+#else
+        return false;
+#endif
+    }
+
     bool CBuildConfig::isDebugBuild()
     {
 #ifdef QT_DEBUG
@@ -119,10 +128,27 @@ namespace BlackMisc
         return s;
     }
 
+    bool isAppBundle()
+    {
+        QDir bundleDir(CBuildConfig::getApplicationDir());
+        bundleDir.cd("../..");
+        static const bool isBundled = QFileInfo(bundleDir.absolutePath()).isBundle();
+        return isBundled;
+    }
+
     QString getSwiftResourceDirImpl()
     {
         QDir dir(CBuildConfig::getApplicationDir());
-        if (dir.cdUp() && dir.cd("data"))
+        bool success = true;
+
+        static const bool appBundle = isAppBundle();
+        if (CBuildConfig::isRunningOnMacOSXPlatform() && appBundle)
+        {
+            success = dir.cd("../../../../data");
+        }
+        else { success = dir.cd("../data"); }
+
+        if (success)
         {
             Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
             return dir.absolutePath();

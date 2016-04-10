@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackcore/pluginmanagerweatherdata.h"
 #include "blackcore/weatherdata.h"
 
@@ -66,7 +67,7 @@ namespace BlackCore
 
     QString CPluginManagerWeatherData::pluginDirectory() const
     {
-        return qApp->applicationDirPath() % QStringLiteral("/plugins/weatherdata");
+        return sApp->applicationDirPath() % QStringLiteral("/plugins/weatherdata");
     }
 
 }

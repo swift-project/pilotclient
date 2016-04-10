@@ -6,7 +6,6 @@ TARGET = sampleblackmiscsim
 TEMPLATE = app
 
 CONFIG   += console
-CONFIG   -= app_bundle
 CONFIG   += blackmisc blacksim blackcore
 CONFIG  -= app_bundle
 

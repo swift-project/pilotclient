@@ -436,6 +436,14 @@ namespace BlackCore
         }
     }
 
+    QString CApplication::applicationDirPath()
+    {
+        QString appDirectoryString(qApp->applicationDirPath());
+        if (appDirectoryString.endsWith("Contents/MacOS")) { appDirectoryString += "/../../.."; }
+        QDir appDirectory(appDirectoryString);
+        return appDirectory.absolutePath();
+    }
+
     bool CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
     {
         Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");

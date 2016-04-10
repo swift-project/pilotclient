@@ -3,7 +3,7 @@ LIBS *= -L$$DestRoot/lib
 unix:!macx {
     # Set the rpath-link to find dependent shared libraries when linking
     # Note: This does not add any rpath into the binaries.
-    LIBS += -Wl,-rpath-link,$$DestRoot/lib
+    LIBS += -Wl,-rpath-link,$$DestRoot/lib -Wl,-rpath-link,$$[QT_INSTALL_LIBS]
 }
 
 blackgui {

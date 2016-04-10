@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
 
@@ -134,7 +135,7 @@ namespace BlackCore
 
     QString CPluginManagerSimulator::pluginDirectory() const
     {
-        return qApp->applicationDirPath() % QStringLiteral("/plugins/simulator");
+        return sApp->applicationDirPath() % QStringLiteral("/plugins/simulator");
     }
 
 }

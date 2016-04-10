@@ -8,6 +8,7 @@
  */
 
 #include "simulatorxplaneconfigwindow.h"
+#include "blackcore/application.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
@@ -32,7 +33,7 @@ namespace
 {
     QString xBusOriginDir()
     {
-        return QCoreApplication::applicationDirPath() % QStringLiteral("/../xbus");
+        return sApp->applicationDirPath() % QStringLiteral("/../xbus");
     }
 }
 

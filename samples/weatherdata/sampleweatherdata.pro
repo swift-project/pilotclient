@@ -6,7 +6,6 @@ TARGET = sampleweatherdata
 TEMPLATE = app
 
 CONFIG   += console
-CONFIG   -= app_bundle
 CONFIG   += blackmisc blackcore
 CONFIG  -= app_bundle
 
