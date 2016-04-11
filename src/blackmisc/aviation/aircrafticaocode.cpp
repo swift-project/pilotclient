@@ -262,6 +262,7 @@ namespace BlackMisc
             if (!this->hasIataCode()) { return ""; }
             QString s(getIataCode());
             s = s.append(" [IATA]");
+            if (hasDesignator()) { s.append(" ").append(getDesignator()); }
             if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
             if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
             return s.append(" ").append(getDbKeyAsStringInParentheses());
@@ -272,8 +273,9 @@ namespace BlackMisc
             if (!this->hasFamily()) { return ""; }
             QString s(getFamily());
             s = s.append(" [family]");
-            if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
-            if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
+            if (hasDesignator()) { s.append(" ").append(getDesignator()); }
+            if (hasManufacturer()) { s.append(" ").append(getManufacturer()); }
+            if (hasModelDescription()) { s.append(" ").append(getModelDescription()); }
             return s.append(" ").append(getDbKeyAsStringInParentheses());
         }
 

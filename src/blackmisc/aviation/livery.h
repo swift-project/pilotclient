@@ -176,7 +176,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(combinedCode, 0, CaseInsensitiveComparison),
                 BLACK_METAMEMBER(description),
                 BLACK_METAMEMBER(colorFuselage),
-                BLACK_METAMEMBER(colorTail)
+                BLACK_METAMEMBER(colorTail),
+                BLACK_METAMEMBER(military)
             );
         };
     } // namespace

@@ -126,6 +126,11 @@ namespace BlackMisc
             QString s(this->m_designator);
             if (this->m_name.isEmpty()) { return ""; }
             if (!this->m_name.isEmpty()) { s.append(" (").append(this->m_name).append(")"); }
+
+            s.append(" Op: ").append(boolToYesNo(this->isOperating()));
+            s.append(" VA: ").append(boolToYesNo(this->isVirtualAirline()));
+            s.append(" Mil: ").append(boolToYesNo(this->isMilitary()));
+
             return s;
         }
 

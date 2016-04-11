@@ -278,6 +278,12 @@ namespace BlackMisc
             return this->m_livery.hasValidAirlineDesignator();
         }
 
+        bool CAircraftModel::isMilitary() const
+        {
+            return this->getAircraftIcaoCode().isMilitary() ||
+                   this->getLivery().isMilitary();
+        }
+
         bool CAircraftModel::hasDistributor() const
         {
             return this->m_distributor.hasValidDbKey();
@@ -327,6 +333,15 @@ namespace BlackMisc
         bool CAircraftModel::matchesSimulator(const CSimulatorInfo &simulator) const
         {
             return (static_cast<int>(simulator.getSimulator()) & static_cast<int>(this->getSimulatorInfo().getSimulator())) > 0;
+        }
+
+        QString CAircraftModel::getSwiftLiveryString() const
+        {
+            const QString cc(this->getLivery().getCombinedCode());
+            if (cc.isEmpty() && !this->hasModelString()) { return ""; }
+            if (cc.isEmpty()) { return this->getModelString(); }
+            if (!this->hasModelString()) { return cc; }
+            return cc + " [" + this->getModelString() + "]";
         }
 
         void CAircraftModel::updateMissingParts(const CAircraftModel &otherModel, bool dbModelPriority)
@@ -471,6 +486,37 @@ namespace BlackMisc
             model.setModelModeAsString(modelMode);
             model.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return model;
+        }
+
+        QStringList CAircraftModel::splitNetworkLiveryString(const QString &liveryString)
+        {
+            QStringList liveryModelStrings({ "", "" });
+            if (liveryString.isEmpty()) { return liveryModelStrings; }
+            const QString l(liveryString.toUpper().trimmed());
+            if (liveryString.contains('[') && liveryString.contains(']'))
+            {
+                // seems to be a valid swift string
+                const QStringList split = l.split("[");
+                if (split.size() > 0)
+                {
+                    liveryModelStrings[0] = split[0].trimmed();
+                }
+                if (split.size() > 1)
+                {
+                    QString m = split[1];
+                    m.replace('[', ' ');
+                    m.replace(']', ' ');
+                    liveryModelStrings[1] = m.trimmed();
+                }
+            }
+            else
+            {
+                if (CLivery::isValidCombinedCode(l))
+                {
+                    liveryModelStrings[0] = l;
+                }
+            }
+            return liveryModelStrings;
         }
     } // namespace
 } // namespace

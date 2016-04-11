@@ -164,6 +164,9 @@ namespace BlackMisc
             //! Airline designator?
             bool hasAirlineDesignator() const;
 
+            //! Military modles
+            bool isMilitary() const;
+
             //! Get livery
             const BlackMisc::Aviation::CLivery &getLivery() const { return m_livery; }
 
@@ -239,6 +242,10 @@ namespace BlackMisc
             //! File name
             void setFileName(const QString &fileName) { m_fileName = fileName; }
 
+            //! swift livery string (to be sent via network), "liveryCode [modelString]";
+            //! \sa splitNetworkLiveryString
+            QString getSwiftLiveryString() const;
+
             //! Update missing parts from another model
             void updateMissingParts(const CAircraftModel &otherModel, bool dbModelPriority = true);
 
@@ -286,6 +293,11 @@ namespace BlackMisc
 
             //! From swift DB JSON
             static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString prefix = QString("mod_"));
+
+            //! Split swift network string "DLH._STD" [modelname]"
+            //! \return QStringList [0] livery code , [1] model string
+            //! \sa getSwiftLiveryString
+            static QStringList splitNetworkLiveryString(const QString &liveryString);
 
         private:
             BlackMisc::Aviation::CCallsign m_callsign;             //!< aircraft's callsign if any
