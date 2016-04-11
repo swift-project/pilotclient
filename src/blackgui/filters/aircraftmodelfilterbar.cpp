@@ -48,6 +48,7 @@ namespace BlackGui
             this->ui->le_AirlineIcao->setValidator(ucv);
             this->ui->le_ModelKey->setValidator(ucv);
             this->ui->le_AircraftManufacturer->setValidator(ucv);
+            this->ui->le_LiveryCode->setValidator(ucv);
 
             // reset form
             this->clearForm();
