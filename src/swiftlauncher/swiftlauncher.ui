@@ -582,7 +582,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <property name="icon">
                  <iconset resource="../blackmisc/blackmisc.qrc">
-                  <normaloff>:/own/icons/own/swift/swiftNova64.png</normaloff>:/own/icons/own/swift/swiftNova64.png</iconset>
+                  <normaloff>:/own/icons/own/swift/swiftCartoonNova64.png</normaloff>:/own/icons/own/swift/swiftCartoonNova64.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>

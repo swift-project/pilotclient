@@ -83,8 +83,8 @@ BlackGui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame {
 BlackGui--CDockWidgetInfoArea > QMenu {
   border: 1px solid darkslategray; /* reserve space for selection border */
   background: lightgray;
-  color: black;
-  padding: 0px;
+  color: black;           /* text color */
+  padding: 3px;           /* some space for border needed */
 }
 
 /* required when info area is not floating */
