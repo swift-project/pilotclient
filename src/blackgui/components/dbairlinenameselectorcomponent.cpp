@@ -35,11 +35,12 @@ namespace BlackGui
             // no inline destructor, read QScopedPointer Forward Declared Pointers
         }
 
-        void CDbAirlineNameSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
+        bool CDbAirlineNameSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
         {
-            CDbAirlineIcaoSelectorBase::setAirlineIcao(icao);
+            if (!CDbAirlineIcaoSelectorBase::setAirlineIcao(icao)) { return false; }
             QString name(icao.getName());
             this->ui->le_AirlineName->setText(name);
+            return true;
         }
 
         void CDbAirlineNameSelectorComponent::clear()

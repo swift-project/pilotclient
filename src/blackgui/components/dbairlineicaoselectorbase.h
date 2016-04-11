@@ -38,7 +38,7 @@ namespace BlackGui
             virtual ~CDbAirlineIcaoSelectorBase();
 
             //! Current airline ICAO
-            virtual void setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+            virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
             //! Current airline ICAO by key
             bool setAirlineIcao(int key);

@@ -37,13 +37,12 @@ namespace BlackGui
         CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase()
         { }
 
-        void CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
+        bool CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
         {
-            if (icao != m_currentIcao)
-            {
-                m_currentIcao = icao;
-                emit changedAirlineIcao(icao);
-            }
+            if (icao == m_currentIcao) { return false; }
+            m_currentIcao = icao;
+            emit changedAirlineIcao(icao);
+            return true;
         }
 
         bool CDbAirlineIcaoSelectorBase::setAirlineIcao(int key)

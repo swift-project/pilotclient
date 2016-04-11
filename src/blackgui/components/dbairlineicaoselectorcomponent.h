@@ -41,7 +41,7 @@ namespace BlackGui
             //! \name Base class overrides
             //! @{
             virtual void setReadOnly(bool readOnly) override;
-            virtual void setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
+            virtual bool setAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao) override;
             virtual void clear() override;
             //! @}
 

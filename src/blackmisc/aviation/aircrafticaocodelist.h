@@ -59,6 +59,12 @@ namespace BlackMisc
             //! Find by model description
             CAircraftIcaoCodeList findByDescription(const QString &description) const;
 
+            //! Those with IATA code
+            CAircraftIcaoCodeList findWithIataCode(bool removeWhenSameAsDesignator) const;
+
+            //! Those with family
+            CAircraftIcaoCodeList findWithFamily(bool removeWhenSameAsDesignator) const;
+
             //! Find by designator, then best match by rank
             CAircraftIcaoCode findFirstByDesignatorAndRank(const QString &designator) const;
 
@@ -67,6 +73,9 @@ namespace BlackMisc
 
             //! Sort by rank
             void sortByRank();
+
+            //! Sort by designator first, then by rank
+            void sortByDesignatorAndRank();
 
             //! For selection completion
             QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;

@@ -13,7 +13,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAircraftIcaoCodeList::CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other) :
             CSequence<CAircraftIcaoCode>(other)
         { }
@@ -78,6 +77,24 @@ namespace BlackMisc
             return this->findBy([&](const CAircraftIcaoCode & code)
             {
                 return code.getModelDescription().startsWith(description, Qt::CaseInsensitive);
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findWithIataCode(bool removeWhenSameAsDesignator) const
+        {
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                if (!code.hasIataCode()) { return false; }
+                return !removeWhenSameAsDesignator || !code.isIataSameAsDesignator();
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findWithFamily(bool removeWhenSameAsDesignator) const
+        {
+            return this->findBy([&](const CAircraftIcaoCode & code)
+            {
+                if (!code.hasFamily()) { return false; }
+                return !removeWhenSameAsDesignator || !code.isFamilySameAsDesignator();
             });
         }
 

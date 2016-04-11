@@ -44,12 +44,13 @@ namespace BlackGui
             this->ui->le_Airline->setReadOnly(readOnly);
         }
 
-        void CDbAirlineIcaoSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
+        bool CDbAirlineIcaoSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
         {
-            CDbAirlineIcaoSelectorBase::setAirlineIcao(icao);
+            if (!CDbAirlineIcaoSelectorBase::setAirlineIcao(icao)) { return false; }
             const QString icaoStr(icao.getVDesignator());
             this->ui->le_Airline->setText(icaoStr);
             ui->lbl_Description->setText(icao.getName());
+            return true;
         }
 
         void CDbAirlineIcaoSelectorComponent::withIcaoDescription(bool description)
