@@ -50,89 +50,132 @@ namespace BlackCore
             return remoteAircraft.getModel();
         }
 
+        CAircraftModel matchedModel(remoteAircraft.getModel());
+        if (matchedModels.isEmpty())
+        {
+            logDetails(log, remoteAircraft, "No models for matching, using default", CStatusMessage::SeverityError);
+            matchedModel = this->getDefaultModel();
+            matchedModel.setCallsign(remoteAircraft.getCallsign());
+            return matchedModel;
+        }
+
         do
         {
+            if (matchedModels.isEmpty())
+            {
+                logDetails(log, remoteAircraft, "No models for matching, using default", CStatusMessage::SeverityWarning);
+                matchedModel = this->getDefaultModel();
+                break;
+            }
+
             // try to find in installed models by model string
             if (mode.testFlag(ByModelString))
             {
-                aircraftModel = matchByExactModelString(remoteAircraft, matchModels, log);
-                if (aircraftModel.hasModelString()) { break; }
+                matchedModel = matchByExactModelString(remoteAircraft, matchedModels, log);
+                if (matchedModel.hasModelString()) { break; }
             }
             else if (log)
             {
                 logDetails(log, remoteAircraft, "Skipping model string match");
             }
 
-            // by livery, then by ICAO
-            if (mode.testFlag(ByLivery))
+            // primary reduction
+            bool reduced = false;
+            do
             {
-                aircraftModel = matchByLiveryAndIcaoCode(remoteAircraft, matchModels, log);
-                if (aircraftModel.hasModelString()) { break; }
-            }
-            else if (log)
-            {
-                logDetails(log, remoteAircraft, "Skipping livery match");
-            }
+                // by livery, then by ICAO
+                if (mode.testFlag(ByLivery))
+                {
+                    matchedModels = ifPossibleReduceByLiveryAndIcaoCode(remoteAircraft, matchedModels, reduced, log);
+                    if (reduced) { break; }
+                }
+                else if (log)
+                {
+                    logDetails(log, remoteAircraft, "Skipping livery reduction");
+                }
 
-            // by ICAO data from set
-            aircraftModel = matchModelsByIcaoData(remoteAircraft, matchModels, false, log);
-            if (aircraftModel.hasModelString()) { break; }
+                // by ICAO data from set
+                if (mode.testFlag(ByIcaoData))
+                {
+                    // if already matched by livery skip
+                    matchedModels = ifPossibleReduceByIcaoData(remoteAircraft, matchedModels, false, reduced, log);
+                    if (reduced) { break; }
+                }
+                else if (log)
+                {
+                    logDetails(log, remoteAircraft, "Skipping ICAO reduction");
+                }
 
-            // family
-            if (mode.testFlag(ByFamily))
-            {
-                QString family = remoteAircraft.getAircraftIcaoCode().getFamily();
-                aircraftModel = matchByFamily(remoteAircraft, family, matchModels, "real family", log);
-                if (aircraftModel.hasModelString()) { break; }
+                // family
+                if (mode.testFlag(ByFamily))
+                {
+                    QString family = remoteAircraft.getAircraftIcaoCode().getFamily();
+                    matchedModels = ifPossibleReduceByFamily(remoteAircraft, family, matchedModels, "real family", reduced, log);
+                    if (reduced) { break; }
 
-                // scenario: the ICAO actually is the family
-                family = remoteAircraft.getAircraftIcaoCodeDesignator();
-                aircraftModel = matchByFamily(remoteAircraft, family, matchModels, "ICAO treated as family", log);
-                if (aircraftModel.hasModelString()) { break; }
-            }
-            else if (log)
-            {
-                logDetails(log, remoteAircraft, "Skipping family match");
-            }
+                    // scenario: the ICAO actually is the family
+                    family = remoteAircraft.getAircraftIcaoCodeDesignator();
+                    matchedModels = ifPossibleReduceByFamily(remoteAircraft, family, matchedModels, "ICAO treated as family", reduced, log);
+                    if (reduced) { break; }
+                }
+                else if (log)
+                {
+                    logDetails(log, remoteAircraft, "Skipping family match");
+                }
 
-            // combined code
-            if (mode.testFlag(ByCombinedCode))
-            {
-                aircraftModel = matchByCombinedCode(remoteAircraft, matchModels, true, log);
-                if (aircraftModel.hasModelString()) { break; }
+                // combined code
+                if (mode.testFlag(ByCombinedCode))
+                {
+                    matchedModels = ifPossibleReduceByCombinedCode(remoteAircraft, matchedModels, true, reduced, log);
+                    if (reduced) { break; }
+                }
+                else if (log)
+                {
+                    logDetails(log, remoteAircraft, "Skipping combined code match");
+                }
             }
-            else if (log)
-            {
-                logDetails(log, remoteAircraft, "Skipping combined code match");
-            }
+            while (false);
 
-            aircraftModel = getDefaultModel();
-            logDetails(log, remoteAircraft, "Using default model " + aircraftModel.getModelString());
+            // here we have a list of possible models, we reduce/refine further
+            bool military = remoteAircraft.getModel().isMilitary();
+            matchedModels = ifPossibleReduceByManufacturer(remoteAircraft, matchedModels, "2nd pass", reduced, log);
+            matchedModels = ifPossibleReduceByMilitaryFlag(remoteAircraft, military, matchedModels, reduced, log);
+
+            // expect first to be the right one in order
+            matchedModel = matchedModels.isEmpty() ? getDefaultModel() : matchedModels.front();
         }
         while (false);
 
         // copy over callsign and other data
-        aircraftModel.setCallsign(remoteAircraft.getCallsign());
+        matchedModel.setCallsign(remoteAircraft.getCallsign());
 
-        Q_ASSERT_X(!aircraftModel.getCallsign().isEmpty(), Q_FUNC_INFO, "Missing callsign");
-        Q_ASSERT_X(aircraftModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
-        Q_ASSERT_X(aircraftModel.getModelType() != CAircraftModel::TypeUnknown, Q_FUNC_INFO, "Missing model type");
+        Q_ASSERT_X(!matchedModel.getCallsign().isEmpty(), Q_FUNC_INFO, "Missing callsign");
+        Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
+        Q_ASSERT_X(matchedModel.getModelType() != CAircraftModel::TypeUnknown, Q_FUNC_INFO, "Missing model type");
 
-        return aircraftModel;
+        return matchedModel;
     }
 
     CAircraftModel CAircraftMatcher::reverseLookup(const CAircraftModel &modelToLookup, const QString &liveryInfo, CStatusMessageList *log)
     {
         CAircraftModel model(modelToLookup);
         const CCallsign callsign(model.getCallsign());
-        if (model.hasModelString())
+        const QStringList liveryModelStrings = CAircraftModel::splitNetworkLiveryString(liveryInfo);
+        const QString modelString(modelToLookup.hasModelString() ? modelToLookup.getModelString() : liveryModelStrings[1]);
+        QString liveryCode(liveryModelStrings[0]);
+
+        if (!modelString.isEmpty())
         {
             // if we find the model here we have a fully defined DB model
-            const CAircraftModel modelFromDb(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
+            const CAircraftModel modelFromDb(sApp->getWebDataServices()->getModelForModelString(modelString));
             if (modelFromDb.hasValidDbKey())
             {
                 model = modelFromDb;
                 if (log) { logDetails(log, callsign, QString("Reverse looked up DB model `%1` for %2").arg(modelFromDb.getDbKey()).arg(callsign.toQString())); }
+            }
+            else
+            {
+                if (log) { logDetails(log, callsign, QString("Reverse looked, not found model for `%1`").arg(modelString)); }
             }
         }
 
