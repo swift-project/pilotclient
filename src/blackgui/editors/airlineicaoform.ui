@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>232</width>
-    <height>210</height>
+    <width>233</width>
+    <height>205</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -165,6 +165,13 @@
           <widget class="QCheckBox" name="cb_Va">
            <property name="text">
             <string>VA?</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb_Military">
+           <property name="text">
+            <string>Mil.</string>
            </property>
           </widget>
          </item>

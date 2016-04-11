@@ -45,35 +45,104 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QWidget" name="wi_DesignatorVa" native="true">
-        <layout class="QHBoxLayout" name="hl_DesignatorRank">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="BlackGui::Components::CDbLiverySelectorComponent" name="livery_Selector">
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
+      <item row="0" column="3" rowspan="7">
+       <widget class="BlackGui::Editors::CValidationIndicator" name="val_Indicator">
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_Description">
+        <property name="text">
+         <string>Description:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Description</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_Timestamp">
+        <property name="text">
+         <string>Last updated:</string>
+        </property>
+        <property name="buddy">
+         <cstring>le_Updated</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="le_Id">
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>Id</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Code">
+        <property name="text">
+         <string>Code:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_FuselageColor">
+        <property name="text">
+         <string>Fuselage/Tail:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="3">
+       <widget class="BlackGui::Editors::CAirlineIcaoForm" name="editor_AirlineIcao">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>225</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="3">
+       <widget class="BlackGui::CDropSite" name="drop_DropData">
+        <property name="text">
+         <string>Drop data here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_Updated">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_Description">
+        <property name="placeholderText">
+         <string>Livery description</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
        <widget class="QWidget" name="wi_Colors" native="true">
         <layout class="QHBoxLayout" name="hl_Colors">
          <property name="spacing">
@@ -111,103 +180,47 @@
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="hs_Colors">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </widget>
       </item>
-      <item row="6" column="0" colspan="2">
-       <widget class="BlackGui::Editors::CAirlineIcaoForm" name="editor_AirlineIcao">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>225</height>
-         </size>
-        </property>
+      <item row="1" column="1">
+       <widget class="BlackGui::Components::CDbLiverySelectorComponent" name="comp_LiverySelector">
+        <layout class="QHBoxLayout" name="hl_DesignatorRank">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_Code">
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="cb_Military">
+        <property name="toolTip">
+         <string>Military livery</string>
+        </property>
         <property name="text">
-         <string>Code:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_Description">
-        <property name="text">
-         <string>Description:</string>
-        </property>
-        <property name="buddy">
-         <cstring>le_Description</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_Timestamp">
-        <property name="text">
-         <string>Last updated:</string>
-        </property>
-        <property name="buddy">
-         <cstring>le_Updated</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLineEdit" name="le_Updated">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="le_Id">
-        <property name="maximumSize">
-         <size>
-          <width>75</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>Id</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_FuselageColor">
-        <property name="text">
-         <string>Fuselage/Tail:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="le_Description">
-        <property name="placeholderText">
-         <string>Livery description</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="BlackGui::CDropSite" name="drop_DropData">
-        <property name="text">
-         <string>Drop data here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" rowspan="7">
-       <widget class="BlackGui::Editors::CValidationIndicator" name="val_Indicator">
-        <property name="minimumSize">
-         <size>
-          <width>10</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <string>Mil.</string>
         </property>
        </widget>
       </item>

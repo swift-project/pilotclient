@@ -78,6 +78,8 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CLiveryForm> ui;
+            BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
+
         };
     } // ns
 } // ns

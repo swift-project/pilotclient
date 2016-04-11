@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/guiutility.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "liveryform.h"
@@ -29,10 +30,10 @@ namespace BlackGui
             this->ui->le_Id->setReadOnly(true);
             this->ui->le_Updated->setReadOnly(true);
             this->ui->lai_Id->set(CIcons::appLiveries16(), "Id:");
-            this->ui->livery_Selector->withLiveryDescription(false);
+            this->ui->comp_LiverySelector->withLiveryDescription(false);
 
             // selector
-            connect(this->ui->livery_Selector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
+            connect(this->ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
 
             // drag and drop
             connect(this->ui->drop_DropData, &CDropSite::droppedValueObject, this, &CLiveryForm::ps_droppedLivery);
@@ -47,7 +48,7 @@ namespace BlackGui
 
         CLivery CLiveryForm::getValue() const
         {
-            CLivery livery(this->ui->livery_Selector->getLivery());
+            CLivery livery(this->ui->comp_LiverySelector->getLivery());
             if (livery.hasCompleteData() && livery.hasValidDbKey())
             {
                 // already complete data from selector
@@ -57,6 +58,7 @@ namespace BlackGui
             CAirlineIcaoCode airline(this->ui->editor_AirlineIcao->getValue());
             livery.setAirlineIcaoCode(airline);
             livery.setDescription(this->ui->le_Description->text());
+            livery.setMilitary(this->ui->cb_Military->isChecked());
             return livery;
         }
 
@@ -67,12 +69,16 @@ namespace BlackGui
 
         void CLiveryForm::setValue(const CLivery &livery)
         {
-            this->ui->livery_Selector->setLivery(livery);
+            if (this->m_originalLivery == livery) { return; }
+
+            this->m_originalLivery = livery;
+            this->ui->comp_LiverySelector->setLivery(livery);
             this->ui->le_Id->setText(livery.getDbKeyAsString());
             this->ui->le_Description->setText(livery.getDescription());
             this->ui->le_Updated->setText(livery.getFormattedUtcTimestampYmdhms());
             this->ui->color_Fuselage->setColor(livery.getColorFuselage());
             this->ui->color_Tail->setColor(livery.getColorTail());
+            this->ui->cb_Military->setChecked(livery.isMilitary());
 
             if (livery.isColorLivery())
             {
@@ -122,17 +128,18 @@ namespace BlackGui
         void CLiveryForm::setReadOnly(bool readOnly)
         {
             this->m_readOnly = readOnly;
-            this->ui->livery_Selector->setReadOnly(readOnly);
+            this->ui->comp_LiverySelector->setReadOnly(readOnly);
             this->ui->le_Description->setReadOnly(readOnly);
             this->ui->color_Fuselage->setReadOnly(readOnly);
             this->ui->color_Tail->setReadOnly(readOnly);
             this->ui->editor_AirlineIcao->setReadOnly(readOnly);
+            CGuiUtility::checkBoxReadOnly(this->ui->cb_Military, readOnly);
         }
 
         void CLiveryForm::setSelectOnly()
         {
             this->setReadOnly(true);
-            this->ui->livery_Selector->setReadOnly(false);
+            this->ui->comp_LiverySelector->setReadOnly(false);
             this->ui->editor_AirlineIcao->setSelectOnly();
         }
 
@@ -162,8 +169,9 @@ namespace BlackGui
         {
             if (!code.hasCompleteData()) { return; }
             if (!code.hasValidDbKey()) { return; }
+//            if (this->m_originalLivery.getAirlineIcaoCode() == code) { return; } // avoid redundant updates
 
-            CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoDesignator(code));
+            const CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoDesignator(code));
             if (stdLivery.hasValidDbKey())
             {
                 this->setValue(stdLivery);

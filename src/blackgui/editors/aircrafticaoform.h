@@ -69,7 +69,8 @@ namespace BlackGui
             void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
 
         private:
-            QScopedPointer<Ui::CAircraftIcaoForm> ui;
+            QScopedPointer<Ui::CAircraftIcaoForm>  ui;
+            BlackMisc::Aviation::CAircraftIcaoCode m_originalCode;
 
             //! Key from GUI
             int getDbKeyFromGui() const;

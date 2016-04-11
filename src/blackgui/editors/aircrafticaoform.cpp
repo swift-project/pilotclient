@@ -44,6 +44,9 @@ namespace BlackGui
 
         void CAircraftIcaoForm::setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
         {
+            if (icao == this->m_originalCode) { return; }
+            this->m_originalCode = icao;
+
             this->ui->le_Id->setText(icao.getDbKeyAsString());
             this->ui->aircraft_Selector->setAircraftIcao(icao);
             this->ui->le_Manufacturer->setText(icao.getManufacturer());

@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/guiutility.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/country.h"
 #include "airlineicaoform.h"
@@ -44,22 +45,22 @@ namespace BlackGui
 
         void CAirlineIcaoForm::setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao)
         {
-            if (this->m_originalCode != icao)
-            {
-                this->m_originalCode = icao;
-                this->ui->selector_AirlineDesignator->setAirlineIcao(icao);
-                this->ui->selector_AirlineName->setAirlineIcao(icao);
-                this->ui->le_Id->setText(icao.getDbKeyAsString());
-                this->ui->le_TelephonyDesignator->setText(icao.getTelephonyDesignator());
-                this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
-                this->ui->cb_Va->setChecked(icao.isVirtualAirline());
-                this->ui->country_Selector->setCountry(icao.getCountry());
-                this->ui->lbl_AirlineIcon->setPixmap(icao.toPixmap());
+            if (this->m_originalCode == icao) { return; }
+            this->m_originalCode = icao;
 
-                if (this->m_originalCode.hasCompleteData())
-                {
-                    emit airlineChanged(this->m_originalCode);
-                }
+            this->ui->selector_AirlineDesignator->setAirlineIcao(icao);
+            this->ui->selector_AirlineName->setAirlineIcao(icao);
+            this->ui->le_Id->setText(icao.getDbKeyAsString());
+            this->ui->le_TelephonyDesignator->setText(icao.getTelephonyDesignator());
+            this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
+            this->ui->cb_Va->setChecked(icao.isVirtualAirline());
+            this->ui->cb_Military->setChecked(icao.isMilitary());
+            this->ui->country_Selector->setCountry(icao.getCountry());
+            this->ui->lbl_AirlineIcon->setPixmap(icao.toPixmap());
+
+            if (this->m_originalCode.hasCompleteData())
+            {
+                emit airlineChanged(this->m_originalCode);
             }
         }
 
@@ -67,6 +68,7 @@ namespace BlackGui
         {
             CAirlineIcaoCode code(m_originalCode);
             code.setVirtualAirline(this->ui->cb_Va->isChecked());
+            code.setMilitary(this->ui->cb_Military->isChecked());
             code.setCountry(this->ui->country_Selector->getCountry());
             code.setName(this->ui->selector_AirlineName->getAirlineIcao().getName());
             code.setTelephonyDesignator(this->ui->le_TelephonyDesignator->text());
@@ -103,7 +105,9 @@ namespace BlackGui
             this->ui->selector_AirlineName->setReadOnly(readOnly);
             this->ui->le_TelephonyDesignator->setReadOnly(readOnly);
             this->ui->country_Selector->setReadOnly(readOnly);
-            this->ui->cb_Va->setEnabled(!readOnly);
+
+            CGuiUtility::checkBoxReadOnly(this->ui->cb_Va, readOnly);
+            CGuiUtility::checkBoxReadOnly(this->ui->cb_Military, readOnly);
         }
 
         void CAirlineIcaoForm::setSelectOnly()
@@ -137,6 +141,5 @@ namespace BlackGui
             }
             this->setValue(icao);
         }
-
     } // ns
 } // ns
