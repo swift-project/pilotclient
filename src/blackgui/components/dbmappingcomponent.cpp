@@ -73,6 +73,8 @@ namespace BlackGui
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::ps_tabIndexChanged);
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher , &CModelMatcherComponent::tabIndexChanged);
 
+            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
+
             // how to display forms
             ui->editor_AircraftIcao->setSelectOnly();
             ui->editor_Distributor->setSelectOnly();
@@ -81,6 +83,10 @@ namespace BlackGui
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
             this->ui->comp_StashAircraft->view()->setCustomMenu(new CApplyDbDataMenu(this));
+
+            // custom menu
+            this->setContextMenuPolicy(Qt::CustomContextMenu);
+            connect(this, &CDbMappingComponent::customContextMenuRequested, this, &CDbMappingComponent::ps_onCustomContextMenu);
 
             // vPilot
             this->initVPilotLoading();
@@ -137,6 +143,8 @@ namespace BlackGui
         {
             if (!index.isValid()) { return CAircraftModel(); }
             const QObject *sender = QObject::sender();
+
+            // check if we have an explicit sender
             if (sender == this->ui->tvp_AircraftModelsForVPilot)
             {
                 return this->ui->tvp_AircraftModelsForVPilot->at(index);
@@ -148,6 +156,10 @@ namespace BlackGui
             else if (sender == this->ui->comp_StashAircraft || sender == this->ui->comp_StashAircraft->view())
             {
                 return this->ui->comp_StashAircraft->view()->at(index);
+            }
+            else if (sender == this->ui->comp_OwnModelSet->view())
+            {
+                return this->ui->comp_OwnModelSet->view()->at(index);
             }
 
             // no sender, use current tab
