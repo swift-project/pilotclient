@@ -255,6 +255,9 @@ namespace BlackMisc
             //! Normalize designator, remove illegal characters
             static const QString normalizeDesignator(const QString candidate);
 
+            //! Create relaxed combined codes, e.g "L2J" -> "L3J", ...
+            static QStringList alternativeCombinedCodes(const QString &combinedCode);
+
             //! From our database JSON format
             static CAircraftIcaoCode fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 

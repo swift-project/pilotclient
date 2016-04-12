@@ -492,6 +492,43 @@ namespace BlackMisc
             return n.remove(regexp);
         }
 
+        QStringList CAircraftIcaoCode::alternativeCombinedCodes(const QString &combinedCode)
+        {
+            // manually add some replacements for frequently used types
+            static const QMultiMap<QString, QString> knownCodes
+            {
+                { "L1P", "L2P" }, { "L1P", "S1P" },
+                { "L2J", "L3J" }, { "L2J", "L4J" },
+                { "L3J", "L4J" }
+            };
+
+            if (isValidCombinedType(combinedCode)) { return QStringList(); }
+            if (knownCodes.contains(combinedCode))
+            {
+                return knownCodes.values(combinedCode);
+            }
+
+            // turn E to P engine
+            if (combinedCode.endsWith("E")) { return QStringList({ combinedCode.left(2) + "P"}); }
+
+            // turn T to H plane (tilt wing to helicopter
+            if (combinedCode.startsWith("T")) { return QStringList({ "H" + combinedCode.right(2)}); }
+
+            // based on engine count
+            QStringList codes;
+            int engineCount = combinedCode[1].digitValue();
+            if (engineCount > 1)
+            {
+                for (int c = 2; c < 5; c++)
+                {
+                    if (c == engineCount) { continue; }
+                    const QString code(combinedCode.left(1) + QString::number(c) + combinedCode.right(1));
+                    codes.push_back(code);
+                }
+            }
+            return codes;
+        }
+
         CAircraftIcaoCode CAircraftIcaoCode::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             if (!existsKey(json,  prefix))
