@@ -19,7 +19,7 @@ namespace BlackMisc
 {
     //! Interface for a plugin storage provider.
     //! It allows plugins to store any arbitrary data which can be packed into a \sa CVariant
-    //! Every plugin shall have its own data area. This means mulitple plugins can store
+    //! Every plugin shall have its own data area. This means multiple plugins can store
     //! data under the same key without overwriting each other.
     class IPluginStorageProvider
     {
