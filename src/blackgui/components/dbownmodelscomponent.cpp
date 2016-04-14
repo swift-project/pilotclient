@@ -38,18 +38,16 @@ namespace BlackGui
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
 
             this->m_lastInteractions.synchronize();
+
+            // should be single simulator or no simulator (default)
             const CSimulatorInfo sim = this->m_lastInteractions.getCopy().getLastSimulatorSelection();
+            BLACK_VERIFY_X(!sim.isMultipleSimulators(), Q_FUNC_INFO, "Should be single simulator or default");
             if (sim.isSingleSimulator())
             {
                 // if we have already use this before, use it again, but only from cache
                 this->initModelLoader(sim);
                 this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
             }
-            else
-            {
-                BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing sim");
-            }
-
             ui->tvp_OwnAircraftModels->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnAircraftModels, this->modelLoader(), false));
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
         }

@@ -77,6 +77,11 @@ namespace BlackMisc
             return m_simulator == 0;
         }
 
+        bool CSimulatorInfo::isMultipleSimulators() const
+        {
+            return this->numberSimulators() > 1;
+        }
+
         bool CSimulatorInfo::isAllSimulators() const
         {
             return fsx() && fs9() && xplane() && p3d();

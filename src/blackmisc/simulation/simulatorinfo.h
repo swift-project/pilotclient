@@ -89,6 +89,9 @@ namespace BlackMisc
             //! No simulator?
             bool isNoSimulator() const;
 
+            //! Represents > 1 simulator
+            bool isMultipleSimulators() const;
+
             //! Is all simulators?
             bool isAllSimulators() const;
 
