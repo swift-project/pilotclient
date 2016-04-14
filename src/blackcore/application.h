@@ -90,10 +90,10 @@ namespace BlackCore
         void deleteAllCookies();
 
         //! Setup already syncronized
-        bool isSetupSyncronized() const;
+        bool isSetupAvailable() const;
 
         //! Reload setup and version
-        BlackMisc::CStatusMessage requestReloadOfSetupAndVersion();
+        BlackMisc::CStatusMessageList requestReloadOfSetupAndVersion();
 
         //! Web data services available?
         bool hasWebDataServices() const;
@@ -114,7 +114,7 @@ namespace BlackCore
         const char *swiftVersionChar();
 
         //! Running in dev.environment?
-        bool isRunningInDeveloperEnvironment() const;
+        bool isRunningInDeveloperEnvironment() const { return this->m_devEnv; }
 
         //! Signal startup automatically or individually
         void signalStartupAutomatically(bool signal = false);
@@ -136,6 +136,9 @@ namespace BlackCore
 
         //! Process all events for some time
         static void processEventsFor(int milliseconds);
+
+        //! Clear the caches
+        static QStringList clearCaches();
 
         // ----------------------- parsing ----------------------------------------
 
@@ -259,11 +262,11 @@ namespace BlackCore
                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
 
     signals:
-        //! Setup syncronized
-        void setupSyncronized(bool success);
+        //! Setup available (cache, web load, ..)
+        void setupAvailable(bool success);
 
-        //! Update info syncronized
-        void updateInfoSynchronized(bool success);
+        //! Update info available (cache, web load)
+        void updateInfoAvailable(bool success);
 
         //! Startup has been completed
         void startUpCompleted(bool success);
@@ -276,7 +279,7 @@ namespace BlackCore
 
     protected slots:
         //! Setup read/syncronized
-        void ps_setupSyncronized(bool success);
+        void ps_setupAvailable(bool available);
 
         //! Startup completed
         virtual void ps_startupCompleted();
@@ -296,6 +299,9 @@ namespace BlackCore
 
         //! Can be used to start special services
         virtual bool startHookIn() { return true; }
+
+        //! Flag set or explicitly set to true
+        bool isSetOrTrue(const QCommandLineOption &option) const;
 
         //! Severe issue during startup, most likely it does not make sense to continue
         //! \note call this here if the parsing stage is over and reaction to a runtime issue
@@ -317,17 +323,17 @@ namespace BlackCore
         static void registerMetadata();
 
         // cmd parsing
-        QCommandLineParser m_parser;                    //!< cmd parser
-        QCommandLineOption m_cmdHelp {"help"};          //!< help option
-        QCommandLineOption m_cmdVersion {"version"};    //!< version option
-        QCommandLineOption m_cmdDBusAddress {"empty"};  //!< DBus address
-        QCommandLineOption m_cmdDevelopment {"dev"};    //!< Dev flag
-        QCommandLineOption m_cmdSharedDir {"shared"};   //!< Dev flag
-
-        bool               m_parsed = false;            //!< Parsing accomplished?
-        bool               m_started = false;           //!< started with success?
-        bool               m_startUpCompleted = false;  //!< startup phase completed? Can mean startup failed
-        bool               m_startSetupReader = false;  //!< start the setup reader
+        QCommandLineParser m_parser;                       //!< cmd parser
+        QCommandLineOption m_cmdHelp {"help"};             //!< help option
+        QCommandLineOption m_cmdVersion {"version"};       //!< version option
+        QCommandLineOption m_cmdDBusAddress {"empty"};     //!< DBus address
+        QCommandLineOption m_cmdDevelopment {"dev"};       //!< Dev. flag
+        QCommandLineOption m_cmdSharedDir {"shared"};      //!< Shared directory
+        QCommandLineOption m_cmdClearCache {"clearcache"}; //!< Clear cache
+        bool               m_parsed  = false;              //!< Parsing accomplished?
+        bool               m_started = false;              //!< started with success?
+        bool               m_startUpCompleted = false;     //!< startup phase completed? Can mean startup failed
+        bool               m_startSetupReader = false;     //!< start the setup reader
 
     private:
         //! init logging system
@@ -335,6 +341,9 @@ namespace BlackCore
 
         //! Init parser
         void initParser();
+
+        //! Dev.environment
+        bool initIsRunningInDeveloperEnvironment() const;
 
         //! Async. start when setup is loaded
         bool asyncWebAndContextStart();
@@ -354,6 +363,7 @@ namespace BlackCore
         bool                                   m_useContexts = false;    //!< use contexts
         bool                                   m_useWebData = false;     //!< use web data
         bool                                   m_signalStartup = true;   //!< signal startup automatically
+        bool                                   m_devEnv = false;         //!< dev. environment
     };
 } // namespace
 

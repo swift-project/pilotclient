@@ -37,6 +37,9 @@ namespace BlackMisc
         //! Construct from a base class object.
         CStatusMessageList(const CSequence<CStatusMessage> &other);
 
+        //! Construct from single message
+        CStatusMessageList(const CStatusMessage &statusMessage);
+
         //! Find by type
         CStatusMessageList findByCategory(const CLogCategory &category) const;
 
@@ -52,6 +55,18 @@ namespace BlackMisc
         //! Warning or error messages
         bool hasWarningOrErrorMessages() const;
 
+        //! All messages are marked as success
+        bool isSuccess() const;
+
+        //! Any message is marked as failure
+        bool isFailure() const;
+
+        //! Get all error messages
+        CStatusMessageList getErrorMessages() const;
+
+        //! Get all warning and error messages
+        CStatusMessageList getWarningAndErrorMessages() const;
+
         //! Add a category to all messages in the list
         void addCategory(const CLogCategory &category);
 
@@ -63,6 +78,9 @@ namespace BlackMisc
 
         //! Reset the categories of all messages in the list
         void setCategories(const CLogCategoryList &categories);
+
+        //! And higher (more critical) severity will be clipped to given severity
+        void clipSeverity(CStatusMessage::StatusSeverity severity);
 
         //! Remove warnings and below
         void removeWarningsAndBelow();

@@ -205,6 +205,9 @@ namespace BlackMisc
         //! Message severity
         StatusSeverity getSeverity() const { return this->m_severity; }
 
+        //! Clip/reduce severity if higher (more critical)
+        bool clipSeverity(StatusSeverity severity);
+
         //! Info or debug, no warning or error
         bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
 

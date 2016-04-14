@@ -17,6 +17,11 @@ namespace BlackMisc
         CSequence<CStatusMessage>(other)
     { }
 
+    CStatusMessageList::CStatusMessageList(const CStatusMessage &statusMessage)
+    {
+        this->push_back(statusMessage);
+    }
+
     CStatusMessageList CStatusMessageList::findByCategory(const CLogCategory &category) const
     {
         return this->findBy([ & ](const CStatusMessage & msg) { return msg.getCategories().contains(category); });
@@ -41,6 +46,29 @@ namespace BlackMisc
     {
         return this->containsBy
         ([ = ](const CStatusMessage & m) { return m.getSeverity() == CStatusMessage::SeverityWarning || m.getSeverity() == CStatusMessage::SeverityError; });
+    }
+
+    bool CStatusMessageList::isSuccess() const
+    {
+        return !this->isFailure();
+    }
+
+    bool CStatusMessageList::isFailure() const
+    {
+        return this->contains(&CStatusMessage::isFailure, true);
+    }
+
+    CStatusMessageList CStatusMessageList::getErrorMessages() const
+    {
+        return findBySeverity(SeverityError);
+    }
+
+    CStatusMessageList CStatusMessageList::getWarningAndErrorMessages() const
+    {
+        return this->findBy([ & ](const CStatusMessage & msg)
+        {
+            return msg.getSeverity() >= CStatusMessage::SeverityWarning;
+        });
     }
 
     void CStatusMessageList::addCategory(const CLogCategory &category)
@@ -73,8 +101,16 @@ namespace BlackMisc
         {
             msg.setCategories(categories);
         }
-	}
-		
+    }
+
+    void CStatusMessageList::clipSeverity(CStatusMessage::StatusSeverity severity)
+    {
+        for (auto &msg : *this)
+        {
+            msg.clipSeverity(severity);
+        }
+    }
+
     void CStatusMessageList::removeWarningsAndBelow()
     {
         if (this->isEmpty()) { return; }

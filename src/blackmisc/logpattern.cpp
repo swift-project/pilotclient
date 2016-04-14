@@ -28,6 +28,7 @@ namespace BlackMisc
             { "downloading data",            exactMatch(CLogCategory::download()) },
             { "VASTIM specific",             exactMatch(CLogCategory::vatsimSpecific()) },
             { "webservice related",          exactMatch(CLogCategory::webservice()) },
+            { "startup phase",               exactMatch(CLogCategory::startup()) },
             { "swift DB webservice related", exactMatch(CLogCategory::swiftDbWebservice()) },
             { "Qt library",                  startsWith("qt.") },
             { "uncategorized (other)",       empty() }

@@ -41,10 +41,9 @@ BlackCore::CApplication *sApp = nullptr; // set by constructor
 
 namespace BlackCore
 {
-    CApplication::CApplication(const QString &applicationName, bool init) :
-        m_cookieManager( {}, this),
-                     m_applicationName(applicationName),
-                     m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+    CApplication::CApplication(
+        const QString &applicationName, bool init) :
+        m_cookieManager( {}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -67,25 +66,26 @@ namespace BlackCore
             this->initParser();
             this->initLogging();
 
+            //
+            // cmd line arguments not yet parsed here
+            //
+
             // Translations
             QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
             CLogMessage(this).debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
             QTranslator translator;
-            if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/"))
-            {
-                CLogMessage(this).debug() << "Translator loaded";
-            }
+            if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/")) { CLogMessage(this).debug() << "Translator loaded"; }
             QCoreApplication::instance()->installTranslator(&translator);
 
-            // Global setup / bootstraping
+            // Init network
             this->m_cookieManager.setParent(&this->m_accessManager);
             this->m_accessManager.setCookieJar(&this->m_cookieManager);
 
             // global setup
             sApp = this;
             this->m_setupReader.reset(new CSetupReader(this));
-            connect(this->m_setupReader.data(), &CSetupReader::setupSynchronized, this, &CApplication::ps_setupSyncronized);
-            connect(this->m_setupReader.data(), &CSetupReader::updateInfoSynchronized, this, &CApplication::updateInfoSynchronized);
+            connect(this->m_setupReader.data(), &CSetupReader::setupAvailable, this, &CApplication::ps_setupAvailable);
+            connect(this->m_setupReader.data(), &CSetupReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable);
 
             this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions());
 
@@ -96,7 +96,6 @@ namespace BlackCore
             connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
         }
     }
-
 
     CApplication::~CApplication()
     {
@@ -137,13 +136,21 @@ namespace BlackCore
             if (!s) { return false; }
         }
 
-        // parsing itself is done
-        if (this->m_startSetupReader && !this->m_setupReader->isSetupSyncronized())
+        // clear cache?
+        if (this->isSetOrTrue(this->m_cmdClearCache))
         {
-            CStatusMessage m(this->requestReloadOfSetupAndVersion());
-            if (m.isWarningOrAbove())
+            QStringList files(CApplication::clearCaches());
+            CLogMessage(this).debug() << "Cleared cache, " << files.size() << " files";
+        }
+
+        // parsing itself is done
+        if (this->m_startSetupReader && !this->m_setupReader->isSetupAvailable())
+        {
+            const CStatusMessageList msgs(this->requestReloadOfSetupAndVersion());
+            CLogMessage::preformatted(msgs);
+            if (msgs.isFailure())
             {
-                this->cmdLineErrorMessage(m.getMessage());
+                this->cmdLineErrorMessage(msgs.getWarningAndErrorMessages().toSingleMessage().getMessage());
                 return false;
             }
         }
@@ -188,13 +195,13 @@ namespace BlackCore
         return this->m_started;
     }
 
-    bool CApplication::isSetupSyncronized() const
+    bool CApplication::isSetupAvailable() const
     {
         if (this->m_shutdown || !this->m_setupReader) { return false; }
-        return this->m_setupReader->isSetupSyncronized();
+        return this->m_setupReader->isSetupAvailable();
     }
 
-    CStatusMessage CApplication::requestReloadOfSetupAndVersion()
+    CStatusMessageList CApplication::requestReloadOfSetupAndVersion()
     {
         if (!this->m_shutdown)
         {
@@ -256,16 +263,14 @@ namespace BlackCore
         return a.constData();
     }
 
-    bool CApplication::isRunningInDeveloperEnvironment() const
+    bool CApplication::initIsRunningInDeveloperEnvironment() const
     {
         if (!CBuildConfig::canRunInDeveloperEnvironment()) { return false; }
-        if (!this->m_parser.value(this->m_cmdDevelopment).isEmpty())
+        if (this->m_parser.isSet(this->m_cmdDevelopment))
         {
-            // explicit value
-            const QString v(this->m_parser.value(this->m_cmdDevelopment));
-            return stringToBool(v);
+            return this->isSetOrTrue(this->m_cmdDevelopment);
         }
-        else if (this->isSetupSyncronized())
+        else if (this->isSetupAvailable())
         {
             // assume value from setup
             return this->getGlobalSetup().isDevelopment();
@@ -442,7 +447,7 @@ namespace BlackCore
     {
         if (!this->m_useContexts) { return true; } // we do not use context, so no need to startup
         if (!this->m_parsed) { return false; }
-        if (!this->m_setupReader || !this->m_setupReader->isSetupSyncronized()) { return false; }
+        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return false; }
 
         Q_ASSERT_X(this->m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
         Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
@@ -460,7 +465,7 @@ namespace BlackCore
     {
         if (!this->m_useWebData) { return true; }
         if (!this->m_parsed) { return false; }
-        if (!this->m_setupReader || !this->m_setupReader->isSetupSyncronized()) { return false; }
+        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return false; }
 
         Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
         if (!this->m_webDataServices)
@@ -490,7 +495,7 @@ namespace BlackCore
         this->m_cmdHelp = this->m_parser.addHelpOption();
         this->m_cmdVersion = this->m_parser.addVersionOption();
 
-        this->m_cmdDevelopment = QCommandLineOption({ "dev", "developemnt" },
+        this->m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
                                  QCoreApplication::translate("application", "Dev.system feature?"),
                                  "development");
         this->addParserOption(this->m_cmdDevelopment);
@@ -499,12 +504,35 @@ namespace BlackCore
                                QCoreApplication::translate("application", "Local shared directory."),
                                "shared");
         this->addParserOption(this->m_cmdSharedDir);
+
+        this->m_cmdClearCache = QCommandLineOption({ "ccache", "clearcache" },
+                                QCoreApplication::translate("application", "Clear (reset) the caches."),
+                                "clearcache");
+        this->addParserOption(this->m_cmdClearCache);
+    }
+
+    bool CApplication::isSetOrTrue(const QCommandLineOption &option) const
+    {
+        if (!this->m_parser.isSet(option)) { return false; }
+
+        // explicit value
+        const QString v(this->m_parser.value(option).trimmed());
+        if (v.isEmpty()) { return true; } // just flag
+        if (v.startsWith("-")) { return true; } // just flag, because value is already next parameter
+        return stringToBool(v);
     }
 
     void CApplication::registerMetadata()
     {
         BlackMisc::registerMetadata();
         BlackCore::registerMetadata();
+    }
+
+    QStringList CApplication::clearCaches()
+    {
+        const QStringList files(CDataCache::instance()->enumerateStore());
+        CDataCache::instance()->clearAllValues();
+        return files;
     }
 
     void CApplication::gracefulShutdown()
@@ -553,14 +581,15 @@ namespace BlackCore
         this->m_fileLogger->close();
     }
 
-    void CApplication::ps_setupSyncronized(bool success)
+    void CApplication::ps_setupAvailable(bool available)
     {
-        if (success)
+        if (available)
         {
-            emit setupSyncronized(success);
             this->m_started = this->asyncWebAndContextStart();
         }
         this->m_startUpCompleted = true;
+        emit setupAvailable(available);
+
         if (this->m_signalStartup)
         {
             emit this->startUpCompleted(this->m_started);
@@ -624,7 +653,7 @@ namespace BlackCore
 
     void CApplication::addDBusAddressOption()
     {
-        this->m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbus-address", "dbusaddress" },
+        this->m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbusaddress" },
                                  QCoreApplication::translate("application", "DBus address."),
                                  "dbusaddress");
         this->addParserOption(this->m_cmdDBusAddress);
@@ -703,6 +732,9 @@ namespace BlackCore
             this->cmdLineVersionMessage();
             return true;
         }
+
+        // dev.
+        this->m_devEnv = this->initIsRunningInDeveloperEnvironment();
 
         // Hookin, other parsing
         if (!this->parsingHookIn()) { return false; }

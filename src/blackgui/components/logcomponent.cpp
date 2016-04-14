@@ -72,8 +72,14 @@ namespace BlackGui
 
         void CLogComponent::appendStatusMessageToList(const CStatusMessage &statusMessage)
         {
-            if (statusMessage.isEmpty()) return;
+            if (statusMessage.isEmpty()) { return; }
             this->ui->tvp_StatusMessages->insert(statusMessage);
+        }
+
+        void CLogComponent::appendStatusMessagesToList(const CStatusMessageList &statusMessages)
+        {
+            if (statusMessages.isEmpty()) { return; }
+            this->ui->tvp_StatusMessages->insert(statusMessages);
         }
 
         void CLogComponent::CLogMenu::customMenu(QMenu &menu) const

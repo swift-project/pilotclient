@@ -30,10 +30,7 @@ namespace BlackCore
 {
     CSetupReader::CSetupReader(QObject *parent) :
         QObject(parent)
-    {
-        connect(this, &CSetupReader::setupSynchronized, this, &CSetupReader::ps_setupSyncronized);
-        connect(this, &CSetupReader::updateInfoSynchronized, this, &CSetupReader::ps_versionInfoSyncronized);
-    }
+    { }
 
     QList<QCommandLineOption> CSetupReader::getCmdLineOptions() const
     {
@@ -46,24 +43,33 @@ namespace BlackCore
         };
     }
 
-    CStatusMessage CSetupReader::asyncLoad()
+    CStatusMessageList CSetupReader::asyncLoad()
     {
+        CStatusMessageList msgs;
         if (this->readLocalBootstrapFile(this->m_localSetupFileValue))
         {
             // initialized by local file for testing
-            emit this->setupSynchronized(true);
-            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Using local bootstrap file: " + this->m_localSetupFileValue);
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Using local bootstrap file: " + this->m_localSetupFileValue));
+            msgs.push_back(this->manageSetupAvailability(false, true));
+            return msgs;
         }
 
         m_setup.synchronize(); // make sure it is loaded
+        CGlobalSetup cachedSetup = m_setup.getCopy();
+        const bool cacheAvailable = cachedSetup.wasLoaded();
+        msgs.push_back(cacheAvailable ?
+                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup syncronized and contains data") :
+                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup syncronized, but no data")
+                      );
         if (this->m_bootstrapMode == CacheOnly)
         {
-
-            CGlobalSetup currentSetup = m_setup.getCopy();
-            this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls();
-            emit this->setupSynchronized(true);
-            emit this->updateInfoSynchronized(true);
-            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is");
+            this->m_updateInfoUrls = cachedSetup.getUpdateInfoFileUrls();
+            msgs.push_back(cacheAvailable ?
+                           CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is") :
+                           CStatusMessage(this, CStatusMessage::SeverityError, "Cache only setup, but cache is empty")
+                          );
+            msgs.push_back(this->manageSetupAvailability(false, false));
+            return msgs;
         }
 
         this->m_bootstrapUrls.clear(); // clean up previous values
@@ -76,37 +82,45 @@ namespace BlackCore
         }
 
         // if ever loaded add those URLs
-        const CGlobalSetup currentSetup = m_setup.getCopy();
-        if (this->m_bootstrapMode != Explicit)
+        if (cacheAvailable)
         {
-            // also use previously cached URLs
-            this->m_bootstrapUrls.push_back(currentSetup.getBootstrapFileUrls());
-
-            // fail over if still empty
-            //! \todo do we want to keep this or use a cmd line flag to enable the behaviour. Risk here to use an undesired setup
-            if (this->m_bootstrapUrls.isEmpty())
+            if (this->m_bootstrapMode != Explicit)
             {
-                // use file from disk delivered with swift
-                // there is a potential risk here, if the URL passed via cmd args is actually adressing an entirely diffent scenario,
-                // this would load a file for something else
-                CGlobalSetup resourceSetup(CGlobalSetup::fromJsonFile(
-                                               CBuildConfig::getBootstrapResourceFile()
-                                           ));
-                this->m_bootstrapUrls.push_back(resourceSetup.getBootstrapFileUrls());
+                // also use previously cached URLs
+                const CUrlList bootstrapCacheUrls(cachedSetup.getBootstrapFileUrls());
+                this->m_bootstrapUrls.push_back(bootstrapCacheUrls);
+                msgs.push_back(bootstrapCacheUrls.isEmpty() ?
+                               CStatusMessage(this, CStatusMessage::SeverityWarning, "No bootsrap URLs in cache") :
+                               CStatusMessage(this, CStatusMessage::SeverityInfo, "Adding " + QString::number(bootstrapCacheUrls.size()) + " bootstrap URLs from cache"));
             }
+        }
+        else
+        {
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Empty cache, will not add URLs"));
         }
 
         this->m_bootstrapUrls.removeDuplicates(); // clean up
         if (this->m_bootstrapUrls.isEmpty())
         {
             // after all still empty
-            return CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup");
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "No bootstrap URLs, cannot load setup"));
         }
         else
         {
-            this->ps_readSetup(); // start reading
-            return CStatusMessage(this, CStatusMessage::SeverityInfo, "Will start loading setup");
+            CStatusMessageList readMsgs = triggerReadSetup();
+            if (cacheAvailable && readMsgs.isFailure())
+            {
+                // error but cache is available, we can continue
+                readMsgs.clipSeverity(CStatusMessage::SeverityWarning);
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, "Loading setup failed, but cache is available, will continue"));
+                msgs.push_back(readMsgs);
+            }
+            else
+            {
+                msgs.push_back(readMsgs);
+            }
         }
+        return msgs;
     }
 
     bool CSetupReader::parseCmdLineArguments()
@@ -114,8 +128,13 @@ namespace BlackCore
         this->m_bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(
                                             sApp->getParserValue(this->m_cmdBootstrapUrl)
                                         );
-        this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
         QUrl url(this->m_bootstrapUrlFileValue);
+        const QString urlString(url.toString());
+        this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
+        if (urlString.isEmpty() && this->m_bootstrapMode == Explicit)
+        {
+            this->m_bootstrapMode = Implicit; // no URL, we use implicit mode
+        }
 
         // check on local file
         if (url.isLocalFile())
@@ -136,7 +155,7 @@ namespace BlackCore
             {
                 if (!CNetworkUtils::canConnect(url))
                 {
-                    sApp->cmdLineErrorMessage("URL " + url.toString() + " not reachable");
+                    sApp->cmdLineErrorMessage("URL " + urlString + " not reachable");
                     return false;
                 }
             }
@@ -151,17 +170,29 @@ namespace BlackCore
 
     void CSetupReader::ps_readSetup()
     {
+        const CStatusMessageList msgs(this->triggerReadSetup());
+        if (!msgs.isSuccess())
+        {
+            CLogMessage::preformatted(msgs);
+        }
+    }
+
+    CStatusMessageList CSetupReader::triggerReadSetup()
+    {
+        if (m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
         const CUrl url(this->m_bootstrapUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read setup, URLs: %1, failed URLs: %2")
-                    << this->m_bootstrapUrls
-                    << this->m_bootstrapUrls.getFailedUrls();
-            emit setupSynchronized(false);
-            return;
+            const CStatusMessage m(this, CStatusMessage::SeverityError,
+                                   "Cannot read setup, URLs: " + this->m_bootstrapUrls.toQString() +
+                                   " failed URLs: " + this->m_bootstrapUrls.getFailedUrls().toQString());
+            CStatusMessageList msgs(m);
+            msgs.push_back(this->manageSetupAvailability(false, false));
+            return msgs;
         }
-        if (m_shutdown) { return; }
+        const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Start reading URL: " + url.toQString());
         sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseSetupFile });
+        return m;
     }
 
     void CSetupReader::ps_readUpdateInfo()
@@ -172,31 +203,11 @@ namespace BlackCore
             CLogMessage(this).warning("Cannot read update info, URLs: %1, failed URLs: %2")
                     << this->m_updateInfoUrls
                     << this->m_updateInfoUrls.getFailedUrls();
-            emit updateInfoSynchronized(false);
+            this->manageUpdateAvailability(false);
             return;
         }
         if (m_shutdown) { return; }
         sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseUpdateInfoFile});
-    }
-
-    void CSetupReader::ps_setupSyncronized(bool success)
-    {
-        // trigger consecutive read
-        this->m_setupSyncronized = success;
-        if (success)
-        {
-            CLogMessage(this).info("Setup synchronized, will trigger read of update information");
-            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
-        }
-        else
-        {
-            CLogMessage(this).error("Setup reading failed, hence version info will not be loaded");
-        }
-    }
-
-    void CSetupReader::ps_versionInfoSyncronized(bool success)
-    {
-        this->m_updateInfoSyncronized = success;
     }
 
     void CSetupReader::ps_setupChanged()
@@ -209,7 +220,7 @@ namespace BlackCore
         const QString bsm(s.toLower().trimmed());
         if (bsm.startsWith("expl")) return Explicit;
         if (bsm.startsWith("cache")) return CacheOnly;
-        return Default;
+        return Implicit;
     }
 
     bool CSetupReader::readLocalBootstrapFile(QString &fileName)
@@ -273,7 +284,7 @@ namespace BlackCore
                 {
                     this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls(); // defaults
                     CLogMessage(this).info("Same setup version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
-                    emit setupSynchronized(true);
+                    CLogMessage::preformatted(this->manageSetupAvailability(true));
                     return; // success
                 }
 
@@ -284,14 +295,14 @@ namespace BlackCore
                 {
                     m.setCategories(getLogCategories());
                     CLogMessage::preformatted(m);
-                    emit setupSynchronized(false);
+                    CLogMessage::preformatted(this->manageSetupAvailability(false));
                     return; // issue with cache
                 }
                 else
                 {
                     this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
                     CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
-                    emit setupSynchronized(true);
+                    CLogMessage::preformatted(this->manageSetupAvailability(true));
                     return; // success
                 } // cache
 
@@ -311,7 +322,7 @@ namespace BlackCore
         }
         else
         {
-            emit setupSynchronized(false);
+            CLogMessage::preformatted(manageSetupAvailability(false));
         }
     }
 
@@ -346,7 +357,7 @@ namespace BlackCore
                 if (sameVersionLoaded)
                 {
                     CLogMessage(this).info("Same update info version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
-                    emit updateInfoSynchronized(true);
+                    this->manageUpdateAvailability(true);
                     return; // success
                 }
 
@@ -355,13 +366,13 @@ namespace BlackCore
                 {
                     m.setCategories(getLogCategories());
                     CLogMessage::preformatted(m);
-                    emit updateInfoSynchronized(false);
+                    this->manageUpdateAvailability(false);
                     return; // issue with cache
                 }
                 else
                 {
                     CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
-                    emit updateInfoSynchronized(true);
+                    this->manageUpdateAvailability(true);
                     return; // success
                 } // cache
             } // json empty
@@ -380,13 +391,13 @@ namespace BlackCore
         }
         else
         {
-            emit updateInfoSynchronized(false);
+            this->manageUpdateAvailability(false);
         }
     } // function
 
     const CLogCategoryList &CSetupReader::getLogCategories()
     {
-        static const CLogCategoryList cats({ CLogCategory("swift.setupreader"), CLogCategory::webservice()});
+        static const CLogCategoryList cats({ CLogCategory("swift.setupreader"), CLogCategory::webservice(), CLogCategory::startup()});
         return cats;
     }
 
@@ -398,5 +409,66 @@ namespace BlackCore
     CUpdateInfo CSetupReader::getUpdateInfo() const
     {
         return m_updateInfo.getCopy();
+    }
+
+    CStatusMessageList CSetupReader::manageSetupAvailability(bool webRead, bool localRead)
+    {
+        Q_ASSERT_X(!(webRead && localRead), Q_FUNC_INFO, "Local and web read together seems to be wrong");
+        CStatusMessageList msgs;
+        if (webRead)
+        {
+            msgs.push_back(CLogMessage(this).info("Setup loaded from web, will trigger read of update information"));
+            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
+        }
+        if (localRead)
+        {
+            msgs.push_back(CLogMessage(this).info("Setup loaded locally, will trigger read of update information"));
+            QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
+        }
+
+        bool available = false;
+        if (webRead || localRead)
+        {
+            available = true;
+        }
+        else
+        {
+            bool cacheAvailable = this->m_setup.get().wasLoaded();
+            available = cacheAvailable && this->m_bootstrapMode != Explicit;
+        }
+
+        if (available && !webRead && !localRead)
+        {
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Setup available, but not updated this time"));
+        }
+        else if (!available)
+        {
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Setup not available"));
+        }
+
+        this->m_setupAvailable = available;
+        emit setupAvailable(available);
+
+        if (!webRead && !localRead)
+        {
+            msgs.push_back(CStatusMessage(this).warning("Since setup was not updated this time, will not start loading of update information"));
+            this->manageUpdateAvailability(false);
+        }
+        return msgs;
+    }
+
+    void CSetupReader::manageUpdateAvailability(bool webRead)
+    {
+        if (webRead)
+        {
+            this->m_updateInfoAvailable = true;
+            emit updateInfoAvailable(true);
+        }
+        else
+        {
+            bool cached = this->m_updateInfo.isSaved();
+            this->m_updateInfoAvailable = cached;
+            emit updateInfoAvailable(cached);
+        }
     }
 } // namespace

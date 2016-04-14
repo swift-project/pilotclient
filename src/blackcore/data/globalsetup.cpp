@@ -82,14 +82,14 @@ namespace BlackCore
 
         QString CGlobalSetup::buildBootstrapFileUrl(const QString &candidate)
         {
-            static const QString vS(QString(versionString()).append("/"));
+            static const QString version(QString(versionString()).append("/"));
             if (candidate.endsWith("bootstrap.json")) { return candidate; }
             CUrl url(candidate);
             if (candidate.contains("/bootstrap"))
             {
                 url.appendPath("bootstrap.json");
             }
-            else if (candidate.endsWith(versionString()) || candidate.endsWith(vS))
+            else if (candidate.endsWith(versionString()) || candidate.endsWith(version))
             {
                 url.appendPath("/bootstrap/bootstrap.json");
             }

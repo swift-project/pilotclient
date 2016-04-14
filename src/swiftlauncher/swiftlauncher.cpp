@@ -47,7 +47,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
 
     // use version signal as trigger for completion
-    connect(sGui, &CApplication::updateInfoSynchronized, this, &CSwiftLauncher::ps_loadedUpdateInfo);
+    connect(sGui, &CApplication::updateInfoAvailable, this, &CSwiftLauncher::ps_loadedUpdateInfo);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     this->ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
@@ -287,8 +287,8 @@ void CSwiftLauncher::ps_loadSetup()
     if (!this->ui->le_LatestVersion->text().isEmpty())
     {
         this->ui->le_LatestVersion->setText("");
-        const CStatusMessage m(sApp->requestReloadOfSetupAndVersion());
-        this->ps_appendLogMessage(m);
+        const CStatusMessageList msgs(sApp->requestReloadOfSetupAndVersion());
+        this->ps_appendLogMessages(msgs);
     }
 }
 
@@ -379,6 +379,15 @@ void CSwiftLauncher::ps_appendLogMessage(const CStatusMessage &message)
     if (message.getSeverity() == CStatusMessage::SeverityError)
     {
         this->ps_showStatusMessage(message);
+    }
+}
+
+void CSwiftLauncher::ps_appendLogMessages(const CStatusMessageList &messages)
+{
+    ui->fr_SwiftLauncherLog->appendStatusMessagesToList(messages);
+    if (messages.hasErrorMessages())
+    {
+        this->ps_showStatusMessage(messages.getErrorMessages().toSingleMessage());
     }
 }
 

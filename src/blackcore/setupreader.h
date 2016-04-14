@@ -52,18 +52,18 @@ namespace BlackCore
         BlackCore::Data::CUpdateInfo getUpdateInfo() const;
 
     signals:
-        //! Setup has been read
-        void setupSynchronized(bool success);
+        //! Setup avialable (from web, cache, or local file)
+        void setupAvailable(bool available);
 
-        //! Version bas been read
-        void updateInfoSynchronized(bool success);
+        //! Setup avialable (from web, cache
+        void updateInfoAvailable(bool available);
 
     protected:
         //! Constructor
         explicit CSetupReader(QObject *parent);
 
         //! Load the data
-        BlackMisc::CStatusMessage asyncLoad();
+        BlackMisc::CStatusMessageList asyncLoad();
 
         //! Parse cmd line arguments
         bool parseCmdLineArguments();
@@ -74,13 +74,13 @@ namespace BlackCore
         //! Terminate
         void gracefulShutdown();
 
-        //! Setup loaded?
+        //! Setup available?
         //! \threadsafe
-        bool isSetupSyncronized() const { return m_setupSyncronized; }
+        bool isSetupAvailable() const { return m_setupAvailable; }
 
-        //! Version info loaded?
+        //! Version info available?
         //! \threadsafe
-        bool isUpdateSyncronized() const { return m_updateInfoSyncronized; }
+        bool isUpdateInfoAvailable() const { return m_updateInfoAvailable; }
 
     private slots:
         //! Setup has been read
@@ -95,12 +95,6 @@ namespace BlackCore
         //! Do reading
         void ps_readUpdateInfo();
 
-        //! Setup has beem syncronized
-        void ps_setupSyncronized(bool success);
-
-        //! Version info has beem syncronized
-        void ps_versionInfoSyncronized(bool success);
-
         //! Setup has been changed
         void ps_setupChanged();
 
@@ -108,17 +102,17 @@ namespace BlackCore
         //! Bootstrap mode
         enum BootstrapMode
         {
-            Default,
+            Implicit,
             Explicit,
             CacheOnly
         };
 
         bool m_shutdown = false;
-        std::atomic<bool> m_setupSyncronized { false };
-        std::atomic<bool> m_updateInfoSyncronized { false };
+        std::atomic<bool> m_setupAvailable { false };
+        std::atomic<bool> m_updateInfoAvailable { false };
         QString m_localSetupFileValue;                         //! Local file for setup, passed by cmd line arguments
         QString m_bootstrapUrlFileValue;                       //! Bootstrap URL if not local
-        BootstrapMode m_bootstrapMode;                         //! How to bootstrap
+        BootstrapMode m_bootstrapMode = Explicit;              //! How to bootstrap
         BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;  //!< location of setup files
         BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
@@ -126,19 +120,30 @@ namespace BlackCore
 
         QCommandLineOption m_cmdBootstrapUrl
         {
-            { "url", "bootstrap-url", "bootstrapurl" },
+            { "url", "bootstrapurl" },
             QCoreApplication::translate("application", "bootstrap URL, e.g. datastore.swift-project.org"),
             "bootstrapurl"
-        };                                              //!< bootstrap URL
+        };                                                     //!< bootstrap URL
         QCommandLineOption m_cmdBootstrapMode
         {
-            { "bmode", "bootstrap-mode", "bootstrapmode" },
-            QCoreApplication::translate("application", "bootstrap mode: (e)xplicit, d(default), (c)ache-only"),
-            "bootstrapmode", "default"
-        };                                              //!< bootstrap mode
+            { "bmode", "bootstrapmode" },
+            QCoreApplication::translate("application", "bootstrap mode: explicit, implicit, cache(-only)"),
+            "bootstrapmode", "explicit"
+        };                                                     //!< bootstrap mode
 
-        //! Read by local individual file
+        //! Read by local individual file and update cache from that
         bool readLocalBootstrapFile(QString &fileName);
+
+        //! Trigger reading
+        BlackMisc::CStatusMessageList triggerReadSetup();
+
+        //! Emit the availability signal and state
+        //! \threadsafe
+        BlackMisc::CStatusMessageList manageSetupAvailability(bool webRead, bool localRead = false);
+
+        //! Emit the available signal
+        //! \threadsafe
+        void manageUpdateAvailability(bool webRead);
 
         //! Convert string to mode
         static BootstrapMode stringToEnum(const QString &s);

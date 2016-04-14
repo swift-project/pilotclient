@@ -197,6 +197,13 @@ namespace BlackMisc
         return c.isEmpty() ? this->getCategoriesAsString() : c;
     }
 
+    bool CStatusMessage::clipSeverity(CStatusMessage::StatusSeverity severity)
+    {
+        if (this->getSeverity() <= severity) { return false; }
+        this->setSeverity(severity);
+        return true;
+    }
+
     bool CStatusMessage::isSuccess() const
     {
         return !isFailure();

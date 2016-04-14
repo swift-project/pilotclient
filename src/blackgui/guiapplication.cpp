@@ -307,8 +307,8 @@ namespace BlackGui
         a = sm->addAction("Reset cache");
         c = connect(a, &QAction::triggered, this, [this]()
         {
-            CDataCache::instance()->clearAllValues();
-            this->displayTextInConsole("Cleared cache!");
+            const QStringList files = CApplication::clearCaches();
+            this->displayTextInConsole("Cleared caches! " + QString::number(files.size()) + " files");
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 

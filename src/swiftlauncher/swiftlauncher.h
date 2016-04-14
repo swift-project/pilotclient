@@ -145,6 +145,9 @@ private slots:
     //! Append status message
     void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);
 
+    //! Append status messages
+    void ps_appendLogMessages(const BlackMisc::CStatusMessageList &messages);
+
     //! Show set main page
     void ps_showMainPage();
 
