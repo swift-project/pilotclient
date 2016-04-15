@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/pixmap.h"
 #include "blackmisc/variant.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -55,6 +56,9 @@ namespace BlackGui
         //! Single Text message mode
         void setModeToTextMessage();
 
+        //! Display image
+        void setModeToImage();
+
         //! Set header text
         void setHeaderText(const QString &header);
 
@@ -80,6 +84,12 @@ namespace BlackGui
 
         //! Info message, based on text message
         void showOverlayTextMessage(const BlackMisc::Network::CTextMessage &textMessage, int timeOutMs = -1);
+
+        //! Image
+        void showOverlayImage(const BlackMisc::CPixmap &image, int timeOutMs = -1);
+
+        //! Image
+        void showOverlayImage(const QPixmap &image, int timeOutMs = -1);
 
         //! Display one of the supported types
         void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);

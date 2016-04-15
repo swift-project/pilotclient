@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>221</width>
-    <height>416</height>
+    <height>422</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -197,22 +197,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="BlackGui::Components::CDbLiverySelectorComponent" name="comp_LiverySelector">
-        <layout class="QHBoxLayout" name="hl_DesignatorRank">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-        </layout>
-       </widget>
+       <widget class="BlackGui::Components::CDbLiverySelectorComponent" name="comp_LiverySelector"/>
       </item>
       <item row="1" column="2">
        <widget class="QCheckBox" name="cb_Military">

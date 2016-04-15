@@ -10,6 +10,7 @@
 #include "aircraftmodelmenus.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include <QDesktopServices>
 
@@ -44,15 +45,32 @@ namespace BlackGui
             return mv->selectedObjects();
         }
 
+        CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame, bool separator) :
+            IAircraftModelViewMenu(modelView, separator), m_messageFrame(messageFrame)
+        { }
+
         void CShowSimulatorFileMenu::customMenu(QMenu &menu) const
         {
             CAircraftModelView *mv = modelView();
             Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
 
-            if (mv->hasSelection())
+            if (mv->hasSingleSelectedRow())
             {
-                this->addSeparator(menu);
-                menu.addAction(CIcons::text16(), "Open simulator file", this, &CShowSimulatorFileMenu::ps_showSimulatorFile);
+                const CAircraftModel model(mv->selectedObject());
+                if (model.hasFileName() || (!model.getIconPath().isEmpty() && this->m_messageFrame))
+                {
+                    this->addSeparator(menu);
+                    if (this->m_messageFrame)
+                    {
+                        const CAircraftModel model(mv->selectedObject());
+                        if (!model.getIconPath().isEmpty())
+                        {
+                            this->addSeparator(menu);
+                            menu.addAction(CIcons::appAircraft16(), "Display icon", this, &CShowSimulatorFileMenu::ps_displayIcon);
+                        }
+                    }
+                    menu.addAction(CIcons::text16(), "Open simulator file", this, &CShowSimulatorFileMenu::ps_showSimulatorFile);
+                }
             }
             this->nestedCustomMenu(menu);
         }
@@ -60,21 +78,32 @@ namespace BlackGui
         void CShowSimulatorFileMenu::ps_showSimulatorFile() const
         {
             const CAircraftModelView *mv = modelView();
-            if (!mv->hasSelection()) { return; }
-            const CAircraftModelList models(getSelectedAircraftModels().findWithFileName());
-            if (models.isEmpty()) { return; }
-            int trails = 0;
-
-            for (const CAircraftModel &model : models)
+            if (!mv->hasSingleSelectedRow()) { return; }
+            const CAircraftModel model(mv->selectedObject());
+            if (!model.hasFileName()) { return; }
+            if (QFile::exists(model.getFileName()))
             {
-                trails++;
-                if (QFile::exists(model.getFileName()))
-                {
-                    const QString url("file:///" + model.getFileName());
-                    QDesktopServices::openUrl(QUrl(url));
-                    break;
-                }
-                if (trails > 10) { break; }
+                const QString url("file:///" + model.getFileName());
+                QDesktopServices::openUrl(QUrl(url));
+            }
+        }
+
+        void CShowSimulatorFileMenu::ps_displayIcon()
+        {
+            const CAircraftModelView *mv = modelView();
+            if (!mv->hasSingleSelectedRow()) { return; }
+            const CAircraftModel model(mv->selectedObject());
+            if (model.getIconPath().isEmpty()) { return; }
+            CStatusMessage msg;
+            const CPixmap pm(model.loadIcon(msg));
+            if (msg.isSuccess())
+            {
+                this->m_messageFrame->showOverlayImage(pm);
+            }
+            else
+            {
+                msg.setCategories(getLogCategories());
+                CLogMessage::preformatted(msg);
             }
         }
 
@@ -133,6 +162,14 @@ namespace BlackGui
             {
                 this->modelsTargetUpdatable()->updateModels(models);
             }
+        }
+
+        void CMergeWithDbDataMenu::addSeparator(QMenu &menu) const
+        {
+            // when the menu before us is a DB menu, we ignore the separator
+            if (!this->m_separator) { return; }
+            if (this->previousMenuItemContains("DB", menu)) { return; }
+            IAircraftModelViewMenu::addSeparator(menu);
         }
 
         IModelsSetable *CMergeWithDbDataMenu::modelsTargetSetable() const

@@ -32,13 +32,15 @@ namespace BlackGui
             ui(new Ui::CDbOwnModelSetComponent)
         {
             ui->setupUi(this);
-            ui->tvp_OwnModelSet->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
+            ui->tvp_OwnModelSet->setAircraftModelMode(CAircraftModelListModel::OwnModelSet);
             ui->tvp_OwnModelSet->menuRemoveItems(CAircraftModelView::MenuDisplayAutomaticallyAndRefresh | CAircraftModelView::MenuStashing | CAircraftModelView::MenuBackend | CAircraftModelView::MenuRefresh);
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
             ui->tvp_OwnModelSet->addFilterDialog();
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
             ui->tvp_OwnModelSet->setJsonLoad(CAircraftModelView::AllowOnlySingleSimulator | CAircraftModelView::ReduceToOneSimulator);
-            ui->tvp_OwnModelSet->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnModelSet, this, false));
+            ui->tvp_OwnModelSet->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnModelSet, this, true));
+            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuOrderable);
+            ui->tvp_OwnModelSet->initAsOrderable();
 
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);

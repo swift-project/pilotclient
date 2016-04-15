@@ -291,6 +291,10 @@ namespace BlackGui
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(QMenu &menu) const override;
 
+            protected:
+                //! \copydoc IMenuDelegate::addSeparator
+                virtual void addSeparator(QMenu &menu) const override;
+
             private:
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
@@ -324,6 +328,10 @@ namespace BlackGui
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(QMenu &menu) const override;
+
+            protected:
+                //! \copydoc IMenuDelegate::addSeparator
+                virtual void addSeparator(QMenu &menu) const override;
 
             private:
                 //! Mapping component

@@ -33,7 +33,6 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CShowSimulatorFileMenu(ui->tvp_OwnAircraftModels, false), true);
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
 

@@ -10,8 +10,11 @@
 #ifndef BLACKGUI_MENUS_MENUDELEGATE_H
 #define BLACKGUI_MENUS_MENUDELEGATE_H
 
+#include "blackmisc/logcategorylist.h"
 #include <QMenu>
 #include <QObject>
+
+using namespace BlackMisc;
 
 namespace BlackGui
 {
@@ -37,6 +40,13 @@ namespace BlackGui
             //! Destructor
             virtual ~IMenuDelegate() {}
 
+            //! Log categories
+            const CLogCategoryList &getLogCategories()
+            {
+                static const CLogCategoryList cats({CLogCategory::guiComponent()});
+                return cats;
+            }
+
         protected:
             //! Constructor
             IMenuDelegate(QWidget *parent = nullptr, bool separator = false) :
@@ -50,10 +60,18 @@ namespace BlackGui
             }
 
             //! Add separator
-            void addSeparator(QMenu &menu) const
+            virtual void addSeparator(QMenu &menu) const
             {
                 if (!m_separator || menu.isEmpty()) { return; }
                 menu.addSeparator();
+            }
+
+            //! Does the previous (menu) item contain string?
+            bool previousMenuItemContains(const QString &str, const QMenu &menu, Qt::CaseSensitivity cs = Qt::CaseSensitive) const
+            {
+                if (menu.isEmpty() || str.isEmpty()) { return false; }
+                const QString t(menu.actions().last()->text());
+                return t.contains(str, cs);
             }
 
             IMenuDelegate *m_nestedDelegate = nullptr; //!< nested delegate if any

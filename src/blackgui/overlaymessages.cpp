@@ -131,6 +131,28 @@ namespace BlackGui
         this->display(timeOutMs);
     }
 
+    void COverlayMessages::showOverlayImage(const CPixmap &image, int timeOutMs)
+    {
+        this->showOverlayImage(image.toPixmap(), timeOutMs);
+    }
+
+    void COverlayMessages::showOverlayImage(const QPixmap &image, int timeOutMs)
+    {
+        this->setModeToImage();
+        QSize sizeAvailable = this->ui->fr_StatusMessagesComponentsInner->size();
+        if (sizeAvailable.width() < 300)
+        {
+            // first time inner frame is not giving correct size, workaround
+            sizeAvailable = this->size() * 0.9;
+        }
+
+        this->ui->lbl_Image->setText("");
+        this->ui->lbl_Image->setPixmap(
+            image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation)
+        );
+        this->display(timeOutMs);
+    }
+
     void COverlayMessages::showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs)
     {
         if (variant.canConvert<CStatusMessageList>())
@@ -144,6 +166,14 @@ namespace BlackGui
         else if (variant.canConvert<CTextMessage>())
         {
             showOverlayTextMessage(variant.value<CTextMessage>(), timeOutMs);
+        }
+        else if (variant.canConvert<QPixmap>())
+        {
+            showOverlayImage(variant.value<QPixmap>(), timeOutMs);
+        }
+        else if (variant.canConvert<CPixmap>())
+        {
+            showOverlayImage(variant.value<CPixmap>(), timeOutMs);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type");
     }
@@ -170,6 +200,12 @@ namespace BlackGui
     {
         this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_TextMessage);
         this->setHeader("Text message");
+    }
+
+    void COverlayMessages::setModeToImage()
+    {
+        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_Image);
+        this->setHeader("Image");
     }
 
     void COverlayMessages::setConfirmationMessage(const QString &message)

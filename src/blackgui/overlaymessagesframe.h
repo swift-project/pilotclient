@@ -41,10 +41,11 @@ namespace BlackGui
         //! \copydoc COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
             const BlackMisc::CStatusMessageList &messages,
-            const QString &confirmationMessage,
-            std::function<void()> okLambda,
-            int defaultButton = QMessageBox::Cancel,
-            int timeOutMs = -1);
+            const QString                       &confirmationMessage,
+            std::function<void()>                okLambda,
+            int                                  defaultButton = QMessageBox::Cancel,
+            int                                  timeOutMs = -1
+        );
 
     public slots:
         //! \copydoc COverlayMessages::showOverlayMessages
@@ -58,6 +59,9 @@ namespace BlackGui
 
         //! \copydoc COverlayMessages::showOverlayVariant
         void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
+
+        //! \copydoc COverlayMessages::showOverlayImage
+        void showOverlayImage(const BlackMisc::CPixmap &pixmap, int timeOutMs = -1);
 
     protected:
         //! \copydoc QFrame::paintEvent

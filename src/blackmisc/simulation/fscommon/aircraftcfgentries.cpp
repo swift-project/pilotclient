@@ -10,6 +10,7 @@
 #include "aircraftcfgentries.h"
 #include "blackmisc/variant.h"
 #include <QDir>
+#include <QFile>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -120,7 +121,7 @@ namespace BlackMisc
                 model.setFileName(this->getFileName());
                 model.setName(this->getSimName());
                 model.setUtcTimestamp(this->getUtcTimestamp()); // aircraft.cfg file last modified
-                model.setIconPath(this->getThumbnailFileName());
+                model.setIconPath(this->getThumbnailFileNameChecked());
 
                 const QString designator(CAircraftIcaoCode::normalizeDesignator(getAtcModel()));
                 CAircraftIcaoCode aircraft(
@@ -143,12 +144,20 @@ namespace BlackMisc
                 return model;
             }
 
-            QString CAircraftCfgEntries::getThumbnailFileName() const
+            QString CAircraftCfgEntries::getThumbnailFileNameGuess() const
             {
                 if (this->m_texture.isEmpty()) { return ""; }
                 if (this->m_fileName.isEmpty()) { return ""; }
                 QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + this->m_texture + QDir::separator() + "thumbnail.jpg");
                 return fn;
+            }
+
+            QString CAircraftCfgEntries::getThumbnailFileNameChecked() const
+            {
+                const QString f(getThumbnailFileNameGuess());
+                if (f.isEmpty()) { return ""; }
+                if (QFile(f).exists()) { return f; }
+                return "";
             }
 
             CVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

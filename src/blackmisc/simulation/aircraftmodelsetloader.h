@@ -49,6 +49,10 @@ namespace BlackMisc
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getAircraftModels() const;
 
+            //! The loaded models for given simulator
+            //! \threadsafe
+            BlackMisc::Simulation::CAircraftModelList getAircraftModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+
             //! Count of loaded models
             //! \threadsafe
             int getAircraftModelsCount() const { return getAircraftModels().size(); }

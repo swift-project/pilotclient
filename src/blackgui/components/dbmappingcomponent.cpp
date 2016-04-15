@@ -12,6 +12,7 @@
 #include "blackgui/components/dbautostashingcomponent.h"
 #include "blackgui/components/dbmodelmappingmodifycomponent.h"
 #include "blackgui/components/modelmatchercomponent.h"
+#include "blackgui/menus/aircraftmodelmenus.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/shortcut.h"
@@ -50,10 +51,18 @@ namespace BlackGui
             this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
             this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
 
-            // own models
+            // model menus
+            ui->comp_OwnAircraftModels->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnAircraftModels->view(), this, true));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new CMergeWithVPilotMenu(this));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new COwnModelSetMenu(this, true));
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new CModelStashToolsMenu(this, false));
+
+            ui->comp_OwnModelSet->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnModelSet->view(), this, true));
+            ui->comp_OwnModelSet->view()->setCustomMenu(new CModelStashToolsMenu(this, true));
+
+            ui->comp_StashAircraft->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_StashAircraft->view(), this, true));
+            ui->comp_StashAircraft->view()->setCustomMenu(new CApplyDbDataMenu(this, true));
+            ui->comp_StashAircraft->view()->setCustomMenu(new CModelStashToolsMenu(this, false));
 
             // connects
             connect(ui->editor_Model, &CModelMappingForm::requestStash, this, &CDbMappingComponent::ps_stashCurrentModel);
@@ -75,6 +84,10 @@ namespace BlackGui
 
             connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
 
+            // initial values
+            this->ps_onModelSetCountChanged(ui->comp_OwnModelSet->view()->rowCount(), ui->comp_OwnModelSet->view()->hasFilter());
+            this->ps_onStashCountChanged(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
+
             // how to display forms
             ui->editor_AircraftIcao->setSelectOnly();
             ui->editor_Distributor->setSelectOnly();
@@ -82,7 +95,6 @@ namespace BlackGui
 
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
             this->ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
-            this->ui->comp_StashAircraft->view()->setCustomMenu(new CApplyDbDataMenu(this));
 
             // custom menu
             this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -99,12 +111,13 @@ namespace BlackGui
 
         void CDbMappingComponent::initVPilotLoading()
         {
-            bool canUseVPilot = true; // general flag if vPilot can be used/not used
+            const bool canUseVPilot = true; // general flag if vPilot can be used/not used
             this->m_withVPilot = canUseVPilot && this->m_swiftDbUser.get().isMappingAdmin();
             static const QString tabName(this->ui->tw_ModelsToBeMapped->tabText(TabVPilot));
 
             if (this->m_vPilot1stInit && canUseVPilot)
             {
+                this->m_vPilot1stInit = false;
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onVPilotCountChanged);
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
@@ -119,10 +132,9 @@ namespace BlackGui
                 this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
                 const CAircraftModelList vPilotModels(m_vPilotReader.getAsModelsFromCache());
                 this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(vPilotModels);
-                int noModels = vPilotModels.size();
+                const int noModels = vPilotModels.size();
                 CLogMessage(this).info("%1 cached vPilot models loaded") << noModels;
             }
-            this->m_vPilot1stInit = false;
             this->ui->tab_VPilot->setEnabled(this->m_withVPilot);
             this->ui->tab_VPilot->setVisible(this->m_withVPilot);
             if (this->m_withVPilot)
@@ -750,47 +762,52 @@ namespace BlackGui
         {
             CDbMappingComponent *mapComp = mappingComponent();
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
-            bool canConnectDb = sGui->getWebDataServices()->canConnectSwiftDb();
-            if (canConnectDb)
+            const bool canConnectDb = sGui->getWebDataServices()->canConnectSwiftDb();
+            if (!canConnectDb) { this->nestedCustomMenu(menu); return; }
+
+            if (!mapComp->currentModelView()->isEmpty() && mapComp->currentModelView()->getMenu().testFlag(CViewBaseNonTemplate::MenuCanStashModels))
             {
-                if (!mapComp->currentModelView()->isEmpty() && mapComp->currentModelView()->getMenu().testFlag(CViewBaseNonTemplate::MenuCanStashModels))
+                QMenu *stashMenu = new QMenu("Stash tools", &menu);
+                int dbModels = sGui->getWebDataServices()->getModelsCount();
+                if (dbModels > 0)
                 {
-                    QMenu *stashMenu = new QMenu("Stash tools", &menu);
-                    int dbModels = sGui->getWebDataServices()->getModelsCount();
-                    if (dbModels > 0)
-                    {
-                        // we have keys and data by which we could delete them from view
-                        const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from " + mapComp->currentTabText());
-                        stashMenu->addAction(CIcons::delete16(), msgDelete, mapComp, &CDbMappingComponent::ps_removeDbModelsFromView);
-                    }
+                    // we have keys and data by which we could delete them from view
+                    const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from " + mapComp->currentTabText());
+                    stashMenu->addAction(CIcons::delete16(), msgDelete, mapComp, &CDbMappingComponent::ps_removeDbModelsFromView);
+                }
 
-                    const QString msgAutoStash("Auto stashing");
-                    stashMenu->addAction(CIcons::appDbStash16(), msgAutoStash, mapComp, &CDbMappingComponent::ps_displayAutoStashingDialog);
+                const QString msgAutoStash("Auto stashing");
+                stashMenu->addAction(CIcons::appDbStash16(), msgAutoStash, mapComp, &CDbMappingComponent::ps_displayAutoStashingDialog);
 
-                    if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
-                    {
-                        stashMenu->addAction(CIcons::appDbStash16(), "Last auto stash run", mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults);
-                    }
+                if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
+                {
+                    stashMenu->addAction(CIcons::appDbStash16(), "Last auto stash run", mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults);
+                }
 
-                    // auto filter in DB views
-                    QAction *a = stashMenu->addAction(CIcons::filter16(), "Auto filtering in DB views (on/off)", mapComp, &CDbMappingComponent::ps_toggleAutoFiltering);
-                    a->setCheckable(true);
-                    a->setChecked(mapComp->m_autoFilterInDbViews);
+                // auto filter in DB views
+                QAction *a = stashMenu->addAction(CIcons::filter16(), "Auto filtering in DB views (on/off)", mapComp, &CDbMappingComponent::ps_toggleAutoFiltering);
+                a->setCheckable(true);
+                a->setChecked(mapComp->m_autoFilterInDbViews);
 
-                    // add menu
-                    if (stashMenu->isEmpty())
-                    {
-                        menu.deleteLater();
-                    }
-                    else
-                    {
-                        this->addSeparator(menu);
-                        menu.addMenu(stashMenu);
-                        stashMenu->setIcon(CIcons::appDbStash16());
-                    }
+                // add menu
+                if (stashMenu->isEmpty())
+                {
+                    menu.deleteLater();
+                }
+                else
+                {
+                    this->addSeparator(menu);
+                    menu.addMenu(stashMenu);
+                    stashMenu->setIcon(CIcons::appDbStash16());
                 }
             }
             this->nestedCustomMenu(menu);
+        }
+
+        void CDbMappingComponent::CModelStashToolsMenu::addSeparator(QMenu &menu) const
+        {
+            if (this->previousMenuItemContains("Stash", menu, Qt::CaseInsensitive)) { return; }
+            IMenuDelegate::addSeparator(menu);
         }
 
         CDbMappingComponent *CDbMappingComponent::CModelStashToolsMenu::mappingComponent() const
@@ -825,7 +842,7 @@ namespace BlackGui
                 this->addSeparator(menu);
 
                 // stash view and selection
-                QMenu *subMenu = menu.addMenu(CIcons::database16(), "Apply DB data (to selected)");
+                QMenu *subMenu = menu.addMenu(CIcons::database16(), "Apply editor DB data (to selected)");
                 QAction *a = nullptr;
 
                 a = subMenu->addAction(CIcons::appAircraftIcao16(), "Current aircraft ICAO", mapComp, &CDbMappingComponent::ps_applyDbData);
@@ -840,10 +857,16 @@ namespace BlackGui
                 // a = subMenu->addAction(CIcons::appAirlineIcao16(), "Current airline ICAO", mapComp, &CDbMappingComponent::ps_applyDbData);
                 // a->setData(CAirlineIcaoCode().getClassName());
 
-                menu.addAction(CIcons::databaseTable16(), "Modify model data", mapComp, &CDbMappingComponent::ps_applyDbData);
+                menu.addAction(CIcons::databaseTable16(), "Modify DB model data", mapComp, &CDbMappingComponent::ps_applyDbData);
                 a->setData(CAircraftModel().getClassName());
             }
             this->nestedCustomMenu(menu);
+        }
+
+        void CDbMappingComponent::CApplyDbDataMenu::addSeparator(QMenu &menu) const
+        {
+            if (this->previousMenuItemContains("DB", menu)) { return; }
+            IMenuDelegate::addSeparator(menu);
         }
 
         CDbMappingComponent *CDbMappingComponent::CApplyDbDataMenu::mappingComponent() const

@@ -155,7 +155,11 @@ namespace BlackMisc
                 BlackMisc::Simulation::CAircraftModel toAircraftModel() const;
 
                 //! Thumbnail.jpg path if possible
-                QString getThumbnailFileName() const;
+                QString getThumbnailFileNameGuess() const;
+
+                //! Thumbnail.jpg path if possible, and checked if file exists
+                //! \remark checks file existence, consider I/O load
+                QString getThumbnailFileNameChecked() const;
 
                 //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
                 BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

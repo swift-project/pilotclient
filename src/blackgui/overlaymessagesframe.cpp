@@ -70,6 +70,13 @@ namespace BlackGui
         this->repaint();
     }
 
+    void COverlayMessagesFrame::showOverlayImage(const BlackMisc::CPixmap &pixmap, int timeOutMs)
+    {
+        this->initInnerFrame();
+        this->m_overlayMessages->showOverlayImage(pixmap, timeOutMs);
+        this->repaint();
+    }
+
     void COverlayMessagesFrame::paintEvent(QPaintEvent *event)
     {
         bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);

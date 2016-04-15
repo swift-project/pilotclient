@@ -12,6 +12,7 @@
 
 #include "menudelegate.h"
 #include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include <QMenu>
@@ -48,14 +49,17 @@ namespace BlackGui
 
         public:
             //! Constructor
-            using IAircraftModelViewMenu::IAircraftModelViewMenu;
+            CShowSimulatorFileMenu(BlackGui::Views::CAircraftModelView *modelView, BlackGui::COverlayMessagesFrame *messageFrame, bool separator = true);
 
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(QMenu &menu) const override;
 
         private slots:
-            //! Open simulator file
-            void ps_showSimulatorFile() const;
+            void ps_showSimulatorFile() const; //!< simulator file
+            void ps_displayIcon();             //!< aircraft icon if any
+
+        private:
+            BlackGui::COverlayMessagesFrame *m_messageFrame = nullptr;
         };
 
         //! Merge with DB data
@@ -77,10 +81,14 @@ namespace BlackGui
             void ps_mergeData();
             void ps_mergeSelectedData();
 
+        protected:
+            //! \copydoc IMenuDelegate::addSeparator
+            virtual void addSeparator(QMenu &menu) const override;
+
         private:
-            BlackMisc::Simulation::IModelsSetable *modelsTargetSetable() const;
+            BlackMisc::Simulation::IModelsSetable   *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
-            QObject *m_modelsTarget = nullptr; //!< optional target for setting/updating the models
+            QObject *m_modelsTarget = nullptr;     //!< optional target for setting/updating the models
         };
     } // ns
 } // ns
