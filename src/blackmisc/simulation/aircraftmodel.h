@@ -19,6 +19,7 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/pixmap.h"
 #include <QUrlQuery>
 
 namespace BlackMisc
@@ -71,6 +72,7 @@ namespace BlackMisc
                 IndexLivery,
                 IndexDistributor,
                 IndexFileName,
+                IndexIconPath,
                 IndexModelType,
                 IndexModelTypeAsString,
                 IndexModelMode,
@@ -242,6 +244,15 @@ namespace BlackMisc
             //! File name
             void setFileName(const QString &fileName) { m_fileName = fileName; }
 
+            //! File representing model
+            const QString &getIconPath() const { return m_iconPath; }
+
+            //! File representing model
+            void setIconPath(const QString &iconFile) { m_iconPath = iconFile; }
+
+            //! Load icon from disk
+            CPixmap loadIcon(CStatusMessage &success) const;
+
             //! swift livery string (to be sent via network), "liveryCode [modelString]";
             //! \sa splitNetworkLiveryString
             QString getSwiftLiveryString() const;
@@ -309,6 +320,7 @@ namespace BlackMisc
             QString        m_name;                                 //!< Model name
             QString        m_description;                          //!< descriptive text
             QString        m_fileName;                             //!< file name
+            QString        m_iconPath;                             //!< a file representing the aircraft as icon
             ModelType      m_modelType = TypeUnknown;              //!< model string is coming representing ...?
             ModelMode      m_modelMode = Include;                  //!< model mode (include / exclude)
 
@@ -325,6 +337,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(name),
                 BLACK_METAMEMBER(description, 0, DisabledForComparison),
                 BLACK_METAMEMBER(fileName, 0, DisabledForComparison),
+                BLACK_METAMEMBER(iconPath, 0, DisabledForComparison),
                 BLACK_METAMEMBER(modelType),
                 BLACK_METAMEMBER(modelMode)
             );

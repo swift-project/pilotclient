@@ -55,14 +55,6 @@ namespace BlackMisc
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
             }
 
-            CPixmap CAircraftModelLoaderXPlane::iconForModel(const QString &modelString, CStatusMessage &statusMessage) const
-            {
-                // X-Plane does not have previews. Maybe we can just use the textures?
-                Q_UNUSED(modelString)
-                Q_UNUSED(statusMessage)
-                return {};
-            }
-
             void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
                 if (m_rootDirectory.isEmpty())

@@ -25,10 +25,10 @@ using namespace BlackMisc::Weather;
 namespace BlackCore
 {
     CSimulatorCommon::CSimulatorCommon(const CSimulatorPluginInfo &info,
-                                       BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                       BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                       IPluginStorageProvider *pluginStorageProvider,
-                                       IWeatherGridProvider *weatherGridProvider,
+                                       IPluginStorageProvider                         *pluginStorageProvider,
+                                       IWeatherGridProvider                           *weatherGridProvider,
                                        QObject *parent)
         : ISimulator(parent),
           COwnAircraftAware(ownAircraftProvider),
@@ -146,9 +146,9 @@ namespace BlackCore
 
         // with an interpolator the interpolated situation is used
         // to avoid position jittering when displayed
-        qint64 time = QDateTime::currentMSecsSinceEpoch();
+        const qint64 time = QDateTime::currentMSecsSinceEpoch();
         IInterpolator::InterpolationStatus interpolationStatus;
-        CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), interpolationStatus));
+        const CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), interpolationStatus));
         if (interpolationStatus.interpolationSucceeded)
         {
             aircraft.setSituation(as);

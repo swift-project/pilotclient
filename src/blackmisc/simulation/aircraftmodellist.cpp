@@ -59,6 +59,15 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModel CAircraftModelList::findFirstByCallsignOrDefault(const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) { return CAircraftModel(); }
+            return this->findFirstByOrDefault([ = ](const CAircraftModel & model)
+            {
+                return model.getCallsign() == callsign;
+            });
+        }
+
         CAircraftModelList CAircraftModelList::findByIcaoDesignators(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode) const
         {
             const QString aircraft(aircraftIcaoCode.getDesignator());
@@ -178,6 +187,20 @@ namespace BlackMisc
             {
                 return (model.isMilitary() == military);
             });
+        }
+
+        QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const
+        {
+            if (modelString.isEmpty()) { return ""; }
+            const CAircraftModel m(findFirstByModelStringOrDefault(modelString, Qt::CaseInsensitive));
+            return m.getIconPath();
+        }
+
+        QString CAircraftModelList::findModelIconPathByCallsign(const CCallsign &callsign) const
+        {
+            if (callsign.isEmpty()) { return ""; }
+            const CAircraftModel m(findFirstByCallsignOrDefault(callsign));
+            return m.getIconPath();
         }
 
         QString CAircraftModelList::designatorToFamily(const CAircraftIcaoCode &aircraftIcaoCode) const

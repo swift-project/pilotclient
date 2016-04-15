@@ -134,6 +134,8 @@ namespace BlackMisc
                 return CVariant(this->m_name);
             case IndexFileName:
                 return CVariant(this->m_fileName);
+            case IndexIconPath:
+                return CVariant(this->m_iconPath);
             case IndexAircraftIcaoCode:
                 return m_aircraftIcao.propertyByIndex(index.copyFrontRemoved());
             case IndexLivery:
@@ -180,6 +182,9 @@ namespace BlackMisc
             case IndexFileName:
                 this->m_fileName = variant.toQString();
                 break;
+            case IndexIconPath:
+                this->m_iconPath = variant.toQString();
+                break;
             case IndexModelType:
                 this->m_modelType = variant.value<ModelType>();
                 break;
@@ -225,6 +230,8 @@ namespace BlackMisc
                 return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved());
             case IndexFileName:
                 return this->m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
+            case IndexIconPath:
+                return this->m_iconPath.compare(compareValue.getIconPath(), Qt::CaseInsensitive);
             case IndexModelType:
                 return Compare::compare(this->m_modelType, compareValue.getModelType());
             case IndexModelMode:
@@ -335,6 +342,16 @@ namespace BlackMisc
             return (static_cast<int>(simulator.getSimulator()) & static_cast<int>(this->getSimulatorInfo().getSimulator())) > 0;
         }
 
+        CPixmap CAircraftModel::loadIcon(CStatusMessage &success) const
+        {
+            static const CStatusMessage noIcon(this, CStatusMessage::SeverityInfo, "no icon");
+            if (this->m_iconPath.isEmpty()) { success = noIcon; return CPixmap(); }
+
+            // load from file
+            const CPixmap pm(CPixmap::loadFromFile(this->m_iconPath, success));
+            return pm;
+        }
+
         QString CAircraftModel::getSwiftLiveryString() const
         {
             const QString cc(this->getLivery().getCombinedCode());
@@ -356,13 +373,14 @@ namespace BlackMisc
                 return;
             }
 
-            if (this->m_callsign.isEmpty())    { this->setCallsign(otherModel.getCallsign()); }
-            if (this->m_modelString.isEmpty()) { this->setModelString(otherModel.getModelString()); }
-            if (this->m_description.isEmpty()) { this->setDescription(otherModel.getDescription()); }
-            if (this->m_fileName.isEmpty())    { this->setFileName(otherModel.getFileName()); }
-            if (this->m_callsign.isEmpty())    { this->setCallsign(otherModel.getCallsign()); }
+            if (this->m_callsign.isEmpty())       { this->setCallsign(otherModel.getCallsign()); }
+            if (this->m_modelString.isEmpty())    { this->setModelString(otherModel.getModelString()); }
+            if (this->m_description.isEmpty())    { this->setDescription(otherModel.getDescription()); }
+            if (this->m_fileName.isEmpty())       { this->setFileName(otherModel.getFileName()); }
+            if (this->m_iconPath.isEmpty())       { this->setIconPath(otherModel.getIconPath()); }
+            if (this->m_callsign.isEmpty())       { this->setCallsign(otherModel.getCallsign()); }
             if (this->m_modelType == TypeUnknown) { this->m_modelType = otherModel.getModelType(); }
-            if (this->m_modelMode == Undefined) { this->m_modelType = otherModel.getModelType(); }
+            if (this->m_modelMode == Undefined)   { this->m_modelType = otherModel.getModelType(); }
             if (this->m_simulator.isUnspecified())
             {
                 this->setSimulatorInfo(otherModel.getSimulatorInfo());

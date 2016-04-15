@@ -120,6 +120,7 @@ namespace BlackMisc
                 model.setFileName(this->getFileName());
                 model.setName(this->getSimName());
                 model.setUtcTimestamp(this->getUtcTimestamp()); // aircraft.cfg file last modified
+                model.setIconPath(this->getThumbnailFileName());
 
                 const QString designator(CAircraftIcaoCode::normalizeDesignator(getAtcModel()));
                 CAircraftIcaoCode aircraft(

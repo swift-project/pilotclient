@@ -45,7 +45,6 @@ namespace BlackMisc
 
                 //! \name Interface functions
                 //! @{
-                virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
                 virtual bool isLoadingFinished() const override;
                 virtual bool areModelFilesUpdated() const override;
                 //! @}
@@ -85,8 +84,8 @@ namespace BlackMisc
                 //! Content after "="
                 static QString getFixedIniLineContent(const QString &line);
 
-                CAircraftCfgEntriesList m_parsedCfgEntriesList; //!< parsed entries
-                QPointer<BlackMisc::CWorker> m_parserWorker;    //!< worker will destroy itself, so weak pointer
+                CAircraftCfgEntriesList      m_parsedCfgEntriesList; //!< parsed entries
+                QPointer<BlackMisc::CWorker> m_parserWorker;         //!< worker will destroy itself, so weak pointer
 
                 //! Files to be used
                 static const QString &fileFilter();

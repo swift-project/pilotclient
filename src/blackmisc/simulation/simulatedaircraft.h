@@ -313,6 +313,9 @@ namespace BlackMisc
             //! Get model
             const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_model; }
 
+            //! \copydoc BlackMisc::Simulation::CAircraftModel::getIconPath
+            const QString &getIconPath() const { return m_model.getIconPath(); }
+
             //! Get model string
             QString getModelString() const { return m_model.getModelString(); }
 

@@ -98,9 +98,11 @@ namespace BlackSimPlugin
 
         CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
         {
+            const CAircraftModel model(this->m_modelSetLoader.getModelForModelString(modelString));
+
+            // load from file
             CStatusMessage msg;
-            // CPixmap pm(m_aircraftCfgParser->iconForModel(modelString, msg));
-            CPixmap pm;
+            const CPixmap pm(model.loadIcon(msg));
             if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
             return pm;
         }

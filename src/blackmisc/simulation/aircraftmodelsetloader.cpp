@@ -66,6 +66,18 @@ namespace BlackMisc
             return this->m_caches.getCachedModels(this->m_simulatorInfo);
         }
 
+        CAircraftModelList CAircraftModelSetLoader::getAircraftModels(const CSimulatorInfo &simulator) const
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            return this->m_caches.getCachedModels(simulator);
+        }
+
+        CAircraftModel CAircraftModelSetLoader::getModelForModelString(const QString &modelString) const
+        {
+            if (modelString.isEmpty()) { return CAircraftModel(); }
+            return this->getAircraftModels().findFirstByModelStringOrDefault(modelString);
+        }
+
         QDateTime CAircraftModelSetLoader::getCacheTimestamp() const
         {
             return this->m_caches.getCacheTimestamp(this->m_simulatorInfo);

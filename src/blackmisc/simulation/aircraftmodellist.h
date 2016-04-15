@@ -45,11 +45,14 @@ namespace BlackMisc
             bool containsModelStringOrDbKey(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find by model string
-            //! \remark normally CAircraftModelList::findFirstByModelString would be used
+            //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used
             CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find first by model string
             CAircraftModel findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+
+            //! Find first by callsign
+            CAircraftModel findFirstByCallsignOrDefault(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Find models starting with
             CAircraftModelList findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
@@ -95,6 +98,12 @@ namespace BlackMisc
 
             //! Find by military flag
             CAircraftModelList findByMilitaryFlag(bool military) const;
+
+            //! Model icon path
+            QString findModelIconPathByModelString(const QString &modelString) const;
+
+            //! Model icon path
+            QString findModelIconPathByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! Take a designator and find its family
             QString designatorToFamily(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) const;

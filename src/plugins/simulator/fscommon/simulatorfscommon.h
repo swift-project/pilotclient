@@ -72,10 +72,10 @@ namespace BlackSimPlugin
         protected:
             //! Constructor
             CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
-                               BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
+                               BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                                BlackMisc::Simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                               BlackMisc::IPluginStorageProvider *pluginStorageProvider,
-                               BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
+                               BlackMisc::IPluginStorageProvider              *pluginStorageProvider,
+                               BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
                                QObject *parent = nullptr);
 
             QString simulatorDetails;                               //!< describes version etc.

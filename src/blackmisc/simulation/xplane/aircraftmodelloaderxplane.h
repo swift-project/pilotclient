@@ -43,7 +43,6 @@ namespace BlackMisc
 
                 //! \name Interface functions
                 //! @{
-                virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const override;
                 virtual bool isLoadingFinished() const override;
                 virtual bool areModelFilesUpdated() const override;
                 //! @}

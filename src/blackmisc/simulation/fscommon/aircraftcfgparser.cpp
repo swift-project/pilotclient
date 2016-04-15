@@ -67,34 +67,6 @@ namespace BlackMisc
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
             }
 
-            CPixmap CAircraftCfgParser::iconForModel(const QString &modelString, CStatusMessage &statusMessage) const
-            {
-                static const CPixmap empty {};
-                if (modelString.isEmpty()) { return empty; }
-                CAircraftCfgEntriesList cfgEntries = this->getAircraftCfgEntriesList().findByTitle(modelString);
-                if (cfgEntries.isEmpty())
-                {
-                    statusMessage = CStatusMessage(CStatusMessage::SeverityWarning, QString("No .cfg entry for '%1'").arg(modelString));
-                    return empty;
-                }
-
-                // normally we should have only one entry
-                if (cfgEntries.size() > 1)
-                {
-                    statusMessage = CStatusMessage(CStatusMessage::SeverityWarning, QString("Multiple FSX .cfg entries for '%1'").arg(modelString));
-                }
-
-                // use first with icon
-                for (const CAircraftCfgEntries &entry : cfgEntries)
-                {
-                    const QString thumbnail = entry.getThumbnailFileName();
-                    if (thumbnail.isEmpty()) { continue; }
-                    QPixmap pm;
-                    if (pm.load(thumbnail)) { return CPixmap(pm); }
-                }
-                return empty;
-            }
-
             void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
                 if (mode.testFlag(LoadInBackground))

@@ -83,9 +83,6 @@ namespace BlackMisc
             //! Model files updated?
             virtual bool areModelFilesUpdated() const = 0;
 
-            //! A representive pixmap for given model
-            virtual BlackMisc::CPixmap iconForModel(const QString &modelName, BlackMisc::CStatusMessage &statusMessage) const = 0;
-
             //! Which simulator is supported by that very loader
             const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const;
 
@@ -101,7 +98,7 @@ namespace BlackMisc
             //! Shutdown
             void gracefulShutdown();
 
-            //! \name Implementations of the models interfaces
+            //! \name Implementations of the model interfaces (allows to set models modified in utility functions)
             //! @{
             virtual void setModels(const CAircraftModelList &models) override  { this->setCachedModels(models, this->m_simulatorInfo); }
             virtual void updateModels(const CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->m_simulatorInfo); }
