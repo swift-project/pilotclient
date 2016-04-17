@@ -95,7 +95,7 @@ namespace BlackMisc
             CAircraftModel(const QString &model, ModelType type, const QString &description, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
 
             //! Constructor.
-            CAircraftModel(const QString &model, ModelType type, CSimulatorInfo &simulator, const QString &name, const QString &description, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
+            CAircraftModel(const QString &model, ModelType type, const CSimulatorInfo &simulator, const QString &name, const QString &description, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -227,10 +227,10 @@ namespace BlackMisc
             void setModelModeAsString(const QString &mode);
 
             //! Simulator info
-            CSimulatorInfo getSimulatorInfo() const { return this->m_simulator; }
+            CSimulatorInfo getSimulator() const { return this->m_simulator; }
 
             //! Set simulator info
-            void setSimulatorInfo(const CSimulatorInfo &simulator) { this->m_simulator = simulator; }
+            void setSimulator(const CSimulatorInfo &simulator) { this->m_simulator = simulator; }
 
             //! Matches given simulator?
             bool matchesSimulator(const CSimulatorInfo &simulator) const;

@@ -72,7 +72,7 @@ namespace BlackMisc
                 for (const CAircraftCfgEntries &entries : (*this))
                 {
                     CAircraftModel m(entries.toAircraftModel());
-                    m.setSimulatorInfo(simInfo);
+                    m.setSimulator(simInfo);
                     ml.push_back(m);
                 }
                 return ml;

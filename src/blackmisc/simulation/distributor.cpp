@@ -21,8 +21,8 @@ namespace BlackMisc
             this->setDbKey(key);
         }
 
-        CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2) :
-            m_description(description), m_alias1(alias1.trimmed().toUpper()), m_alias2(alias2.trimmed().toUpper())
+        CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const CSimulatorInfo &simulator) :
+            m_description(description), m_alias1(alias1.trimmed().toUpper()), m_alias2(alias2.trimmed().toUpper()), m_simulator(simulator)
         {
             this->setDbKey(id);
         }
@@ -41,16 +41,24 @@ namespace BlackMisc
             return (distributor.hasAlias2() && this->matchesKeyOrAlias(distributor.getAlias2()));
         }
 
+        bool CDistributor::matchesSimulator(const CSimulatorInfo &simulator) const
+        {
+            return this->m_simulator.matchesAny(simulator);
+        }
+
         CVariant CDistributor::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::propertyByIndex(index); }
+            if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
+
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAlias1: return CVariant::from(this->m_alias1);
             case IndexAlias2: return CVariant::from(this->m_alias2);
             case IndexDescription: return CVariant::from(this->m_description);
+            case IndexSimulator: return m_simulator.propertyByIndex(index.copyFrontRemoved());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -60,6 +68,8 @@ namespace BlackMisc
         {
             if (index.isMyself()) { (*this) = variant.to<CDistributor>(); return; }
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { IDatastoreObjectWithStringKey::setPropertyByIndex(variant, index); return; }
+            if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(variant, index); return; }
+
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -72,6 +82,9 @@ namespace BlackMisc
             case IndexDescription:
                 this->m_description = variant.value<QString>();
                 break;
+            case IndexSimulator:
+                this->m_simulator.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
@@ -81,15 +94,14 @@ namespace BlackMisc
         int CDistributor::comparePropertyByIndex(const CDistributor &compareValue, const CPropertyIndex &index) const
         {
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(compareValue, index); }
+            if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(compareValue, index); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexAlias1:
-                return this->m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
-            case IndexAlias2:
-                return this->m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
-            case IndexDescription:
-                return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexAlias1: return this->m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
+            case IndexAlias2: return this->m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
+            case IndexDescription: return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexSimulator: return this->m_simulator.comparePropertyByIndex(compareValue.m_simulator, index.copyFrontRemoved());
             default:
                 break;
             }
@@ -145,7 +157,7 @@ namespace BlackMisc
                 return CDistributor();
             }
 
-            QString description(json.value(prefix + "description").toString());
+            const QString description(json.value(prefix + "description").toString());
             if (description.isEmpty())
             {
                 // stub, only key, maybe also timestamps
@@ -154,13 +166,13 @@ namespace BlackMisc
                 return distributorStub;
             }
 
-            QString alias1(json.value(prefix + "alias1").toString());
-            QString alias2(json.value(prefix + "alias2").toString());
+            const CSimulatorInfo simulator = CSimulatorInfo::fromDatabaseJson(json, prefix);
+            const QString alias1(json.value(prefix + "alias1").toString());
+            const QString alias2(json.value(prefix + "alias2").toString());
             Q_ASSERT_X(!description.isEmpty(), Q_FUNC_INFO, "Missing description");
-            CDistributor distributor("", description, alias1, alias2);
+            CDistributor distributor("", description, alias1, alias2, simulator);
             distributor.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return distributor;
         }
-
     } // namespace
 } // namespace

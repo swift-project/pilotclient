@@ -43,6 +43,7 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
                     this->m_columns.addColumn(CColumn::standardString("alias1", CDistributor::IndexAlias1));
                     this->m_columns.addColumn(CColumn::standardString("alias2", CDistributor::IndexAlias2));
+                    this->m_columns.addColumn(CColumn::standardString("sim.", "simulator", { CDistributor::IndexSimulator, CSimulatorInfo::IndexString}));
                     this->m_columns.addColumn(CColumn::standardString("changed", CDistributor::IndexUtcTimestampFormattedYmdhms));
 
                     // default sort order

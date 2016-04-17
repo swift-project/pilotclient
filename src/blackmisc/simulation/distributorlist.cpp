@@ -74,5 +74,18 @@ namespace BlackMisc
             return sl;
         }
 
+        CDistributorList CDistributorList::matchesSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const
+        {
+            if (this->isEmpty()) { return CDistributorList(); }
+            CDistributorList distributors;
+            for (const CDistributor &distributor : (*this))
+            {
+                if (distributor.matchesSimulator(simulator))
+                {
+                    distributors.push_back(distributor);
+                }
+            }
+            return distributors;
+        }
     } // namespace
 } // namespace

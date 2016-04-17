@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/orderablelist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include <QObject>
@@ -29,6 +30,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CDistributorList :
             public BlackMisc::CSequence<CDistributor>,
             public BlackMisc::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
+            public BlackMisc::IOrderableList<CDistributor, CDistributorList>,
             public BlackMisc::Mixin::MetaType<CDistributorList>
         {
         public:
@@ -51,6 +53,9 @@ namespace BlackMisc
 
             //! All DB keys and aliases
             QStringList getDbKeysAndAliases(bool sort) const;
+
+            //! Find for given simulator
+            CDistributorList matchesSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
         };
     } //namespace
 } // namespace

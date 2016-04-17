@@ -13,7 +13,9 @@
 #define BLACKMISC_SIMULATION_DISTRIBUTOR_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/orderable.h"
 #include "blackmisc/datastore.h"
 #include "blackmisc/statusmessagelist.h"
 #include <QJsonObject>
@@ -25,7 +27,8 @@ namespace BlackMisc
         //! Value object encapsulating information of software distributor.
         class BLACKMISC_EXPORT CDistributor :
             public BlackMisc::CValueObject<CDistributor>,
-            public BlackMisc::IDatastoreObjectWithStringKey
+            public BlackMisc::IDatastoreObjectWithStringKey,
+            public BlackMisc::IOrderable
         {
         public:
             //! Property indexes
@@ -33,7 +36,8 @@ namespace BlackMisc
             {
                 IndexDescription = CPropertyIndex::GlobalIndexCDistributor,
                 IndexAlias1,
-                IndexAlias2
+                IndexAlias2,
+                IndexSimulator
             };
 
             //! Default constructor.
@@ -43,7 +47,7 @@ namespace BlackMisc
             CDistributor(const QString &key);
 
             //! Constructor
-            CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2);
+            CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const BlackMisc::Simulation::CSimulatorInfo &simulator = BlackMisc::Simulation::CSimulatorInfo());
 
             //! Get description
             const QString &getDescription() const { return this->m_description;}
@@ -72,11 +76,20 @@ namespace BlackMisc
             //! Alias 2?
             bool hasAlias2() const { return !this->m_alias2.isEmpty(); }
 
+            //! Simulator
+            const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const { return m_simulator; }
+
+            //! Set simulator
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) { m_simulator = simulator; }
+
             //! Matches key or alias
             bool matchesKeyOrAlias(const QString &keyOrAlias) const;
 
             //! Matches key or alias
             bool matchesKeyOrAlias(const CDistributor &distributor) const;
+
+            //! Matches simulator
+            bool matchesSimulator(const CSimulatorInfo &simulator) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -103,20 +116,22 @@ namespace BlackMisc
             static CDistributor fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
-            QString m_description; //!< description
-            QString m_alias1;      //!< alias name
-            QString m_alias2;      //!< alias name
+            QString m_description;                             //!< description
+            QString m_alias1;                                  //!< alias name
+            QString m_alias2;                                  //!< alias name
+            BlackMisc::Simulation::CSimulatorInfo m_simulator; //!< simulator
 
             BLACK_METACLASS(
                 CDistributor,
                 BLACK_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(order),
                 BLACK_METAMEMBER(description),
                 BLACK_METAMEMBER(alias1, 0, CaseInsensitiveComparison),
-                BLACK_METAMEMBER(alias2, 0, CaseInsensitiveComparison)
+                BLACK_METAMEMBER(alias2, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(simulator)
             );
         };
-
     } // namespace
 } // namespace
 

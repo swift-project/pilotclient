@@ -155,7 +155,7 @@ namespace BlackMisc
 
                     CAircraftModel model;
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                    model.setSimulatorInfo(m_simulatorInfo);
+                    model.setSimulator(m_simulatorInfo);
                     model.setFileName(aircraftIt.filePath());
                     model.setModelString(modelString);
 
@@ -262,7 +262,7 @@ namespace BlackMisc
                         CDistributor distributor(package.name);
                         model.setDistributor(distributor);
 
-                        model.setSimulatorInfo(m_simulatorInfo);
+                        model.setSimulator(m_simulatorInfo);
                         installedModels.push_back(model);
                     }
                 }

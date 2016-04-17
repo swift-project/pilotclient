@@ -37,7 +37,7 @@ namespace BlackMisc
             m_aircraftIcao(icao), m_livery(livery), m_modelString(model.trimmed().toUpper()), m_description(description.trimmed()), m_modelType(type)
         {}
 
-        CAircraftModel::CAircraftModel(const QString &model, CAircraftModel::ModelType type, CSimulatorInfo &simulator, const QString &name, const QString &description, const CAircraftIcaoCode &icao, const CLivery &livery) :
+        CAircraftModel::CAircraftModel(const QString &model, CAircraftModel::ModelType type, const CSimulatorInfo &simulator, const QString &name, const QString &description, const CAircraftIcaoCode &icao, const CLivery &livery) :
             m_aircraftIcao(icao), m_livery(livery), m_simulator(simulator), m_modelString(model.trimmed().toUpper()), m_name(name.trimmed()), m_description(description.trimmed()), m_modelType(type)
         { }
 
@@ -69,7 +69,7 @@ namespace BlackMisc
             obj.insert("mode", QJsonValue(getModelModeAsString().left(1).toUpper()));
 
             // sims
-            const CSimulatorInfo sim(getSimulatorInfo());
+            const CSimulatorInfo sim(getSimulator());
             QString flag = CDatastoreUtility::boolToDbYN(sim.fsx());
             obj.insert("simfsx", QJsonValue(flag));
             flag = CDatastoreUtility::boolToDbYN(sim.p3d());
@@ -223,7 +223,7 @@ namespace BlackMisc
                 return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
             case IndexSimulatorInfoAsString:
             case IndexSimulatorInfo:
-                return this->m_simulator.comparePropertyByIndex(compareValue.getSimulatorInfo(), index.copyFrontRemoved());
+                return this->m_simulator.comparePropertyByIndex(compareValue.getSimulator(), index.copyFrontRemoved());
             case IndexName:
                 return this->m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
             case IndexCallsign:
@@ -339,7 +339,7 @@ namespace BlackMisc
 
         bool CAircraftModel::matchesSimulator(const CSimulatorInfo &simulator) const
         {
-            return (static_cast<int>(simulator.getSimulator()) & static_cast<int>(this->getSimulatorInfo().getSimulator())) > 0;
+            return (static_cast<int>(simulator.getSimulator()) & static_cast<int>(this->getSimulator().getSimulator())) > 0;
         }
 
         CPixmap CAircraftModel::loadIcon(CStatusMessage &success) const
@@ -383,11 +383,11 @@ namespace BlackMisc
             if (this->m_modelMode == Undefined)   { this->m_modelType = otherModel.getModelType(); }
             if (this->m_simulator.isUnspecified())
             {
-                this->setSimulatorInfo(otherModel.getSimulatorInfo());
+                this->setSimulator(otherModel.getSimulator());
             }
             else
             {
-                this->m_simulator.add(otherModel.getSimulatorInfo());
+                this->m_simulator.add(otherModel.getSimulator());
             }
 
             this->m_livery.updateMissingParts(otherModel.getLivery());
@@ -487,16 +487,11 @@ namespace BlackMisc
             QString modelName(json.value(prefix + "name").toString());
             QString modelMode(json.value(prefix + "mode").toString());
 
-            bool fsx = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfsx").toString());
-            bool fs9 = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfs9").toString());
-            bool xp = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simxplane").toString());
-            bool p3d = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simp3d").toString());
+            const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
+            const CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, "ac_"));
+            const CLivery livery(CLivery::fromDatabaseJson(json, "liv_"));
+            const CDistributor distributor(CDistributor::fromDatabaseJson(json, "dist_"));
 
-            CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, "ac_"));
-            CLivery livery(CLivery::fromDatabaseJson(json, "liv_"));
-            CDistributor distributor(CDistributor::fromDatabaseJson(json, "dist_"));
-
-            CSimulatorInfo simInfo(fsx, fs9, xp, p3d);
             CAircraftModel model(
                 modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription, aircraftIcao, livery
             );

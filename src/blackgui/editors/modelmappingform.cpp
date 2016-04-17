@@ -37,7 +37,7 @@ namespace BlackGui
         BlackMisc::Simulation::CAircraftModel CModelMappingForm::getValue() const
         {
             CAircraftModel model(m_originalModel);
-            model.setSimulatorInfo(this->ui->selector_Simulator->getValue());
+            model.setSimulator(this->ui->selector_Simulator->getValue());
             model.setDescription(this->ui->le_Description->text());
             model.setModelString(this->ui->le_ModelKey->text());
             model.setName(this->ui->le_Name->text());
@@ -73,7 +73,7 @@ namespace BlackGui
             ui->le_Description->setText(model.getDescription());
             ui->le_Name->setText(model.getName());
             ui->selector_ModelMode->setValue(model.getModelMode());
-            ui->selector_Simulator->setValue(model.getSimulatorInfo());
+            ui->selector_Simulator->setValue(model.getSimulator());
             m_originalModel = model;
         }
 

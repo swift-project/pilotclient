@@ -69,7 +69,7 @@ namespace BlackGui
         {
             this->ui->le_Description->setText(model.getDescription());
             this->ui->le_Name->setText(model.getName());
-            this->ui->frp_SimulatorSelector->setValue(model.getSimulatorInfo());
+            this->ui->frp_SimulatorSelector->setValue(model.getSimulator());
             this->ui->frp_IncludeSelector->setValue(model);
         }
 

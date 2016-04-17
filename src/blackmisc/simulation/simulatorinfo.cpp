@@ -10,6 +10,7 @@
 #include "simulatorinfo.h"
 #include "buildconfig.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/datastoreutility.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include <algorithm>
 
@@ -202,6 +203,17 @@ namespace BlackMisc
                 CSimulatorInfo::boolToFlag(fsx, fs9, xp, p3d)
             );
             return sim;
+        }
+
+        CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString prefix)
+        {
+            bool fsx = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfsx").toString());
+            bool fs9 = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfs9").toString());
+            bool xp = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simxplane").toString());
+            bool p3d = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simp3d").toString());
+
+            const CSimulatorInfo simInfo(fsx, fs9, xp, p3d);
+            return simInfo;
         }
 
         CCountPerSimulator::CCountPerSimulator()

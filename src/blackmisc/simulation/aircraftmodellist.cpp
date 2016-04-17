@@ -241,8 +241,8 @@ namespace BlackMisc
             const CSimulatorInfo::Simulator s = info.getSimulator();
             for (CAircraftModel &model : (*this))
             {
-                if (model.getSimulatorInfo().getSimulator() == s) { continue; }
-                model.setSimulatorInfo(info);
+                if (model.getSimulator().getSimulator() == s) { continue; }
+                model.setSimulator(info);
                 c++;
             }
             return c;
@@ -253,7 +253,7 @@ namespace BlackMisc
             CSimulatorInfo::Simulator s = CSimulatorInfo::None;
             for (const CAircraftModel &model : (*this))
             {
-                s |= model.getSimulatorInfo().getSimulator();
+                s |= model.getSimulator().getSimulator();
                 if (s == CSimulatorInfo::All) { break; }
             }
             return CSimulatorInfo(s);
@@ -403,7 +403,7 @@ namespace BlackMisc
             CCountPerSimulator count;
             for (const CAircraftModel &model : (*this))
             {
-                count.increaseSimulatorCounts(model.getSimulatorInfo());
+                count.increaseSimulatorCounts(model.getSimulator());
             }
             return count;
         }
@@ -437,6 +437,20 @@ namespace BlackMisc
             {
                 model.setDistributor(distributor);
             }
+        }
+
+        CDistributorList CAircraftModelList::getDistributors(bool onlyDbDistributors) const
+        {
+            if (this->isEmpty()) { return CDistributorList(); }
+            CDistributorList distributors;
+            for (const CAircraftModel &model : *this)
+            {
+                const CDistributor d(model.getDistributor());
+                if (onlyDbDistributors && !d.hasValidDbKey()) { continue; }
+                if (distributors.contains(d)) { continue; }
+                distributors.push_back(d);
+            }
+            return distributors;
         }
 
         void CAircraftModelList::updateAircraftIcao(const CAircraftIcaoCode &icao)

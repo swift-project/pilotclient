@@ -112,7 +112,7 @@ namespace BlackMisc
                 const CSimulatorInfo sim(CSimulatorInfo::FSX_P3D);
                 model.setMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
                 model.setDistributor(distributor);
-                model.setSimulatorInfo(sim);
+                model.setSimulator(sim);
                 return model;
             }
 

@@ -153,8 +153,11 @@ namespace BlackMisc
             //! Which simulator(s) have the most entries
             CSimulatorInfo simulatorsWithMaxEntries() const;
 
-            //! Update distributors
+            //! Update distributor, all models in list are set to given distributor
             void updateDistributor(const CDistributor &distributor);
+
+            //! All distributors used with models of this list
+            CDistributorList getDistributors(bool onlyDbDistributors = true) const;
 
             //! Update aircraft ICAO
             void updateAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);

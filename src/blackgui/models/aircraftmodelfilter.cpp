@@ -40,7 +40,7 @@ namespace BlackGui
             {
                 if (!m_simulatorInfo.isAllSimulators())
                 {
-                    if (!this->m_simulatorInfo.matchesAny(model.getSimulatorInfo())) { continue; }
+                    if (!this->m_simulatorInfo.matchesAny(model.getSimulator())) { continue; }
                 }
 
                 if (!this->m_modelKey.isEmpty())
