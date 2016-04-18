@@ -23,9 +23,6 @@ namespace BlackGui
     class BLACKGUI_EXPORT CDropBase
     {
     public:
-        //! Set text for drop site
-        void setInfoText(const QString &dropSiteText);
-
         //! Accepted ids
         void setAcceptedMetaTypeIds(const QList<int> &ids);
 
@@ -38,14 +35,14 @@ namespace BlackGui
         //! Drop allowed
         virtual void allowDrop(bool allowed);
 
+        //! Accept drop?
+        bool acceptDrop(const QMimeData *mime) const;
+
         //! Mime data to CVariant (normally encapsulating a value object)
         BlackMisc::CVariant toCVariant(const QMimeData *mime) const;
 
     protected:
         CDropBase();
-
-        //! Accept drop
-        bool acceptDrop(const QMimeData *mime) const;
 
     private:
         bool       m_allowDrop = true;   //!< dropping allowed?

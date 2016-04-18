@@ -33,7 +33,6 @@ namespace BlackCore
                 //! \copydoc BlackMisc::CSettingTrait::isValid
                 static bool isValid(const BlackMisc::Audio::Settings::CSettingsAudio &value) { Q_UNUSED(value); return true; }
             };
-
         } // ns
     } // ns
 } // ns

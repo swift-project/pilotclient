@@ -106,6 +106,9 @@ namespace BlackMisc
             //! Compare by index
             int comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const;
 
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
             //! Can be initialized from FSD
             bool canInitializeFromFsd() const;
 
@@ -283,9 +286,6 @@ namespace BlackMisc
 
             //! Validate
             BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
 
             //! To database JSON
             QJsonObject toDatabaseJson() const;
