@@ -328,6 +328,7 @@ namespace BlackMisc
                 CAircraftModel,
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(order),
                 BLACK_METAMEMBER(callsign),
                 BLACK_METAMEMBER(aircraftIcao),
                 BLACK_METAMEMBER(livery),

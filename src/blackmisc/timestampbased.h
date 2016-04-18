@@ -18,7 +18,6 @@
 
 namespace BlackMisc
 {
-
     //! Entity with timestamp
     class BLACKMISC_EXPORT ITimestampBased
     {
@@ -116,7 +115,8 @@ namespace BlackMisc
 
         qint64 m_timestampMSecsSinceEpoch; //!< timestamp value
     };
-
 } // namespace
+
+Q_DECLARE_INTERFACE(BlackMisc::ITimestampBased, "org.swift-project.blackmisc.itimestampbased")
 
 #endif // guard

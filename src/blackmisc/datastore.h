@@ -24,6 +24,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT IDatastoreObjectWithIntegerKey : public ITimestampBased
     {
+        Q_INTERFACES(BlackMisc::ITimestampBased)
+
     public:
         //! Property index
         enum ColumnIndex
@@ -95,6 +97,8 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT IDatastoreObjectWithStringKey : public ITimestampBased
     {
+        Q_INTERFACES(BlackMisc::ITimestampBased)
+
     public:
         //! Property index
         enum ColumnIndex
@@ -150,5 +154,8 @@ namespace BlackMisc
     };
 
 } // namespace
+
+Q_DECLARE_INTERFACE(BlackMisc::IDatastoreObjectWithIntegerKey, "org.swift-project.blackmisc.idatastoreobjectwithintegerkey")
+Q_DECLARE_INTERFACE(BlackMisc::IDatastoreObjectWithStringKey, "org.swift-project.blackmisc.idatastoreobjectwithstringkey")
 
 #endif // guard
