@@ -27,6 +27,7 @@ namespace BlackMisc
             CAirspaceAircraftSnapshot::registerMetadata();
             CDistributor::registerMetadata();
             CDistributorList::registerMetadata();
+            CDistributorListPreferences::registerMetadata();
             CSimConnectUtilities::registerMetadata();
             CSimulatedAircraft::registerMetadata();
             CSimulatedAircraftList::registerMetadata();
