@@ -22,6 +22,8 @@
 
 namespace BlackGui
 {
+    class COverlayMessagesFrame;
+
     //! GUI utilities
     class BLACKGUI_EXPORT CGuiUtility
     {
@@ -64,6 +66,9 @@ namespace BlackGui
 
         //! Meta type id from dropped data
         static int metaTypeIdFromSwiftDragAndDropData(const QMimeData *mime);
+
+        //! Find next BlackGui::COverlayMessages QFrame
+        static COverlayMessagesFrame *nextOverlayMessageFrame(QWidget *widget, int maxLevels = 10);
 
         //! Metatype
         static const QString &swiftJsonDragAndDropMimeType();

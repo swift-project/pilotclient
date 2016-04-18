@@ -8,6 +8,7 @@
  */
 
 #include "guiutility.h"
+#include "overlaymessagesframe.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/cookiemanager.h"
 #include "blackmisc/filelogger.h"
@@ -158,6 +159,23 @@ namespace BlackGui
         if (typeName.isEmpty()) { return Unknown; }
         int typeId = QMetaType::type(qPrintable(typeName));
         return typeId;
+    }
+
+    COverlayMessagesFrame *CGuiUtility::nextOverlayMessageFrame(QWidget *widget, int maxLevels)
+    {
+        if (!widget || maxLevels < 1) { return nullptr; }
+        COverlayMessagesFrame *o = qobject_cast<COverlayMessagesFrame *> (widget);
+        if (o) { return o; }
+        int cl = 0;
+        QWidget *cw = widget->parentWidget();
+        while (cl < maxLevels && cw)
+        {
+            o = qobject_cast<COverlayMessagesFrame *> (cw);
+            if (o) { return o; }
+            cl++;
+            cw = cw->parentWidget();
+        }
+        return nullptr;
     }
 
     const QString &CGuiUtility::swiftJsonDragAndDropMimeType()
