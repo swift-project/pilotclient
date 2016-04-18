@@ -31,7 +31,7 @@ namespace BlackGui
             this->ui->tvp_AircraftIcao->setResizeMode(CAircraftIcaoCodeView::ResizingOff);
             connect(this->ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::ps_reload);
 
-            this->ui->tvp_AircraftIcao->allowDragDropValueObjects(true, false);
+            this->ui->tvp_AircraftIcao->allowDragDrop(true, false);
             this->ui->tvp_AircraftIcao->setFilterWidget(this->ui->filter_AircraftIcao);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::ps_icaoRead);

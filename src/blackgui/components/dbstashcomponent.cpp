@@ -36,8 +36,8 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
-            this->ui->tvp_StashAircraftModels->allowDragDropValueObjects(false, true);
-            this->ui->tvp_StashAircraftModels->setImplementedMetaTypeIds();
+            this->ui->tvp_StashAircraftModels->allowDragDrop(false, true);
+            this->ui->tvp_StashAircraftModels->setAcceptedMetaTypeIds();
             this->ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuLoadAndSave);
 
             connect(this->ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::ps_onUnstashPressed);

@@ -44,7 +44,7 @@ namespace BlackGui
 
             // configure view
             this->ui->tvp_AircraftModel->setFilterWidget(this->ui->filter_AircraftModelFilter);
-            this->ui->tvp_AircraftModel->allowDragDropValueObjects(true, false);
+            this->ui->tvp_AircraftModel->allowDragDrop(true, false);
 
             connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::ps_modelsRead);
             this->ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount());

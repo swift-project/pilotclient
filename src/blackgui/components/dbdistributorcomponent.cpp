@@ -28,7 +28,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setViewWithIndicator(this->ui->tvp_Distributors);
             this->ui->tvp_Distributors->setResizeMode(CViewBaseNonTemplate::ResizingAuto);
-            this->ui->tvp_Distributors->allowDragDropValueObjects(true, false);
+            this->ui->tvp_Distributors->allowDragDrop(true, false);
             connect(this->ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::ps_reload);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::ps_distributorsRead);
             this->ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());

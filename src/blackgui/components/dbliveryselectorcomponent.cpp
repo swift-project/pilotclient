@@ -150,7 +150,7 @@ namespace BlackGui
         void CDbLiverySelectorComponent::dropEvent(QDropEvent *event)
         {
             if (!event || !acceptDrop(event->mimeData())) { return; }
-            CVariant valueVariant(toCVariant(event->mimeData()));
+            const CVariant valueVariant(toCVariant(event->mimeData()));
             if (valueVariant.isValid())
             {
                 if (valueVariant.canConvert<CLivery>())

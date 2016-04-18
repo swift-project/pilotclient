@@ -32,7 +32,7 @@ namespace BlackGui
 
             // filter and drag and drop
             this->ui->tvp_Countries->setFilterWidget(this->ui->filter_CountryComponent);
-            this->ui->tvp_Countries->allowDragDropValueObjects(true, false);
+            this->ui->tvp_Countries->allowDragDrop(true, false);
 
             connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::ps_countriesRead);
             this->ps_countriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());

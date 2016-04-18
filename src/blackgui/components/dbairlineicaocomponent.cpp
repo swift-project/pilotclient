@@ -30,7 +30,7 @@ namespace BlackGui
             this->setViewWithIndicator(this->ui->tvp_AirlineIcao);
             this->ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);
             this->ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);
-            this->ui->tvp_AirlineIcao->allowDragDropValueObjects(true, false);
+            this->ui->tvp_AirlineIcao->allowDragDrop(true, false);
             this->ui->tvp_AirlineIcao->setFilterWidget(this->ui->filter_AirlineIcao);
             connect(this->ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::ps_reload);
 

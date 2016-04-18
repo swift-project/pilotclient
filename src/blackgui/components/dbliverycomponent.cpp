@@ -31,7 +31,7 @@ namespace BlackGui
 
             // filter and drag and drop
             this->ui->tvp_Liveries->setFilterWidget(this->ui->filter_Livery);
-            this->ui->tvp_Liveries->allowDragDropValueObjects(true, false);
+            this->ui->tvp_Liveries->allowDragDrop(true, false);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::ps_liveriesRead);
             this->ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
