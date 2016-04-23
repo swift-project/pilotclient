@@ -20,6 +20,7 @@
 #include "testgeo.h"
 #include "testidentifier.h"
 #include "testinput.h"
+#include "testlibrarypath.h"
 #include "testmath.h"
 #include "testphysicalquantities.h"
 #include "testvaluecache.h"
@@ -47,6 +48,7 @@ namespace BlackMiscTest
             CTestValueCache valueCacheTests;
             CTestWeather weatherTests;
             CTestMath mathTests;
+            CTestLibraryPath libraryPathTests;
             status |= QTest::qExec(&pqBaseTests, argc, argv);
             status |= QTest::qExec(&avBaseTests, argc, argv);
             status |= QTest::qExec(&geoTests, argc, argv);
@@ -57,6 +59,7 @@ namespace BlackMiscTest
             status |= QTest::qExec(&valueCacheTests, argc, argv);
             status |= QTest::qExec(&weatherTests, argc, argv);
             status |= QTest::qExec(&mathTests, argc, argv);
+            status |= QTest::qExec(&libraryPathTests, argc, argv);
         }
         return status;
     }
