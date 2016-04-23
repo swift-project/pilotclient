@@ -11,14 +11,8 @@ contains(BLACK_CONFIG, Static) {
 }
 
 buildconfig.input = buildconfig.cpp.in
-CONFIG(debug, debug|release) {
-    buildconfig.output = $$OUT_PWD/debug/buildconfig_gen.cpp
-    GENERATED_SOURCES += $$OUT_PWD/debug/buildconfig_gen.cpp
-
-} else {
-    buildconfig.output = $$OUT_PWD/release/buildconfig_gen.cpp
-    GENERATED_SOURCES += $$OUT_PWD/release/buildconfig_gen.cpp
-}
+buildconfig.output = $$DestRoot/buildconfig_gen.cpp
+GENERATED_SOURCES += $$DestRoot/buildconfig_gen.cpp
 QMAKE_SUBSTITUTES += buildconfig
 
 INCLUDEPATH += ..

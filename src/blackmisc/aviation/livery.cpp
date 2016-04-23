@@ -209,7 +209,7 @@ namespace BlackMisc
             return s;
         }
 
-        const QString CLivery::getStandardCode(const CAirlineIcaoCode &airline)
+        QString CLivery::getStandardCode(const CAirlineIcaoCode &airline)
         {
             QString code(airline.getDesignator());
             return code.isEmpty() ? "" : code.append('.').append(standardLiveryMarker());

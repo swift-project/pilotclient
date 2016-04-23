@@ -44,7 +44,7 @@ namespace BlackSimPlugin
                              BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                              QObject *parent = nullptr);
 
-            //! ISimulator implementations
+            //! \name ISimulator implementations
             //! @{
             virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
             virtual bool connectTo() override;

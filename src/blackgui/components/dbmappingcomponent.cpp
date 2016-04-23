@@ -483,8 +483,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_tabIndexChanged(int index)
         {
-            TabIndex ti = static_cast<CDbMappingComponent::TabIndex>(index);
-
+            CDbMappingComponent::TabIndex ti = static_cast<CDbMappingComponent::TabIndex>(index);
             switch (ti)
             {
             case CDbMappingComponent::TabOwnModelSet:
