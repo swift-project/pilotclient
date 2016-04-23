@@ -58,6 +58,25 @@ namespace BlackGui
             QColor         m_highlightColor = Qt::green;
         };
 
+
+        //! List model for DB objects
+        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare = false> class COrderableListModelDbObjects :
+            public CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>
+        {
+        public:
+            //! Destructor
+            virtual ~COrderableListModelDbObjects() {}
+
+            //! \name specialized BlackGui::Models::CListModelDbObjects functions for ordering
+            //! @{
+            virtual int update(const ContainerType &container, bool sort) override;
+            virtual void moveItems(const ContainerType &items, int position) override;
+            //! @}
+
+        protected:
+            //! Constructor
+            COrderableListModelDbObjects(const QString &translationContext, QObject *parent = nullptr);
+        };
     } // namespace
 } // namespace
 #endif // guard

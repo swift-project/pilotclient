@@ -18,7 +18,6 @@
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/loadindicator.h"
-#include "blackgui/dropbase.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
@@ -39,8 +38,7 @@ namespace BlackGui
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used
         class BLACKGUI_EXPORT CViewBaseNonTemplate :
             public QTableView,
-            public BlackGui::Components::CEnableForDockWidgetInfoArea,
-            public BlackGui::CDropBase
+            public BlackGui::Components::CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -79,6 +77,7 @@ namespace BlackGui
                 MenuSave                 = 1 << 6,   //!< save as JSON
                 MenuLoad                 = 1 << 7,   //!< load from JSON
                 MenuToggleSelectionMode  = 1 << 8,   //!< allow to toggle selection mode
+                MenuOrderable            = 1 << 9,   //!< items can be ordered (if container is BlackMisc::IOrderableList
                 MenuStandard             = MenuClear | MenuRemoveSelectedRows | MenuRefresh | MenuBackend |
                                            MenuDisplayAutomatically | MenuFilter | MenuSave | MenuLoad | MenuToggleSelectionMode,
                 MenuLoadAndSave          = MenuLoad  | MenuSave,
@@ -87,9 +86,9 @@ namespace BlackGui
                 MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightDbData      = 1 << 9,   //!< highlight DB data
-                MenuHighlightStashed     = 1 << 10,  //!< highlight stashed models
-                MenuCanStashModels       = 1 << 11,  //!< stash models
+                MenuHighlightDbData      = 1 << 10,   //!< highlight DB data
+                MenuHighlightStashed     = 1 << 11,  //!< highlight stashed models
+                MenuCanStashModels       = 1 << 12,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
@@ -106,20 +105,26 @@ namespace BlackGui
             //! Empty?
             virtual bool isEmpty() const = 0 ;
 
+            //! Elements in container
+            virtual int rowCount() const = 0;
+
+            //! Is the corresponding model orderable, BlackMisc::Models::CListModelBaseNonTemplate::isOrderable
+            virtual bool isOrderable() const = 0;
+
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setSorting
+            virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+
             //! Allow to drag and/or drop value objects
-            virtual void allowDragDropValueObjects(bool allowDrag, bool allowDrop);
+            virtual void allowDragDrop(bool allowDrag, bool allowDrop) = 0;
 
-            //! \copydoc CDropBase::allowDrop
-            virtual void allowDrop(bool allow) override;
+            //! Drop allowed?
+            virtual bool isDropAllowed() const = 0;
 
-            //! \copydoc CDropBase::isDropAllowed
-            virtual bool isDropAllowed() const override;
+            //! Accept drop data?
+            virtual bool acceptDrop(const QMimeData *mimeData) const = 0;
 
             //! \copydoc Components::CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
-
-            //! Elements in container
-            virtual int rowCount() const = 0;
 
             //! Resize mode
             ResizeMode getResizeMode() const { return m_resizeMode; }
@@ -278,23 +283,14 @@ namespace BlackGui
             //! \sa BlackGui::Views::CViewBaseNonTemplate::ps_customMenuRequested
             virtual void customMenu(QMenu &menu) const;
 
-            //! \copydoc QTableView::paintEvent
+            //! \name Functions from QTableView
+            //! @{
             virtual void paintEvent(QPaintEvent *event) override;
-
-            //! \copydoc QTableView::showEvent
             virtual void showEvent(QShowEvent *event) override;
-
-            //! \copydoc QTableView::dragEnterEvent
             virtual void dragEnterEvent(QDragEnterEvent *event) override;
-
-            //! \copydoc QTableView::dragMoveEvent
             virtual void dragMoveEvent(QDragMoveEvent *event) override;
-
-            //! \copydoc QTableView::dragLeaveEvent
             virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
-
-            //! \copydoc QTableView::dropEvent
-            virtual void dropEvent(QDropEvent *event) override;
+            //! @}
 
             //! Perform resizing / non slot method for template
             virtual void performModeBasedResizeToContent() = 0;
@@ -341,7 +337,7 @@ namespace BlackGui
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu     m_menus                          = MenuDefault;           //!< Default menu settings
             BlackGui::Menus::IMenuDelegate    *m_menu = nullptr;               //!< custom menu if any
-            BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if neeeded
+            BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if needed
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
@@ -428,9 +424,6 @@ namespace BlackGui
             //! Model
             const ModelClass *derivedModel() const { return this->m_model; }
 
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::clear
-            virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
-
             //! Update whole container
             //! \return int size after update
             int updateContainer(const ContainerType &container, bool sort = true, bool resize = true);
@@ -458,12 +451,6 @@ namespace BlackGui
 
             //! Selected objects
             ContainerType selectedObjects() const;
-
-            //! \name Slot overrides from base class
-            //! @{
-            virtual int removeSelectedRows() override;
-            virtual void presizeOrFullResizeToContents() override;
-            //! @}
 
             //! Update selected objects
             int updateSelected(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
@@ -495,14 +482,26 @@ namespace BlackGui
                 this->updateContainerMaybeAsync(copy);
             }
 
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::rowCount
+            //! \name Slot overrides from base class
+            //! @{
+            virtual int removeSelectedRows() override;
+            virtual void presizeOrFullResizeToContents() override;
+            //! @}
+
+            //! \name BlackGui::Views::CViewBaseNonTemplate implementations
+            //! @{
+            virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
             virtual int rowCount() const override;
+            virtual bool isEmpty() const override;
+            virtual bool isOrderable() const override;
+            virtual void allowDragDrop(bool allowDrag, bool allowDrop) override;
+            virtual bool isDropAllowed() const override;
+            virtual bool acceptDrop(const QMimeData *mimeData) const override;
+            virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            //! @}
 
             //! Column count
             int columnCount() const;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::isEmpty
-            virtual bool isEmpty() const override;
 
             //! Convert to JSON
             QJsonObject toJson() const;
@@ -522,6 +521,15 @@ namespace BlackGui
             //! Has filter set?
             bool hasFilter() const;
 
+            //! Add the object and container type as accepted drop types CDropBase::addAcceptedMetaTypeId
+            void addContainerTypesAsDropTypes(bool objectType = true, bool containerType = true);
+
+            //! Init so items can be ordered
+            void initAsOrderable();
+
+            //! Drop actions
+            void setDropActions(Qt::DropActions dropActions) { Q_ASSERT(this->m_model); this->m_model->setDropActions(dropActions); }
+
         protected:
             ModelClass *m_model = nullptr; //!< corresponding model
 
@@ -534,14 +542,12 @@ namespace BlackGui
             //! Standard initialization
             void standardInit(ModelClass *model = nullptr);
 
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::reachedResizeThreshold
+            //! \name base class implementations
+            //! @{
             virtual bool reachedResizeThreshold(int containrerSize = -1) const override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::performModeBasedResizeToContent
             virtual void performModeBasedResizeToContent() override;
-
-            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
+            //! @}
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
             virtual BlackMisc::CStatusMessage modifyLoadedJsonData(ContainerType &data) const;

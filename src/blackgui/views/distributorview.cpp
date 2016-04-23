@@ -17,7 +17,7 @@ namespace BlackGui
     namespace Views
     {
         CDistributorView::CDistributorView(QWidget *parent) :
-            CViewWithDbObjects(parent)
+            COrderableViewWithDbObjects(parent)
         {
             this->standardInit(new CDistributorListModel(this));
             this->setMenu(MenuDefaultDbViews);

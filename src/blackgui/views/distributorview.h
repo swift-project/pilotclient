@@ -22,7 +22,7 @@ namespace BlackGui
     {
         //! Distributors
         class BLACKGUI_EXPORT CDistributorView :
-            public CViewWithDbObjects<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor, QString>
+            public COrderableViewWithDbObjects<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor, QString>
         {
         public:
             //! Constructor

@@ -94,7 +94,6 @@ namespace BlackGui
             }
         }
 
-
         void CViewBaseNonTemplate::setFilterDialog(CFilterDialog *filterDialog)
         {
             this->setFilterWidgetImpl(filterDialog);
@@ -303,25 +302,6 @@ namespace BlackGui
             QTableView::showEvent(event);
         }
 
-        void CViewBaseNonTemplate::allowDragDropValueObjects(bool allowDrag, bool allowDrop)
-        {
-            // see model for implementing logic of drag
-            this->setAcceptDrops(allowDrop);
-            this->setDragEnabled(allowDrag);
-            this->setDropIndicatorShown(allowDrop);
-            CDropBase::allowDrop(allowDrop);
-        }
-
-        void CViewBaseNonTemplate::allowDrop(bool allow)
-        {
-            this->allowDragDropValueObjects(this->dragEnabled(), allow);
-        }
-
-        bool CViewBaseNonTemplate::isDropAllowed() const
-        {
-            return this->acceptDrops();
-        }
-
         int CViewBaseNonTemplate::getHorizontalHeaderFontHeight() const
         {
             QFontMetrics m(this->getHorizontalHeaderFont());
@@ -518,10 +498,10 @@ namespace BlackGui
             this->setVisible(false);
             // magic trick from:
             // http://stackoverflow.com/q/3433664/356726
-            const QRect vporig = this->viewport()->geometry();
-            QRect vpnew = vporig;
-            vpnew.setWidth(std::numeric_limits<int>::max());
-            this->viewport()->setGeometry(vpnew);
+            const QRect vpOriginal = this->viewport()->geometry();
+            QRect vpNew = vpOriginal;
+            vpNew.setWidth(std::numeric_limits<int>::max());
+            this->viewport()->setGeometry(vpNew);
 
             this->m_resizeCount++;
             this->resizeColumnsToContents(); // columns
@@ -531,14 +511,8 @@ namespace BlackGui
                 // re-stretch
                 this->horizontalHeader()->setStretchLastSection(true);
             }
-
-            this->viewport()->setGeometry(vporig);
+            this->viewport()->setGeometry(vpOriginal);
             this->setVisible(true);
-        }
-
-        void CViewBaseNonTemplate::presizeOrFullResizeToContents()
-        {
-
         }
 
         void CViewBaseNonTemplate::ps_customMenuRequested(QPoint pos)
@@ -601,14 +575,14 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::dragEnterEvent(QDragEnterEvent *event)
         {
-            if (!event || !acceptDrop(event->mimeData())) { return; }
+            if (!event || !this->acceptDrop(event->mimeData())) { return; }
             setBackgroundRole(QPalette::Highlight);
             event->acceptProposedAction();
         }
 
         void CViewBaseNonTemplate::dragMoveEvent(QDragMoveEvent *event)
         {
-            if (!event || !acceptDrop(event->mimeData())) { return; }
+            if (!event || !this->acceptDrop(event->mimeData())) { return; }
             event->acceptProposedAction();
         }
 
@@ -616,11 +590,6 @@ namespace BlackGui
         {
             if (!event) { return; }
             event->accept();
-        }
-
-        void CViewBaseNonTemplate::dropEvent(QDropEvent *event)
-        {
-            Q_UNUSED(event);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -646,7 +615,7 @@ namespace BlackGui
 
             // we have data
             this->showLoadIndicator(container.size());
-            bool reallyResize = resize && isResizeConditionMet(container.size()); // do we really perform resizing
+            const bool reallyResize = resize && isResizeConditionMet(container.size()); // do we really perform resizing
             bool presize = (m_resizeMode == PresizeSubset) &&
                            this->isEmpty() && // only when no data yet
                            !reallyResize;     // not when we resize later
@@ -895,6 +864,47 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
+        bool CViewBase<ModelClass, ContainerType, ObjectType>::isOrderable() const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->isOrderable();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::allowDragDrop(bool allowDrag, bool allowDrop)
+        {
+            Q_ASSERT(this->m_model);
+
+            // see model for implementing logic of drag
+            this->viewport()->setAcceptDrops(allowDrop);
+            this->setDragEnabled(allowDrag);
+            this->setDropIndicatorShown(allowDrop);
+            this->m_model->allowDrop(allowDrop);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        bool CViewBase<ModelClass, ContainerType, ObjectType>::isDropAllowed() const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->isDropAllowed();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        bool CViewBase<ModelClass, ContainerType, ObjectType>::acceptDrop(const QMimeData *mimeData) const
+        {
+            Q_ASSERT(this->m_model);
+            const bool a = this->m_model->acceptDrop(mimeData);
+            return a;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        {
+            Q_ASSERT(this->m_model);
+            this->m_model->setSorting(propertyIndex, order);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
         QJsonObject CViewBase<ModelClass, ContainerType, ObjectType>::toJson() const
         {
             Q_ASSERT(this->m_model);
@@ -934,6 +944,23 @@ namespace BlackGui
         bool CViewBase<ModelClass, ContainerType, ObjectType>::hasFilter() const
         {
             return derivedModel()->hasFilter();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::addContainerTypesAsDropTypes(bool objectType, bool containerType)
+        {
+            if (objectType) { this->m_model->addAcceptedMetaTypeId(qMetaTypeId<ObjectType>()); }
+            if (containerType) { this->m_model->addAcceptedMetaTypeId(qMetaTypeId<ContainerType>()); }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::initAsOrderable()
+        {
+            Q_ASSERT_X(isOrderable(), Q_FUNC_INFO, "Model not orderable");
+            this->allowDragDrop(true, true);
+            this->setDragDropMode(InternalMove);
+            this->setDropActions(Qt::MoveAction);
+            this->addContainerTypesAsDropTypes(true, true);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

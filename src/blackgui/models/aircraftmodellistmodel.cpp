@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Models
     {
         CAircraftModelListModel::CAircraftModelListModel(AircraftModelMode mode, QObject *parent) :
-            CListModelDbObjects("CAircraftModelListModel", parent)
+            COrderableListModelDbObjects("CAircraftModelListModel", parent)
         {
             this->setAircraftModelMode(mode);
 
@@ -60,16 +60,23 @@ namespace BlackGui
                 this->m_sortOrder = Qt::AscendingOrder;
                 break;
 
+            case OwnModelSet:
+                // intentional fall thru
+                this->m_columns.addColumn(CColumn::orderColumn());
+
             case OwnSimulatorModelMapping:
                 this->m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
                 this->m_columns.addColumn(CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
                 this->m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
                 // this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraftModel::IndexCallsign));
                 this->m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey}));
+                if (mode == OwnModelSet)
+                {
+                    this->m_columns.addColumn(CColumn::standardString("d#", "distributor order", { CAircraftModel::IndexDistributor, CDistributor::IndexOrderString}));
+                }
                 this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator}));
                 this->m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily}));
                 this->m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator}));
-                // this->m_columns.addColumn(CColumn::standardString("ct", "combined type", { CAircraftModel::IndexIcao, CAircraftIcaoData::IndexCombinedAircraftType}));
                 this->m_columns.addColumn(CColumn::standardString("description",  CAircraftModel::IndexDescription));
                 this->m_columns.addColumn(CColumn::standardString("filename",  CAircraftModel::IndexFileName));
                 this->m_columns.addColumn(CColumn::standardString("icon",  CAircraftModel::IndexIconPath));

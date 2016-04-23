@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/modelfilter.h"
+#include "blackgui/dropbase.h"
 #include "blackmisc/worker.h"
 #include <QStandardItemModel>
 #include <QThread>
@@ -27,7 +28,9 @@ namespace BlackGui
     namespace Models
     {
         //! Non templated base class, allows Q_OBJECT and signals to be used
-        class BLACKGUI_EXPORT CListModelBaseNonTemplate : public QStandardItemModel
+        class BLACKGUI_EXPORT CListModelBaseNonTemplate :
+            public QStandardItemModel,
+            public BlackGui::CDropBase
         {
             Q_OBJECT
 
@@ -38,17 +41,17 @@ namespace BlackGui
             //! Destructor
             virtual ~CListModelBaseNonTemplate() {}
 
-            //! \copydoc QStandardItemModel::columnCount()
+            //! \name Functions from QStandardItemModel
+            //! @{
             virtual int columnCount(const QModelIndex &modelIndex = QModelIndex()) const override;
-
-            //! \copydoc QStandardItemModel::headerData()
             virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-
-            //! \copydoc QStandardItemModel::headerData()
             virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
-
-            //! \copydoc QStandardItemModel::parent()
             virtual QModelIndex parent(const QModelIndex &child) const override;
+            virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+            virtual Qt::DropActions supportedDragActions() const override;
+            virtual Qt::DropActions supportedDropActions() const override;
+            virtual QStringList mimeTypes() const override;
+            //! @}
 
             //! Column to property index
             virtual BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
@@ -66,6 +69,9 @@ namespace BlackGui
             //! \param propertyIndex index of column to be sorted
             virtual void setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex);
 
+            //! Sorting
+            virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+
             //! Get sort column property index
             virtual int getSortColumn() const { return this->m_sortedColumn; }
 
@@ -78,23 +84,17 @@ namespace BlackGui
             //! Translation context
             virtual const QString &getTranslationContext() const;
 
-            //! \copydoc QStandardItemModel::flags
-            virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
-
-            //! \copydoc QStandardItemModel::supportedDragActions
-            virtual Qt::DropActions supportedDragActions() const override;
-
-            //! \copydoc QStandardItemModel::supportedDropActions
-            virtual Qt::DropActions supportedDropActions() const override;
-
-            //! \copydoc QStandardItemModel::mimeTypes
-            virtual QStringList mimeTypes() const override;
+            //! Orderable, normally use a container BlackMisc::IOrderableList
+            virtual bool isOrderable() const = 0;
 
             //! Mark as about to be destroyed, normally marked from view
             void markDestroyed();
 
             //! Model about to be destroyed?
             bool isModelDestroyed();
+
+            //! Drop actions
+            void setDropActions(Qt::DropActions dropActions) { this->m_dropActions = dropActions; }
 
             //! Send signal that data have been changed.
             //! \note Meant for scenarios where the container is directly updated and a subsequent signal is required
@@ -127,17 +127,18 @@ namespace BlackGui
 
         protected:
             //! Constructor
-            //! \param translationContext    I18N context
+            //! \param translationContext I18N context
             //! \param parent
             CListModelBaseNonTemplate(const QString &translationContext, QObject *parent = nullptr);
 
             //! Helper method with template free signature
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) = 0;
 
-            CColumns m_columns;            //!< columns metadata
-            int m_sortedColumn;            //!< current sort column
-            Qt::SortOrder m_sortOrder;     //!< sort order (asc/desc)
-            bool m_modelDestroyed = false; //!< model is about to be destroyed
+            CColumns        m_columns;                            //!< columns metadata
+            int             m_sortedColumn;                       //!< current sort column
+            Qt::SortOrder   m_sortOrder;                          //!< sort order (asc/desc)
+            bool            m_modelDestroyed = false;             //!< model is about to be destroyed
+            Qt::DropActions m_dropActions    = Qt::IgnoreAction;  //!< drop actions
         };
 
         //! List model
@@ -146,6 +147,24 @@ namespace BlackGui
         public:
             //! Destructor
             virtual ~CListModelBase() {}
+
+            //! \name Functions from QStandardItemModel
+            //! @{
+            virtual QVariant data(const QModelIndex &index, int role) const override;
+            virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+            virtual QMimeData *mimeData(const QModelIndexList &indexes) const override;
+            virtual void sort(int column, Qt::SortOrder order) override;
+            virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const override;
+            virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const override;
+            virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+            //! @}
+
+            //! \name Functions from CListModelBaseNonTemplate
+            //! @{
+            virtual QJsonObject toJson() const override;
+            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const override;
+            virtual bool isOrderable() const override;
+            //! @}
 
             //! Valid index (in range)
             virtual bool isValidIndex(const QModelIndex &index) const;
@@ -156,19 +175,9 @@ namespace BlackGui
             //! Full container or cached filtered container as approproiate
             const ContainerType &containerOrFilteredContainer() const;
 
-            //! \copydoc QStandardItemModel::data()
-            virtual QVariant data(const QModelIndex &index, int role) const override;
-
-            //! \copydoc QStandardItemModel::setData()
-            //! \sa CListModelBaseNonTemplate::flags
-            virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
-
             //! Simple set of data in container, using class is responsible for firing signals etc.
             //! \sa sendDataChanged
             bool setInContainer(const QModelIndex &index, const ObjectType &obj);
-
-            //! \copydoc QStandardItemModel::rowCount()
-            virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const override;
 
             //! Update by new container
             //! \return int size after update
@@ -187,14 +196,14 @@ namespace BlackGui
             //! Update single element
             virtual void update(int rowIndex, const ObjectType &object);
 
+            //! Move items to position
+            virtual void moveItems(const ContainerType &items, int position);
+
             //! Object at row position
             virtual const ObjectType &at(const QModelIndex &index) const;
 
             //! Sort by given sort order \sa getSortColumn() \sa getSortOrder()
             void sort();
-
-            //! \copydoc QStandardItemModel::sort()
-            virtual void sort(int column, Qt::SortOrder order) override;
 
             //! Truncate to given number
             void truncate(int maxNumber, bool forceSort = false);
@@ -234,15 +243,6 @@ namespace BlackGui
 
             //! Empty?
             virtual bool isEmpty() const;
-
-            //! \copydoc QStandardItemModel::mimeData
-            virtual QMimeData *mimeData(const QModelIndexList &indexes) const override;
-
-            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::toJsonString
-            virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const override;
 
             //! Filter available
             bool hasFilter() const;
@@ -286,9 +286,8 @@ namespace BlackGui
             template <typename ObjectType>
             bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const BlackMisc::CPropertyIndex &index, std::false_type)
             {
-                Q_UNUSED(index);
-                BlackMisc::CVariant aQv = a.propertyByIndex(index);
-                BlackMisc::CVariant bQv = b.propertyByIndex(index);
+                const BlackMisc::CVariant aQv = a.propertyByIndex(index);
+                const BlackMisc::CVariant bQv = b.propertyByIndex(index);
                 return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
             }
         } // namespace

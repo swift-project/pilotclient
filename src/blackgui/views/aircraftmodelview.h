@@ -23,7 +23,7 @@ namespace BlackGui
     {
         //! Aircraft view
         class BLACKGUI_EXPORT CAircraftModelView :
-            public CViewWithDbObjects<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>
+            public COrderableViewWithDbObjects<Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>
         {
             Q_OBJECT
 
@@ -59,7 +59,7 @@ namespace BlackGui
             bool hasSelectedModelsToStash() const;
 
             //! Add the technically supported metatypes allowed for drag and drop
-            void setImplementedMetaTypeIds();
+            void setAcceptedMetaTypeIds();
 
             //! Add my own filter dialog
             void addFilterDialog();

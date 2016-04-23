@@ -51,6 +51,37 @@ namespace BlackGui
             //! \copydoc BlackGui::Views::CViewBase::ps_toggleHighlightDbData
             virtual void ps_toggleHighlightDbData() override;
         };
+
+        //! Base class for views with DB objects
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType> class COrderableViewWithDbObjects :
+            public CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>
+        {
+        protected:
+            //! Constructor
+            explicit COrderableViewWithDbObjects(QWidget *parent = nullptr);
+
+            //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
+            virtual void customMenu(QMenu &menu) const override;
+
+            //! Move selected items
+            void moveSelectedItems(int order);
+
+        protected slots:
+            //! Order to top
+            void ps_orderToTop();
+
+            //! Order to bottom
+            void ps_orderToBottom();
+
+            //! Order to line edit
+            void ps_orderToLineEdit();
+
+            //! Current order set as order
+            void ps_freezeCurrentOrder();
+
+        private:
+            QList<QAction *> m_menuActions;
+        };
     } // namespace
 } // namespace
 #endif // guard

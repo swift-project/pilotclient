@@ -25,7 +25,7 @@ namespace BlackGui
     {
         //! Aircraft model list model
         class BLACKGUI_EXPORT CAircraftModelListModel :
-            public CListModelDbObjects<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>
+            public COrderableListModelDbObjects<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>
         {
         public:
             //! How to display
@@ -34,6 +34,7 @@ namespace BlackGui
             {
                 NotSet,
                 OwnSimulatorModel,         //!< models existing for my simulator
+                OwnModelSet,               //!< own model set
                 OwnSimulatorModelMapping,  //!< models of my simulator, but in mapping mode
                 Database,                  //!< Database entry
                 VPilotRuleModel,           //!< vPilot rule turned into model
@@ -73,11 +74,14 @@ namespace BlackGui
             //! \copydoc QAbstractItemModel::data
             virtual QVariant data(const QModelIndex &index, int role) const override;
 
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::isOrderable
+            virtual bool isOrderable() const override { return true; }
+
         private:
-            AircraftModelMode m_mode = NotSet;          //!< current mode
-            bool m_highlightModelStrings = false;       //!< highlight in in model strings
-            QStringList m_highlightStrings;             //!< model strings to highlight
-            QBrush      m_highlightColor{Qt::yellow};   //!< how to highlight
+            AircraftModelMode m_mode = NotSet;                  //!< current mode
+            bool              m_highlightModelStrings = false;  //!< highlight in in model strings
+            QStringList       m_highlightStrings;               //!< model strings to highlight
+            QBrush            m_highlightColor{Qt::yellow};     //!< how to highlight
         };
     } // ns
 } // ns

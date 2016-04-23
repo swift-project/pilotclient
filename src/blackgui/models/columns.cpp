@@ -88,6 +88,11 @@ namespace BlackGui
             return CColumn(headerName, toolTip, propertyIndex, new CStringFormatter(alignment));
         }
 
+        CColumn CColumn::orderColumn(const CPropertyIndex &propertyIndex, int alignment)
+        {
+            return CColumn("#", "order", propertyIndex, new CStringFormatter(alignment));
+        }
+
         // --------------- columns ----------------------------------------------
 
         CColumns::CColumns(const QString &translationContext, QObject *parent) :

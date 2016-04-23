@@ -18,7 +18,7 @@ namespace BlackGui
     namespace Models
     {
         CDistributorListModel::CDistributorListModel(QObject *parent) :
-            CListModelDbObjects("ModelDistributorList", parent)
+            COrderableListModelDbObjects("ModelDistributorList", parent)
         {
             this->setDistributorMode(Normal);
 
@@ -36,6 +36,8 @@ namespace BlackGui
             this->m_columns.clear();
             switch (distributorMode)
             {
+            case NormalWithOrder:
+                this->m_columns.addColumn(CColumn::orderColumn());
             case NotSet:
             case Normal:
                 {

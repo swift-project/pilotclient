@@ -32,7 +32,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CAircraftModelView::CAircraftModelView(QWidget *parent) : CViewWithDbObjects(parent)
+        CAircraftModelView::CAircraftModelView(QWidget *parent) : COrderableViewWithDbObjects(parent)
         {
             // default
             this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnSimulatorModel, this));
@@ -105,9 +105,10 @@ namespace BlackGui
             return m_menus.testFlag(MenuCanStashModels) && hasSelection();
         }
 
-        void CAircraftModelView::setImplementedMetaTypeIds()
+        void CAircraftModelView::setAcceptedMetaTypeIds()
         {
-            this->setAcceptedMetaTypeIds(
+            Q_ASSERT(this->m_model);
+            this->m_model->setAcceptedMetaTypeIds(
             {
                 qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>(),
                 qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>(),
@@ -176,7 +177,8 @@ namespace BlackGui
 
         void CAircraftModelView::dropEvent(QDropEvent *event)
         {
-            if (!isDropAllowed()) { return; }
+
+            if (!this->isDropAllowed()) { return; }
             if (!event) { return; }
             const QMimeData *mime = event->mimeData();
             if (!mime) { return; }
@@ -290,7 +292,7 @@ namespace BlackGui
                 menu.addMenu(stashMenu);
                 stashMenu->setIcon(CIcons::appDbStash16());
             }
-            CViewWithDbObjects::customMenu(menu);
+            COrderableViewWithDbObjects::customMenu(menu);
         }
 
         CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
@@ -338,7 +340,7 @@ namespace BlackGui
                 if (sim.isSingleSimulator()) { return ok; }
                 return CStatusMessage(this, CStatusMessage::SeverityError, "data need to be from one simulator");
             }
-            return CViewWithDbObjects::validateLoadedJsonData(models);
+            return COrderableViewWithDbObjects::validateLoadedJsonData(models);
         }
 
         void CAircraftModelView::jsonLoadedAndModelUpdated(const CAircraftModelList &models)

@@ -57,6 +57,37 @@ namespace BlackGui
             return m_highlightKeys.contains(dbKeyForIndex(index));
         }
 
+        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>
+        COrderableListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::COrderableListModelDbObjects(const QString &translationContext, QObject *parent)
+            : CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>(translationContext, parent)
+        { }
+
+        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>
+        void COrderableListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::moveItems(const ContainerType &items, int position)
+        {
+            if (items.isEmpty()) { return; }
+            ContainerType container(this->container());
+            int order = 0;
+            if (position >= 0 && position < container.size())
+            {
+                order = container[position].getOrder();
+            }
+            container.moveTo(items, order);
+            this->updateContainerMaybeAsync(container);
+        }
+
+        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>
+        int COrderableListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::update(const ContainerType &container, bool sort)
+        {
+            if (container.needsOrder())
+            {
+                ContainerType orderable(container);
+                orderable.resetOrder();
+                return CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::update(orderable, sort);
+            }
+            return CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::update(container, sort);
+        }
+
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CListModelDbObjects<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int, true>;
@@ -65,6 +96,8 @@ namespace BlackGui
         template class CListModelDbObjects<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int, true>;
         template class CListModelDbObjects<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>;
         template class CListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>;
+        template class COrderableListModelDbObjects<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int, true>;
+        template class COrderableListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>;
 
     } // namespace
 } // namespace

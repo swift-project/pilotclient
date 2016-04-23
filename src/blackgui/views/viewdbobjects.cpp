@@ -10,6 +10,9 @@
 #include "viewdbobjects.h"
 #include "blackgui/models/allmodels.h"
 #include <QAction>
+#include <QWidgetAction>
+#include <QLineEdit>
+#include <QIntValidator>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -84,7 +87,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
         void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(QMenu &menu) const
         {
-            if (this->m_menus.testFlag(CViewBase<ModelClass, ContainerType, ObjectType>::MenuHighlightDbData))
+            if (this->m_menus.testFlag(CViewBaseNonTemplate::MenuHighlightDbData))
             {
                 QAction *a = menu.addAction(CIcons::database16(), "Highlight DB data", this, &CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleHighlightDbData);
                 a->setCheckable(true);
@@ -100,14 +103,91 @@ namespace BlackGui
             this->derivedModel()->setHighlightDbData(!h);
         }
 
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::COrderableViewWithDbObjects(QWidget *parent) :
+            CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::CViewWithDbObjects(parent)
+        {
+            // void
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(QMenu &menu) const
+        {
+            if (this->m_menus.testFlag(CViewBaseNonTemplate::MenuOrderable) && this->hasSelection())
+            {
+                const int maxOrder = this->rowCount() - 1;
+                QMenu *menuOrder = menu.addMenu(CIcons::arrowMediumEast16(), "Order");
+
+                QLineEdit *leOrder = new QLineEdit(&menu);
+                leOrder->setPlaceholderText("New order 0-" + QString::number(maxOrder));
+                const QIntValidator *v = new QIntValidator(0, maxOrder, leOrder);
+                leOrder->setValidator(v);
+                QWidgetAction *orderAction = new QWidgetAction(&menu);
+                orderAction->setDefaultWidget(leOrder);
+                menuOrder->addAction(orderAction);
+                QObject::connect(leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToLineEdit);
+
+                menuOrder->addAction(CIcons::arrowMediumNorth16(), "To top", this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToTop);
+                menuOrder->addAction(CIcons::arrowMediumSouth16(), "To bottom", this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToBottom);
+                menuOrder->addAction(CIcons::arrowMediumWest16(), "Freeze current order", this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_freezeCurrentOrder);
+                menu.addSeparator();
+            }
+            CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(menu);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::moveSelectedItems(int order)
+        {
+            if (this->isEmpty()) { return; }
+            const ContainerType objs(this->selectedObjects());
+            if (objs.isEmpty()) { return; }
+            this->m_model->moveItems(objs, order);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToTop()
+        {
+            this->moveSelectedItems(0);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToBottom()
+        {
+            int c = this->model()->rowCount() - 1;
+            if (c >= 0)
+            {
+                this->moveSelectedItems(c);
+            }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToLineEdit()
+        {
+            if (this->isEmpty()) { return; }
+            QLineEdit *le = qobject_cast<QLineEdit *>(QObject::sender());
+            if (!le || le->text().isEmpty()) { return; }
+            const int order = le->text().toInt();
+            this->moveSelectedItems(order);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_freezeCurrentOrder()
+        {
+            ContainerType objects = this->container();
+            objects.freezeOrder();
+            this->updateContainerAsync(objects, false);
+        }
+
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CViewWithDbObjects<BlackGui::Models::CAircraftIcaoCodeListModel, BlackMisc::Aviation::CAircraftIcaoCodeList, BlackMisc::Aviation::CAircraftIcaoCode, int>;
-        template class CViewWithDbObjects<BlackGui::Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>;
         template class CViewWithDbObjects<BlackGui::Models::CAirlineIcaoCodeListModel, BlackMisc::Aviation::CAirlineIcaoCodeList, BlackMisc::Aviation::CAirlineIcaoCode, int>;
         template class CViewWithDbObjects<BlackGui::Models::CCountryListModel, BlackMisc::CCountryList, BlackMisc::CCountry, QString>;
-        template class CViewWithDbObjects<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor, QString>;
         template class CViewWithDbObjects<BlackGui::Models::CLiveryListModel, BlackMisc::Aviation::CLiveryList, BlackMisc::Aviation::CLivery, int>;
+        template class CViewWithDbObjects<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor, QString>;
+        template class CViewWithDbObjects<BlackGui::Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>;
+        template class COrderableViewWithDbObjects<BlackGui::Models::CDistributorListModel, BlackMisc::Simulation::CDistributorList, BlackMisc::Simulation::CDistributor, QString>;
+        template class COrderableViewWithDbObjects<BlackGui::Models::CAircraftModelListModel, BlackMisc::Simulation::CAircraftModelList, BlackMisc::Simulation::CAircraftModel, int>;
 
     } // namespace
 } // namespace

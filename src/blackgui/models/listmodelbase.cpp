@@ -96,6 +96,12 @@ namespace BlackGui
             this->m_sortedColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
         }
 
+        void CListModelBaseNonTemplate::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        {
+            this->setSortColumnByPropertyIndex(propertyIndex);
+            this->m_sortOrder = order;
+        }
+
         bool CListModelBaseNonTemplate::hasValidSortColumn() const
         {
 
@@ -107,7 +113,7 @@ namespace BlackGui
         {
             Qt::ItemFlags f = QStandardItemModel::flags(index);
             if (!index.isValid()) { return f; }
-            bool editable = this->m_columns.isEditable(index);
+            const bool editable = this->m_columns.isEditable(index);
             f = editable ? (f | Qt::ItemIsEditable) : (f & ~Qt::ItemIsEditable);
 
             // flags from formatter
@@ -127,12 +133,12 @@ namespace BlackGui
 
         Qt::DropActions CListModelBaseNonTemplate::supportedDragActions() const
         {
-            return Qt::CopyAction;
+            return isOrderable() ? Qt::CopyAction | Qt::MoveAction : Qt::CopyAction;
         }
 
         Qt::DropActions CListModelBaseNonTemplate::supportedDropActions() const
         {
-            return QStandardItemModel::supportedDropActions();
+            return this->m_dropActions;
         }
 
         QStringList CListModelBaseNonTemplate::mimeTypes() const
@@ -161,8 +167,8 @@ namespace BlackGui
             if (columns < 1) { return; }
             if (startRowIndex < 0) { startRowIndex = 0; }
             if (endRowIndex >= rows) { endRowIndex = rows - 1; }
-            QModelIndex topLeft(createIndex(startRowIndex, 0));
-            QModelIndex bottomRight(createIndex(endRowIndex, columns - 1));
+            const QModelIndex topLeft(createIndex(startRowIndex, 0));
+            const QModelIndex bottomRight(createIndex(endRowIndex, columns - 1));
             emit dataChanged(topLeft, bottomRight);
         }
 
@@ -188,6 +194,38 @@ namespace BlackGui
         {
             Q_UNUSED(parentIndex);
             return this->containerOrFilteredContainer().size();
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        bool CListModelBase<ObjectType, ContainerType, UseCompare>::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
+        {
+            Q_UNUSED(action);
+            Q_UNUSED(row);
+            Q_UNUSED(column);
+            Q_UNUSED(parent);
+            if (!this->isDropAllowed()) { return false; }
+            if (!this->acceptDrop(data)) { return false; }
+            return true;
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        bool CListModelBase<ObjectType, ContainerType, UseCompare>::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+        {
+            Q_UNUSED(row);
+            Q_UNUSED(column);
+            if (!this->isOrderable() || !this->acceptDrop(data)) { return false; }
+            const CVariant valueVariant(this->toCVariant(data));
+            if (valueVariant.isValid())
+            {
+                if (action == Qt::MoveAction)
+                {
+                    const ContainerType container(valueVariant.value<ContainerType>());
+                    if (container.isEmpty()) { return false; }
+                    const int position = parent.row();
+                    this->moveItems(container, position);
+                }
+            }
+            return true;
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -370,7 +408,7 @@ namespace BlackGui
         {
             if (!filter)
             {
-                this->removeFilter();    // clear filter
+                this->removeFilter(); // clear filter
                 return;
             }
             if (filter->isValid())
@@ -529,6 +567,14 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::moveItems(const ContainerType &items, int position)
+        {
+            // overridden in specialized class
+            Q_UNUSED(items);
+            Q_UNUSED(position);
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::sort()
         {
             this->sort(this->getSortColumn(), this->getSortOrder());
@@ -628,6 +674,12 @@ namespace BlackGui
         QString CListModelBase<ObjectType, ContainerType, UseCompare>::toJsonString(QJsonDocument::JsonFormat format) const
         {
             return container().toJsonString(format);
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        bool CListModelBase<ObjectType, ContainerType, UseCompare>::isOrderable() const
+        {
+            return false;
         }
 
         // see here for the reason of thess forward instantiations

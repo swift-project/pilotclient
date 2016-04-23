@@ -23,7 +23,7 @@ namespace BlackGui
     {
         //! Distributor list model
         class BLACKGUI_EXPORT CDistributorListModel :
-            public CListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>
+            public COrderableListModelDbObjects<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString, true>
         {
         public:
             //! What kind of stations
@@ -31,6 +31,7 @@ namespace BlackGui
             {
                 NotSet,
                 Normal,
+                NormalWithOrder,
                 Minimal
             };
 
@@ -45,6 +46,9 @@ namespace BlackGui
 
             //! Mode
             DistributorMode getDistributorMode() const { return this->m_distributorMode; }
+
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::isOrderable
+            virtual bool isOrderable() const override { return true; }
 
         private:
             DistributorMode m_distributorMode = NotSet;
