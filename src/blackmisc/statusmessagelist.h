@@ -80,7 +80,7 @@ namespace BlackMisc
         void setCategories(const CLogCategoryList &categories);
 
         //! And higher (more critical) severity will be clipped to given severity
-        void clipSeverity(CStatusMessage::StatusSeverity severity);
+        void clampSeverity(CStatusMessage::StatusSeverity severity);
 
         //! Remove warnings and below
         void removeWarningsAndBelow();

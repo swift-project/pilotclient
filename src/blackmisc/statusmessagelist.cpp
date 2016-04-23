@@ -103,11 +103,11 @@ namespace BlackMisc
         }
     }
 
-    void CStatusMessageList::clipSeverity(CStatusMessage::StatusSeverity severity)
+    void CStatusMessageList::clampSeverity(CStatusMessage::StatusSeverity severity)
     {
         for (auto &msg : *this)
         {
-            msg.clipSeverity(severity);
+            msg.clampSeverity(severity);
         }
     }
 

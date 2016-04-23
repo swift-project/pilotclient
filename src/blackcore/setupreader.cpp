@@ -111,7 +111,7 @@ namespace BlackCore
             if (cacheAvailable && readMsgs.isFailure())
             {
                 // error but cache is available, we can continue
-                readMsgs.clipSeverity(CStatusMessage::SeverityWarning);
+                readMsgs.clampSeverity(CStatusMessage::SeverityWarning);
                 msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, "Loading setup failed, but cache is available, will continue"));
                 msgs.push_back(readMsgs);
             }
