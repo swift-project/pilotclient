@@ -98,12 +98,24 @@ namespace BlackMisc
             CStatusMessage CModelSetCaches::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                CAircraftModelList m(models);
+
+                // make sure we have a proper order
+                if (m.needsOrder())
+                {
+                    m.resetOrder();
+                }
+                else
+                {
+                    m.sortAscendingByOrder();
+                }
+
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.set(models);
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.set(models);
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.set(models);
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.set(models);
+                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.set(m);
+                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.set(m);
+                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.set(m);
+                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.set(m);
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     return CStatusMessage();
