@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/orderablelist.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 
@@ -27,6 +28,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAircraftModelList :
             public CSequence<CAircraftModel>,
             public IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
+            public IOrderableList<CAircraftModel, CAircraftModelList>,
             public BlackMisc::Mixin::MetaType<CAircraftModelList>
         {
         public:
@@ -164,6 +166,9 @@ namespace BlackMisc
 
             //! Update livery
             void updateLivery(const BlackMisc::Aviation::CLivery &livery);
+
+            //! From given CDistributorList update the model`s distributor order
+            int updateDistributorOrder(const CDistributorList &distributors);
 
             //! Completer strings
             QStringList toCompleterStrings(bool sorted = true) const;

@@ -469,6 +469,17 @@ namespace BlackMisc
             }
         }
 
+        int CAircraftModelList::updateDistributorOrder(const CDistributorList &distributors)
+        {
+            if (distributors.isEmpty()) { return 0; }
+            int found = 0;
+            for (CAircraftModel &model : *this)
+            {
+                if (model.updateDistributorOrder(distributors)) { found ++; }
+            }
+            return found;
+        }
+
         QStringList CAircraftModelList::toCompleterStrings(bool sorted) const
         {
             QStringList c;

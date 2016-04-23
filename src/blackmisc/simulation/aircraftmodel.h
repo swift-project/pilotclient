@@ -30,7 +30,8 @@ namespace BlackMisc
         //! \remarks Simulator independent class, supposed to be common denominator
         class BLACKMISC_EXPORT CAircraftModel :
             public CValueObject<CAircraftModel>,
-            public BlackMisc::IDatastoreObjectWithIntegerKey
+            public BlackMisc::IDatastoreObjectWithIntegerKey,
+            public BlackMisc::IOrderable
         {
         public:
             //! Model type
@@ -186,6 +187,9 @@ namespace BlackMisc
 
             //! Set distributor
             void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
+
+            //! Update distributor`s order attribute
+            bool updateDistributorOrder(const CDistributorList &distributors);
 
             //! Distributor
             bool hasDistributor() const;

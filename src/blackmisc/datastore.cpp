@@ -84,12 +84,7 @@ namespace BlackMisc
 
     void IDatastoreObjectWithIntegerKey::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
     {
-        if (ITimestampBased::canHandleIndex(index))
-        {
-            ITimestampBased::setPropertyByIndex(variant, index);
-            return;
-        }
-
+        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -152,7 +147,7 @@ namespace BlackMisc
     CVariant IDatastoreObjectWithStringKey::propertyByIndex(const CPropertyIndex &index) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbStringKey: return CVariant::from(this->m_dbKey);
@@ -165,13 +160,8 @@ namespace BlackMisc
 
     void IDatastoreObjectWithStringKey::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
     {
-        if (ITimestampBased::canHandleIndex(index))
-        {
-            ITimestampBased::setPropertyByIndex(variant, index);
-            return;
-        }
-
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbStringKey:
@@ -185,7 +175,7 @@ namespace BlackMisc
     int IDatastoreObjectWithStringKey::comparePropertyByIndex(const IDatastoreObjectWithStringKey &compareValue, const CPropertyIndex &index) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbStringKey:  return this->m_dbKey.compare(compareValue.getDbKey());

@@ -105,6 +105,8 @@ namespace BlackMisc
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+            if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index);}
+
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -152,6 +154,9 @@ namespace BlackMisc
         void CAircraftModel::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftModel>(); return; }
+            if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(variant, index); return; }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(variant, index); return; }
+
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -207,6 +212,7 @@ namespace BlackMisc
         int CAircraftModel::comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const
         {
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
+            if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(compareValue, index);}
             if (index.isMyself()) { return this->m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -289,6 +295,31 @@ namespace BlackMisc
         {
             return this->getAircraftIcaoCode().isMilitary() ||
                    this->getLivery().isMilitary();
+        }
+
+        bool CAircraftModel::updateDistributorOrder(const CDistributorList &distributors)
+        {
+            if (distributors.isEmpty()) { return false; }
+            bool found = false;
+            const int noDistributorOrder = distributors.size();
+            if (this->hasDistributor())
+            {
+                const CDistributor d = distributors.findByKeyOrAlias(this->m_distributor.getDbKey());
+                if (d.hasValidDbKey())
+                {
+                    this->m_distributor.setOrder(d.getOrder());
+                    found = true;
+                }
+                else
+                {
+                    this->m_distributor.setOrder(noDistributorOrder);
+                }
+            }
+            else
+            {
+                this->m_distributor.setOrder(noDistributorOrder);
+            }
+            return found;
         }
 
         bool CAircraftModel::hasDistributor() const
