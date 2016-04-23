@@ -13,6 +13,7 @@
 #define NOMINMAX
 #endif
 #include "traffic.h"
+#include "utils.h"
 #include "XPMPMultiplayer.h"
 #include "XPMPMultiplayerCSL.h"
 #include <XPLM/XPLMProcessing.h>
@@ -38,24 +39,6 @@ namespace XBus
 
         std::strncpy(position1.label, qPrintable(callsign), sizeof(position1.label));
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
-    }
-
-
-    QString g_xplanePath;
-    QString g_sep;
-
-    //! Init global xplane path
-    void initXPlanePath()
-    {
-        char xplanePath[512];
-        XPLMGetSystemPath(xplanePath);
-#ifdef Q_OS_MAC
-        HFS2PosixPath(xplanePath, xplanePath, sizeof(xplanePath));
-        g_sep = "/";
-#else
-        g_sep = XPLMGetDirectorySeparator();
-#endif
-        g_xplanePath = xplanePath;
     }
 
     CTraffic::CTraffic(QObject *parent) : QObject(parent)

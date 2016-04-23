@@ -74,8 +74,13 @@ macx {
     XBUS_DIR = xbus
     XBUS_DESTDIR = $$DestRoot/$$XBUS_DIR
 } else {
-    equals(WORD_SIZE,64): XBUS_DIR = xbus/64
-    equals(WORD_SIZE,32): XBUS_DIR = xbus
+    equals(WORD_SIZE,64) {
+        XBUS_DIR = xbus/64
+        DEFINES += WORD_SIZE_64
+    }
+    equals(WORD_SIZE,32) {
+        XBUS_DIR = xbus
+    }
     XBUS_DESTDIR = $$DestRoot/$$XBUS_DIR
 }
 

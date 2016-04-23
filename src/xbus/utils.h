@@ -167,4 +167,16 @@ public:
     }
 };
 
+namespace XBus
+{
+    //! Absolute xplane path
+    extern QString g_xplanePath;
+
+    //! Platform specific dir separator
+    extern QString g_sep;
+
+    //! Init global xplane path
+    void initXPlanePath();
+}
+
 #endif // guard

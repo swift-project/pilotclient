@@ -11,6 +11,8 @@
 #include "service.h"
 #include "traffic.h"
 #include "weather.h"
+#include "utils.h"
+#include "blackmisc/librarypath.h"
 
 namespace {
     inline QString xbusServiceName() {
@@ -34,7 +36,15 @@ namespace XBus
         Q_ASSERT(! m_server);
         for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
 
+        auto previousLibraryPath = BlackMisc::getCustomLibraryPath();
+        auto libraryPath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xbus";
+        #if !defined (Q_OS_MAC) && defined(WORD_SIZE_64)
+        libraryPath = libraryPath + g_sep + "64";
+        #endif
+        BlackMisc::setCustomLibraryPath(libraryPath);
         m_server = new BlackMisc::CDBusServer(xbusServiceName(), address, this);
+        BlackMisc::setCustomLibraryPath(previousLibraryPath);
+
         m_service = new CService(this);
         m_traffic = new CTraffic(this);
         m_weather = new CWeather(this);
