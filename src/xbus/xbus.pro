@@ -92,4 +92,88 @@ target.files *= $$XBUS_DESTDIR/$${TARGET}.xpl
 target.CONFIG += no_check_exist
 INSTALLS += target
 
+dep_target.path = $$PREFIX/$$XBUS_DIR
+win32 {
+    dep_target.files *= $$DestRoot/lib/blackmisc.dll
+    dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Core$${DLL_DEBUG_SUFFIX}.dll
+    dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Gui$${DLL_DEBUG_SUFFIX}.dll
+    dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Widgets$${DLL_DEBUG_SUFFIX}.dll
+    dep_target.files *= $$[QT_INSTALL_BINS]/Qt5DBus$${DLL_DEBUG_SUFFIX}.dll
+    dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Network$${DLL_DEBUG_SUFFIX}.dll
+    dep_target.files *= $$[QT_INSTALL_BINS]/Qt5Xml$${DLL_DEBUG_SUFFIX}.dll
+    win32-g++: dep_target.files *= $$[QT_INSTALL_BINS]/libdbus-1-3.dll
+    else: dep_target.files *= $$[QT_INSTALL_BINS]/dbus-1-3.dll
+    dep_target.CONFIG += no_check_exist
+
+    legacy_data_target.path = $$PREFIX/xbus
+    legacy_data_target.files *= LegacyData
+} else:macx: {
+    dep_target.files *= $$PREFIX/lib/libblackmisc.0.dylib
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtCore.framework/ $${PREFIX}/$$XBUS_DIR/QtCore.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtGui.framework/ $${PREFIX}/$$XBUS_DIR/QtGui.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtWidgets.framework/ $${PREFIX}/$$XBUS_DIR/QtWidgets.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtDBus.framework/ $${PREFIX}/$$XBUS_DIR/QtDBus.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtNetwork.framework/ $${PREFIX}/$$XBUS_DIR/QtNetwork.framework/ &&
+    dep_target.extra += rsync -avz --exclude \'Headers*\' --exclude \'*debug*\' $$[QT_INSTALL_LIBS]/QtXml.framework/ $${PREFIX}/$$XBUS_DIR/QtXml.framework/
+    dep_target.CONFIG += no_check_exist
+
+    legacy_data_target.path = $$PREFIX/xbus
+    legacy_data_target.files *= LegacyData
+
+    # We rely on legacy_data_target to be called after dep_target. So the library should already be installed and can be modified in place.
+    # We cannot modify the original library since this is xbus specific.
+    legacy_data_target.depends += fix_plugin_rpath
+    fix_plugin_rpath.target = fix_plugin_rpath
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/libblackmisc.0.dylib\" \"@loader_path/libblackmisc.0.dylib\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtWidgets.framework/Versions/5/QtWidgets\" \"@loader_path/QtWidgets.framework/Versions/5/QtWidgets\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtGui.framework/Versions/5/QtGui\" \"@loader_path/QtGui.framework/Versions/5/QtGui\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtDBus.framework/Versions/5/QtDBus\" \"@loader_path/QtDBus.framework/Versions/5/QtDBus\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtNetwork.framework/Versions/5/QtNetwork\" \"@loader_path/QtNetwork.framework/Versions/5/QtNetwork\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtCore.framework/Versions/5/QtCore\" \"@loader_path/QtCore.framework/Versions/5/QtCore\" $$shell_path($$PREFIX/$$XBUS_DIR/mac.xpl) &&
+    fix_plugin_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib)
+    QMAKE_EXTRA_TARGETS += fix_plugin_rpath
+
+    fix_plugin_rpath.depends += fix_misc_rpath
+    fix_misc_rpath.target = fix_misc_rpath
+    fix_misc_rpath.commands += install_name_tool -id \"@loader_path/libblackmisc.0.dylib\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtGui.framework/Versions/5/QtGui\" \"@loader_path/QtGui.framework/Versions/5/QtGui\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtDBus.framework/Versions/5/QtDBus\" \"@loader_path/QtDBus.framework/Versions/5/QtDBus\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtNetwork.framework/Versions/5/QtNetwork\" \"@loader_path/QtNetwork.framework/Versions/5/QtNetwork\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtCore.framework/Versions/5/QtCore\" \"@loader_path/QtCore.framework/Versions/5/QtCore\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib) &&
+    fix_misc_rpath.commands += install_name_tool -change \"@rpath/QtXml.framework/Versions/5/QtXml\" \"@loader_path/QtXml.framework/Versions/5/QtXml\" $$shell_path($$PREFIX/$$XBUS_DIR/libblackmisc.0.dylib)
+    QMAKE_EXTRA_TARGETS += fix_misc_rpath
+
+} else:unix: {
+    dep_target.files *= $$PREFIX/lib/libblackmisc.so*
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Core.so.5
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Gui.so.5
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Widgets.so.5
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5DBus.so.5
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Network.so.5
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libQt5Xml.so.5
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libicui18n.so.56
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libicuuc.so.56
+    dep_target.files *= $$[QT_INSTALL_LIBS]/libicudata.so.56
+    dep_target.CONFIG += no_check_exist
+
+    legacy_data_target.path = $$PREFIX/xbus
+    legacy_data_target.files *= LegacyData
+}
+
+win32-g++ {
+    dep_target.files *= $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll
+    dep_target.files *= $$[QT_INSTALL_BINS]/libwinpthread-1.dll
+
+    # libstdc++-6.dll needs a workaround since copy does not accept a filepath with '+' in it
+    dep_target.depends += copy_libstdc
+    copy_libstdc.target = copy_libstdc
+    source_path = $$[QT_INSTALL_BINS]/libstdc++-6.dll
+    dest_path = $$PREFIX/$$XBUS_DIR
+    copy_libstdc.commands = xcopy /Y $$shell_path($$source_path) $$shell_path($$dest_path)
+    QMAKE_EXTRA_TARGETS += copy_libstdc
+}
+
+INSTALLS += dep_target
+INSTALLS += legacy_data_target
+
 load(common_post)

@@ -160,3 +160,9 @@ isEmpty(QMAKE_EXTENSION_EXE) {
 isEmpty(PREFIX) {
     PREFIX = $$BuildRoot/dist
 }
+
+################################
+# Debug Suffix
+################################
+
+win32: CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d

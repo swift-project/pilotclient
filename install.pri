@@ -1,5 +1,3 @@
-win32: CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d
-
 ############### Readme, License etc. #####
 
 text_files_target.path = $${PREFIX}/bin
