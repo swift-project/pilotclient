@@ -165,9 +165,7 @@ namespace BlackGui
                 {
                     this->m_modelSetDialog->setModal(true);
                     this->m_modelSetDialog->reloadData();
-                    QDialog::DialogCode rc = static_cast<QDialog::DialogCode>(
-                                                 this->m_modelSetDialog->exec()
-                                             );
+                    QDialog::DialogCode rc = static_cast<QDialog::DialogCode>(this->m_modelSetDialog->exec());
                     if (rc == QDialog::Accepted)
                     {
                         this->setModelSet(this->m_modelSetDialog->getModelSet(), this->m_modelSetDialog->getSimulatorInfo());
@@ -235,6 +233,16 @@ namespace BlackGui
             }
         }
 
+        void CDbOwnModelSetComponent::ps_preferencesChanged()
+        {
+            const CDistributorListPreferences preferences = this->m_distributorPreferences.get();
+            const CSimulatorInfo simuulator = preferences.getLastUpdatedSimulator();
+            if (simuulator.isSingleSimulator())
+            {
+                this->updateDistributorOrder(simuulator);
+            }
+        }
+
         void CDbOwnModelSetComponent::setSaveFileName(const CSimulatorInfo &sim)
         {
             Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
@@ -246,6 +254,24 @@ namespace BlackGui
         {
             this->m_simulator = sim;
             this->ui->le_Simulator->setText(sim.toQString(true));
+        }
+
+        void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)
+        {
+            CAircraftModelList modelSet = this->m_modelSetLoader.getAircraftModels(simulator);
+            if (modelSet.isEmpty()) { return; }
+            const CDistributorListPreferences preferences = this->m_distributorPreferences.get();
+            const CDistributorList distributors = preferences.getDistributors(simulator);
+            if (distributors.isEmpty()) { return; }
+            modelSet.updateDistributorOrder(distributors);
+            this->m_modelSetLoader.setModels(modelSet, simulator);
+
+            // display?
+            const CSimulatorInfo currentSimulator(this->getModelSetSimulator());
+            if (simulator == currentSimulator)
+            {
+                ui->tvp_OwnModelSet->updateContainerAsync(modelSet);
+            }
         }
 
         void CDbOwnModelSetComponent::CLoadModelsMenu::customMenu(QMenu &menu) const

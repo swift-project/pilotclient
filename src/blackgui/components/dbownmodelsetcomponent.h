@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 
 #include "blackgui/menus/menudelegate.h"
+#include "blackcore/settings/distributorpreferences.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "dbmappingcomponentaware.h"
@@ -105,6 +106,9 @@ namespace BlackGui
             //! JSON data have been loaded from disk
             void ps_onJsonDataLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Preferences changed
+            void ps_preferencesChanged();
+
         private:
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
@@ -112,10 +116,14 @@ namespace BlackGui
             //! Simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
+            //! Update distributor order
+            void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
             QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
             BlackMisc::Simulation::CSimulatorInfo          m_simulator;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
+            BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_preferencesChanged };
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component
