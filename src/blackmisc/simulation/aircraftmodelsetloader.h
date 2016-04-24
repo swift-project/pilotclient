@@ -40,7 +40,7 @@ namespace BlackMisc
 
         public:
             //! Constructor
-            CAircraftModelSetLoader(const CSimulatorInfo &info, QObject *parent = nullptr);
+            CAircraftModelSetLoader(const CSimulatorInfo &simulator, QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CAircraftModelSetLoader();
@@ -62,7 +62,7 @@ namespace BlackMisc
             BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
 
             //! Which simulator is supported by that very loader
-            const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const;
+            CSimulatorInfo getSimulator() const;
 
             //! Supported simulators as string
             QString getSimulatorAsString() const;
@@ -75,8 +75,8 @@ namespace BlackMisc
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setCachedModels(models, this->m_simulatorInfo); }
-            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->m_simulatorInfo); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setCachedModels(models, this->getSimulator()); }
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->getSimulator()); }
             virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->setCachedModels(models, simulator); }
             virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
             //! @}
@@ -105,7 +105,7 @@ namespace BlackMisc
             QDateTime getCacheTimestamp() const;
 
             //! Make sure cache is syncronized
-            void syncronizeCache();
+            bool syncronizeCache();
 
             //! Any cached data?
             bool hasCachedData() const;
@@ -113,7 +113,6 @@ namespace BlackMisc
             //! Clear cache
             BlackMisc::CStatusMessage clearCache();
 
-            BlackMisc::Simulation::CSimulatorInfo        m_simulatorInfo;   //!< Corresponding simulator
             BlackMisc::Simulation::Data::CModelSetCaches m_caches { this }; //!< caches
         };
     } // namespace

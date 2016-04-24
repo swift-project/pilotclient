@@ -67,15 +67,15 @@ namespace BlackGui
             const BlackMisc::Simulation::CAircraftModelList &getModelSet() const;
 
             //! Model set is for simulator
-            const BlackMisc::Simulation::CSimulatorInfo &getModelSetSimulator() const { return m_simulator; }
+            const Simulation::CSimulatorInfo getModelSetSimulator() const;
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelSet(models, this->m_simulator); }
-            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddModelSet(models, this->m_simulator); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModelSet(models, this->getModelSetSimulator()); }
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddModelSet(models, this->getModelSetSimulator()); }
             virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->setModelSet(models, simulator); }
             virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->replaceOrAddModelSet(models, simulator); }
             //! @}
@@ -109,19 +109,21 @@ namespace BlackGui
             //! Preferences changed
             void ps_preferencesChanged();
 
+            //! Model has been changed
+            void ps_modelChanged();
+
         private:
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
             //! Simulator
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &sim);
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Update distributor order
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
             QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
-            BlackMisc::Simulation::CSimulatorInfo          m_simulator;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
             BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_preferencesChanged };
 

@@ -15,11 +15,11 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftModelSetLoader::CAircraftModelSetLoader(const CSimulatorInfo &info, QObject *parent) :
-            QObject(parent),
-            m_simulatorInfo(info)
+        CAircraftModelSetLoader::CAircraftModelSetLoader(const CSimulatorInfo &simulator, QObject *parent) :
+            QObject(parent)
         {
-            Q_ASSERT_X(info.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
+            this->syncronizeCache();
             connect(&this->m_caches, &CModelSetCaches::cacheChanged, this, &CAircraftModelSetLoader::cacheChanged);
         }
 
@@ -30,7 +30,7 @@ namespace BlackMisc
 
         CStatusMessage CAircraftModelSetLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_simulatorInfo;
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_caches.getCurrentSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simulator"); }
             const CStatusMessage m(this->m_caches.setCachedModels(models, sim));
             return m;
@@ -39,7 +39,7 @@ namespace BlackMisc
         CStatusMessage CAircraftModelSetLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_simulatorInfo;
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_caches.getCurrentSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
             CAircraftModelList allModels(this->m_caches.getCachedModels(sim));
             int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
@@ -56,14 +56,13 @@ namespace BlackMisc
         void CAircraftModelSetLoader::changeSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-            this->m_simulatorInfo = simulator;
             this->m_caches.syncronizeCache(simulator);
             emit simulatorChanged(simulator);
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels() const
         {
-            return this->m_caches.getCachedModels(this->m_simulatorInfo);
+            return this->m_caches.getCurrentCachedModels();
         }
 
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels(const CSimulatorInfo &simulator) const
@@ -80,17 +79,17 @@ namespace BlackMisc
 
         QDateTime CAircraftModelSetLoader::getCacheTimestamp() const
         {
-            return this->m_caches.getCacheTimestamp(this->m_simulatorInfo);
+            return this->m_caches.getCurrentCacheTimestamp();
         }
 
-        void CAircraftModelSetLoader::syncronizeCache()
+        bool CAircraftModelSetLoader::syncronizeCache()
         {
-            return this->m_caches.syncronizeCache(this->m_simulatorInfo);
+            return this->m_caches.syncronizeCurrentCache();
         }
 
         bool CAircraftModelSetLoader::hasCachedData() const
         {
-            return !this->m_caches.getCachedModels(this->m_simulatorInfo).isEmpty();
+            return !this->m_caches.getCurrentCachedModels().isEmpty();
         }
 
         CStatusMessage CAircraftModelSetLoader::clearCache()
@@ -98,14 +97,14 @@ namespace BlackMisc
             return this->setCachedModels(CAircraftModelList());
         }
 
-        const CSimulatorInfo &CAircraftModelSetLoader::getSimulator() const
+        CSimulatorInfo CAircraftModelSetLoader::getSimulator() const
         {
-            return m_simulatorInfo;
+            return this->m_caches.getCurrentSimulator();
         }
 
         QString CAircraftModelSetLoader::getSimulatorAsString() const
         {
-            return m_simulatorInfo.toQString();
+            return this->getSimulator().toQString();
         }
 
         bool CAircraftModelSetLoader::supportsSimulator(const CSimulatorInfo &info)

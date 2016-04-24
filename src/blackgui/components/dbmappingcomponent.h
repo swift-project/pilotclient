@@ -18,7 +18,6 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/components/data/lastselections.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
@@ -112,7 +111,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
             //! Own models for simulator
-            const BlackMisc::Simulation::CSimulatorInfo &getOwnModelsSimulator() const;
+            const Simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
             //! Number of own models
             int getOwnModelsCount() const;

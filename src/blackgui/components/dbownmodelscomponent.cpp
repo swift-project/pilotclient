@@ -33,22 +33,23 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
+            ui->tvp_OwnAircraftModels->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnAircraftModels, this->modelLoader(), false));
+            ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
 
-            this->m_lastInteractions.synchronize();
-
             // should be single simulator or no simulator (default)
-            const CSimulatorInfo sim = this->m_lastInteractions.getCopy().getLastSimulatorSelection();
-            BLACK_VERIFY_X(!sim.isMultipleSimulators(), Q_FUNC_INFO, "Should be single simulator or default");
-            if (sim.isSingleSimulator())
+            this->m_simulatorSelection.synchronize();
+            const CSimulatorInfo simulator(this->m_simulatorSelection.get());
+            const bool s = this->initModelLoader(!simulator.isSingleSimulator() ? CSimulatorInfo(CSimulatorInfo::FSX) : simulator);
+            if (s)
             {
-                // if we have already use this before, use it again, but only from cache
-                this->initModelLoader(sim);
                 this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
             }
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnAircraftModels, this->modelLoader(), false));
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
+            else
+            {
+                CLogMessage(this).error("Init of model loader failed in component");
+            }
         }
 
         CDbOwnModelsComponent::~CDbOwnModelsComponent()
@@ -89,7 +90,7 @@ namespace BlackGui
             return ui->tvp_OwnAircraftModels->selectedObjects();
         }
 
-        const CSimulatorInfo &CDbOwnModelsComponent::getOwnModelsSimulator() const
+        const CSimulatorInfo CDbOwnModelsComponent::getOwnModelsSimulator() const
         {
             static const CSimulatorInfo noSim;
             if (!this->m_modelLoader) { return noSim; }
@@ -117,27 +118,28 @@ namespace BlackGui
             if (this->m_modelLoader) { this->m_modelLoader->gracefulShutdown(); }
         }
 
-        bool CDbOwnModelsComponent::initModelLoader(const CSimulatorInfo &simInfo)
+        bool CDbOwnModelsComponent::initModelLoader(const CSimulatorInfo &simulator)
         {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+
             // already loaded
-            Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
-            if (this->m_modelLoader && this->m_modelLoader->supportsSimulator(simInfo))
+            if (this->m_modelLoader && this->m_modelLoader->supportsSimulator(simulator))
             {
-                this->setSaveFileName(simInfo);
+                this->setSaveFileName(simulator);
                 return true;
             }
 
-            // unload old
+            // mismatching loader
             if (this->m_modelLoader)
             {
                 this->m_modelLoader->gracefulShutdown();
             }
 
             // create loader, also syncronizes the caches
-            this->m_modelLoader = IAircraftModelLoader::createModelLoader(simInfo);
-            if (!this->m_modelLoader || !this->m_modelLoader->supportsSimulator(simInfo))
+            this->m_modelLoader = IAircraftModelLoader::createModelLoader(simulator); // last selected simulator or explicit given
+            if (!this->m_modelLoader || !this->m_modelLoader->supportsSimulator(simulator))
             {
-                CLogMessage(this).error("Failed to init model loader %1") << simInfo.toQString();
+                CLogMessage(this).error("Failed to init model loader %1") << simulator.toQString();
                 this->m_modelLoader.reset();
                 return false;
             }
@@ -146,7 +148,7 @@ namespace BlackGui
                 bool c = connect(this->m_modelLoader.get(), &IAircraftModelLoader::loadingFinished, this, &CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect for model loader");
                 Q_UNUSED(c);
-                this->setSaveFileName(simInfo);
+                this->setSaveFileName(simulator);
                 return true;
             }
         }
@@ -242,45 +244,35 @@ namespace BlackGui
             );
         }
 
-        void CDbOwnModelsComponent::ps_loadInstalledModels(const CSimulatorInfo &simInfo, IAircraftModelLoader::LoadMode mode)
+        void CDbOwnModelsComponent::ps_loadInstalledModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode)
         {
-            if (!this->initModelLoader(simInfo))
+            if (!this->initModelLoader(simulator))
             {
-                CLogMessage(this).error("Cannot load model loader for %1") << simInfo.toQString();
+                CLogMessage(this).error("Cannot load model loader for %1") << simulator.toQString();
                 return;
             }
 
             if (!this->m_modelLoader->isLoadingFinished())
             {
-                CLogMessage(this).info("Loading for %1 already in progress") << simInfo.toQString();
+                CLogMessage(this).info("Loading for %1 already in progress") << simulator.toQString();
                 return;
             }
 
-            CLogMessage(this).info("Starting loading for %1") << simInfo.toQString();
+            CLogMessage(this).info("Starting loading for %1") << simulator.toQString();
             this->ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
             this->m_modelLoader->startLoading(mode, sGui->getWebDataServices()->getModels());
         }
 
-        void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(bool success, const CSimulatorInfo &simInfo)
+        void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(bool success, const CSimulatorInfo &simulator)
         {
-            Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
             if (success && this->m_modelLoader)
             {
                 const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
                 const int modelsLoaded = models.size();
                 this->ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
-                if (modelsLoaded > 0)
-                {
-                    // store for later
-                    Data::CDbOwnModelsComponent mc(this->m_lastInteractions.get());
-                    if (simInfo.isSingleSimulator() &&  mc.getLastSimulatorSelection() != simInfo)
-                    {
-                        mc.setLastSimulatorSelection(simInfo);
-                        this->m_lastInteractions.set(mc);
-                    }
-                }
-                else
+                if (modelsLoaded < 1)
                 {
                     // loading ok, but no data
                     CLogMessage(this).warning("Loading completed, but no models");
@@ -288,15 +280,15 @@ namespace BlackGui
             }
             else
             {
-                this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
-                CLogMessage(this).error("Loading of models failed, simulator %1") << simInfo.toQString();
+                this->ui->tvp_OwnAircraftModels->clear();
+                CLogMessage(this).error("Loading of models failed, simulator %1") << simulator.toQString();
             }
             this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
         }
 
-        void CDbOwnModelsComponent::ps_requestSimulatorModels(const CSimulatorInfo &simInfo, IAircraftModelLoader::LoadMode mode)
+        void CDbOwnModelsComponent::ps_requestSimulatorModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode)
         {
-            this->ps_loadInstalledModels(simInfo, mode);
+            this->ps_loadInstalledModels(simulator, mode);
         }
     } // ns
 } // ns

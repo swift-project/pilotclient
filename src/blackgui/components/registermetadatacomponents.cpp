@@ -8,7 +8,6 @@
  */
 
 #include "registermetadatacomponents.h"
-#include "blackgui/components/data/lastselections.h"
 
 namespace BlackGui
 {
@@ -16,8 +15,7 @@ namespace BlackGui
     {
         void registerMetadata()
         {
-            Data::CDbOwnModelsComponent::registerMetadata();
-        }
 
+        }
     } // ns
 } // ns

@@ -60,7 +60,7 @@ namespace BlackMisc
                 if (m_rootDirectory.isEmpty())
                 {
                     this->clearCache();
-                    emit loadingFinished(false, this->m_simulatorInfo);
+                    emit loadingFinished(false, this->getSimulator());
                     return;
                 }
 
@@ -105,7 +105,7 @@ namespace BlackMisc
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
                 this->setCachedModels(models);
-                emit loadingFinished(true, this->m_simulatorInfo);
+                emit loadingFinished(true, this->getSimulator());
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
@@ -155,7 +155,7 @@ namespace BlackMisc
 
                     CAircraftModel model;
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                    model.setSimulator(m_simulatorInfo);
+                    model.setSimulator(this->getSimulator());
                     model.setFileName(aircraftIt.filePath());
                     model.setModelString(modelString);
 
@@ -208,9 +208,9 @@ namespace BlackMisc
                 while (it.hasNext())
                 {
                     QString packageFile = it.next();
-                    //! \todo KB I would consider exclude dirs here CFileUtils::matchesExcludeDirectory()
+                    if (CFileUtils::isExcludedDirectory(it.filePath(), excludeDirectories)) { continue; }
 
-                    QString packageFilePath = it.fileInfo().absolutePath();
+                    const QString packageFilePath = it.fileInfo().absolutePath();
                     QFile file(packageFile);
                     file.open(QIODevice::ReadOnly);
                     QString content;
@@ -219,7 +219,7 @@ namespace BlackMisc
                     content.append(ts.readAll());
                     file.close();
 
-                    auto package = parsePackageHeader(packageFilePath, content);
+                    const auto package = parsePackageHeader(packageFilePath, content);
                     if (package.hasValidHeader()) m_cslPackages.push_back(package);
                 }
 
@@ -262,7 +262,7 @@ namespace BlackMisc
                         CDistributor distributor(package.name);
                         model.setDistributor(distributor);
 
-                        model.setSimulator(m_simulatorInfo);
+                        model.setSimulator(this->getSimulator());
                         installedModels.push_back(model);
                     }
                 }

@@ -12,6 +12,7 @@
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 
+using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
 
@@ -19,10 +20,11 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &info, const QString &rootDirectory, const QStringList &excludeDirs) :
-            m_simulatorInfo(info), m_rootDirectory(rootDirectory), m_excludedDirectories(excludeDirs)
+        IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, const QString &rootDirectory, const QStringList &excludeDirs) :
+            m_rootDirectory(rootDirectory), m_excludedDirectories(excludeDirs)
         {
-            Q_ASSERT_X(info.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
+            this->m_caches.setCurrentSimulator(simulator);
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::ps_loadFinished);
         }
 
@@ -41,7 +43,7 @@ namespace BlackMisc
 
         CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_simulatorInfo;
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
             return this->m_caches.setCachedModels(models, sim);
         }
@@ -49,7 +51,7 @@ namespace BlackMisc
         CStatusMessage IAircraftModelLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_simulatorInfo;
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
             CAircraftModelList allModels(this->m_caches.getCachedModels(sim));
             int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
@@ -80,22 +82,22 @@ namespace BlackMisc
 
         CAircraftModelList IAircraftModelLoader::getAircraftModels() const
         {
-            return this->m_caches.getCachedModels(this->m_simulatorInfo);
+            return this->m_caches.getCurrentCachedModels();
         }
 
         QDateTime IAircraftModelLoader::getCacheTimestamp() const
         {
-            return this->m_caches.getCacheTimestamp(this->m_simulatorInfo);
+            return this->m_caches.getCurrentCacheTimestamp();
         }
 
-        void IAircraftModelLoader::syncronizeCache()
+        bool IAircraftModelLoader::syncronizeCache()
         {
-            return this->m_caches.syncronizeCache(this->m_simulatorInfo);
+            return this->m_caches.syncronizeCurrentCache();
         }
 
         bool IAircraftModelLoader::hasCachedData() const
         {
-            return !this->m_caches.getCachedModels(this->m_simulatorInfo).isEmpty();
+            return !this->m_caches.getCurrentCachedModels().isEmpty();
         }
 
         CStatusMessage IAircraftModelLoader::clearCache()
@@ -110,7 +112,7 @@ namespace BlackMisc
             const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
             if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
             {
-                emit loadingFinished(true, this->m_simulatorInfo);
+                emit loadingFinished(true, this->getSimulator());
                 return;
             }
             else if (useCachedData && mode.testFlag(CacheUntilNewer))
@@ -118,27 +120,27 @@ namespace BlackMisc
                 //! \todo currently too slow, does not make sense with that overhead
                 if (!this->areModelFilesUpdated())
                 {
-                    emit loadingFinished(true, this->m_simulatorInfo);
+                    emit loadingFinished(true, this->getSimulator());
                     return;
                 }
             }
             if (mode.testFlag(CacheOnly))
             {
                 // only cache, but we did not find any data
-                emit loadingFinished(false, this->m_simulatorInfo);
+                emit loadingFinished(false, this->getSimulator());
                 return;
             }
             this->startLoadingFromDisk(mode, dbModels);
         }
 
-        const CSimulatorInfo &IAircraftModelLoader::getSimulator() const
+        const CSimulatorInfo IAircraftModelLoader::getSimulator() const
         {
-            return m_simulatorInfo;
+            return this->m_caches.getCurrentSimulator();
         }
 
         QString IAircraftModelLoader::getSimulatorAsString() const
         {
-            return m_simulatorInfo.toQString();
+            return this->getSimulator().toQString();
         }
 
         bool IAircraftModelLoader::supportsSimulator(const CSimulatorInfo &info)
@@ -157,10 +159,11 @@ namespace BlackMisc
             this->cancelLoading();
         }
 
-        std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simInfo)
+        std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator)
         {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
             std::unique_ptr<IAircraftModelLoader> loader;
-            if (simInfo.xplane())
+            if (simulator.xplane())
             {
                 loader = std::make_unique<CAircraftModelLoaderXPlane>(
                              CSimulatorInfo(CSimulatorInfo::XPLANE),
@@ -168,10 +171,16 @@ namespace BlackMisc
             }
             else
             {
-                loader = CAircraftCfgParser::createModelLoader(simInfo);
+                loader = CAircraftCfgParser::createModelLoader(simulator);
             }
-            // make sure the cache is really available
-            loader->syncronizeCache();
+
+            if (!loader) { return loader; }
+
+            // make sure the cache is really available, normally this happens in the constructor
+            if (loader->getSimulator() != simulator)
+            {
+                loader->m_caches.setCurrentSimulator(simulator); // mark current simulator and sync caches
+            }
             return loader;
         }
     } // ns

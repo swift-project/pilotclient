@@ -84,7 +84,7 @@ namespace BlackMisc
             virtual bool areModelFilesUpdated() const = 0;
 
             //! Which simulator is supported by that very loader
-            const BlackMisc::Simulation::CSimulatorInfo &getSimulator() const;
+            const CSimulatorInfo getSimulator() const;
 
             //! Supported simulators as string
             QString getSimulatorAsString() const;
@@ -100,14 +100,14 @@ namespace BlackMisc
 
             //! \name Implementations of the model interfaces (allows to set models modified in utility functions)
             //! @{
-            virtual void setModels(const CAircraftModelList &models) override  { this->setCachedModels(models, this->m_simulatorInfo); }
-            virtual void updateModels(const CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->m_simulatorInfo); }
+            virtual void setModels(const CAircraftModelList &models) override  { this->setCachedModels(models, this->getSimulator()); }
+            virtual void updateModels(const CAircraftModelList &models) override  { this->replaceOrAddCachedModels(models, this->getSimulator()); }
             virtual void setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { this->setCachedModels(models, simulator); }
             virtual void updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
             //! @}
 
             //! Create a loader and syncronize caches
-            static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+            static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         public slots:
             //! Set cache from outside, this should only be used in special cases.
@@ -124,13 +124,13 @@ namespace BlackMisc
 
         protected:
             //! Constructor
-            IAircraftModelLoader(const CSimulatorInfo &info, const QString &rootDirectory, const QStringList &excludeDirs = {});
+            IAircraftModelLoader(const CSimulatorInfo &simulator, const QString &rootDirectory, const QStringList &excludeDirs = {});
 
             //! Cache timestamp
             QDateTime getCacheTimestamp() const;
 
             //! Make sure cache is syncronized
-            void syncronizeCache();
+            bool syncronizeCache();
 
             //! Any cached data?
             bool hasCachedData() const;
@@ -144,7 +144,6 @@ namespace BlackMisc
             //! Start the loading process from disk
             virtual void startLoadingFromDisk(LoadMode mode, const BlackMisc::Simulation::CAircraftModelList &dbModels) = 0;
 
-            BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;        //!< Corresponding simulator
             std::atomic<bool> m_cancelLoading { false };                  //!< flag
             std::atomic<bool> m_loadingInProgress { false };              //!< Loading in progress
             QString           m_rootDirectory;                            //!< root directory parsing aircraft.cfg files

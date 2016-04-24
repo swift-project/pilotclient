@@ -699,7 +699,7 @@ namespace BlackGui
             return this->ui->comp_OwnAircraftModels->getOwnModelForModelString(modelString);
         }
 
-        const CSimulatorInfo &CDbMappingComponent::getOwnModelsSimulator() const
+        const CSimulatorInfo CDbMappingComponent::getOwnModelsSimulator() const
         {
             return this->ui->comp_OwnAircraftModels->getOwnModelsSimulator();
         }

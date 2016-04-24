@@ -12,6 +12,7 @@
 #include "blackgui/menus/aircraftmodelmenus.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 #include "dbmappingcomponent.h"
 #include "dbownmodelsetdialog.h"
 #include "ui_dbownmodelsetcomponent.h"
@@ -36,10 +37,11 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuRemoveItems(CAircraftModelView::MenuDisplayAutomaticallyAndRefresh | CAircraftModelView::MenuStashing | CAircraftModelView::MenuBackend | CAircraftModelView::MenuRefresh);
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
             ui->tvp_OwnModelSet->addFilterDialog();
-            ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
             ui->tvp_OwnModelSet->setJsonLoad(CAircraftModelView::AllowOnlySingleSimulator | CAircraftModelView::ReduceToOneSimulator);
+            ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
             ui->tvp_OwnModelSet->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnModelSet, this, true));
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuOrderable);
+            ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
 
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
@@ -47,9 +49,16 @@ namespace BlackGui
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(&this->m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::rowCountChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
+            connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::ps_modelChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::jsonModelsForSimulatorLoaded, this, &CDbOwnModelSetComponent::ps_onJsonDataLoaded);
 
-            this->ps_onRowCountChanged(ui->tvp_OwnModelSet->rowCount(), ui->tvp_OwnModelSet->hasFilter());
+            const CSimulatorInfo sim = this->m_modelSetLoader.getSimulator();
+            if (sim.isSingleSimulator())
+            {
+                ui->tvp_OwnModelSet->updateContainerMaybeAsync(this->m_modelSetLoader.getAircraftModels());
+            }
+            const int c = this->m_modelSetLoader.getAircraftModelsCount();
+            this->ps_onRowCountChanged(c, ui->tvp_OwnModelSet->hasFilter());
         }
 
         CDbOwnModelSetComponent::~CDbOwnModelSetComponent()
@@ -101,6 +110,11 @@ namespace BlackGui
         const CAircraftModelList &CDbOwnModelSetComponent::getModelSet() const
         {
             return ui->tvp_OwnModelSet->container();
+        }
+
+        const CSimulatorInfo CDbOwnModelSetComponent::getModelSetSimulator() const
+        {
+            return this->m_modelSetLoader.getSimulator();
         }
 
         CStatusMessage CDbOwnModelSetComponent::addToModelSet(const CAircraftModel &model, const CSimulatorInfo &simulator)
@@ -195,16 +209,18 @@ namespace BlackGui
         void CDbOwnModelSetComponent::ps_changeSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            this->m_modelSetLoader.changeSimulator(simulator);
+            if (this->getModelSetSimulator() == simulator) { return; } // avoid endless loops
+
             this->setSimulator(simulator);
+            const CAircraftModelList models(this->m_modelSetLoader.getAircraftModels());
+            ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
         }
 
         void CDbOwnModelSetComponent::ps_onSimulatorChanged(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const CAircraftModelList models(this->m_modelSetLoader.getAircraftModels());
-            this->setSimulator(simulator);
-            ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
+            if (this->getModelSetSimulator() == simulator) { return; } // avoid endless loops
+            this->ps_changeSimulator(simulator);
         }
 
         void CDbOwnModelSetComponent::ps_onRowCountChanged(int count, bool withFilter)
@@ -212,12 +228,12 @@ namespace BlackGui
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
             int realUnfilteredCount = ui->tvp_OwnModelSet->container().size();
-            bool canSave = this->m_simulator.isSingleSimulator() && (realUnfilteredCount > 0);
+            bool canSave = this->getModelSetSimulator().isSingleSimulator() && (realUnfilteredCount > 0);
             this->ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
             if (canSave)
             {
-                this->setSaveFileName(this->m_simulator);
-                ui->pb_SaveAsSetForSimulator->setText("save for " + this->m_simulator.toQString(true));
+                this->setSaveFileName(this->getModelSetSimulator());
+                ui->pb_SaveAsSetForSimulator->setText("save for " + this->getModelSetSimulator().toQString(true));
             }
             else
             {
@@ -243,6 +259,11 @@ namespace BlackGui
             }
         }
 
+        void CDbOwnModelSetComponent::ps_modelChanged()
+        {
+            ui->pb_SaveAsSetForSimulator->setEnabled(true);
+        }
+
         void CDbOwnModelSetComponent::setSaveFileName(const CSimulatorInfo &sim)
         {
             Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
@@ -250,10 +271,11 @@ namespace BlackGui
             this->ui->tvp_OwnModelSet->setSaveFileName(name);
         }
 
-        void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &sim)
+        void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
         {
-            this->m_simulator = sim;
-            this->ui->le_Simulator->setText(sim.toQString(true));
+            if (this->m_modelSetLoader.getSimulator() == simulator) { return; } // avoid unnecessary signals
+            this->m_modelSetLoader.changeSimulator(simulator);
+            this->ui->le_Simulator->setText(simulator.toQString(true));
         }
 
         void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)

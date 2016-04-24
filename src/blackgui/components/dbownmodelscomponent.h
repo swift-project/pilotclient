@@ -13,7 +13,6 @@
 #define BLACKGUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 
 #include "blackgui/models/aircraftmodellistmodel.h"
-#include "blackgui/components/data/lastselections.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include <QFrame>
@@ -49,7 +48,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
 
             //! Own models for simulator
-            const BlackMisc::Simulation::CSimulatorInfo &getOwnModelsSimulator() const;
+            const BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
             //! Number of own models
             int getOwnModelsCount() const;
@@ -74,21 +73,21 @@ namespace BlackGui
             void ps_requestOwnModelsUpdate();
 
             //! Load the models
-            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
 
             //! Model loading finished
-            void ps_onOwnModelsLoadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+            void ps_onOwnModelsLoadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Request simulator models
-            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simInfo, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>       m_modelLoader;              //!< read own aircraft models
-            BlackMisc::CData<BlackGui::Components::Data::DbOwnModelsComponent> m_lastInteractions {this};  //!< last interactions
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>               m_modelLoader;                //!< read own aircraft models
+            BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection>     m_simulatorSelection {this }; //!< last selection
 
             //! Init model loader
-            bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
+            bool initModelLoader(const Simulation::CSimulatorInfo &simulator);
 
             //! File name for savinf
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);

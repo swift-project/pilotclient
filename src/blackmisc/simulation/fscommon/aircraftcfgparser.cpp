@@ -100,11 +100,11 @@ namespace BlackMisc
                                 this->setCachedModels(models); // not thread safe
                             }
                             // currently I treat no data as error
-                            emit this->loadingFinished(hasData, this->m_simulatorInfo);
+                            emit this->loadingFinished(hasData, this->getSimulator());
                         }
                         else
                         {
-                            emit this->loadingFinished(false, this->m_simulatorInfo);
+                            emit this->loadingFinished(false, this->getSimulator());
                         }
                     });
                 }
@@ -120,7 +120,7 @@ namespace BlackMisc
                         this->setCachedModels(models); // not thread safe
                     }
                     // currently I treat no data as error
-                    emit this->loadingFinished(hasData, this->m_simulatorInfo);
+                    emit this->loadingFinished(hasData, this->getSimulator());
                 }
             }
 
@@ -128,7 +128,7 @@ namespace BlackMisc
             {
                 if (this->hasCachedData())
                 {
-                    emit this->loadingFinished(true, this->m_simulatorInfo);
+                    emit this->loadingFinished(true, this->getSimulator());
                 }
             }
 

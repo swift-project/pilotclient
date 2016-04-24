@@ -8,6 +8,9 @@
  */
 
 #include "modelcaches.h"
+#include "blackmisc/logmessage.h"
+
+using namespace BlackMisc;
 
 namespace BlackMisc
 {
@@ -15,8 +18,30 @@ namespace BlackMisc
     {
         namespace Data
         {
+            void IMultiSimulatorModelCaches::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+            {
+                this->setCachedModels(models, simulator);
+            }
+
+            CAircraftModelList IMultiSimulatorModelCaches::getCurrentCachedModels() const
+            {
+                const CSimulatorInfo sim(this->getCurrentSimulator());
+                if (!sim.isSingleSimulator()) { return CAircraftModelList(); }
+                return this->getCachedModels(sim);
+            }
+
+            bool IMultiSimulatorModelCaches::syncronizeCurrentCache()
+            {
+                const CSimulatorInfo sim(this->getCurrentSimulator());
+                if (!sim.isSingleSimulator()) { return false; }
+                this->syncronizeCache(sim);
+                return true;
+            }
+
             CModelCaches::CModelCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
-            { }
+            {
+                this->m_currentSimulator.synchronize();
+            }
 
             CAircraftModelList CModelCaches::getCachedModels(const CSimulatorInfo &simulator) const
             {
@@ -36,6 +61,8 @@ namespace BlackMisc
             CStatusMessage CModelCaches::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                const CStatusMessage m = this->m_currentSimulator.set(simulator);
+                if (m.isFailure()) { return m; }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9: return this->m_modelCacheFs9.set(models);
@@ -46,6 +73,13 @@ namespace BlackMisc
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     return CStatusMessage();
                 }
+            }
+
+            QDateTime IMultiSimulatorModelCaches::getCurrentCacheTimestamp() const
+            {
+                const CSimulatorInfo sim(this->getCurrentSimulator());
+                if (!sim.isSingleSimulator()) { return QDateTime(); }
+                return this->getCacheTimestamp(sim);
             }
 
             QDateTime CModelCaches::getCacheTimestamp(const CSimulatorInfo &simulator) const
@@ -66,6 +100,8 @@ namespace BlackMisc
             void CModelCaches::syncronizeCache(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                const CStatusMessage m = this->m_currentSimulator.set(simulator);
+                if (m.isFailure()) { CLogMessage::preformatted(m); }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9: return this->m_modelCacheFs9.synchronize(); break;
@@ -77,8 +113,15 @@ namespace BlackMisc
                 }
             }
 
+            void CModelCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
+            {
+                this->syncronizeCache(simulator);
+            }
+
             CModelSetCaches::CModelSetCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
-            { }
+            {
+                this->m_currentSimulator.synchronize();
+            }
 
             CAircraftModelList CModelSetCaches::getCachedModels(const CSimulatorInfo &simulator) const
             {
@@ -98,24 +141,24 @@ namespace BlackMisc
             CStatusMessage CModelSetCaches::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                CAircraftModelList m(models);
-
-                // make sure we have a proper order
-                if (m.needsOrder())
+                const CStatusMessage m = this->m_currentSimulator.set(simulator);
+                if (m.isFailure()) { return m; }
+                CAircraftModelList orderedModels(models);
+                if (orderedModels.needsOrder())
                 {
-                    m.resetOrder();
+                    orderedModels.resetOrder();
                 }
                 else
                 {
-                    m.sortAscendingByOrder();
+                    orderedModels.sortAscendingByOrder();
                 }
 
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.set(m);
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.set(m);
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.set(m);
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.set(m);
+                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.set(orderedModels);
+                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.set(orderedModels);
+                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.set(orderedModels);
+                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.set(orderedModels);
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     return CStatusMessage();
@@ -140,6 +183,8 @@ namespace BlackMisc
             void CModelSetCaches::syncronizeCache(const CSimulatorInfo &simulator)
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                const CStatusMessage m = this->m_currentSimulator.set(simulator);
+                if (m.isFailure()) { CLogMessage::preformatted(m); }
                 switch (simulator.getSimulator())
                 {
                 case CSimulatorInfo::FS9: return this->m_modelCacheFs9.synchronize(); break;
@@ -149,6 +194,11 @@ namespace BlackMisc
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 }
+            }
+
+            void CModelSetCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
+            {
+                this->syncronizeCache(simulator);
             }
 
         } // ns

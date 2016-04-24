@@ -37,7 +37,7 @@ namespace BlackMisc
     {
         Q_ASSERT_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
         if (this->isEmpty()) { return CPropertyIndex(); }
-        int p = this->m_indexString.indexOf(';');
+        const int p = this->m_indexString.indexOf(';');
         if (p < 0) { return CPropertyIndex(); }
         return CPropertyIndex(this->m_indexString.mid(p + 1));
     }
@@ -129,7 +129,7 @@ namespace BlackMisc
         Q_ASSERT_X(!this->isEmpty(), Q_FUNC_INFO, "No index");
         int f = -1;
         bool ok;
-        int p = this->m_indexString.indexOf(';');
+        const int p = this->m_indexString.indexOf(';');
         if (p < 0)
         {
             f = this->m_indexString.toInt(&ok);
