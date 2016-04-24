@@ -202,7 +202,7 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this, &CModelCaches::changedFs9 }; //!< FS9 cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this, &CModelCaches::changedP3D }; //!< P3D cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection> m_currentSimulator {this };               //!< surrent simulator
+                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection> m_currentSimulator { this };              //!< current simulator
             };
 
             //! Bundle of caches for model sets of all simulators

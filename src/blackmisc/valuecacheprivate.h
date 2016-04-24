@@ -28,6 +28,21 @@ namespace BlackMisc
     {
 
         /*!
+         * \private Identity type trait.
+         */
+        template <typename T>
+        struct Identity
+        {
+            using type = T;
+        };
+
+        /*!
+         * \private Trick to force a non-deduced context during template argument type deduction.
+         */
+        template <typename T>
+        using NonDeduced = typename Identity<T>::type;
+
+        /*!
          * \private QObject subclass used by CCached<T> class template for signal/slot communication with CValueCache.
          * An instance of this class is shared between all CCached<T> referring to the same CValueCache and owned by the same QObject,
          * with the latter QObject becoming parent of this instance.
