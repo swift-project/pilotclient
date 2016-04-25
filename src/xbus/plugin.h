@@ -61,6 +61,7 @@ namespace XBus
         QVector<CMenuItem> m_startServerMenuItems;
 
         void startServer(const QString &address);
+        void tryStartServer(const QString &address);
     };
 }
 
