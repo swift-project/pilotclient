@@ -47,11 +47,11 @@ namespace BlackMisc
             break;
         case SERVERMODE_SYSTEMBUS:
             {
-                QDBusConnection connection = QDBusConnection::systemBus();
+                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
                 if (!connection.isConnected())
                 {
                     launchDBusDaemon();
-                    connection = QDBusConnection::systemBus();
+                    connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
                 }
 
                 if (!connection.registerService(service))
@@ -90,6 +90,7 @@ namespace BlackMisc
     CDBusServer::~CDBusServer()
     {
         this->removeAllObjects();
+        QDBusConnection::disconnectFromBus(coreServiceName());
     }
 
     const QString &CDBusServer::coreServiceName()
@@ -392,13 +393,19 @@ namespace BlackMisc
         }
         else
         {
-            QDBusConnection connection(dbusAddress == systemBusAddress() ? QDBusConnection::systemBus() : QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName()));
+            QString name = coreServiceName();
+            QDBusConnection connection = dbusAddress == systemBusAddress() ?
+                        QDBusConnection::connectToBus(QDBusConnection::SystemBus, name) :
+                        QDBusConnection::connectToBus(QDBusConnection::SessionBus, name);
 
             // todo: further checks would need to go here
             // failing session bus not detected yet
 
             o_message = connection.lastError().message();
-            return connection.isConnected();
+            bool isConnected = connection.isConnected();
+
+            QDBusConnection::disconnectFromBus(name);
+            return isConnected;
         }
     }
 
