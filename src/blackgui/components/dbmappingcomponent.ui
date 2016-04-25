@@ -74,11 +74,11 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="tab_StashAircraftModels">
+         <widget class="QWidget" name="tab_OwnModelSet">
           <attribute name="title">
-           <string>Stashed models</string>
+           <string>My model set</string>
           </attribute>
-          <layout class="QHBoxLayout" name="hl_StashedAircraftModels">
+          <layout class="QHBoxLayout" name="hl_OwnModelSet">
            <property name="spacing">
             <number>4</number>
            </property>
@@ -95,7 +95,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::Components::CDbStashComponent" name="comp_StashAircraft">
+            <widget class="BlackGui::Components::CDbOwnModelSetComponent" name="comp_OwnModelSet">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -138,11 +138,11 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_OwnModelSet">
+         <widget class="QWidget" name="tab_StashAircraftModels">
           <attribute name="title">
-           <string>My model set</string>
+           <string>Stashed models</string>
           </attribute>
-          <layout class="QHBoxLayout" name="hl_OwnModelSet">
+          <layout class="QHBoxLayout" name="hl_StashedAircraftModels">
            <property name="spacing">
             <number>4</number>
            </property>
@@ -159,7 +159,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::Components::CDbOwnModelSetComponent" name="comp_OwnModelSet">
+            <widget class="BlackGui::Components::CDbStashComponent" name="comp_StashAircraft">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>

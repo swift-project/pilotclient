@@ -52,9 +52,9 @@ namespace BlackGui
             enum TabIndex
             {
                 NoValidTab      =  -1,
-                TabStash        =   0,
+                TabOwnModelSet  =   0,
                 TabOwnModels    =   1,
-                TabOwnModelSet  =   2,
+                TabStash        =   2,
                 TabModelMatcher =   3,
                 TabVPilot      =    4
             };
