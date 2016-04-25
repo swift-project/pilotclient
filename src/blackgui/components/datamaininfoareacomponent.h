@@ -40,8 +40,8 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaData          =  0,
-                InfoAreaMapping       =  1,
+                InfoAreaMapping       =  0,
+                InfoAreaData          =  1,
                 InfoAreaSettings      =  2,
                 InfoAreaLog           =  3,
                 InfoAreaNone          = -1
