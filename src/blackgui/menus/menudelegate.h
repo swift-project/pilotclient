@@ -11,7 +11,7 @@
 #define BLACKGUI_MENUS_MENUDELEGATE_H
 
 #include "blackmisc/logcategorylist.h"
-#include <QMenu>
+#include "blackgui/menus/menuaction.h"
 #include <QObject>
 
 using namespace BlackMisc;
@@ -29,7 +29,7 @@ namespace BlackGui
 
         public:
             //! Display custom menu
-            virtual void customMenu(QMenu &menu) const = 0;
+            virtual void customMenu(CMenuActions &menuActions) = 0;
 
             //! Set nested delegate
             void setNestedDelegate(IMenuDelegate *nestedDelegate) { m_nestedDelegate = nestedDelegate; }
@@ -53,17 +53,10 @@ namespace BlackGui
                 QObject(parent), m_separator(separator) {}
 
             //! Delegate down one level
-            void nestedCustomMenu(QMenu &menu) const
+            void nestedCustomMenu(CMenuActions &menuActions) const
             {
                 if (!m_nestedDelegate) { return; }
-                m_nestedDelegate->customMenu(menu);
-            }
-
-            //! Add separator
-            virtual void addSeparator(QMenu &menu) const
-            {
-                if (!m_separator || menu.isEmpty()) { return; }
-                menu.addSeparator();
+                m_nestedDelegate->customMenu(menuActions);
             }
 
             //! Does the previous (menu) item contain string?

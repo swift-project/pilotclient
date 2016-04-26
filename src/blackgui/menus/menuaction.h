@@ -1,0 +1,300 @@
+/* Copyright (C) 2015
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKGUI_MENUS_MENUACTION_H
+#define BLACKGUI_MENUS_MENUACTION_H
+
+#include "blackmisc/slot.h"
+#include <QMenu>
+#include <QAction>
+#include <QIcon>
+#include <QMultiMap>
+
+namespace BlackGui
+{
+    namespace Menus
+    {
+        /*!
+         * Wraps a QAction with extra metadata to allow proper sorting for a QMenu
+         */
+        class CMenuAction
+        {
+        public:
+            //! Constructor
+            CMenuAction(const QIcon &icon, const QString &title, const QString &path = pathNone(), bool separator = false);
+
+            //! Constructor
+            CMenuAction(const QString &path = pathNone(), bool separator = false);
+
+            //! Constructor
+            CMenuAction(QAction *action, const QString &path = pathNone(), bool separator = false);
+
+            //! Title
+            void setTitle(const QString &title) { m_title = title; }
+
+            //! Icon
+            void setIcon(const QIcon &icon) { m_icon = icon; }
+
+            //! Path
+            void setPath(const QString &path) { m_path = path; }
+
+            //! Action
+            QAction *getQAction() const { return m_action; }
+
+            //! Checkable QAction
+            bool isCheckableQAction() const;
+
+            //! Set a checkable action, QAction::setChecked
+            void setActionChecked(bool checked);
+
+            //! Path
+            const QString &getPath() const  { return m_path; }
+
+            //! Last part of the path, e.g. "Foo/Bar" -> "Bar"
+            QString getLastPathPart() const;
+
+            //! Title
+            const QString &getTitle() const { return m_title; }
+
+            //! Has title?
+            bool hasTitle() const { return !m_title.isEmpty(); }
+
+            //! Is menu?
+            bool isSubMenu() const { return m_isMenu; }
+
+            //! Is menu?
+            void setSubMenu(bool menu) { m_isMenu = menu; }
+
+            //! No path and separator wanted
+            bool hasNoPathWithSeparator() const;
+
+            //! No path?
+            bool hasNoPath() const;
+
+            //! Icon
+            const QIcon &getIcon() const { return m_icon; }
+
+            //! Has icon?
+            bool hasIcon() const { return !m_icon.isNull(); }
+
+            //! Conversion
+            operator QAction *() const { return this->m_action; }
+
+            // ---- paths for menus ----
+            //! \name Menu path definitions
+            //! @{
+
+            //! No key
+            static const QString &pathNone() { static const QString p("_NONE"); return p; }
+
+            //! Model set
+            static const QString &pathModelSet()  { static const QString p("Custom.10.Model/Model set"); return p; }
+
+            //! Model set, new set
+            static const QString &pathModelSetNew()  { static const QString p("Custom.10.Model/Model set/New set"); return p; }
+
+            //! Simulator sub menu
+            static const QString &pathSimulator()  { static const QString p("Custom.11.Simulator/Simulator"); return p; }
+
+            //! Simulator sub menu reload models
+            static const QString &pathSimulatorModelsReload()  { static const QString p("Custom.11.Simulator/Simulator/Reload models"); return p; }
+
+            //! Stash sub menu
+            static const QString &pathStash()  { static const QString p("Custom.12.Stash/Stash"); return p; }
+
+            //! Stash editor sub menu
+            static const QString &pathStashEditor()  { static const QString p("Custom.13.Stash/Editor"); return p; }
+
+            //! vPilot data
+            static const QString &pathVPilot()  { static const QString p("Custom.14.vPilot/vPilot"); return p; }
+
+            //! Log functionality
+            static const QString &pathLog()  { static const QString p("Custom15.Log"); return p; }
+
+            // ---- client ----
+
+            //! Client COM related
+            static const QString &pathClientCom()  { static const QString p("Client.ATC"); return p; }
+
+            //! Client COM related
+            static const QString &pathClientSimulation()  { static const QString p("Client.Simulation"); return p; }
+
+            // ---- standard view paths --------
+
+            //! Database
+            static const QString &pathViewDatabase()  { static const QString p("View.10.Database/Database"); return p; }
+
+            //! Database merge
+            static const QString &pathViewDatabaseMerge()  { static const QString p("View.10.Database/Database/Merge"); return p; }
+
+            //! Select add remove
+            static const QString &pathViewAddRemove()  { static const QString p("View.11.AddRemove"); return p; }
+
+            //! View selection mode
+            static const QString &pathViewSelection()  { static const QString p("View.12.Selection/Selection"); return p; }
+
+            //! Order submenus
+            static const QString &pathViewOrder()  { static const QString p("View.13.Order/Order"); return p; }
+
+            //! View resizing
+            static const QString &pathViewResize()  { static const QString p("View.14.Resize"); return p; }
+
+            //! View filter
+            static const QString &pathViewFilter()  { static const QString p("View.15.Filter"); return p; }
+
+            //! View update
+            static const QString &pathViewUpdates()  { static const QString p("View.16.Updates"); return p; }
+
+            //! View load/save
+            static const QString &pathViewLoadSave()  { static const QString p("View.17.LoadSave"); return p; }
+
+            //! @}
+
+        private:
+            QAction *m_action = nullptr;        //!< the action
+            QIcon    m_icon;                    //!< icon
+            QString  m_title;                   //!< title
+            QString  m_path;                    //!< path in menu
+            bool     m_separator = false;       //!< separator
+            bool     m_isMenu = false;          //!< is menu?
+        };
+
+        /*!
+         * Bunch of CMenuAction objects
+         */
+        class CMenuActions
+        {
+        public:
+            //! Constructor
+            CMenuActions() {}
+
+            //! Constructor
+            CMenuActions(const QList<CMenuAction> &actions);
+
+            //! All actions
+            CMenuActions getActions() const { return m_actions.values(); }
+
+            //! QActions
+            QList<QAction *> getQActions() const;
+
+            //! All menu actions
+            CMenuActions getMenuActions(const QString &path) const;
+
+            //! Menu already available?
+            bool containsMenu(const QString &path) const;
+
+            //! Empty?
+            bool isEmpty() const { return m_actions.isEmpty(); }
+
+            //! Elements
+            int size() const { return m_actions.size(); }
+
+            //! Add a sub menu
+            CMenuAction addMenu(const QString &title, const QString &path);
+
+            //! Add a sub menu
+            CMenuAction addMenu(const QIcon &icon, const QString &title, const QString &path);
+
+            //! Add menu action
+            CMenuAction addAction(const CMenuAction &menuAction);
+
+            //! Add menu actions, returns last valid QAction
+            CMenuActions addActions(const CMenuActions &actions);
+
+            //! Add menu action
+            CMenuAction addAction(QAction *action, const QString &path);
+
+            //! Add menu action
+            CMenuActions addActions(const QList<QAction *> &actions, const QString &path);
+
+            //! Convenience function if method is also kept elsewhere
+            CMenuAction addAction(QAction *action, const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Convenience function if method is also kept elsewhere
+            CMenuAction addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Convenience function if method is also kept elsewhere
+            CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Convenience function if method is also kept elsewhere
+            CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Add action which still needs to be connected
+            CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner, const QKeySequence &shortcut = 0);
+
+            //! Add action which still needs to be connected
+            CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const QKeySequence &shortcut = 0);
+
+            //! Add action
+            CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Add action
+            CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Add menu action
+            CMenuAction addAction(const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Add menu action
+            CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Insert the sorted actions to the menu
+            void toQMenu(QMenu &menu, bool separateGroups) const;
+
+            //! To QList
+            QList<CMenuAction> toQList() const;
+
+            //! First action
+            CMenuAction first() const { return toQList().first(); }
+
+            //! Last action
+            CMenuAction last() const { return toQList().last(); }
+
+            //! All actions;
+            operator QList<QAction *>() const;
+
+            //! As QList
+            operator QList<CMenuAction>() const { return toQList(); }
+
+            //! \name Add some typical sub menus
+            //! @{
+
+            //! View order menu
+            CMenuAction addMenuViewOrder();
+
+            //! Simulator menu
+            CMenuAction addMenuSimulator();
+
+            //! Stash menu
+            CMenuAction addMenuStash();
+
+            //! Stash menu
+            CMenuAction addMenuStashEditor();
+
+            //! Database menu
+            CMenuAction addMenuDatabase();
+
+            //! Model set menu
+            CMenuAction addMenuModelSet();
+
+            //! @}
+
+        private:
+            QMultiMap<QString, CMenuAction> m_actions; //!< actions sorted by path
+
+            //! Split actions into submenus, normal actions and fix order
+            void splitSubMenus(const QString &key, QList<CMenuAction> &actions, QList<CMenuAction> &menus) const;
+
+            static int pathDepth(const QString &path);
+            static QMenu *currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pd);
+            static QString parentPathKey(const QString &cuurentPath);
+        };
+    } // ns
+} // ns
+
+#endif // guard
