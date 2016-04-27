@@ -81,15 +81,6 @@ namespace BlackCore
             this->m_cookieManager.setParent(&this->m_accessManager);
             this->m_accessManager.setCookieJar(&this->m_cookieManager);
 
-            // trigger loading of settings
-            //! \todo maybe loaded twice, context initializing might trigger loading of settings a second time
-            CStatusMessage m = CSettingsCache::instance()->loadFromStore();
-            if (!m.isEmpty())
-            {
-                m.setCategories(getLogCategories());
-                CLogMessage::preformatted(m);
-            }
-
             // global setup
             sApp = this;
             this->m_setupReader.reset(new CSetupReader(this));
@@ -158,6 +149,18 @@ namespace BlackCore
         }
 
         bool s = this->startHookIn();
+
+        // trigger loading of settings in appropriate scenarios
+        if (this->m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
+        {
+            CStatusMessage m = CSettingsCache::instance()->loadFromStore();
+            if (!m.isEmpty())
+            {
+                m.setCategories(getLogCategories());
+                CLogMessage::preformatted(m);
+            }
+        }
+
         if (waitForStart)
         {
             s = this->waitForStart();
