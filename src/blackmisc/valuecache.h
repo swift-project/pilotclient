@@ -35,10 +35,13 @@ namespace BlackMisc
         using base_type = CDictionary;
 
         //! Constructor.
-        CValueCachePacket(bool saved = false) : m_saved(saved) {}
+        CValueCachePacket(bool saved = false, bool valuesChanged = true) : m_saved(saved), m_valuesChanged(valuesChanged) {}
 
         //! Construct from CVariantMap and a timestamp.
-        CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved = false);
+        CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved = false, bool valuesChanged = true);
+
+        //! Values have been changed.
+        bool valuesChanged() const { return m_valuesChanged; }
 
         //! Values are to be saved.
         //! @{
@@ -90,10 +93,12 @@ namespace BlackMisc
 
     private:
         bool m_saved = false;
+        bool m_valuesChanged = true;
 
         BLACK_METACLASS(
             CValueCachePacket,
-            BLACK_METAMEMBER(saved)
+            BLACK_METAMEMBER(saved),
+            BLACK_METAMEMBER(valuesChanged)
         );
     };
 
@@ -303,6 +308,9 @@ namespace BlackMisc
 
         //! Write and save in the same step. Must be called from the thread in which the owner lives.
         CStatusMessage setAndSave(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp, true); }
+
+        //! Save using the currently set value. Must be called from the thread in which the owner lives.
+        CStatusMessage save() { return m_page.setValue(m_element, {}, 0, true, true); }
 
         //! Is current thread the owner thread, so CCached::set is safe
         bool isOwnerThread() const { return QThread::currentThread() == m_page.thread(); }

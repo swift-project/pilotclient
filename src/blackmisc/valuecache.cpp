@@ -33,8 +33,8 @@ namespace BlackMisc
     // CValueCachePacket
     ////////////////////////////////
 
-    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved) :
-        m_saved(saved)
+    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved, bool valuesChanged) :
+        m_saved(saved), m_valuesChanged(valuesChanged)
     {
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
@@ -182,13 +182,16 @@ namespace BlackMisc
             while (out != end && out.key() < in.key()) { ++out; }
             auto &element = getElement(in.key(), out);
 
-            Q_ASSERT(isSafeToIncrement(element.m_pendingChanges));
-            element.m_pendingChanges++;
-            element.m_value = in.value();
-            element.m_timestamp = in.timestamp();
+            if (values.valuesChanged())
+            {
+                Q_ASSERT(isSafeToIncrement(element.m_pendingChanges));
+                element.m_pendingChanges++;
+                element.m_value = in.value();
+                element.m_timestamp = in.timestamp();
+            }
             element.m_saved = values.isSaved();
         }
-        emit valuesChanged(values, sender());
+        if (values.valuesChanged()) { emit valuesChanged(values, sender()); }
         emit valuesChangedByLocal(values);
     }
 
@@ -196,6 +199,11 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
         if (values.empty()) { return; }
+        if (! values.valuesChanged())
+        {
+            if (values.isSaved()) { emit valuesSaveRequested(values); }
+            return;
+        }
         CValueCachePacket ratifiedChanges(values.isSaved());
         auto out = m_elements.lowerBound(values.cbegin().key());
         auto end = m_elements.upperBound((values.cend() - 1).key());
@@ -453,17 +461,24 @@ namespace BlackMisc
         return element.m_value.read();
     }
 
-    CStatusMessage CValuePage::setValue(Element &element, const CVariant &value, qint64 timestamp, bool save)
+    CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save, bool ignoreValue)
     {
         Q_ASSERT(QThread::currentThread() == thread());
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
-        if (element.m_value.read() == value && element.m_timestamp == timestamp) { return {}; }
+        if (element.m_value.read() == value && element.m_timestamp == timestamp && ! ignoreValue) { return {}; }
+
+        if (ignoreValue) { value = element.m_value.read(); }
 
         auto status = validate(element, value, CStatusMessage::SeverityError);
         if (status.isSuccess())
         {
-            if (m_batchMode > 0)
+            if (ignoreValue)
+            {
+                element.m_saved = save;
+                emit valuesWantToCache({ { { element.m_key, {} } }, 0, save, false });
+            }
+            else if (m_batchMode > 0)
             {
                 m_batchedValues[element.m_key] = value;
             }
@@ -505,6 +520,7 @@ namespace BlackMisc
     void CValuePage::setValuesFromCache(const CValueCachePacket &values, QObject *changedBy)
     {
         Q_ASSERT(QThread::currentThread() == thread());
+        Q_ASSERT_X(values.valuesChanged(), Q_FUNC_INFO, "packet with unchanged values should not reach here");
 
         QList<NotifySlot> notifySlots;
 
