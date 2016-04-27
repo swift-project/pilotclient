@@ -34,9 +34,9 @@ namespace BlackMisc
         //! Save core settings to disk.
         BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {});
 
-        //! Save individual settings to disk.
-        //! Core application context connects this slot to the valuesSaveRequested signal.
-        void saveToStoreByPacket(const CValueCachePacket &values);
+        //! Connects signal CValueCache::valuesSaveRequested to a private slot that saves the values.
+        //! In a dbus distributed scenario, only call this method in the core process.
+        void enableLocalSave();
 
         //! Load core settings from disk.
         BlackMisc::CStatusMessage loadFromStore();
@@ -49,6 +49,7 @@ namespace BlackMisc
 
     private:
         CSettingsCache();
+        void saveToStoreByPacket(const CValueCachePacket &values);
     };
 
     /*!

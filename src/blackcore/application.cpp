@@ -150,7 +150,7 @@ namespace BlackCore
 
         bool s = this->startHookIn();
 
-        // trigger loading of settings in appropriate scenarios
+        // trigger loading and saving of settings in appropriate scenarios
         if (this->m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
         {
             CStatusMessage m = CSettingsCache::instance()->loadFromStore();
@@ -159,6 +159,8 @@ namespace BlackCore
                 m.setCategories(getLogCategories());
                 CLogMessage::preformatted(m);
             }
+
+            CSettingsCache::instance()->enableLocalSave();
         }
 
         if (waitForStart)

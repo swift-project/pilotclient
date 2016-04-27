@@ -34,6 +34,11 @@ namespace BlackMisc
         return saveToFiles(persistentStore(), keyPrefix);
     }
 
+    void CSettingsCache::enableLocalSave()
+    {
+        connect(CSettingsCache::instance(), &CSettingsCache::valuesSaveRequested, CSettingsCache::instance(), &CSettingsCache::saveToStoreByPacket);
+    }
+
     void CSettingsCache::saveToStoreByPacket(const CValueCachePacket &values)
     {
         CStatusMessage status = saveToFiles(persistentStore(), values.toVariantMap());
