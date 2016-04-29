@@ -45,7 +45,7 @@ namespace BlackGui
             explicit CViewWithDbObjects(QWidget *parent = nullptr);
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
-            virtual void customMenu(QMenu &menu) const override;
+            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
         protected slots:
             //! \copydoc BlackGui::Views::CViewBase::ps_toggleHighlightDbData
@@ -61,7 +61,7 @@ namespace BlackGui
             explicit COrderableViewWithDbObjects(QWidget *parent = nullptr);
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
-            virtual void customMenu(QMenu &menu) const override;
+            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
             //! Move selected items
             void moveSelectedItems(int order);
@@ -81,6 +81,8 @@ namespace BlackGui
 
         private:
             QList<QAction *> m_menuActions;
+            QLineEdit       *m_leOrder = nullptr;
+            QIntValidator   *m_validator = nullptr;
         };
     } // namespace
 } // namespace

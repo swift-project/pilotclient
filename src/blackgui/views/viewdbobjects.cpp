@@ -17,6 +17,7 @@
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Models;
+using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
@@ -85,15 +86,21 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(QMenu &menu) const
+        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(Menus::CMenuActions &menuActions)
         {
             if (this->m_menus.testFlag(CViewBaseNonTemplate::MenuHighlightDbData))
             {
-                QAction *a = menu.addAction(CIcons::database16(), "Highlight DB data", this, &CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleHighlightDbData);
-                a->setCheckable(true);
+                if (!this->m_menuFlagActions.contains(CViewBaseNonTemplate::MenuHighlightDbData))
+                {
+                    CMenuActions ma;
+                    QAction *added = ma.addAction(CIcons::database16(), "Highlight DB data", CMenuAction::pathViewDatabase(), { this, &CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleHighlightDbData });
+                    added->setCheckable(true);
+                    this->m_menuFlagActions.insert(CViewBaseNonTemplate::MenuHighlightDbData, ma);
+                }
+                QAction *a = menuActions.addActions(this->initMenuActions(CViewBaseNonTemplate::MenuHighlightDbData)).first();
                 a->setChecked(this->derivedModel()->highlightDbData());
             }
-            CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(menu);
+            CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(menuActions);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
@@ -111,28 +118,39 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(QMenu &menu) const
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(CMenuActions &menuActions)
         {
             if (this->m_menus.testFlag(CViewBaseNonTemplate::MenuOrderable) && this->hasSelection())
             {
                 const int maxOrder = this->rowCount() - 1;
-                QMenu *menuOrder = menu.addMenu(CIcons::arrowMediumEast16(), "Order");
+                if (this->m_menuActions.isEmpty())
+                {
+                    // predefine menus
+                    this->m_menuActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr});
 
-                QLineEdit *leOrder = new QLineEdit(&menu);
-                leOrder->setPlaceholderText("New order 0-" + QString::number(maxOrder));
-                const QIntValidator *v = new QIntValidator(0, maxOrder, leOrder);
-                leOrder->setValidator(v);
-                QWidgetAction *orderAction = new QWidgetAction(&menu);
-                orderAction->setDefaultWidget(leOrder);
-                menuOrder->addAction(orderAction);
-                QObject::connect(leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToLineEdit);
+                    if (!this->m_menuActions[0])
+                    {
+                        this->m_leOrder = new QLineEdit(this);
+                        this->m_validator = new QIntValidator(0, maxOrder, this);
+                        this->m_leOrder->setValidator(this->m_validator);
+                        QWidgetAction *orderAction = new QWidgetAction(this);
+                        orderAction->setDefaultWidget(this->m_leOrder);
+                        QObject::connect(this->m_leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToLineEdit);
+                        this->m_menuActions[0] = orderAction;
+                    }
+                }
 
-                menuOrder->addAction(CIcons::arrowMediumNorth16(), "To top", this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToTop);
-                menuOrder->addAction(CIcons::arrowMediumSouth16(), "To bottom", this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToBottom);
-                menuOrder->addAction(CIcons::arrowMediumWest16(), "Freeze current order", this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_freezeCurrentOrder);
-                menu.addSeparator();
+                this->m_validator->setRange(0, maxOrder);
+                this->m_leOrder->setValidator(this->m_validator);
+                this->m_leOrder->setPlaceholderText("New order 0-" + QString::number(maxOrder));
+
+                menuActions.addMenuViewOrder();
+                menuActions.addAction(this->m_menuActions[0], CMenuAction::pathViewOrder());
+                this->m_menuActions[1] = menuActions.addAction(CIcons::arrowMediumNorth16(), "To top", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToTop });
+                this->m_menuActions[2] = menuActions.addAction(CIcons::arrowMediumSouth16(), "To bottom", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_orderToBottom });
+                this->m_menuActions[3] = menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_freezeCurrentOrder });
             }
-            CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(menu);
+            CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(menuActions);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>

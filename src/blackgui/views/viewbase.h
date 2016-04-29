@@ -17,6 +17,7 @@
 #include "blackgui/filters/filterwidget.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/menus/menudelegate.h"
+#include "blackgui/menus/menuaction.h"
 #include "blackgui/loadindicator.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/icons.h"
@@ -30,6 +31,7 @@
 #include <QPoint>
 #include <QFont>
 #include <QList>
+#include <QMultiMap>
 
 namespace BlackGui
 {
@@ -281,7 +283,7 @@ namespace BlackGui
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu
             //! \sa BlackGui::Views::CViewBaseNonTemplate::ps_customMenuRequested
-            virtual void customMenu(QMenu &menu) const;
+            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions);
 
             //! \name Functions from QTableView
             //! @{
@@ -319,6 +321,9 @@ namespace BlackGui
             //! Default file for load/save operations
             QString getDefaultFilename(bool load) const;
 
+            //! Init menu actions
+            BlackGui::Menus::CMenuActions initMenuActions(MenuFlag menu);
+
             QString        m_saveFileName;                                     //!< save file name (JSON)
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
@@ -336,8 +341,9 @@ namespace BlackGui
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu     m_menus                          = MenuDefault;           //!< Default menu settings
-            BlackGui::Menus::IMenuDelegate    *m_menu = nullptr;               //!< custom menu if any
+            BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if needed
+            QMap<MenuFlag, BlackGui::Menus::CMenuActions> m_menuFlagActions;   //!< initialized actions
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
@@ -367,11 +373,14 @@ namespace BlackGui
             //! Load JSON
             virtual BlackMisc::CStatusMessage ps_loadJson() = 0;
 
+            //! Load JSON for action/menu, no return signatur
+            void ps_loadJsonAction();
+
             //! Save JSON
             virtual BlackMisc::CStatusMessage ps_saveJson() const = 0;
 
-            //! Save JSON called by shortcut
-            virtual void ps_saveJsonShortcut();
+            //! Save JSON for action/menu, no return signatur
+            void ps_saveJsonAction();
 
             // ------------ slots of CViewDbObjects ----------------
             // need to be declared here and overridden, as this is the only part with valid Q_OBJECT

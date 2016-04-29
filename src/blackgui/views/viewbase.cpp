@@ -11,6 +11,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/buildconfig.h"
 #include "blackgui/models/allmodels.h"
+#include "blackgui/menus/menuaction.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/guiapplication.h"
@@ -59,7 +60,7 @@ namespace BlackGui
             filter->setObjectName("Filter shortcut for " + this->objectName());
             QShortcut *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this, SLOT(clearSelection()), nullptr, Qt::WidgetShortcut);
             clearSelection->setObjectName("Clear selection shortcut for " + this->objectName());
-            QShortcut *saveJson = new QShortcut(CShortcut::keySaveViews(), this, SLOT(ps_saveJsonShortcut()), nullptr, Qt::WidgetShortcut);
+            QShortcut *saveJson = new QShortcut(CShortcut::keySaveViews(), this, SLOT(ps_saveJsonAction()), nullptr, Qt::WidgetShortcut);
             saveJson->setObjectName("Save JSON for " + this->objectName());
             QShortcut *deleteRow = new QShortcut(CShortcut::keyDelete(), this, SLOT(ps_removeSelectedRows()), nullptr, Qt::WidgetShortcut);
             deleteRow->setObjectName("Delete selected rows for " + this->objectName());
@@ -174,116 +175,133 @@ namespace BlackGui
             return menu;
         }
 
-        void CViewBaseNonTemplate::customMenu(QMenu &menu) const
+        CMenuActions CViewBaseNonTemplate::initMenuActions(CViewBaseNonTemplate::MenuFlag menu)
+        {
+            if (this->m_menuFlagActions.contains(menu)) { return this->m_menuFlagActions.value(menu); }
+
+            CMenuActions ma;
+            switch (menu)
+            {
+            case MenuRefresh: { ma.addAction(BlackMisc::CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::requestUpdate }); break; }
+            case MenuBackend: { ma.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::requestNewBackendData}); break; }
+            case MenuDisplayAutomatically:
+                {
+                    QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_toggleAutoDisplay });
+                    a->setCheckable(true);
+                    a->setChecked(this->displayAutomatically());
+                    break;
+                }
+            case MenuRemoveSelectedRows: { ma.addAction(BlackMisc::CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_removeSelectedRows }, CShortcut::keyDelete()); break; }
+            case MenuClear: { ma.addAction(BlackMisc::CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_clear }); break; }
+            case MenuFilter:
+                {
+                    ma.addAction(CIcons::filter16(), "Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_displayFilterDialog }, CShortcut::keyDisplayFilter());
+                    ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_removeFilter });
+                    break;
+                }
+            case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_loadJsonAction }); break; }
+            case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_saveJsonAction }, CShortcut::keySaveViews()); break; }
+            default:
+                break;
+            }
+            this->m_menuFlagActions.insert(menu, ma);
+            return ma;
+        }
+
+        void CViewBaseNonTemplate::customMenu(CMenuActions &menuActions)
         {
             // delegate?
-            if (this->m_menu) { this->m_menu->customMenu(menu); }
+            if (this->m_menu) { this->m_menu->customMenu(menuActions); }
 
-            // separator
-            if (!menu.isEmpty() && ((this->m_menus & MenuStandard) > 0)) { menu.addSeparator(); }
+            // standard view menus
+            if (this->m_menus.testFlag(MenuRefresh)) { menuActions.addActions(this->initMenuActions(MenuRefresh)); }
+            if (this->m_menus.testFlag(MenuBackend)) { menuActions.addActions(this->initMenuActions(MenuBackend)); }
+            if (m_showingLoadIndicator)
+            {
+                // just in case, if this ever will be dangling
+                menuActions.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::hideLoadIndicator });
+            }
 
-            // standard menus
-            int items = menu.actions().size();
-            if (this->m_menus.testFlag(MenuRefresh)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, &CViewBaseNonTemplate::requestUpdate); }
-            if (this->m_menus.testFlag(MenuBackend)) { menu.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", this, &CViewBaseNonTemplate::requestNewBackendData); }
-            if (this->m_menus.testFlag(MenuClear)) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, &CViewBaseNonTemplate::ps_clear); }
+            if (this->m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
+            if (this->m_menus.testFlag(MenuDisplayAutomatically))
+            {
+                // here I expect only one action
+                QAction *a = menuActions.addActions(this->initMenuActions(MenuDisplayAutomatically)).first();
+                a->setChecked(this->displayAutomatically());
+            }
             if (this->m_menus.testFlag(MenuRemoveSelectedRows))
             {
                 if (this->hasSelection())
                 {
-                    menu.addAction(BlackMisc::CIcons::delete16(), "Remove selected rows", this, &CViewBaseNonTemplate::ps_removeSelectedRows, CShortcut::keyDelete());
+                    menuActions.addActions(this->initMenuActions(MenuRemoveSelectedRows));
                 }
             }
-            if (this->m_menus.testFlag(MenuDisplayAutomatically))
-            {
-                QAction *a = menu.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", this, &CViewBaseNonTemplate::ps_toggleAutoDisplay);
-                a->setCheckable(true);
-                a->setChecked(this->displayAutomatically());
-            }
-            if (menu.actions().size() > items) { menu.addSeparator(); }
-
-            items = menu.actions().size();
             if (this->m_menus.testFlag(MenuFilter))
             {
-                menu.addAction(CIcons::filter16(), "Filter", this, &CViewBaseNonTemplate::ps_displayFilterDialog, CShortcut::keyDisplayFilter());
-                menu.addAction(CIcons::filter16(), "Remove Filter", this, &CViewBaseNonTemplate::ps_removeFilter);
+                menuActions.addActions(this->initMenuActions(MenuFilter));
             }
-            if (menu.actions().size() > items) { menu.addSeparator(); }
 
-            // selection menus
-            items = menu.actions().size();
-            SelectionMode sm = this->selectionMode();
+            // selection menus, not in menu action list because it depends on current selection
+            const SelectionMode sm = this->selectionMode();
             if (sm == MultiSelection || sm == ExtendedSelection)
             {
-                menu.addAction(QIcon(), "Select all", this, &CViewBaseNonTemplate::selectAll, Qt::CTRL + Qt::Key_A);
+                menuActions.addAction("Select all", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::selectAll }, Qt::CTRL + Qt::Key_A);
+            }
+            if (sm != NoSelection)
+            {
+                menuActions.addAction("Clear selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::clearSelection }, CShortcut::keyClearSelection());
             }
             if ((this->m_originalSelectionMode == MultiSelection || this->m_originalSelectionMode == ExtendedSelection) && this->m_menus.testFlag(MenuToggleSelectionMode))
             {
                 if (sm != MultiSelection)
                 {
-                    QAction *a = menu.addAction(QIcon(), "Switch to multi selection", this, &CViewBaseNonTemplate::ps_toggleSelectionMode);
+                    QAction *a = menuActions.addAction("Switch to multi selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_toggleSelectionMode });
                     a->setData(MultiSelection);
                 }
 
                 if (sm != ExtendedSelection)
                 {
-                    QAction *a = menu.addAction(QIcon(), "Switch to extended selection", this, &CViewBaseNonTemplate::ps_toggleSelectionMode);
+                    QAction *a = menuActions.addAction("Switch to extended selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_toggleSelectionMode });
                     a->setData(ExtendedSelection);
                 }
 
                 if (sm != SingleSelection)
                 {
-                    QAction *a = menu.addAction(QIcon(), "Switch to single selection", this, &CViewBaseNonTemplate::ps_toggleSelectionMode);
+                    QAction *a = menuActions.addAction("Switch to single selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_toggleSelectionMode });
                     a->setData(SingleSelection);
                 }
             }
-            if (sm != NoSelection)
-            {
-                menu.addAction(QIcon(), "Clear selection", this, &CViewBaseNonTemplate::clearSelection, CShortcut::keyClearSelection());
-            }
-            if (menu.actions().size() > items) { menu.addSeparator(); }
 
             // load/save
-            items = menu.actions().size();
-            if (m_menus.testFlag(MenuLoad)) { menu.addAction(CIcons::disk16(), "Load from file", this, &CViewBaseNonTemplate::ps_loadJson); }
-            if (m_menus.testFlag(MenuSave) && !isEmpty()) { menu.addAction(CIcons::disk16(), "Save data in file", this, &CViewBaseNonTemplate::ps_saveJson, CShortcut::keySaveViews()); }
-            if (menu.actions().size() > items) { menu.addSeparator(); }
+            if (m_menus.testFlag(MenuLoad)) { menuActions.addActions(this->initMenuActions(MenuLoad)); }
+            if (m_menus.testFlag(MenuSave) && !isEmpty()) { menuActions.addActions(this->initMenuActions(MenuSave)); }
 
             // resizing
-            menu.addAction(BlackMisc::CIcons::resize16(), "Resize", this, &CViewBaseNonTemplate::presizeOrFullResizeToContents);
+            menuActions.addAction(BlackMisc::CIcons::resize16(), "Resize", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::presizeOrFullResizeToContents });
 
             // resize to content might decrease performance,
             // so I only allow changing to "content resizing" if size matches
-            bool enabled = !this->reachedResizeThreshold();
-            bool autoResize = this->m_resizeMode == ResizingAuto;
+            const bool enabled = !this->reachedResizeThreshold();
+            const bool autoResize = this->m_resizeMode == ResizingAuto;
 
             // when not auto let set how we want to resize rows
             if (m_rowResizeMode == Interactive)
             {
-                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), " Resize rows to content (auto)", this, &CViewBaseNonTemplate::rowsResizeModeToContent);
+                QAction *a = menuActions.addAction(BlackMisc::CIcons::resizeVertical16(), " Resize rows to content (auto)", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
                 a->setEnabled(enabled && !autoResize);
             }
             else
             {
-                QAction *a = menu.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", this, &CViewBaseNonTemplate::rowsResizeModeToInteractive);
+                QAction *a = menuActions.addAction(BlackMisc::CIcons::resizeVertical16(), "Resize rows interactive", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
                 a->setEnabled(!autoResize);
             }
 
-            QAction *actionInteractiveResize = new QAction(&menu);
+            QAction *actionInteractiveResize = menuActions.addAction(CIcons::viewMultiColumn(), "Resize (auto)", CMenuAction::pathViewResize(), nullptr);
             actionInteractiveResize->setObjectName(this->objectName().append("ActionResizing"));
-            actionInteractiveResize->setIconText("Resize (auto)");
-            actionInteractiveResize->setIcon(CIcons::viewMultiColumn());
             actionInteractiveResize->setCheckable(true);
             actionInteractiveResize->setChecked(autoResize);
             actionInteractiveResize->setEnabled(enabled);
-            menu.addAction(actionInteractiveResize);
             connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::ps_toggleResizeMode);
-
-            if (m_showingLoadIndicator)
-            {
-                // just in case, if this ever will be dangling
-                menu.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", this, &CViewBaseNonTemplate::hideLoadIndicator);
-            }
         }
 
         void CViewBaseNonTemplate::paintEvent(QPaintEvent *event)
@@ -405,7 +423,14 @@ namespace BlackGui
             this->m_filterWidget->show();
         }
 
-        void CViewBaseNonTemplate::ps_saveJsonShortcut()
+        void CViewBaseNonTemplate::ps_loadJsonAction()
+        {
+            if (this->isEmpty()) { return; }
+            if (!this->m_menus.testFlag(MenuLoad)) { return; }
+            this->ps_loadJson();
+        }
+
+        void CViewBaseNonTemplate::ps_saveJsonAction()
         {
             if (this->isEmpty()) { return; }
             if (!this->m_menus.testFlag(MenuSave)) { return; }
@@ -518,8 +543,10 @@ namespace BlackGui
         void CViewBaseNonTemplate::ps_customMenuRequested(QPoint pos)
         {
             QMenu menu;
-            this->customMenu(menu);
-            if (menu.isEmpty()) { return; }
+            CMenuActions menuActions;
+            this->customMenu(menuActions);
+            if (menuActions.isEmpty()) { return; }
+            menuActions.toQMenu(menu, true);
 
             QPoint globalPos = this->mapToGlobal(pos);
             menu.exec(globalPos);
