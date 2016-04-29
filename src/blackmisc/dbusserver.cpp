@@ -102,7 +102,7 @@ namespace BlackMisc
     void CDBusServer::launchDBusDaemon()
     {
         const QString program = QStringLiteral("dbus-daemon");
-        const QStringList arguments = { QStringLiteral("--config-file=../share/dbus-1/session.conf") };
+        const QStringList arguments = { QStringLiteral("--config-file=../etc/dbus-1/session.conf") };
         bool success = QProcess::startDetached(program, arguments);
         if (!success) { CLogMessage(this).error("Failed to launch dbus-daemon!"); }
     }

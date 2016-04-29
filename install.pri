@@ -90,9 +90,9 @@ win32-g++ {
     DBUS_LIBRARIES *= libdbus-1-3.dll
     dbus_library_target.path = $${PREFIX}/bin
 
-    DBUS_CONFIG_SOURCE_DIR = $$[QT_INSTALL_BINS]/..
-    DBUS_CONFIG_FILES *= share/dbus-1/*
-    dbus_config_target.path = $${PREFIX}/share/dbus-1
+    DBUS_CONFIG_SOURCE_DIR = $$SourceRoot
+    DBUS_CONFIG_FILES *= etc/dbus-1/*
+    dbus_config_target.path = $${PREFIX}/etc/dbus-1
 }
 
 win32-msvc2015 {
@@ -105,9 +105,9 @@ win32-msvc2015 {
     DBUS_LIBRARIES *= dbus-1-3.dll
     dbus_library_target.path = $${PREFIX}/bin
 
-    DBUS_CONFIG_SOURCE_DIR = $$[QT_INSTALL_BINS]/..
-    DBUS_CONFIG_FILES *= share/dbus-1/*
-    dbus_config_target.path = $${PREFIX}/share/dbus-1
+    DBUS_CONFIG_SOURCE_DIR = $$SourceRoot
+    DBUS_CONFIG_FILES *= etc/dbus-1/*
+    dbus_config_target.path = $${PREFIX}/etc/dbus-1
 }
 
 macx {
@@ -122,7 +122,7 @@ macx {
     DBUS_CONFIG_SOURCE_DIR = /usr/local/share/dbus-1
     DBUS_CONFIG_FILES *= session.conf
     DBUS_CONFIG_FILES *= system.conf
-    dbus_config_target.path = $${PREFIX}/share/dbus-1
+    dbus_config_target.path = $${PREFIX}/etc/dbus-1
 }
 
 for (BINARY, DBUS_BINARIES) {
