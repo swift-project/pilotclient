@@ -138,7 +138,11 @@ namespace BlackGui
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
+                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+
+            private:
+                QList<QAction *> m_setActions;
+                QList<QAction *> m_setNewActions;
             };
         };
     } // ns

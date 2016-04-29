@@ -14,6 +14,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Models;
+using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
@@ -39,7 +40,7 @@ namespace BlackGui
             this->m_withMenuHighlight = menuHighlight;
         }
 
-        void CSimulatedAircraftView::customMenu(QMenu &menu) const
+        void CSimulatedAircraftView::customMenu(CMenuActions &menuActions)
         {
             if (BlackMisc::CBuildConfig::isDebugBuild())
             {
@@ -50,13 +51,12 @@ namespace BlackGui
             {
                 CSimulatedAircraft aircraft(selectedObject());
                 Q_ASSERT(!aircraft.getCallsign().isEmpty());
-                menu.addAction(CIcons::appTextMessages16(), "Show text messages", this, SLOT(ps_requestTextMessage()));
-                if (m_withMenuEnable)       { menu.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", this, SLOT(ps_enableAircraft())); }
-                if (m_withMenuHighlight)    { menu.addAction(CIcons::appSimulator16(), "Highlight in simulator", this, SLOT(ps_highlightInSimulator())); }
-                if (m_withMenuFastPosition) { menu.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates", this, SLOT(ps_fastPositionUpdates())); }
-                menu.addSeparator();
+                menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CSimulatedAircraftView::ps_requestTextMessage });
+                if (m_withMenuEnable)       { menuActions.addAction(CIcons::appAircraft16(), aircraft.isEnabled() ? "Disable aircraft" : "Enabled aircraft", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::ps_enableAircraft }); }
+                if (m_withMenuHighlight)    { menuActions.addAction(CIcons::appSimulator16(), "Highlight in simulator", CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::ps_highlightInSimulator }); }
+                if (m_withMenuFastPosition) { menuActions.addAction(CIcons::globe16(), aircraft.fastPositionUpdates() ? "Normal updates" : "Fast position updates",  CMenuAction::pathClientSimulation(), { this, &CSimulatedAircraftView::ps_fastPositionUpdates }); }
             }
-            CViewBase::customMenu(menu);
+            CViewBase::customMenu(menuActions);
         }
 
         void CSimulatedAircraftView::ps_requestTextMessage()

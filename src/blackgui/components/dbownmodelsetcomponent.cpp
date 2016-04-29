@@ -296,76 +296,94 @@ namespace BlackGui
             }
         }
 
-        void CDbOwnModelSetComponent::CLoadModelsMenu::customMenu(QMenu &menu) const
+        void CDbOwnModelSetComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
         {
             const CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
-            bool noSims = sims.isNoSimulator() || sims.isUnspecified();
+            const bool noSims = sims.isNoSimulator() || sims.isUnspecified();
             if (!noSims)
             {
-                this->addSeparator(menu);
-                QMenu *load = menu.addMenu(CIcons::appModels16(), "Model set");
                 CDbOwnModelSetComponent *ownModelSetComp = qobject_cast<CDbOwnModelSetComponent *>(this->parent());
                 Q_ASSERT_X(ownModelSetComp, Q_FUNC_INFO, "Cannot access parent");
-                if (sims.fsx())
+                if (this->m_setActions.isEmpty())
                 {
-                    load->addAction(CIcons::appModels16(), "FSX models", ownModelSetComp, [ownModelSetComp]()
+                    if (sims.fsx())
                     {
-                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
-                    });
-                }
-                if (sims.p3d())
-                {
-                    load->addAction(CIcons::appModels16(), "P3D models", ownModelSetComp, [ownModelSetComp]()
-                    {
-                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
-                    });
-                }
-                if (sims.fs9())
-                {
-                    load->addAction(CIcons::appModels16(), "FS9 models", ownModelSetComp, [ownModelSetComp]()
-                    {
-                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
-                    });
-                }
-                if (sims.xplane())
-                {
-                    load->addAction(CIcons::appModels16(), "XP models", ownModelSetComp, [ownModelSetComp]()
-                    {
-                        ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
-                    });
-                }
+                        QAction *a = new QAction(CIcons::appModels16(), "FSX models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
+                        });
+                        this->m_setActions.append(a);
 
-                QMenu *emptySetMenu = load->addMenu("New empty set");
-                if (sims.fsx())
-                {
-                    emptySetMenu->addAction(CIcons::appModels16(), "FSX models", ownModelSetComp, [ownModelSetComp]()
+                        a = new QAction(CIcons::appModels16(), "New set FSX models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FSX));
+                        });
+                        this->m_setNewActions.append(a);
+                    }
+                    if (sims.p3d())
                     {
-                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FSX));
-                    });
-                }
-                if (sims.p3d())
-                {
-                    emptySetMenu->addAction(CIcons::appModels16(), "P3D models", ownModelSetComp, [ownModelSetComp]()
+                        QAction *a = new QAction(CIcons::appModels16(), "P3D models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
+                        });
+                        this->m_setActions.append(a);
+
+                        a = new QAction(CIcons::appModels16(), "New set P3D models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::P3D));
+                        });
+                        this->m_setNewActions.append(a);
+                    }
+                    if (sims.fs9())
                     {
-                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::P3D));
-                    });
-                }
-                if (sims.fs9())
-                {
-                    emptySetMenu->addAction(CIcons::appModels16(), "FS9 models", ownModelSetComp, [ownModelSetComp]()
+                        QAction *a = new QAction(CIcons::appModels16(), "FS9 models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
+                        });
+                        this->m_setActions.append(a);
+
+                        a = new QAction(CIcons::appModels16(), "New set FS9 models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FS9));
+                        });
+                        this->m_setNewActions.append(a);
+                    }
+                    if (sims.xplane())
                     {
-                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FS9));
-                    });
+                        QAction *a = new QAction(CIcons::appModels16(), "XPlane models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->ps_changeSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
+                        });
+                        this->m_setActions.append(a);
+
+                        a = new QAction(CIcons::appModels16(), "New set XPlane models", this);
+                        connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::XPLANE));
+                        });
+                        this->m_setNewActions.append(a);
+                    }
                 }
-                if (sims.xplane())
-                {
-                    emptySetMenu->addAction(CIcons::appModels16(), "XP models", ownModelSetComp, [ownModelSetComp]()
-                    {
-                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::XPLANE));
-                    });
-                }
+                menuActions.addMenuModelSet();
+                menuActions.addActions(this->m_setActions, CMenuAction::pathModelSet());
+                menuActions.addActions(this->m_setNewActions, CMenuAction::pathModelSetNew());
             }
-            this->nestedCustomMenu(menu);
+            this->nestedCustomMenu(menuActions);
         }
     } // ns
 } // ns

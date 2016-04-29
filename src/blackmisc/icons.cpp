@@ -609,7 +609,7 @@ namespace BlackMisc
 
     const QPixmap &CIcons::appModels16()
     {
-        return appMappings16();
+        return appAircraft16();
     }
 
     const QPixmap &CIcons::appCountries16()

@@ -27,6 +27,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
+using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
@@ -266,33 +267,39 @@ namespace BlackGui
             } // valid mime?
         }
 
-        void CAircraftModelView::customMenu(QMenu &menu) const
+        void CAircraftModelView::customMenu(CMenuActions &menuActions)
         {
-            QMenu *stashMenu = new QMenu("Stash", &menu);
+            bool used = false;
             if (this->m_menus.testFlag(MenuCanStashModels))
             {
-                stashMenu->addAction(CIcons::appDbStash16(), "Stash", this, &CAircraftModelView::ps_requestStash);
-                QAction *a = stashMenu->addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", this, &CAircraftModelView::ps_stashingClearsSelection);
-                a->setCheckable(true);
+                if (!this->m_menuFlagActions.contains(MenuCanStashModels))
+                {
+                    CMenuActions ma;
+                    ma.addAction(CIcons::appDbStash16(), "Stash selectied", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_requestStash });
+                    QAction *added = ma.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_stashingClearsSelection });
+                    added->setCheckable(true);
+                    this->m_menuFlagActions.insert(MenuCanStashModels, ma);
+                }
+                QAction *a = menuActions.addActions(initMenuActions(MenuCanStashModels)).last();
                 a->setChecked(m_stashingClearsSelection);
+                used = true;
             }
             if (this->m_menus.testFlag(MenuHighlightStashed))
             {
                 // this function requires that someone provides the model strings to be highlighted
-                QAction *a = stashMenu->addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", this, &CAircraftModelView::ps_toggleHighlightStashedModels);
-                a->setCheckable(true);
+                if (!this->m_menuFlagActions.contains(MenuHighlightStashed))
+                {
+                    CMenuActions ma;
+                    QAction *added = ma.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_toggleHighlightStashedModels });
+                    added->setCheckable(true);
+                    this->m_menuFlagActions.insert(MenuHighlightStashed, ma);
+                }
+                QAction *a = menuActions.addActions(initMenuActions(CViewBaseNonTemplate::MenuHighlightStashed)).first();
                 a->setChecked(this->derivedModel()->highlightModelStrings());
+                used = true;
             }
-            if (stashMenu->isEmpty())
-            {
-                stashMenu->deleteLater();
-            }
-            else
-            {
-                menu.addMenu(stashMenu);
-                stashMenu->setIcon(CIcons::appDbStash16());
-            }
-            COrderableViewWithDbObjects::customMenu(menu);
+            if (used) { menuActions.addMenuStash();}
+            COrderableViewWithDbObjects::customMenu(menuActions);
         }
 
         CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const

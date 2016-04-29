@@ -110,7 +110,7 @@ namespace BlackGui
 
             //! \name View base class overrides
             //! @{
-            virtual void customMenu(QMenu &menu) const override;
+            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
             virtual BlackMisc::CStatusMessage modifyLoadedJsonData(BlackMisc::Simulation::CAircraftModelList &models) const override;
             virtual BlackMisc::CStatusMessage validateLoadedJsonData(const BlackMisc::Simulation::CAircraftModelList &models) const override;
             virtual void jsonLoadedAndModelUpdated(const BlackMisc::Simulation::CAircraftModelList &models) override;

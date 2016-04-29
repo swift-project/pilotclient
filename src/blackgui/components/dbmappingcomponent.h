@@ -269,11 +269,12 @@ namespace BlackGui
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
+                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
+                QAction *m_menuAction = nullptr;
             };
 
             //! Menu for tools:
@@ -288,15 +289,14 @@ namespace BlackGui
                 CModelStashToolsMenu(CDbMappingComponent *mappingComponent, bool separator = true);
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-
-            protected:
-                //! \copydoc IMenuDelegate::addSeparator
-                virtual void addSeparator(QMenu &menu) const override;
+                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
+
+                QAction *m_autoStashing = nullptr;
+                QAction *m_stashFiltering = nullptr;
             };
 
             //! Menu for own model sets
@@ -309,11 +309,13 @@ namespace BlackGui
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
+                virtual void customMenu(Menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
+
+                QAction *m_menuAction = nullptr;
             };
 
             //! Apply DB data to selected models
@@ -326,15 +328,13 @@ namespace BlackGui
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
-
-            protected:
-                //! \copydoc IMenuDelegate::addSeparator
-                virtual void addSeparator(QMenu &menu) const override;
+                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
+
+                QList<QAction *> m_menuActions;
             };
 
             //! Merge with vPilot data
@@ -345,10 +345,13 @@ namespace BlackGui
                 CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent, bool separator = true);
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
+                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
+
+            private:
+                QList<QAction *> m_menuActions;
             };
         };
     } // ns

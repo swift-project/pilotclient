@@ -48,7 +48,7 @@ namespace BlackGui
 
         protected:
             //! \copydoc CViewBase::customMenu
-            virtual void customMenu(QMenu &menu) const override;
+            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
         private slots:
             void ps_testRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }
@@ -56,6 +56,10 @@ namespace BlackGui
             void ps_tuneInAtcCom1();
             void ps_tuneInAtcCom2();
             void ps_requestTextMessage();
+
+        private:
+            QList<QAction *> m_actions;
+            QList<QAction *> m_debugActions;
         };
     }
 }

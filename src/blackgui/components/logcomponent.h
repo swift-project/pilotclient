@@ -86,7 +86,11 @@ namespace BlackGui
                 CLogMenu(CLogComponent *parent) : IMenuDelegate(parent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(QMenu &menu) const override;
+                virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+
+            private:
+                QAction *m_action = nullptr;
+
             };
         };
     } // ns

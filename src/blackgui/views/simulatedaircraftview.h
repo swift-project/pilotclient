@@ -51,7 +51,7 @@ namespace BlackGui
 
         protected:
             //! \copydoc CViewBase::customMenu
-            virtual void customMenu(QMenu &menu) const override;
+            virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
         private slots:
             void ps_requestTextMessage();

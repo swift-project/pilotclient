@@ -160,80 +160,130 @@ namespace BlackGui
             this->ui->tvp_OwnAircraftModels->setSaveFileName(n);
         }
 
-        void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(QMenu &menu) const
+        void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
         {
-            CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
-            bool noSims = sims.isNoSimulator() || sims.isUnspecified();
+            const CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
+            const bool noSims = sims.isNoSimulator() || sims.isUnspecified();
             if (!noSims)
             {
-                this->addSeparator(menu);
-                QMenu *load = menu.addMenu(CIcons::appModels16(), "Load installed models");
                 CDbOwnModelsComponent *ownModelsComp = qobject_cast<CDbOwnModelsComponent *>(this->parent());
                 Q_ASSERT_X(ownModelsComp, Q_FUNC_INFO, "Cannot access parent");
+
+                if (this->m_loadActions.isEmpty()) { this->m_loadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
+                menuActions.addMenuSimulator();
                 if (sims.fsx())
                 {
-                    load->addAction(CIcons::appModels16(), "FSX models", ownModelsComp, [ownModelsComp]()
+                    if (!this->m_loadActions[0])
                     {
-                        ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundWithCache);
-                    });
+                        this->m_loadActions[0] = new QAction(CIcons::appModels16(), "FSX models", this);
+                        connect(this->m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundWithCache);
+                        });
+                    }
+                    menuActions.addAction(this->m_loadActions[0], CMenuAction::pathSimulator());
                 }
                 if (sims.p3d())
                 {
-                    load->addAction(CIcons::appModels16(), "P3D models", ownModelsComp, [ownModelsComp]()
+                    if (!this->m_loadActions[1])
                     {
-                        ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundWithCache);
-                    });
+                        this->m_loadActions[1] = new QAction(CIcons::appModels16(), "P3D models", this);
+                        connect(this->m_loadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundWithCache);
+                        });
+                    }
+                    menuActions.addAction(this->m_loadActions[1], CMenuAction::pathSimulator());
                 }
                 if (sims.fs9())
                 {
-                    load->addAction(CIcons::appModels16(), "FS9 models", ownModelsComp, [ownModelsComp]()
+                    if (!this->m_loadActions[2])
                     {
-                        ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundWithCache);
-                    });
+                        this->m_loadActions[2] = new QAction(CIcons::appModels16(), "FS9 models", this);
+                        connect(this->m_loadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundWithCache);
+                        });
+                    }
+                    menuActions.addAction(this->m_loadActions[2], CMenuAction::pathSimulator());
                 }
                 if (sims.xplane())
                 {
-                    load->addAction(CIcons::appModels16(), "XP models", ownModelsComp, [ownModelsComp]()
+                    if (!this->m_loadActions[3])
                     {
-                        ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundWithCache);
-                    });
+                        this->m_loadActions[3] = new QAction(CIcons::appModels16(), "XPlane models", this);
+                        connect(this->m_loadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                        {
+                            Q_UNUSED(checked);
+                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundWithCache);
+                        });
+                    }
+                    menuActions.addAction(this->m_loadActions[3], CMenuAction::pathSimulator());
                 }
 
                 // with models loaded I allow a refresh reload
                 if (sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
                 {
-                    QMenu *reloadMenu = load->addMenu("Force reload");
+                    if (this->m_reloadActions.isEmpty()) { this->m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
+                    menuActions.addMenu(CIcons::refresh16(), "Force model reload", CMenuAction::pathSimulatorModelsReload());
                     if (sims.fsx())
                     {
-                        reloadMenu->addAction(CIcons::appModels16(), "FSX models", ownModelsComp, [ownModelsComp]()
+                        if (!this->m_reloadActions[0])
                         {
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundNoCache);
-                        });
+                            this->m_reloadActions[0] = new QAction(CIcons::appModels16(), "FSX models", this);
+                            connect(this->m_reloadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            {
+                                Q_UNUSED(checked);
+                                ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundNoCache);
+                            });
+                        }
+                        menuActions.addAction(this->m_reloadActions[0], CMenuAction::pathSimulatorModelsReload());
                     }
                     if (sims.p3d())
                     {
-                        reloadMenu->addAction(CIcons::appModels16(), "P3D models", ownModelsComp, [ownModelsComp]()
+                        if (!this->m_reloadActions[1])
                         {
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundNoCache);
-                        });
+                            this->m_reloadActions[1] = new QAction(CIcons::appModels16(), "P3D models", this);
+                            connect(this->m_reloadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            {
+                                Q_UNUSED(checked);
+                                ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundNoCache);
+                            });
+                        }
+                        menuActions.addAction(this->m_reloadActions[1], CMenuAction::pathSimulatorModelsReload());
                     }
                     if (sims.fs9())
                     {
-                        reloadMenu->addAction(CIcons::appModels16(), "FS9 models", ownModelsComp, [ownModelsComp]()
+                        if (!this->m_reloadActions[2])
                         {
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundNoCache);
-                        });
+                            this->m_reloadActions[2] = new QAction(CIcons::appModels16(), "FS9 models", this);
+                            connect(this->m_reloadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            {
+                                Q_UNUSED(checked);
+                                ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundNoCache);
+                            });
+                        }
+                        menuActions.addAction(this->m_reloadActions[2], CMenuAction::pathSimulatorModelsReload());
                     }
                     if (sims.xplane())
                     {
-                        reloadMenu->addAction(CIcons::appModels16(), "XP models", ownModelsComp, [ownModelsComp]()
+                        if (!this->m_reloadActions[3])
                         {
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundNoCache);
-                        });
+                            this->m_reloadActions[3] = new QAction(CIcons::appModels16(), "XPlane models", this);
+                            connect(this->m_reloadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            {
+                                Q_UNUSED(checked);
+                                ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundNoCache);
+                            });
+                        }
+                        menuActions.addAction(this->m_reloadActions[3], CMenuAction::pathSimulatorModelsReload());
                     }
                 }
             }
-            this->nestedCustomMenu(menu);
+            this->nestedCustomMenu(menuActions);
         }
 
         void CDbOwnModelsComponent::ps_requestOwnModelsUpdate()

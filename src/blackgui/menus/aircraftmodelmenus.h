@@ -52,14 +52,16 @@ namespace BlackGui
             CShowSimulatorFileMenu(BlackGui::Views::CAircraftModelView *modelView, BlackGui::COverlayMessagesFrame *messageFrame, bool separator = true);
 
             //! \copydoc IMenuDelegate::customMenu
-            virtual void customMenu(QMenu &menu) const override;
+            virtual void customMenu(CMenuActions &menuActions) override;
 
         private slots:
-            void ps_showSimulatorFile() const; //!< simulator file
-            void ps_displayIcon();             //!< aircraft icon if any
+            void ps_showSimulatorFile(); //!< simulator file
+            void ps_displayIcon();       //!< aircraft icon if any
 
         private:
             BlackGui::COverlayMessagesFrame *m_messageFrame = nullptr;
+            QAction *m_fileAction = nullptr;
+            QAction *m_iconAction = nullptr;
         };
 
         //! Merge with DB data
@@ -75,20 +77,18 @@ namespace BlackGui
             CMergeWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget, bool separator = true);
 
             //! \copydoc IMenuDelegate::customMenu
-            virtual void customMenu(QMenu &menu) const override;
+            virtual void customMenu(CMenuActions &menuActions) override;
 
         private slots:
             void ps_mergeData();
             void ps_mergeSelectedData();
 
-        protected:
-            //! \copydoc IMenuDelegate::addSeparator
-            virtual void addSeparator(QMenu &menu) const override;
-
         private:
             BlackMisc::Simulation::IModelsSetable   *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
-            QObject *m_modelsTarget = nullptr;     //!< optional target for setting/updating the models
+            QObject *m_modelsTarget  = nullptr;   //!< optional target for setting/updating the models
+            QAction *m_mergeAll      = nullptr;
+            QAction *m_mergeSelected = nullptr;
         };
     } // ns
 } // ns

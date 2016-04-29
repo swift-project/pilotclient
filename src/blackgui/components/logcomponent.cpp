@@ -14,6 +14,7 @@
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Views;
+using namespace BlackGui::Menus;
 
 namespace BlackGui
 {
@@ -50,13 +51,13 @@ namespace BlackGui
         void CLogComponent::displayLog(bool attention)
         {
             this->ui->tw_StatusPage->setCurrentIndex(0);
-            if(attention) { emit requestAttention(); }
+            if (attention) { emit requestAttention(); }
         }
 
         void CLogComponent::displayConsole(bool attention)
         {
             this->ui->tw_StatusPage->setCurrentIndex(1);
-            if(attention) { emit requestAttention(); }
+            if (attention) { emit requestAttention(); }
         }
 
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
@@ -82,16 +83,17 @@ namespace BlackGui
             this->ui->tvp_StatusMessages->insert(statusMessages);
         }
 
-        void CLogComponent::CLogMenu::customMenu(QMenu &menu) const
+        void CLogComponent::CLogMenu::customMenu(CMenuActions &menuActions)
         {
             CLogComponent *logComp = qobject_cast<CLogComponent *>(this->parent());
             Q_ASSERT_X(logComp, Q_FUNC_INFO, "Missing parent");
 
             bool v = logComp->ui->form_StatusMessage->isVisible();
             QString formString(v ? "Hide log details" : "Show log details");
-            QAction *a = menu.addAction(BlackMisc::CIcons::databaseTable16(), formString, logComp->ui->form_StatusMessage, SLOT(toggleVisibility()));
-            a->setCheckable(true);
-            a->setChecked(v);
+            this->m_action = menuActions.addAction(this->m_action, BlackMisc::CIcons::databaseTable16(), formString,
+                                                   CMenuAction::pathLog(), { logComp->ui->form_StatusMessage, &CStatusMessageForm::toggleVisibility});
+            this->m_action->setCheckable(true);
+            this->m_action->setChecked(v);
         }
     }
 } // namespace
