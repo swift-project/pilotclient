@@ -77,6 +77,20 @@ namespace BlackMisc
 #endif
     }
 
+    bool CBuildConfig::isRunningOnLinuxPlatform()
+    {
+#ifdef Q_OS_LINUX
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool CBuildConfig::isRunningOnUnixPlatform()
+    {
+        return isRunningOnMacOSXPlatform() || isRunningOnLinuxPlatform();
+    }
+
     bool CBuildConfig::isDebugBuild()
     {
 #ifdef QT_DEBUG

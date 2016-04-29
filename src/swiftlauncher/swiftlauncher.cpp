@@ -195,8 +195,10 @@ void CSwiftLauncher::startSwiftCore()
     }
 
     // I set this for debug purpose only
-    this->m_executableArgs = args;
-    this->m_executable = CBuildConfig::swiftCoreExecutableName();
+    m_executableArgs = args;
+    m_executable.clear();
+    if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
+    m_executable += CBuildConfig::swiftCoreExecutableName();
     CLogMessage(this).info(this->getCmdLine());
 
     // start
@@ -205,7 +207,9 @@ void CSwiftLauncher::startSwiftCore()
 
 void CSwiftLauncher::setSwiftDataExecutable()
 {
-    m_executable = CBuildConfig::swiftDataExecutableName();
+    m_executable.clear();
+    if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
+    m_executable += CBuildConfig::swiftDataExecutableName();
     m_executableArgs.clear();
 }
 
@@ -214,7 +218,9 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
     QString msg;
     if (this->isStandaloneGuiSelected() || this->canConnectDBusServer(msg))
     {
-        m_executable = CBuildConfig::swiftGuiExecutableName();
+        m_executable.clear();
+        if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
+        m_executable += CBuildConfig::swiftGuiExecutableName();
         QStringList args
         {
             "--core", CoreModes::coreModeToString(getCoreMode()),

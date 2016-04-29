@@ -77,6 +77,12 @@ namespace BlackMisc
         //! Running on Mac OS X platform?
         static bool isRunningOnMacOSXPlatform();
 
+        //! Running on Linux platform?
+        static bool isRunningOnLinuxPlatform();
+
+        //! Running on Unix (Linux or Mac OS X) platform
+        static bool isRunningOnUnixPlatform();
+
         //! Application directory where current application is located
         //! \todo Move to to CApplication
         static const QString &getApplicationDir();
