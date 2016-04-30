@@ -109,7 +109,7 @@ namespace BlackMiscTest
     void CTestValueCache::localOnly()
     {
         CValueCache cache(CValueCache::LocalOnly);
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Uninitialized value")); }
+        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
         testCommon(user1, user2);
@@ -118,7 +118,7 @@ namespace BlackMiscTest
     void CTestValueCache::localOnlyWithThreads()
     {
         CValueCache cache(CValueCache::LocalOnly);
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Uninitialized value")); }
+        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
         CRegularThread thread;
@@ -148,7 +148,7 @@ namespace BlackMiscTest
             QMetaObject::invokeMethod(&otherCache, "changeValuesFromRemote", Q_ARG(BlackMisc::CValueCachePacket, values), Q_ARG(BlackMisc::CIdentifier, thisProcess));
         });
 
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Uninitialized value")); }
+        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser thisUser(&thisCache);
         CValueCacheUser otherUser(&otherCache);
 
@@ -169,7 +169,7 @@ namespace BlackMiscTest
     void CTestValueCache::batched()
     {
         CValueCache cache(CValueCache::LocalOnly);
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Uninitialized value")); }
+        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
 

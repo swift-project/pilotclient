@@ -597,7 +597,7 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, invalidSeverity, "Uninitialized value for " + element.m_key, true);
+            return CStatusMessage(this, invalidSeverity, "Empty cache value " + element.m_key, true);
         }
         else if (value.userType() != element.m_metaType)
         {
