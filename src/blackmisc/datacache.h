@@ -267,7 +267,10 @@ namespace BlackMisc
         }
 
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
+        //! @{
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setAndSaveProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
+        //! @}
 
         //! Data cache doesn't support save (because currently set value is saved already).
         CStatusMessage save() = delete;

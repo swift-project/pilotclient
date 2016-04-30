@@ -312,6 +312,12 @@ namespace BlackMisc
         //! Save using the currently set value. Must be called from the thread in which the owner lives.
         CStatusMessage save() { return m_page.setValue(m_element, {}, 0, true, true); }
 
+        //! Write a property of the value. Must be called from the thread in which the owner lives.
+        CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) { auto v = get(); v.setPropertyByIndex(value, index); return set(v, timestamp); }
+
+        //! Write a property and save in the same step. Must be called from the thread in which the owner lives.
+        CStatusMessage setAndSaveProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) { auto v = get(); v.setPropertyByIndex(value, index); return setAndSave(v, timestamp); }
+
         //! Is current thread the owner thread, so CCached::set is safe
         bool isOwnerThread() const { return QThread::currentThread() == m_page.thread(); }
 
