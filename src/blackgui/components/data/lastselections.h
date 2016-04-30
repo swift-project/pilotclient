@@ -75,6 +75,9 @@ namespace BlackGui
                     return ls;
                 }
 
+                //! First load is synchronous
+                static bool isPinned() { return true; }
+
                 //! Key in data cache
                 static const char *key() { return "dbownmodelscomponent"; }
             };

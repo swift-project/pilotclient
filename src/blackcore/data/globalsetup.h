@@ -189,6 +189,9 @@ namespace BlackCore
             //! Key in data cache
             static const char *key() { return "bootstrap"; }
 
+            //! First load is synchronous
+            static bool isPinned() { return true; }
+
             //! Default value
             static const CGlobalSetup &defaultValue()
             {

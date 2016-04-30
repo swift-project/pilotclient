@@ -121,6 +121,9 @@ namespace BlackCore
             //! Key in data cache
             static const char *key() { return "vatsim"; }
 
+            //! First load is synchronous
+            static bool isPinned() { return true; }
+
             //! Default value
             static const CVatsimSetup &defaultValue()
             {

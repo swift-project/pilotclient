@@ -27,6 +27,9 @@ namespace BlackCore
             //! Key in data cache
             static const char *key() { return "dbuser"; }
 
+            //! First load is synchronous
+            static bool isPinned() { return true; }
+
             //! Default value
             static const BlackMisc::Network::CAuthenticatedUser &defaultValue()
             {
