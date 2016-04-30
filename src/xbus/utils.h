@@ -94,7 +94,7 @@ class QSharedApplication : public QApplication
         m_weakptr = ptr;
     }
 
-    static char *strdup(const char *s) { auto s2 = static_cast<char *>(std::malloc(std::strlen(s))); return std::strcpy(s2, s); }
+    static char *strdup(const char *s) { auto s2 = static_cast<char *>(std::malloc(std::strlen(s) + 1)); return std::strcpy(s2, s); }
 
 public:
     /*!
