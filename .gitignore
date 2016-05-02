@@ -32,6 +32,9 @@ Makefile
 *.lib
 *.obj
 
+# Exception for XPlane object files
+!src/xbus/LegacyData/**/*.obj
+
 # Linux compile
 *.a
 *.la
