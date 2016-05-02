@@ -11,19 +11,23 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <description>bin</description>
             <destination>${installdir}/bin</destination>
             <name>bin_linux</name>
-            <platforms>linux linux-x64</platforms>
+            <platforms>linux linux-x64 osx</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/bin/swiftcore</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftcore*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/swiftdata</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftdata*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/swiftguistd</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftguistd*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/swiftlauncher</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/swiftlauncher*</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
@@ -77,67 +81,27 @@ This installs the binaries to run all swift applications.</detailedDescription>
             <description>lib</description>
             <destination>${installdir}/lib</destination>
             <name>lib_linux</name>
-            <platforms>linux linux-x64</platforms>
+            <platforms>linux linux-x64 osx</platforms>
             <distributionFileList>
                 <distributionFile>
-                    <origin>../../dist/lib/libblackcore.so</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackcore*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libblackcore.so.0</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackgui*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libblackcore.so.0.7</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackinput*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libblackcore.so.0.7.0</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblackmisc*</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libblackgui.so</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackgui.so.0</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackgui.so.0.7</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackgui.so.0.7.0</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackinput.so</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackinput.so.0</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackinput.so.0.7</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackinput.so.0.7.0</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackmisc.so</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackmisc.so.0</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackmisc.so.0.7</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblackmisc.so.0.7.0</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblacksound.so</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblacksound.so.0</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblacksound.so.0.7</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libblacksound.so.0.7.0</origin>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libblacksound*</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>

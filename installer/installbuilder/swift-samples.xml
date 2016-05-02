@@ -9,20 +9,8 @@
         <folder>
             <description>bin</description>
             <destination>${installdir}/bin</destination>
-            <name>bin_windows</name>
-            <platforms>windows</platforms>
-            <distributionFileList>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/sample*.exe</origin>
-                </distributionFile>
-            </distributionFileList>
-        </folder>
-        <folder>
-            <description>bin</description>
-            <destination>${installdir}/bin</destination>
             <name>bin_linux</name>
-            <platforms>linux linux-x64</platforms>
+            <platforms>all</platforms>
             <distributionFileList>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>

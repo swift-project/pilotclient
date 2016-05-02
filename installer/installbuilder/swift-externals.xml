@@ -47,5 +47,25 @@
                 </distributionFile>
             </distributionFileList>
         </folder>
+        <folder>
+            <description>lib</description>
+            <destination>${installdir}/lib</destination>
+            <name>lib_osx</name>
+            <platforms>osx</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/lib/libopus.0.dylib</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libportaudio.2.dylib</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libspeexdsp.1.dylib</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libvatlib.dylib</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
     </folderList>
 </component>

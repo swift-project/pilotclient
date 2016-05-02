@@ -1,12 +1,13 @@
 <component>
     <name>autoupdater</name>
-    <description>includes tool to perform updates</description>
+    <description>Auto Updater</description>
     <canBeEdited>0</canBeEdited>
+    <detailedDescription>includes tool to perform updates</detailedDescription>
     <selected>1</selected>
     <show>0</show>
     <folderList>
         <folder>
-            <description>Auto Updater</description>
+            <description>/</description>
             <destination>${installdir}</destination>
             <name>autoupdaterwin</name>
             <platforms>windows</platforms>
@@ -15,12 +16,23 @@
             </distributionFileList>
         </folder>
         <folder>
-            <description>Auto Updater</description>
+            <description>/</description>
             <destination>${installdir}</destination>
             <name>autoupdaterlinux</name>
             <platforms>linux linux-x64</platforms>
             <distributionFileList>
                 <distributionFile origin="../../dist/autoupdate-linux-x64.run"/>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>/</description>
+            <destination>${installdir}</destination>
+            <name>autoupdaterosx</name>
+            <platforms>osx</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/autoupdate-osx.app</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
     </folderList>

@@ -72,6 +72,22 @@ check_for_updates = 1
             <program>${installdir}/bin/swiftlauncher</program>
             <programArguments></programArguments>
             <progressText>Run swift launcher</progressText>
+            <ruleList>
+                <platformTest>
+                    <negate>1</negate>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+        <runProgram>
+            <program>${Installdir}/bin/swiftlauncher.app/Contents/MacOS/swiftlauncher</program>
+            <programArguments></programArguments>
+            <progressText>Run swift launcher</progressText>
+            <ruleList>
+                <platformTest>
+                    <type>osx</type>
+                </platformTest>
+            </ruleList>
         </runProgram>
     </finalPageActionList>
     <licenseFileList>

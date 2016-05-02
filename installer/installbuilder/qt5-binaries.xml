@@ -123,5 +123,51 @@
                 </distributionFile>
             </distributionFileList>
         </folder>
+        <folder>
+            <description>lib</description>
+            <destination>${installdir}/lib</destination>
+            <name>lib_osx</name>
+            <platforms>osx</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/lib/libdbus-1.3.dylib</origin>
+                </distributionFile>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtCore.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtDBus.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtGui.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtMultimedia.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtNetwork.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtSvg.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtWidgets.framework</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/lib/QtXml.framework</origin>
+                </distributionDirectory>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/bin</destination>
+            <name>bin_osx</name>
+            <platforms>osx</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/bin/dbus-daemon</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
     </folderList>
 </componentGroup>

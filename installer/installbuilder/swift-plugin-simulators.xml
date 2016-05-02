@@ -1,6 +1,6 @@
 <componentGroup>
     <name>simulators</name>
-    <description>Simulators</description>
+    <description>Simulator Plugins</description>
     <canBeEdited>1</canBeEdited>
     <selected>1</selected>
     <show>1</show>
@@ -73,29 +73,12 @@ This plugin acts as the interface between swift and X-Plane</detailedDescription
                 <folder>
                     <description>bin/plugins/simulator</description>
                     <destination>${installdir}/bin/plugins/simulator</destination>
-                    <name>bin_plugins_simulator_win</name>
-                    <platforms>windows</platforms>
+                    <name>bin_plugins_simulator</name>
+                    <platforms>all</platforms>
                     <distributionFileList>
                         <distributionFile>
                             <allowWildcards>1</allowWildcards>
-                            <origin>../../dist/bin/plugins/simulator/simulatorxplane.dll</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>../../dist/bin/plugins/simulator/simulatorxplaneconfig.dll</origin>
-                        </distributionFile>
-                    </distributionFileList>
-                </folder>
-                <folder>
-                    <description>bin/plugins/simulator</description>
-                    <destination>${installdir}/bin/plugins/simulator</destination>
-                    <name>bin_plugins_simulator_linux</name>
-                    <platforms>linux linux-x64</platforms>
-                    <distributionFileList>
-                        <distributionFile>
-                            <origin>../../dist/bin/plugins/simulator/libsimulatorxplane.so</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>../../dist/bin/plugins/simulator/libsimulatorxplaneconfig.so</origin>
+                            <origin>../../dist/bin/plugins/simulator/*simulatorxplane*</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
