@@ -1,0 +1,21 @@
+<component>
+    <name>xbus</name>
+    <description>xbus</description>
+    <canBeEdited>1</canBeEdited>
+    <detailedDescription>Plugin loaded by X-Plane which publishes a DBus service</detailedDescription>
+    <selected>1</selected>
+    <show>1</show>
+    <folderList>
+        <folder>
+            <description>xbus</description>
+            <destination>${installdir}</destination>
+            <name>xbus</name>
+            <platforms>all</platforms>
+            <distributionFileList>
+                <distributionDirectory>
+                    <origin>../../dist/xbus</origin>
+                </distributionDirectory>
+            </distributionFileList>
+        </folder>
+    </folderList>
+</component>
