@@ -113,7 +113,7 @@ namespace BlackGui
             {
                 bool s = connect(filterWidget, &CFilterWidget::changeFilter, this, &CViewBaseNonTemplate::ps_filterWidgetChangedFilter);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect");
-                s = connect(this, &CViewBaseNonTemplate::rowCountChanged, filterWidget, &CFilterWidget::onRowCountChanged);
+                s = connect(this, &CViewBaseNonTemplate::modelDataChanged, filterWidget, &CFilterWidget::onRowCountChanged);
                 Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect");
                 Q_UNUSED(s);
             }
@@ -437,6 +437,11 @@ namespace BlackGui
             this->ps_saveJson();
         }
 
+        void CViewBaseNonTemplate::onModelChanged()
+        {
+            this->updateSortIndicator();
+        }
+
         void CViewBaseNonTemplate::rowsResizeModeToInteractive()
         {
             const int height = this->verticalHeader()->minimumSectionSize();
@@ -625,7 +630,7 @@ namespace BlackGui
             this->setSortingEnabled(true);
             if (model)
             {
-                this->setModel(this->m_model);
+                this->standardInit(model);
             }
         }
 
@@ -659,7 +664,7 @@ namespace BlackGui
                     this->fullResizeToContents();
                 }
             }
-            int c = this->m_model->update(container, sort);
+            const int c = this->m_model->update(container, sort);
 
             // resize after real update according to mode
             if (presizeThresholdReached)
@@ -675,6 +680,7 @@ namespace BlackGui
                 // small amount of data not covered before
                 this->fullResizeToContents();
             }
+            this->updateSortIndicator(); // make sure sort indicator represents sort order
             this->hideLoadIndicator();
             return c;
         }
@@ -804,7 +810,7 @@ namespace BlackGui
 
             if (c > 0)
             {
-                this->derivedModel()->sendDataChanged(firstUpdatedRow, lastUpdatedRow);
+                this->derivedModel()->emitDataChanged(firstUpdatedRow, lastUpdatedRow);
             }
             return c;
         }
@@ -1008,10 +1014,22 @@ namespace BlackGui
             Q_ASSERT_X(model || this->m_model, Q_FUNC_INFO, "Missing model");
             if (model)
             {
+                if (model == this->m_model) { return; }
+                if (this->m_model)
+                {
+                    this->m_model->disconnect();
+                }
+
                 this->m_model = model;
-                connect(this->m_model, &ModelClass::rowCountChanged, this, &CViewBase::rowCountChanged);
-                connect(this->m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
-                connect(this->m_model, &ModelClass::changed, this, &CViewBase::modelChanged);
+                bool c = connect(this->m_model, &ModelClass::modelDataChanged, this, &CViewBase::modelDataChanged);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+                c = connect(this->m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+                c = connect(this->m_model, &ModelClass::changed, this, &CViewBase::modelChanged);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+                c = connect(this->m_model, &ModelClass::changed, this, &CViewBase::onModelChanged);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+                Q_UNUSED(c);
             }
 
             this->setModel(this->m_model); // via QTableView
@@ -1045,6 +1063,17 @@ namespace BlackGui
         {
             ContainerType c(variant.to<ContainerType>());
             return this->updateContainer(c, sort, resize);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::updateSortIndicator()
+        {
+            if (this->derivedModel()->hasValidSortColumn())
+            {
+                const int index = this->derivedModel()->getSortColumn();
+                Qt::SortOrder order = this->derivedModel()->getSortOrder();
+                this->horizontalHeader()->setSortIndicator(index, order);
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

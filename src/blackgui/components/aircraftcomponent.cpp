@@ -40,10 +40,10 @@ namespace BlackGui
             this->ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::InfoMode);
             this->ui->tvp_AircraftInRange->configureMenu(true, false, false);
 
-            connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
             connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
-            connect(this->ui->tvp_AirportsInRange, &CSimulatedAircraftView::rowCountChanged, this, &CAircraftComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
         }
 

@@ -157,19 +157,19 @@ namespace BlackGui
             return m_modelDestroyed;
         }
 
-        void CListModelBaseNonTemplate::sendDataChanged(int startRowIndex, int endRowIndex)
+        void CListModelBaseNonTemplate::emitDataChanged(int startRowIndex, int endRowIndex)
         {
             BLACK_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");
             BLACK_VERIFY_X(startRowIndex >= 0 &&  endRowIndex >= 0, Q_FUNC_INFO, "check rows");
 
-            int columns = columnCount();
-            int rows = rowCount();
+            const int columns = columnCount();
+            const int rows = rowCount();
             if (columns < 1) { return; }
             if (startRowIndex < 0) { startRowIndex = 0; }
             if (endRowIndex >= rows) { endRowIndex = rows - 1; }
             const QModelIndex topLeft(createIndex(startRowIndex, 0));
             const QModelIndex bottomRight(createIndex(endRowIndex, columns - 1));
-            emit dataChanged(topLeft, bottomRight);
+            emit this->dataChanged(topLeft, bottomRight);
         }
 
         int CListModelBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort)
@@ -182,6 +182,9 @@ namespace BlackGui
         {
             // non unique default name, set translation context as default
             this->setObjectName(translationContext);
+
+            // connect
+            connect(this, &CListModelBaseNonTemplate::dataChanged, this, &CListModelBaseNonTemplate::ps_onDataChanged);
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -288,7 +291,7 @@ namespace BlackGui
                 this->m_container[index.row()] = obj;
                 const CVariant co = CVariant::from(obj);
                 emit objectChanged(co, propertyIndex);
-                emit dataChanged(topLeft, bottomRight);
+                emit this->dataChanged(topLeft, bottomRight);
                 this->updateFilteredContainer();
                 return true;
             }
@@ -326,9 +329,9 @@ namespace BlackGui
             this->endResetModel();
 
             int newSize = this->m_container.size();
-            // I have to update with same size because  cannot tell what data are changed
-            this->emitRowCountChanged();
             Q_UNUSED(oldSize);
+            // I have to update even with same size because I cannot tell what/if data are changed
+            this->emitModelDataChanged();
             return newSize;
         }
 
@@ -400,7 +403,7 @@ namespace BlackGui
             this->beginResetModel();
             this->updateFilteredContainer();
             this->endResetModel();
-            this->emitRowCountChanged();
+            this->emitModelDataChanged();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -417,7 +420,7 @@ namespace BlackGui
                 this->beginResetModel();
                 this->updateFilteredContainer();
                 this->endResetModel();
-                this->emitRowCountChanged();
+                this->emitModelDataChanged();
             }
             else
             {
@@ -453,7 +456,7 @@ namespace BlackGui
             this->m_container.push_back(object);
             endInsertRows();
             this->updateFilteredContainer();
-            this->emitRowCountChanged();
+            this->emitModelDataChanged();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -469,7 +472,7 @@ namespace BlackGui
                 this->updateFilteredContainer();
                 this->endResetModel();
             }
-            this->emitRowCountChanged();
+            this->emitModelDataChanged();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -486,7 +489,7 @@ namespace BlackGui
                 this->updateFilteredContainer();
                 this->endResetModel();
             }
-            this->emitRowCountChanged();
+            this->emitModelDataChanged();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -499,7 +502,7 @@ namespace BlackGui
             int newSize = this->m_container.size();
             if (oldSize != newSize)
             {
-                this->emitRowCountChanged();
+                this->emitModelDataChanged();
                 if (this->hasFilter())
                 {
                     this->beginResetModel();
@@ -516,7 +519,7 @@ namespace BlackGui
             this->m_container.clear();
             this->m_containerFiltered.clear();
             endResetModel();
-            this->emitRowCountChanged();
+            this->emitModelDataChanged();
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -559,11 +562,29 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        void CListModelBase<ObjectType, ContainerType, UseCompare>::emitRowCountChanged()
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::emitModelDataChanged()
         {
-            int n = this->containerOrFilteredContainer().size();
-            emit this->rowCountChanged(n, this->hasFilter());
+            const int n = this->containerOrFilteredContainer().size();
+            emit this->modelDataChanged(n, this->hasFilter());
             emit this->changed();
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::ps_onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+        {
+            // underlying base class changed
+            Q_UNUSED(topLeft);
+            Q_UNUSED(bottomRight);
+            Q_UNUSED(roles);
+            this->emitModelDataChanged();
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        void CListModelBase<ObjectType, ContainerType, UseCompare>::ps_onChangedDigest()
+        {
+            const int n = this->containerOrFilteredContainer().size();
+            emit this->changedDigest();
+            emit this->modelDataChangedDigest(n, this->hasFilter());
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>

@@ -42,9 +42,9 @@ namespace BlackGui
         Q_ASSERT_X(!this->m_acceptedMetaTypes.isEmpty(), Q_FUNC_INFO, "no accepted meta type ids");
         if (m_acceptedMetaTypes.isEmpty()) { return false; }
         if (!m_allowDrop || !CGuiUtility::hasSwiftVariantMimeType(mime)) { return false; }
-        int metaTypeId = CGuiUtility::metaTypeIdFromSwiftDragAndDropData(mime);
+        const int metaTypeId = CGuiUtility::metaTypeIdFromSwiftDragAndDropData(mime);
         if (metaTypeId == QMetaType::UnknownType) { return false; }
-        bool accept =  m_acceptedMetaTypes.contains(metaTypeId);
+        const bool accept =  m_acceptedMetaTypes.contains(metaTypeId);
         return accept;
     }
 

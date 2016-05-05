@@ -52,7 +52,7 @@ namespace BlackGui
             virtual void ps_toggleHighlightDbData() override;
         };
 
-        //! Base class for views with DB objects
+        //! Base class for views with DB objects also orderable (based on BlackMisc::IOrderableList )
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType> class COrderableViewWithDbObjects :
             public CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>
         {

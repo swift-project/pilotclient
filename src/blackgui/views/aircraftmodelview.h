@@ -106,6 +106,7 @@ namespace BlackGui
 
         protected:
             //! \copydoc QTableView::dropEvent
+            //! \sa BlackGui::Models::CListModelBase::dropMimeData
             virtual void dropEvent(QDropEvent *event) override;
 
             //! \name View base class overrides

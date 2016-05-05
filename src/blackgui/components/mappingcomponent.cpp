@@ -51,11 +51,11 @@ namespace BlackGui
             this->ui->tvp_SimulatedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
 
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
-            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
             connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestNewBackendData, this, &CMappingComponent::ps_onMenuRequestModelReload);
 
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::rowCountChanged, this, &CMappingComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::ps_onSimulatedAircraftUpdateRequested);
             connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);

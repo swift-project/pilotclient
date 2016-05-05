@@ -44,7 +44,7 @@ namespace BlackGui
             connect(this->ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::ps_onValidatePressed);
             connect(this->ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::ps_onPublishPressed);
             connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
-            connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::rowCountChanged, this, &CDbStashComponent::ps_onRowCountChanged);
+            connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::ps_onRowCountChanged);
 
             // copy over buttons
             connect(this->ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);

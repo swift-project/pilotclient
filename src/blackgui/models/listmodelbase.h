@@ -17,6 +17,7 @@
 #include "blackgui/models/modelfilter.h"
 #include "blackgui/dropbase.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/digestsignal.h"
 #include <QStandardItemModel>
 #include <QThread>
 #include <memory>
@@ -98,7 +99,7 @@ namespace BlackGui
 
             //! Send signal that data have been changed.
             //! \note Meant for scenarios where the container is directly updated and a subsequent signal is required
-            void sendDataChanged(int startRowIndex, int endRowIndex);
+            void emitDataChanged(int startRowIndex, int endRowIndex);
 
             //! Convert to JSON
             virtual QJsonObject toJson() const = 0;
@@ -110,11 +111,17 @@ namespace BlackGui
             //! Asynchronous update finished
             void asyncUpdateFinished();
 
-            //! Number of elements changed
-            void rowCountChanged(int count, bool withFilter);
+            //! Data changed
+            void modelDataChanged(int count, bool withFilter);
+
+            //! Data changed, digest version
+            void modelDataChangedDigest(int count, bool withFilter);
 
             //! Model has been changed
             void changed();
+
+            //! Model has been changed, digest signal
+            void changedDigest();
 
             //! Template free information, that object changed
             void objectChanged(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &changedIndex);
@@ -124,6 +131,12 @@ namespace BlackGui
             //! \param variant container is transferred in variant
             //! \param sort
             int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort);
+
+            //! Feedback when QStandardItemModel::dataChanged was called
+            virtual void ps_onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) = 0;
+
+            //! Digest signal
+            virtual void ps_onChangedDigest() = 0;
 
         protected:
             //! Constructor
@@ -136,9 +149,12 @@ namespace BlackGui
 
             CColumns        m_columns;                            //!< columns metadata
             int             m_sortedColumn;                       //!< current sort column
-            Qt::SortOrder   m_sortOrder;                          //!< sort order (asc/desc)
             bool            m_modelDestroyed = false;             //!< model is about to be destroyed
+            Qt::SortOrder   m_sortOrder;                          //!< sort order (asc/desc)
             Qt::DropActions m_dropActions    = Qt::IgnoreAction;  //!< drop actions
+
+        private:
+            BlackMisc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::ps_onChangedDigest, 500, 10 };
         };
 
         //! List model
@@ -196,7 +212,8 @@ namespace BlackGui
             //! Update single element
             virtual void update(int rowIndex, const ObjectType &object);
 
-            //! Move items to position
+            //! Move items to position, normally called from dropMimeData
+            //! \sa dropMimeData
             virtual void moveItems(const ContainerType &items, int position);
 
             //! Object at row position
@@ -233,7 +250,7 @@ namespace BlackGui
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
                 int c = m_container.removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
-                if (c > 0) { this->emitRowCountChanged();}
+                if (c > 0) { this->emitModelDataChanged();}
                 this->updateFilteredContainer();
                 return c;
             }
@@ -257,14 +274,18 @@ namespace BlackGui
             //! Constructor
             CListModelBase(const QString &translationContext, QObject *parent = nullptr);
 
-            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::performUpdateContainer
+            //! \name Base class overrides
+            //! @{
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) override;
+            virtual void ps_onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft, const QVector<int> &roles) override;
+            virtual void ps_onChangedDigest() override;
+            //! @}
 
             //! Update filtered container
             void updateFilteredContainer();
 
             //! Row count changed
-            void emitRowCountChanged();
+            void emitModelDataChanged();
 
             std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter
             ContainerType m_container;                              //!< used container

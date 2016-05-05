@@ -18,8 +18,7 @@
 
 namespace BlackMisc
 {
-
-    //! Receive 1..n signal, collect them over time, and resend afer n milliseconds
+    //! Receive 1..n signals, collect them over time, and resend afer n milliseconds
     class BLACKMISC_EXPORT CDigestSignal : public QObject
     {
         Q_OBJECT

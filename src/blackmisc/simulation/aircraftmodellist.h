@@ -26,9 +26,9 @@ namespace BlackMisc
     {
         //! Value object encapsulating a list of aircraft models
         class BLACKMISC_EXPORT CAircraftModelList :
-            public CSequence<CAircraftModel>,
-            public IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
-            public IOrderableList<CAircraftModel, CAircraftModelList>,
+            public BlackMisc::CSequence<CAircraftModel>,
+            public BlackMisc::IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
+            public BlackMisc::IOrderableList<CAircraftModel, CAircraftModelList>,
             public BlackMisc::Mixin::MetaType<CAircraftModelList>
         {
         public:

@@ -72,8 +72,18 @@ namespace BlackGui
             {
                 order = container[position].getOrder();
             }
+            this->setSortColumnToOrder();
             container.moveTo(items, order);
+
+            // update container
             this->updateContainerMaybeAsync(container);
+        }
+
+        template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>
+        void COrderableListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::setSortColumnToOrder()
+        {
+            // force sorted by order, otherwise display looks confusing
+            this->setSorting(IOrderable::IndexOrder);
         }
 
         template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>

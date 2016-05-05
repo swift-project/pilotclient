@@ -18,6 +18,7 @@
 namespace BlackMisc
 {
     //! List of orderable IOrderable objects
+    //! \remark Orerable objects shall implement BlackMisc::IOrderable
     template<class OBJ, class CONTAINER>
     class IOrderableList
     {
@@ -71,8 +72,8 @@ namespace BlackMisc
 
     extern template class BLACKMISC_EXPORT_TEMPLATE IOrderableList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE IOrderableList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
-
     //! \endcond
+
 } //namespace
 
 #endif //guard

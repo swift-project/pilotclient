@@ -73,6 +73,9 @@ namespace BlackGui
             virtual void moveItems(const ContainerType &items, int position) override;
             //! @}
 
+            //! Sort order to order property BlackMisc::IOrderable::IndexOrder
+            void setSortColumnToOrder();
+
         protected:
             //! Constructor
             COrderableListModelDbObjects(const QString &translationContext, QObject *parent = nullptr);

@@ -178,7 +178,14 @@ namespace BlackGui
 
         void CAircraftModelView::dropEvent(QDropEvent *event)
         {
-
+            // moves from myself are ignored
+            // depends on isDropAllowed() / acceptDrop() if this function is called
+            Qt::DropAction action = event->dropAction();
+            if (action == Qt::MoveAction)
+            {
+                COrderableViewWithDbObjects::dropEvent(event);
+                return;
+            }
             if (!this->isDropAllowed()) { return; }
             if (!event) { return; }
             const QMimeData *mime = event->mimeData();

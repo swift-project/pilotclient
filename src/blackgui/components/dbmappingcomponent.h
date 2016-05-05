@@ -24,6 +24,7 @@
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/digestsignal.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -164,6 +165,9 @@ namespace BlackGui
             //! Tab index has been changed
             void tabIndexChanged(int index);
 
+            //! \private Just needed to trigger CDbMappingComponent::ps_onStashedModelsChangedDigest
+            void ps_digestStashedModelsChanged();
+
         private slots:
             //! Load the vPilot rules
             void ps_loadVPilotData();
@@ -179,6 +183,9 @@ namespace BlackGui
 
             //! Stashed models changed
             void ps_onStashedModelsChanged();
+
+            //! Stashed models changed
+            void ps_onStashedModelsChangedDigest();
 
             //! Tab index changed
             void ps_tabIndexChanged(int index);
@@ -243,9 +250,11 @@ namespace BlackGui
             QScopedPointer<CDbModelMappingModifyComponent>         m_modelModifyDialog;  //!< dialog when modifying models
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader    m_vPilotReader;       //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser> m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
-            bool m_vPilot1stInit       = true;
-            bool m_withVPilot          = false;
+            BlackMisc::CDigestSignal                               m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
+            bool m_vPilot1stInit       = true;   //!< vPilot extensions initaliazed?
+            bool m_withVPilot          = false;  //!< use vPilot extensions
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
+
 
             //! Init vPilot if rights and suitable
             void initVPilotLoading();

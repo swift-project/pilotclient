@@ -68,17 +68,17 @@ namespace BlackGui
             connect(ui->editor_Model, &CModelMappingForm::requestStash, this, &CDbMappingComponent::ps_stashCurrentModel);
 
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
-            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onOwnModelsCountChanged);
+            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onOwnModelsCountChanged);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
 
-            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onStashCountChanged);
+            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onStashCountChanged);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::ps_handleStashDropRequest);
             connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::ps_onStashedModelsChanged);
             connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::ps_onModelsSuccessfullyPublished);
 
-            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onModelSetCountChanged);
+            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onModelSetCountChanged);
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::ps_tabIndexChanged);
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher , &CModelMatcherComponent::tabIndexChanged);
 
@@ -120,7 +120,7 @@ namespace BlackGui
             {
                 this->m_vPilot1stInit = false;
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
-                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::rowCountChanged, this, &CDbMappingComponent::ps_onVPilotCountChanged);
+                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onVPilotCountChanged);
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
@@ -466,6 +466,11 @@ namespace BlackGui
         }
 
         void CDbMappingComponent::ps_onStashedModelsChanged()
+        {
+            emit this->ps_digestStashedModelsChanged();
+        }
+
+        void CDbMappingComponent::ps_onStashedModelsChangedDigest()
         {
             const bool hlvp = this->ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
             const bool hlom = this->ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModelStrings();

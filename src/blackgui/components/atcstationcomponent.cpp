@@ -61,14 +61,14 @@ namespace BlackGui
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
-            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
-            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChanged, this, &CAtcStationComponent::ps_onCountChanged);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChanged, this, &CAtcStationComponent::ps_onCountChanged);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::ps_setComFrequency);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
-            connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::rowCountChanged, this, &CAtcStationComponent::ps_onCountChanged);
+            connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChanged, this, &CAtcStationComponent::ps_onCountChanged);
 
             connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
 

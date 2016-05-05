@@ -228,8 +228,8 @@ namespace BlackGui
             //! Asynchronous update finished
             void asyncUpdateFinished();
 
-            //! Number of elements changed
-            void rowCountChanged(int count, bool withFilter);
+            //! Model data changed
+            void modelDataChanged(int count, bool withFilter);
 
             //! Model bas been changed (means data in view have been changed)
             void modelChanged();
@@ -269,6 +269,9 @@ namespace BlackGui
             //! \param containerSizeDependent check against resize threshold if indicator makes sense
             //! \param processEvents force event processing to display indicator by updating GUI
             void showLoadIndicator(int containerSizeDependent = -1, bool processEvents = true);
+
+            //! Underlying model changed
+            void onModelChanged();
 
             //! Hide loading indicator
             void hideLoadIndicator();
@@ -323,6 +326,9 @@ namespace BlackGui
 
             //! Init menu actions
             BlackGui::Menus::CMenuActions initMenuActions(MenuFlag menu);
+
+            //! Set the sort indicator to the current sort column
+            virtual void updateSortIndicator() = 0;
 
             QString        m_saveFileName;                                     //!< save file name (JSON)
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
@@ -533,7 +539,7 @@ namespace BlackGui
             //! Add the object and container type as accepted drop types CDropBase::addAcceptedMetaTypeId
             void addContainerTypesAsDropTypes(bool objectType = true, bool containerType = true);
 
-            //! Init so items can be ordered
+            //! Init so items can be ordered, includes enabling drag and drop
             void initAsOrderable();
 
             //! Drop actions
@@ -556,6 +562,7 @@ namespace BlackGui
             virtual bool reachedResizeThreshold(int containrerSize = -1) const override;
             virtual void performModeBasedResizeToContent() override;
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
+            virtual void updateSortIndicator() override;
             //! @}
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
