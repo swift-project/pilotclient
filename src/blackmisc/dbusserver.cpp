@@ -10,19 +10,21 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/processctrl.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QDBusServer>
 #include <QMetaClassInfo>
 #include <QMetaObject>
-#include <QProcess>
 #include <QStringList>
+#include <QThread>
 #include <QtGlobal>
 
 using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
+
     CDBusServer::CDBusServer(const QString &service, const QString &address, QObject *parent) : QObject(parent)
     {
         m_serverMode = modeOfAddress(address);
@@ -30,14 +32,16 @@ namespace BlackMisc
         {
         case SERVERMODE_SESSIONBUS:
             {
-                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
-                if (! connection.isConnected())
-                {
-                    launchDBusDaemon();
-                    connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
-                }
+                QDBusConnection testConnection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
+                if (! testConnection.isConnected()) { launchDBusDaemon(); }
+                testConnection.disconnectFromBus(coreServiceName());
 
-                if (! connection.registerService(service))
+                // Sleep for 200 ms in order for dbus-daemon to finish loading.
+                // FIXME: Dirty workaround. Instead poll the the server up to x times every 50 ms until it connection is accepted.
+                QThread::msleep(200);
+
+                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
+                if (! connection.isConnected() || ! connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
                     CLogMessage(this).warning("DBus registration: %1") << connection.lastError().message();
@@ -47,14 +51,15 @@ namespace BlackMisc
             break;
         case SERVERMODE_SYSTEMBUS:
             {
-                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
-                if (!connection.isConnected())
-                {
-                    launchDBusDaemon();
-                    connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
-                }
+                QDBusConnection testConnection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
+                if (! testConnection.isConnected()) { launchDBusDaemon(); }
+                testConnection.disconnectFromBus(coreServiceName());
 
-                if (!connection.registerService(service))
+                // Sleep for 200 ms in order for dbus-daemon to finish loading.
+                QThread::msleep(200);
+
+                QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
+                if (! connection.isConnected() || ! connection.registerService(service))
                 {
                     // registration fails can either mean something wrong with DBus or service already exists
                     CLogMessage(this).warning("DBus registration: %1") << connection.lastError().message();
@@ -103,7 +108,7 @@ namespace BlackMisc
     {
         const QString program = QStringLiteral("dbus-daemon");
         const QStringList arguments = { QStringLiteral("--config-file=../etc/dbus-1/session.conf") };
-        bool success = QProcess::startDetached(program, arguments);
+        bool success = CProcessCtrl::startDetachedWithoutConsole(program, arguments);
         if (!success) { CLogMessage(this).error("Failed to launch dbus-daemon!"); }
     }
 
