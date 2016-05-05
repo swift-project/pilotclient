@@ -161,7 +161,7 @@ namespace BlackCore
         bank *= -1.0;
         currentSituation.setBank(bank);
 
-        currentSituation.setGroundspeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
+        currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
                                         * simulationTimeFraction
                                         + oldSituation.getGroundSpeed());
         status.changedPosition = true;

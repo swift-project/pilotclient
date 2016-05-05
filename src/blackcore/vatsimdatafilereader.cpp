@@ -265,7 +265,7 @@ namespace BlackCore
                             // Pilot section
                             const double groundspeed = clientPartsMap["groundspeed"].toDouble();
                             CAircraftSituation situation(position, altitude);
-                            situation.setGroundspeed(CSpeed(groundspeed, CSpeedUnit::kts()));
+                            situation.setGroundSpeed(CSpeed(groundspeed, CSpeedUnit::kts()));
                             CSimulatedAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
 
                             QString aircraftIcaoCode = clientPartsMap["planned_aircraft"];

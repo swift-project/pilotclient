@@ -22,12 +22,12 @@ namespace BlackMisc
 
         CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs)
             : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
-              m_bank(bank), m_groundspeed(gs) {}
+              m_bank(bank), m_groundSpeed(gs) {}
 
         CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs)
             : m_correspondingCallsign(correspondingCallsign),
               m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
-              m_bank(bank), m_groundspeed(gs)
+              m_bank(bank), m_groundSpeed(gs)
         {
             m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
         }
@@ -38,7 +38,7 @@ namespace BlackMisc
             s.append(" altitude: ").append(this->m_altitude.toQString(i18n));
             s.append(" bank: ").append(this->m_bank.toQString(i18n));
             s.append(" pitch: ").append(this->m_pitch.toQString(i18n));
-            s.append(" gs: ").append(this->m_groundspeed.toQString(i18n));
+            s.append(" gs: ").append(this->m_groundSpeed.toQString(i18n));
             s.append(" heading: ").append(this->m_heading.toQString(i18n));
             s.append(" timestamp: ").append(this->getFormattedUtcTimestampDhms());
             return s;
@@ -70,7 +70,7 @@ namespace BlackMisc
             case IndexBank:
                 return this->m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundspeed:
-                return this->m_groundspeed.propertyByIndex(index.copyFrontRemoved());
+                return this->m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:
                 return this->m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
             default:
@@ -103,7 +103,7 @@ namespace BlackMisc
                 this->m_bank.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexGroundspeed:
-                this->m_groundspeed.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_groundSpeed.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexCallsign:
                 this->m_correspondingCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());

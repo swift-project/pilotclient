@@ -114,7 +114,7 @@ namespace BlackSimPlugin
                 situation.setHeading({ m_xplaneData.trueHeading, Aviation::CHeading::True, CAngleUnit::deg() });
                 situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
                 situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
-                situation.setGroundspeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
+                situation.setGroundSpeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
 
                 // updates
                 updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());

@@ -73,7 +73,7 @@ namespace BlackSimPlugin
             situation.setPosition(position);
             situation.setAltitude(CAltitude(dHigh + dLow, CAltitude::MeanSeaLevel, CLengthUnit::m()));
             double groundSpeed = positionVelocity.ground_velocity / 65536.0;
-            situation.setGroundspeed(CSpeed(groundSpeed, CSpeedUnit::m_s()));
+            situation.setGroundSpeed(CSpeed(groundSpeed, CSpeedUnit::m_s()));
 
             FS_PBH pbhstrct;
             pbhstrct.pbh = positionVelocity.pbh;

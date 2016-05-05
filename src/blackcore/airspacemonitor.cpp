@@ -965,7 +965,7 @@ namespace BlackCore
             auto history = this->m_situationsByCallsign[callsign];
             if (history.empty()) { return; } // we need one full situation
             interimSituation.setCurrentUtcTime();
-            interimSituation.setGroundspeed(history.latestObject().getGroundSpeed());
+            interimSituation.setGroundSpeed(history.latestObject().getGroundSpeed());
         }
 
         // store situation history

@@ -131,11 +131,11 @@ namespace BlackMisc
             //! Set bank (angle)
             void setBank(const BlackMisc::PhysicalQuantities::CAngle &bank) { this->m_bank = bank; }
 
-            //! Get groundspeed
-            const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_groundspeed; }
+            //! Get ground speed
+            const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_groundSpeed; }
 
-            //! Set groundspeed
-            void setGroundspeed(const BlackMisc::PhysicalQuantities::CSpeed &groundspeed) { this->m_groundspeed = groundspeed; }
+            //! Set ground speed
+            void setGroundSpeed(const BlackMisc::PhysicalQuantities::CSpeed &groundspeed) { this->m_groundSpeed = groundspeed; }
 
             //! Corresponding callsign
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_correspondingCallsign; }
@@ -153,7 +153,7 @@ namespace BlackMisc
             BlackMisc::Aviation::CHeading  m_heading;
             BlackMisc::PhysicalQuantities::CAngle m_pitch;
             BlackMisc::PhysicalQuantities::CAngle m_bank;
-            BlackMisc::PhysicalQuantities::CSpeed m_groundspeed;
+            BlackMisc::PhysicalQuantities::CSpeed m_groundSpeed;
 
             BLACK_METACLASS(
                 CAircraftSituation,
@@ -163,7 +163,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(heading),
                 BLACK_METAMEMBER(pitch),
                 BLACK_METAMEMBER(bank),
-                BLACK_METAMEMBER(groundspeed),
+                BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch)
             );
         };

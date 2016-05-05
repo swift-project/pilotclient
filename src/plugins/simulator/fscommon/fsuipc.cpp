@@ -367,7 +367,7 @@ namespace BlackSimPlugin
                     situation.setBank(bank);
                     situation.setHeading(heading);
                     situation.setPitch(pitch);
-                    situation.setGroundspeed(groundspeed);
+                    situation.setGroundSpeed(groundspeed);
                     situation.setAltitude(altitude);
                     aircraft.setSituation(situation);
 
