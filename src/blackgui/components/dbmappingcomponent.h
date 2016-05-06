@@ -70,7 +70,7 @@ namespace BlackGui
             void gracefulShutdown();
 
             //! With vPilot rules
-            bool withVPilot() const { return m_withVPilot; }
+            bool withVPilot() const { return m_vPilotEnabled; }
 
             //! Any models which can be stashed?
             bool hasSelectedModelsToStash() const;
@@ -251,12 +251,19 @@ namespace BlackGui
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader    m_vPilotReader;       //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::AuthenticatedDbUser> m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
             BlackMisc::CDigestSignal                               m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
+            const bool vPilotSupport   = true;   //!< vPilot support
             bool m_vPilot1stInit       = true;   //!< vPilot extensions initaliazed?
-            bool m_withVPilot          = false;  //!< use vPilot extensions
+            bool m_vPilotEnabled       = false;  //!< use vPilot extensions
+            bool m_vPilotFormatted     = false;  //!< vPilot fomratted (workaround)
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
 
             //! Init vPilot if rights and suitable
             void initVPilotLoading();
+
+            //! Workaround to format vPilot view
+            //! \remark presize does not work properly when data are loaded, reason is not understood. This here does a formatting when tab becomes visible.
+            //! \todo can be removed whenever a proper formatting is archived with data loading
+            void formatVPilotView();
 
             //! Model for given index from sender/current view
             BlackMisc::Simulation::CAircraftModel getModelFromView(const QModelIndex &index) const;

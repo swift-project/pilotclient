@@ -112,11 +112,10 @@ namespace BlackGui
 
         void CDbMappingComponent::initVPilotLoading()
         {
-            const bool canUseVPilot = true; // general flag if vPilot can be used/not used
-            this->m_withVPilot = canUseVPilot && this->m_swiftDbUser.get().isMappingAdmin();
+            this->m_vPilotEnabled = vPilotSupport && this->m_swiftDbUser.get().isMappingAdmin();
             static const QString tabName(this->ui->tw_ModelsToBeMapped->tabText(TabVPilot));
 
-            if (this->m_vPilot1stInit && canUseVPilot)
+            if (this->m_vPilot1stInit && vPilotSupport)
             {
                 this->m_vPilot1stInit = false;
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
@@ -136,9 +135,9 @@ namespace BlackGui
                 const int noModels = vPilotModels.size();
                 CLogMessage(this).info("%1 cached vPilot models loaded") << noModels;
             }
-            this->ui->tab_VPilot->setEnabled(this->m_withVPilot);
-            this->ui->tab_VPilot->setVisible(this->m_withVPilot);
-            if (this->m_withVPilot)
+            this->ui->tab_VPilot->setEnabled(this->m_vPilotEnabled);
+            this->ui->tab_VPilot->setVisible(this->m_vPilotEnabled);
+            if (this->m_vPilotEnabled)
             {
                 // create / restore tab
                 this->ui->tw_ModelsToBeMapped->addTab(this->ui->tab_VPilot, tabName);
@@ -148,8 +147,16 @@ namespace BlackGui
             }
             else
             {
+                this->m_vPilotFormatted = false;
                 this->ui->tw_ModelsToBeMapped->removeTab(TabVPilot);
             }
+        }
+
+        void CDbMappingComponent::formatVPilotView()
+        {
+            if (!this->m_vPilotEnabled || this->m_vPilotFormatted) { return; }
+            this->m_vPilotFormatted = true;
+            this->ui->tvp_AircraftModelsForVPilot->presizeOrFullResizeToContents();
         }
 
         CAircraftModel CDbMappingComponent::getModelFromView(const QModelIndex &index) const
@@ -190,7 +197,7 @@ namespace BlackGui
 
         bool CDbMappingComponent::hasSelectedModelsToStash() const
         {
-            TabIndex tab = currentTabIndex();
+            const TabIndex tab = currentTabIndex();
             switch (tab)
             {
             case TabOwnModels:
@@ -205,7 +212,7 @@ namespace BlackGui
 
         CAircraftModelView *CDbMappingComponent::currentModelView() const
         {
-            TabIndex tab = currentTabIndex();
+            const TabIndex tab = currentTabIndex();
             switch (tab)
             {
             case TabOwnModels:
@@ -223,7 +230,7 @@ namespace BlackGui
 
         QString CDbMappingComponent::currentTabText() const
         {
-            int i = this->ui->tw_ModelsToBeMapped->currentIndex();
+            const int i = this->ui->tw_ModelsToBeMapped->currentIndex();
             return this->ui->tw_ModelsToBeMapped->tabText(i);
         }
 
@@ -265,7 +272,7 @@ namespace BlackGui
         CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
         {
             if (!hasSelectedModelsToStash()) { return CAircraftModelList(); }
-            TabIndex tab = currentTabIndex();
+            const TabIndex tab = currentTabIndex();
             switch (tab)
             {
             case TabOwnModels:
@@ -291,7 +298,7 @@ namespace BlackGui
         CDbMappingComponent::TabIndex CDbMappingComponent::currentTabIndex() const
         {
             if (!ui->tw_ModelsToBeMapped) { return CDbMappingComponent::NoValidTab; }
-            int t = ui->tw_ModelsToBeMapped->currentIndex();
+            const int t = ui->tw_ModelsToBeMapped->currentIndex();
             return static_cast<TabIndex>(t);
         }
 
@@ -314,7 +321,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_handleStashDropRequest(const CAirlineIcaoCode &code) const
         {
-            CLivery stdLivery(sGui->getWebDataServices()->getStdLiveryForAirlineCode(code));
+            const CLivery stdLivery(sGui->getWebDataServices()->getStdLiveryForAirlineCode(code));
             if (!stdLivery.hasValidDbKey()) { return; }
             this->ui->comp_StashAircraft->applyToSelected(stdLivery);
         }
@@ -342,7 +349,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_removeDbModelsFromView()
         {
-            QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
+            const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
             if (modelStrings.isEmpty()) { return; }
             if (currentTabIndex() == TabVPilot || currentTabIndex() == TabOwnModels)
             {
@@ -470,7 +477,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_onLoadVPilotDataFinished(bool success)
         {
-            if (!m_withVPilot) { return; }
+            if (!m_vPilotEnabled) { return; }
             if (success)
             {
                 CLogMessage(this).info("Loading vPilot ruleset completed");
@@ -524,7 +531,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_tabIndexChanged(int index)
         {
-            CDbMappingComponent::TabIndex ti = static_cast<CDbMappingComponent::TabIndex>(index);
+            const CDbMappingComponent::TabIndex ti = static_cast<CDbMappingComponent::TabIndex>(index);
             switch (ti)
             {
             case CDbMappingComponent::TabOwnModelSet:
@@ -537,6 +544,9 @@ namespace BlackGui
                 ui->frp_Editors->setVisible(false);
                 this->resizeForSelect();
                 break;
+            case CDbMappingComponent::TabVPilot:
+                // fall thru intended
+                this->formatVPilotView();
             default:
                 ui->frp_Editors->setVisible(true);
                 ui->editor_Model->setVisible(true);

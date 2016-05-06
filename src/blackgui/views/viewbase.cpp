@@ -525,9 +525,9 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::fullResizeToContents()
         {
-            this->setVisible(false);
             // magic trick from:
             // http://stackoverflow.com/q/3433664/356726
+            this->setVisible(false);
             const QRect vpOriginal = this->viewport()->geometry();
             QRect vpNew = vpOriginal;
             vpNew.setWidth(std::numeric_limits<int>::max());
@@ -542,6 +542,9 @@ namespace BlackGui
                 this->horizontalHeader()->setStretchLastSection(true);
             }
             this->viewport()->setGeometry(vpOriginal);
+
+            // if I store the original visibility and then
+            // set it back here, the whole view disappears
             this->setVisible(true);
         }
 
@@ -1047,7 +1050,8 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::performModeBasedResizeToContent()
         {
-            // small set or large set?
+            // small set or large set? This only performs real resizing, no presizing
+            // remark, see also presizeOrFullResizeToContents
             if (this->isResizeConditionMet())
             {
                 this->fullResizeToContents();

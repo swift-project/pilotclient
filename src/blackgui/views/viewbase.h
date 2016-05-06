@@ -297,7 +297,8 @@ namespace BlackGui
             virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
             //! @}
 
-            //! Perform resizing / non slot method for template
+            //! Perform resizing (no presizing) / non slot method for template
+            //! \sa CViewBaseNonTemplate::presizeOrFullResizeToContents
             virtual void performModeBasedResizeToContent() = 0;
 
             //! Helper method with template free signature
