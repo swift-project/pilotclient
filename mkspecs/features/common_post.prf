@@ -4,7 +4,7 @@
 
 equals (TEMPLATE, lib) {
     # Uncomment line below to supress the default RPATH
-    # QMAKE_LFLAGS_RPATH =
+    QMAKE_LFLAGS_RPATH =
 
     macx: QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@rpath/
     else:unix: QMAKE_LFLAGS *= '-Wl,-rpath,\'\$$ORIGIN\''
@@ -12,7 +12,7 @@ equals (TEMPLATE, lib) {
 
 equals (TEMPLATE, app) {
     # Uncomment line below to supress the default RPATH
-    # QMAKE_LFLAGS_RPATH =
+    QMAKE_LFLAGS_RPATH =
 
     # Add rpath to externals to run tests without installing.
     # DYLD_LIBRARY_PATH isn't working anymore since OS X 10.11.
