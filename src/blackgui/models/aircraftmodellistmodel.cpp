@@ -32,7 +32,7 @@ namespace BlackGui
 
         void CAircraftModelListModel::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)
         {
-            if (this->m_mode == mode) return;
+            if (this->m_mode == mode) { return; }
             this->m_mode = mode;
             this->m_columns.clear();
             switch (mode)
@@ -41,6 +41,7 @@ namespace BlackGui
             case OwnSimulatorModel:
             case StashModel:
                 this->m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString}));
+                this->m_columns.addColumn(CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("DB", "parts from DB", { CAircraftModel::IndexMembersDbStatus}));
                 this->m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("description", { CAircraftModel::IndexDescription}));
