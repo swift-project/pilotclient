@@ -39,13 +39,17 @@ namespace BlackGui
         CDistributorForm::~CDistributorForm()
         { }
 
-        void CDistributorForm::setValue(const BlackMisc::Simulation::CDistributor &distributor)
+        bool CDistributorForm::setValue(const BlackMisc::Simulation::CDistributor &distributor)
         {
+            const CDistributor currentDistributor(this->getValue());
+            if (currentDistributor == distributor) { return false; }
+
             this->ui->distributor_Selector->setDistributor(distributor);
             this->ui->le_Description->setText(distributor.getDescription());
             this->ui->le_Alias1->setText(distributor.getAlias1());
             this->ui->le_Alias2->setText(distributor.getAlias2());
             this->ui->le_Updated->setText(distributor.getFormattedUtcTimestampYmdhms());
+            return true;
         }
 
         CDistributor CDistributorForm::getValue() const

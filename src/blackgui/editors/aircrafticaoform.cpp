@@ -42,9 +42,9 @@ namespace BlackGui
         CAircraftIcaoForm::~CAircraftIcaoForm()
         { }
 
-        void CAircraftIcaoForm::setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
+        bool CAircraftIcaoForm::setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
         {
-            if (icao == this->m_originalCode) { return; }
+            if (icao == this->m_originalCode) { return false; }
             this->m_originalCode = icao;
 
             this->ui->le_Id->setText(icao.getDbKeyAsString());
@@ -65,6 +65,7 @@ namespace BlackGui
             CGuiUtility::setComboBoxValueByStartingString(this->ui->cb_Wtc, wtc, "unspecified");
 
             this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
+            return true;
         }
 
         CAircraftIcaoCode CAircraftIcaoForm::getValue() const

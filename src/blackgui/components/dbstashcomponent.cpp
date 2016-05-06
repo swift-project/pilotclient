@@ -150,6 +150,12 @@ namespace BlackGui
             return this->ui->tvp_StashAircraftModels->derivedModel()->container();
         }
 
+        CAircraftModel CDbStashComponent::getStashedModel(const QString &modelString) const
+        {
+            if (modelString.isEmpty() || ui->tvp_StashAircraftModels->isEmpty()) { return CAircraftModel(); }
+            return ui->tvp_StashAircraftModels->container().findFirstByModelStringOrDefault(modelString);
+        }
+
         void CDbStashComponent::applyToSelected(const CLivery &livery, bool acceptWarnings)
         {
             if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }

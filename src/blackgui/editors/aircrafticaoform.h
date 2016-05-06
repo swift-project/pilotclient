@@ -62,7 +62,7 @@ namespace BlackGui
 
         public slots:
             //! Set value
-            void setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+            bool setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
         private slots:
             //! Variant has been dropped

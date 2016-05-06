@@ -62,7 +62,7 @@ namespace BlackGui
 
         public slots:
             //! Set value
-            void setValue(const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
+            bool setValue(const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
 
         private slots:
             //! Variant has been dropped

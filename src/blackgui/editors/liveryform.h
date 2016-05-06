@@ -67,7 +67,7 @@ namespace BlackGui
 
         public slots:
             //! Value
-            void setValue(const BlackMisc::Aviation::CLivery &livery);
+            bool setValue(const BlackMisc::Aviation::CLivery &livery);
 
         private slots:
             //! Livery dropped

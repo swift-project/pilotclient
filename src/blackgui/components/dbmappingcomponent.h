@@ -169,6 +169,9 @@ namespace BlackGui
             void ps_digestStashedModelsChanged();
 
         private slots:
+            //! Tab index changed
+            void ps_tabIndexChanged(int index);
+
             //! Load the vPilot rules
             void ps_loadVPilotData();
 
@@ -177,6 +180,9 @@ namespace BlackGui
 
             //! vPilot cached models changed
             void ps_onVPilotCacheChanged();
+
+            //! vPilot data changed
+            void ps_onVPilotDataChanged(int count, bool withFilter);
 
             //! Request update of vPilot data
             void ps_requestVPilotDataUpdate();
@@ -187,8 +193,8 @@ namespace BlackGui
             //! Stashed models changed
             void ps_onStashedModelsChangedDigest();
 
-            //! Tab index changed
-            void ps_tabIndexChanged(int index);
+            //! Stash has been changed
+            void ps_onStashedModelsDataChanged(int count, bool withFilter);
 
             //! Models have been published successfully
             void ps_onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models);
@@ -196,14 +202,11 @@ namespace BlackGui
             //! Stash drop request
             void ps_handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
 
-            //! Row count for vPilot data changed
-            void ps_onVPilotCountChanged(int count, bool withFilter);
+            //! Model set has been changed
+            void ps_onModelSetChanged(int count, bool withFilter);
 
-            //! Stash count has been changed
-            void ps_onStashCountChanged(int count, bool withFilter);
-
-            //! Model set count has been changed
-            void ps_onModelSetCountChanged(int count, bool withFilter);
+            //! Own models have been changed
+            void ps_onOwnModelsChanged(int count, bool withFilter);
 
             //! Row has been selected
             void ps_onModelRowSelected(const QModelIndex &index);
@@ -229,9 +232,6 @@ namespace BlackGui
             //! Open model modify dialog
             void ps_modifyModelDialog();
 
-            //! Own models have been changed
-            void ps_onOwnModelsCountChanged(int count, bool withFilter);
-
             //! Add to own model set
             void ps_addToOwnModelSet();
 
@@ -255,7 +255,6 @@ namespace BlackGui
             bool m_withVPilot          = false;  //!< use vPilot extensions
             bool m_autoFilterInDbViews = false;  //!< automatically filter the DB view by the current model
 
-
             //! Init vPilot if rights and suitable
             void initVPilotLoading();
 
@@ -264,6 +263,9 @@ namespace BlackGui
 
             //! Current tab text
             QString currentTabText() const;
+
+            //! Data have been changed and the editor data might need an update
+            void updateEditorsWhenApplicable();
 
             // -------------------- component specific menus --------------------------
 

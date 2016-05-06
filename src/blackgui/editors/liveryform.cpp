@@ -67,9 +67,9 @@ namespace BlackGui
             return this->ui->editor_AirlineIcao->getValue();
         }
 
-        void CLiveryForm::setValue(const CLivery &livery)
+        bool CLiveryForm::setValue(const CLivery &livery)
         {
-            if (this->m_originalLivery == livery) { return; }
+            if (this->m_originalLivery == livery) { return false; }
 
             this->m_originalLivery = livery;
             this->ui->comp_LiverySelector->setLivery(livery);
@@ -88,6 +88,7 @@ namespace BlackGui
             {
                 this->ui->editor_AirlineIcao->setValue(livery.getAirlineIcaoCode());
             }
+            return true;
         }
 
         CStatusMessageList CLiveryForm::validate(bool withNestedForms) const

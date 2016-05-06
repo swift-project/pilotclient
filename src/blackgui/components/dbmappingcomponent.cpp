@@ -68,25 +68,25 @@ namespace BlackGui
             connect(ui->editor_Model, &CModelMappingForm::requestStash, this, &CDbMappingComponent::ps_stashCurrentModel);
 
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
-            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onOwnModelsCountChanged);
+            connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onOwnModelsChanged);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
 
-            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onStashCountChanged);
+            connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onStashedModelsDataChanged);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
             connect(ui->comp_StashAircraft->view(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::ps_handleStashDropRequest);
             connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::ps_onStashedModelsChanged);
             connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::ps_onModelsSuccessfullyPublished);
 
-            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onModelSetCountChanged);
+            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onModelSetChanged);
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::ps_tabIndexChanged);
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher , &CModelMatcherComponent::tabIndexChanged);
 
             connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
 
             // initial values
-            this->ps_onModelSetCountChanged(ui->comp_OwnModelSet->view()->rowCount(), ui->comp_OwnModelSet->view()->hasFilter());
-            this->ps_onStashCountChanged(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
+            this->ps_onModelSetChanged(ui->comp_OwnModelSet->view()->rowCount(), ui->comp_OwnModelSet->view()->hasFilter());
+            this->ps_onStashedModelsDataChanged(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
 
             // how to display forms
             ui->editor_AircraftIcao->setSelectOnly();
@@ -120,7 +120,7 @@ namespace BlackGui
             {
                 this->m_vPilot1stInit = false;
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
-                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onVPilotCountChanged);
+                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onVPilotDataChanged);
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
                 connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
@@ -142,7 +142,7 @@ namespace BlackGui
             {
                 // create / restore tab
                 this->ui->tw_ModelsToBeMapped->addTab(this->ui->tab_VPilot, tabName);
-                this->ps_onVPilotCountChanged(
+                this->ps_onVPilotDataChanged(
                     this->ui->tvp_AircraftModelsForVPilot->rowCount(),
                     this->ui->tvp_AircraftModelsForVPilot->hasFilter());
             }
@@ -225,6 +225,41 @@ namespace BlackGui
         {
             int i = this->ui->tw_ModelsToBeMapped->currentIndex();
             return this->ui->tw_ModelsToBeMapped->tabText(i);
+        }
+
+        void CDbMappingComponent::updateEditorsWhenApplicable()
+        {
+            const CAircraftModel currentEditorModel(ui->editor_Model->getValue());
+            if (!currentEditorModel.hasModelString()) { return; } // no related model
+            const QString modelString(currentEditorModel.getModelString());
+            const CAircraftModel currentStashedModel(ui->comp_StashAircraft->getStashedModel(modelString));
+            if (!currentStashedModel.hasModelString()) { return; }
+
+            // we have found a model in the stashed models and this is the one currently displayed
+            // in the editors
+            bool updated = false;
+            const CLivery stashedLivery(currentStashedModel.getLivery());
+            if (stashedLivery.hasValidDbKey())
+            {
+                if (ui->editor_Livery->setValue(stashedLivery)) { updated = true; }
+            }
+
+            const CDistributor stashedDistributor(currentStashedModel.getDistributor());
+            if (stashedDistributor.hasValidDbKey())
+            {
+                if (ui->editor_Distributor->setValue(stashedDistributor)) { updated = true; }
+            }
+
+            const CAircraftIcaoCode stashedIcaoCode(currentStashedModel.getAircraftIcaoCode());
+            if (stashedIcaoCode.hasValidDbKey())
+            {
+                if (ui->editor_AircraftIcao->setValue(stashedIcaoCode)) { updated = true; }
+            }
+
+            if (updated)
+            {
+                CLogMessage(this).info("Updated editor data for '%1'") << modelString;
+            }
         }
 
         CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
@@ -516,7 +551,7 @@ namespace BlackGui
             emit this->requestUpdatedData(CEntityFlags::ModelEntity);
         }
 
-        void CDbMappingComponent::ps_onVPilotCountChanged(int count, bool withFilter)
+        void CDbMappingComponent::ps_onVPilotDataChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -527,7 +562,7 @@ namespace BlackGui
             this->ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 
-        void CDbMappingComponent::ps_onOwnModelsCountChanged(int count, bool withFilter)
+        void CDbMappingComponent::ps_onOwnModelsChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -592,7 +627,7 @@ namespace BlackGui
             Q_UNUSED(selectedItem);
         }
 
-        void CDbMappingComponent::ps_onStashCountChanged(int count, bool withFilter)
+        void CDbMappingComponent::ps_onStashedModelsDataChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
@@ -601,9 +636,12 @@ namespace BlackGui
             const QString f = this->ui->comp_StashAircraft->view()->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, this->ui->comp_StashAircraft->view()->rowCount()) + f;
             this->ui->tw_ModelsToBeMapped->setTabText(i, o);
+
+            // update editors
+            this->updateEditorsWhenApplicable();
         }
 
-        void CDbMappingComponent::ps_onModelSetCountChanged(int count, bool withFilter)
+        void CDbMappingComponent::ps_onModelSetChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);

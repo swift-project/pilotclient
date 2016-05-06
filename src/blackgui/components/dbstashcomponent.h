@@ -74,6 +74,9 @@ namespace BlackGui
             //! The stashed models
             const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
 
+            //! Model for model string
+            Simulation::CAircraftModel getStashedModel(const QString &modelString) const;
+
             //! Apply livery to selected objects
             void applyToSelected(const BlackMisc::Aviation::CLivery &livery, bool acceptWarnings = true);
 
