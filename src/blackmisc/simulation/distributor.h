@@ -30,9 +30,6 @@ namespace BlackMisc
             public BlackMisc::IDatastoreObjectWithStringKey,
             public BlackMisc::IOrderable
         {
-            Q_INTERFACES(BlackMisc::IDatastoreObjectWithStringKey)
-            Q_INTERFACES(BlackMisc::IOrderable)
-
         public:
             //! Property indexes
             enum ColumnIndex

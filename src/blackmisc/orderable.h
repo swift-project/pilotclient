@@ -17,7 +17,7 @@
 
 namespace BlackMisc
 {
-    //! Entity with timestamp
+    //! Entity with order attribute (can be manually ordered in views)
     class BLACKMISC_EXPORT IOrderable
     {
     public:
@@ -62,7 +62,5 @@ namespace BlackMisc
         int m_order = -1; //!< order number
     };
 } // namespace
-
-Q_DECLARE_INTERFACE(BlackMisc::IOrderable, "org.swift-project.blackmisc.iorderable")
 
 #endif // guard

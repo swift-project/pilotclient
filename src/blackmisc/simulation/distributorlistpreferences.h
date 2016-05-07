@@ -55,7 +55,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(distributorsFsx),
                 BLACK_METAMEMBER(distributorsP3d),
                 BLACK_METAMEMBER(distributorsFs9),
-                BLACK_METAMEMBER(distributorsXPlane)
+                BLACK_METAMEMBER(distributorsXPlane),
+                BLACK_METAMEMBER(lastUpdatedSimulator)
             );
         };
     } //namespace

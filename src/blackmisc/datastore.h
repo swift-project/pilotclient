@@ -24,8 +24,6 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT IDatastoreObjectWithIntegerKey : public ITimestampBased
     {
-        Q_INTERFACES(BlackMisc::ITimestampBased)
-
     public:
         //! Property index
         enum ColumnIndex
@@ -97,8 +95,6 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT IDatastoreObjectWithStringKey : public ITimestampBased
     {
-        Q_INTERFACES(BlackMisc::ITimestampBased)
-
     public:
         //! Property index
         enum ColumnIndex

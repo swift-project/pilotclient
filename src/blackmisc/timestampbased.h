@@ -117,6 +117,4 @@ namespace BlackMisc
     };
 } // namespace
 
-Q_DECLARE_INTERFACE(BlackMisc::ITimestampBased, "org.swift-project.blackmisc.itimestampbased")
-
 #endif // guard

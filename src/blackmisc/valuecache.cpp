@@ -492,7 +492,7 @@ namespace BlackMisc
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
             // All good info
-            status = CStatusMessage(this, CStatusMessage::SeverityInfo, "Set values in " + this->getKey(element));
+            status = CStatusMessage(this, CStatusMessage::SeverityInfo, "Set values in " + element.m_key);
         }
         return status;
     }
