@@ -29,6 +29,9 @@
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
+                <fileExists>
+                    <path>${build_project_directory}/../../dist/bin/plugins/simulator/simulatorfs9.dll</path>
+                </fileExists>
             </shouldPackRuleList>
         </component>
         <component>
@@ -59,6 +62,9 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
                 <platformTest>
                     <type>windows</type>
                 </platformTest>
+                <fileExists>
+                    <path>${build_project_directory}/../../dist/bin/plugins/simulator/simulatorfsx.dll</path>
+                </fileExists>
             </shouldPackRuleList>
         </component>
         <component>
