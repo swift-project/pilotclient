@@ -219,8 +219,14 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = create_updater
-    win32: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
-    else:macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} osx --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
-    else:unix: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux-x64 --setvars project.outputDirectory=$$shell_path($${PREFIX}/..)
+    win32: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows \
+                                        --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
+                                        project.installerFilename=swift-installer-$${BLACK_VERSION}-win-$${WORD_SIZE}.exe
+    else:macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} osx \
+                                        --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
+                                        project.installerFilename=swift-installer-$${BLACK_VERSION}-osx-$${WORD_SIZE}.app
+    else:unix: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux-x$${WORD_SIZE} \
+                                        --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
+                                        project.installerFilename=swift-installer-$${BLACK_VERSION}-linux-$${WORD_SIZE}.run
     QMAKE_EXTRA_TARGETS += create_installer
 }
