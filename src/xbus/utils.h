@@ -14,7 +14,7 @@
 #include <XPLM/XPLMPlugin.h>
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QSharedPointer>
 #include <cstring>
 #include <cstdio>
@@ -82,13 +82,13 @@ public:
  * Qt framework, they can simply copy & paste this class into their project
  * and both X-Plane plugins will be able to share a single QApplication safely.
  */
-class QSharedApplication : public QApplication
+class QSharedApplication : public QCoreApplication
 {
     Q_OBJECT
 
-    QWeakPointer<QApplication> m_weakptr;
+    QWeakPointer<QCoreApplication> m_weakptr;
 
-    QSharedApplication(QSharedPointer<QApplication> &ptr, int &argc, char **argv) : QApplication(argc, argv)
+    QSharedApplication(QSharedPointer<QCoreApplication> &ptr, int &argc, char **argv) : QCoreApplication(argc, argv)
     {
         ptr.reset(this);
         m_weakptr = ptr;
@@ -102,9 +102,9 @@ public:
      *
      * The QApplication will not be destroyed while this shared pointer exists.
      */
-    static QSharedPointer<QApplication> sharedInstance()
+    static QSharedPointer<QCoreApplication> sharedInstance()
     {
-        QSharedPointer<QApplication> ptr;
+        QSharedPointer<QCoreApplication> ptr;
         if (! instance())
         {
             static int argc = 1;
@@ -123,7 +123,7 @@ public:
         }
         if (! instance()->inherits("QSharedApplication"))
         {
-            qFatal("There is an unshared QApplication in another plugin");
+            qFatal("There is an unshared QCoreApplication in another plugin");
         }
         return static_cast<QSharedApplication*>(instance())->m_weakptr;
     }
@@ -148,8 +148,8 @@ class QXPlaneEventLoop : public QObject
 
     static float callback(float, float, int, void *)
     {
-        QApplication::processEvents();
-        QApplication::sendPostedEvents();
+        QCoreApplication::processEvents();
+        QCoreApplication::sendPostedEvents();
         return -1;
     }
 
@@ -160,9 +160,9 @@ public:
      */
     static void exec()
     {
-        if (! QApplication::instance()->findChild<QXPlaneEventLoop *>())
+        if (! QCoreApplication::instance()->findChild<QXPlaneEventLoop *>())
         {
-            new QXPlaneEventLoop(QApplication::instance());
+            new QXPlaneEventLoop(QCoreApplication::instance());
         }
     }
 };
