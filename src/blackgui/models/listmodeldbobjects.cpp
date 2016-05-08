@@ -9,6 +9,8 @@
 
 #include "listmodeldbobjects.h"
 #include "allmodelcontainers.h"
+#include "blackmisc/datastoreobjectlist.h"
+#include <type_traits>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -21,7 +23,9 @@ namespace BlackGui
         CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::CListModelDbObjects(const QString &translationContext, QObject *parent) :
             CListModelBase<ObjectType, ContainerType, UseCompare>(translationContext, parent)
         {
-            // void
+            constexpr bool hasIntegerKey = std::is_base_of<IDatastoreObjectWithIntegerKey, ObjectType>::value && std::is_same<int, KeyType>::value;
+            constexpr bool hasStringKey = std::is_base_of<IDatastoreObjectWithStringKey, ObjectType>::value && std::is_base_of<QString, KeyType>::value;
+            static_assert(hasIntegerKey || hasStringKey, "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
         }
 
         template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>

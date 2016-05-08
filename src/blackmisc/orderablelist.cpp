@@ -12,12 +12,15 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include <algorithm>
 #include <iterator>
+#include <type_traits>
 
 namespace BlackMisc
 {
     template <class OBJ, class CONTAINER>
     IOrderableList<OBJ, CONTAINER>::IOrderableList()
-    { }
+    {
+        static_assert(std::is_base_of<IOrderable, OBJ>::value, "OBJ needs to implement IOrderable");
+    }
 
     template <class OBJ, class CONTAINER>
     const CONTAINER &IOrderableList<OBJ, CONTAINER>::container() const

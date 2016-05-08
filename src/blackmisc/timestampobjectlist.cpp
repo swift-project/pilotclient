@@ -22,12 +22,15 @@
 #include "blackmisc/countrylist.h"
 #include <algorithm>
 #include <iterator>
+#include <type_traits>
 
 namespace BlackMisc
 {
     template <class OBJ, class CONTAINER>
     ITimestampObjectList<OBJ, CONTAINER>::ITimestampObjectList()
-    { }
+    {
+        static_assert(std::is_base_of<ITimestampBased, OBJ>::value, "OBJ needs to implement ITimestampBased");
+    }
 
     template <class OBJ, class CONTAINER>
     const CONTAINER &ITimestampObjectList<OBJ, CONTAINER>::container() const

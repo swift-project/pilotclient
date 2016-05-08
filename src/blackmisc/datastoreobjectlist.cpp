@@ -17,12 +17,17 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include <algorithm>
 #include <iterator>
+#include <type_traits>
 
 namespace BlackMisc
 {
     template <class OBJ, class CONTAINER, typename KEYTYPE>
     IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::IDatastoreObjectList()
-    { }
+    {
+        constexpr bool hasIntegerKey = std::is_base_of<IDatastoreObjectWithIntegerKey, OBJ>::value && std::is_same<int, KEYTYPE>::value;
+        constexpr bool hasStringKey = std::is_base_of<IDatastoreObjectWithStringKey, OBJ>::value && std::is_base_of<QString, KEYTYPE>::value;
+        static_assert(hasIntegerKey || hasStringKey, "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
+    }
 
     template <class OBJ, class CONTAINER, typename KEYTYPE>
     OBJ IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::findByKey(KEYTYPE key, const OBJ &notFound) const
