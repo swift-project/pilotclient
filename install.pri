@@ -61,23 +61,72 @@ for (LIBRARY, QT5_LIBRARIES) {
     !exists($$LIBRARY_PATH): error("Cannot find $${LIBRARY_PATH}")
     qt5_target.files *= $${LIBRARY_PATH}
 }
+
 INSTALLS += qt5_target
 
-############### Install Qt5 platform plugins ##############
+############### Install Qt5 audio plugins ##############
 
-win32: QT5_PLATFORM_PLUGINS *= qwindows$${DLL_DEBUG_SUFFIX}.dll
-else:macx: QT5_PLATFORM_PLUGINS *= libqcocoa.dylib
-else:unix:QT5_PLATFORM_PLUGINS *= libqxcb.so
+win32: qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*.dylib
+else:unix:qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*.so
+qt5_audio_plugins_target.path = $${PREFIX}/bin/audio
+INSTALLS += qt5_audio_plugins_target
 
-qt5_plugin_target.path = $${PREFIX}/bin/platforms
+############### Install Qt5 iconengines plugins ##############
 
-for (PLUGIN, QT5_PLATFORM_PLUGINS) {
-    PLUGIN_PATH = $$[QT_INSTALL_PLUGINS]/platforms/$${PLUGIN}
-    !exists($$PLUGIN_PATH): error("Cannot find $${PLUGIN_PATH}")
-    qt5_plugin_target.files *= $${PLUGIN_PATH}
+win32: qt5_iconengines_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/iconengines/*$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_iconengines_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/iconengines/*.dylib
+else:unix:qt5_iconengines_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/iconengines/*.so
+qt5_iconengines_plugins_target.path = $${PREFIX}/bin/iconengines
+INSTALLS += qt5_iconengines_plugins_target
+
+############### Install Qt5 imageformats plugins ##############
+
+win32: qt5_imageformats_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/imageformats/*$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_imageformats_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/imageformats/*.dylib
+else:unix:qt5_imageformats_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/imageformats/*.so
+qt5_imageformats_plugins_target.path = $${PREFIX}/bin/imageformats
+INSTALLS += qt5_imageformats_plugins_target
+
+############### Install Qt5 mediaservice plugins ##############
+
+win32: qt5_mediaservice_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/mediaservice/*$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_mediaservice_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/mediaservice/*.dylib
+else:unix:qt5_mediaservice_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/mediaservice/*.so
+qt5_mediaservice_plugins_target.path = $${PREFIX}/bin/mediaservice
+INSTALLS += qt5_mediaservice_plugins_target
+
+############### Install Qt5 platforms plugins ##############
+
+win32: qt5_platforms_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platforms/qwindows$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_platforms_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platforms/libqcocoa.dylib
+else:unix:qt5_platforms_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platforms/libqxcb.so
+qt5_platforms_plugins_target.path = $${PREFIX}/bin/platforms
+INSTALLS += qt5_platforms_plugins_target
+
+############### Install Qt5 platforminputcontexts plugins ##############
+
+win32: qt5_platforminputcontexts_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platforminputcontexts/*$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_platforminputcontexts_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platforminputcontexts/*.dylib
+else:unix:qt5_platforminputcontexts_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platforminputcontexts/*.so
+qt5_platforminputcontexts_plugins_target.path = $${PREFIX}/bin/platforminputcontexts
+INSTALLS += qt5_platforminputcontexts_plugins_target
+
+############### Install Qt5 platformthemes plugins ##############
+
+win32: qt5_platformthemes_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platformthemes/*$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_platformthemes_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platformthemes/*.dylib
+else:unix:qt5_platformthemes_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/platformthemes/*.so
+qt5_platformthemes_plugins_target.path = $${PREFIX}/bin/platformthemes
+INSTALLS += qt5_platformthemes_plugins_target
+
+############### Install Qt5 xcbglintegrations plugins ##############
+
+unix:!macx {
+    qt5_xcbglintegrations_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/xcbglintegrations/*.so
+    qt5_xcbglintegrations_plugins_target.path = $${PREFIX}/bin/xcbglintegrations
+    INSTALLS += qt5_xcbglintegrations_plugins_target
 }
-
-INSTALLS += qt5_plugin_target
 
 ############### Install DBus ##############
 

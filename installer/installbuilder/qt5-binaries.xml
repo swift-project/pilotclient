@@ -51,9 +51,6 @@
                 <distributionFile>
                     <origin>../../dist/bin/dbus-daemon.exe</origin>
                 </distributionFile>
-                <distributionDirectory>
-                    <origin>../../dist/bin/platforms</origin>
-                </distributionDirectory>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/expat.dll*</origin>
@@ -167,6 +164,41 @@
                 <distributionFile>
                     <origin>../../dist/bin/dbus-daemon</origin>
                 </distributionFile>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/bin</destination>
+            <name>bin_plugins</name>
+            <platforms>all</platforms>
+            <distributionFileList>
+                <distributionDirectory>
+                    <origin>../../dist/bin/audio</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/bin/iconengines</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/bin/imageformats</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/bin/mediaservice</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <origin>../../dist/bin/platforms</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/platforminputcontexts*</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/platformthemes*</origin>
+                </distributionDirectory>
+                <distributionDirectory>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/bin/xcbglintegrations*</origin>
+                </distributionDirectory>
             </distributionFileList>
         </folder>
     </folderList>
