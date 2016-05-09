@@ -12,7 +12,6 @@
 
 namespace BlackMisc
 {
-
     CCountry::CCountry(const QString &iso, const QString &name) :
         IDatastoreObjectWithStringKey(iso.trimmed().toUpper()),
         m_name(name.trimmed())
@@ -110,7 +109,7 @@ namespace BlackMisc
         }
     }
 
-    void CCountry::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CCountry::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (index.isMyself()) { (*this) = variant.to<CCountry>(); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -124,16 +123,16 @@ namespace BlackMisc
             break;
         default:
             return (IDatastoreObjectWithStringKey::canHandleIndex(index)) ?
-                   IDatastoreObjectWithStringKey::setPropertyByIndex(variant, index) :
-                   CValueObject::setPropertyByIndex(variant, index);
+                   IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant) :
+                   CValueObject::setPropertyByIndex(index, variant);
             break;
         }
     }
 
-    int CCountry::comparePropertyByIndex(const CCountry &compareValue, const CPropertyIndex &index) const
+    int CCountry::comparePropertyByIndex(const CPropertyIndex &index, const CCountry &compareValue) const
     {
         if (index.isMyself()) { return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(compareValue, index);}
+        if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);}
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -165,5 +164,4 @@ namespace BlackMisc
     {
         return isoCode.length() == 2;
     }
-
 } // namespace

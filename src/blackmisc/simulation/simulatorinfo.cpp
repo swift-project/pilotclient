@@ -117,7 +117,7 @@ namespace BlackMisc
             return (this->m_simulator & otherInfo.m_simulator) > 0;
         }
 
-        int CSimulatorInfo::comparePropertyByIndex(const CSimulatorInfo &compareValue, const CPropertyIndex &index) const
+        int CSimulatorInfo::comparePropertyByIndex(const CPropertyIndex &index, const CSimulatorInfo &compareValue) const
         {
             Q_UNUSED(index);
             return Compare::compare(this->m_simulator, compareValue.m_simulator);

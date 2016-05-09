@@ -54,7 +54,7 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! Compare for index
-            int comparePropertyByIndex(const CAirportIcaoCode &compareValue, const CPropertyIndex &index) const;
+            int comparePropertyByIndex(const CPropertyIndex &index, const CAirportIcaoCode &compareValue) const;
 
         private:
             QString m_icaoCode;

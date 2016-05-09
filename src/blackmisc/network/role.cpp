@@ -41,10 +41,10 @@ namespace BlackMisc
             }
         }
 
-        void CRole::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CRole::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CRole>(); return; }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(variant, index); return; }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -54,7 +54,7 @@ namespace BlackMisc
             case IndexDescription:
                 this->setDescription(variant.value<QString>());
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

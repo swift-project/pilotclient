@@ -108,10 +108,10 @@ namespace BlackMisc
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
         //! Compare for index
-        int comparePropertyByIndex(const ITimestampBased &compareValue, const CPropertyIndex &index) const;
+        int comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const;
 
         qint64 m_timestampMSecsSinceEpoch; //!< timestamp value
     };

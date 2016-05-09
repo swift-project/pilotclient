@@ -99,12 +99,12 @@ namespace BlackCore
             }
         }
 
-        void CUpdateInfo::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CUpdateInfo::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CUpdateInfo>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
-                ITimestampBased::setPropertyByIndex(variant, index);
+                ITimestampBased::setPropertyByIndex(index, variant);
                 return;
             }
 
@@ -130,7 +130,7 @@ namespace BlackCore
                 this->m_latestVersionBeta = variant.toQString();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

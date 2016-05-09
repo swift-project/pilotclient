@@ -73,7 +73,7 @@ namespace BlackMisc
             }
         }
 
-        void CGridPoint::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CGridPoint::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CGridPoint>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -98,7 +98,7 @@ namespace BlackMisc
                 setSurfacePressure(variant.value<CPressure>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

@@ -233,12 +233,12 @@ namespace BlackCore
             }
         }
 
-        void CGlobalSetup::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CGlobalSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CGlobalSetup>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
-                ITimestampBased::setPropertyByIndex(variant, index);
+                ITimestampBased::setPropertyByIndex(index, variant);
                 return;
             }
 
@@ -246,7 +246,7 @@ namespace BlackCore
             switch (i)
             {
             case IndexDbRootDirectory:
-                this->m_dbRootDirectoryUrl.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexDbHttpPort:
                 this->m_dbHttpPort = variant.toInt();
@@ -260,7 +260,7 @@ namespace BlackCore
                 this->m_vatsimDataFileUrls = variant.value<CUrlList>();
                 break;
             case IndexVatsimBookings:
-                this->m_vatsimBookingsUrl.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_vatsimBookingsUrl.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexVatsimMetars:
                 this->m_vatsimMetarsUrls = variant.value<CUrlList>();
@@ -272,7 +272,7 @@ namespace BlackCore
                 this->m_wasLoaded = variant.toBool();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

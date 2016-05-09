@@ -405,10 +405,10 @@ namespace BlackMisc
         }
     }
 
-    void CStatusMessage::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CStatusMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (index.isMyself()) { (*this) = variant.to<CStatusMessage>(); return; }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -423,15 +423,15 @@ namespace BlackMisc
             this->m_categories = variant.value<CLogCategoryList>();
             break;
         default:
-            CValueObject::setPropertyByIndex(variant, index);
+            CValueObject::setPropertyByIndex(index, variant);
             break;
         }
     }
 
-    int CStatusMessage::comparePropertyByIndex(const CStatusMessage &compareValue, const CPropertyIndex &index) const
+    int CStatusMessage::comparePropertyByIndex(const CPropertyIndex &index, const CStatusMessage &compareValue) const
     {
         if (index.isMyself()) { return Compare::compare(this->getSeverity(), compareValue.getSeverity()); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

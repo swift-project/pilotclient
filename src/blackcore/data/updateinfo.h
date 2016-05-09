@@ -88,7 +88,7 @@ namespace BlackCore
             BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
         private:
             bool                            m_development = false;        //!< for development

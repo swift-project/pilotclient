@@ -44,7 +44,7 @@ namespace BlackMisc
             }
         }
 
-        void CPresentWeather::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CPresentWeather::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CPresentWeather>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -60,7 +60,7 @@ namespace BlackMisc
                 setWeatherPhenomena(variant.toInt());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

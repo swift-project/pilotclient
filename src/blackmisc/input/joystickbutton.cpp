@@ -29,7 +29,7 @@ namespace BlackMisc
             this->m_buttonIndex = button.m_buttonIndex;
         }
 
-        void CJoystickButton::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CJoystickButton::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CJoystickButton>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

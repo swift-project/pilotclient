@@ -121,7 +121,7 @@ namespace BlackMisc
             static int compareImpl(const T &lhs, const T&, ...) { throw CVariantException(lhs, "compare"); }
 
             template <typename T>
-            static void setPropertyByIndex(T &object, const CVariant &variant, const CPropertyIndex &index, decltype(static_cast<void>(object.setPropertyByIndex(variant, index)), 0)) { object.setPropertyByIndex(variant, index); }
+            static void setPropertyByIndex(T &object, const CVariant &variant, const CPropertyIndex &index, decltype(static_cast<void>(object.setPropertyByIndex(index, variant)), 0)) { object.setPropertyByIndex(index, variant); }
             template <typename T>
             static void setPropertyByIndex(T &object, const CVariant &, const CPropertyIndex &, ...) { throw CVariantException(object, "setPropertyByIndex"); }
 

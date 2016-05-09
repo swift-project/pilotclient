@@ -84,7 +84,6 @@ namespace BlackMisc
                     this->isValidFrequency(this->getFrequencyStandby());
             }
         };
-
     }
 }
 

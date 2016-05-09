@@ -188,7 +188,7 @@ namespace BlackMisc
             }
         }
 
-        void CUser::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CUser::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CUser>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -207,18 +207,18 @@ namespace BlackMisc
                 this->setRealName(variant.value<QString>());
                 break;
             case IndexHomebase:
-                this->m_homebase.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_homebase.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexCallsign:
-                this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CUser::comparePropertyByIndex(const CUser &compareValue, const CPropertyIndex &index) const
+        int CUser::comparePropertyByIndex(const CPropertyIndex &index, const CUser &compareValue) const
         {
             if (index.isMyself()) { return this->getRealName().compare(compareValue.getRealName(), Qt::CaseInsensitive); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -233,9 +233,9 @@ namespace BlackMisc
             case IndexRealName:
                 return this->m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
             case IndexHomebase:
-                return this->m_homebase.comparePropertyByIndex(compareValue.getHomebase(), index.copyFrontRemoved());
+                return this->m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomebase());
             case IndexCallsign:
-                return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved());
+                return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             default:
                 break;
             }

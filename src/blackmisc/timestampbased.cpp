@@ -174,7 +174,7 @@ namespace BlackMisc
         return CVariant::fromValue(m);
     }
 
-    void ITimestampBased::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+    void ITimestampBased::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (!index.isEmpty())
         {
@@ -204,7 +204,7 @@ namespace BlackMisc
         Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
     }
 
-    int ITimestampBased::comparePropertyByIndex(const ITimestampBased &compareValue, const CPropertyIndex &index) const
+    int ITimestampBased::comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const
     {
         Q_UNUSED(index);
         return Compare::compare(this->m_timestampMSecsSinceEpoch, compareValue.m_timestampMSecsSinceEpoch);

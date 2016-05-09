@@ -238,7 +238,7 @@ namespace BlackMisc
             }
         }
 
-        void CUrl::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CUrl::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CUrl>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -257,7 +257,7 @@ namespace BlackMisc
                 this->setScheme(variant.value<QString>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

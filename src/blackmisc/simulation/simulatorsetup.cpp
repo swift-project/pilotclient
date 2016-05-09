@@ -68,7 +68,7 @@ namespace BlackMisc
             }
         }
 
-        void CSimulatorSetup::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CSimulatorSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CSimulatorSetup>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -78,7 +78,7 @@ namespace BlackMisc
                 this->m_data = variant.to<CNameVariantPairList>();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

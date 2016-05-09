@@ -104,10 +104,10 @@ namespace BlackMisc
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
         //! Compare for index
-        int comparePropertyByIndex(const CRgbColor &compareValue, const CPropertyIndex &index) const;
+        int comparePropertyByIndex(const CPropertyIndex &index, const CRgbColor &compareValue) const;
 
     private:
         int m_r = -1;

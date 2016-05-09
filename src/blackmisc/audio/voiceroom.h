@@ -89,7 +89,7 @@ namespace BlackMisc
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! Protocol prefix "vvl"
             static const QString &protocol() { static QString p("vvl"); return p; }

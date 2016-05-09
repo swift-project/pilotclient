@@ -46,7 +46,7 @@ namespace BlackMisc
             }
         }
 
-        void CTemperatureLayer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CTemperatureLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CTemperatureLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -62,7 +62,7 @@ namespace BlackMisc
                 setRelativeHumidity(variant.value<double>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

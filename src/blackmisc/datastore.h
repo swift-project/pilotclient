@@ -79,10 +79,10 @@ namespace BlackMisc
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
         //! Compare by index
-        int comparePropertyByIndex(const IDatastoreObjectWithIntegerKey &compareValue, const CPropertyIndex &index) const;
+        int comparePropertyByIndex(const CPropertyIndex &index, const IDatastoreObjectWithIntegerKey &compareValue) const;
 
         //! Can given index be handled?
         static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
@@ -138,10 +138,10 @@ namespace BlackMisc
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+        void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
         //! Compare by index
-        int comparePropertyByIndex(const IDatastoreObjectWithStringKey &compareValue, const BlackMisc::CPropertyIndex &index) const;
+        int comparePropertyByIndex(const BlackMisc::CPropertyIndex &index, const IDatastoreObjectWithStringKey &compareValue) const;
 
         //! Can given index be handled
         static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);

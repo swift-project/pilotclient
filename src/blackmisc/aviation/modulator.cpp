@@ -125,17 +125,17 @@ namespace BlackMisc
         }
 
         template <class AVIO>
-        void CModulator<AVIO>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CModulator<AVIO>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index to base template"); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexActiveFrequency:
-                this->m_frequencyActive.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_frequencyActive.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexStandbyFrequency:
-                this->m_frequencyStandby.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_frequencyStandby.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexEnabled:
                 this->setEnabled(variant.toBool());
@@ -147,7 +147,7 @@ namespace BlackMisc
                 this->setVolumeOutput(variant.toInt());
                 break;
             default:
-                CValueObject<CModulator<AVIO>>::setPropertyByIndex(variant, index);
+                CValueObject<CModulator<AVIO>>::setPropertyByIndex(index, variant);
                 break;
             }
         }

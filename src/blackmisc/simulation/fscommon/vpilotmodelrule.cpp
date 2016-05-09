@@ -64,10 +64,10 @@ namespace BlackMisc
                 }
             }
 
-            void CVPilotModelRule::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+            void CVPilotModelRule::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
             {
                 if (index.isMyself()) { (*this) = variant.to<CVPilotModelRule>(); return; }
-                if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+                if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -76,7 +76,7 @@ namespace BlackMisc
                 case IndexTypeCode: this->setTypeCode(variant.value<QString>()); break;
                 case IndexCallsignPrefix: this->setCallsignPrefix(variant.value<QString>()); break;
                 default:
-                    CValueObject::setPropertyByIndex(variant, index);
+                    CValueObject::setPropertyByIndex(index, variant);
                     break;
                 }
             }

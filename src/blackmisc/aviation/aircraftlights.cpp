@@ -74,7 +74,7 @@ namespace BlackMisc
             }
         }
 
-        void CAircraftLights::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftLights::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftLights>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -99,7 +99,7 @@ namespace BlackMisc
                 this->m_taxiOn = variant.toBool();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

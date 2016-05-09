@@ -786,10 +786,10 @@ namespace BlackGui
             if (!hasSelection()) { return 0; }
             int c = 0;
 
-            QModelIndexList indexes = this->selectedRows();
             int lastUpdatedRow = -1;
             int firstUpdatedRow = -1;
-            const CPropertyIndexList pis(vm.indexes());
+            const CPropertyIndexList propertyIndexes(vm.indexes());
+            const QModelIndexList indexes = this->selectedRows();
 
             for (const QModelIndex &i : indexes)
             {
@@ -799,9 +799,9 @@ namespace BlackGui
                 ObjectType obj(this->at(i));
 
                 // update all properties in map
-                for (const CPropertyIndex &pi : pis)
+                for (const CPropertyIndex &pi : propertyIndexes)
                 {
-                    obj.setPropertyByIndex(vm.value(pi), pi);
+                    obj.setPropertyByIndex(pi, vm.value(pi));
                 }
 
                 // and update container

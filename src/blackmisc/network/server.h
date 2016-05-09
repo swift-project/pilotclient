@@ -101,7 +101,7 @@ namespace BlackMisc
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;

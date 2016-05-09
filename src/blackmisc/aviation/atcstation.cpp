@@ -383,7 +383,7 @@ namespace BlackMisc
             }
         }
 
-        void CAtcStation::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAtcStation::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAtcStation>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -396,37 +396,37 @@ namespace BlackMisc
                 this->setBookedUntilUtc(variant.value<QDateTime>());
                 break;
             case IndexCallsign:
-                this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexController:
-                this->m_controller.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_controller.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexFrequency:
-                this->m_frequency.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_frequency.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexIsOnline:
                 this->setOnline(variant.value<bool>());
                 break;
             case IndexPosition:
-                this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexRange:
-                this->m_range.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_range.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexDistanceToOwnAircraft:
-                this->m_distanceToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_distanceToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexAtis:
-                this->m_atis.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexMetar:
-                this->m_metar.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_metar.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexVoiceRoom:
-                this->m_voiceRoom.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_voiceRoom.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

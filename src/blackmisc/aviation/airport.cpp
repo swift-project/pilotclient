@@ -72,48 +72,48 @@ namespace BlackMisc
             }
         }
 
-        void CAirport::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAirport::setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAirport>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIcao:
-                this->m_icao.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexDescriptiveName:
                 this->setDescriptiveName(variant.toQString());
                 break;
             case IndexPosition:
-                this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexBearing:
-                this->m_bearingToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_bearingToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexDistanceToOwnAircraft:
-                this->m_distanceToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_distanceToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CAirport::comparePropertyByIndex(const CAirport &compareValue, const CPropertyIndex &index) const
+        int CAirport::comparePropertyByIndex(const CPropertyIndex &index, const CAirport &compareValue) const
         {
-            if (index.isMyself()) { return this->m_icao.comparePropertyByIndex(compareValue.getIcao(), index.copyFrontRemoved()); }
+            if (index.isMyself()) { return this->m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao()); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIcao:
-                return this->m_icao.comparePropertyByIndex(compareValue.getIcao(), index.copyFrontRemoved());
+                return this->m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
             case IndexDescriptiveName:
                 return this->m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
             case IndexBearing:
-                return this->m_bearingToOwnAircraft.comparePropertyByIndex(compareValue.getBearingToOwnAircraft(), index.copyFrontRemoved());
+                return this->m_bearingToOwnAircraft.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBearingToOwnAircraft());
             case IndexPosition:
             case IndexDistanceToOwnAircraft:
-                return this->m_distanceToOwnAircraft.comparePropertyByIndex(compareValue.getDistanceToOwnAircraft(), index.copyFrontRemoved());
+                return this->m_distanceToOwnAircraft.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistanceToOwnAircraft());
             default:
                 break;
             }

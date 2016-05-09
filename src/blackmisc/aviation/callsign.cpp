@@ -148,7 +148,7 @@ namespace BlackMisc
             }
         }
 
-        void CCallsign::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CCallsign::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CCallsign>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -164,11 +164,11 @@ namespace BlackMisc
                 this->m_telephonyDesignator = variant.toQString();
                 break;
             default:
-                return CValueObject::setPropertyByIndex(variant, index);
+                return CValueObject::setPropertyByIndex(index, variant);
             }
         }
 
-        int CCallsign::comparePropertyByIndex(const CCallsign &compareValue, const CPropertyIndex &index) const
+        int CCallsign::comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const
         {
             if (index.isMyself()) { return this->m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

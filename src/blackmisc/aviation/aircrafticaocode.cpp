@@ -354,10 +354,10 @@ namespace BlackMisc
             }
         }
 
-        void CAircraftIcaoCode::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftIcaoCode::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftIcaoCode>(); return; }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(variant, index); return; }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -392,15 +392,15 @@ namespace BlackMisc
                 this->m_rank = variant.toInt();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CAircraftIcaoCode::comparePropertyByIndex(const CAircraftIcaoCode &compareValue, const CPropertyIndex &index) const
+        int CAircraftIcaoCode::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftIcaoCode &compareValue) const
         {
             if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

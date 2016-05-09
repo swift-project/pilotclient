@@ -369,7 +369,7 @@ namespace BlackMisc
         }
 
         template <class MU, class PQ>
-        void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<PQ>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -389,13 +389,13 @@ namespace BlackMisc
                 this->parseFromString(variant.toQString());
                 break;
             default:
-                Mixin::Index<PQ>::setPropertyByIndex(variant, index);
+                Mixin::Index<PQ>::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
         template <class MU, class PQ>
-        int CPhysicalQuantity<MU, PQ>::comparePropertyByIndex(const PQ &pq, const CPropertyIndex &index) const
+        int CPhysicalQuantity<MU, PQ>::comparePropertyByIndex(const CPropertyIndex &index, const PQ &pq) const
         {
             if (index.isMyself()) { return compareImpl(*derived(), pq); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

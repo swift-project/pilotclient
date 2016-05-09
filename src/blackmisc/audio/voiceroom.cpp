@@ -46,7 +46,7 @@ namespace BlackMisc
             }
         }
 
-        void CVoiceRoom::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CVoiceRoom::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CVoiceRoom>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -68,7 +68,7 @@ namespace BlackMisc
                 this->setVoiceRoomUrl(variant.value<QString>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

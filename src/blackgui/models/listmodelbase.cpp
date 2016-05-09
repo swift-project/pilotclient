@@ -282,7 +282,7 @@ namespace BlackGui
             ObjectType obj = this->m_container[index.row()];
             ObjectType currentObject(obj);
             BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
-            obj.setPropertyByIndex(value, propertyIndex);
+            obj.setPropertyByIndex(propertyIndex, value);
 
             if (obj != currentObject)
             {

@@ -78,12 +78,12 @@ namespace BlackMisc
             }
         }
 
-        void CAircraftSituation::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftSituation::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftSituation>(); return; }
             if (ITimestampBased::canHandleIndex(index))
             {
-                ITimestampBased::setPropertyByIndex(variant, index);
+                ITimestampBased::setPropertyByIndex(index, variant);
                 return;
             }
 
@@ -91,25 +91,25 @@ namespace BlackMisc
             switch (i)
             {
             case IndexPosition:
-                this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexAltitude:
-                this->m_altitude.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_altitude.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexPitch:
-                this->m_pitch.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexBank:
-                this->m_bank.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexGroundspeed:
-                this->m_groundSpeed.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexCallsign:
-                this->m_correspondingCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

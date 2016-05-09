@@ -12,7 +12,6 @@
 
 namespace BlackMisc
 {
-
     CNameVariantPair::CNameVariantPair(const QString &name, const CVariant &variant, const CIcon &icon)
         : m_name(name), m_variant(variant), m_icon(icon)
     {  }
@@ -46,7 +45,7 @@ namespace BlackMisc
         }
     }
 
-    void CNameVariantPair::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CNameVariantPair::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (index.isMyself()) { (*this) = variant.to<CNameVariantPair>(); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -77,7 +76,7 @@ namespace BlackMisc
             this->m_variant = variant;
             break;
         default:
-            CValueObject::setPropertyByIndex(variant, index);
+            CValueObject::setPropertyByIndex(index, variant);
             break;
         }
     }

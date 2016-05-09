@@ -50,7 +50,7 @@ namespace BlackMisc
             CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false);
 
             //! Set property by index
-            void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
             //! Property by index
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -78,7 +78,7 @@ namespace BlackMisc
             template <typename T>
             CVariant basePropertyByIndex(const T *base, const CPropertyIndex &index) const { return base->propertyByIndex(index); }
             template <typename T>
-            void baseSetPropertyByIndex(T *base, const CVariant &var, const CPropertyIndex &index) { base->setPropertyByIndex(var, index); }
+            void baseSetPropertyByIndex(T *base, const CVariant &var, const CPropertyIndex &index) { base->setPropertyByIndex(index, var); }
 
             CVariant basePropertyByIndex(const void *, const CPropertyIndex &index) const
             { qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {}; }
@@ -216,13 +216,13 @@ namespace BlackMisc
                     bool equal = derived()->equalsPropertyByIndex(value, index);
                     if (equal) { continue; }
                 }
-                derived()->setPropertyByIndex(value, index);
+                derived()->setPropertyByIndex(index, value);
                 changed.push_back(index);
             }
             return changed;
         }
         template <class Derived>
-        void Index<Derived>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void Index<Derived>::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself())
             {

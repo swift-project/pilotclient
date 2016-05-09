@@ -151,11 +151,11 @@ namespace BlackMisc
             }
         }
 
-        void CAircraftModel::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftModel::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftModel>(); return; }
-            if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(variant, index); return; }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(variant, index); return; }
+            if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(index, variant); return; }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -164,25 +164,25 @@ namespace BlackMisc
                 this->m_modelString = variant.toQString();
                 break;
             case IndexAircraftIcaoCode:
-                this->m_aircraftIcao.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_aircraftIcao.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexLivery:
-                this->m_livery.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_livery.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexDistributor:
-                this->m_distributor.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_distributor.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexDescription:
                 this->m_description = variant.toQString();
                 break;
             case IndexSimulatorInfo:
-                this->m_simulator.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexName:
                 this->m_name = variant.toQString();
                 break;
             case IndexCallsign:
-                this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexFileName:
                 this->m_fileName = variant.toQString();
@@ -204,15 +204,15 @@ namespace BlackMisc
                 }
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CAircraftModel::comparePropertyByIndex(const CAircraftModel &compareValue, const CPropertyIndex &index) const
+        int CAircraftModel::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftModel &compareValue) const
         {
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
-            if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(compareValue, index);}
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
+            if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue);}
             if (index.isMyself()) { return this->m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -220,20 +220,20 @@ namespace BlackMisc
             case IndexModelString:
                 return this->m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);
             case IndexAircraftIcaoCode:
-                return this->m_aircraftIcao.comparePropertyByIndex(compareValue.getAircraftIcaoCode(), index.copyFrontRemoved());
+                return this->m_aircraftIcao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAircraftIcaoCode());
             case IndexLivery:
-                return this->m_livery.comparePropertyByIndex(compareValue.getLivery(), index.copyFrontRemoved());
+                return this->m_livery.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
             case IndexDistributor:
-                return this->m_distributor.comparePropertyByIndex(compareValue.getDistributor(), index.copyFrontRemoved());
+                return this->m_distributor.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistributor());
             case IndexDescription:
                 return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
             case IndexSimulatorInfoAsString:
             case IndexSimulatorInfo:
-                return this->m_simulator.comparePropertyByIndex(compareValue.getSimulator(), index.copyFrontRemoved());
+                return this->m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSimulator());
             case IndexName:
                 return this->m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
             case IndexCallsign:
-                return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved());
+                return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexFileName:
                 return this->m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
             case IndexIconPath:

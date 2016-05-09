@@ -72,7 +72,7 @@ namespace BlackMisc
             }
         }
 
-        void CCloudLayer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CCloudLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CCloudLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -88,7 +88,7 @@ namespace BlackMisc
                 setCoveragePercent(variant.value<int>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

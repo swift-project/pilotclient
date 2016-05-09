@@ -204,25 +204,25 @@ namespace BlackMisc
             }
         }
 
-        void CTextMessage::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CTextMessage::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CTextMessage>(); return; }
-            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexSenderCallsign:
-                this->m_senderCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_senderCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexRecipientCallsign:
-                this->m_recipientCallsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_recipientCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexMessage:
                 this->m_message = variant.value<QString>();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

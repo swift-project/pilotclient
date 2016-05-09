@@ -310,38 +310,38 @@ namespace BlackMisc
             }
         }
 
-        void CSimulatedAircraft::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CSimulatedAircraft::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CSimulatedAircraft>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsign:
-                this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexPilot:
-                this->m_pilot.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_pilot.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexDistanceToOwnAircraft:
-                this->m_distanceToOwnAircraft.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_distanceToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexCom1System:
-                this->m_com1system.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_com1system.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexCom2System:
-                this->m_com2system.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_com2system.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexTransponder:
-                this->m_transponder.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_transponder.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexSituation:
-                this->m_situation.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_situation.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexParts:
-                this->m_parts.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_parts.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexModel:
-                this->m_model.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_model.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 this->setModel(this->m_model); // sync some values
                 break;
             case IndexEnabled:
@@ -360,36 +360,36 @@ namespace BlackMisc
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported");
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CSimulatedAircraft::comparePropertyByIndex(const CSimulatedAircraft &compareValue, const CPropertyIndex &index) const
+        int CSimulatedAircraft::comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const
         {
-            if (index.isMyself()) { return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved()); }
+            if (index.isMyself()) { return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign()); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsign:
-                return this->m_callsign.comparePropertyByIndex(compareValue.getCallsign(), index.copyFrontRemoved());
+                return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             case IndexPilot:
-                return this->m_pilot.comparePropertyByIndex(compareValue.getPilot(), index.copyFrontRemoved());
+                return this->m_pilot.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPilot());
             case IndexSituation:
             case IndexDistanceToOwnAircraft:
-                return this->m_distanceToOwnAircraft.comparePropertyByIndex(compareValue.getDistanceToOwnAircraft(), index.copyFrontRemoved());
+                return this->m_distanceToOwnAircraft.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistanceToOwnAircraft());
             case IndexCom1System:
-                return m_com1system.getFrequencyActive().comparePropertyByIndex(compareValue.getCom1System().getFrequencyActive(), index.copyFrontRemoved());
+                return m_com1system.getFrequencyActive().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System().getFrequencyActive());
             case IndexCom2System:
-                return m_com2system.getFrequencyActive().comparePropertyByIndex(compareValue.getCom2System().getFrequencyActive(), index.copyFrontRemoved());
+                return m_com2system.getFrequencyActive().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom2System().getFrequencyActive());
             case IndexTransponder:
                 return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
             case IndexLivery:
-                return this->getLivery().comparePropertyByIndex(compareValue.getLivery(), index.copyFrontRemoved());
+                return this->getLivery().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
             case IndexParts:
-                return this->m_parts.comparePropertyByIndex(compareValue.getParts(), index.copyFrontRemoved());
+                return this->m_parts.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getParts());
             case IndexModel:
-                return m_model.comparePropertyByIndex(compareValue.getModel(), index.copyFrontRemoved());
+                return m_model.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
             case IndexEnabled:
                 return Compare::compare(this->m_enabled, compareValue.isEnabled());
             case IndexRendered:

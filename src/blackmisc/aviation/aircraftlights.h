@@ -46,7 +46,7 @@ namespace BlackMisc
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! Strobes lights on?
             bool isStrobeOn() const { return m_strobeOn; }

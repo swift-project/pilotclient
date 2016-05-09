@@ -16,7 +16,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         QString CTrack::convertToQString(bool i18n) const
         {
             QString s = CAngle::convertToQString(i18n).append(" ");
@@ -31,6 +30,5 @@ namespace BlackMisc
                 return s.append(this->isMagneticTrack() ? "magnetic" : "true");
             }
         }
-
     } // namespace
 } // namespace

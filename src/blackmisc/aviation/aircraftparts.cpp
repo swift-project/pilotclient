@@ -57,10 +57,10 @@ namespace BlackMisc
             }
         }
 
-        void CAircraftParts::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftParts::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftParts>(); return; }
-            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -75,21 +75,21 @@ namespace BlackMisc
                 this->m_gearDown = variant.toBool();
                 break;
             case IndexLights:
-                this->m_lights.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_lights.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexSpoilersOut:
                 this->m_spoilersOut = variant.toBool();
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CAircraftParts::comparePropertyByIndex(const CAircraftParts &compareValue, const CPropertyIndex &index) const
+        int CAircraftParts::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftParts &compareValue) const
         {
-            if (index.isMyself()) { return ITimestampBased::comparePropertyByIndex(compareValue, CPropertyIndex()); }
-            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
+            if (index.isMyself()) { return ITimestampBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)

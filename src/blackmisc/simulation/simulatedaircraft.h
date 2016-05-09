@@ -305,10 +305,10 @@ namespace BlackMisc
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! Compare for index
-            int comparePropertyByIndex(const CSimulatedAircraft &compareValue, const CPropertyIndex &index) const;
+            int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const;
 
             //! Get model
             const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_model; }

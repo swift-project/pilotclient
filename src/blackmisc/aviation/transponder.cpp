@@ -173,7 +173,7 @@ namespace BlackMisc
             return CVariant::fromValue(m);
         }
 
-        void CTransponder::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CTransponder::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CTransponder>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

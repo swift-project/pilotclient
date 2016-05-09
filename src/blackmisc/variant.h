@@ -281,7 +281,7 @@ namespace BlackMisc
         friend int compare(const CVariant &a, const CVariant &b) { return compareImpl(a, b); }
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index);
+        void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
         CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

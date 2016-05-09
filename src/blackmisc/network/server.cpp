@@ -91,7 +91,7 @@ namespace BlackMisc
             }
         }
 
-        void CServer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CServer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CServer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -110,13 +110,13 @@ namespace BlackMisc
                 this->setName(variant.value<QString>());
                 break;
             case IndexUser:
-                this->m_user.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_user.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexIsAcceptingConnections:
                 this->setIsAcceptingConnections(variant.value<bool>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

@@ -47,15 +47,15 @@ namespace BlackMisc
             CAtcStation station;
             if (byPropertyIndex)
             {
-                station.setPropertyByIndex(CVariant::from(CCallsign(cs)), CAtcStation::IndexCallsign);
-                station.setPropertyByIndex(CVariant::from(user), CAtcStation::IndexController);
-                station.setPropertyByIndex(CVariant::from(CFrequency(f, CFrequencyUnit::MHz())), CAtcStation::IndexFrequency);
-                station.setPropertyByIndex(CVariant::from(CLength(50, CLengthUnit::km())), CAtcStation::IndexRange);
-                station.setPropertyByIndex(CVariant::from(geoPos), CAtcStation::IndexPosition);
-                station.setPropertyByIndex(CVariant::from(false), CAtcStation::IndexIsOnline);
-                station.setPropertyByIndex(CVariant::from(dtFrom), CAtcStation::IndexBookedFrom);
-                station.setPropertyByIndex(CVariant::from(dtUntil), CAtcStation::IndexBookedUntil);
-                station.setPropertyByIndex(CVariant::from(CLength(index + 1, CLengthUnit::NM())), CAtcStation::IndexDistanceToOwnAircraft);
+                station.setPropertyByIndex(CAtcStation::IndexCallsign, CVariant::from(CCallsign(cs)));
+                station.setPropertyByIndex(CAtcStation::IndexController, CVariant::from(user));
+                station.setPropertyByIndex(CAtcStation::IndexFrequency, CVariant::from(CFrequency(f, CFrequencyUnit::MHz())));
+                station.setPropertyByIndex(CAtcStation::IndexRange, CVariant::from(CLength(50, CLengthUnit::km())));
+                station.setPropertyByIndex(CAtcStation::IndexPosition, CVariant::from(geoPos));
+                station.setPropertyByIndex(CAtcStation::IndexIsOnline, CVariant::from(false));
+                station.setPropertyByIndex(CAtcStation::IndexBookedFrom, CVariant::from(dtFrom));
+                station.setPropertyByIndex(CAtcStation::IndexBookedUntil, CVariant::from(dtUntil));
+                station.setPropertyByIndex(CAtcStation::IndexDistanceToOwnAircraft, CVariant::from(CLength(index + 1, CLengthUnit::NM())));
             }
             else
             {
@@ -71,7 +71,7 @@ namespace BlackMisc
 
         void CTesting::readStations(const CAtcStationList &stations, bool byPropertyIndex)
         {
-            foreach(const CAtcStation station, stations)
+            foreach (const CAtcStation station, stations)
             {
                 readStation(station, byPropertyIndex);
             }

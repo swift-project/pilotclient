@@ -42,7 +42,7 @@ namespace BlackMisc
             }
         }
 
-        void CVisibilityLayer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CVisibilityLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CVisibilityLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -58,7 +58,7 @@ namespace BlackMisc
                 setVisibility(variant.value<CLength>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

@@ -268,7 +268,7 @@ namespace BlackMisc
         }
     }
 
-    void CVariant::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+    void CVariant::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         auto *meta = getValueObjectMetaInfo();
         Q_ASSERT(meta);

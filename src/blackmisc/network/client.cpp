@@ -99,7 +99,7 @@ namespace BlackMisc
             }
         }
 
-        void CClient::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CClient::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CClient>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -109,22 +109,22 @@ namespace BlackMisc
                 this->m_capabilities = variant.value<CPropertyIndexVariantMap>();
                 break;
             case IndexModel:
-                this->m_model.setPropertyByIndex(variant, index.copyFrontRemoved());;
+                this->m_model.setPropertyByIndex(index.copyFrontRemoved(), variant);;
                 break;
             case IndexServer:
                 this->m_server = variant.toQString();
                 break;
             case IndexUser:
-                this->m_user.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_user.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexCallsign:
                 this->m_user.setCallsign(variant.value<BlackMisc::Aviation::CCallsign>());
                 break;
             case IndexVoiceCapabilities:
-                this->m_voiceCapabilities.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_voiceCapabilities.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

@@ -195,7 +195,7 @@ namespace BlackMisc
         }
     }
 
-    void CRgbColor::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CRgbColor::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (index.isMyself()) { (*this) = variant.to<CRgbColor>(); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -214,12 +214,12 @@ namespace BlackMisc
             this->setByString(variant.toQString());
             break;
         default:
-            CValueObject::setPropertyByIndex(variant, index);
+            CValueObject::setPropertyByIndex(index, variant);
             break;
         }
     }
 
-    int CRgbColor::comparePropertyByIndex(const CRgbColor &compareValue, const CPropertyIndex &index) const
+    int CRgbColor::comparePropertyByIndex(const CPropertyIndex &index, const CRgbColor &compareValue) const
     {
         if (index.isMyself()) { return this->hex().compare(compareValue.hex(), Qt::CaseInsensitive); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();

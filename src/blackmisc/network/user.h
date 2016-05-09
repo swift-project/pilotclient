@@ -120,10 +120,10 @@ namespace BlackMisc
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! Compare by index
-            int comparePropertyByIndex(const CUser &compareValue, const CPropertyIndex &index) const;
+            int comparePropertyByIndex(const CPropertyIndex &index, const CUser &compareValue) const;
 
             //! This and another user exchange missing data, This user has priority and overrides first.
             void syncronizeData(CUser &otherUser);

@@ -109,9 +109,9 @@ namespace BlackMisc
         }
     }
 
-    void CIdentifier::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CIdentifier::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
-        CValueObject::setPropertyByIndex(variant, index);
+        CValueObject::setPropertyByIndex(index, variant);
     }
 
 } // ns

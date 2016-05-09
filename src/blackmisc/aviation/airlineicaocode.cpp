@@ -166,10 +166,10 @@ namespace BlackMisc
             }
         }
 
-        void CAirlineIcaoCode::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAirlineIcaoCode::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAirlineIcaoCode>(); return; }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(variant, index); return; }
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -198,16 +198,16 @@ namespace BlackMisc
                 this->setMilitary(variant.toBool());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CAirlineIcaoCode::comparePropertyByIndex(const CAirlineIcaoCode &compareValue, const CPropertyIndex &index) const
+        int CAirlineIcaoCode::comparePropertyByIndex(const CPropertyIndex &index, const CAirlineIcaoCode &compareValue) const
         {
             if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
-            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(compareValue, index);}
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);}
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAirlineDesignator:
@@ -215,7 +215,7 @@ namespace BlackMisc
             case IndexIataCode:
                 return this->m_iataCode.compare(compareValue.getIataCode());
             case IndexAirlineCountry:
-                return this->m_country.comparePropertyByIndex(compareValue.getCountry(), index.copyFrontRemoved());
+                return this->m_country.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCountry());
             case IndexDesignatorNameCountry:
                 return this->m_country.getName().compare(compareValue.getCountry().getName(), Qt::CaseInsensitive);
             case IndexAirlineName:
@@ -326,6 +326,5 @@ namespace BlackMisc
             code.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return code;
         }
-
     } // namespace
 } // namespace

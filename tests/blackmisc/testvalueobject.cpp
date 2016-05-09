@@ -50,7 +50,7 @@ namespace BlackMisc
     /*
      * Property by index (setter)
      */
-    void CTestValueObject::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CTestValueObject::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (index.isMyself()) { (*this) = variant.to<CTestValueObject>(); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -63,7 +63,7 @@ namespace BlackMisc
             this->setName(variant.value<QString>());
             break;
         default:
-            CValueObject::setPropertyByIndex(variant, index);
+            CValueObject::setPropertyByIndex(index, variant);
             break;
         }
     }

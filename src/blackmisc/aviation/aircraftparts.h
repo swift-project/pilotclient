@@ -54,10 +54,10 @@ namespace BlackMisc
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! Compare for index
-            int comparePropertyByIndex(const CAircraftParts &compareValue, const CPropertyIndex &index) const;
+            int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftParts &compareValue) const;
 
             //! Get aircraft lights
             CAircraftLights getLights() const { return m_lights; }

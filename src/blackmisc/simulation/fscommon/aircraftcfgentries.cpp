@@ -185,10 +185,10 @@ namespace BlackMisc
                 }
             }
 
-            void CAircraftCfgEntries::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+            void CAircraftCfgEntries::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
             {
                 if (index.isMyself()) { (*this) = variant.to<CAircraftCfgEntries>(); return; }
-                if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+                if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
                 switch (i)
                 {
@@ -207,7 +207,7 @@ namespace BlackMisc
                 case IndexCreatedBy: this->setCreatedBy(variant.toQString()); break;
                 case IndexRotorcraft: this->setRotorcraft(variant.toBool()); break;
                 default:
-                    CValueObject::setPropertyByIndex(variant, index);
+                    CValueObject::setPropertyByIndex(index, variant);
                     break;
                 }
             }

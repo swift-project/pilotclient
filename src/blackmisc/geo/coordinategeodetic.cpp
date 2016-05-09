@@ -125,14 +125,14 @@ namespace BlackMisc
             }
         }
 
-        void CCoordinateGeodetic::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CCoordinateGeodetic::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CCoordinateGeodetic>(); return; }
             ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
             switch (i)
             {
             case IndexGeodeticHeight:
-                this->m_geodeticHeight.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexLatitude:
                 this->setLatitude(variant.value<CLatitude>());
@@ -153,7 +153,7 @@ namespace BlackMisc
                 this->setNormalVector(variant.value<QVector3D>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

@@ -76,13 +76,13 @@ namespace BlackMisc
         QString convertToQString(bool i18n = false) const;
 
         //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-        CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+        CVariant propertyByIndex(const CPropertyIndex &index) const;
 
         //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
+        void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
         //! Compare for index
-        int comparePropertyByIndex(const CCountry &compareValue, const CPropertyIndex &index) const;
+        int comparePropertyByIndex(const CPropertyIndex &index, const CCountry &compareValue) const;
 
         //! From our database JSON format
         static CCountry fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());

@@ -37,10 +37,10 @@ namespace BlackMisc
                        CValueObject::propertyByIndex(index);
             }
 
-            void CNavDataReference::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+            void CNavDataReference::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
             {
                 if (index.isMyself()) { (*this) = variant.to<CNavDataReference>(); return; }
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
             }
 
             QString CNavDataReference::convertToQString(bool i18n) const

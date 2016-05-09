@@ -44,7 +44,7 @@ namespace BlackMisc
             }
         }
 
-        void CWindLayer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CWindLayer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CWindLayer>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -66,7 +66,7 @@ namespace BlackMisc
                 setGustSpeed(variant.value<CSpeed>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

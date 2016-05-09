@@ -57,7 +57,7 @@ namespace BlackMisc
         return CVariant::fromValue(m);
     }
 
-    void IOrderable::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+    void IOrderable::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
         if (!index.isEmpty())
         {
@@ -76,7 +76,7 @@ namespace BlackMisc
         Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
     }
 
-    int IOrderable::comparePropertyByIndex(const IOrderable &compareValue, const CPropertyIndex &index) const
+    int IOrderable::comparePropertyByIndex(const CPropertyIndex &index, const IOrderable &compareValue) const
     {
         Q_UNUSED(index);
         static const int max = std::numeric_limits<int>::max();

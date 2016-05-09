@@ -86,7 +86,7 @@ namespace BlackMisc
             return CVariant::fromValue(m);
         }
 
-        void CKeyboardKey::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CKeyboardKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CKeyboardKey>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -82,9 +82,9 @@ namespace BlackMisc
         return CVariant();
     }
 
-    void IDatastoreObjectWithIntegerKey::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+    void IDatastoreObjectWithIntegerKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -96,14 +96,14 @@ namespace BlackMisc
         }
     }
 
-    int IDatastoreObjectWithIntegerKey::comparePropertyByIndex(const IDatastoreObjectWithIntegerKey &compareValue, const CPropertyIndex &index) const
+    int IDatastoreObjectWithIntegerKey::comparePropertyByIndex(const CPropertyIndex &index, const IDatastoreObjectWithIntegerKey &compareValue) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDbIntegerKey:  return Compare::compare(this->m_dbKey, compareValue.getDbKey());
-        case IndexDatabaseIcon:  return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
+        case IndexDbIntegerKey: return Compare::compare(this->m_dbKey, compareValue.getDbKey());
+        case IndexDatabaseIcon: return Compare::compare(this->hasValidDbKey(), compareValue.hasValidDbKey());
         default: break;
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
@@ -158,9 +158,9 @@ namespace BlackMisc
         return CVariant();
     }
 
-    void IDatastoreObjectWithStringKey::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+    void IDatastoreObjectWithStringKey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
     {
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(variant, index); return; }
+        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -172,9 +172,9 @@ namespace BlackMisc
         }
     }
 
-    int IDatastoreObjectWithStringKey::comparePropertyByIndex(const IDatastoreObjectWithStringKey &compareValue, const CPropertyIndex &index) const
+    int IDatastoreObjectWithStringKey::comparePropertyByIndex(const CPropertyIndex &index, const IDatastoreObjectWithStringKey &compareValue) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(compareValue, index); }
+        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

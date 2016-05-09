@@ -67,7 +67,7 @@ namespace BlackMisc
             }
         }
 
-        void CActionHotkey::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CActionHotkey::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CActionHotkey>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -85,7 +85,7 @@ namespace BlackMisc
                 this->setObject(variant.value<CActionHotkey>());
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }

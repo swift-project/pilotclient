@@ -64,11 +64,11 @@ namespace BlackMisc
             }
         }
 
-        void CDistributor::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
+        void CDistributor::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CDistributor>(); return; }
-            if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { IDatastoreObjectWithStringKey::setPropertyByIndex(variant, index); return; }
-            if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(variant, index); return; }
+            if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant); return; }
+            if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(index, variant); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -83,25 +83,25 @@ namespace BlackMisc
                 this->m_description = variant.value<QString>();
                 break;
             case IndexSimulator:
-                this->m_simulator.setPropertyByIndex(variant, index.copyFrontRemoved());
+                this->m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
-                CValueObject::setPropertyByIndex(variant, index);
+                CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
         }
 
-        int CDistributor::comparePropertyByIndex(const CDistributor &compareValue, const CPropertyIndex &index) const
+        int CDistributor::comparePropertyByIndex(const CPropertyIndex &index, const CDistributor &compareValue) const
         {
-            if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(compareValue, index); }
-            if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(compareValue, index); }
+            if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue); }
+            if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAlias1: return this->m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
             case IndexAlias2: return this->m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
             case IndexDescription: return this->m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-            case IndexSimulator: return this->m_simulator.comparePropertyByIndex(compareValue.m_simulator, index.copyFrontRemoved());
+            case IndexSimulator: return this->m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
             default:
                 break;
             }
