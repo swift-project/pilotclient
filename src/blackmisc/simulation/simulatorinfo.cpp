@@ -7,11 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorinfo.h"
-#include "buildconfig.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include <QJsonValue>
+#include <QtGlobal>
 #include <algorithm>
 
 using namespace BlackMisc;

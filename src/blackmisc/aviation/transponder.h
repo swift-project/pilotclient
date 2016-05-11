@@ -13,7 +13,17 @@
 #define BLACKMISC_AVIATION_TRANSPONDER_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QHash>
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
+#include <tuple>
 
 namespace BlackMisc
 {

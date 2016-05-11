@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "cloudlayerlist.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/weather/cloudlayerlist.h"
 
 using namespace BlackMisc::Aviation;
 

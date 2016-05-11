@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelutils.h"
-
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
 
 namespace BlackMisc
 {

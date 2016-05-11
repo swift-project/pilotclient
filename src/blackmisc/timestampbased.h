@@ -12,9 +12,13 @@
 #ifndef BLACKMISC_TIMESTAMPBASED_H
 #define BLACKMISC_TIMESTAMPBASED_H
 
-#include "blackmiscexport.h"
-#include "propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
+
 #include <QDateTime>
+#include <QString>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

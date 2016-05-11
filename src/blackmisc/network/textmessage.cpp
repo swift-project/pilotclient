@@ -8,10 +8,15 @@
  */
 
 #include "blackmisc/network/textmessage.h"
-#include "blackmisc/pq/constants.h"
-#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/physicalquantity.h"
+
+#include <QRegExp>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

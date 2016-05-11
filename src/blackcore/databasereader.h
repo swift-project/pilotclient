@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/threadedreader.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/network/entityflags.h"
 #include <QNetworkReply>
 #include <QJsonArray>

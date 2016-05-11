@@ -12,9 +12,16 @@
 #ifndef BLACKMISC_AVIATION_LIVERYLIST_H
 #define BLACKMISC_AVIATION_LIVERYLIST_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 #include <QStringList>
 
 namespace BlackMisc

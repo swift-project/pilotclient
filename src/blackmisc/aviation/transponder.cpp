@@ -11,6 +11,10 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 
+#include <QRegExp>
+#include <Qt>
+#include <QtDebug>
+
 namespace BlackMisc
 {
     namespace Aviation

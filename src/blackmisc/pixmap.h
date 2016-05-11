@@ -12,14 +12,20 @@
 #ifndef BLACKMISC_PIXMAP_H
 #define BLACKMISC_PIXMAP_H
 
-#include "blackmiscexport.h"
-#include "valueobject.h"
-#include "statusmessage.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/valueobject.h"
+
+#include <QByteArray>
+#include <QMetaType>
 #include <QPixmap>
 #include <QReadWriteLock>
+#include <QString>
 
 namespace BlackMisc
 {
+    class CStatusMessage;
+
     //! Pixmap which can be transferred via DBus.
     //! \remark: Use, when a pixmap cannot be stored in the resources
     class BLACKMISC_EXPORT CPixmap : public CValueObject<CPixmap>

@@ -13,14 +13,20 @@
 #define BLACKMISC_NETWORK_SERVERLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/server.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/network/server.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {
     namespace Network
     {
+        class CServer;
+
         //! Value object encapsulating a list of servers.
         class BLACKMISC_EXPORT CServerList :
             public CSequence<CServer>,

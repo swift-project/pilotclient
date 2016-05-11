@@ -12,8 +12,11 @@
 #ifndef BLACKMISC_ORDERABLE_H
 #define BLACKMISC_ORDERABLE_H
 
-#include "blackmiscexport.h"
-#include "propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
+
+#include <QString>
 
 namespace BlackMisc
 {

@@ -12,12 +12,19 @@
 #ifndef BLACKMISC_AVIATION_LIVERY_H
 #define BLACKMISC_AVIATION_LIVERY_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/rgbcolor.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/datastore.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/rgbcolor.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

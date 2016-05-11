@@ -20,6 +20,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/voicecapabilities.h"
 
 #include <QObject>

@@ -12,10 +12,17 @@
 #ifndef BLACKMISC_WEATHER_METARSET_H
 #define BLACKMISC_WEATHER_METARSET_H
 
+#include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/weather/metar.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/metar.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

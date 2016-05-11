@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "weatherdataplugininfo.h"
+#include "blackmisc/weather/weatherdataplugininfo.h"
+
+#include <QJsonValue>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

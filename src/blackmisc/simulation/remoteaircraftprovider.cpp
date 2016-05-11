@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "remoteaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 
 using namespace BlackMisc::Aviation;
 

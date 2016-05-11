@@ -7,11 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "dbusserver.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
-#include <QProcess>
+#include "blackmisc/statusmessage.h"
+
+#include <QDBusServer>
 #include <QMetaClassInfo>
+#include <QMetaObject>
+#include <QProcess>
+#include <QStringList>
+#include <QtGlobal>
 
 using namespace BlackMisc::Network;
 

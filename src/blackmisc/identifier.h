@@ -7,17 +7,23 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_IDENTIFIER_H
 #define BLACKMISC_IDENTIFIER_H
 
-//! \file
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/timestampbased.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
 
-#include "blackmiscexport.h"
-#include "valueobject.h"
-#include "timestampbased.h"
 #include <QByteArray>
+#include <QMetaType>
 #include <QString>
 #include <QUuid>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

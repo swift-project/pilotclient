@@ -8,7 +8,12 @@
  */
 
 #include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/range.h"
+
+#include <QString>
+#include <tuple>
 
 using namespace BlackMisc::PhysicalQuantities;
 

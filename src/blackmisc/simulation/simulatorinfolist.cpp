@@ -8,7 +8,9 @@
  */
 
 #include "blackmisc/simulation/simulatorinfolist.h"
-#include "blackmisc/predicates.h"
+
+#include <QList>
+#include <tuple>
 
 namespace BlackMisc
 {

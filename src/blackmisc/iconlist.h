@@ -12,11 +12,18 @@
 #ifndef BLACKMISC_ICONLIST_H
 #define BLACKMISC_ICONLIST_H
 
-#include "blackmiscexport.h"
-#include "sequence.h"
-#include "collection.h"
-#include "icon.h"
-#include "icons.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/sequence.h"
+
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
+#include <tuple>
 
 namespace BlackMisc
 {

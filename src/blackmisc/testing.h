@@ -12,8 +12,11 @@
 #ifndef BLACKMISC_TESTING_H
 #define BLACKMISC_TESTING_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/blackmiscexport.h"
+
+#include <QString>
 
 //! Generate data for testing purposes.
 namespace BlackMisc

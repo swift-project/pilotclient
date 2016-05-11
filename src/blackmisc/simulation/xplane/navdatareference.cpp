@@ -11,6 +11,8 @@
 
 #include "blackmisc/simulation/xplane/navdatareference.h"
 
+#include <QtGlobal>
+
 namespace BlackMisc
 {
     namespace Simulation

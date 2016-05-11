@@ -8,14 +8,24 @@
  */
 
 #include "blackmisc/aviation/livery.h"
-#include "blackmisc/datastoreutility.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/datastoreutility.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
+#include <QCoreApplication>
+#include <QJsonValue>
+#include <Qt>
+#include <QtGlobal>
+#include <tuple>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
 
 namespace BlackMisc
 {

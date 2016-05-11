@@ -7,14 +7,18 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_LOGCATEGORY_H
 #define BLACKMISC_LOGCATEGORY_H
 
-//! \file
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/valueobject.h"
 
-#include "blackmiscexport.h"
-#include "valueobject.h"
-#include "sequence.h"
+#include <QList>
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

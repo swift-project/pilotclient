@@ -7,14 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISC_IDENTIFIABLE_H
-#define BLACKMISC_IDENTIFIABLE_H
 
 //! \file
 
-#include "blackmiscexport.h"
-#include "identifier.h"
+#ifndef BLACKMISC_IDENTIFIABLE_H
+#define BLACKMISC_IDENTIFIABLE_H
+
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/identifier.h"
+
+#include <QMetaObject>
 #include <QObject>
+#include <QString>
 
 namespace BlackMisc
 {

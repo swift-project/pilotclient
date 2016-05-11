@@ -9,13 +9,17 @@
 
 //! \file
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/propertyindex.h"
-#include <QString>
-
 #ifndef BLACKMISC_AUDIO_VOICEROOM_H
 #define BLACKMISC_AUDIO_VOICEROOM_H
+
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

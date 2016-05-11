@@ -8,8 +8,22 @@
  */
 
 #include "blackmisc/pq/pqstring.h"
-#include "blackmisc/pq/pq.h"
+#include "blackmisc/pq/acceleration.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/mass.h"
+#include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+
+#include <QLocale>
+#include <QRegExp>
 #include <QThreadStorage>
+#include <QtDebug>
 
 namespace BlackMisc
 {

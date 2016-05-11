@@ -8,12 +8,15 @@
  */
 
 #include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/network/clientlist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/network/clientlist.h"
+
+#include <QtGlobal>
 
 namespace BlackMisc
 {

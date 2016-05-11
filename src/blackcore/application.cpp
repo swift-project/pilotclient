@@ -24,9 +24,11 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/loghandler.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QFileInfo>
+#include <QTranslator>
 #include <stdlib.h>
 
 using namespace BlackMisc;

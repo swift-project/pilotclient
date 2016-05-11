@@ -12,16 +12,14 @@
 #ifndef BLACKMISC_NETWORK_CLIENTLIST_H
 #define BLACKMISC_NETWORK_CLIENTLIST_H
 
+#include "blackmisc/aviation/callsignobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/network/client.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/collection.h"
-#include "blackmisc/aviation/callsignobjectlist.h"
-#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/variant.h"
 
-#include <QObject>
-#include <QString>
-#include <QList>
+#include <QMetaType>
 
 namespace BlackMisc
 {

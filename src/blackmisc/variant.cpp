@@ -9,12 +9,26 @@
 
 //! \cond PRIVATE
 
-#include "variant.h"
-#include "icon.h"
-#include "logmessage.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/variant.h"
+
+#include <QByteArray>
+#include <QChar>
 #include <QDBusArgument>
-#include <QDBusMetaType>
 #include <QDBusVariant>
+#include <QDate>
+#include <QFlags>
+#include <QHash>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QStringList>
+#include <QTime>
+#include <Qt>
+#include <QtDebug>
 
 namespace BlackMisc
 {

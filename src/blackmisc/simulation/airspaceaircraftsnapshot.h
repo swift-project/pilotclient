@@ -12,11 +12,20 @@
 #ifndef BLACKMISC_SIMULATION_AIRSPACEAIRCRAFTANALYZER_H
 #define BLACKMISC_SIMULATION_AIRSPACEAIRCRAFTANALYZER_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
 #include <QDateTime>
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

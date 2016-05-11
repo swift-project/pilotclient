@@ -17,6 +17,7 @@
 #include "json.h"
 #include "variant.h"
 #include "dbus.h"
+
 #include <algorithm>
 #include <QStringList>
 

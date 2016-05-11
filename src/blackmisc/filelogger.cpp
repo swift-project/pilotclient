@@ -7,12 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "filelogger.h"
+#include "blackmisc/filelogger.h"
+#include "blackmisc/loghandler.h"
+
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
+#include <QFileInfo>
+#include <QFlags>
+#include <QIODevice>
+#include <QLatin1String>
 #include <QString>
 #include <QStringBuilder>
-#include <QDateTime>
-#include <QCoreApplication>
-#include <QDir>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

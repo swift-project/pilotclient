@@ -13,18 +13,24 @@
 #define BLACKMISC_PQ_MEASUREMENTUNIT_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/stringutils.h"
+
 #include <QCoreApplication>
-#include <QtDBus/QDBusArgument>
-#include <QString>
-#include <QtGlobal>
-#include <QDebug>
+#include <QDBusArgument>
+#include <QHash>
 #include <QSharedData>
 #include <QSharedDataPointer>
-#include <QHash>
-#include <cstddef>
+#include <QString>
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
+#include <QList>
 #include <cmath>
+#include <cstddef>
+#include <string>
 
 namespace BlackMisc
 {

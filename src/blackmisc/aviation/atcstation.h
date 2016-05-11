@@ -12,19 +12,30 @@
 #ifndef BLACKMISC_AVIATION_ATCSTATION_H
 #define BLACKMISC_AVIATION_ATCSTATION_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/informationmessage.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/user.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
 #include <QDateTime>
-#include <QMap>
-#include <functional>
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+#include <array>
+#include <tuple>
 
 namespace BlackMisc
 {

@@ -13,7 +13,14 @@
 #define BLACKMISC_AVIATION_AIRPORTICAOCODE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
+
+#include <QMetaType>
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

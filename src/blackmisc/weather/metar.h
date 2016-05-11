@@ -12,21 +12,28 @@
 #ifndef BLACKMISC_AVIATION_METAR_H
 #define BLACKMISC_AVIATION_METAR_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
 #include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/presentweatherlist.h"
 #include "blackmisc/weather/windlayer.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/temperature.h"
-#include "blackmisc/pq/pressure.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {
     namespace Weather
     {
+        class CCloudLayer;
+        class CPresentWeather;
+
         /*!
          * Value object encapsulating information about METAR
          * FIXME: runway visibilities

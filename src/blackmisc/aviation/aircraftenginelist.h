@@ -12,11 +12,18 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTENGINELIST_H
 #define BLACKMISC_AVIATION_AIRCRAFTENGINELIST_H
 
-#include "aircraftengine.h"
+#include "blackmisc/aviation/aircraftengine.h"
+#include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/json.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QMetaType>
 #include <initializer_list>
+#include <tuple>
 
 namespace BlackMisc
 {

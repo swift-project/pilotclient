@@ -13,14 +13,20 @@
 #define BLACKMISC_WEATHER_GRIDPOINT_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/temperaturelayerlist.h"
 #include "blackmisc/weather/visibilitylayerlist.h"
 #include "blackmisc/weather/windlayerlist.h"
-#include "blackmisc/pq/pressure.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

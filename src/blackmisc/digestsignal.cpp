@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "digestsignal.h"
+#include "blackmisc/digestsignal.h"
 
 namespace BlackMisc
 {

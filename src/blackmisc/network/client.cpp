@@ -8,10 +8,15 @@
  */
 
 #include "blackmisc/network/client.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclassprivate.h"
 
+#include <QPixmap>
 #include <QString>
+#include <QStringList>
+#include <tuple>
 
 namespace BlackMisc
 {

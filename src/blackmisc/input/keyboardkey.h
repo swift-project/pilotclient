@@ -12,10 +12,16 @@
 #ifndef BLACKMISC_INPUT_KEYBOARDKEY_H
 #define BLACKMISC_INPUT_KEYBOARDKEY_H
 
-#include "keycodes.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/input/keycodes.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QList>
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

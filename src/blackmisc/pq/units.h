@@ -16,11 +16,18 @@
 #undef min
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/dbus.h"
 #include "blackmisc/pq/measurementunit.h"
-#include <QtDBus/QDBusArgument>
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/variant.h"
+
+#include <math.h>
+#include <QDBusArgument>
 #include <QList>
-#include <QtCore/qmath.h>
-#include <QTranslator>
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
+#include <cstddef>
 
 //
 // Used with the template for quantities. This is the reason for

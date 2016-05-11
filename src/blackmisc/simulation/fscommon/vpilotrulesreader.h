@@ -13,16 +13,20 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_VPILOTRULESREADER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/worker.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
 #include "blackmisc/simulation/data/modelcaches.h"
-#include <QStringList>
+#include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
+
 #include <QObject>
 #include <QReadWriteLock>
+#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
+    class CWorker;
+
     namespace Simulation
     {
         namespace FsCommon

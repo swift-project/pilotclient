@@ -12,18 +12,20 @@
 #ifndef BLACKMISC_AUDIO_VOICEROOMLIST_H
 #define BLACKMISC_AUDIO_VOICEROOMLIST_H
 
-#include "voiceroom.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
-#include <QObject>
-#include <QString>
-#include <QList>
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include "voiceroom.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {
     namespace Audio
     {
+        class CVoiceRoom;
+
         //! Value object encapsulating a list of voice rooms.
         class BLACKMISC_EXPORT CVoiceRoomList :
             public CSequence<CVoiceRoom>,

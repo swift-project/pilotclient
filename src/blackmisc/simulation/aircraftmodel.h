@@ -12,18 +12,40 @@
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODEL_H
 #define BLACKMISC_SIMULATION_AIRCRAFTMODEL_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/datastore.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/orderable.h"
 #include "blackmisc/pixmap.h"
-#include <QUrlQuery>
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QFlags>
+#include <QHash>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
+#include <Qt>
+#include <tuple>
 
 namespace BlackMisc
 {
+    class CIcon;
+    class CStatusMessage;
+
     namespace Simulation
     {
         //! Aircraft model (used by another pilot, my models on disk)

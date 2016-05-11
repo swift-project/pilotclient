@@ -8,11 +8,15 @@
  */
 
 #include "blackmisc/aviation/modulator.h"
+#include "blackmisc/math/mathutils.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/adfsystem.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/variant.h"
+
+#include <QtGlobal>
 
 using BlackMisc::PhysicalQuantities::CFrequency;
 using BlackMisc::PhysicalQuantities::CFrequencyUnit;

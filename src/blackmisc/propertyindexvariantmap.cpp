@@ -9,9 +9,11 @@
 
 //! \cond PRIVATE
 
-#include "propertyindexvariantmap.h"
-#include "propertyindexlist.h"
-#include "dictionary.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/propertyindexvariantmap.h"
+
+#include <QHash>
+#include <tuple>
 
 namespace BlackMisc
 {

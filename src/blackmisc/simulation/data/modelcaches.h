@@ -13,8 +13,13 @@
 #define BLACKMISC_SIMULATION_DATA_MODELCACHES
 
 #include "blackmisc/datacache.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QDateTime>
+#include <QObject>
 
 namespace BlackMisc
 {

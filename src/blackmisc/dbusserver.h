@@ -12,14 +12,17 @@
 #ifndef BLACKMISC_DBUSSERVER_H
 #define BLACKMISC_DBUSSERVER_H
 
-#include "blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include <QObject>
-#include <QtDBus/QDBusServer>
-#include <QtDBus/QDBusError>
-#include <QtDBus/QDBusConnection>
-#include <QStringList>
+#include "blackmisc/blackmiscexport.h"
+
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QFlags>
 #include <QMap>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+class QDBusServer;
 
 //! Service name of DBus service
 #define SWIFT_SERVICENAME "org.swift-project"

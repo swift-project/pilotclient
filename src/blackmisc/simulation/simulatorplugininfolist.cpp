@@ -7,7 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorplugininfolist.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/range.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
+
+#include <algorithm>
+#include <tuple>
 
 namespace BlackMisc
 {

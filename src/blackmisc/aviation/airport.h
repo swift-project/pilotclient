@@ -12,10 +12,21 @@
 #ifndef BLACKMISC_AVIATION_AIRPORT_H
 #define BLACKMISC_AVIATION_AIRPORT_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+#include <array>
 
 namespace BlackMisc
 {

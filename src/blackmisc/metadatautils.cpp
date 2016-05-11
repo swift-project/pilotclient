@@ -8,7 +8,10 @@
  */
 
 #include "metadatautils.h"
+
 #include <QMetaType>
+#include <QTextStream>
+#include <QMetaObject>
 
 namespace BlackMisc
 {

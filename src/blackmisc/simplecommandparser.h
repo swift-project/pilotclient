@@ -12,9 +12,10 @@
 #ifndef BLACKMISC_SIMPLECOMMANDPARSER_H
 #define BLACKMISC_SIMPLECOMMANDPARSER_H
 
-#include "blackmiscexport.h"
-#include <QStringList>
+#include "blackmisc/blackmiscexport.h"
+
 #include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {

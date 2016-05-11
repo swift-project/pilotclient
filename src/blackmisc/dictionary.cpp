@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "dictionary.h"
+#include "blackmisc/dictionary.h"
 
 uint BlackMisc::calculateHash(const QList<uint> &values, const char *className)
 {

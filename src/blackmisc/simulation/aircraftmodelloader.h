@@ -14,10 +14,17 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
-#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/pixmap.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QDateTime>
+#include <QFlags>
+#include <QMetaType>
 #include <QObject>
+#include <QString>
+#include <QStringList>
 #include <atomic>
 #include <memory>
 

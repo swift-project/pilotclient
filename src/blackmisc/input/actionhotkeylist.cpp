@@ -9,6 +9,9 @@
 
 #include "actionhotkeylist.h"
 
+#include "blackmisc/input/actionhotkeylist.h"
+#include "blackmisc/input/hotkeycombination.h"
+
 namespace BlackMisc
 {
     namespace Input

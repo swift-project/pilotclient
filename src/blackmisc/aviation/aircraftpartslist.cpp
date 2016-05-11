@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
+
+#include <tuple>
 
 namespace BlackMisc
 {

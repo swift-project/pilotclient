@@ -12,8 +12,9 @@
 #ifndef BLACKMISC_ORDERABLELIST_H
 #define BLACKMISC_ORDERABLELIST_H
 
-#include "blackmisc/collection.h"
-#include "blackmisc/sequence.h"
+#include "blackmisc/blackmiscexport.h"
+
+#include <QList>
 
 namespace BlackMisc
 {

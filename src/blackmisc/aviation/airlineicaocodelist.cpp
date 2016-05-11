@@ -7,7 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "airlineicaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/country.h"
+#include "blackmisc/range.h"
+
+#include <QJsonObject>
+#include <QJsonValue>
 
 namespace BlackMisc
 {

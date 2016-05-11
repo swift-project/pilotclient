@@ -12,6 +12,8 @@
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/logmessage.h"
+
+#include <QNetworkReply>
 #include <QTextStream>
 #include <QFile>
 #include <QReadLocker>

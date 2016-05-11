@@ -12,11 +12,14 @@
 #ifndef BLACKMISC_IDENTIFIERLIST_H
 #define BLACKMISC_IDENTIFIERLIST_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/identifier.h"
-#include "collection.h"
-#include "sequence.h"
-#include "timestampobjectlist.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

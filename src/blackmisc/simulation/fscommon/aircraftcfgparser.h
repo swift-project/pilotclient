@@ -13,17 +13,24 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGPARSER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/datacache.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 
+#include <QObject>
 #include <QPointer>
+#include <QString>
+#include <QStringList>
+#include <QVariant>
+#include <memory>
+
+class QSettings;
 
 namespace BlackMisc
 {
+    class CWorker;
+
     namespace Simulation
     {
         namespace FsCommon

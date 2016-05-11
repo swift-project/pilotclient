@@ -13,9 +13,14 @@
 #define BLACKMISC_INPUT_JOYSTICKBUTTONLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <initializer_list>
+#include <tuple>
 
 namespace BlackMisc
 {

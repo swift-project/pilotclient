@@ -16,6 +16,7 @@
 #include "blackcore/data/vatsimsetup.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/network/entityflags.h"
 
 #include <QObject>
 #include <QTimer>

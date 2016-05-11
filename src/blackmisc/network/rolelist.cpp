@@ -7,7 +7,12 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/network/role.h"
 #include "blackmisc/network/rolelist.h"
+
+#include <QJsonObject>
+#include <QJsonValue>
+#include <tuple>
 
 namespace BlackMisc
 {

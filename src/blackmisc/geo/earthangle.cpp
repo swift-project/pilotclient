@@ -8,9 +8,16 @@
  */
 
 #include "blackmisc/geo/earthangle.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/iconlist.h"
+
+#include <QRegExp>
+#include <Qt>
+#include <QtGlobal>
+#include <QtMath>
 
 namespace BlackMisc
 {

@@ -13,14 +13,17 @@
 #define BLACKMISC_SIMULATION_DISTRIBUTORLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/orderablelist.h"
-#include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include <QObject>
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 #include <QString>
-#include <QList>
+#include <QStringList>
 
 namespace BlackMisc
 {

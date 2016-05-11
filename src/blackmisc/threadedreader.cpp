@@ -7,9 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "threadedreader.h"
-#include "blackmisc/threadutils.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/threadedreader.h"
+#include "blackmisc/threadutils.h"
+
+#include <QCoreApplication>
+#include <QMetaObject>
+#include <QReadLocker>
+#include <QThread>
+#include <QTimer>
+#include <QWriteLocker>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

@@ -7,8 +7,24 @@
  * contained in the LICENSE file.
  */
 
-#include "testing.h"
-#include "network/voicecapabilities.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/testing.h"
+#include "blackmisc/variant.h"
+
+#include <QDateTime>
+#include <QList>
+#include <QStringList>
+#include <QtGlobal>
+#include <tuple>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;

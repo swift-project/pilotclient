@@ -12,21 +12,23 @@
 #ifndef BLACKMISC_AVIATION_ATCSTATIONLIST_H
 #define BLACKMISC_AVIATION_ATCSTATIONLIST_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/geo/geoobjectlist.h"
-#include "blackmisc/network/userlist.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/geo/geoobjectlist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackmisc/sequence.h"
-#include <QObject>
-#include <QString>
-#include <QList>
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {
     namespace Aviation
     {
+        class CComSystem;
+
         //! Value object for a list of ATC stations.
         class BLACKMISC_EXPORT CAtcStationList :
             public CSequence<CAtcStation>,

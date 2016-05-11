@@ -7,10 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelloader.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+
+#include <QDir>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation::Data;
 using namespace BlackMisc::Simulation::FsCommon;

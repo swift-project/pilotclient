@@ -12,8 +12,23 @@
 #ifndef BLACKMISC_AVIATION_COMSYSTEM_H
 #define BLACKMISC_AVIATION_COMSYSTEM_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/modulator.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/json.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/variant.h"
+
+#include <QHash>
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

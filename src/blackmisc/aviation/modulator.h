@@ -13,8 +13,6 @@
 #define BLACKMISC_AVIATION_MODULATORUNIT_H
 
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/pq/constants.h"
 #include "blackmisc/pq/frequency.h"
 
 namespace BlackMisc

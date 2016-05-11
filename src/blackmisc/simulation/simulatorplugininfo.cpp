@@ -7,7 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorplugininfo.h"
+
+#include "blackmisc/simulation/simulatorplugininfo.h"
+
+#include <QJsonValue>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

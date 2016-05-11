@@ -13,11 +13,15 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGENTRY_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/timestampbased.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/timestampbased.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

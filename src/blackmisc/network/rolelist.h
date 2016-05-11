@@ -13,14 +13,22 @@
 #define BLACKMISC_NETWORK_ROLELIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/role.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/network/role.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonArray>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
     namespace Network
     {
+        class CRole;
+
         //! Value object encapsulating a list of servers.
         class BLACKMISC_EXPORT CRoleList :
             public CSequence<CRole>,

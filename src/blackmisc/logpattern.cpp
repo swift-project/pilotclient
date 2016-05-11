@@ -7,8 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "logpattern.h"
-#include "logcategorylist.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logpattern.h"
+#include "blackmisc/sequence.h"
+
+#include <QHash>
+#include <QList>
+#include <QStringList>
+#include <algorithm>
+#include <tuple>
 
 namespace BlackMisc
 {

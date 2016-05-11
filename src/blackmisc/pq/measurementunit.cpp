@@ -9,6 +9,7 @@
 
 #include "blackmisc/pq/measurementunit.h"
 #include "blackmisc/math/mathutils.h"
+#include <QLocale>
 
 using namespace BlackMisc::Math;
 

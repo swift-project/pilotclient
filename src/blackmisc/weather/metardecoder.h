@@ -13,12 +13,12 @@
 #define BLACKMISC_WEATHER_METARDECODER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
 #include "blackmisc/weather/metar.h"
-#include <QString>
+
 #include <QObject>
-#include <QVector>
+#include <QString>
 #include <memory>
+#include <vector>
 
 namespace BlackMisc
 {

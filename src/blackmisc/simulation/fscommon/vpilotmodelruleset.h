@@ -12,11 +12,18 @@
 #ifndef BLACKMISC_SIMULATION_FSCOMMON_VPILOTMODELRULELIST_H
 #define BLACKMISC_SIMULATION_FSCOMMON_VPILOTMODELRULELIST_H
 
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
+
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/fscommon/vpilotmodelrule.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/fscommon/vpilotmodelrule.h"
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

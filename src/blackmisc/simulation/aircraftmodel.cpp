@@ -7,14 +7,24 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodel.h"
-#include "distributorlist.h"
-#include "blackmisc/datastoreutility.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/comparefunctions.h"
-#include <QString>
+#include "blackmisc/datastoreutility.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
+
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "blackmisc/verify.h"
+#include <QJsonValue>
+#include <QList>
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

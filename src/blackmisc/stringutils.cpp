@@ -8,8 +8,8 @@
  */
 
 #include "stringutils.h"
-#include "pixmap.h"
-#include <QBuffer>
+
+#include <QChar>
 
 QString BlackMisc::boolToOnOff(bool v, bool i18n)
 {

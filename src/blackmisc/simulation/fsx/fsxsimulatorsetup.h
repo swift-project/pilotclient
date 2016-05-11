@@ -12,9 +12,10 @@
 #ifndef BLACKMISC_SIMULATION_FSX_SIMSETUP_H
 #define BLACKMISC_SIMULATION_FSX_SIMSETUP_H
 
+#include "blackmisc/simulation/simulatorsetup.h"
 #include "blackmisc/blackmiscexport.h"
-#include "../simulatorsetup.h"
-#include <QString>
+
+class QString;
 
 namespace BlackMisc
 {

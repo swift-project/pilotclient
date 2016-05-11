@@ -8,8 +8,11 @@
  */
 
 #include "blackmisc/network/urllist.h"
-#include "blackmisc/network/networkutils.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/network/networkutils.h"
+
+#include <QtGlobal>
+#include <tuple>
 
 using namespace BlackMisc::Math;
 

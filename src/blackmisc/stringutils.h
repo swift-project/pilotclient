@@ -13,10 +13,18 @@
 #define BLACKMISC_STRINGUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include <QMap>
+
 #include <QByteArray>
-#include <QString>
+#include <QDataStream>
 #include <QDebug>
+#include <QMapIterator>
+#include <QString>
+#include <QTextStream>
+#include <QtGlobal>
+#include <iosfwd>
+#include <string>
+
+template <class T1, class T2> class QMap;
 
 //! Free functions in BlackMisc
 namespace BlackMisc

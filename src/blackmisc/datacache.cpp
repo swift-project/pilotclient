@@ -9,13 +9,24 @@
 
 //! \cond PRIVATE
 
-#include "datacache.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/atomicfile.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/logmessage.h"
+
+#include <QByteArray>
+#include <QDir>
+#include <QFile>
+#include <QFlags>
+#include <QIODevice>
+#include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonValuePtr>
+#include <QMutexLocker>
 #include <QStandardPaths>
 #include <QTimer>
-#include <QDir>
+#include <Qt>
+#include <memory>
 #include <utility>
 
 namespace BlackMisc

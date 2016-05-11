@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "identifier.h"
+#include "blackmisc/identifier.h"
+
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QHostInfo>

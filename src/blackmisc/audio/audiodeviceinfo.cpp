@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "audiodeviceinfo.h"
-#include <tuple>
+#include "blackmisc/audio/audiodeviceinfo.h"
+
 #include <QHostInfo>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

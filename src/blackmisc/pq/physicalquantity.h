@@ -12,22 +12,26 @@
 #ifndef BLACKMISC_PQ_PHYSICALQUANTITY_H
 #define BLACKMISC_PQ_PHYSICALQUANTITY_H
 
-#include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/json.h"
+#include "blackmisc/pq/pqstring.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/math/mathutils.h"
-#include "blackmisc/pq/pqstring.h"
-#include <QtDBus/QDBusMetaType>
-#include <QtGlobal>
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
+#include <QDBusArgument>
+#include <QJsonObject>
 #include <QString>
-#include <QLocale>
-#include <typeinfo>
+#include <QtGlobal>
 
 namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
         class CLength;
         class CPressure;
         class CFrequency;

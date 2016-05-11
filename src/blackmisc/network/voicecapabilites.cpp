@@ -7,9 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/iconlist.h"
-#include <tuple>
+#include "blackmisc/icons.h"
+#include "blackmisc/network/voicecapabilities.h"
+
+#include <QList>
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

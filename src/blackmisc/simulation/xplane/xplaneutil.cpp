@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "xplaneutil.h"
+#include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "qsystemdetection.h"
+
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QIODevice>
 #include <QTextStream>
-#include <QtGlobal>
 
 #if defined(Q_OS_WIN)
 #include <Shlobj.h>

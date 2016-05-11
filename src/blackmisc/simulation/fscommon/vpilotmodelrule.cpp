@@ -7,11 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "vpilotmodelrule.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/fscommon/vpilotmodelrule.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+
+#include <Qt>
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;

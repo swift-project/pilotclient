@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/input/joystickbuttonlist.h"
-#include "blackmisc/predicates.h"
 
 namespace BlackMisc
 {

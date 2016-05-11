@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "logcategory.h"
+#include "blackmisc/logcategory.h"
+
+#include <QtGlobal>
 
 namespace BlackMisc
 {

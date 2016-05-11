@@ -12,13 +12,13 @@
 #ifndef BLACKMISC_AUDIO_AUDIODEVICELIST_H
 #define BLACKMISC_AUDIO_AUDIODEVICELIST_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
-#include "blackmisc/sequence.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include <QObject>
-#include <QString>
-#include <QList>
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

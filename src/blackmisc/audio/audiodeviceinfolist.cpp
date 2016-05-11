@@ -7,8 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "audiodeviceinfolist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/range.h"
+
+#include <QString>
+#include <algorithm>
+#include <tuple>
 
 namespace BlackMisc
 {

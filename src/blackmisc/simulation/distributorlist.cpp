@@ -8,7 +8,9 @@
  */
 
 #include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/metaclassprivate.h"
+
+#include <tuple>
 
 namespace BlackMisc
 {

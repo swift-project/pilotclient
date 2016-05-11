@@ -8,7 +8,8 @@
  */
 
 #include "blackmisc/simulation/distributorlistpreferences.h"
-#include "blackmisc/predicates.h"
+
+#include <QtGlobal>
 
 namespace BlackMisc
 {

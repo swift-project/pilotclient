@@ -9,9 +9,16 @@
 
 #include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
-#include <tuple>
+
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

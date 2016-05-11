@@ -7,13 +7,29 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftcfgparser.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/fileutils.h"
-#include "blackmisc/predicates.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/worker.h"
 
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QFileInfoList>
+#include <QFlags>
+#include <QIODevice>
+#include <QList>
+#include <QMetaType>
+#include <QSettings>
+#include <QTextStream>
+#include <Qt>
+#include <QtGlobal>
+#include <atomic>
 #include <tuple>
 
 using namespace BlackMisc;

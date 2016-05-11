@@ -8,9 +8,13 @@
  */
 
 #include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/iterator.h"
+
 #include <QStringList>
+#include <QtGlobal>
+#include <algorithm>
+#include <tuple>
 
 namespace BlackMisc
 {

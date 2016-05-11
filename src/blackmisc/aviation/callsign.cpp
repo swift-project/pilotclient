@@ -8,10 +8,17 @@
  */
 
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
 
-#include <QThreadStorage>
+#include <QRegExp>
 #include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QStringList>
+#include <QThreadStorage>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

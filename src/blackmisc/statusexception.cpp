@@ -7,7 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "statusexception.h"
+#include "blackmisc/statusexception.h"
+
+#include <QReadLocker>
+#include <QString>
+#include <QWriteLocker>
 
 namespace BlackMisc
 {

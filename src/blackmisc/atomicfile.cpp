@@ -9,8 +9,13 @@
 
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/algorithm.h"
-#include <QFileInfo>
+
 #include <QDir>
+#include <QFileInfo>
+#include <QFlags>
+#include <random>
+#include <type_traits>
+
 #if defined(Q_OS_POSIX)
 #include <stdio.h>
 #elif defined(Q_OS_WIN32)

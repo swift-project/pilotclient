@@ -9,6 +9,8 @@
 
 #include "blackmisc/variantmap.h"
 
+#include <QJsonValue>
+
 namespace BlackMisc
 {
 

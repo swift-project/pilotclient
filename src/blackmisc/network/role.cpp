@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "role.h"
+#include "blackmisc/network/role.h"
+#include <QJsonValue>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

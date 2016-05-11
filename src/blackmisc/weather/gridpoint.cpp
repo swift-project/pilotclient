@@ -11,6 +11,8 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 
+#include <QtDebug>
+
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;

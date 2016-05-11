@@ -13,16 +13,22 @@
 #define BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/datastore.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
     namespace Aviation
     {
-        class CAirlineIcaoCode;
 
         //! Value object for ICAO classification
         class BLACKMISC_EXPORT CAircraftIcaoCode :

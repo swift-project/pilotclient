@@ -13,8 +13,23 @@
 #define BLACKMISC_AVIATION_SELCAL_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/pq/frequency.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+
+#include <QChar>
+#include <QList>
+#include <QMetaType>
+#include <QString>
+
+class QStringList;
+
+namespace BlackMisc
+{
+    namespace PhysicalQuantities
+    {
+        class CFrequency;
+    }
+}
 
 namespace BlackMisc
 {

@@ -8,8 +8,14 @@
  */
 
 #include "blackmisc/datastore.h"
-#include "blackmisc/datastoreutility.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/datastoreutility.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
+
+#include <QDateTime>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelsetloader.h"
+#include "blackmisc/simulation/aircraftmodelsetloader.h"
+
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation::Data;
 

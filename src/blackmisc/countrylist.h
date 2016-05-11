@@ -12,12 +12,18 @@
 #ifndef BLACKMISC_COUNTRYLIST_H
 #define BLACKMISC_COUNTRYLIST_H
 
-#include "country.h"
 #include "blackmisc/blackmiscexport.h"
-#include "datastoreobjectlist.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/country.h"
+#include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/sequence.h"
-#include <initializer_list>
+#include "blackmisc/variant.h"
+
+#include <QJsonArray>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
+#include <tuple>
 
 namespace BlackMisc
 {

@@ -7,7 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "airspaceaircraftsnapshot.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+
 #include <QThread>
 
 using namespace BlackMisc::Aviation;

@@ -8,9 +8,17 @@
  */
 
 #include "blackmisc/rgbcolor.h"
-#include "stringutils.h"
-#include "comparefunctions.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/comparefunctions.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/stringutils.h"
+
+#include <QBrush>
 #include <QPainter>
+#include <QPixmap>
+#include <QSize>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

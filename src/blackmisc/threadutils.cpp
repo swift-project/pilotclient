@@ -7,9 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "threadutils.h"
-#include <QThread>
+#include "blackmisc/threadutils.h"
+
 #include <QCoreApplication>
+#include <QObject>
+#include <QThread>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

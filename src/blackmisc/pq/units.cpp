@@ -8,6 +8,9 @@
  */
 
 #include "blackmisc/pq/units.h"
+#include "blackmisc/math/mathutils.h"
+
+#include <QCoreApplication>
 
 namespace BlackMisc
 {

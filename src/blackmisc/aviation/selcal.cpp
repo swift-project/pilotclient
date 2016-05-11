@@ -8,6 +8,12 @@
  */
 
 #include "blackmisc/aviation/selcal.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/units.h"
+
+#include <QStringList>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 

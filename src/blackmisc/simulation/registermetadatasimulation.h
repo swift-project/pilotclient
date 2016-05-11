@@ -9,10 +9,10 @@
 
 //! \file
 
-#include "blackmisc/blackmiscexport.h"
-
 #ifndef BLACKMISC_SIMULATION_REGISTERMETADATASIMULATION_H
 #define BLACKMISC_SIMULATION_REGISTERMETADATASIMULATION_H
+
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {

@@ -7,11 +7,19 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/buildconfig.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/worker.h"
-#include "fileutils.h"
-#include "buildconfig.h"
-#include <QFile>
+
 #include <QCoreApplication>
+#include <QDateTime>
+#include <QFile>
+#include <QFlags>
+#include <QIODevice>
+#include <QList>
+#include <QTextStream>
+#include <QtGlobal>
+#include <algorithm>
 
 namespace BlackMisc
 {

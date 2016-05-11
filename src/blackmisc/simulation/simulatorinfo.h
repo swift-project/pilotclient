@@ -13,8 +13,17 @@
 #define BLACKMISC_SIMULATION_SIMULATORINFO_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
+
+#include <QFlag>
+#include <QFlags>
+#include <QJsonObject>
+#include <QList>
+#include <QMetaType>
 #include <QMultiMap>
+#include <QString>
 
 namespace BlackMisc
 {

@@ -9,13 +9,17 @@
 
 //! \cond PRIVATE
 
-#include "icons.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/fileutils.h"
-#include "buildconfig.h"
-#include <QImage>
+#include "blackmisc/icons.h"
+
 #include <QIcon>
+#include <QImage>
+#include <QMap>
+#include <QMatrix>
 #include <QPainter>
-#include <QCoreApplication>
+#include <QSize>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

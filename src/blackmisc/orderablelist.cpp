@@ -8,10 +8,11 @@
  */
 
 #include "blackmisc/orderablelist.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/predicates.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
+
 #include <algorithm>
-#include <iterator>
 #include <type_traits>
 
 namespace BlackMisc

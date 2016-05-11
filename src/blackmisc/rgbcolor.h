@@ -12,9 +12,17 @@
 #ifndef BLACKMISC_RGBCOLOR_H
 #define BLACKMISC_RGBCOLOR_H
 
-#include "blackmiscexport.h"
-#include "valueobject.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
 #include <QColor>
+#include <QMetaType>
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

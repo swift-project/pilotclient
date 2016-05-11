@@ -12,9 +12,9 @@
 #ifndef BLACKMISC_CTHREADUTILS_H
 #define BLACKMISC_CTHREADUTILS_H
 
-#include "blackmiscexport.h"
-#include <QObject>
-#include <QDebug>
+#include "blackmisc/blackmiscexport.h"
+
+class QObject;
 
 namespace BlackMisc
 {

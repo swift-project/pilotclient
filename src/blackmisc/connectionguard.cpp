@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "connectionguard.h"
+#include "blackmisc/connectionguard.h"
 
 namespace BlackMisc
 {

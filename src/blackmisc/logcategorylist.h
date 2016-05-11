@@ -7,20 +7,28 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_LOGCATEGORYLIST_H
 #define BLACKMISC_LOGCATEGORYLIST_H
 
-//! \file
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/typetraits.h"
 
-#include "blackmiscexport.h"
-#include "logcategory.h"
-#include "sequence.h"
-#include "collection.h"
-#include "typetraits.h"
+#include <QJsonObject>
+#include <QMetaType>
 #include <QObject>
+#include <QString>
+#include <QStringList>
 #include <QThreadStorage>
+#include <QtGlobal>
+#include <initializer_list>
+#include <tuple>
 #include <type_traits>
-#include <typeinfo>
 
 namespace BlackMisc
 {

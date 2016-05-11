@@ -12,24 +12,30 @@
 #ifndef BLACKMISC_VARIANT_H
 #define BLACKMISC_VARIANT_H
 
-#include "variantprivate.h"
-#include "blackmiscexport.h"
-#include "stringutils.h"
-#include "compare.h"
-#include "dbus.h"
-#include "json.h"
-#include <QVariant>
+
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/inheritancetraits.h"
+#include "blackmisc/json.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variantprivate.h"
+
+#include <QDBusArgument>
 #include <QDateTime>
-#include <QJsonValueRef>
-#include <QJsonValue>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QMetaType>
+#include <QPixmap>
+#include <QString>
+#include <QVariant>
+#include <QtGlobal>
+#include <algorithm>
 #include <type_traits>
 
 namespace BlackMisc
 {
-    class CPropertyIndex;
     class CIcon;
+    class CPropertyIndex;
 
     namespace Mixin
     {

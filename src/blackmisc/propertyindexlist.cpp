@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "propertyindexlist.h"
+#include "blackmisc/propertyindexlist.h"
+
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

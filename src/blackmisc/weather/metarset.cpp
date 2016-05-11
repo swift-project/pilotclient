@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "metarset.h"
+#include "blackmisc/weather/metarset.h"
+
+#include <tuple>
 
 namespace BlackMisc
 {

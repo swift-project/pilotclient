@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "weathergridprovider.h"
+#include "blackmisc/weather/weathergridprovider.h"
 
 using namespace BlackMisc;
 

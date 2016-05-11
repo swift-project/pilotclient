@@ -20,6 +20,7 @@
 #include <QTimer>
 #include <QNetworkReply>
 #include <QCommandLineOption>
+#include <QCoreApplication>
 #include <atomic>
 
 namespace BlackCore

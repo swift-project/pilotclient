@@ -9,6 +9,8 @@
 
 #include "registermetadatasimulation.h"
 #include "simulation.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
 
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Fsx;

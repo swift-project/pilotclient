@@ -13,11 +13,12 @@
 #define BLACKMISC_SIMULATION_SIMULATORINFOLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include <QObject>
-#include <QString>
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

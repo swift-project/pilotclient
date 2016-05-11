@@ -10,6 +10,10 @@
 #include "blackmisc/icon.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/sequence.h"
+
+#include <QtGlobal>
 
 namespace BlackMisc
 {

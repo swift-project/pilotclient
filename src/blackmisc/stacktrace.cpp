@@ -8,21 +8,28 @@
  */
 
 #include "blackmisc/stacktrace.h"
-#include <QMutex>
+
+#include <stdlib.h>
+#include <QByteArray>
+#include <QLatin1String>
 #include <QStringBuilder>
+#include <QMutexLocker>
 #include <array>
+
 #if defined(Q_CC_MSVC)
 #   include <windows.h>
+
 #   pragma warning(push)
 #   pragma warning(disable:4091)
 #   include <dbghelp.h>
+
 #   pragma warning(pop)
 #elif defined(Q_OS_WIN) && defined (Q_CC_GNU)
 #   include <windows.h>
 #   include <dbghelp.h>
 #elif defined(Q_CC_GNU)
-#   include <execinfo.h>
 #   include <cxxabi.h>
+#   include <execinfo.h>
 #   include <cstring>
 #endif
 

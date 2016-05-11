@@ -10,14 +10,18 @@
 //! \cond PRIVATE
 
 #include "buildconfig.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/simulation/simulatorinfo.h"
 
-#include <QStringList>
 #include <QCoreApplication>
-#include <QProcessEnvironment>
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QStandardPaths>
+#include <QStringList>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

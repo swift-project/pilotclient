@@ -13,8 +13,12 @@
 #define BLACKMISC_BUILDCONFIG_H
 
 #include "blackmisc/blackmiscexport.h"
+
+#include <QList>
 #include <QString>
-#include <QDateTime>
+
+class QDateTime;
+class QStringList;
 
 namespace BlackMisc
 {

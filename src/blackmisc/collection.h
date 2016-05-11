@@ -15,6 +15,7 @@
 #include "iterator.h"
 #include "containerbase.h"
 #include "icon.h"
+
 #include <QScopedPointer>
 #include <algorithm>
 #include <type_traits>

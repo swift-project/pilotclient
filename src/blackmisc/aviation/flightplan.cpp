@@ -9,6 +9,7 @@
 
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
 
 namespace BlackMisc
 {

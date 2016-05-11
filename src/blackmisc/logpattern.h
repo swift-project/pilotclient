@@ -7,15 +7,30 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_LOGPATTERN_H
 #define BLACKMISC_LOGPATTERN_H
 
-//! \file
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
 
-#include "blackmiscexport.h"
-#include "statusmessage.h"
-#include <QExplicitlySharedDataPointer>
-#include <numeric>
+#include <QDBusArgument>
+#include <QMetaType>
+#include <QSet>
+#include <QString>
+#include <QtGlobal>
+
+class QStringList;
+template <class Key, class T> class QHash;
 
 namespace BlackMisc
 {

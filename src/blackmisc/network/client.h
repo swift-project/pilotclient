@@ -12,12 +12,20 @@
 #ifndef BLACKMISC_NETWORK_CLIENT_H
 #define BLACKMISC_NETWORK_CLIENT_H
 
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/network/user.h"
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

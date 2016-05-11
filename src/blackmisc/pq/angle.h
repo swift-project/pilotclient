@@ -13,8 +13,13 @@
 #define BLACKMISC_PQ_ANGLE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/math/mathutils.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

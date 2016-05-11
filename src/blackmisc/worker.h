@@ -12,17 +12,25 @@
 #ifndef BLACKMISC_WORKER_H
 #define BLACKMISC_WORKER_H
 
-#include "blackmiscexport.h"
-#include "variant.h"
-#include "stacktrace.h"
-#include "invoke.h"
-#include <QThread>
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/invoke.h"
+#include "blackmisc/stacktrace.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaObject>
+#include <QMetaType>
 #include <QMutex>
-#include <QTimer>
+#include <QMutexLocker>
+#include <QObject>
 #include <QSharedPointer>
+#include <QString>
+#include <QThread>
+#include <QTimer>
 #include <QWeakPointer>
+#include <QtGlobal>
+#include <algorithm>
 #include <functional>
-#include <atomic>
+#include <type_traits>
 
 namespace BlackMisc
 {

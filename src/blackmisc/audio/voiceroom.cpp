@@ -7,12 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "voiceroom.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
-#include <QChar>
+
 #include <QStringList>
-#include <tuple>
+#include <Qt>
 
 namespace BlackMisc
 {

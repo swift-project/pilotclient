@@ -7,7 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "metar.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/weather/cloudlayer.h"
+#include "blackmisc/weather/metar.h"
+#include "blackmisc/weather/presentweather.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

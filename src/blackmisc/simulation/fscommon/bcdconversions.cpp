@@ -7,11 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "bcdconversions.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/fscommon/bcdconversions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
-
 
 namespace BlackMisc
 {

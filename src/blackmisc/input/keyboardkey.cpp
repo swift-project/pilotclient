@@ -8,6 +8,12 @@
  */
 
 #include "blackmisc/input/keyboardkey.h"
+
+#include <QChar>
+#include <QHash>
+#include <QtDebug>
+#include <QtGlobal>
+
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 

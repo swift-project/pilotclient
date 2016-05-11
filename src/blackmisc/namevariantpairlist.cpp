@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "namevariantpairlist.h"
-#include "predicates.h"
+#include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/range.h"
+
+#include <tuple>
 
 namespace BlackMisc
 {

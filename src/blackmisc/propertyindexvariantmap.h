@@ -12,12 +12,25 @@
 #ifndef BLACKMISC_PROPERTYINDEXVARIANTMAP_H
 #define BLACKMISC_PROPERTYINDEXVARIANTMAP_H
 
-#include "variant.h"
-#include "propertyindexlist.h"
-#include "blackmiscexport.h"
-#include "inheritancetraits.h"
-#include <QVariantMap>
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/inheritancetraits.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexlist.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
 #include <QDBusArgument>
+#include <QList>
+#include <QMap>
+#include <QMetaType>
+#include <QString>
+#include <QVariant>
+#include <QtDebug>
+#include <QtGlobal>
+#include <type_traits>
 
 namespace BlackMisc
 {

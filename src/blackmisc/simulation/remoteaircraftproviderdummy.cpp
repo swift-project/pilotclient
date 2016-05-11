@@ -7,7 +7,23 @@
  * contained in the LICENSE file.
  */
 
-#include "remoteaircraftproviderdummy.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
+#include "blackmisc/variant.h"
+
+#include <QHash>
+
+namespace BlackMisc {
+namespace Aviation {
+class CAircraftParts;
+class CAircraftSituation;
+}  // namespace Aviation
+}  // namespace BlackMisc
 
 using namespace BlackMisc::Aviation;
 

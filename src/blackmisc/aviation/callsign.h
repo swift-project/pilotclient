@@ -13,9 +13,18 @@
 #define BLACKMISC_AVIATION_CALLSIGN_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <tuple>
+
+class QStringList;
 
 namespace BlackMisc
 {

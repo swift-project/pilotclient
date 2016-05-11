@@ -13,7 +13,10 @@
 #define BLACKMISC_SIMULATION_FSCOMMONUTIL_H
 
 #include "blackmisc/blackmiscexport.h"
+
 #include <QString>
+
+class QStringList;
 
 namespace BlackMisc
 {

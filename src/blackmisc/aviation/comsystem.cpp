@@ -8,6 +8,12 @@
  */
 
 #include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/math/mathutils.h"
+
+#include <QDBusMetaType>
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;

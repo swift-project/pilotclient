@@ -12,16 +12,21 @@
 #ifndef BLACKMISC_WEATHER_WEATHERDATAPLUGININFOLIST_H
 #define BLACKMISC_WEATHER_WEATHERDATAPLUGININFOLIST_H
 
-#include "weatherdataplugininfo.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/weatherdataplugininfo.h"
+
+#include <QMetaType>
 #include <QStringList>
 
 namespace BlackMisc
 {
     namespace Weather
     {
+        class CWeatherDataPluginInfo;
+
         //! Value object encapsulating a list of CWeatherDataPluginInfo objects.
         class BLACKMISC_EXPORT CWeatherDataPluginInfoList :
             public BlackMisc::CSequence<CWeatherDataPluginInfo>,

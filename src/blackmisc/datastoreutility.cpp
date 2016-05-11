@@ -7,11 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/datastoreutility.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/stringutils.h"
-#include <QJsonObject>
+
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QRegExp>
 #include <QTimeZone>
 
 using namespace BlackMisc;

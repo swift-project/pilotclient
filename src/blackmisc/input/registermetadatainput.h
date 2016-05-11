@@ -9,10 +9,10 @@
 
 //! \file
 
-#include "blackmisc/blackmiscexport.h"
-
 #ifndef BLACKMISC_INPUT_REGISTERMETADATAINPUT_H
 #define BLACKMISC_INPUT_REGISTERMETADATAINPUT_H
+
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {

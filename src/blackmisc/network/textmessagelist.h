@@ -12,19 +12,25 @@
 #ifndef BLACKMISC_NETWORK_TEXTMESSAGELIST_H
 #define BLACKMISC_NETWORK_TEXTMESSAGELIST_H
 
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackmisc/sequence.h"
-#include <QObject>
-#include <QString>
+#include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/variant.h"
+
 #include <QList>
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {
     namespace Network
     {
+        class CTextMessage;
+
         //! Value object encapsulating a list of text messages
         class BLACKMISC_EXPORT CTextMessageList :
             public CSequence<CTextMessage>,

@@ -13,9 +13,16 @@
 #define BLACKMISC_NETWORK_NETWORKLOCATION_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
-#include <QUrl>
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QMetaType>
 #include <QNetworkRequest>
+#include <QString>
+#include <QUrl>
 
 namespace BlackMisc
 {

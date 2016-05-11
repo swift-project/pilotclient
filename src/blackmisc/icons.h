@@ -12,9 +12,17 @@
 #ifndef BLACKMISC_ICONS_H
 #define BLACKMISC_ICONS_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
+
+#include <QIcon>
+#include <QImage>
+#include <QMetaType>
 #include <QPixmap>
-#include <QMap>
+#include <QString>
+#include <Qt>
+
+class QSize;
+template <class Key, class T> class QMap;
 
 namespace BlackMisc
 {

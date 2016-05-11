@@ -9,10 +9,10 @@
 
 //! \file
 
-#include "blackmisc/blackmiscexport.h"
-
 #ifndef BLACKMISC_GEO_REGISTERMETAGEO_H
 #define BLACKMISC_GEO_REGISTERMETAGEO_H
+
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {

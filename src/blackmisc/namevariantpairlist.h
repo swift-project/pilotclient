@@ -12,10 +12,15 @@
 #ifndef BLACKMISC_NAMEVARIANPAIRTLIST_H
 #define BLACKMISC_NAMEVARIANPAIRTLIST_H
 
-#include "blackmiscexport.h"
-#include "namevariantpair.h"
-#include "collection.h"
-#include "sequence.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/namevariantpair.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

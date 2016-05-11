@@ -12,8 +12,13 @@
 #ifndef BLACKMISC_ATOMICFILE_H
 #define BLACKMISC_ATOMICFILE_H
 
-#include <QFile>
 #include "blackmisc/blackmiscexport.h"
+
+#include <QFile>
+#include <QFileDevice>
+#include <QIODevice>
+#include <QString>
+#include <exception>
 
 namespace BlackMisc
 {

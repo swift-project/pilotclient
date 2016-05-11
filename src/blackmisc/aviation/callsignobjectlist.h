@@ -12,12 +12,9 @@
 #ifndef BLACKMISC_AVIATION_CALLSIGNOBJECTLIST_H
 #define BLACKMISC_AVIATION_CALLSIGNOBJECTLIST_H
 
-#include "blackmisc/collection.h"
-#include "blackmisc/sequence.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/propertyindexlist.h"
 #include "blackmisc/propertyindexvariantmap.h"
-#include <QList>
+
 #include <QHash>
 
 namespace BlackMisc
@@ -27,8 +24,6 @@ namespace BlackMisc
     {
         class CAircraftSituation;
         class CAircraftSituationList;
-        class CAircraftParts;
-        class CAircraftPartsList;
         class CAircraft;
         class CAircraftList;
         class CAtcStation;

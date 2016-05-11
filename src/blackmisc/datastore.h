@@ -12,13 +12,20 @@
 #ifndef BLACKMISC_DATASTORE_H
 #define BLACKMISC_DATASTORE_H
 
-#include "blackmiscexport.h"
-#include "timestampbased.h"
-#include "propertyindex.h"
-#include "variant.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/timestampbased.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QObject>
+#include <QString>
 
 namespace BlackMisc
 {
+    class CIcon;
+
     /*!
      * Class from which a derived class can inherit datastore-related functions.
      */

@@ -12,11 +12,21 @@
 #ifndef BLACKMISC_LOCKFREE_H
 #define BLACKMISC_LOCKFREE_H
 
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/integersequence.h"
 #include "blackmisc/variant.h"
-#include <QThread>
+#include "blackmisc/variantprivate.h"
+
+#include <stddef.h>
+#include <QMetaType>
 #include <QMutex>
+#include <QMutexLocker>
+#include <QString>
+#include <QThread>
+#include <QtGlobal>
 #include <memory>
-#include <atomic>
+#include <tuple>
+#include <type_traits>
 #include <utility>
 
 #if ! (defined(Q_CC_GNU) && __GNUC__ <= 4)

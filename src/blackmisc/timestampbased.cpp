@@ -7,9 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "timestampbased.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/variant.h"
+
+#include <QByteArray>
+#include <QDate>
+#include <QTime>
+#include <Qt>
 
 namespace BlackMisc
 {

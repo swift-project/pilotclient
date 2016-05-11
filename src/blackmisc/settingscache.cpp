@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "settingscache.h"
-#include "logmessage.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/settingscache.h"
+
 #include <QStandardPaths>
 
 namespace BlackMisc

@@ -8,8 +8,13 @@
  */
 
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/pq/pqstring.h"
 #include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/pq/pqstring.h"
+
+#include <Qt>
+#include <QtGlobal>
 
 using BlackMisc::PhysicalQuantities::CLength;
 using BlackMisc::PhysicalQuantities::CLengthUnit;

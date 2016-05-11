@@ -13,12 +13,12 @@
 #define BLACKMISC_NETWORK_USERLIST_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/collection.h"
-#include <QObject>
-#include <QString>
-#include <QList>
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

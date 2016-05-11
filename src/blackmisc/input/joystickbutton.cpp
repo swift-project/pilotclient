@@ -8,8 +8,8 @@
  */
 
 #include "blackmisc/input/joystickbutton.h"
+
 #include "blackmisc/variant.h"
-#include <QCoreApplication>
 
 namespace BlackMisc
 {

@@ -12,10 +12,19 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATORSETUP_H
 #define BLACKMISC_SIMULATION_SIMULATORSETUP_H
 
-#include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/blackmiscexport.h"
-#include <QMap>
+#include "blackmisc/containerbase.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QHash>
+#include <QMetaType>
 #include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

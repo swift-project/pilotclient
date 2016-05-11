@@ -12,10 +12,17 @@
 #ifndef BLACKMISC_COUNTRY_H
 #define BLACKMISC_COUNTRY_H
 
-#include "blackmiscexport.h"
-#include "datastore.h"
-#include "valueobject.h"
-#include <QColor>
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/datastore.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

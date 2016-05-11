@@ -8,8 +8,13 @@
  */
 
 #include "blackmisc/aviation/airport.h"
+#include "blackmisc/pq/angle.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
+
+#include <QCoreApplication>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;

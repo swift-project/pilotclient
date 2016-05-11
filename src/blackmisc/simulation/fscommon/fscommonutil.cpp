@@ -8,9 +8,14 @@
  */
 
 #include "blackmisc/buildconfig.h"
-#include "fscommonutil.h"
-#include <QSettings>
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
+
 #include <QDir>
+#include <QList>
+#include <QPair>
+#include <QSettings>
+#include <QStringList>
+#include <QVariant>
 
 using namespace BlackMisc;
 

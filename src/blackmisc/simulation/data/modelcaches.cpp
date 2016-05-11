@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "modelcaches.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/simulation/data/modelcaches.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

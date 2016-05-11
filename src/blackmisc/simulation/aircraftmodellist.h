@@ -12,16 +12,35 @@
 #ifndef BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
 #define BLACKMISC_SIMULATION_AIRCRAFTMODELLIST_H
 
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/orderablelist.h"
-#include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
+#include <Qt>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CCallsign;
+        class CLivery;
+    }
+
     namespace Simulation
     {
         //! Value object encapsulating a list of aircraft models

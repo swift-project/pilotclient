@@ -8,9 +8,15 @@
  */
 
 #include "json.h"
-#include "stringutils.h"
-#include "imageutils.h"
+#include "blackmisc/imageutils.h"
+#include "blackmisc/stringutils.h"
+
+#include <QDateTime>
 #include <QJsonDocument>
+#include <QList>
+#include <QStringList>
+
+class QPixmap;
 
 const QJsonValue &operator >>(const QJsonValue &json, int &value)
 {

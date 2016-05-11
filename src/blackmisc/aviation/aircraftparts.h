@@ -12,12 +12,18 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 #define BLACKMISC_AVIATION_AIRCRAFTPARTS_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/timestampbased.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/aviation/aircraftlights.h"
+#include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
+#include "blackmisc/aviation/aircraftlights.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/timestampbased.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

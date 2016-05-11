@@ -8,14 +8,22 @@
  */
 
 #include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/variant.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/datastoreutility.h"
-#include <tuple>
-#include <QThreadStorage>
+#include "blackmisc/icons.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonValue>
 #include <QRegularExpression>
-#include "blackmisc/logmessage.h"
+#include <QRegularExpressionMatch>
+#include <QThreadStorage>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

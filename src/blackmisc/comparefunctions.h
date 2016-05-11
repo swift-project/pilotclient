@@ -13,7 +13,8 @@
 #define BLACKMISC_COMPAREFUNCTIONS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/variant.h"
+
+#include <QtGlobal>
 
 namespace BlackMisc
 {

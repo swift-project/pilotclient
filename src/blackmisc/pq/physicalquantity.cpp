@@ -7,10 +7,32 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/pq/pq.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/dictionary.h"
+#include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/mass.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/acceleration.h"
+
 #include <QCoreApplication>
+#include <QDBusArgument>
+#include <QHash>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QList>
+#include <QString>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

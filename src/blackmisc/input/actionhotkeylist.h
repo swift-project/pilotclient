@@ -13,9 +13,15 @@
 #define BLACKMISC_INPUT_ACTIONHOTKEYLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "actionhotkey.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/input/actionhotkey.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <initializer_list>
+#include <tuple>
 
 namespace BlackMisc
 {

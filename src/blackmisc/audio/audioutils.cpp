@@ -9,7 +9,9 @@
 
 #include "audioutils.h"
 #include "blackmisc/buildconfig.h"
+
 #include <QProcess>
+#include <QStringList>
 
 namespace BlackMisc
 {

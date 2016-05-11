@@ -12,13 +12,21 @@
 #ifndef BLACKMISC_AVIATION_FLIGHTPLAN_H
 #define BLACKMISC_AVIATION_FLIGHTPLAN_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/pq/time.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/valueobject.h"
+
 #include <QDateTime>
+#include <QMetaType>
+#include <QString>
+#include <QTime>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

@@ -12,10 +12,15 @@
 #ifndef BLACKMISC_NAMEVARIANTPAIR_H
 #define BLACKMISC_NAMEVARIANTPAIR_H
 
-#include "blackmiscexport.h"
-#include "variant.h"
-#include "valueobject.h"
-#include "icon.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

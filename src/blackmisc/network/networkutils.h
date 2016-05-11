@@ -13,20 +13,28 @@
 #define BLACKMISC_NETWORKUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/server.h"
 #include "blackmisc/network/url.h"
-#include <QUrl>
+
+#include <QByteArray>
 #include <QHttpPart>
-#include <QStringList>
-#include <QUrlQuery>
-#include <QNetworkRequest>
-#include <QNetworkReply>
+#include <QJsonArray>
 #include <QJsonObject>
+#include <QNetworkRequest>
+#include <QString>
+#include <QStringList>
+#include <QtGlobal>
+
+class QHttpPart;
+class QNetworkReply;
+class QUrl;
+class QUrlQuery;
 
 namespace BlackMisc
 {
     namespace Network
     {
+        class CServer;
+
         //! Utilities, e.g. checking whether a network connection can be established
         class BLACKMISC_EXPORT CNetworkUtils
         {

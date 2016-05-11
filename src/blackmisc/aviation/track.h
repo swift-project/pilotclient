@@ -13,8 +13,20 @@
 #define BLACKMISC_AVIATION_TRACK_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/pq/angle.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/json.h"
 #include "blackmisc/metaclass.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

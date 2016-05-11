@@ -9,10 +9,10 @@
 
 //! \file
 
-#include "blackmisc/blackmiscexport.h"
-
 #ifndef BLACKMISC_PQ_REGISTERMETADATAPQ_H
 #define BLACKMISC_PQ_REGISTERMETADATAPQ_H
+
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {

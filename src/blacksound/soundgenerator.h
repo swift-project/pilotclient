@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/pq/time.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include <QIODevice>
 #include <QThread>

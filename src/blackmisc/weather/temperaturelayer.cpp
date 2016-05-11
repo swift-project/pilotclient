@@ -11,9 +11,6 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
 
-#include <tuple>
-#include <QRegularExpression>
-
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 

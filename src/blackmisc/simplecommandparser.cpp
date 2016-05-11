@@ -7,8 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "simplecommandparser.h"
 #include "blackmisc/pq/pqstring.h"
+#include "blackmisc/simplecommandparser.h"
+
+#include <QList>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 

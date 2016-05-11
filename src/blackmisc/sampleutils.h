@@ -12,9 +12,12 @@
 #ifndef BLACKMISC_SAMPLEUTILS_H
 #define BLACKMISC_SAMPLEUTILS_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
+
+#include <QString>
 #include <QStringList>
-#include <QTextStream>
+
+class QTextStream;
 
 namespace BlackMisc
 {

@@ -12,11 +12,17 @@
 #ifndef BLACKMISC_CFILEUTILS_H
 #define BLACKMISC_CFILEUTILS_H
 
-#include "blackmiscexport.h"
-#include <QObject>
-#include <QDebug>
+#include "blackmisc/blackmiscexport.h"
+
 #include <QDir>
+#include <QFileInfo>
+#include <QFileInfoList>
+#include <QString>
+#include <QStringList>
+#include <Qt>
 #include <functional>
+
+class QDateTime;
 
 namespace BlackMisc
 {

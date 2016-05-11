@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "settingsaudio.h"
-#include "logmessage.h"
+#include "blackmisc/audio/settings/settingsaudio.h"
+
+#include <QChar>
+#include <QtGlobal>
 
 using namespace BlackMisc::Audio;
 

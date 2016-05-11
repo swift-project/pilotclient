@@ -12,11 +12,13 @@
 #ifndef BLACKMISC_PROPERTYINDEXLIST_H
 #define BLACKMISC_PROPERTYINDEXLIST_H
 
-#include "blackmiscexport.h"
-#include "propertyindex.h"
-#include "collection.h"
-#include "sequence.h"
-#include <QList>
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

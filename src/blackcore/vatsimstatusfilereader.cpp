@@ -12,6 +12,8 @@
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/logmessage.h"
 
+#include <QNetworkReply>
+
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;

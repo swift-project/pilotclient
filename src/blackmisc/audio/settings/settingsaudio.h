@@ -12,11 +12,15 @@
 #ifndef BLACKMISC_AUDIO_SETTINGS_AUDIO_H
 #define BLACKMISC_AUDIO_SETTINGS_AUDIO_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include <QJsonObject>
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

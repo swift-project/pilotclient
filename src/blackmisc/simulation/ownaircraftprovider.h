@@ -12,12 +12,31 @@
 #ifndef BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 #define BLACKMISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/selcal.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+
+#include <QObject>
+#include <QtGlobal>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CAircraftSituation;
+        class CCallsign;
+        class CTransponder;
+    }
+
     namespace Simulation
     {
         //! Direct threadsafe in memory access to own aircraft

@@ -17,6 +17,8 @@
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/logmessage.h"
+
+#include <QNetworkReply>
 #include <QRegularExpression>
 
 using namespace BlackMisc;

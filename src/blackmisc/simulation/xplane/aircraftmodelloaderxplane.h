@@ -13,15 +13,21 @@
 #define BLACKMISC_SIMULATION_XPLANE_AIRCRAFTMODELLOADERXPLANE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/pixmap.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 
+#include <QObject>
 #include <QPointer>
+#include <QString>
+#include <QStringList>
+#include <QVector>
+#include <QtGlobal>
 
 namespace BlackMisc
 {
+    class CWorker;
+
     namespace Simulation
     {
         namespace XPlane

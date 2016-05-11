@@ -8,10 +8,10 @@
  */
 
 #include "blackmisc/network/entityflags.h"
-#include "blackmisc/dbus.h"
-#include <QtDBus/QDBusMetaType>
-#include <QStringList>
 #include "blackmisc/verify.h"
+
+#include <QStringList>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

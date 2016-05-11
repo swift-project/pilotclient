@@ -12,24 +12,50 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATEDAIRCRAFT_H
 #define BLACKMISC_SIMULATION_SIMULATEDAIRCRAFT_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "aircraftmodel.h"
+#include "blackmisc/aviation/aircraftlights.h"
+#include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/aircraftparts.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/namevariantpairlist.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/network/client.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+#include <QtGlobal>
+#include <array>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CAltitude;
+        class CHeading;
+    }
+    namespace PhysicalQuantities
+    {
+        class CAngle;
+        class CSpeed;
+    }
+
     namespace Simulation
     {
         //! Comprehensive information of an aircraft

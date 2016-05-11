@@ -13,6 +13,7 @@
 #define BLACKMISC_IMAGEUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+
 #include <QByteArray>
 #include <QString>
 #include <QPixmap>

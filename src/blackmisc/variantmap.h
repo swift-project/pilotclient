@@ -12,8 +12,16 @@
 #ifndef BLACKMISC_VARIANTMAP_H
 #define BLACKMISC_VARIANTMAP_H
 
-#include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/dictionary.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QMap>
+#include <QMetaType>
+#include <QString>
+#include <initializer_list>
+#include <utility>
 
 namespace BlackMisc
 {

@@ -7,8 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "namevariantpair.h"
-#include "iconlist.h"
+#include "blackmisc/iconlist.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/namevariantpair.h"
+#include "blackmisc/propertyindexvariantmap.h"
+
+#include <tuple>
 
 namespace BlackMisc
 {

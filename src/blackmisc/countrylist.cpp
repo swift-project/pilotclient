@@ -7,7 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "countrylist.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/range.h"
+
+#include <QJsonObject>
+#include <QJsonValue>
+#include <Qt>
 
 namespace BlackMisc
 {

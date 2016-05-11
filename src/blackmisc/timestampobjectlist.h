@@ -12,10 +12,12 @@
 #ifndef BLACKMISC_TIMESTAMPOBJECTLIST_H
 #define BLACKMISC_TIMESTAMPOBJECTLIST_H
 
-#include "blackmisc/collection.h"
-#include "blackmisc/sequence.h"
+#include "blackmisc/blackmiscexport.h"
+
 #include <QList>
-#include <QMap>
+#include <QtGlobal>
+
+class QDateTime;
 
 namespace BlackMisc
 {

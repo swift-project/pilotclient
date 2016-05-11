@@ -12,19 +12,31 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 #define BLACKMISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/callsignobjectlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/geo/geoobjectlist.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include <QObject>
-#include <QString>
-#include <QList>
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CCallsign;
+    }
+    namespace Simulation
+    {
+        class CAircraftModel;
+        class CSimulatedAircraft;
+    }
+
     namespace Simulation
     {
         //! Value object encapsulating a list of aircraft.

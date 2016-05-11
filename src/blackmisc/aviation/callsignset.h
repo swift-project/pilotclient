@@ -12,11 +12,15 @@
 #ifndef BLACKMISC_AVIATION_CALLSIGNSET_H
 #define BLACKMISC_AVIATION_CALLSIGNSET_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/sequence.h"
-#include <QObject>
+
+#include <QMetaType>
+#include <tuple>
 
 namespace BlackMisc
 {

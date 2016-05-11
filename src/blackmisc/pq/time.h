@@ -14,6 +14,14 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/pq/units.h"
+
+#include <QList>
+#include <QMetaType>
+#include <QString>
+
+class QTime;
 
 namespace BlackMisc
 {

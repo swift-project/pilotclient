@@ -7,10 +7,19 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/predicates.h"
-#include "blackmisc/propertyindexallclasses.h"
+#include "blackmisc/range.h"
+
+#include <QString>
+#include <tuple>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

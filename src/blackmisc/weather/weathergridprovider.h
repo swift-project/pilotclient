@@ -13,13 +13,15 @@
 #define BLACKMISC_WEATHER_WEATHERGRIDPROVIDER_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/weather/weathergrid.h"
-#include "blackmisc/pq/length.h"
 #include "blackmisc/slot.h"
+#include "blackmisc/weather/weathergrid.h"
+
+#include <QObject>
+#include <QtGlobal>
 
 namespace BlackMisc
 {
+
     namespace Weather
     {
         //! Direct threadsafe in memory access to weather grid

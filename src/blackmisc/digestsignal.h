@@ -12,9 +12,10 @@
 #ifndef BLACKMISC_DIGESTSIGNAL_H
 #define BLACKMISC_DIGESTSIGNAL_H
 
-#include "blackmiscexport.h"
-#include <QTimer>
+#include "blackmisc/blackmiscexport.h"
+
 #include <QObject>
+#include <QTimer>
 
 namespace BlackMisc
 {

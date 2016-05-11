@@ -13,8 +13,13 @@
 #define BLACKMISC_AVIATION_AIRCRAFTLIGHTS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

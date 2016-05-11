@@ -13,8 +13,10 @@
 #define BLACKMISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 
 #include "blackmisc/blackmiscexport.h"
+
+#include <QMetaType>
+#include <QObject>
 #include <QString>
-#include <QMetaEnum>
 
 // Apart from the below definitions, the following code is OS independent,
 // though it does not make sense to be used on non WIN machines.

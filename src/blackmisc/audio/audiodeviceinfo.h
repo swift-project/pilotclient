@@ -13,7 +13,10 @@
 #define BLACKMISC_AUDIO_AUDIODEVICE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+
+#include <QMetaType>
 #include <QString>
 
 namespace BlackMisc

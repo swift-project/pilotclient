@@ -7,8 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "voiceroomlist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/audio/voiceroomlist.h"
+
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

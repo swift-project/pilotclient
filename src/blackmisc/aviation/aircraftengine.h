@@ -13,7 +13,11 @@
 #define BLACKMISC_AVIATION_AIRCRAFTENGINES_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

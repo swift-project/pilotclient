@@ -13,10 +13,14 @@
 #define BLACKMISC_NETWORK_NETWORKLOCATIONLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/url.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/sequence.h"
-#include <QReadWriteLock>
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {

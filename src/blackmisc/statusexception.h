@@ -12,8 +12,12 @@
 #ifndef BLACKMISC_STATUSEXCEPTION_H
 #define BLACKMISC_STATUSEXCEPTION_H
 
-#include "statusmessage.h"
-#include <stdexcept>
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QByteArray>
+#include <QReadWriteLock>
+#include <exception>
 
 namespace BlackMisc
 {

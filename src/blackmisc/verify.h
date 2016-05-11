@@ -13,7 +13,6 @@
 #define BLACKMISC_VERIFY_H
 
 #include "blackmisc/blackmiscexport.h"
-#include <QtGlobal>
 
 namespace BlackMisc
 {

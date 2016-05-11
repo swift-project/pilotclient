@@ -9,11 +9,29 @@
 
 //! \cond PRIVATE
 
-#include "metardecoder.h"
+
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/weather/cloudlayer.h"
+#include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/presentweather.h"
+#include "blackmisc/weather/windlayer.h"
+
+#include <QHash>
 #include <QRegularExpression>
-#include <QDebug>
+#include <QRegularExpressionMatch>
+#include <QStringList>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

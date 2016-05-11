@@ -7,10 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "simconnectutilities.h"
-#include <QFile>
-#include <QTextStream>
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
+
 #include <QCoreApplication>
+#include <QFile>
+#include <QFlags>
+#include <QIODevice>
+#include <QLatin1String>
+#include <QMetaEnum>
+#include <QMetaObject>
+#include <QTextStream>
 
 namespace BlackMisc
 {

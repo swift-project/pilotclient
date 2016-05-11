@@ -7,12 +7,29 @@
  * contained in the LICENSE file.
  */
 
-#include "vpilotrulesreader.h"
 #include "blackmisc/logmessage.h"
-#include <QtXml/QDomElement>
-#include <QFile>
+#include "blackmisc/simulation/fscommon/vpilotmodelrule.h"
+#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/worker.h"
+
+#include <QByteArray>
+#include <QDateTime>
 #include <QDir>
+#include <QDomDocument>
+#include <QDomNamedNodeMap>
+#include <QDomNode>
+#include <QDomNodeList>
+#include <QFile>
+#include <QFileInfo>
+#include <QFileInfoList>
+#include <QFlags>
+#include <QIODevice>
+#include <QReadLocker>
 #include <QStandardPaths>
+#include <QTimer>
+#include <QWriteLocker>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

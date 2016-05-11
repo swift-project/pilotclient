@@ -12,12 +12,18 @@
 #ifndef BLACKMISC_STATUSMESSAGELIST_H
 #define BLACKMISC_STATUSMESSAGELIST_H
 
-#include "blackmiscexport.h"
-#include "timestampobjectlist.h"
-#include "valueobject.h"
-#include "sequence.h"
-#include "collection.h"
-#include "statusmessage.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonArray>
+#include <QMetaType>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

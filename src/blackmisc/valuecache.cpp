@@ -10,14 +10,30 @@
 //! \cond PRIVATE
 
 #include "blackmisc/valuecache.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/algorithm.h"
-#include "blackmisc/lockfree.h"
 #include "blackmisc/atomicfile.h"
-#include <QThread>
-#include <QJsonDocument>
+#include "blackmisc/identifier.h"
+#include "blackmisc/lockfree.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logmessage.h"
+
+#include <QByteArray>
+#include <QDBusMetaType>
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QFlags>
+#include <QIODevice>
+#include <QJsonDocument>
+#include <QList>
+#include <QMutexLocker>
+#include <QThread>
+#include <Qt>
+#include <algorithm>
+#include <atomic>
+#include <exception>
+#include <functional>
+#include <limits>
 
 namespace BlackMisc
 {

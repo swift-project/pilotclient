@@ -12,17 +12,32 @@
 #ifndef BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 #define BLACKMISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 
+#include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/aviation/aircraftpartslist.h"
 
+#include <QHash>
+#include <QList>
+#include <QMetaObject>
+#include <QObject>
+#include <QtGlobal>
 #include <functional>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CAircraftSituation;
+        class CCallsign;
+    }
+
     namespace Simulation
     {
         //! Direct thread safe in memory access to remote aircraft

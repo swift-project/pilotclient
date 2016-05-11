@@ -10,6 +10,8 @@
 #include "registermetadataaudio.h"
 #include "audio.h"
 
+#include <QDBusMetaType>
+
 namespace BlackMisc
 {
     namespace Audio

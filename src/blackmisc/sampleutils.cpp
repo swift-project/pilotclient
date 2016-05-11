@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "sampleutils.h"
+#include "blackmisc/sampleutils.h"
+
+#include <QTextStream>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

@@ -7,21 +7,27 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_LOGHANDLER_H
 #define BLACKMISC_LOGHANDLER_H
 
-//! \file
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logpattern.h"
+#include "blackmisc/statusmessage.h"
 
-#include "blackmiscexport.h"
-#include "logpattern.h"
-#include "statusmessage.h"
+#include <QList>
+#include <QMetaMethod>
+#include <QMetaObject>
 #include <QObject>
-#include <QMap>
 #include <QPointer>
 #include <QThread>
-#include <QMetaMethod>
 #include <QTimer>
+#include <QtGlobal>
+#include <QtMessageHandler>
 #include <atomic>
+#include <utility>
 
 namespace BlackMisc
 {

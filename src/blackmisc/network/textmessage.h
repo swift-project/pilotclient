@@ -12,13 +12,21 @@
 #ifndef BLACKMISC_NETWORK_TEXTMESSAGE_H
 #define BLACKMISC_NETWORK_TEXTMESSAGE_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/timestampbased.h"
-#include "blackmisc/pq/frequency.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
-#include <QDateTime>
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QPixmap>
+#include <QString>
 
 namespace BlackMisc
 {

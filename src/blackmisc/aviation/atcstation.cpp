@@ -8,11 +8,17 @@
  */
 
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/audio/voiceroom.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
+
+#include <QCoreApplication>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;

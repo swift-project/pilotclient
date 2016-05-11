@@ -8,6 +8,10 @@
  */
 
 #include "blackmisc/pq/time.h"
+#include "blackmisc/math/mathutils.h"
+#include <QTime>
+#include <QtGlobal>
+#include <cmath>
 
 namespace BlackMisc
 {

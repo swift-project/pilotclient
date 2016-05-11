@@ -7,9 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftparts.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/stringutils.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

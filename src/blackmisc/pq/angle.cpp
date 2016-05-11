@@ -9,7 +9,10 @@
 
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/iconlist.h"
-#include "blackmisc/aviation/heading.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/math/mathutils.h"
+
+#include <cmath>
 
 namespace BlackMisc
 {

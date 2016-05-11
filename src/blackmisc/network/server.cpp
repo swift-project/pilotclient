@@ -8,9 +8,14 @@
  */
 
 #include "blackmisc/network/server.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
-#include <tuple>
+
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

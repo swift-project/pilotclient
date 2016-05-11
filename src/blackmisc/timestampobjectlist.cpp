@@ -14,12 +14,15 @@
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/countrylist.h"
+
+#include <QDateTime>
 #include <algorithm>
 #include <iterator>
 #include <type_traits>

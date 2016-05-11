@@ -14,7 +14,10 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/statusmessage.h"
-#include <QObject>
+
+#include <QFlags>
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

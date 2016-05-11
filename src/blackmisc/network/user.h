@@ -12,11 +12,18 @@
 #ifndef BLACKMISC_NETWORK_USER_H
 #define BLACKMISC_NETWORK_USER_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

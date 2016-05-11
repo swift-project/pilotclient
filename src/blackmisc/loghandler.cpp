@@ -9,11 +9,20 @@
 
 //! \cond PRIVATE
 
-#include "loghandler.h"
-#include "algorithm.h"
-#include "worker.h"
+#include "blackmisc/algorithm.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/loghandler.h"
+#include "blackmisc/worker.h"
+
 #include <QCoreApplication>
+#include <QGlobalStatic>
+#include <QMessageLogContext>
 #include <QMetaMethod>
+#include <QString>
+#include <Qt>
+#include <QtDebug>
+#include <algorithm>
+#include <tuple>
 
 namespace BlackMisc
 {

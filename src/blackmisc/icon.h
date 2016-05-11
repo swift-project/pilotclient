@@ -12,17 +12,29 @@
 #ifndef BLACKMISC_ICON_H
 #define BLACKMISC_ICON_H
 
-#include "blackmiscexport.h"
-#include "icons.h"
-#include "variant.h"
-#include "inheritancetraits.h"
-#include "dictionary.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/json.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
 #include <QIcon>
+#include <QMetaType>
+#include <QPixmap>
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {
     class CIcon;
-    namespace PhysicalQuantities { class CAngle; }
+    namespace PhysicalQuantities
+    {
+        class CAngle;
+    }
 
     namespace Mixin
     {

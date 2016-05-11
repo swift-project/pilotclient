@@ -13,11 +13,18 @@
 #define BLACKMISC_AVIATION_AIRCRAFTICAOCODELIST_H
 
 #include "aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/sequence.h"
-#include <initializer_list>
+#include "blackmisc/variant.h"
+
+#include <QJsonArray>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
+#include <tuple>
 
 namespace BlackMisc
 {

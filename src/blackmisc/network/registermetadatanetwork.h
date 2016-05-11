@@ -9,10 +9,10 @@
 
 //! \file
 
-#include "blackmisc/blackmiscexport.h"
-
 #ifndef BLACKMISC_NETWORK_REGISTERMETADATANETWORK_H
 #define BLACKMISC_NETWORK_REGISTERMETADATANETWORK_H
+
+#include "blackmisc/blackmiscexport.h"
 
 namespace BlackMisc
 {

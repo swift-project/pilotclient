@@ -12,9 +12,9 @@
 #ifndef BLACKMISC_GEO_GEOOBJECTLIST_H
 #define BLACKMISC_GEO_GEOOBJECTLIST_H
 
-#include "blackmisc/collection.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/length.h"
 
 namespace BlackMisc
 {
@@ -40,6 +40,8 @@ namespace BlackMisc
 
     namespace Geo
     {
+        class ICoordinateGeodetic;
+
         //! List of objects with geo coordinates.
         template<class OBJ, class CONTAINER>
         class IGeoObjectList

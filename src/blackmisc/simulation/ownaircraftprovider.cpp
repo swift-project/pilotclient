@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "ownaircraftprovider.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;

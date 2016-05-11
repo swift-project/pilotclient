@@ -8,9 +8,11 @@
  */
 
 #include "blackmisc/geo/geoobjectlist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/xplane/navdatareference.h"
 

@@ -14,11 +14,16 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/pq/frequency.h"
-#include "blackmisc/aviation/transponder.h"
+
 #include <QtGlobal>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CTransponder;
+    }
+
     namespace Simulation
     {
         namespace FsCommon

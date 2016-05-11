@@ -12,15 +12,26 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTSITUATION_H
 #define BLACKMISC_AVIATION_AIRCRAFTSITUATION_H
 
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/heading.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/timestampbased.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/pq/speed.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
-#include <QDateTime>
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+#include <array>
 
 namespace BlackMisc
 {

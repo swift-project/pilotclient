@@ -13,13 +13,19 @@
 #define BLACKMISC_DATASTOREUTILITY_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/statusmessagelist.h"
-#include "timestampbased.h"
-#include "propertyindex.h"
-#include "variant.h"
+
+#include <QDateTime>
+#include <QString>
 
 namespace BlackMisc
 {
+    class CStatusMessageList;
+
+    namespace Simulation
+    {
+        class CAircraftModelList;
+    }
+
     /*!
      * Class with datastore related utilities
      */

@@ -8,9 +8,10 @@
  */
 
 #include "imageutils.h"
-#include "stringutils.h"
-#include "pixmap.h"
+#include "blackmisc/stringutils.h"
+
 #include <QBuffer>
+#include <QIODevice>
 
 bool BlackMisc::pixmapToPngByteArray(const QPixmap &pixmap, QByteArray &array)
 {

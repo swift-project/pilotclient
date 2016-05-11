@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftcfgentrieslist.h"
 #include "blackmisc/predicates.h"
-#include "blackmisc/logmessage.h"
+#include "blackmisc/range.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

@@ -13,8 +13,13 @@
 #define BLACKMISC_METADATAUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include <QTextStream>
+
+#include <stddef.h>
 #include <QString>
+
+class QMetaType;
+class QTextStream;
+struct QMetaObject;
 
 //! Metadata util functions
 namespace BlackMisc

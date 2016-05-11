@@ -7,15 +7,18 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_FILELOGGER_H
 #define BLACKMISC_FILELOGGER_H
 
-//! \file
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/logpattern.h"
+#include "blackmisc/statusmessage.h"
 
-#include "blackmiscexport.h"
-#include "loghandler.h"
-#include "statusmessage.h"
 #include <QFile>
+#include <QObject>
+#include <QString>
 #include <QTextStream>
 
 namespace BlackMisc

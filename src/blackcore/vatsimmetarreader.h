@@ -13,6 +13,7 @@
 #define BLACKCORE_VATSIMMETARREADER_H
 
 #include "blackcoreexport.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/metarset.h"

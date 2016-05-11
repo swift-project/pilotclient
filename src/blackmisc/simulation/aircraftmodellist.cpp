@@ -8,7 +8,19 @@
  */
 
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/range.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QJsonValue>
+#include <QList>
+#include <QMultiMap>
+#include <tuple>
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;

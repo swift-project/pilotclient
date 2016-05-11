@@ -8,7 +8,19 @@
  */
 
 #include "registermetadatapq.h"
-#include "pq.h"
+#include "blackmisc/pq/acceleration.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/mass.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {

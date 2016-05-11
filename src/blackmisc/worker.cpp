@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "worker.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/worker.h"
+
 #include <future>
 
 namespace BlackMisc

@@ -7,9 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "statusmessagelist.h"
-#include "statusmessage.h"
-#include "logcategorylist.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/range.h"
+#include "blackmisc/statusmessagelist.h"
+
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QString>
+#include <QStringList>
+#include <tuple>
 
 namespace BlackMisc
 {

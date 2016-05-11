@@ -12,20 +12,38 @@
 #ifndef BLACKMISC_DICTIONARY_H
 #define BLACKMISC_DICTIONARY_H
 
-#include "dbus.h"
-#include "json.h"
-#include "stringutils.h"
-#include "iterator.h"
-#include "range.h"
-#include "containerbase.h"
-#include "typetraits.h"
-#include "metaclass.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/containerbase.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/inheritancetraits.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/json.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/range.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/typetraits.h"
+
+#include <QDBusArgument>
 #include <QHash>
-#include <utility>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonValueRef>
+#include <QList>
+#include <QMap>
+#include <QString>
+#include <QtDebug>
+#include <QtGlobal>
+#include <algorithm>
 #include <initializer_list>
+#include <type_traits>
+#include <utility>
 
 namespace BlackMisc
 {
+    class CEmpty;
+
     // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
     // This will be safe as long as no global qHash has the same signature as ours.
     // Alternative would be to qualify all our invokations of the global qHash as ::qHash.

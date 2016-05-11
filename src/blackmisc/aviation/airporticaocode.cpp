@@ -1,4 +1,9 @@
 #include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/compare.h"
+
+#include <QRegExp>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

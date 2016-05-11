@@ -12,9 +12,13 @@
 #ifndef BLACKMISC_WEATHER_PRESENTWEATHERLIST_H
 #define BLACKMISC_WEATHER_PRESENTWEATHERLIST_H
 
-#include "presentweather.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/presentweather.h"
+#include "presentweather.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

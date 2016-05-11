@@ -12,12 +12,23 @@
 #ifndef BLACKMISC_WEATHER_TEMPERATURELAYERLIST_H
 #define BLACKMISC_WEATHER_TEMPERATURELAYERLIST_H
 
-#include "temperaturelayer.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/temperaturelayer.h"
+#include "temperaturelayer.h"
+
+#include <QMetaType>
+#include <initializer_list>
+#include <tuple>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAltitude;
+    }
+
     namespace Weather
     {
         /*!

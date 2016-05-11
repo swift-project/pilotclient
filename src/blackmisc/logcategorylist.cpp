@@ -7,7 +7,18 @@
  * contained in the LICENSE file.
  */
 
-#include "logcategorylist.h"
+#include "blackmisc/containerbase.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/range.h"
+#include "blackmisc/variant.h"
+
+#include <QDBusMetaType>
+#include <QList>
+#include <QMetaObject>
+
+struct QMetaObject;
 
 namespace BlackMisc
 {

@@ -12,10 +12,12 @@
 #ifndef BLACKMISC_VARIANTLIST_H
 #define BLACKMISC_VARIANTLIST_H
 
-#include "blackmiscexport.h"
-#include "variant.h"
-#include "sequence.h"
-#include "collection.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/collection.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

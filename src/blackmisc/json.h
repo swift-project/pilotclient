@@ -13,19 +13,24 @@
 #define BLACKMISC_JSON_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/metaclass.h"
-#include "blackmisc/inheritancetraits.h"
 #include "blackmisc/fileutils.h"
-#include <QJsonObject>
+#include "blackmisc/inheritancetraits.h"
+#include "blackmisc/metaclass.h"
+
+#include <QByteArray>
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonValueRef>
-#include <QJsonArray>
-#include <QDateTime>
-#include <QStringList>
-#include <QPixmap>
-#include <QByteArray>
+#include <QString>
+#include <QtGlobal>
+#include <type_traits>
 #include <utility>
+
+class QDateTime;
+class QPixmap;
+class QStringList;
 
 /*!
  * \defgroup JSON Streaming operators for JSON

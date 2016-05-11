@@ -7,8 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftengine.h"
+#include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/stringutils.h"
+
+#include <QChar>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

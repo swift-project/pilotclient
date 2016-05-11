@@ -8,7 +8,9 @@
  */
 
 #include "registermetadataweather.h"
-#include "weather.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/weather.h"
 
 namespace BlackMisc
 {

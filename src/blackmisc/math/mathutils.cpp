@@ -8,11 +8,14 @@
  */
 
 #include "blackmisc/math/mathutils.h"
+
 #include <QThreadStorage>
 #include <QTime>
+#include <QtGlobal>
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <limits>
 
 namespace BlackMisc
 {

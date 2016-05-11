@@ -8,7 +8,10 @@
  */
 
 #include "blackmisc/network/clientlist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/metaclassprivate.h"
+
+#include <QString>
+#include <tuple>
 
 using namespace BlackMisc::Aviation;
 

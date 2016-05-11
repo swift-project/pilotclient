@@ -7,8 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "identifierlist.h"
-#include "predicates.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/identifierlist.h"
+
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

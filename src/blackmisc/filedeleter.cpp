@@ -7,8 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "filedeleter.h"
+#include "blackmisc/filedeleter.h"
+
 #include <QFile>
+#include <QtGlobal>
+
+class QTimerEvent;
 
 namespace BlackMisc
 {

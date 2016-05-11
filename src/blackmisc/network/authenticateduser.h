@@ -15,9 +15,18 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/country.h"
 #include "blackmisc/datastore.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/network/rolelist.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {

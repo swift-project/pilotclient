@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/input//keyboardkeylist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/input/keyboardkeylist.h"
+#include "blackmisc/input/keycodes.h"
 
 namespace BlackMisc
 {

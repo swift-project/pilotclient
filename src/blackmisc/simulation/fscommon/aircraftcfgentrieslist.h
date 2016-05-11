@@ -13,14 +13,18 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_AIRCRAFTCFGLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
-#include <QDir>
-#include <QVector>
-#include <QDebug>
-#include <QSettings>
+#include "blackmisc/sequence.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
+#include <Qt>
+#include <tuple>
 
 namespace BlackMisc
 {

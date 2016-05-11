@@ -12,9 +12,13 @@
 #ifndef BLACKMISC_CFILEDELETER_H
 #define BLACKMISC_CFILEDELETER_H
 
-#include "blackmiscexport.h"
+#include "blackmisc/blackmiscexport.h"
+
 #include <QObject>
-#include <QDebug>
+#include <QString>
+#include <QStringList>
+
+class QTimerEvent;
 
 namespace BlackMisc
 {

@@ -12,11 +12,17 @@
 #ifndef BLACKMISC_WEATHER_VISIBILITYLAYER_H
 #define BLACKMISC_WEATHER_VISIBILITYLAYER_H
 
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/propertyindex.h"
 #include "blackmisc/aviation/altitude.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

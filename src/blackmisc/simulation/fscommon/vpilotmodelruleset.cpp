@@ -7,9 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "vpilotmodelruleset.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/range.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
+
+#include <QList>
+#include <QSet>
 #include <QStringList>
+#include <Qt>
+#include <tuple>
 
 using namespace BlackMisc::Network;
 

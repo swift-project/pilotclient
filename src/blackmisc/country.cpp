@@ -8,7 +8,11 @@
  */
 
 #include "blackmisc/country.h"
-#include <QPainter>
+#include "blackmisc/icons.h"
+
+#include <QJsonValue>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

@@ -7,14 +7,27 @@
  * contained in the LICENSE file.
  */
 
-#include "networkutils.h"
-#include <QtNetwork/QNetworkInterface>
-#include <QtNetwork/QTcpSocket>
-#include <QCoreApplication>
-#include <QHostAddress>
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/network/server.h"
+
 #include <QAbstractSocket>
-#include <QUrl>
+#include <QDateTime>
+#include <QDebug>
+#include <QHostAddress>
+#include <QJsonDocument>
+#include <QList>
+#include <QNetworkAddressEntry>
+#include <QNetworkInterface>
+#include <QNetworkReply>
+#include <QObject>
 #include <QSslConfiguration>
+#include <QSslSocket>
+#include <QTcpSocket>
+#include <QTextStream>
+#include <QUrl>
+#include <QUrlQuery>
+#include <QVariant>
+#include <QtDebug>
 
 using namespace BlackMisc::Network;
 

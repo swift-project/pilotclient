@@ -9,10 +9,12 @@
 
 #include "blackmisc/verify.h"
 #include "blackmisc/logmessage.h"
+
+#include <QtGlobal>
+
 #if defined(Q_CC_MSVC)
 #include <intrin.h>
 #elif defined(Q_OS_UNIX)
-#include <signal.h>
 #endif
 
 #if defined(Q_CC_CLANG)

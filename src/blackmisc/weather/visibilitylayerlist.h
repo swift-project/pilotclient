@@ -12,12 +12,22 @@
 #ifndef BLACKMISC_WEATHER_VISIBILITYLAYERLIST_H
 #define BLACKMISC_WEATHER_VISIBILITYLAYERLIST_H
 
-#include "visibilitylayer.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/visibilitylayer.h"
+
+#include <QMetaType>
+#include <initializer_list>
+#include <tuple>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAltitude;
+    }
+
     namespace Weather
     {
         /*!

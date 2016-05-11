@@ -12,13 +12,22 @@
 #ifndef BLACKMISC_WEATHER_WEATHERGRID_H
 #define BLACKMISC_WEATHER_WEATHERGRID_H
 
-#include "gridpoint.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/geo/geoobjectlist.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/gridpoint.h"
+
+#include <QMetaType>
+#include <initializer_list>
 
 namespace BlackMisc
 {
+    namespace Geo
+    {
+        class ICoordinateGeodetic;
+    }
+
     namespace Weather
     {
         /*!

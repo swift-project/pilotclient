@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "propertyindex.h"
-#include "predicates.h"
+#include "blackmisc/propertyindex.h"
+
+#include <QStringList>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

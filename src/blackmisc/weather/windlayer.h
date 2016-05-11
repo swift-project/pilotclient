@@ -12,13 +12,17 @@
 #ifndef BLACKMISC_WEATHER_WINDLAYER_H
 #define BLACKMISC_WEATHER_WINDLAYER_H
 
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/speed.h"
-#include "blackmisc/aviation/altitude.h"
-#include <type_traits>
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

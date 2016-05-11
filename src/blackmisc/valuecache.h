@@ -12,9 +12,42 @@
 #ifndef BLACKMISC_VALUECACHE_H
 #define BLACKMISC_VALUECACHE_H
 
-#include "blackmisc/valuecacheprivate.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/range.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/valuecacheprivate.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/variantmap.h"
+
+#include <QChar>
+#include <QDBusArgument>
+#include <QDateTime>
+#include <QJsonObject>
+#include <QMap>
+#include <QMetaType>
+#include <QMutex>
+#include <QObject>
+#include <QSet>
+#include <QSharedPointer>
+#include <QString>
+#include <QStringList>
 #include <QThread>
+#include <QVariant>
+#include <QtGlobal>
+#include <cstddef>
+#include <tuple>
+#include <utility>
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 
 namespace BlackMisc
 {
@@ -241,6 +274,7 @@ namespace BlackMisc
     private:
         friend class Private::CValuePage;
         struct Element;
+
         using ElementPtr = QSharedPointer<Element>; // QMap doesn't support move-only types
 
         QMap<QString, ElementPtr> m_elements;

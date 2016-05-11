@@ -9,6 +9,8 @@
 
 #include "blackmisc/aviation/heading.h"
 
+#include <QCoreApplication>
+
 using BlackMisc::PhysicalQuantities::CAngle;
 using BlackMisc::PhysicalQuantities::CAngleUnit;
 

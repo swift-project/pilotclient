@@ -12,12 +12,22 @@
 #ifndef BLACKMISC_WEATHER_WINDLAYERLIST_H
 #define BLACKMISC_WEATHER_WINDLAYERLIST_H
 
-#include "windlayer.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/weather/windlayer.h"
+
+#include <QMetaType>
+#include <initializer_list>
+#include <tuple>
 
 namespace BlackMisc
 {
+    namespace Aviation
+    {
+        class CAltitude;
+    }
+
     namespace Weather
     {
         /*!

@@ -7,8 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "actionhotkey.h"
-#include "variant.h"
+#include "blackmisc/input/actionhotkey.h"
 
 namespace BlackMisc
 {

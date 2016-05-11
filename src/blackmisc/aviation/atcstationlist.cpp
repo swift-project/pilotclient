@@ -8,7 +8,17 @@
  */
 
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/predicates.h"
+#include "blackmisc/range.h"
+
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;

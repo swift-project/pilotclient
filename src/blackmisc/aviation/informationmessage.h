@@ -13,9 +13,13 @@
 #define BLACKMISC_AVIATION_INFORMATIONMESSAGE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/valueobject.h"
-#include <QString>
+
 #include <QDateTime>
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

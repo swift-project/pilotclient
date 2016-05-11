@@ -8,8 +8,12 @@
  */
 
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

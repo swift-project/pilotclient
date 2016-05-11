@@ -13,8 +13,20 @@
 #define BLACKMISC_AVIATION_ALTITUDE_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/pq/length.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

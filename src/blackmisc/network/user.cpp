@@ -9,11 +9,16 @@
 
 #include "blackmisc/network/user.h"
 #include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/variant.h"
-#include <tuple>
+
+#include <QChar>
 #include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QThreadStorage>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
 

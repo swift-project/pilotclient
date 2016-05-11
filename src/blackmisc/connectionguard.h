@@ -13,7 +13,9 @@
 #define BLACKMISC_CONNECTIONGUARD_H
 
 #include "blackmisc/blackmiscexport.h"
+
 #include <QList>
+#include <QMetaObject>
 #include <QObject>
 
 namespace BlackMisc

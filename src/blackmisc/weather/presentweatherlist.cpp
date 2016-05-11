@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "presentweatherlist.h"
+#include "blackmisc/weather/presentweatherlist.h"
 
 namespace BlackMisc
 {

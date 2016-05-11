@@ -7,21 +7,22 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_THREADED_READER_H
 #define BLACKMISC_THREADED_READER_H
 
-//! \file
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/worker.h"
 
-#include "blackmiscexport.h"
-#include "blackmisc/network/urllist.h"
-#include "blackmisc/network/entityflags.h"
-#include "worker.h"
-#include <QReadWriteLock>
 #include <QDateTime>
-#include <QTimer>
-#include <QNetworkReply>
-#include <QCoreApplication>
-#include <atomic>
+#include <QObject>
+#include <QReadWriteLock>
+#include <QString>
+#include <QtGlobal>
+
+class QNetworkReply;
+class QTimer;
 
 namespace BlackMisc
 {

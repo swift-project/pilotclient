@@ -13,12 +13,33 @@
 #define BLACKMISC_DATACACHE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
+#include "blackmisc/valuecacheprivate.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/variantmap.h"
 #include "blackmisc/worker.h"
-#include <QUuid>
+
+#include <QDateTime>
 #include <QFileSystemWatcher>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QList>
 #include <QLockFile>
+#include <QMap>
+#include <QMutex>
+#include <QObject>
+#include <QSet>
+#include <QString>
+#include <QStringList>
+#include <QUuid>
+#include <QtDebug>
+#include <QtGlobal>
 #include <future>
+#include <utility>
+#include <vector>
 
 namespace BlackMisc
 {

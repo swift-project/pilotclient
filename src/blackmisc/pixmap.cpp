@@ -7,10 +7,18 @@
  * contained in the LICENSE file.
  */
 
-#include "pixmap.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/statusmessage.h"
+
 #include <QBuffer>
 #include <QFile>
+#include <QIODevice>
+#include <QReadLocker>
+#include <QWriteLocker>
+#include <QtGlobal>
 #include <tuple>
+
+
 
 namespace BlackMisc
 {

@@ -12,15 +12,15 @@
 #ifndef BLACKMISC_AVIATION_AIRPORTLIST_H
 #define BLACKMISC_AVIATION_AIRPORTLIST_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/airport.h"
-#include "blackmisc/geo/geoobjectlist.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/sequence.h"
 #include "blackmisc/geo/geoobjectlist.h"
-#include <QObject>
-#include <QString>
-#include <QList>
+#include "blackmisc/sequence.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
 
 namespace BlackMisc
 {

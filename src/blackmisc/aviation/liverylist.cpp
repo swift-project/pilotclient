@@ -8,7 +8,12 @@
  */
 
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/predicates.h"
+#include "blackmisc/range.h"
+
+#include <QtGlobal>
+#include <tuple>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;

@@ -16,6 +16,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/network/entityflags.h"
 
 #include <QObject>
 #include <QTimer>

@@ -13,7 +13,13 @@
 #define BLACKMISC_SETTINGSCACHE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecache.h"
+
+#include <QObject>
+#include <QString>
+#include <QStringList>
+#include <QtDebug>
 
 namespace BlackMisc
 {

@@ -7,9 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "orderable.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/orderable.h"
 #include "blackmisc/variant.h"
+
+#include <QByteArray>
+#include <QtGlobal>
 #include <limits>
 
 namespace BlackMisc

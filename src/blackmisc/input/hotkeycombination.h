@@ -13,10 +13,15 @@
 #define BLACKMISC_INPUT_HOTKEYCOMBINATION_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/input/keyboardkeylist.h"
+#include "blackmisc/input/joystickbutton.h"
 #include "blackmisc/input/joystickbuttonlist.h"
+#include "blackmisc/input/keyboardkey.h"
+#include "blackmisc/input/keyboardkeylist.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/valueobject.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackMisc
 {

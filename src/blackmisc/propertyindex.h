@@ -12,14 +12,20 @@
 #ifndef BLACKMISC_PROPERTYINDEX_H
 #define BLACKMISC_PROPERTYINDEX_H
 
-#include "blackmiscexport.h"
-#include "dictionary.h"
-#include "stringutils.h"
-#include "variant.h"
-#include "dbus.h"
-#include "json.h"
-#include "compare.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/json.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
+#include <QList>
+#include <QMetaType>
+#include <QString>
 #include <initializer_list>
+#include <type_traits>
 
 namespace BlackMisc
 {

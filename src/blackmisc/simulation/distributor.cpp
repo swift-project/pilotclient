@@ -7,8 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "distributor.h"
-#include <QJsonArray>
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QJsonValue>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

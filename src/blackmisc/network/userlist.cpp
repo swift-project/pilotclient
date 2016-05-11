@@ -8,7 +8,10 @@
  */
 
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/metaclassprivate.h"
+
+#include <QString>
+#include <tuple>
 
 namespace BlackMisc
 {

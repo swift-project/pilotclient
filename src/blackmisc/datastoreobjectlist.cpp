@@ -15,8 +15,10 @@
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
+
+#include <QJsonObject>
+#include <QJsonValue>
 #include <algorithm>
-#include <iterator>
 #include <type_traits>
 
 namespace BlackMisc

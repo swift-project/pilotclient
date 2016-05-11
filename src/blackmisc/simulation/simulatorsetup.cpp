@@ -7,7 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorsetup.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/simulation/simulatorsetup.h"
+
+#include <QDBusMetaType>
+#include <QJsonObject>
 
 namespace BlackMisc
 {

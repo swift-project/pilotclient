@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftlights.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
 
 using namespace BlackMisc;
 

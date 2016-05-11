@@ -8,7 +8,13 @@
  */
 
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/predicates.h"
+#include "blackmisc/containerbase.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/variant.h"
+
+#include <QDBusMetaType>
+#include <QJsonObject>
+#include <QString>
 
 namespace BlackMisc
 {

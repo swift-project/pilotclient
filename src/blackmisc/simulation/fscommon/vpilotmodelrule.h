@@ -13,11 +13,16 @@
 #define BLACKMISC_SIMULATION_FSCOMMON_VPILOTMODELRULE_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/datastore.h"
 #include "blackmisc/timestampbased.h"
-#include <QJsonObject>
+#include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
 
 namespace BlackMisc
 {

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "identifiable.h"
+#include "blackmisc/identifiable.h"
 
 namespace BlackMisc
 {

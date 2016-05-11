@@ -7,19 +7,33 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelloaderxplane.h"
-#include "xplaneutil.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
-#include "blackmisc/predicates.h"
-#include "blackmisc/logmessage.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/livery.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
+#include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/worker.h"
 
+#include <string.h>
+#include <QChar>
+#include <QDateTime>
+#include <QDir>
 #include <QDirIterator>
-#include <QTextStream>
 #include <QFile>
+#include <QFileInfo>
+#include <QFlags>
+#include <QIODevice>
+#include <QList>
+#include <QMap>
 #include <QRegularExpression>
-#include <QDirIterator>
-
+#include <QTextStream>
+#include <algorithm>
 #include <functional>
 
 using namespace BlackMisc;

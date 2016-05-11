@@ -7,10 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatedaircraft.h"
-#include "blackmisc/stringutils.h"
-#include "blackmisc/propertyindex.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/comparefunctions.h"
+#include "blackmisc/metaclassprivate.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/stringutils.h"
+
+#include <tuple>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

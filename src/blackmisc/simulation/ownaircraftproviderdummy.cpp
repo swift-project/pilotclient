@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "ownaircraftproviderdummy.h"
+#include "blackmisc/simulation/ownaircraftproviderdummy.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

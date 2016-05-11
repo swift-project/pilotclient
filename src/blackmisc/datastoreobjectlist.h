@@ -13,10 +13,10 @@
 #define BLACKMISC_DATABASEOBJECTLIST_H
 
 #include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/collection.h"
-#include "blackmisc/sequence.h"
+
+#include <QJsonArray>
 #include <QList>
-#include <QMap>
+#include <QString>
 
 namespace BlackMisc
 {
