@@ -12,18 +12,23 @@
 #ifndef BLACKCORE_PLUGIN_MANAGER_SIMULATOR_H
 #define BLACKCORE_PLUGIN_MANAGER_SIMULATOR_H
 
-#include "blackcoreexport.h"
-#include "pluginmanager.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/pluginmanager.h"
 #include "blackmisc/pluginstorageprovider.h"
+#include "blackmisc/sequence.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
+#include "blackmisc/variant.h"
+
+#include <QHash>
+#include <QMap>
 #include <QObject>
+#include <QString>
 
 namespace BlackCore
 {
     class ISimulatorFactory;
     class ISimulatorListener;
-    class ISimulator;
 
     /*!
      * Manages plugins for the simulator context.

@@ -7,8 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "inputmanager.h"
-#include "blackmisc/input/keyboardkeylist.h"
+#include "blackcore/inputmanager.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/input/actionhotkey.h"
+#include "blackmisc/sequence.h"
+
+#include <limits.h>
+#include <QtGlobal>
 
 using namespace BlackInput;
 using namespace BlackMisc;

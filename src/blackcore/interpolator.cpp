@@ -7,14 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "interpolator.h"
-#include "blackmisc/logmessage.h"
-#include <functional>
+#include "blackcore/interpolator.h"
+#include "blackmisc/aviation/callsign.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
-
 
 namespace BlackCore
 {

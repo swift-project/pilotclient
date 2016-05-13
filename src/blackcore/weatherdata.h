@@ -12,10 +12,10 @@
 #ifndef BLACKCORE_WEATHERDATA_H
 #define BLACKCORE_WEATHERDATA_H
 
-#include "blackcoreexport.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/weather/gridpoint.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/weather/weathergrid.h"
+
 #include <QObject>
 
 namespace BlackCore

@@ -9,13 +9,52 @@
 
 //! \cond PRIVATE
 
-#include "networkvatlib.h"
-#include "application.h"
+#include "blackcore/application.h"
+#include "blackcore/networkvatlib.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/informationmessage.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/transponder.h"
 #include "blackmisc/buildconfig.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/buildconfig.h"
+#include "blackmisc/network/network.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessage.h"
+#include "vatlib/vatlib.h"
+
+#include <QChar>
+#include <QCommandLineOption>
+#include <QCoreApplication>
+#include <QDateTime>
 #include <QJsonDocument>
-#include <vector>
+#include <QJsonParseError>
+#include <QJsonValue>
+#include <QList>
+#include <QRegExp>
+#include <QTextCodec>
+#include <QVector>
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
+#include <algorithm>
 #include <type_traits>
 
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");

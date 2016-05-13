@@ -12,15 +12,31 @@
 #ifndef BLACKCORE_CONTEXT_H
 #define BLACKCORE_CONTEXT_H
 
-#include "blackcoreexport.h"
-#include "blackcore/corefacadeconfig.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/corefacade.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
-#include <QObject>
+#include "blackmisc/statusmessage.h"
+
 #include <QDateTime>
+#include <QObject>
+#include <QString>
+#include <QtGlobal>
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 
 namespace BlackCore
 {
+    class IContextApplication;
+    class IContextAudio;
+    class IContextNetwork;
+    class IContextOwnAircraft;
+    class IContextSimulator;
+
     //! Base for all context classes
     class BLACKCORE_EXPORT CContext : public QObject
     {

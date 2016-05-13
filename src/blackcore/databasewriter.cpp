@@ -7,15 +7,23 @@
  * contained in the LICENSE file.
  */
 
-#include "databasewriter.h"
 #include "blackcore/application.h"
-#include "blackmisc/logmessage.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/databasewriter.h"
 #include "blackmisc/datastoreutility.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/network/networkutils.h"
-#include <QUrlQuery>
-#include <QJsonDocument>
-#include <QHttpPart>
+#include "blackmisc/statusmessage.h"
+
 #include <QHttpMultiPart>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QString>
+#include <QUrl>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

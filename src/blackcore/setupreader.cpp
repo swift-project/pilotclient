@@ -8,18 +8,25 @@
  */
 
 #include "blackcore/application.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/logcategory.h"
-#include "blackmisc/json.h"
-#include "blackmisc/buildconfig.h"
+#include "blackcore/setupreader.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/json.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
-#include "setupreader.h"
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QDateTime>
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QByteArray>
+#include <QFile>
+#include <QNetworkReply>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QTimer>
+#include <QUrl>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

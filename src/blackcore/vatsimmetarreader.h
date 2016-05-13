@@ -12,15 +12,17 @@
 #ifndef BLACKCORE_VATSIMMETARREADER_H
 #define BLACKCORE_VATSIMMETARREADER_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/threadedreader.h"
+#include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metardecoder.h"
 #include "blackmisc/weather/metarset.h"
 
 #include <QObject>
-#include <QTimer>
-#include <QReadWriteLock>
+
+class QNetworkReply;
 
 namespace BlackCore
 {

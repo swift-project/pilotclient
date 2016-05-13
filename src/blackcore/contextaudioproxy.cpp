@@ -7,8 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "contextaudioproxy.h"
+#include "blackcore/contextaudioproxy.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/genericdbusinterface.h"
+
 #include <QDBusConnection>
+#include <QLatin1Literal>
+#include <QtGlobal>
 
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;

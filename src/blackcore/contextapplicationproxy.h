@@ -10,12 +10,29 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 #define BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 
-#include "blackcoreexport.h"
-#include "contextapplication.h"
-#include "blackmisc/genericdbusinterface.h"
+#include <QObject>
+#include <QString>
+#include <QStringList>
+
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/identifierlist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/valuecache.h"
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CGenericDBusInterface;
+    class CLogPattern;
+}
 
 namespace BlackCore
 {
+    class CCoreFacade;
 
     //! \brief Application context proxy
     //! \ingroup dbus

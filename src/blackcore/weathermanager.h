@@ -14,12 +14,17 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/pluginmanagerweatherdata.h"
-#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/slot.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/weather/weathergridprovider.h"
-#include "blackmisc/slot.h"
+
 #include <QObject>
-#include <functional>
+#include <QVector>
+
+namespace BlackMisc
+{
+    template <typename F> class CSlot;
+}
 
 namespace BlackCore
 {

@@ -12,17 +12,48 @@
 #ifndef BLACKCORE_CONTEXTOWNAIRCRAFT_IMPL_H
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_IMPL_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/contextownaircraft.h"
-#include "blackcore/corefacade.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/settings/network.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/selcal.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 
-namespace BlackMisc { class CDbusServer; }
+#include <QObject>
+#include <QReadWriteLock>
+#include <QString>
+
+namespace BlackMisc
+{
+    class CDBusServer;
+
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CAircraftSituation;
+        class CAltitude;
+        class CCallsign;
+        class CTransponder;
+    }
+}
+
 namespace BlackCore
 {
+    class CCoreFacade;
+
     //! Own aircraft context implementation.
     //! Central instance of data for \sa IOwnAircraftProvider .
     class BLACKCORE_EXPORT CContextOwnAircraft :

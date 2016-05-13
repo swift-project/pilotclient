@@ -12,13 +12,17 @@
 #ifndef BLACKCORE_COOKIEMANAGER_H
 #define BLACKCORE_COOKIEMANAGER_H
 
-#include "blackmisc/restricted.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackmisc/restricted.h"
+
+#include <QList>
 #include <QNetworkCookieJar>
-#include <QNetworkCookie>
-#include <QNetworkRequest>
-#include <QNetworkAccessManager>
+#include <QObject>
 #include <QReadWriteLock>
+
+class QNetworkCookie;
+class QNetworkRequest;
+class QUrl;
 
 namespace BlackCore
 {

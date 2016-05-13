@@ -12,27 +12,61 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_IMPL_H
 #define BLACKCORE_CONTEXTNETWORK_IMPL_H
 
-#include "blackcoreexport.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/corefacade.h"
-#include "blackcore/network.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/weather/metarset.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/digestsignal.h"
-#include "blackmisc/logmessage.h"
+#include <QList>
+#include <QMetaObject>
+#include <QObject>
+#include <QString>
+#include <QtGlobal>
+#include <functional>
 
-#include <QMap>
-#include <QTimer>
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackcore/network.h"
+#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/digestsignal.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/weather/metar.h"
+#include "blackmisc/weather/metarset.h"
+
+class QTimer;
+
+namespace BlackMisc
+{
+    class CDBusServer;
+
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CAircraftSituation;
+        class CCallsign;
+    }
+}
 
 namespace BlackCore
 {
     class CAirspaceMonitor;
-    class CVatsimMetarReader;
-    class CWebDataServices;
+    class CCoreFacade;
 
     //! Network context implementation
     class BLACKCORE_EXPORT CContextNetwork :

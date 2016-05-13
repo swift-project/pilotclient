@@ -12,24 +12,54 @@
 #ifndef BLACKCORE_AIRSPACE_MONITOR_H
 #define BLACKCORE_AIRSPACE_MONITOR_H
 
+#include <QJsonObject>
+#include <QList>
+#include <QMap>
+#include <QMetaObject>
+#include <QObject>
+#include <QReadWriteLock>
+#include <QString>
+#include <QTimer>
+#include <QtGlobal>
+#include <functional>
+
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/network.h"
-#include "blackcore/vatsimmetarreader.h"
-#include "airspaceanalyzer.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/weather/metarset.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CAircraftSituation;
+        class CComSystem;
+        class CInformationMessage;
+        class CTransponder;
+    }
+}
 
 namespace BlackCore
 {
-    class CWebDataServices;
+    class CAirspaceAnalyzer;
+    class INetwork;
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.

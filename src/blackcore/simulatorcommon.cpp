@@ -7,13 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorcommon.h"
 #include "blackcore/interpolator.h"
-#include "blackcore/registermetadata.h"
+#include "blackcore/simulatorcommon.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/collection.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
+
+#include <QDateTime>
+#include <QString>
+#include <QThread>
+#include <functional>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

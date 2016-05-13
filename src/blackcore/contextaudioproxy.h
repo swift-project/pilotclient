@@ -12,16 +12,42 @@
 #ifndef BLACKCORE_CONTEXTVOICE_PROXY_H
 #define BLACKCORE_CONTEXTVOICE_PROXY_H
 
-#include "blackcoreexport.h"
-#include "contextaudio.h"
+#include <QObject>
+#include <QString>
 
-#include "blackmisc/genericdbusinterface.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/contextaudio.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/selcal.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/network/userlist.h"
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CGenericDBusInterface;
+
+    namespace Audio
+    {
+        class CAudioDeviceInfo;
+    }
+
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+}
 
 namespace BlackCore
 {
+    class CCoreFacade;
 
     //! \brief Audio context proxy
     //! \ingroup dbus

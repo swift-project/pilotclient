@@ -12,7 +12,7 @@
 #ifndef BLACKCORE_REGISTERMETADATA_H
 #define BLACKCORE_REGISTERMETADATA_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 
 namespace BlackCore
 {

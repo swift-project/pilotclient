@@ -12,20 +12,35 @@
 #ifndef BLACKCORE_VATSIMDATAFILEREADER_H
 #define BLACKCORE_VATSIMDATAFILEREADER_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/data/vatsimsetup.h"
-#include "blackmisc/threadedreader.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/userlist.h"
-#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/threadedreader.h"
 
+#include <QMap>
 #include <QObject>
-#include <QTimer>
-#include <QReadWriteLock>
+#include <QString>
+#include <QStringList>
+
+class QNetworkReply;
+
+namespace BlackMisc
+{
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+}
 
 namespace BlackCore
 {

@@ -9,15 +9,25 @@
 
 #include "blackcore/vatsimmetarreader.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/sequence.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/network/urllist.h"
+#include "blackmisc/statusmessage.h"
 
+#include <QByteArray>
+#include <QMetaObject>
 #include <QNetworkReply>
-#include <QTextStream>
-#include <QFile>
 #include <QReadLocker>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QString>
+#include <QTextStream>
+#include <QTimer>
+#include <QUrl>
 #include <QWriteLocker>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

@@ -14,14 +14,24 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/databasereader.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
 
+#include <QDateTime>
+#include <QList>
 #include <QObject>
-#include <QTimer>
-#include <QNetworkReply>
 #include <QReadWriteLock>
+#include <QString>
+#include <QStringList>
+
+class QNetworkReply;
 
 namespace BlackCore
 {

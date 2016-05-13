@@ -10,25 +10,19 @@
 #ifndef BLACKCORE_VOICE_H
 #define BLACKCORE_VOICE_H
 
-#include "blackcoreexport.h"
-#include "audiodevice.h"
-#include "voicechannel.h"
-#include "audiomixer.h"
-
-#include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/audio/voiceroomlist.h"
-#include "blackmisc/audio/audiodeviceinfolist.h"
-#include "blackmisc/statusmessage.h"
+#include "blackcore/audiomixer.h"
+#include "blackcore/blackcoreexport.h"
 
 #include <QObject>
 #include <QSharedPointer>
-
 #include <memory>
 
 namespace BlackCore
 {
+    class IAudioInputDevice;
+    class IAudioOutputDevice;
+    class IVoiceChannel;
+
     //! Interface to a connection to a ATC voice server for use in flight simulation.
     class BLACKCORE_EXPORT IVoice : public QObject
     {

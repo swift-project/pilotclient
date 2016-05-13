@@ -7,29 +7,51 @@
  * contained in the LICENSE file.
  */
 
-#include "application.h"
-#include "blackmisc/buildconfig.h"
-#include "blackcore/corefacade.h"
-#include "blackcore/setupreader.h"
-#include "blackcore/networkvatlib.h"
-#include "blackcore/webdataservices.h"
+#include "blackcore/application.h"
 #include "blackcore/contextapplication.h"
-#include "blackcore/registermetadata.h"
 #include "blackcore/cookiemanager.h"
-#include "blackmisc/logmessage.h"
+#include "blackcore/corefacade.h"
+#include "blackcore/networkvatlib.h"
+#include "blackcore/registermetadata.h"
+#include "blackcore/setupreader.h"
+#include "blackcore/webdataservices.h"
+#include "blackmisc/buildconfig.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/filelogger.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/loghandler.h"
-#include <QStandardPaths>
+#include "blackmisc/logmessage.h"
+#include "blackmisc/logpattern.h"
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/registermetadata.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/slot.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/threadutils.h"
+#include "blackmisc/verify.h"
+#include "qcompilerdetection.h"
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QEventLoop>
 #include <QFile>
 #include <QFileInfo>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QSslSocket>
+#include <QStandardPaths>
+#include <QThread>
+#include <QTime>
+#include <QTimer>
 #include <QTranslator>
-#include <stdlib.h>
+#include <QWriteLocker>
+#include <Qt>
+#include <QtGlobal>
+#include <cstdlib>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

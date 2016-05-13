@@ -12,18 +12,48 @@
 #ifndef BLACKCORE_NETWORK_VATLIB_H
 #define BLACKCORE_NETWORK_VATLIB_H
 
-#include "blackcoreexport.h"
-#include "network.h"
-#include "settings/network.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/network.h"
+#include "blackcore/settings/network.h"
+#include "blackcore/tokenbucket.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
-#include "tokenbucket.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+
+#include <stdbool.h>
 #include <vatlib/vatlib.h>
-#include <QScopedPointer>
-#include <QTimer>
-#include <QTextCodec>
 #include <QByteArray>
-#include <QMap>
-#include <QCommandLineOption>
+#include <QJsonObject>
+#include <QList>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QStringList>
+#include <QTimer>
+#include <functional>
+
+class QCommandLineOption;
+class QTextCodec;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CFlightPlan;
+    }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+}
 
 namespace BlackCore
 {

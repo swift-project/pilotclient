@@ -10,6 +10,7 @@
 #include "ui_dbaircrafticaocomponent.h"
 #include "dbaircrafticaocomponent.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include <functional>
 
 using namespace BlackCore;

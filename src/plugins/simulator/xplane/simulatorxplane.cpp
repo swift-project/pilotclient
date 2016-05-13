@@ -14,6 +14,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/textmessage.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
 #include <QString>

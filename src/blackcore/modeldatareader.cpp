@@ -8,16 +8,25 @@
  */
 
 #include "blackcore/application.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/network/networkutils.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/modeldatareader.h"
 #include "blackmisc/fileutils.h"
-#include "modeldatareader.h"
+#include "blackmisc/json.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/statusmessage.h"
 
-#include <QTimer>
-#include <QRegularExpression>
+#include <QDir>
+#include <QFlags>
 #include <QJsonDocument>
-#include <QJsonObject>
+#include <QNetworkReply>
+#include <QReadLocker>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QTimer>
+#include <QUrl>
+#include <QWriteLocker>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

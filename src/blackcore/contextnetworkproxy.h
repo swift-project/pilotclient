@@ -12,20 +12,53 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_PROXY_H
 #define BLACKCORE_CONTEXTNETWORK_PROXY_H
 
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcoreexport.h"
-#include "contextnetwork.h"
-#include "networkvatlib.h"
-
-#include "blackmisc/aviation/aviation.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/network.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/weather/metar.h"
+
+#include <stdbool.h>
+#include <QObject>
+#include <QString>
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CGenericDBusInterface;
+
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CCallsign;
+    }
+    namespace Simulation
+    {
+        class CAircraftModel;
+    }
+}
 
 namespace BlackCore
 {
+    class CCoreFacade;
 
     //! Network context proxy
     //! \ingroup dbus

@@ -11,6 +11,7 @@
 #include "ui_dbliveryselectorcomponent.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/stringutils.h"
 #include <QDragEnterEvent>

@@ -13,15 +13,26 @@
 #define BLACKCORE_SETUPREADER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/threadedreader.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
-#include <QObject>
-#include <QTimer>
-#include <QNetworkReply>
+#include "blackmisc/datacache.h"
+#include "blackmisc/network/urllist.h"
+#include "blackmisc/statusmessagelist.h"
+
 #include <QCommandLineOption>
 #include <QCoreApplication>
+#include <QJsonObject>
+#include <QList>
+#include <QObject>
+#include <QString>
 #include <atomic>
+
+class QNetworkReply;
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 
 namespace BlackCore
 {

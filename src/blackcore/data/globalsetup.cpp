@@ -7,15 +7,18 @@
  * contained in the LICENSE file.
  */
 
-#include "globalsetup.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/buildconfig.h"
-#include "blackmisc/math/mathutils.h"
+#include "blackmisc/json.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/stringutils.h"
+
+#include <QJsonObject>
 #include <QStringList>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Json;
-using namespace BlackMisc::Math;
 using namespace BlackMisc::Network;
 
 namespace BlackCore

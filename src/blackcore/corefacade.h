@@ -12,19 +12,20 @@
 #ifndef BLACKCORE_COREFACADE_H
 #define BLACKCORE_COREFACADE_H
 
-#include "blackcoreexport.h"
-#include "blackcore/corefacadeconfig.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/settings/network.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/settingscache.h"
 
 #include <QDBusConnection>
+#include <QMap>
 #include <QObject>
-#include <QMultiMap>
-#include <QReadWriteLock>
+#include <QString>
 
-namespace BlackMisc { class CDBusServer; }
+namespace BlackMisc
+{
+    class CDBusServer;
+}
 
 namespace BlackCore
 {
@@ -35,6 +36,7 @@ namespace BlackCore
     class CContextNetwork;
     class CContextOwnAircraft;
     class CContextSimulator;
+    class CCoreFacadeConfig;
     class IContextApplication;
     class IContextAudio;
     class IContextNetwork;

@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "contextownaircraft.h"
-#include "contextownaircraftimpl.h"
-#include "contextownaircraftproxy.h"
-#include "contextownaircraftempty.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/contextownaircraftempty.h"
+#include "blackcore/contextownaircraftimpl.h"
+#include "blackcore/contextownaircraftproxy.h"
 #include "blackmisc/dbusserver.h"
 
 namespace BlackCore

@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "corefacadeconfig.h"
-#include <QMap>
-#include <QDebug>
+#include "blackcore/corefacadeconfig.h"
 
 namespace BlackCore
 {

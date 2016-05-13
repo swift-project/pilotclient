@@ -11,6 +11,7 @@
 #include "ui_ownmodelsetform.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/simulation/distributorlist.h"
 
 using namespace BlackMisc::Simulation;

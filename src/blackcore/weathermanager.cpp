@@ -7,10 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "weathermanager.h"
 #include "blackcore/weatherdata.h"
+#include "blackcore/weathermanager.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/weather/gridpoint.h"
+#include "blackmisc/weather/weatherdataplugininfo.h"
 #include "blackmisc/weather/weatherdataplugininfolist.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;

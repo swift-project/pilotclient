@@ -7,21 +7,28 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
 #define BLACKCORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
 
-//! \file
-
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/network/authenticateduser.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackcore/data/authenticateduser.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/statusmessagelist.h"
 
+#include <QObject>
 #include <QString>
-#include <QNetworkReply>
-#include <QNetworkCookieJar>
-#include <QSharedPointer>
+
+class QNetworkReply;
+
+namespace BlackMisc
+{
+    namespace Network
+    {
+        class CAuthenticatedUser;
+    }
+}
 
 namespace BlackCore
 {

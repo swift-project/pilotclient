@@ -12,15 +12,25 @@
 #ifndef BLACKCORE_PLUGINMANAGERWEATHERDATA_H
 #define BLACKCORE_PLUGINMANAGERWEATHERDATA_H
 
-#include "blackcoreexport.h"
-#include "pluginmanager.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/pluginmanager.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/weather/weatherdataplugininfo.h"
 #include "blackmisc/weather/weatherdataplugininfolist.h"
+
+#include <QHash>
+#include <QMap>
 #include <QObject>
+#include <QString>
+
+namespace BlackMisc
+{
+    class CVariant;
+}
 
 namespace BlackCore
 {
     class IWeatherDataFactory;
-    class IWeatherData;
 
     /*!
      * Manages plugins of type WeatherData.

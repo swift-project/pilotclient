@@ -14,32 +14,63 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/webreaderflags.h"
-#include "blackcore/data/globalsetup.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/country.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/serverlist.h"
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metarset.h"
-#include "blackmisc/logcategorylist.h"
-#include "blackmisc/countrylist.h"
-#include "blackmisc/restricted.h"
+
+#include <QDateTime>
+#include <QList>
 #include <QObject>
+#include <QString>
+#include <QStringList>
+
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+
+    template <typename T> class Restricted;
+}
 
 namespace BlackCore
 {
-    class CVatsimStatusFileReader;
+    class CApplication;
+    class CDatabaseWriter;
+    class CIcaoDataReader;
+    class CModelDataReader;
     class CVatsimBookingReader;
     class CVatsimDataFileReader;
     class CVatsimMetarReader;
-    class CIcaoDataReader;
-    class CModelDataReader;
-    class CDatabaseWriter;
-    class CApplication;
+    class CVatsimStatusFileReader;
 
     /*!
      * Encapsulates reading data from web sources

@@ -9,10 +9,13 @@
 
 //! \cond PRIVATE
 
-#include "voicechannelvatlib.h"
+#include "blackcore/voicechannelvatlib.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/statusmessage.h"
 
-#include <mutex>
+#include <QList>
+#include <QStringList>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;

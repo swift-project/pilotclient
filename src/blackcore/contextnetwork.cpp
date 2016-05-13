@@ -7,10 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "contextnetwork.h"
-#include "contextnetworkimpl.h"
-#include "contextnetworkproxy.h"
-#include "contextnetworkempty.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextnetworkempty.h"
+#include "blackcore/contextnetworkimpl.h"
+#include "blackcore/contextnetworkproxy.h"
+#include "blackmisc/dbusserver.h"
 
 namespace BlackCore
 {

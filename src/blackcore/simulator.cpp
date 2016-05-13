@@ -7,10 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "simulator.h"
-#include "interpolator.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/collection.h"
+#include "blackcore/simulator.h"
+
+#include <QFlag>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

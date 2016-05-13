@@ -7,9 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "pluginmanagersimulator.h"
-#include "simulator.h"
+#include "blackcore/pluginmanagersimulator.h"
+#include "blackcore/simulator.h"
+
+#include <QCoreApplication>
+#include <QJsonObject>
+#include <QJsonValue>
 #include <QStringBuilder>
+#include <QtGlobal>
 
 namespace BlackCore
 {

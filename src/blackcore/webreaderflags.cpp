@@ -9,7 +9,7 @@
 
 //! \cond PRIVATE
 
-#include "webreaderflags.h"
+#include "blackcore/webreaderflags.h"
 
 using namespace BlackMisc::Network;
 

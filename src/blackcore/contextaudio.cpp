@@ -8,9 +8,11 @@
  */
 
 #include "contextaudio.h"
-#include "contextaudioimpl.h"
-#include "contextaudioproxy.h"
-#include "contextaudioempty.h"
+
+#include "blackcore/contextaudio.h"
+#include "blackcore/contextaudioempty.h"
+#include "blackcore/contextaudioimpl.h"
+#include "blackcore/contextaudioproxy.h"
 #include "blackmisc/dbusserver.h"
 
 namespace BlackCore

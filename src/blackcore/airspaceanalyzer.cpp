@@ -8,10 +8,20 @@
  */
 
 #include "blackcore/airspaceanalyzer.h"
-#include "blackcore/registermetadata.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/transponder.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
+
 #include <QDateTime>
+#include <QMetaObject>
+#include <QReadLocker>
+#include <QString>
+#include <QThread>
+#include <QWriteLocker>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

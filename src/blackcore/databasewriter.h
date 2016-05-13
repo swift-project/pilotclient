@@ -7,19 +7,21 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_DATABASE_WRITER_H
 #define BLACKCORE_DATABASE_WRITER_H
 
-//! \file
-
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/data/globalsetup.h"
-#include "blackmisc/threadedreader.h"
+#include "blackmisc/network/url.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/statusmessagelist.h"
 
-#include <QNetworkReply>
-#include <QJsonArray>
-#include <QDateTime>
+#include <QByteArray>
+#include <QList>
+#include <QObject>
+
+class QNetworkReply;
 
 namespace BlackCore
 {

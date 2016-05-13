@@ -7,18 +7,28 @@
  * contained in the LICENSE file.
  */
 
-#include "databaseauthentication.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/network/url.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/databaseauthentication.h"
+#include "blackmisc/json.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/authenticateduser.h"
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/network/rolelist.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/statusmessage.h"
 
+#include <QByteArray>
+#include <QJsonObject>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
 #include <QString>
+#include <QUrl>
 #include <QUrlQuery>
-#include <QJsonDocument>
-#include <QHttpPart>
-#include <QHttpMultiPart>
-#include <QCoreApplication>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

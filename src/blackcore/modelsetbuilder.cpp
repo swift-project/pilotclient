@@ -7,8 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "modelsetbuilder.h"
-#include "application.h"
+#include "blackcore/application.h"
+#include "blackcore/modelsetbuilder.h"
+#include "blackcore/webdataservices.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+
+#include <QStringList>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
 

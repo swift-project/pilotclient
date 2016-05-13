@@ -9,8 +9,11 @@
 
 //! \cond PRIVATE
 
-#include "audiodevicevatlib.h"
+#include "blackcore/audiodevicevatlib.h"
 #include "blackmisc/logmessage.h"
+
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;

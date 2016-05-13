@@ -12,16 +12,14 @@
 #ifndef BLACKCORE_VATSIMBOOKINGREADER_H
 #define BLACKCORE_VATSIMBOOKINGREADER_H
 
-#include "blackcoreexport.h"
-#include "blackcore/data/globalsetup.h"
-#include "blackmisc/threadedreader.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/network/entityflags.h"
+#include "blackmisc/threadedreader.h"
 
 #include <QObject>
-#include <QTimer>
-#include <QNetworkReply>
-#include <QReadWriteLock>
+
+class QNetworkReply;
 
 namespace BlackCore
 {

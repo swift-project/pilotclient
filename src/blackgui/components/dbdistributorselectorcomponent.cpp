@@ -11,6 +11,8 @@
 #include "ui_dbdistributorselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackcore/webdataservices.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include <QMimeData>
 
 using namespace BlackGui;

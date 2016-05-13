@@ -7,18 +7,36 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextallimpl.h"
-#include "blackcore/contextallproxies.h"
-#include "blackcore/contextallempties.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/contextapplicationimpl.h"
+#include "blackcore/contextaudio.h"
+#include "blackcore/contextaudioimpl.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextnetworkimpl.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/contextownaircraftimpl.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/contextsimulatorimpl.h"
+#include "blackcore/corefacade.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/registermetadata.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/dbusserver.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/registermetadata.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
 
+#include <stdbool.h>
+#include <QByteArray>
+#include <QDBusConnection>
+#include <QDBusError>
 #include <QMap>
-#include <QDebug>
+#include <QObject>
+#include <QString>
+#include <QTime>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

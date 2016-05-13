@@ -12,27 +12,45 @@
 #ifndef BLACKCORE_APPLICATION_H
 #define BLACKCORE_APPLICATION_H
 
-#include "corefacadeconfig.h"
-#include "cookiemanager.h"
-#include "webdataservices.h"
-#include "blackcore/data/updateinfo.h"
-#include "blackmisc/network/url.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/logcategorylist.h"
-#include "blackmisc/filelogger.h"
-#include "blackmisc/slot.h"
-#include "blackcoreexport.h"
-#include <QObject>
-#include <QScopedPointer>
-#include <QNetworkAccessManager>
+#include <QByteArray>
+#include <QCommandLineOption>
 #include <QCommandLineParser>
+#include <QList>
+#include <QNetworkAccessManager>
+#include <QObject>
+#include <QReadWriteLock>
+#include <QScopedPointer>
+#include <QString>
+#include <QStringList>
 #include <atomic>
+
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/cookiemanager.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/data/updateinfo.h"
+#include "blackcore/webreaderflags.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/network/urllist.h"
+#include "blackmisc/slot.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+
+class QHttpMultiPart;
+class QNetworkReply;
+class QNetworkRequest;
+
+namespace BlackMisc
+{
+    class CFileLogger;
+    class CLogCategoryList;
+}
 
 namespace BlackCore
 {
     class CCoreFacade;
     class CSetupReader;
-
+    class CWebDataServices;
     class IContextApplication;
     class IContextAudio;
     class IContextNetwork;

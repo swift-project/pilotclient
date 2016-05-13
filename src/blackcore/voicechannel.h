@@ -16,10 +16,9 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/callsignset.h"
+
 #include <QObject>
 #include <QScopedPointer>
-
-//! \file
 
 namespace BlackCore
 {

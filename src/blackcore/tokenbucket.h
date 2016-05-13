@@ -10,9 +10,9 @@
 #ifndef BLACKCORE_TOKENBUCKET_H
 #define BLACKCORE_TOKENBUCKET_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/pq/time.h"
-#include <QtGlobal>
+
 #include <QDateTime>
 
 namespace BlackCore

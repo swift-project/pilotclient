@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "audiomixervatlib.h"
+#include "blackcore/audiomixervatlib.h"
 
 namespace BlackCore
 {

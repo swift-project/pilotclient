@@ -12,12 +12,22 @@
 #ifndef BLACKCORE_INTERPOLATOR_H
 #define BLACKCORE_INTERPOLATOR_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/worker.h"
-#include <QHash>
-#include <QList>
+
+#include <QObject>
+#include <QString>
+#include <QtGlobal>
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+}
 
 namespace BlackCore
 {

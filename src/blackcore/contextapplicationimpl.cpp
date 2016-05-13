@@ -7,15 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "contextapplicationimpl.h"
-#include "corefacade.h"
-#include "inputmanager.h"
+#include "blackcore/contextapplicationimpl.h"
+#include "blackcore/inputmanager.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/logmessage.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/loghandler.h"
-#include <QtMsgHandler>
+#include "blackmisc/logmessage.h"
+#include "blackmisc/settingscache.h"
+
 #include <QFile>
+#include <QFlags>
+#include <QIODevice>
+#include <QTextStream>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

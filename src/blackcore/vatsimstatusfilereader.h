@@ -12,15 +12,16 @@
 #ifndef BLACKCORE_VATSIMSTATUSFILEREADER_H
 #define BLACKCORE_VATSIMSTATUSFILEREADER_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/data/vatsimsetup.h"
-#include "blackmisc/threadedreader.h"
-#include "blackmisc/network/urllist.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/urllist.h"
+#include "blackmisc/threadedreader.h"
 
 #include <QObject>
-#include <QTimer>
-#include <QReadWriteLock>
+
+class QNetworkReply;
 
 namespace BlackCore
 {

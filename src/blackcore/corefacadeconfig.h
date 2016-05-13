@@ -12,7 +12,8 @@
 #ifndef BLACKCORE_COREFACADECONFIG_H
 #define BLACKCORE_COREFACADECONFIG_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
+
 #include <QString>
 
 namespace BlackCore

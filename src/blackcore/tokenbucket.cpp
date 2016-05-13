@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "tokenbucket.h"
+#include "blackcore/tokenbucket.h"
+#include "blackmisc/pq/units.h"
+
+#include <QtGlobal>
 
 namespace BlackCore
 {

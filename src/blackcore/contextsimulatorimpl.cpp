@@ -7,21 +7,31 @@
  * contained in the LICENSE file.
  */
 
-#include "contextsimulatorimpl.h"
-#include "contextownaircraftimpl.h"
-#include "contextownaircraft.h"
-#include "contextapplication.h"
-#include "contextnetworkimpl.h"
-#include "pluginmanagersimulator.h"
-#include "corefacade.h"
-#include "blackcore/registermetadata.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextnetworkimpl.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/contextownaircraftimpl.h"
+#include "blackcore/contextsimulatorimpl.h"
+#include "blackcore/corefacade.h"
+#include "blackcore/pluginmanagersimulator.h"
+#include "blackcore/simulator.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/logmessage.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
-#include <QPluginLoader>
-#include <QLibrary>
+
+#include <QMetaObject>
+#include <QStringList>
+#include <QThread>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

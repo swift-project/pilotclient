@@ -7,15 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "pluginmanager.h"
+#include "blackcore/pluginmanager.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/loghandler.h"
+#include "blackmisc/statusmessage.h"
+
 #include <QCoreApplication>
 #include <QDir>
 #include <QDirIterator>
+#include <QJsonValue>
+#include <QJsonValueRef>
 #include <QLibrary>
 #include <QPluginLoader>
 #include <QStringBuilder>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

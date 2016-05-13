@@ -9,13 +9,14 @@
 
 //! \file
 
-#include "blackcoreexport.h"
-#include "blackmisc/network/entityflags.h"
-#include <QFlags>
-#include <QMetaType>
-
 #ifndef BLACKCORE_CWEBREADERFLAGS_H
 #define BLACKCORE_CWEBREADERFLAGS_H
+
+#include "blackcore/blackcoreexport.h"
+#include "blackmisc/network/entityflags.h"
+
+#include <QFlags>
+#include <QMetaType>
 
 namespace BlackCore
 {

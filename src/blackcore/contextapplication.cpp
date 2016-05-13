@@ -8,17 +8,21 @@
  */
 
 #include "blackcore/contextapplication.h"
+#include "blackcore/contextapplicationempty.h"
 #include "blackcore/contextapplicationimpl.h"
 #include "blackcore/contextapplicationproxy.h"
-#include "blackcore/contextapplicationempty.h"
+#include "blackcore/corefacade.h"
 #include "blackcore/inputmanager.h"
+#include "blackmisc/dbus.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/settingscache.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
-#include <QCoreApplication>
-#include <QThread>
+#include "blackmisc/settingscache.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QtDebug>
+#include <algorithm>
 
 using namespace BlackCore;
 using namespace BlackMisc;

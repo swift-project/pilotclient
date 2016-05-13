@@ -12,12 +12,17 @@
 #ifndef BLACKCORE_AUDIODEVICEVATLIB_H
 #define BLACKCORE_AUDIODEVICEVATLIB_H
 
-#include "blackcoreexport.h"
-#include "audiodevice.h"
+#include "blackcore/audiodevice.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "vatlib/vatlib.h"
+
 #include <QObject>
+#include <QScopedPointer>
+
+struct VatConsumer_tag;
+struct VatProducer_tag;
 
 namespace BlackCore
 {

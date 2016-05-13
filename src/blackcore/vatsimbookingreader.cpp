@@ -8,14 +8,31 @@
  */
 
 #include "blackcore/application.h"
-#include "blackmisc/sequence.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/vatsimbookingreader.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/entityflags.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/logmessage.h"
-#include "vatsimbookingreader.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/statusmessage.h"
 
-#include <QtXml/QDomElement>
+#include <QByteArray>
+#include <QDateTime>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QDomNode>
+#include <QDomNodeList>
+#include <QMetaObject>
+#include <QNetworkReply>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QString>
+#include <QTimer>
+#include <QUrl>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

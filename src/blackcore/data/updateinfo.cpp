@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "updateinfo.h"
+#include "blackcore/data/updateinfo.h"
 #include "blackmisc/buildconfig.h"
+
 #include <QStringList>
 
 using namespace BlackMisc;

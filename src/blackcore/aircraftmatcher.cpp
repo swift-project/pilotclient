@@ -7,12 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmatcher.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/worker.h"
+#include "blackcore/aircraftmatcher.h"
 #include "blackcore/application.h"
-#include <utility>
-#include <atomic>
+#include "blackcore/webdataservices.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessagelist.h"
+
+#include <QList>
+#include <QStringList>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

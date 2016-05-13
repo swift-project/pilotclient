@@ -7,19 +7,31 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_DATABASE_READER_H
 #define BLACKCORE_DATABASE_READER_H
 
-//! \file
-
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/threadedreader.h"
-#include "blackmisc/network/url.h"
 #include "blackmisc/network/entityflags.h"
-#include <QNetworkReply>
-#include <QJsonArray>
+#include "blackmisc/network/url.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/threadedreader.h"
+
 #include <QDateTime>
+#include <QJsonArray>
+#include <QObject>
+#include <QReadWriteLock>
+#include <QString>
 #include <QTimer>
+#include <QtGlobal>
+
+class QNetworkReply;
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+}
 
 namespace BlackCore
 {

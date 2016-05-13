@@ -24,6 +24,7 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/aviation/callsignset.h"
+
 #include <QObject>
 #include <QString>
 #include <QMap>

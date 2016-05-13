@@ -12,13 +12,37 @@
 #ifndef BLACKCORE_CONTEXTSIMULATOR_PROXY_H
 #define BLACKCORE_CONTEXTSIMULATOR_PROXY_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/contextsimulator.h"
-#include "blackmisc/genericdbusinterface.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
+#include "blackmisc/simulation/simulatorsetup.h"
+
+#include <QObject>
+#include <QString>
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CGenericDBusInterface;
+
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+}
 
 namespace BlackCore
 {
+    class CCoreFacade;
+
     //! DBus proxy for Simulator Context
     //! \ingroup dbus
     class BLACKCORE_EXPORT CContextSimulatorProxy : public IContextSimulator

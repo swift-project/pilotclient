@@ -12,6 +12,7 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;

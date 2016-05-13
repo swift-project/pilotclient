@@ -12,26 +12,52 @@
 #ifndef BLACKCORE_CONTEXTAUDIO_IMPL_H
 #define BLACKCORE_CONTEXTAUDIO_IMPL_H
 
+#include "blackcore/actionbind.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/contextaudio.h"
-#include "blackcore/corefacade.h"
-#include "blackcore/voice.h"
-#include "blackcore/voicechannel.h"
-#include "blackcore/audiodevice.h"
-#include "blackcore/audiomixer.h"
-#include "blackcore/actionbind.h"
-#include "blackinput/keyboard.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/settings/audio.h"
+#include "blackcore/voicechannel.h"
+#include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/selcal.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/settingscache.h"
 
-#include <QThread>
-#include <QQueue>
-#include <QPointer>
-#include <QScopedPointer>
+#include <QHash>
+#include <QList>
+#include <QObject>
+#include <QSharedPointer>
+#include <QString>
+#include <memory>
 
-namespace BlackMisc { class CDBusServer; }
+namespace BlackMisc
+{
+    class CDBusServer;
+
+    namespace Audio
+    {
+        class CAudioDeviceInfo;
+    }
+
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+}
+
 namespace BlackCore
 {
+    class CCoreFacade;
+    class IAudioInputDevice;
+    class IAudioMixer;
+    class IAudioOutputDevice;
+    class IVoice;
     class IVoiceChannel;
 
     //! Audio context implementation

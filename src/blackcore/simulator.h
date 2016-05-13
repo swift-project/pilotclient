@@ -12,23 +12,48 @@
 #ifndef BLACKCORE_SIMULATOR_H
 #define BLACKCORE_SIMULATOR_H
 
-#include "blackcoreexport.h"
-#include "blackcore/interpolator.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorsetup.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/pluginstorageprovider.h"
-#include "blackmisc/statusmessagelist.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/network/client.h"
-#include "blackmisc/pixmap.h"
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/identifiable.h"
-#include "blackmisc/weather/weathergridprovider.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QFlags>
 #include <QObject>
+#include <QString>
+
+namespace BlackMisc
+{
+    class IPluginStorageProvider;
+
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+
+    namespace Network
+    {
+        class CTextMessage;
+    }
+
+    namespace Simulation
+    {
+        class CSimulatorSetup;
+        class IOwnAircraftProvider;
+        class IRemoteAircraftProvider;
+    }
+    namespace Weather
+    {
+        class IWeatherGridProvider;
+    }
+}
 
 namespace BlackCore
 {

@@ -11,6 +11,7 @@
 #include "ui_infobarwebreadersstatuscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webreaderflags.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/verify.h"
 

@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "context.h"
-#include <QDebug>
+#include "blackcore/context.h"
+#include "blackmisc/logcategorylist.h"
 
 using namespace BlackMisc;
 

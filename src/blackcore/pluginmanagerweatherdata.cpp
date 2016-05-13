@@ -7,10 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "pluginmanagerweatherdata.h"
-#include "weatherdata.h"
-#include <QStringBuilder>
+#include "blackcore/pluginmanagerweatherdata.h"
+#include "blackcore/weatherdata.h"
+
 #include <QCoreApplication>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QStringBuilder>
 
 namespace BlackCore
 {

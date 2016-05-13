@@ -7,20 +7,33 @@
  * contained in the LICENSE file.
  */
 
-#include "contextaudioimpl.h"
-#include "contextnetwork.h"
-#include "contextownaircraft.h"
-#include "contextapplication.h"
-#include "voicechannel.h"
-#include "voicevatlib.h"
-#include "blacksound/soundgenerator.h"
-#include "blackmisc/dbusserver.h"
+#include "blackcore/audiodevice.h"
+#include "blackcore/audiomixer.h"
+#include "blackcore/contextaudioimpl.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/corefacade.h"
+#include "blackcore/voice.h"
+#include "blackcore/voicevatlib.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/audio/settings/settingsaudio.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbusserver.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/sequence.h"
 #include "blackmisc/simplecommandparser.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessage.h"
+#include "blacksound/soundgenerator.h"
 
+#include <stdbool.h>
 #include <QTimer>
+#include <QtGlobal>
+#include <algorithm>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

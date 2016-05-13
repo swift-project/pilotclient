@@ -12,13 +12,39 @@
 #ifndef BLACKCORE_OWNAIRCRAFT_PROXY_H
 #define BLACKCORE_OWNAIRCRAFT_PROXY_H
 
-#include "blackcoreexport.h"
+#include <QObject>
+#include <QString>
+
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/contextownaircraft.h"
-#include "blackmisc/genericdbusinterface.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/selcal.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CGenericDBusInterface;
+
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CAltitude;
+        class CCallsign;
+        class CTransponder;
+    }
+}
 
 namespace BlackCore
 {
+    class CCoreFacade;
 
     //! Own aircraft context proxy
     //! \ingroup dbus

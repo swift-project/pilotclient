@@ -8,24 +8,30 @@
  */
 
 #include "blackcore/application.h"
-#include "blackcore/setupreader.h"
-#include "blackcore/webdataservices.h"
-#include "blackcore/modeldatareader.h"
-#include "blackcore/icaodatareader.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackcore/databasewriter.h"
-#include "blackcore/vatsimstatusfilereader.h"
+#include "blackcore/icaodatareader.h"
+#include "blackcore/modeldatareader.h"
 #include "blackcore/vatsimbookingreader.h"
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/vatsimmetarreader.h"
-#include "blackcore/data/globalsetup.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/logmessage.h"
+#include "blackcore/vatsimstatusfilereader.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/restricted.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/worker.h"
-#include "blackmisc/json.h"
-#include <QJsonObject>
+
+#include <QDir>
+#include <QFlags>
 #include <QJsonDocument>
 #include <QSslSocket>
+#include <QThread>
+#include <QTimer>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackCore::Data;

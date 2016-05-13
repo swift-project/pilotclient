@@ -10,6 +10,7 @@
 #include "dbownmodelscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/verify.h"

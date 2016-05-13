@@ -7,19 +7,24 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_VOICE_CHANNEL_VATLIB_H
 #define BLACKCORE_VOICE_CHANNEL_VATLIB_H
 
-#include "blackcoreexport.h"
-#include "voicechannel.h"
-#include "voicevatlib.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/audio/voiceroomlist.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/voicechannel.h"
+#include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/callsignset.h"
-#include <QObject>
-#include <QSharedPointer>
+#include "vatlib/vatlib.h"
 
-//! \file
+#include <stdbool.h>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+struct VatProducerConsumer_tag;
 
 namespace BlackCore
 {

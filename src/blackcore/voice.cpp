@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "voice.h"
+#include "blackcore/voice.h"
 
 namespace BlackCore
 {

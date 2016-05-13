@@ -9,6 +9,7 @@
 
 #include "aircraftmodelmenus.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"

@@ -7,22 +7,27 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_INPUTMANAGER_H
 #define BLACKCORE_INPUTMANAGER_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/settings/application.h"
-#include "blackinput/keyboard.h"
 #include "blackinput/joystick.h"
+#include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
-#include <QObject>
-#include <QHash>
-#include <QVector>
-#include <QPointer>
-#include <type_traits>
-#include <functional>
+#include "blackmisc/settingscache.h"
 
-//! \file
+#include <QHash>
+#include <QObject>
+#include <QPointer>
+#include <QString>
+#include <QStringList>
+#include <QVector>
+#include <algorithm>
+#include <functional>
+#include <memory>
 
 namespace BlackCore
 {

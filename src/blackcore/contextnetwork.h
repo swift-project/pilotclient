@@ -12,20 +12,54 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_H
 #define BLACKCORE_CONTEXTNETWORK_H
 
-#include "blackcoreexport.h"
+#include <QObject>
+#include <QString>
+
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/context.h"
-#include "blackmisc/identifier.h"
+#include "blackcore/corefacade.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackcore/network.h"
+#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/weather/metar.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/network/userlist.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/audio/voiceroomlist.h"
-#include "blackcore/network.h"
+#include "blackmisc/weather/metar.h"
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CDBusServer;
+
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CCallsign;
+    }
+
+    namespace Network
+    {
+        class CTextMessage;
+    }
+
+    namespace Simulation
+    {
+        class CAircraftModel;
+    }
+}
 
 //! \addtogroup dbus
 //! @{

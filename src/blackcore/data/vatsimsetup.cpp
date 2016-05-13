@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "vatsimsetup.h"
+#include "blackcore/data/vatsimsetup.h"
+
 #include <QStringList>
 
 using namespace BlackMisc;

@@ -9,6 +9,7 @@
 
 #include "blackgui/guiutility.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "liveryform.h"
 #include "ui_liveryform.h"

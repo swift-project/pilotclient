@@ -13,6 +13,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/aircraftmodelview.h"
 #include "blackcore/databasewriter.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 

@@ -10,12 +10,24 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 #define BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 
-#include "blackcoreexport.h"
-#include "contextapplication.h"
-#include "corefacade.h"
-#include "blackmisc/identifierlist.h"
+#include <QObject>
+#include <QString>
+#include <QStringList>
 
-namespace BlackMisc { class CDBusServer; }
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/identifierlist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/valuecache.h"
+
+namespace BlackMisc
+{
+    class CDBusServer;
+    class CLogPattern;
+}
+
 namespace BlackCore
 {
     class CCoreFacade;

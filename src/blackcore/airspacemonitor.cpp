@@ -7,19 +7,48 @@
  * contained in the LICENSE file.
  */
 
-#include "airspacemonitor.h"
-#include "blackcore/application.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackcore/registermetadata.h"
-#include "blackcore/webdataservices.h"
+#include "blackcore/airspaceanalyzer.h"
+#include "blackcore/airspacemonitor.h"
+#include "blackcore/application.h"
+#include "blackcore/network.h"
 #include "blackcore/vatsimbookingreader.h"
 #include "blackcore/vatsimdatafilereader.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/testing.h"
+#include "blackcore/webdataservices.h"
+#include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/modulator.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/propertyindexallclasses.h"
+#include "blackmisc/network/client.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/range.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/testing.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
+#include "blackmisc/worker.h"
+
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QEventLoop>
+#include <QReadLocker>
+#include <QThread>
+#include <QTime>
+#include <QVariant>
+#include <QWriteLocker>
+#include <Qt>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;

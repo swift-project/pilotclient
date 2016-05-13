@@ -7,11 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "contextsimulator.h"
-#include "contextsimulatorimpl.h"
-#include "contextsimulatorproxy.h"
-#include "contextsimulatorempty.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/contextsimulatorempty.h"
+#include "blackcore/contextsimulatorimpl.h"
+#include "blackcore/contextsimulatorproxy.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/pq/units.h"
+
+#include <QFlag>
 
 using namespace BlackMisc::PhysicalQuantities;
 

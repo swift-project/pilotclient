@@ -7,15 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "voicevatlib.h"
-#include "voicechannelvatlib.h"
-#include "audiodevicevatlib.h"
-#include "audiomixervatlib.h"
+#include "blackcore/audiodevice.h"
+#include "blackcore/audiodevicevatlib.h"
+#include "blackcore/audiomixervatlib.h"
+#include "blackcore/voicechannel.h"
+#include "blackcore/voicechannelvatlib.h"
+#include "blackcore/voicevatlib.h"
 #include "blackmisc/logmessage.h"
-#include <QDebug>
-#include <QTimer>
+#include "vatlib/vatlib.h"
+
+#include <QtGlobal>
 #include <memory>
-#include <mutex>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;

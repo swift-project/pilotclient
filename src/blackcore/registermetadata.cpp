@@ -7,15 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "registermetadata.h"
+#include "blackcore/registermetadata.h"
 #include "blackcore/contextapplication.h"
-#include "blackcore/webreaderflags.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/data/vatsimsetup.h"
-#include "voicechannel.h"
-#include "network.h"
-#include "setupreader.h"
+#include "blackcore/network.h"
+#include "blackcore/voicechannel.h"
+#include "blackcore/webreaderflags.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/network/network.h"
+#include "blackmisc/valueobject.h"
+
+#include <QDBusMetaType>
+#include <QMetaType>
+
+
 
 namespace BlackCore
 {

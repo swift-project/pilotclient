@@ -12,12 +12,36 @@
 #ifndef BLACKCORE_CONTEXTOWNAIRCRAFT_H
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/context.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/audio/voiceroomlist.h"
+#include "blackcore/corefacade.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+
+#include <QObject>
+#include <QString>
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CDBusServer;
+
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CAltitude;
+        class CCallsign;
+        class CTransponder;
+    }
+}
 
 //! \addtogroup dbus
 //! @{

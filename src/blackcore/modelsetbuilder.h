@@ -12,11 +12,14 @@
 #ifndef BLACKCORE_CMODELSETBUILDER_H
 #define BLACKCORE_CMODELSETBUILDER_H
 
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
-#include "blackcore/blackcoreexport.h"
-#include <QObject>
+#include "blackmisc/simulation/simulatorinfo.h"
 
+#include <QFlags>
+#include <QMetaType>
+#include <QObject>
 
 namespace BlackCore
 {

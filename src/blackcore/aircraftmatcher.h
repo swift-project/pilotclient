@@ -13,13 +13,29 @@
 #define BLACKCORE_AIRCRAFTMATCHER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QFlags>
 #include <QObject>
-#include <QPointer>
-#include <QThread>
-#include <memory>
-#include <atomic>
+#include <QString>
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+    class CStatusMessageList;
+
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+}
 
 namespace BlackCore
 {

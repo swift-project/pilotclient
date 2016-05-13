@@ -10,11 +10,15 @@
 #ifndef BLACKCORE_AUDIOMIXERVATLIB_H
 #define BLACKCORE_AUDIOMIXERVATLIB_H
 
-#include "blackcoreexport.h"
-#include "audiomixer.h"
-
+#include "blackcore/audiomixer.h"
+#include "blackcore/blackcoreexport.h"
 #include "vatlib/vatlib.h"
+
+#include <stdbool.h>
+#include <QObject>
 #include <QScopedPointer>
+
+struct VatProducerConsumer_tag;
 
 namespace BlackCore
 {

@@ -7,15 +7,33 @@
  * contained in the LICENSE file.
  */
 
-#include "contextownaircraftimpl.h"
-#include "contextsimulator.h"
-#include "contextnetwork.h"
-#include "contextaudio.h"
-#include "contextapplication.h"
-#include "corefacade.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/contextaudio.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraftimpl.h"
+#include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/simplecommandparser.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/simplecommandparser.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QReadLocker>
+#include <QWriteLocker>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

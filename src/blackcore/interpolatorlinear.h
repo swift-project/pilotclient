@@ -12,12 +12,27 @@
 #ifndef BLACKCORE_INTERPOLATOR_LINEAR_H
 #define BLACKCORE_INTERPOLATOR_LINEAR_H
 
-#include "blackcoreexport.h"
-#include "interpolator.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/interpolator.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-#include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/sequence.h"
-#include <QDateTime>
+
+#include <QString>
+#include <QtGlobal>
+
+class QObject;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+
+    namespace Simulation
+    {
+        class IRemoteAircraftProvider;
+    }
+}
 
 namespace BlackCore
 {

@@ -7,11 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "databasereader.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/logmessage.h"
+#include "blackcore/databasereader.h"
 #include "blackmisc/datastoreutility.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/network/networkutils.h"
+
+#include <QByteArray>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValueRef>
+#include <QMetaObject>
+#include <QNetworkReply>
+#include <QReadLocker>
+#include <QUrl>
+#include <QWriteLocker>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

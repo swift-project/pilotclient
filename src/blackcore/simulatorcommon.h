@@ -12,28 +12,48 @@
 #ifndef BLACKCORE_SIMULATOR_COMMON_H
 #define BLACKCORE_SIMULATOR_COMMON_H
 
-#include "blackcore/blackcoreexport.h"
-#include "blackcore/interpolator.h"
-#include "blackcore/simulator.h"
+#include <QObject>
+#include <QTimer>
+#include <QtGlobal>
+
 #include "blackcore/aircraftmatcher.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorsetup.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/simulator.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/connectionguard.h"
+#include "blackmisc/pluginstorageprovider.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/pluginstorageprovider.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/network/client.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/connectionguard.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorsetup.h"
 #include "blackmisc/weather/weathergridprovider.h"
-#include <QObject>
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CAircraftSituation;
+        class CCallsign;
+    }
+
+    namespace Simulation
+    {
+        class CAirspaceAircraftSnapshot;
+        class CSimulatedAircraft;
+    }
+}
 
 namespace BlackCore
 {
+    class IInterpolator;
+
     //! Common base class with providers, interface and some base functionality
     class BLACKCORE_EXPORT CSimulatorCommon :
         public BlackCore::ISimulator,

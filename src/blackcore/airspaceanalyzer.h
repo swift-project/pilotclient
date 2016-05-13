@@ -14,15 +14,31 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
-#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
-#include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/worker.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
-#include "blackmisc/aviation/callsign.h"
-#include <QObject>
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
+#include "blackmisc/worker.h"
+
 #include <QHash>
+#include <QObject>
 #include <QReadWriteLock>
+#include <QTimer>
+#include <QtGlobal>
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CAircraftSituation;
+        class CCallsign;
+        class CTransponder;
+    }
+}
 
 namespace BlackCore
 {

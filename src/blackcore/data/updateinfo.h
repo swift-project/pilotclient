@@ -14,9 +14,15 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/datacache.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/network/urllist.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+
+#include <QMetaType>
+#include <QString>
 
 namespace BlackCore
 {

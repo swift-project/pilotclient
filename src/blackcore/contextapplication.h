@@ -12,15 +12,34 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_H
 #define BLACKCORE_CONTEXTAPPLICATION_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackcore/context.h"
-#include "blackmisc/statusmessagelist.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"
-#include "blackmisc/variantmap.h"
 #include "blackmisc/logpattern.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/valuecache.h"
+
+#include <QDBusArgument>
+#include <QHash>
+#include <QList>
+#include <QMetaType>
 #include <QObject>
-#include <QReadWriteLock>
+#include <QPair>
+#include <QString>
+#include <QStringList>
+#include <QtGlobal>
+
+class QDBusConnection;
+
+namespace BlackMisc
+{
+    class CDBusServer;
+}
 
 //! \addtogroup dbus
 //! @{
@@ -35,6 +54,7 @@
 
 namespace BlackCore
 {
+    class CCoreFacade;
     class CInputManager;
 
     //! Used by application context to track which processes are subscribed to which patterns of log message

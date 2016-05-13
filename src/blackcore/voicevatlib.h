@@ -12,13 +12,21 @@
 #ifndef BLACKCORE_VOICE_VATLIB_H
 #define BLACKCORE_VOICE_VATLIB_H
 
-#include "blackcoreexport.h"
-#include "voice.h"
-#include <vatlib/vatlib.h>
+#include "blackcore/audiomixer.h"
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/voice.h"
 
-#include <QString>
+#include <vatlib/vatlib.h>
+#include <QObject>
 #include <QScopedPointer>
 #include <QSharedPointer>
+#include <memory>
+
+class QTimerEvent;
+
+struct VatAudioService_tag;
+struct VatUDPAudioPort_tag;
+template <class T> class QSharedPointer;
 
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
@@ -27,10 +35,12 @@
 #include <Windows.h>
 #endif
 
-//! \file
-
 namespace BlackCore
 {
+    class IAudioInputDevice;
+    class IAudioOutputDevice;
+    class IVoiceChannel;
+
     //! Vatlib implementation of the IVoice interface.
     class BLACKCORE_EXPORT CVoiceVatlib : public IVoice
     {

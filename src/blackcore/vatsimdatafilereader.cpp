@@ -9,17 +9,41 @@
 
 #include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/application.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/verify.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/server.h"
-#include "blackmisc/network/urllist.h"
-#include "blackmisc/network/entityflags.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/network/urllist.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/range.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
 
+#include <QByteArray>
+#include <QDateTime>
+#include <QMetaObject>
 #include <QNetworkReply>
+#include <QReadLocker>
+#include <QRegExp>
 #include <QRegularExpression>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QTimer>
+#include <QUrl>
+#include <QWriteLocker>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

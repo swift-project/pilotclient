@@ -9,15 +9,29 @@
 
 #include "blackcore/vatsimstatusfilereader.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/urllist.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/network/urllist.h"
+#include "blackmisc/statusmessage.h"
 
+#include <QByteArray>
+#include <QDateTime>
+#include <QList>
+#include <QMetaObject>
 #include <QNetworkReply>
+#include <QRegExp>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QString>
+#include <QStringList>
+#include <QTimer>
+#include <QUrl>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore::Data;

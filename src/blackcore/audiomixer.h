@@ -10,8 +10,9 @@
 #ifndef BLACKCORE_AUDIOMIXER_H
 #define BLACKCORE_AUDIOMIXER_H
 
-#include "blackcoreexport.h"
 #include <QObject>
+
+#include "blackcore/blackcoreexport.h"
 
 namespace BlackCore
 {

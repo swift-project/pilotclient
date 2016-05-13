@@ -10,6 +10,8 @@
 #include "ui_dbdistributorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "dbdistributorcomponent.h"
+#include "blackcore/webdataservices.h"
+
 #include <QFrame>
 #include <QScopedPointer>
 

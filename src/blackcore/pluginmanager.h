@@ -12,11 +12,13 @@
 #ifndef BLACKCORE_PLUGIN_MANAGER_H
 #define BLACKCORE_PLUGIN_MANAGER_H
 
-#include "blackcoreexport.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/sequence.h"
-#include <QObject>
-#include <QMultiMap>
+
 #include <QJsonObject>
+#include <QMap>
+#include <QObject>
+#include <QString>
 
 namespace BlackCore
 {

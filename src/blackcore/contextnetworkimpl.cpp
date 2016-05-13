@@ -7,24 +7,38 @@
  * contained in the LICENSE file.
  */
 
-#include "application.h"
-#include "contextnetworkimpl.h"
-#include "contextapplication.h"
-#include "contextsimulator.h"
-#include "contextownaircraftimpl.h"
-#include "networkvatlib.h"
-#include "vatsimmetarreader.h"
-#include "airspacemonitor.h"
-#include "webdataservices.h"
-#include "blackmisc/network/networkutils.h"
+#include "blackcore/airspaceanalyzer.h"
+#include "blackcore/airspacemonitor.h"
+#include "blackcore/application.h"
+#include "blackcore/contextnetworkimpl.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/contextownaircraftimpl.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/corefacade.h"
+#include "blackcore/networkvatlib.h"
+#include "blackcore/webdataservices.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/dbusserver.h"
+#include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/sequence.h"
 #include "blackmisc/simplecommandparser.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/stringutils.h"
+#include "contextnetworkimpl.h"
 
-#include <QtXml/QDomElement>
-#include <QNetworkReply>
+#include <stdbool.h>
+#include <QTimer>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

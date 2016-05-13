@@ -12,24 +12,49 @@
 #ifndef BLACKCORE_CONTEXTSIMULATOR_IMPL_H
 #define BLACKCORE_CONTEXTSIMULATOR_IMPL_H
 
-#include "blackcoreexport.h"
-#include "blackcore/contextsimulator.h"
-#include "blackcore/simulator.h"
-#include "blackcore/weathermanager.h"
-#include "blackcore/settings/application.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/network/textmessagelist.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/variant.h"
-#include <QTimer>
-#include <QDir>
 
-namespace BlackMisc { class CDBusServer; }
+#include "blackcore/blackcoreexport.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/corefacadeconfig.h"
+#include "blackcore/settings/application.h"
+#include "blackcore/weathermanager.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
+#include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/worker.h"
+
+#include <QObject>
+#include <QPair>
+#include <QString>
+
+namespace BlackMisc
+{
+    class CDBusServer;
+
+    namespace Aviation
+    {
+        class CCallsign;
+    }
+
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+    }
+}
+
 namespace BlackCore
 {
+    class CCoreFacade;
     class CPluginManagerSimulator;
+    class ISimulator;
 
     //! Network simulator concrete implementation
     class BLACKCORE_EXPORT CContextSimulator :

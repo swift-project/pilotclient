@@ -7,10 +7,26 @@
  * contained in the LICENSE file.
  */
 
-#include "interpolatorlinear.h"
+#include "blackcore/interpolatorlinear.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/statusmessage.h"
+
 #include <QDateTime>
+#include <QList>
+#include <array>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;
