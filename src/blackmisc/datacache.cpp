@@ -234,7 +234,9 @@ namespace BlackMisc
         if (! lock) { return; }
         m_cache->m_revision.writeNewRevision(baseline.toTimestampMap());
 
-        m_cache->saveToFiles(persistentStore(), values);
+        auto msg = m_cache->saveToFiles(persistentStore(), values);
+        msg.setCategories(this);
+        CLogMessage::preformatted(msg);
 
         applyDeferredChanges(); // apply changes which we grabbed at the last minute above
     }
@@ -245,7 +247,9 @@ namespace BlackMisc
         if (lock && m_cache->m_revision.isPendingRead())
         {
             CValueCachePacket newValues;
-            m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues);
+            auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues);
+            msg.setCategories(this);
+            CLogMessage::preformatted(msg);
             m_deferredChanges.insert(newValues);
         }
 

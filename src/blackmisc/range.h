@@ -193,6 +193,13 @@ namespace BlackMisc
         template <class T, class = std::enable_if_t<std::is_convertible<value_type, typename T::value_type>::value>>
         operator T() const
         {
+            return to<T>();
+        }
+
+        //! Explicit conversion to any container of value_type which supports push_back. This will copy elements.
+        template <class T>
+        T to() const
+        {
             T container;
             std::copy(begin(), end(), std::back_inserter(container));
             return container;

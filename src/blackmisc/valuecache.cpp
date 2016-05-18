@@ -304,7 +304,7 @@ namespace BlackMisc
             }
         }
         return CStatusMessage(this, CStatusMessage::SeverityInfo,
-                              QString("Written %1 files for value cache in %2").arg(namespaces.size()).arg(dir));
+                              QString("Written %1 to value cache in %2").arg(values.keys().to<QStringList>().join(",")).arg(dir));
     }
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
@@ -347,7 +347,7 @@ namespace BlackMisc
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
         return CStatusMessage(this, CStatusMessage::SeverityInfo,
-                              QString("Loaded value cache from %1 files in %2").arg(entries.size()).arg(dir));
+                              QString("Loaded cache values %1 from %2").arg(o_values.keys().to<QStringList>().join(",")).arg(dir));
     }
 
     void CValueCache::markAllAsSaved(const QString &keyPrefix)
