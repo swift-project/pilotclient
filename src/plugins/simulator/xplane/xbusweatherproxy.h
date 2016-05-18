@@ -7,12 +7,17 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKSIMPLUGIN_XBUS_WEATHER_PROXY_H
 #define BLACKSIMPLUGIN_XBUS_WEATHER_PROXY_H
 
-//! \file
-
 #include "blackmisc/genericdbusinterface.h"
+
+#include <QObject>
+#include <QString>
+
+class QDBusConnection;
 
 //! \cond PRIVATE
 #define XBUS_WEATHER_INTERFACENAME "org.swift_project.xbus.weather"

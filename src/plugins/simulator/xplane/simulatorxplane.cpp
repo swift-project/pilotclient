@@ -8,17 +8,55 @@
  */
 
 #include "simulatorxplane.h"
+#include "blackcore/aircraftmatcher.h"
+#include "blackmisc/aviation/aircraftengine.h"
+#include "blackmisc/aviation/aircraftenginelist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/dbusserver.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/weather/cloudlayer.h"
+#include "blackmisc/weather/cloudlayerlist.h"
+#include "blackmisc/weather/gridpoint.h"
+#include "blackmisc/weather/temperaturelayer.h"
+#include "blackmisc/weather/temperaturelayerlist.h"
+#include "blackmisc/weather/visibilitylayer.h"
+#include "blackmisc/weather/visibilitylayerlist.h"
+#include "blackmisc/weather/windlayer.h"
+#include "blackmisc/weather/windlayerlist.h"
+#include "qcompilerdetection.h"
 #include "xbusserviceproxy.h"
 #include "xbustrafficproxy.h"
 #include "xbusweatherproxy.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/network/textmessage.h"
+
+#include <QColor>
 #include <QDBusServiceWatcher>
-#include <QTimer>
 #include <QString>
-#include <functional>
+#include <QTimer>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

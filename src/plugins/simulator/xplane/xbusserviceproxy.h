@@ -7,14 +7,25 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKSIMPLUGIN_XBUS_SERVICE_PROXY_H
 #define BLACKSIMPLUGIN_XBUS_SERVICE_PROXY_H
 
-//! \file
+
 
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/sequence.h"
+
+#include <QDBusError>
+#include <QDBusPendingReply>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <QStringList>
 #include <functional>
+
+class QDBusConnection;
+class QDBusPendingCallWatcher;
 
 //! \cond PRIVATE
 #define XBUS_SERVICE_INTERFACENAME "org.swift_project.xbus.service"

@@ -15,6 +15,13 @@
 #include "blackgui/pluginconfig.h"
 #include "blackmisc/settingscache.h"
 
+#include <QObject>
+#include <QString>
+
+class QWidget;
+
+namespace BlackGui { class CPluginConfigWindow; }
+
 namespace BlackSimPlugin
 {
     namespace XPlane

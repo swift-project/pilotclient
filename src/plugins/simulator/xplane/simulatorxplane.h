@@ -12,15 +12,50 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_H
 
+#include "blackcore/simulator.h"
 #include "blackcore/simulatorcommon.h"
-#include "blackmisc/simulation/ownaircraftprovider.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
+
 #include <QDBusConnection>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <QStringList>
 
 class QDBusServiceWatcher;
+class QTimer;
+
+namespace BlackMisc
+{
+    class IPluginStorageProvider;
+    namespace Aviation
+    {
+        class CAircraftParts;
+        class CAircraftSituation;
+        class CCallsign;
+    }
+    namespace Network { class CTextMessage; }
+    namespace Simulation
+    {
+        class CSimulatedAircraft;
+        class CSimulatorPluginInfo;
+        class IOwnAircraftProvider;
+        class IRemoteAircraftProvider;
+    }
+    namespace Weather { class IWeatherGridProvider; }
+}
 
 namespace BlackSimPlugin
 {

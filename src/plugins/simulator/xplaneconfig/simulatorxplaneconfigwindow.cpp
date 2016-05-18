@@ -8,15 +8,23 @@
  */
 
 #include "simulatorxplaneconfigwindow.h"
-#include "ui_simulatorxplaneconfigwindow.h"
 #include "blackmisc/dbusserver.h"
-#include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/fileutils.h"
-#include <QStringBuilder>
+#include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "ui_simulatorxplaneconfigwindow.h"
+
+#include <QComboBox>
+#include <QCoreApplication>
+#include <QDialogButtonBox>
+#include <QDir>
 #include <QFileDialog>
+#include <QFlags>
 #include <QMessageBox>
-#include <QStandardPaths>
+#include <QPushButton>
+#include <QString>
 #include <QStringBuilder>
+
+class QWidget;
 
 using namespace BlackGui;
 

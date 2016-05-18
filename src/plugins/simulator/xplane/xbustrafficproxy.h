@@ -7,12 +7,18 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKSIMPLUGIN_XBUS_TRAFFIC_PROXY_H
 #define BLACKSIMPLUGIN_XBUS_TRAFFIC_PROXY_H
 
-//! \file
-
 #include "blackmisc/genericdbusinterface.h"
+
+#include <QObject>
+#include <QString>
+#include <QStringList>
+
+class QDBusConnection;
 
 //! \cond PRIVATE
 #define XBUS_TRAFFIC_INTERFACENAME "org.swift_project.xbus.traffic"

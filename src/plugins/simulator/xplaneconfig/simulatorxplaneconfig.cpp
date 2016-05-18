@@ -10,6 +10,8 @@
 #include "simulatorxplaneconfig.h"
 #include "simulatorxplaneconfigwindow.h"
 
+class QWidget;
+
 namespace BlackSimPlugin
 {
     namespace XPlane

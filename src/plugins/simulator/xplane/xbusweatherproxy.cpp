@@ -8,7 +8,10 @@
  */
 
 #include "xbusweatherproxy.h"
-#include "blackmisc/dbusserver.h"
+
+#include <QLatin1String>
+
+class QDBusConnection;
 
 #define XBUS_SERVICENAME "org.swift-project.xbus"
 

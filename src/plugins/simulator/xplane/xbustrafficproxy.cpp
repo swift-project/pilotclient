@@ -8,8 +8,10 @@
  */
 
 #include "xbustrafficproxy.h"
-#include "blackmisc/dbusserver.h"
-#include <QMetaMethod>
+
+#include <QLatin1String>
+
+class QDBusConnection;
 
 #define XBUS_SERVICENAME "org.swift-project.xbus"
 

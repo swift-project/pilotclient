@@ -12,13 +12,16 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 #define BLACKSIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
-#include "simulatorxplaneconfig.h"
 #include "blackgui/pluginconfigwindow.h"
+#include "blackmisc/settingscache.h"
+#include "simulatorxplaneconfig.h"
+
+#include <QObject>
 #include <QScopedPointer>
 
-namespace Ui {
-class CSimulatorXPlaneConfigWindow;
-}
+class QWidget;
+
+namespace Ui { class CSimulatorXPlaneConfigWindow; }
 
 namespace BlackSimPlugin
 {
