@@ -405,6 +405,8 @@ namespace BlackMisc
 
     void CDataCacheRevision::notifyPendingWrite()
     {
+        QMutexLocker lock(&m_mutex);
+
         m_pendingWrite = true;
     }
 
@@ -420,7 +422,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        return (m_updateInProgress || beginUpdate({{ key, timestamp }}, false)) && m_timestamps.contains(key);
+        return (m_updateInProgress || m_pendingWrite || beginUpdate({{ key, timestamp }}, false)) && m_timestamps.contains(key);
     }
 
     std::future<void> CDataCacheRevision::promiseLoadedValue(const QString &key, qint64 currentTimestamp)
