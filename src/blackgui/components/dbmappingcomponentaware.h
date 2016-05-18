@@ -13,7 +13,8 @@
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 
 #include "blackgui/blackguiexport.h"
-#include <QObject>
+
+class QObject;
 
 namespace BlackGui
 {

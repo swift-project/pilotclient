@@ -12,11 +12,16 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSNETWORKSERVERSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSNETWORKSERVERSCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackcore/settings/network.h"
+#include "blackgui/blackguiexport.h"
+#include "blackmisc/settingscache.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QModelIndex;
+class QWidget;
 
 namespace Ui { class CSettingsNetworkServersComponent; }
 

@@ -7,9 +7,12 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/dbdebugdatabasesetup.h"
 #include "blackgui/guiapplication.h"
 #include "dbdebugdatabasesetup.h"
 #include "ui_dbdebugdatabasesetup.h"
+
+#include <QCheckBox>
 
 using namespace BlackCore::Data;
 using namespace BlackMisc;

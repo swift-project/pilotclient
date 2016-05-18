@@ -12,17 +12,23 @@
 #ifndef BLACKGUI_MAINKEYPADAREACOMPONENT_H
 #define BLACKGUI_MAINKEYPADAREACOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
-#include "maininfoareacomponent.h"
 #include "blackcore/network.h"
+#include "blackgui/blackguiexport.h"
+#include "blackgui/components/maininfoareacomponent.h"
 #include "blackmisc/identifier.h"
 
 #include <QFrame>
-#include <QPushButton>
-#include <QScopedPointer>
 #include <QList>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
 
+class QPushButton;
+class QWidget;
+
+namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CMainKeypadAreaComponent; }
+
 namespace BlackGui
 {
     namespace Components

@@ -14,14 +14,18 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/restricted.h"
+
+#include <QFileSystemWatcher>
 #include <QMap>
 #include <QObject>
-#include <QFont>
-#include <QStringList>
-#include <QStyle>
 #include <QScopedPointer>
 #include <QSettings>
-#include <QFileSystemWatcher>
+#include <QString>
+#include <QStringList>
+#include <QStyle>
+
+class QFont;
+class QWidget;
 
 namespace BlackGui
 {

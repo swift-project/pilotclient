@@ -7,12 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "mainkeypadareacomponent.h"
-#include "ui_mainkeypadareacomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
+#include "blackcore/corefacade.h"
+#include "blackgui/components/mainkeypadareacomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "ui_mainkeypadareacomponent.h"
+
+#include <QLineEdit>
+#include <QPushButton>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

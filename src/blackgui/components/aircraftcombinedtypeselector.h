@@ -14,9 +14,15 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
-#include <QFrame>
-#include <QScopedPointer>
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+class QWidget;
+
+namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
 namespace Ui { class CAircraftCombinedTypeSelector; }
 
 namespace BlackGui

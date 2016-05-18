@@ -12,11 +12,16 @@
 #ifndef BLACKGUI_AUDIOSETUPCOMPONENT_H
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackcore/settings/audio.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
+#include "blackmisc/settingscache.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CAudioSetupComponent; }
 

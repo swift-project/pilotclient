@@ -7,16 +7,27 @@
  * contained in the LICENSE file.
  */
 
-#include "ui_datainfoareacomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/components/datainfoareacomponent.h"
-#include "blackmisc/network/entityflags.h"
 #include "blackcore/webdataservices.h"
+#include "blackgui/components/datainfoareacomponent.h"
+#include "blackgui/components/dbaircrafticaocomponent.h"
+#include "blackgui/components/dbairlineicaocomponent.h"
+#include "blackgui/components/dbcountrycomponent.h"
+#include "blackgui/components/dbdistributorcomponent.h"
+#include "blackgui/components/dbliverycomponent.h"
+#include "blackgui/components/dbmodelcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/buildconfig.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/buildconfig.h"
+#include "ui_datainfoareacomponent.h"
+
+#include <QDateTime>
+#include <QIcon>
+#include <QTabWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

@@ -14,10 +14,16 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforframelesswindow.h"
-#include "blackmisc/icons.h"
+
 #include <QDialog>
+#include <QObject>
 #include <QScopedPointer>
-#include <QMenu>
+
+class QEvent;
+class QMenu;
+class QMouseEvent;
+class QPoint;
+class QWidget;
 
 namespace Ui { class CNavigatorDialog; }
 

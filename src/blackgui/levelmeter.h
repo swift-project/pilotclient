@@ -15,8 +15,14 @@
 #define BLACKGUI_LEVELMETER_H
 
 #include "blackgui/blackguiexport.h"
+
+#include <QColor>
+#include <QObject>
 #include <QTime>
 #include <QWidget>
+
+class QPaintEvent;
+class QTimer;
 
 namespace BlackGui
 {

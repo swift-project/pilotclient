@@ -7,9 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "userlistmodel.h"
-#include <QMetaProperty>
-#include <QBrush>
+#include "blackgui/models/columns.h"
+#include "blackgui/models/userlistmodel.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/propertyindexvariantmap.h"
+
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;

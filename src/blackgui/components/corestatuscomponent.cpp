@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "corestatuscomponent.h"
+#include "blackgui/components/corestatuscomponent.h"
 #include "ui_corestatuscomponent.h"
+
+class QWidget;
 
 namespace BlackGui
 {

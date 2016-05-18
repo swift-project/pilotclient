@@ -12,8 +12,8 @@
 #ifndef BLACKGUI_ACTIONITEM_H
 #define BLACKGUI_ACTIONITEM_H
 
+#include <QList>
 #include <QString>
-#include <QVariant>
 
 namespace BlackGui
 {

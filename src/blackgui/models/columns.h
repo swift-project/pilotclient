@@ -13,13 +13,17 @@
 #define BLACKGUI_COLUMNS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/collection.h"
+#include "blackgui/models/columnformatters.h"
 #include "blackmisc/propertyindex.h"
-#include "columnformatters.h"
-#include <QModelIndex>
+#include "blackmisc/variant.h"
+
+#include <QList>
 #include <QObject>
-#include <QHash>
-#include <QScopedPointer>
+#include <QSharedPointer>
+#include <QString>
+#include <QtGlobal>
+
+class QModelIndex;
 
 namespace BlackGui
 {

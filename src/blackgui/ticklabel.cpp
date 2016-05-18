@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "ticklabel.h"
+#include "blackgui/ticklabel.h"
 #include "blackmisc/icons.h"
 
 using namespace BlackMisc;

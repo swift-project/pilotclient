@@ -14,12 +14,21 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/led.h"
-#include "blackmisc/pq/pq.h"
-#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/icon.h"
-#include <QDateTime>
-#include <QDate>
-#include <QTime>
+#include "blackmisc/icons.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/variant.h"
+
+#include <QFlags>
+#include <QList>
+#include <QPixmap>
+#include <QString>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackGui
 {

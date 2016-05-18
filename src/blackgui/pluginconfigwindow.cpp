@@ -1,7 +1,10 @@
-#include "pluginconfigwindow.h"
-#include <QDesktopWidget>
+#include "blackgui/pluginconfigwindow.h"
+
 #include <QApplication>
+#include <QDesktopWidget>
 #include <QStyle>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackGui {
 

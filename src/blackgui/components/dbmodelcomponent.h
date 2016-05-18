@@ -13,13 +13,18 @@
 #define BLACKUI_COMPONENTS_DBMODELCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/enableforviewbasedindicator.h"
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackgui/menus/menudelegate.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enableforviewbasedindicator.h"
 #include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CDbModelComponent; }
 

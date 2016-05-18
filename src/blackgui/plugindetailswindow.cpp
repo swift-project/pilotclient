@@ -7,10 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "plugindetailswindow.h"
+#include "blackgui/plugindetailswindow.h"
 #include "ui_plugindetailswindow.h"
 
+#include <QApplication>
 #include <QDesktopWidget>
+#include <QFont>
+#include <QLabel>
+#include <QPushButton>
+#include <QStyle>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackGui
 {

@@ -14,8 +14,11 @@
 
 #include "blackgui/blackguiexport.h"
 
+#include <QObject>
+#include <QString>
 #include <QWidget>
-#include <QSignalMapper>
+
+class QSignalMapper;
 
 namespace BlackGui
 {

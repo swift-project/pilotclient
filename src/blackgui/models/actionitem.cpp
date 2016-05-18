@@ -1,5 +1,7 @@
-#include "actionitem.h"
 
+#include "blackgui/models/actionitem.h"
+
+#include <QtAlgorithms>
 
 namespace BlackGui
 {

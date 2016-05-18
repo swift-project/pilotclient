@@ -7,9 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "actionmodel.h"
-#include "actionitem.h"
 #include "blackcore/inputmanager.h"
+#include "blackgui/models/actionitem.h"
+#include "blackgui/models/actionmodel.h"
+
+#include <QString>
+#include <QStringList>
+#include <QtGlobal>
 
 namespace BlackGui
 {

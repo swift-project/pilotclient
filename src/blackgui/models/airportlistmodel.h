@@ -13,9 +13,11 @@
 #define BLACKGUI_AIRPORTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/airportlist.h"
 #include "blackgui/models/listmodelbase.h"
-#include <QAbstractItemModel>
+#include "blackmisc/aviation/airport.h"
+#include "blackmisc/aviation/airportlist.h"
+
+class QObject;
 
 namespace BlackGui
 {

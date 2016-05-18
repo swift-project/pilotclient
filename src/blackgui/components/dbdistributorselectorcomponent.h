@@ -16,9 +16,19 @@
 #include "blackgui/dropbase.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/distributor.h"
+
 #include <QFrame>
+#include <QMetaObject>
+#include <QObject>
 #include <QScopedPointer>
-#include <QCompleter>
+#include <QString>
+
+class QCompleter;
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QDragMoveEvent;
+class QDropEvent;
+class QWidget;
 
 namespace Ui { class CDbDistributorSelectorComponent; }
 

@@ -1,18 +1,33 @@
-#include "settingssimulatorcomponent.h"
-#include "ui_settingssimulatorcomponent.h"
 #include "blackcore/contextapplication.h"
+#include "blackcore/contextsimulator.h"
+#include "blackcore/pluginmanagersimulator.h"
+#include "blackgui/components/settingssimulatorcomponent.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/led.h"
+#include "blackgui/pluginconfig.h"
 #include "blackgui/pluginconfigwindow.h"
 #include "blackgui/plugindetailswindow.h"
-#include "blackcore/contextsimulator.h"
-#include "blackcore/contextnetwork.h"
-#include "blackgui/pluginconfig.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackgui/pluginselector.h"
+#include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/variant.h"
-#include <QComboBox>
-#include <QMessageBox>
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
+#include "blackmisc/statusmessage.h"
+#include "ui_settingssimulatorcomponent.h"
+
+#include <QApplication>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QStringList>
+#include <Qt>
+#include <QtGlobal>
+#include <algorithm>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

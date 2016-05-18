@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "mainwindowaccess.h"
-#include "managedstatusbar.h"
-#include "overlaymessagesframe.h"
-#include "components/logcomponent.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/mainwindowaccess.h"
+#include "blackgui/managedstatusbar.h"
+#include "blackgui/overlaymessagesframe.h"
 
 namespace BlackGui
 {

@@ -14,7 +14,11 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/filters/filterbarbuttons.h"
+
 #include <QFrame>
+#include <QObject>
+
+class QWidget;
 
 namespace BlackGui
 {

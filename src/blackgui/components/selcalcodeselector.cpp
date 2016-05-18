@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "selcalcodeselector.h"
-#include "ui_selcalcodeselector.h"
+#include "blackgui/components/selcalcodeselector.h"
+#include "blackgui/ticklabel.h"
 #include "blackmisc/aviation/selcal.h"
-#include "blackmisc/icons.h"
+#include "ui_selcalcodeselector.h"
+
+#include <QComboBox>
+#include <QStringList>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

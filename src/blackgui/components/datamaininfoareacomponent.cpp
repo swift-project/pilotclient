@@ -7,14 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
-#include "blackgui/components/dbliverycomponent.h"
 #include "blackgui/components/dbaircrafticaocomponent.h"
+#include "blackgui/components/dbliverycomponent.h"
+#include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbmodelcomponent.h"
-#include "blackgui/components/dbstashcomponent.h"
-#include "ui_datamaininfoareacomponent.h"
+#include "blackgui/components/logcomponent.h"
 #include "blackmisc/icons.h"
+#include "ui_datamaininfoareacomponent.h"
+
+#include <QIcon>
 
 using namespace BlackMisc;
 using namespace BlackGui;

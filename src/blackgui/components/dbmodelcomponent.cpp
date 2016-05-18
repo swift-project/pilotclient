@@ -7,15 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "dbmodelcomponent.h"
-#include "dbmappingcomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/stylesheetutility.h"
-#include "blackgui/shortcut.h"
+#include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
+#include "blackgui/components/dbmodelcomponent.h"
+#include "blackgui/filters/aircraftmodelfilterbar.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/viewbase.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "ui_dbmodelcomponent.h"
-#include <functional>
+
+#include <QDateTime>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

@@ -14,8 +14,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
-#include <QMainWindow>
+
+#include <QObject>
 #include <QScopedPointer>
+#include <QSize>
+
+class QPixmap;
+class QWidget;
 
 namespace Ui { class CDataMainInfoAreaComponent; }
 
@@ -23,9 +28,9 @@ namespace BlackGui
 {
     namespace Components
     {
-        class CLogComponent;
-        class CDbMappingComponent;
         class CDataInfoAreaComponent;
+        class CDbMappingComponent;
+        class CLogComponent;
 
         /**
          * Main info area for data entry tool

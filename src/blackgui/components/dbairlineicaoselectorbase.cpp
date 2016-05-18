@@ -7,11 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "dbairlineicaoselectorbase.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/components/dbairlineicaoselectorbase.h"
 #include "blackgui/guiapplication.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/datastoreutility.h"
-#include <QMimeData>
-#include <QStringList>
+#include "blackmisc/variant.h"
+
+#include <QCompleter>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QMetaType>
+#include <QPalette>
+#include <QtGlobal>
 
 using namespace BlackGui;
 using namespace BlackCore;

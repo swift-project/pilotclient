@@ -7,11 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "dbcountrycomponent.h"
-#include "ui_dbcountrycomponent.h"
-#include "blackgui/guiapplication.h"
+#include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
-#include <functional>
+#include "blackgui/components/dbcountrycomponent.h"
+#include "blackgui/filters/countryfilterbar.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/countryview.h"
+#include "blackgui/views/viewbase.h"
+#include "ui_dbcountrycomponent.h"
+
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc::Network;

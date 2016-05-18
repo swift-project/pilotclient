@@ -7,10 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "registercomponent.h"
-#include "ui_registercomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextapplication.h"
+#include "blackgui/components/registercomponent.h"
+#include "blackgui/components/updatetimer.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/identifierview.h"
+#include "ui_registercomponent.h"
+
+#include <QtGlobal>
 
 using namespace BlackCore;
 

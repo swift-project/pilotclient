@@ -7,16 +7,33 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/colorselector.h"
+#include "blackgui/guiutility.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/rgbcolor.h"
+#include "blackmisc/variant.h"
 #include "colorselector.h"
-#include "guiutility.h"
 #include "ui_colorselector.h"
-#include <QColorDialog>
+
 #include <QColor>
-#include <QMimeData>
-#include <QDrag>
-#include <QDropEvent>
+#include <QColorDialog>
 #include <QCompleter>
+#include <QDrag>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMimeData>
+#include <QMouseEvent>
+#include <QPalette>
+#include <QPixmap>
+#include <QToolButton>
+#include <QVariant>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

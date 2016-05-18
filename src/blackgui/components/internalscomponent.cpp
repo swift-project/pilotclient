@@ -7,11 +7,30 @@
  * contained in the LICENSE file.
  */
 
-#include "internalscomponent.h"
-#include "ui_internalscomponent.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/contextaudio.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/contextsimulator.h"
+#include "blackgui/components/internalscomponent.h"
+#include "blackgui/components/remoteaircraftselector.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/contextallinterfaces.h"
+#include "blackmisc/aviation/aircraftenginelist.h"
+#include "blackmisc/aviation/aircraftlights.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/statusmessage.h"
+#include "ui_internalscomponent.h"
+
+#include <QCheckBox>
+#include <QJsonDocument>
 #include <QJsonParseError>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QString>
+#include <QTextEdit>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

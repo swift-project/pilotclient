@@ -7,9 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "modelmappingmodifyform.h"
-#include "ui_modelmappingmodifyform.h"
+#include "blackgui/components/modelmodeselector.h"
+#include "blackgui/components/simulatorselector.h"
+#include "blackgui/editors/modelmappingmodifyform.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "ui_modelmappingmodifyform.h"
+
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QString>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

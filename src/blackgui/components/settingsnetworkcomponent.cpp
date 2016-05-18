@@ -7,10 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "settingsnetworkcomponent.h"
-#include "ui_settingsnetworkcomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
+#include "blackgui/components/settingsnetworkcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "ui_settingsnetworkcomponent.h"
+
+#include <QCheckBox>
 
 using namespace BlackCore;
 

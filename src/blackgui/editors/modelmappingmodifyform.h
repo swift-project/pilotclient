@@ -14,12 +14,15 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include <QFrame>
-#include <QScopedPointer>
-#include <QCheckBox>
-#include <QWidget>
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
+class QCheckBox;
+class QWidget;
+
+namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace Ui { class CModelMappingModifyForm; }
 
 namespace BlackGui

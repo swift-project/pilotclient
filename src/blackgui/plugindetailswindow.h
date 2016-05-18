@@ -14,7 +14,12 @@
 
 #include "blackgui/blackguiexport.h"
 
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
 #include <QWidget>
+
+class QShowEvent;
 
 namespace Ui { class CPluginDetailsWindow; }
 

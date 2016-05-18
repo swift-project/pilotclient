@@ -12,13 +12,17 @@
 #ifndef BLACKGUI_USERCOMPONENT_H
 #define BLACKGUI_USERCOMPONENT_H
 
+#include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
-#include "blackcore/network.h"
-#include <QTabWidget>
-#include <QTimer>
+
+#include <QObject>
 #include <QScopedPointer>
+#include <QTabWidget>
+#include <QtGlobal>
+
+class QWidget;
 
 namespace Ui { class CUserComponent; }
 

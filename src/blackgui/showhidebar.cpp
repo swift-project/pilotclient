@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "showhidebar.h"
+#include "blackgui/showhidebar.h"
 #include "ui_showhidebar.h"
+
+#include <QPushButton>
 
 namespace BlackGui
 {

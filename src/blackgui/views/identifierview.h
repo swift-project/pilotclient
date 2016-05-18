@@ -13,8 +13,13 @@
 #define BLACKGUI_IDENTIFIERVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/identifierlistmodel.h"
+#include "blackgui/models/identifierlistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/identifierlist.h"
+
+class QWidget;
+
+namespace BlackMisc { class CIdentifier; }
 
 namespace BlackGui
 {

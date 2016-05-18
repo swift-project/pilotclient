@@ -7,11 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "validationindicator.h"
-#include "ui_validationindicator.h"
+#include "blackgui/editors/validationindicator.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/statusmessage.h"
-#include <QPainter>
+#include "ui_validationindicator.h"
+
+#include <QLabel>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

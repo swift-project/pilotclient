@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "identifierview.h"
-#include <QHeaderView>
+#include "blackgui/models/identifierlistmodel.h"
+#include "blackgui/views/identifierview.h"
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

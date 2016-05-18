@@ -7,8 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "dropbase.h"
-#include "guiutility.h"
+#include "blackgui/dropbase.h"
+#include "blackgui/guiutility.h"
+
+#include <QMetaType>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

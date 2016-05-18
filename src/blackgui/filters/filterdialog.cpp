@@ -7,8 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "filterdialog.h"
+#include "blackgui/filters/filterdialog.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/stylesheetutility.h"
+
+#include <QString>
+#include <Qt>
 
 namespace BlackGui
 {

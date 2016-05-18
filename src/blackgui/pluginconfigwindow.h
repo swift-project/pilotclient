@@ -13,7 +13,11 @@
 #define BLACKGUI_PLUGINCONFIGWINDOW_H
 
 #include "blackgui/blackguiexport.h"
+
+#include <QObject>
 #include <QWidget>
+
+class QShowEvent;
 
 namespace BlackGui
 {

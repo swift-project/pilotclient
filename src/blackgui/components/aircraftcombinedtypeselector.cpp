@@ -7,10 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftcombinedtypeselector.h"
-#include "ui_aircraftcombinedtypeselector.h"
+#include "blackgui/components/aircraftcombinedtypeselector.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "ui_aircraftcombinedtypeselector.h"
+
+#include <QComboBox>
+#include <QLineEdit>
+#include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
 

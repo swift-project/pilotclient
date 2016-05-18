@@ -13,14 +13,16 @@
 #define BLACKGUI_FOREIGNWINDOWS_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "windowfinder.h"
-#include <QWindow>
-#include <QWidget>
+
 #include <QScopedPointer>
+
+class QWidget;
+class QWindow;
 
 namespace BlackGui
 {
+    class IWindowFinder;
+
     //! Foreign windows
     class BLACKGUI_EXPORT CForeignWindows
     {

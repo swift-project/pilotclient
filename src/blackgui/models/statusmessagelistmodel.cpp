@@ -7,11 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "statusmessagelistmodel.h"
-#include "blackmisc/icon.h"
-#include <QMetaProperty>
-#include <QBrush>
-#include <QIcon>
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/timestampbased.h"
+
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

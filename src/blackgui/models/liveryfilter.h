@@ -15,6 +15,9 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/modelfilter.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/rgbcolor.h"
+
+#include <QString>
 
 namespace BlackGui
 {

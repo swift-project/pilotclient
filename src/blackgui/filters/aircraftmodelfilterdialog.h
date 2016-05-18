@@ -12,12 +12,17 @@
 #ifndef BLACKGUI_FILTERS_AIRCRAFTMODELFILTERFORM_H
 #define BLACKGUI_FILTERS_AIRCRAFTMODELFILTERFORM_H
 
-#include "filterdialog.h"
 #include "blackgui/blackguiexport.h"
-#include "blackgui/models/aircraftmodelfilter.h"
-#include <QDialog>
-#include <QScopedPointer>
+#include "blackgui/filters/filterdialog.h"
+#include "blackgui/models/modelfilter.h"
 
+#include <QObject>
+#include <QScopedPointer>
+#include <memory>
+
+class QWidget;
+
+namespace BlackMisc { namespace Simulation { class CAircraftModelList; } }
 namespace Ui { class CAircraftModelFilterDialog; }
 
 namespace BlackGui

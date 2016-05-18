@@ -13,8 +13,19 @@
 #define BLACKGUI_AIRLINEICAOVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewdbobjects.h"
-#include "../models/airlineicaolistmodel.h"
+#include "blackgui/models/airlineicaolistmodel.h"
+#include "blackgui/views/viewdbobjects.h"
+
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CAirlineIcaoCode;
+        class CAirlineIcaoCodeList;
+    }
+}
 
 namespace BlackGui
 {

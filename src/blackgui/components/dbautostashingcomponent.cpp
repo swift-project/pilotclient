@@ -7,13 +7,35 @@
  * contained in the LICENSE file.
  */
 
-#include "ui_dbautostashingcomponent.h"
-#include "dbautostashingcomponent.h"
-#include "dbmappingcomponent.h"
-#include "dbstashcomponent.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/components/dbautostashingcomponent.h"
+#include "blackgui/components/dbmappingcomponent.h"
+#include "blackgui/components/dbstashcomponent.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/statusmessageview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/statusmessagelist.h"
+#include "dbautostashingcomponent.h"
+#include "ui_dbautostashingcomponent.h"
+
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QFlags>
 #include <QIntValidator>
+#include <QLineEdit>
+#include <QProgressBar>
+#include <QRadioButton>
+#include <QString>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc;

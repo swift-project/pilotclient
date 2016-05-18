@@ -13,9 +13,18 @@
 #define BLACKGUI_AIRLINEICAOLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include <QAbstractItemModel>
-#include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackgui/models/listmodeldbobjects.h"
+
+class QObject;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CAirlineIcaoCode;
+        class CAirlineIcaoCodeList;
+    }
+}
 
 namespace BlackGui
 {

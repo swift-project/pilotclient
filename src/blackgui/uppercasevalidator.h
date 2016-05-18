@@ -13,7 +13,11 @@
 #define BLACKGUI_UPPERCASEVALIDATOR_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QValidator>
+
+class QObject;
+class QString;
 
 namespace BlackGui
 {

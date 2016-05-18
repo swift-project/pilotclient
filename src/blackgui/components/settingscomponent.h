@@ -13,11 +13,13 @@
 #define BLACKGUI_COMPONENTS_SETTINGSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/server.h"
-#include <QTabWidget>
-#include <QModelIndex>
-#include <QTimer>
+
+#include <QColor>
+#include <QObject>
 #include <QScopedPointer>
+#include <QTabWidget>
+
+class QWidget;
 
 namespace Ui { class CSettingsComponent; }
 

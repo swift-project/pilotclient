@@ -7,14 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftcomponent.h"
-#include "ui_aircraftcomponent.h"
-#include "enablefordockwidgetinfoarea.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextsimulator.h"
 #include "blackcore/network.h"
+#include "blackgui/components/aircraftcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/infoarea.h"
+#include "blackgui/models/simulatedaircraftlistmodel.h"
+#include "blackgui/views/airportview.h"
+#include "blackgui/views/simulatedaircraftview.h"
+#include "blackgui/views/viewbase.h"
+#include "ui_aircraftcomponent.h"
+
+#include <QString>
+#include <QTabBar>
+#include <QTimer>
 
 using namespace BlackGui;
 using namespace BlackGui::Views;

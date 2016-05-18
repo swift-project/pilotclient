@@ -7,8 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorselector.h"
+#include "blackgui/components/simulatorselector.h"
+#include "blackmisc/compare.h"
 #include "ui_simulatorselector.h"
+
+#include <QCheckBox>
+#include <QRadioButton>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
 

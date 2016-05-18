@@ -7,7 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "actionhotkeylistmodel.h"
+#include "blackgui/models/actionhotkeylistmodel.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/input/actionhotkey.h"
+#include "blackmisc/input/hotkeycombination.h"
+#include "blackmisc/sequence.h"
+
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Input;

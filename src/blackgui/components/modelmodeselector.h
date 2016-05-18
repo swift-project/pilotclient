@@ -12,10 +12,14 @@
 #ifndef BLACKGUI_COMPONENTS_MODELMODESELECTOR_H
 #define BLACKGUI_COMPONENTS_MODELMODESELECTOR_H
 
-#include "blackguiexport.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CModelModeSelector; }
 

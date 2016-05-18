@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "commandinput.h"
-#include <QDateTime>
+#include "blackgui/components/commandinput.h"
+
+class QWidget;
 
 using namespace BlackMisc;
 

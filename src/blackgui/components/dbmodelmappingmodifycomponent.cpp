@@ -7,9 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "dbmodelmappingmodifycomponent.h"
+#include "blackgui/components/dbmodelmappingmodifycomponent.h"
+#include "blackgui/editors/modelmappingmodifyform.h"
 #include "ui_dbmodelmappingmodifycomponent.h"
-#include "dbmappingcomponent.h"
+
+#include <QWidget>
 
 using namespace BlackMisc;
 

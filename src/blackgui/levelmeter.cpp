@@ -9,12 +9,15 @@
  * Class based on qt example: Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies)
  */
 
-#include "levelmeter.h"
+#include "blackgui/levelmeter.h"
+
 #include <math.h>
 #include <QPainter>
+#include <QRect>
+#include <QSizePolicy>
 #include <QTimer>
-#include <QDebug>
-
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackGui
 {

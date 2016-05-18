@@ -13,14 +13,21 @@
 #define BLACKGUI_SIMULATORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/icon.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
+#include "blackmisc/icons.h"
 
-#include <QTabWidget>
+#include <QObject>
 #include <QScopedPointer>
+#include <QString>
+#include <QTabWidget>
+#include <QtGlobal>
 
+class QWidget;
+
+namespace BlackMisc { class CIcon; }
 namespace Ui { class CSimulatorComponent; }
+
 namespace BlackGui
 {
     namespace Components

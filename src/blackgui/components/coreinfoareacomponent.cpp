@@ -7,17 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "coreinfoareacomponent.h"
-#include "ui_coreinfoareacomponent.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/components/corestatuscomponent.h"
-#include "blackgui/stylesheetutility.h"
-#include "blackgui/guiutility.h"
+#include "blackgui/components/coreinfoareacomponent.h"
+#include "blackgui/infoarea.h"
 #include "blackmisc/icons.h"
-#include <QMenu>
-#include <QListIterator>
-#include <QSignalMapper>
-#include <QCloseEvent>
+#include "ui_coreinfoareacomponent.h"
 
 using namespace BlackMisc;
 using namespace BlackGui;

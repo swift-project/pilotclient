@@ -7,12 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "ownmodelsetform.h"
-#include "ui_ownmodelsetform.h"
-#include "blackgui/models/distributorlistmodel.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
+#include "blackgui/editors/ownmodelsetform.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/models/distributorlistmodel.h"
+#include "blackgui/views/distributorview.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "ui_ownmodelsetform.h"
+
+#include <QRadioButton>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Models;

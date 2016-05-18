@@ -13,13 +13,21 @@
 #define BLACKGUI_FLIGHTPLANCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/statusmessagelist.h"
 
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
 #include <QTabWidget>
+#include <QtGlobal>
 
+class QWidget;
+
+namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CFlightPlanComponent; }
+
 namespace BlackGui
 {
     namespace Components

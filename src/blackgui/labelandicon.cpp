@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "labelandicon.h"
+#include "blackgui/labelandicon.h"
 #include "ui_labelandicon.h"
+
+#include <QLabel>
 
 namespace BlackGui
 {

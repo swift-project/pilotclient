@@ -15,8 +15,13 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/infoarea.h"
 #include "blackmisc/network/entityflags.h"
-#include <QMainWindow>
+
+#include <QObject>
 #include <QScopedPointer>
+#include <QSize>
+
+class QPixmap;
+class QWidget;
 
 namespace Ui { class CDataInfoAreaComponent; }
 
@@ -24,13 +29,12 @@ namespace BlackGui
 {
     namespace Components
     {
-        class CDataMappingComponent;
         class CDbAircraftIcaoComponent;
         class CDbAirlineIcaoComponent;
-        class CDbModelComponent;
+        class CDbCountryComponent;
         class CDbDistributorComponent;
         class CDbLiveryComponent;
-        class CDbCountryComponent;
+        class CDbModelComponent;
 
         /**
          * Info area containing the DB data (models, liveries ...)

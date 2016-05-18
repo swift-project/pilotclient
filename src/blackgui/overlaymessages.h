@@ -13,16 +13,25 @@
 #define BLACKGUI_OVERLAYMESSAGES_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
+
 #include <QFrame>
-#include <QScopedPointer>
-#include <QTimer>
 #include <QMessageBox>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QTimer>
 #include <functional>
 
+class QKeyEvent;
+class QPaintEvent;
+class QPixmap;
+class QWidget;
+
+namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace Ui { class COverlayMessages; }
 
 namespace BlackGui

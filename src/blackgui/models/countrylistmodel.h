@@ -13,9 +13,17 @@
 #define BLACKGUI_COUNTRYLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/countrylist.h"
 #include "blackgui/models/listmodeldbobjects.h"
-#include <QAbstractItemModel>
+
+#include <QString>
+
+class QObject;
+
+namespace BlackMisc
+{
+    class CCountry;
+    class CCountryList;
+}
 
 namespace BlackGui
 {

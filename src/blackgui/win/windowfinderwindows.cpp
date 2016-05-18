@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "windowfinderwindows.h"
+#include "blackgui/win/windowfinderwindows.h"
 #include <QWindow>
 #include <QScopedArrayPointer>
 

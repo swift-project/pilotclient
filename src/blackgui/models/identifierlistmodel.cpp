@@ -7,9 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "identifierlistmodel.h"
-#include <QMetaProperty>
-#include <QBrush>
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackgui/models/identifierlistmodel.h"
+#include "blackmisc/timestampbased.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

@@ -7,11 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "audiosetupcomponent.h"
-#include "ui_audiosetupcomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
-#include "blackmisc/logmessage.h"
+#include "blackgui/components/audiosetupcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/audio/audiodeviceinfo.h"
+#include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/audio/settings/settingsaudio.h"
+#include "blackmisc/sequence.h"
+#include "ui_audiosetupcomponent.h"
+
+#include <QCheckBox>
+#include <QComboBox>
+#include <QToolButton>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc;

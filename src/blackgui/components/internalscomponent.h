@@ -14,8 +14,12 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/aircraftparts.h"
+
+#include <QObject>
+#include <QScopedPointer>
 #include <QWidget>
-#include <QScopedArrayPointer>
+
+class QShowEvent;
 
 namespace Ui { class CInternalsComponent; }
 

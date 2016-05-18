@@ -13,13 +13,25 @@
 #define BLACKGUI_GUIAPPLICATION_H
 
 #include "blackcore/application.h"
-#include "blackgui/mainwindowaccess.h"
-#include "blackgui/enableforframelesswindow.h"
-#include "blackgui/stylesheetutility.h"
 #include "blackgui/blackguiexport.h"
-#include <QMenu>
-#include <QSplashScreen>
+#include "blackgui/enableforframelesswindow.h"
+#include "blackgui/mainwindowaccess.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QCommandLineOption>
+#include <QObject>
+#include <QPixmap>
 #include <QScopedPointer>
+#include <QString>
+#include <Qt>
+
+class QMenu;
+class QSplashScreen;
+class QWidget;
+
+namespace BlackMisc { class CLogCategoryList; }
 
 namespace BlackGui
 {

@@ -14,8 +14,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
+
 #include <QLineEdit>
+#include <QObject>
 #include <QString>
+
+class QWidget;
 
 namespace BlackGui
 {

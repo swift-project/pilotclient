@@ -14,8 +14,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/icons.h"
+
 #include <QLabel>
+#include <QObject>
 #include <QPixmap>
+#include <QString>
+
+class QWidget;
 
 namespace BlackGui
 {

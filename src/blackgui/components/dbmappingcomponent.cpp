@@ -7,20 +7,47 @@
  * contained in the LICENSE file.
  */
 
-#include "dbmappingcomponent.h"
-#include "ui_dbmappingcomponent.h"
+#include "blackcore/webdataservices.h"
 #include "blackgui/components/dbautostashingcomponent.h"
+#include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbmodelmappingmodifycomponent.h"
+#include "blackgui/components/dbownmodelscomponent.h"
+#include "blackgui/components/dbownmodelsetcomponent.h"
+#include "blackgui/components/dbstashcomponent.h"
 #include "blackgui/components/modelmatchercomponent.h"
-#include "blackgui/menus/aircraftmodelmenus.h"
+#include "blackgui/editors/aircrafticaoform.h"
+#include "blackgui/editors/distributorform.h"
+#include "blackgui/editors/liveryform.h"
+#include "blackgui/editors/modelmappingform.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackgui/shortcut.h"
-#include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
-#include "blackmisc/simulation/aircraftmodelutils.h"
+#include "blackgui/menus/aircraftmodelmenus.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
-#include <QFile>
-#include <QShortcut>
+#include "blackmisc/network/authenticateduser.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
+#include "ui_dbmappingcomponent.h"
+
+#include <QAction>
+#include <QDialog>
+#include <QFrame>
+#include <QKeySequence>
+#include <QMenu>
+#include <QModelIndex>
+#include <QPoint>
+#include <QSplitter>
+#include <QTabWidget>
+#include <QVariant>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc;

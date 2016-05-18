@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "liveryview.h"
-#include <QHeaderView>
+#include "blackgui/views/liveryview.h"
+#include "blackgui/views/viewbase.h"
 
 using namespace BlackGui::Models;
 

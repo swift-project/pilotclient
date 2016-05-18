@@ -14,9 +14,15 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessagelist.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+#include <QString>
 #include <QTimer>
+
+class QPaintEvent;
+class QWidget;
 
 namespace Ui { class CValidationIndicator; }
 

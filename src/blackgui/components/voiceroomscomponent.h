@@ -14,8 +14,12 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/audio/voiceroomlist.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CVoiceRoomsComponent; }
 

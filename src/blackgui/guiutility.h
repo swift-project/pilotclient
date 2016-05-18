@@ -13,15 +13,24 @@
 #define BLACKGUI_GUIUTILITY_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/icon.h"
-#include "enableforframelesswindow.h"
+#include "blackmisc/variant.h"
+
+#include <QByteArray>
+#include <QPoint>
+#include <QString>
 #include <QWidgetList>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QCommandLineParser>
+
+class QCheckBox;
+class QComboBox;
+class QLayout;
+class QMimeData;
+class QTabWidget;
+class QWidget;
 
 namespace BlackGui
 {
+    class CEnableForFramelessWindow;
+
     class COverlayMessagesFrame;
 
     //! GUI utilities

@@ -7,13 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "pluginselector.h"
+#include "blackgui/pluginselector.h"
 
 #include <QCheckBox>
 #include <QHBoxLayout>
-#include <QVBoxLayout>
+#include <QLayout>
 #include <QPushButton>
+#include <QSignalMapper>
+#include <QVBoxLayout>
 #include <QVariant>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackGui
 {

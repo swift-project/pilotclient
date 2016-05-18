@@ -13,7 +13,11 @@
 #define BLACKGUI_FILTERS_FILTERDIALOG_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QDialog>
+#include <QObject>
+
+class QWidget;
 
 namespace BlackGui
 {

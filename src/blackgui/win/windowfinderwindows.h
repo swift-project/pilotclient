@@ -13,7 +13,7 @@
 #define BLACKGUI_WINDOWFINDERWINDOWS_H
 
 #include "blackgui/blackguiexport.h"
-#include "../windowfinder.h"
+#include "blackgui/windowfinder.h"
 
 namespace BlackGui
 {

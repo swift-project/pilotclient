@@ -13,8 +13,13 @@
 #define BLACKGUI_SERVERVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/serverlistmodel.h"
+#include "blackgui/models/serverlistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/network/serverlist.h"
+
+class QWidget;
+
+namespace BlackMisc { namespace Network { class CServer; } }
 
 namespace BlackGui
 {

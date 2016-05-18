@@ -7,9 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "serverlistmodel.h"
-#include <QMetaProperty>
-#include <QBrush>
+#include "blackgui/models/columns.h"
+#include "blackgui/models/serverlistmodel.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/user.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc::Network;
 

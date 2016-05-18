@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "textmessageview.h"
-#include <QHeaderView>
+#include "blackgui/models/textmessagelistmodel.h"
+#include "blackgui/views/textmessageview.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

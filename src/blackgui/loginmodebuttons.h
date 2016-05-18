@@ -12,11 +12,14 @@
 #ifndef BLACKGUI_LOGINMODEBUTTONS_H
 #define BLACKGUI_LOGINMODEBUTTONS_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackcore/network.h"
+#include "blackgui/blackguiexport.h"
+
 #include <QGroupBox>
+#include <QObject>
 #include <QScopedPointer>
 
+class QWidget;
 
 namespace Ui { class CLoginModeButtons; }
 

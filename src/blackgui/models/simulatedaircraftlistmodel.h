@@ -13,10 +13,12 @@
 #define BLACKGUI_SIMULATEDAIRCRAFTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackgui/models/listmodelbase.h"
-#include <QAbstractItemModel>
-#include <QDBusConnection>
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+
+class QObject;
+
+namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 
 namespace BlackGui
 {

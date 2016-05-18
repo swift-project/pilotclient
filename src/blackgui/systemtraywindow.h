@@ -13,10 +13,20 @@
 #define BLACKGUI_ENABLEFORSYSTEMTRAY_H
 
 #include "blackgui/blackguiexport.h"
+
+#include <QFlag>
+#include <QFlags>
+#include <QIcon>
 #include <QMainWindow>
+#include <QObject>
+#include <QString>
 #include <QSystemTrayIcon>
-#include <QMenu>
-#include <QAction>
+
+class QAction;
+class QCloseEvent;
+class QEvent;
+class QMenu;
+class QWidget;
 
 namespace BlackGui
 {

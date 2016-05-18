@@ -7,11 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "dbairlinenameselectorcomponent.h"
-#include "ui_dbairlinenameselectorcomponent.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/components/dbairlinenameselectorcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/datastoreutility.h"
+#include "ui_dbairlinenameselectorcomponent.h"
+
+#include <QCompleter>
+#include <QLineEdit>
+#include <QString>
+#include <Qt>
 
 using namespace BlackCore;
 using namespace BlackGui;

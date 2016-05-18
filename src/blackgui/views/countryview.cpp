@@ -7,8 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "countryview.h"
-#include <QHeaderView>
+#include "blackgui/views/countryview.h"
 
 using namespace BlackGui::Models;
 

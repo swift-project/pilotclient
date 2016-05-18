@@ -7,17 +7,31 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_ATCSTATIONVIEW_H
 #define BLACKGUI_ATCSTATIONVIEW_H
 
-//! \file
-
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/atcstationlistmodel.h"
+#include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/pq/frequency.h"
+
+#include <QList>
+#include <QObject>
+
+class QAction;
+class QWidget;
+
+namespace BlackMisc { namespace Aviation { class CCallsign; } }
 
 namespace BlackGui
 {
+    namespace Menus { class CMenuActions; }
+
     namespace Views
     {
         //! ATC stations view

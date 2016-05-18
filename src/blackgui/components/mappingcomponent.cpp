@@ -7,20 +7,40 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/views/aircraftmodelview.h"
-#include "blackgui/filters/aircraftmodelfilterdialog.h"
-#include "blackgui/models/aircraftmodellistmodel.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/guiapplication.h"
-#include "blackcore/contextsimulator.h"
 #include "blackcore/contextnetwork.h"
+#include "blackcore/contextsimulator.h"
 #include "blackcore/network.h"
-#include "blackmisc/propertyindexlist.h"
+#include "blackgui/components/mappingcomponent.h"
+#include "blackgui/components/updatetimer.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/models/simulatedaircraftlistmodel.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/checkboxdelegate.h"
+#include "blackgui/views/simulatedaircraftview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/statusmessage.h"
 #include "mappingcomponent.h"
 #include "ui_mappingcomponent.h"
+
+#include <QCheckBox>
+#include <QCompleter>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPixmap>
+#include <QPushButton>
 #include <QStringListModel>
+#include <QTabBar>
+#include <QTabWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

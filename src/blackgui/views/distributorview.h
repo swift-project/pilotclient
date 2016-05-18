@@ -13,8 +13,20 @@
 #define BLACKGUI_DISTRIBUTORVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewdbobjects.h"
-#include "../models/distributorlistmodel.h"
+#include "blackgui/models/distributorlistmodel.h"
+#include "blackgui/views/viewdbobjects.h"
+
+class QString;
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Simulation
+    {
+        class CDistributor;
+        class CDistributorList;
+    }
+}
 
 namespace BlackGui
 {

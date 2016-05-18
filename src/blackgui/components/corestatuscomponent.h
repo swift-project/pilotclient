@@ -13,8 +13,12 @@
 #define BLACKGUI_COMPONENTS_CORESTATUSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CCoreStatusComponent; }
 

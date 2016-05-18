@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "transpondermodeselector.h"
+#include "blackgui/components/transpondermodeselector.h"
+
+#include <QStringList>
 
 using namespace BlackMisc::Aviation;
 

@@ -7,9 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "cockpitinfoareacomponent.h"
-#include "ui_cockpitinfoareacomponent.h"
+#include "blackgui/components/cockpitinfoareacomponent.h"
+#include "blackgui/infoarea.h"
 #include "blackmisc/icons.h"
+#include "ui_cockpitinfoareacomponent.h"
+
+#include <QTabWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

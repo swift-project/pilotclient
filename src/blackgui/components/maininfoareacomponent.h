@@ -13,27 +13,32 @@
 #define BLACKGUI_MAININFOAREACOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "../infoarea.h"
-#include <QTabBar>
-#include <QPixmap>
+#include "blackgui/infoarea.h"
+
+#include <QObject>
 #include <QScopedPointer>
+#include <QSize>
+
+class QPixmap;
+class QWidget;
 
 namespace Ui { class CMainInfoAreaComponent; }
+
 namespace BlackGui
 {
     namespace Components
     {
+        class CAircraftComponent;
+        class CAtcStationComponent;
         // forward declaration to break compile dependency from all components
         class CCockpitComponent;
-        class CAtcStationComponent;
-        class CAircraftComponent;
-        class CMappingComponent;
-        class CUserComponent;
         class CFlightPlanComponent;
-        class CSettingsComponent;
         class CLogComponent;
+        class CMappingComponent;
+        class CSettingsComponent;
         class CSimulatorComponent;
         class CTextMessageComponent;
+        class CUserComponent;
 
 
         //! Main info area

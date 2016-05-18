@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "form.h"
+#include "blackgui/editors/form.h"
+
+class QWidget;
+namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
 
 namespace BlackGui
 {

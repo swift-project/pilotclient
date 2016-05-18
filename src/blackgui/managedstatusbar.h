@@ -13,13 +13,14 @@
 #define BLACKGUI_MANAGEDSTATUSBAR_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QObject>
-#include <QStatusBar>
-#include <QLabel>
-#include <QTimer>
+
+class QLabel;
+class QStatusBar;
+class QTimer;
 
 namespace BlackGui
 {

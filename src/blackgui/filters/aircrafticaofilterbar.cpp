@@ -7,9 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "aircrafticaofilterbar.h"
+#include "blackgui/components/aircraftcombinedtypeselector.h"
+#include "blackgui/filters/aircrafticaofilterbar.h"
+#include "blackgui/filters/filterbarbuttons.h"
+#include "blackgui/models/aircrafticaofilter.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "ui_aircrafticaofilterbar.h"
+
+#include <QLineEdit>
+#include <QString>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackGui;

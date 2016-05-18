@@ -12,11 +12,25 @@
 #ifndef BLACKGUI_FILTERS_LIVERYFILTERBAR_H
 #define BLACKGUI_FILTERS_LIVERYFILTERBAR_H
 
-#include "blackguiexport.h"
+#include "blackgui/blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
-#include "blackgui/models/liveryfilter.h"
-#include <QFrame>
+#include "blackgui/models/modelfilter.h"
+#include "blackmisc/rgbcolor.h"
 
+#include <QObject>
+#include <QScopedPointer>
+#include <memory>
+
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CLivery;
+        class CLiveryList;
+    }
+}
 namespace Ui { class CLiveryFilterBar; }
 
 namespace BlackGui

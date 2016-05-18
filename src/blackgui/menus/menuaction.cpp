@@ -7,9 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "menuaction.h"
+#include "blackgui/menus/menuaction.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/slot.h"
 #include "blackmisc/verify.h"
+
+#include <QAction>
+#include <QMap>
+#include <QMenu>
+#include <QStringList>
+#include <QtGlobal>
 #include <algorithm>
 
 using namespace BlackMisc;

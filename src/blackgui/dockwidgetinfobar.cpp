@@ -7,14 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "guiutility.h"
-#include "dockwidgetinfobar.h"
-#include "components/maininfoareacomponent.h"
-#include "guiapplication.h"
-#include "stylesheetutility.h"
+#include "blackgui/dockwidgetinfobar.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackmisc/icons.h"
 
-#include <QStyleOption>
+#include <QIcon>
+#include <QString>
 
 using namespace BlackMisc;
 using namespace BlackGui::Components;

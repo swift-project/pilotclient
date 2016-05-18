@@ -12,19 +12,42 @@
 #ifndef BLACKGUI_COMPONENTS_DBSTASHCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBSTASHCOMPONENT_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
-#include "blackgui/menus/menudelegate.h"
-#include "blackmisc/verify.h"
-#include <QFrame>
-#include <QScopedPointer>
-#include <QStringList>
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 
+#include <QFrame>
+#include <QList>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QStringList>
+#include <functional>
+
+class QWidget;
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CLivery;
+    }
+}
 namespace Ui { class CDbStashComponent; }
 
 namespace BlackGui
 {
     namespace Views { class CAircraftModelView; }
+
     namespace Components
     {
         /*!
@@ -75,7 +98,7 @@ namespace BlackGui
             const BlackMisc::Simulation::CAircraftModelList &getStashedModels() const;
 
             //! Model for model string
-            Simulation::CAircraftModel getStashedModel(const QString &modelString) const;
+            BlackMisc::Simulation::CAircraftModel getStashedModel(const QString &modelString) const;
 
             //! Apply livery to selected objects
             void applyToSelected(const BlackMisc::Aviation::CLivery &livery, bool acceptWarnings = true);

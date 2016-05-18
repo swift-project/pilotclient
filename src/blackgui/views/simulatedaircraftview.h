@@ -13,12 +13,24 @@
 #define BLACKGUI_SIMULATEDAIRCRAFTVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/simulatedaircraftlistmodel.h"
-#include <QMenu>
+#include "blackgui/models/simulatedaircraftlistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+
+#include <QObject>
+
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation { class CCallsign; }
+    namespace Simulation { class CSimulatedAircraft; }
+}
 
 namespace BlackGui
 {
+    namespace Menus { class CMenuActions; }
+
     namespace Views
     {
         //! Aircraft view

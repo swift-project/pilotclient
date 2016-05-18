@@ -13,8 +13,13 @@
 #define BLACKGUI_FILTERS_FILTERBARBUTTONS_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QFrame>
+#include <QMetaType>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CFilterBarButtons; }
 

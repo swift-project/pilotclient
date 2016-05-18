@@ -7,11 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "atcstationview.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/views/atcstationview.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/testing.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/buildconfig.h"
-#include <QHeaderView>
+#include "blackmisc/icons.h"
+
+#include <QFlags>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

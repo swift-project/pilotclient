@@ -7,12 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "maininfoareacomponent.h"
-#include "ui_maininfoareacomponent.h"
-#include "allmaininfoareacomponents.h"
-#include "../stylesheetutility.h"
-#include "../guiutility.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/maininfoareacomponent.h"
+#include "blackgui/components/settingscomponent.h"
 #include "blackmisc/icons.h"
+#include "ui_maininfoareacomponent.h"
+
+#include <QIcon>
 
 using namespace BlackMisc;
 using namespace BlackGui;

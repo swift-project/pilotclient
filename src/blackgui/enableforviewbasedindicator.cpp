@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "enableforviewbasedindicator.h"
+#include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/views/viewbase.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackGui;

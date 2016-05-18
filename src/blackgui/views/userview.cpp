@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "userview.h"
-#include <QHeaderView>
+#include "blackgui/models/userlistmodel.h"
+#include "blackgui/views/userview.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

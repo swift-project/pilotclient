@@ -13,8 +13,8 @@
 #define BLACKGUI_PLUGINCONFIG_H
 
 #include "blackgui/blackguiexport.h"
-#include <QtWidgets/QWidget>
-#include <QtPlugin>
+
+class QWidget;
 
 namespace BlackGui
 {

@@ -13,9 +13,14 @@
 #define BLACKGUI_COMPONENTS_DBAIRLINEICAOSELECTORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "dbairlineicaoselectorbase.h"
+#include "blackgui/components/dbairlineicaoselectorbase.h"
 #include "blackmisc/aviation/airlineicaocode.h"
-#include <QScopedPointer>
+
+#include <QObject>
+#include <QString>
+
+class QCompleter;
+class QWidget;
 
 namespace Ui { class CDbAirlineIcaoSelectorComponent; }
 

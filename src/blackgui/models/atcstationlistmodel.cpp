@@ -7,9 +7,29 @@
  * contained in the LICENSE file.
  */
 
-#include "atcstationlistmodel.h"
+#include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
 #include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexvariantmap.h"
+
+#include <QDateTime>
+#include <QList>
+#include <QMap>
+#include <QModelIndex>
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QString>
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Audio;

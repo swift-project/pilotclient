@@ -12,14 +12,21 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 
-#include "blackgui/models/actionhotkeylistmodel.h"
-#include "blackcore/settings/application.h"
 #include "blackcore/actionbind.h"
-#include <QFrame>
+#include "blackcore/settings/application.h"
+#include "blackgui/blackguiexport.h"
+#include "blackgui/models/actionhotkeylistmodel.h"
+#include "blackmisc/input/actionhotkey.h"
+#include "blackmisc/input/actionhotkeylist.h"
+#include "blackmisc/settingscache.h"
 
-namespace Ui {
-    class CSettingsHotkeyComponent;
-}
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
+
+namespace Ui { class CSettingsHotkeyComponent; }
 
 namespace BlackGui
 {

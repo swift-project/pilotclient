@@ -7,10 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "cockpitcomponent.h"
-#include "../showhidebar.h"
-#include "../dockwidgetinfoarea.h"
+#include "blackgui/components/cockpitcomcomponent.h"
+#include "blackgui/components/cockpitcomponent.h"
+#include "blackgui/components/cockpitinfoareacomponent.h"
+#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/showhidebar.h"
 #include "ui_cockpitcomponent.h"
+
+#include <QDockWidget>
+#include <QtGlobal>
 
 namespace BlackGui
 {

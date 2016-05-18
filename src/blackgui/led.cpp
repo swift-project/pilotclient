@@ -9,15 +9,19 @@
  * Class based on qLed: Copyright (C) 2010 by P. Sereno, http://www.sereno-online.com
  */
 
-#include "led.h"
+#include "blackgui/led.h"
 
-#include <QColor>
-#include <QtGlobal>
-#include <QtGui>
-#include <QPolygon>
-#include <QtSvg>
-#include <QSvgRenderer>
 #include <QImage>
+#include <QList>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QRgb>
+#include <QSize>
+#include <QStringList>
+#include <QStyleOption>
+#include <QSvgRenderer>
+#include <Qt>
+#include <QtGlobal>
 
 namespace BlackGui
 {

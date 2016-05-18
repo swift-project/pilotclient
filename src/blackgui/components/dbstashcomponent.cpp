@@ -7,15 +7,32 @@
  * contained in the LICENSE file.
  */
 
-#include "dbstashcomponent.h"
-#include "dbmappingcomponent.h"
-#include "ui_dbstashcomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/views/aircraftmodelview.h"
+#include "blackcore/application.h"
 #include "blackcore/databasewriter.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/icons.h"
+#include "blackgui/components/dbmappingcomponent.h"
+#include "blackgui/components/dbstashcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/sequence.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/verify.h"
+#include "ui_dbstashcomponent.h"
+
+#include <QCheckBox>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
+#include <iterator>
 
 using namespace BlackCore;
 using namespace BlackMisc;

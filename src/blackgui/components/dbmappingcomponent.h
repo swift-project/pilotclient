@@ -14,24 +14,48 @@
 
 #include "blackcore/data/authenticateduser.h"
 #include "blackgui/blackguiexport.h"
-#include "blackgui/overlaymessagesframe.h"
-#include "blackgui/menus/menudelegate.h"
-#include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/views/aircraftmodelview.h"
-#include "blackmisc/simulation/aircraftmodelloader.h"
-#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
-#include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/statusmessagelist.h"
+#include "blackgui/enableforviewbasedindicator.h"
+#include "blackgui/menus/menudelegate.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/digestsignal.h"
-#include <QFrame>
-#include <QScopedPointer>
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 
+#include <QList>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QStringList>
+
+class QAction;
+class QModelIndex;
+class QPoint;
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CLivery;
+    }
+}
 namespace Ui { class CDbMappingComponent; }
 
 namespace BlackGui
 {
+    namespace Menus { class CMenuActions; }
+    namespace Views { class CAircraftModelView; }
+
     namespace Components
     {
         class CDbAutoStashingComponent;
@@ -112,7 +136,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
 
             //! Own models for simulator
-            const Simulation::CSimulatorInfo getOwnModelsSimulator() const;
+            const BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
             //! Number of own models
             int getOwnModelsCount() const;

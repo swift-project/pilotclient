@@ -13,12 +13,17 @@
 #define BLACKGUI_COMPONENTS_DBAIRCRAFTICAOCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enableforviewbasedindicator.h"
 #include "blackmisc/network/entityflags.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
 
+class QWidget;
+
+namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
 namespace Ui { class CDbAircraftIcaoComponent; }
 
 namespace BlackGui

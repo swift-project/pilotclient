@@ -7,9 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatedaircraftview.h"
+#include "blackgui/models/simulatedaircraftlistmodel.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/views/simulatedaircraftview.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/buildconfig.h"
-#include <QHeaderView>
+#include "blackmisc/icons.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

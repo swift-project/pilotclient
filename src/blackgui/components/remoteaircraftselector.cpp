@@ -7,10 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "remoteaircraftselector.h"
-#include "ui_remoteaircraftselector.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextnetwork.h"
+#include "blackgui/components/remoteaircraftselector.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "ui_remoteaircraftselector.h"
+
+#include <QComboBox>
+#include <QString>
+#include <QStringList>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

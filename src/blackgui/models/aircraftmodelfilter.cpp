@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelfilter.h"
+#include "blackgui/models/aircraftmodelfilter.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/livery.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 
 using namespace BlackMisc::Simulation;

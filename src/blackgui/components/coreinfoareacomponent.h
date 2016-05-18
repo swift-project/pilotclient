@@ -13,18 +13,23 @@
 #define BLACKGUI_COMPONENTS_COREINFOAREACOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "../infoarea.h"
-#include <QTabBar>
-#include <QPixmap>
+#include "blackgui/infoarea.h"
+
+#include <QObject>
 #include <QScopedPointer>
+#include <QSize>
+
+class QPixmap;
+class QWidget;
 
 namespace Ui { class CCoreInfoAreaComponent; }
+
 namespace BlackGui
 {
     namespace Components
     {
-        class CLogComponent;
         class CCoreStatusComponent;
+        class CLogComponent;
 
         //! Main info area
         class BLACKGUI_EXPORT CCoreInfoAreaComponent : public BlackGui::CInfoArea

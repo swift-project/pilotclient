@@ -7,9 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "logcomponent.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/statusmessageform.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/views/statusmessageview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/icons.h"
 #include "ui_logcomponent.h"
-#include "../stylesheetutility.h"
+
+#include <QAction>
+#include <QMenu>
+#include <QTabWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackGui;

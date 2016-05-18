@@ -13,12 +13,16 @@
 #define BLACKGUI_COMPONENTS_DBMODELMAPPINGMODIFYCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackmisc/propertyindexvariantmap.h"
-#include "dbmappingcomponentaware.h"
+
 #include <QDialog>
+#include <QObject>
 #include <QScopedPointer>
 
+class QWidget;
+
+namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace Ui { class CDbModelMappingModifyComponent; }
 
 namespace BlackGui

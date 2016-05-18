@@ -13,14 +13,22 @@
 #define BLACKGUI_COCKPITCOMCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enablefordockwidgetinfoarea.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/aviation/transponder.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/selcal.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
 
+class QPaintEvent;
+class QWidget;
+
+namespace BlackMisc { namespace Aviation { class CComSystem; } }
 namespace Ui { class CCockpitMainComponent; }
 
 namespace BlackGui

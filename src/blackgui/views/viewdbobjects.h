@@ -12,12 +12,35 @@
 #ifndef BLACKGUI_VIEWDBOBJECTS_H
 #define BLACKGUI_VIEWDBOBJECTS_H
 
-#include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include <QMenu>
+#include "blackgui/models/aircrafticaolistmodel.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/models/airlineicaolistmodel.h"
+#include "blackgui/models/countrylistmodel.h"
+#include "blackgui/models/distributorlistmodel.h"
+#include "blackgui/models/liverylistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
+
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <QtGlobal>
+
+class QAction;
+class QIntValidator;
+class QLineEdit;
+class QWidget;
 
 namespace BlackGui
 {
+    namespace Menus { class CMenuActions; }
+
     namespace Views
     {
         //! Base class for views with DB objects

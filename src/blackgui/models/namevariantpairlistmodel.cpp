@@ -7,7 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "namevariantpairlistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackgui/models/namevariantpairlistmodel.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/namevariantpair.h"
+#include "blackmisc/propertyindexvariantmap.h"
+
+#include <QModelIndex>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

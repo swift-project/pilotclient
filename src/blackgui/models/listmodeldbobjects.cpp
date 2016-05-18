@@ -7,9 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "listmodeldbobjects.h"
-#include "allmodelcontainers.h"
-#include "blackmisc/datastoreobjectlist.h"
+#include "blackgui/models/listmodeldbobjects.h"
+#include "blackmisc/orderable.h"
+
+#include <QBrush>
+#include <QModelIndex>
 #include <type_traits>
 
 using namespace BlackMisc;

@@ -13,8 +13,12 @@
 #define BLACKGUI_EDITORS_OWNMODELSETFORM_H
 
 #include "blackmisc/simulation/distributorlist.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class COwnModelSetForm; }
 

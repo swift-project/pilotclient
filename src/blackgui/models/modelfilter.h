@@ -12,8 +12,25 @@
 #ifndef BLACKGUI_LISTMODELFILTER_H
 #define BLACKGUI_LISTMODELFILTER_H
 
-#include "blackgui/blackguiexport.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/identifierlist.h"
+#include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/statusmessagelist.h"
+
 #include <QString>
+#include <Qt>
 #include <memory>
 
 namespace BlackGui

@@ -10,12 +10,20 @@
 #ifndef BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
-#include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/settings/application.h"
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include <QFrame>
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+class QWidget;
+
+namespace BlackCore { class CPluginManagerSimulator; }
+namespace BlackMisc { namespace Simulation { class CSimulatorPluginInfo; } }
 namespace Ui { class CSettingsSimulatorComponent; }
 
 namespace BlackGui

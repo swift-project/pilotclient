@@ -12,10 +12,16 @@
 #ifndef BLACKGUI_EDITORS_FORM_H
 #define BLACKGUI_EDITORS_FORM_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackmisc/network/authenticateduser.h"
 #include "blackcore/data/authenticateduser.h"
+#include "blackgui/blackguiexport.h"
+#include "blackmisc/datacache.h"
+
 #include <QFrame>
+#include <QObject>
+
+class QWidget;
+
+namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
 
 namespace BlackGui
 {

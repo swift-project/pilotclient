@@ -1,11 +1,33 @@
-#include "hotkeydialog.h"
-#include "ui_hotkeydialog.h"
+#include "blackcore/inputmanager.h"
+#include "blackgui/components/hotkeydialog.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/input/keyboardkey.h"
+#include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/logmessage.h"
-#include <QIcon>
-#include <QMessageBox>
+#include "blackmisc/statusmessage.h"
+#include "ui_hotkeydialog.h"
+
+#include <QFrame>
+#include <QGroupBox>
+#include <QItemSelection>
+#include <QItemSelectionModel>
+#include <QLayout>
+#include <QLayoutItem>
+#include <QList>
+#include <QModelIndex>
+#include <QModelIndexList>
+#include <QPushButton>
+#include <QString>
+#include <QStringList>
+#include <QTreeView>
+#include <QVariant>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Input;

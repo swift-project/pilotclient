@@ -12,12 +12,22 @@
 #ifndef BLACKGUI_FILTERS_AIRLINEICAOFILTERBAR_H
 #define BLACKGUI_FILTERS_AIRLINEICAOFILTERBAR_H
 
-#include "blackguiexport.h"
+#include "blackgui/blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
-#include "blackgui/models/airlineicaofilter.h"
-#include <QFrame>
-#include <QScopedPointer>
+#include "blackgui/models/modelfilter.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 
+#include <QObject>
+#include <QScopedPointer>
+#include <memory>
+
+class QWidget;
+
+namespace BlackMisc
+{
+    class CCountry;
+    namespace Aviation { class CAirlineIcaoCodeList; }
+}
 namespace Ui { class CAirlineIcaoFilterBar; }
 
 namespace BlackGui

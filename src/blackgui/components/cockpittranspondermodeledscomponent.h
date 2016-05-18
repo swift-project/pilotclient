@@ -13,11 +13,17 @@
 #define BLACKMISC_COCKPITTRANSPONDERMODELEDSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "../led.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackgui/led.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+
 #include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
 
 namespace BlackGui
 {

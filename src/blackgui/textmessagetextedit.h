@@ -14,8 +14,17 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/textmessagelist.h"
+
+#include <QObject>
+#include <QString>
 #include <QTextEdit>
-#include <QAction>
+
+class QAction;
+class QPoint;
+class QTextDocument;
+class QWidget;
+
+namespace BlackMisc { namespace Network { class CTextMessage; } }
 
 namespace BlackGui
 {

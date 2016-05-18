@@ -7,9 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "airportlistmodel.h"
-#include <QMetaProperty>
-#include <QBrush>
+#include "blackgui/models/airportlistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;

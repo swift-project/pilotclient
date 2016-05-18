@@ -13,8 +13,12 @@
 #define BLACKGUI_USERVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/userlistmodel.h"
+#include "blackgui/models/userlistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/network/userlist.h"
+
+class QWidget;
+namespace BlackMisc { namespace Network { class CUser; } }
 
 namespace BlackGui
 {

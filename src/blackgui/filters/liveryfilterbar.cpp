@@ -7,9 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "liveryfilterbar.h"
-#include "ui_liveryfilterbar.h"
+#include "blackgui/components/colorselector.h"
+#include "blackgui/filters/filterbarbuttons.h"
+#include "blackgui/filters/liveryfilterbar.h"
+#include "blackgui/models/liveryfilter.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "ui_liveryfilterbar.h"
+
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QSlider>
+#include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;

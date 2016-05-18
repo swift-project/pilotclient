@@ -7,15 +7,33 @@
  * contained in the LICENSE file.
  */
 
-#include "atcstationcomponent.h"
-#include "ui_atcstationcomponent.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/guiapplication.h"
-#include "blackmisc/aviation/informationmessage.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/weather/metar.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
+#include "blackgui/components/atcstationcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/infoarea.h"
+#include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/views/atcstationview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/informationmessage.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/weather/metar.h"
+#include "ui_atcstationcomponent.h"
+
+#include <QAbstractItemModel>
+#include <QLineEdit>
+#include <QModelIndex>
+#include <QPushButton>
+#include <QStandardItemModel>
+#include <QTabBar>
+#include <QTableView>
+#include <QTextEdit>
+#include <QTimer>
+#include <QTreeView>
 
 using namespace BlackGui;
 using namespace BlackGui::Models;

@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "windowfinder.h"
+#include "blackgui/windowfinder.h"
+
+#include <QtGlobal>
 
 #if defined(Q_OS_WIN)
     #include "win/windowfinderwindows.h"

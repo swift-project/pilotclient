@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "uppercasevalidator.h"
+#include "blackgui/uppercasevalidator.h"
+
+#include <QString>
+#include <QtGlobal>
 
 namespace BlackGui
 {

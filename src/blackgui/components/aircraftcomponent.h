@@ -12,17 +12,29 @@
 #ifndef BLACKGUI_AIRCRAFTCOMPONENT_H
 #define BLACKGUI_AIRCRAFTCOMPONENT_H
 
+#include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
-#include "blackcore/network.h"
 
-#include <QTabWidget>
+#include <QObject>
 #include <QScopedPointer>
+#include <QTabWidget>
+#include <QtGlobal>
 
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation { class CCallsign; }
+    namespace Simulation { class CSimulatedAircraft; }
+}
 namespace Ui { class CAircraftComponent; }
+
 namespace BlackGui
 {
+    class CDockWidgetInfoArea;
+
     namespace Components
     {
         //! Aircraft widget

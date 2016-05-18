@@ -14,7 +14,14 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/input/actionhotkeylist.h"
+
 #include <QAbstractTableModel>
+#include <QModelIndex>
+#include <QObject>
+#include <QVariant>
+#include <Qt>
+
+class QModelIndex;
 
 namespace BlackGui
 {

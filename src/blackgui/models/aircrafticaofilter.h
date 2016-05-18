@@ -16,6 +16,8 @@
 #include "blackgui/models/modelfilter.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 
+#include <QString>
+
 namespace BlackGui
 {
     namespace Models

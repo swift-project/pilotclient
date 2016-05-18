@@ -10,8 +10,13 @@
 #ifndef BLACKGUI_COMPONENTS_REGISTERCOMPONENT_H
 #define BLACKGUI_COMPONENTS_REGISTERCOMPONENT_H
 
-#include "blackgui/components/updatetimer.h"
+#include "blackgui/blackguiexport.h"
+
 #include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CRegisterComponent; }
 
@@ -19,6 +24,8 @@ namespace BlackGui
 {
     namespace Components
     {
+        class CUpdateTimer;
+
         //! Register components in the GUI
         class BLACKGUI_EXPORT CRegisterComponent :
             public QFrame

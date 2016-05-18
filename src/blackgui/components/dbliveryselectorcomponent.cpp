@@ -7,14 +7,29 @@
  * contained in the LICENSE file.
  */
 
-#include "dbliveryselectorcomponent.h"
-#include "ui_dbliveryselectorcomponent.h"
-#include "blackgui/uppercasevalidator.h"
-#include "blackgui/guiapplication.h"
+#include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
+#include "blackgui/components/dbliveryselectorcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+#include "ui_dbliveryselectorcomponent.h"
+
+#include <QCompleter>
 #include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMetaType>
+#include <QPalette>
+#include <QStringList>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackGui;
 using namespace BlackCore;

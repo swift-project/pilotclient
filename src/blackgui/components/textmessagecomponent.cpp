@@ -7,18 +7,40 @@
  * contained in the LICENSE file.
  */
 
-#include "textmessagecomponent.h"
-#include "ui_textmessagecomponent.h"
-#include "blackgui/guiapplication.h"
+#include "blackcore/application.h"
 #include "blackcore/contextaudio.h"
-#include "blackmisc/network/user.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextownaircraft.h"
+#include "blackcore/corefacade.h"
+#include "blackgui/components/textmessagecomponent.h"
+#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/textmessagetextedit.h"
+#include "blackgui/views/textmessageview.h"
+#include "blackgui/views/viewbase.h"
 #include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simplecommandparser.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/sequence.h"
+#include "ui_textmessagecomponent.h"
 
+#include <QLayout>
+#include <QLineEdit>
 #include <QPushButton>
-#include <QMenu>
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc;

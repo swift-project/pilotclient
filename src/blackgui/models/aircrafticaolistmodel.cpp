@@ -7,9 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "aircrafticaolistmodel.h"
-#include <QMetaProperty>
-#include <QBrush>
+#include "blackgui/models/aircrafticaolistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/datastore.h"
+#include "blackmisc/timestampbased.h"
+
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc::Aviation;
 

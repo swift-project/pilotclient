@@ -7,9 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "distributorlistmodel.h"
-#include <QMetaProperty>
-#include <QBrush>
+#include "blackgui/models/columns.h"
+#include "blackgui/models/distributorlistmodel.h"
+#include "blackmisc/datastore.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/timestampbased.h"
+
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
 

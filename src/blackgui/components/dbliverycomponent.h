@@ -13,12 +13,17 @@
 #define BLACKGUI_COMPONENTS_DBLIVERYCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enableforviewbasedindicator.h"
 #include "blackmisc/network/entityflags.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
 
+class QWidget;
+
+namespace BlackMisc { namespace Aviation { class CLivery; } }
 namespace Ui { class CDbLiveryComponent; }
 
 namespace BlackGui

@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "distributorview.h"
-#include <QHeaderView>
+#include "blackgui/models/distributorlistmodel.h"
+#include "blackgui/views/distributorview.h"
+#include "blackgui/views/viewbase.h"
 
 using namespace BlackGui::Models;
 

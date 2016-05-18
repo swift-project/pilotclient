@@ -7,10 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "foreignwindows.h"
+#include "blackgui/foreignwindows.h"
+#include "blackgui/windowfinder.h"
+
 #include <QWidget>
 #include <QWindow>
-#include <QApplication>
+#include <QtGlobal>
 
 namespace BlackGui
 {

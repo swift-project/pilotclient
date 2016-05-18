@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "loginmodebuttons.h"
+#include "blackgui/loginmodebuttons.h"
 #include "ui_loginmodebuttons.h"
+
+#include <QRadioButton>
 
 using namespace BlackCore;
 

@@ -7,13 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "ui_dbdistributorcomponent.h"
-#include "blackgui/guiapplication.h"
-#include "dbdistributorcomponent.h"
 #include "blackcore/webdataservices.h"
+#include "blackgui/components/dbdistributorcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/distributorview.h"
+#include "blackgui/views/viewbase.h"
+#include "dbdistributorcomponent.h"
+#include "ui_dbdistributorcomponent.h"
 
 #include <QFrame>
 #include <QScopedPointer>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc::Network;

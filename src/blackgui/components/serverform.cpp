@@ -7,8 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "serverform.h"
+#include "blackgui/components/serverform.h"
+#include "blackmisc/network/user.h"
 #include "ui_serverform.h"
+
+#include <QIntValidator>
+#include <QLabel>
+#include <QLineEdit>
 
 using namespace BlackMisc::Network;
 

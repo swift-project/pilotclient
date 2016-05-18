@@ -7,9 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "enablefordockwidgetinfoarea.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/enableforframelesswindow.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/infoarea.h"
+
 #include <QDockWidget>
+#include <QMetaObject>
+#include <QObject>
+#include <QtGlobal>
 
 using namespace BlackGui;
 

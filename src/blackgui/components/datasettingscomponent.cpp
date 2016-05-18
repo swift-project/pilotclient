@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "datasettingscomponent.h"
+#include "blackgui/components/datasettingscomponent.h"
 #include "ui_datasettingscomponent.h"
 
 using namespace BlackGui;

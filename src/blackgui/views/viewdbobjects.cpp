@@ -7,12 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "viewdbobjects.h"
-#include "blackgui/models/allmodels.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/views/viewdbobjects.h"
+#include "blackmisc/icons.h"
+
 #include <QAction>
-#include <QWidgetAction>
-#include <QLineEdit>
 #include <QIntValidator>
+#include <QLineEdit>
+#include <QWidgetAction>
 
 using namespace BlackMisc;
 using namespace BlackGui;

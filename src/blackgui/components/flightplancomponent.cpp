@@ -7,13 +7,36 @@
  * contained in the LICENSE file.
  */
 
-#include "flightplancomponent.h"
-#include "blackgui/stylesheetutility.h"
-#include "blackgui/guiapplication.h"
-#include "ui_flightplancomponent.h"
-#include "blackmisc/logmessage.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
+#include "blackgui/components/flightplancomponent.h"
+#include "blackgui/components/selcalcodeselector.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessage.h"
+#include "ui_flightplancomponent.h"
+
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDateTime>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QRegExp>
+#include <QTabBar>
+#include <Qt>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

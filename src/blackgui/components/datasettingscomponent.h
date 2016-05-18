@@ -14,8 +14,11 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/overlaymessagesframe.h"
-#include <QFrame>
+
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CDataSettingsComponent; }
 

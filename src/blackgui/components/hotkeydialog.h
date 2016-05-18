@@ -14,14 +14,19 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/actionmodel.h"
-#include "blackcore/inputmanager.h"
-#include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/identifierlist.h"
-#include <QDialog>
-#include <QComboBox>
-#include <QItemSelection>
+#include "blackmisc/input/actionhotkey.h"
 
+#include <QComboBox>
+#include <QDialog>
+#include <QObject>
+#include <QScopedPointer>
+
+class QItemSelection;
+class QWidget;
+
+namespace BlackCore { class CInputManager; }
+namespace BlackMisc { namespace Input { class CHotkeyCombination; } }
 namespace Ui { class CHotkeyDialog; }
 
 namespace BlackGui

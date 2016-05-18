@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "modelfilter.h"
-#include "blackgui/models/allmodels.h"
+#include "blackgui/models/modelfilter.h"
+
+#include <QtGlobal>
 
 namespace BlackGui
 {

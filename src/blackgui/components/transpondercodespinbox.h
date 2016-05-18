@@ -13,7 +13,12 @@
 #define BLACKGUI_COMPONENTS_TRANSPONDERCODESPINBOX_H
 
 #include "blackgui/blackguiexport.h"
+
+#include <QObject>
 #include <QSpinBox>
+#include <QString>
+
+class QWidget;
 
 namespace BlackGui
 {

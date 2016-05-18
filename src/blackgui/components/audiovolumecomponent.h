@@ -13,10 +13,15 @@
 #define BLACKGUI_AUDIOVOLUME_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
 
+class QWidget;
+
 namespace Ui { class CAudioVolumeComponent; }
+
 namespace BlackGui
 {
     namespace Components

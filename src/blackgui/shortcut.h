@@ -15,7 +15,8 @@
 #define BLACKGUI_SHORTCUT_H
 
 #include "blackgui/blackguiexport.h"
-#include <QShortcut>
+
+class QKeySequence;
 
 namespace BlackGui
 {

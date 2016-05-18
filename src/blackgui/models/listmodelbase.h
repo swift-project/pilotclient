@@ -13,16 +13,30 @@
 #define BLACKGUI_LISTMODELBASE_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/dropbase.h"
 #include "blackgui/models/columns.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackgui/dropbase.h"
-#include "blackmisc/worker.h"
 #include "blackmisc/digestsignal.h"
+#include "blackmisc/variant.h"
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QModelIndex>
+#include <QModelIndexList>
+#include <QObject>
 #include <QStandardItemModel>
-#include <QThread>
+#include <QString>
+#include <QStringList>
+#include <QVariant>
+#include <QVector>
+#include <Qt>
 #include <memory>
-#include <iostream>
 #include <type_traits>
+
+class QMimeData;
+class QModelIndex;
+
+namespace BlackMisc { class CWorker; }
 
 namespace BlackGui
 {

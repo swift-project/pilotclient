@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "liveryfilter.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackgui/models/liveryfilter.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/livery.h"
 
 using namespace BlackMisc::Aviation;
 

@@ -7,17 +7,23 @@
  * contained in the LICENSE file.
  */
 
-#include "settingscomponent.h"
-#include "ui_settingscomponent.h"
-#include "blackgui/models/atcstationlistmodel.h"
-#include "blackgui/stylesheetutility.h"
+#include "blackgui/components/audiosetupcomponent.h"
+#include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextaudio.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/input/keyboardkeylist.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackmisc/logmessage.h"
+#include "ui_settingscomponent.h"
+
 #include <QColorDialog>
+#include <QComboBox>
+#include <QFont>
+#include <QFontComboBox>
+#include <QLineEdit>
+#include <QSlider>
+#include <QString>
+#include <QTabBar>
+#include <QToolButton>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -26,7 +32,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
 using namespace BlackMisc::Input;
 
 namespace BlackGui

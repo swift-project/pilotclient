@@ -7,12 +7,27 @@
  * contained in the LICENSE file.
  */
 
-#include "settingshotkeycomponent.h"
-#include "ui_settingshotkeycomponent.h"
-#include "blackgui/components/hotkeydialog.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextapplication.h"
+#include "blackgui/components/hotkeydialog.h"
+#include "blackgui/components/settingshotkeycomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/identifierlist.h"
+#include "blackmisc/input/hotkeycombination.h"
+#include "ui_settingshotkeycomponent.h"
+
+#include <QAbstractItemModel>
+#include <QFlags>
+#include <QItemSelectionModel>
+#include <QList>
 #include <QMessageBox>
+#include <QModelIndex>
+#include <QModelIndexList>
+#include <QPushButton>
+#include <QString>
+#include <QTableView>
+#include <QVariant>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Input;

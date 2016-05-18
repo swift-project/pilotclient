@@ -13,9 +13,12 @@
 #define BLACKGUI_SERVERLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/serverlist.h"
 #include "blackgui/models/listmodelbase.h"
-#include <QAbstractItemModel>
+#include "blackmisc/network/serverlist.h"
+
+class QObject;
+
+namespace BlackMisc { namespace Network { class CServer; } }
 
 namespace BlackGui
 {

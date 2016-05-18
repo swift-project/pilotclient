@@ -12,8 +12,10 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/variant.h"
-#include <QLabel>
-#include <QMimeData>
+
+#include <QList>
+
+class QMimeData;
 
 namespace BlackGui
 {

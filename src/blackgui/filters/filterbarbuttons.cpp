@@ -7,8 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "filterbarbuttons.h"
+#include "blackgui/filters/filterbarbuttons.h"
 #include "ui_filterbarbuttons.h"
+
+#include <QLineEdit>
+#include <QString>
+#include <QToolButton>
 
 namespace BlackGui
 {

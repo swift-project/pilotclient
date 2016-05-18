@@ -13,13 +13,20 @@
 #define BLACKGUI_ENABLEFORFRAMLESSWINDOW_H
 
 #include "blackgui/blackguiexport.h"
-#include <QWidget>
-#include <QStatusBar>
-#include <QMouseEvent>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QMenuBar>
-#include <QSizeGrip>
+
+#include <QByteArray>
+#include <QPoint>
+#include <QString>
+#include <Qt>
+
+class QEvent;
+class QHBoxLayout;
+class QMenuBar;
+class QMouseEvent;
+class QPushButton;
+class QSizeGrip;
+class QStatusBar;
+class QWidget;
 
 namespace BlackGui
 {

@@ -12,10 +12,15 @@
 #ifndef BLACKGUI_COMPONENTS_DBDEBUGDATABASESETUP_H
 #define BLACKGUI_COMPONENTS_DBDEBUGDATABASESETUP_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackgui/blackguiexport.h"
+#include "blackmisc/datacache.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CDbDebugDatabaseSetup; }
 

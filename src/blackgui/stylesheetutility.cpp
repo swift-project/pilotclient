@@ -7,16 +7,25 @@
  * contained in the LICENSE file.
  */
 
-#include "stylesheetutility.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/restricted.h"
+
+#include <QAbstractScrollArea>
 #include <QCoreApplication>
 #include <QDir>
-#include <QTextStream>
-#include <QDebug>
+#include <QFile>
+#include <QFileInfo>
+#include <QFileInfoList>
+#include <QFlags>
+#include <QFont>
+#include <QIODevice>
 #include <QRegExp>
 #include <QStyleOption>
 #include <QStylePainter>
-#include <QAbstractScrollArea>
+#include <QTextStream>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

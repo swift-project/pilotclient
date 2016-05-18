@@ -7,11 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "ui_dbliverycomponent.h"
-#include "dbliverycomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include <functional>
+#include "blackgui/components/dbliverycomponent.h"
+#include "blackgui/filters/liveryfilterbar.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/liveryview.h"
+#include "dbliverycomponent.h"
+#include "ui_dbliverycomponent.h"
+
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackGui::Views;

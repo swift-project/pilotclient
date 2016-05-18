@@ -7,14 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "dbownmodelscomponent.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/components/dbownmodelscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
-#include "blackcore/webdataservices.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
+#include "blackmisc/statusmessage.h"
 #include "ui_dbownmodelscomponent.h"
+
+#include <QAction>
+#include <QIcon>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

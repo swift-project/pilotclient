@@ -7,14 +7,19 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_CLIENTVIEW_H
 #define BLACKGUI_CLIENTVIEW_H
 
-//! \file
-
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/clientlistmodel.h"
+#include "blackgui/models/clientlistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/network/clientlist.h"
+
+class QWidget;
+
+namespace BlackMisc { namespace Network { class CClient; } }
 
 namespace BlackGui
 {

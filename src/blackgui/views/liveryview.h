@@ -12,9 +12,20 @@
 #ifndef BLACKGUI_LIVERYVIEW_H
 #define BLACKGUI_LIVERYVIEW_H
 
-#include "viewdbobjects.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/liverylistmodel.h"
+#include "blackgui/views/viewdbobjects.h"
+
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CLivery;
+        class CLiveryList;
+    }
+}
 
 namespace BlackGui
 {

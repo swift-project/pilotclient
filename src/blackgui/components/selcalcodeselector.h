@@ -14,10 +14,15 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/selcal.h"
-#include <QFrame>
-#include <QScopedPointer>
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+class QWidget;
 namespace Ui { class CSelcalCodeSelector; }
+
 namespace BlackGui
 {
     namespace Components

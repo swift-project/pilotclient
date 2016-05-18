@@ -7,14 +7,20 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_STATUSMESSAGEVIEW_H
 #define BLACKGUI_STATUSMESSAGEVIEW_H
 
-//! \file
-
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/statusmessagelistmodel.h"
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+
+#include <QObject>
+
+class QWidget;
 
 namespace BlackGui
 {

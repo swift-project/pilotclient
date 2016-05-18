@@ -11,8 +11,14 @@
 #define BLACKGUI_LABELANDICON_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+#include <QString>
+
+class QPixmap;
+class QWidget;
 
 namespace Ui { class CLabelAndIcon; }
 

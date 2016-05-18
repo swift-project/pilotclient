@@ -7,12 +7,25 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/guiutility.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
+#include "blackgui/components/colorselector.h"
+#include "blackgui/components/dbliveryselectorcomponent.h"
+#include "blackgui/dropsite.h"
+#include "blackgui/editors/airlineicaoform.h"
+#include "blackgui/editors/liveryform.h"
+#include "blackgui/editors/validationindicator.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/labelandicon.h"
 #include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icons.h"
 #include "liveryform.h"
 #include "ui_liveryform.h"
+
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QMetaType>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

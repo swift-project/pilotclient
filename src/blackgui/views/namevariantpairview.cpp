@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "namevariantpairview.h"
-#include <QHeaderView>
+#include "blackgui/models/namevariantpairlistmodel.h"
+#include "blackgui/views/namevariantpairview.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

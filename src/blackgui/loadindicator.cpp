@@ -9,15 +9,13 @@
  * Class based on qLed: Copyright (C) 2010 by P. Sereno, http://www.sereno-online.com
  */
 
-#include "loadindicator.h"
+#include "blackgui/loadindicator.h"
 
 #include <QColor>
+#include <QPainter>
+#include <QRect>
+#include <QSizePolicy>
 #include <QtGlobal>
-#include <QtGui>
-#include <QPolygon>
-#include <QtSvg>
-#include <QSvgRenderer>
-#include <QImage>
 
 namespace BlackGui
 {

@@ -13,16 +13,26 @@
 #define BLACKGUI_LOGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackgui/menus/menudelegate.h"
-#include <QPlainTextEdit>
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+
 #include <QFrame>
+#include <QObject>
+#include <QPlainTextEdit>
 #include <QScopedPointer>
+#include <QString>
+
+class QAction;
+class QPoint;
+class QWidget;
 
 namespace Ui { class CLogComponent; }
 
 namespace BlackGui
 {
+    namespace Menus { class CMenuActions; }
+
     namespace Components
     {
         //! Text edit for our log component

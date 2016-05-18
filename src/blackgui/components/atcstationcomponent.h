@@ -12,20 +12,32 @@
 #ifndef BLACKGUI_ATCSTATIONCOMPONENT_H
 #define BLACKGUI_ATCSTATIONCOMPONENT_H
 
+#include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
-#include "blackcore/network.h"
-#include "blackmisc/identifiable.h"
 #include "blackmisc/aviation/atcstation.h"
-#include <QTabWidget>
-#include <QModelIndex>
-#include <QScopedPointer>
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/pq/frequency.h"
 
+#include <QDateTime>
+#include <QModelIndex>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QTabWidget>
+#include <QtGlobal>
+
+class QWidget;
+
+namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace Ui { class CAtcStationComponent; }
 
 namespace BlackGui
 {
+    class CDockWidgetInfoArea;
+
     namespace Components
     {
         //! ATC stations component

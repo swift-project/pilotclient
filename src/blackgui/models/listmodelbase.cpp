@@ -10,16 +10,54 @@
 // Drag and drop docu:
 // http://doc.qt.io/qt-5/model-view-programming.html#using-drag-and-drop-with-item-views
 
-#include "listmodelbase.h"
-#include "allmodelcontainers.h"
 #include "blackgui/guiutility.h"
-#include "blackmisc/verify.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/listmodelbase.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/airport.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/country.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/identifierlist.h"
+#include "blackmisc/namevariantpair.h"
+#include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/network/client.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/userlist.h"
+#include "blackmisc/predicates.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
-#include "blackmisc/json.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/comparefunctions.h"
-#include <QMimeData>
+#include "blackmisc/verify.h"
+#include "blackmisc/worker.h"
+
+#include <QFlags>
 #include <QJsonDocument>
+#include <QList>
+#include <QMimeData>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

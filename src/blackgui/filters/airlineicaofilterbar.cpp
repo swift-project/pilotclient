@@ -7,9 +7,18 @@
  * contained in the LICENSE file.
  */
 
-#include "airlineicaofilterbar.h"
-#include "ui_airlineicaofilterbar.h"
+#include "blackgui/components/dbcountryselectorcomponent.h"
+#include "blackgui/filters/airlineicaofilterbar.h"
+#include "blackgui/filters/filterbarbuttons.h"
+#include "blackgui/models/airlineicaofilter.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/country.h"
+#include "ui_airlineicaofilterbar.h"
+
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QString>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

@@ -7,8 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodellistmodel.h"
-#include "blackmisc/icons.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/datastore.h"
+#include "blackmisc/orderable.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/timestampbased.h"
+
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

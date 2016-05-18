@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "countryfilter.h"
+#include "blackgui/models/countryfilter.h"
 #include "blackmisc/country.h"
 
 using namespace BlackMisc;

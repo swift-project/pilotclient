@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "registermetadata.h"
-#include "components/registermetadatacomponents.h"
+#include "blackgui/registermetadata.h"
+#include "blackgui/components/registermetadatacomponents.h"
 
 namespace BlackGui
 {

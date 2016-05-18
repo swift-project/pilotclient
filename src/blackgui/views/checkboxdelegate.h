@@ -13,8 +13,16 @@
 #define BLACKGUI_CCOLUMNCHECKBOXDELEGATE_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QItemDelegate>
-#include <QCheckBox>
+#include <QObject>
+#include <QString>
+#include <QStyleOptionViewItem>
+
+class QAbstractItemModel;
+class QModelIndex;
+class QStyleOptionViewItem;
+class QWidget;
 
 namespace BlackGui
 {

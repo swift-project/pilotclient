@@ -13,10 +13,14 @@
 #define BLACKGUI_COMPONENTS_SERVERLISTSELECTOR_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/serverlist.h"
+
 #include <QComboBox>
+#include <QObject>
 #include <QStringList>
 
-#include "blackmisc/network/serverlist.h"
+class QWidget;
 
 namespace BlackGui
 {

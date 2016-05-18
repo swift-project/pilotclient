@@ -13,14 +13,16 @@
 #define BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/dockwidgetinfoarea.h"
-#include "blackgui/infoarea.h"
-#include "blackgui/enableforframelesswindow.h"
 #include "blackmisc/connectionguard.h"
-#include <QWidget>
+
+class QWidget;
 
 namespace BlackGui
 {
+    class CDockWidgetInfoArea;
+    class CEnableForFramelessWindow;
+    class CInfoArea;
+
     namespace Components
     {
         //! Helper class: If a component is residing in an dockable widget.

@@ -7,15 +7,23 @@
  * contained in the LICENSE file.
  */
 
-#include "settingsnetworkserverscomponent.h"
-#include "ui_settingsnetworkserverscomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/setupreader.h"
 #include "blackcore/contextapplication.h"
-#include "blackmisc/logmessage.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackgui/components/serverform.h"
+#include "blackgui/components/settingsnetworkserverscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/serverview.h"
 #include "blackmisc/buildconfig.h"
-#include <QModelIndex>
+#include "blackmisc/logmessage.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/serverlist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+#include "ui_settingsnetworkserverscomponent.h"
+
+#include <QPushButton>
+#include <QString>
+#include <QTableView>
 
 using namespace BlackCore;
 using namespace BlackCore::Data;

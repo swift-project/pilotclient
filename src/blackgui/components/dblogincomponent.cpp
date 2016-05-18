@@ -7,13 +7,25 @@
  * contained in the LICENSE file.
  */
 
-#include "dblogincomponent.h"
-#include "ui_dblogincomponent.h"
-#include "blackgui/overlaymessagesframe.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackgui/components/dblogincomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/verify.h"
-#include "blackmisc/network/url.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/network/authenticateduser.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/verify.h"
+#include "ui_dblogincomponent.h"
+
+#include <QLabel>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QPushButton>
+#include <QString>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc;

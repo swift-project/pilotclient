@@ -8,9 +8,13 @@
  */
 
 #include "blackgui/dockwidgetinfoarea.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/infoarea.h"
-#include "components/enablefordockwidgetinfoarea.h"
-#include "blackmisc/icons.h"
+
+#include <QMenu>
+#include <QString>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackGui::Components;
 

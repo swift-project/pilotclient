@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelfilterdialog.h"
+#include "blackgui/filters/aircraftmodelfilterbar.h"
+#include "blackgui/filters/aircraftmodelfilterdialog.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "ui_aircraftmodelfilterdialog.h"
 
 using namespace BlackGui::Models;

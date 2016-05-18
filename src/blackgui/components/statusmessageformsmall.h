@@ -14,7 +14,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/variant.h"
+
 #include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CStatusMessageFormSmall; }
 

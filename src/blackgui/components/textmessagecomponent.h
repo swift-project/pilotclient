@@ -14,19 +14,29 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/textmessagetextedit.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/textmessagelist.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextownaircraft.h"
-#include <QFrame>
-#include <QLineEdit>
-#include <QScopedPointer>
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/variant.h"
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation { class CCallsign; }
+    namespace Network { class CTextMessage; }
+}
 namespace Ui { class CTextMessageComponent; }
+
 namespace BlackGui
 {
+    class CDockWidgetInfoArea;
+
     namespace Components
     {
         //! Text message widget

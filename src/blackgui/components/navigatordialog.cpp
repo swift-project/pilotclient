@@ -7,14 +7,28 @@
  * contained in the LICENSE file.
  */
 
-#include "navigatordialog.h"
-#include "ui_navigatordialog.h"
-#include "blackgui/guiutility.h"
+#include "blackgui/components/navigatordialog.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackgui/stylesheetutility.h"
-#include <QToolButton>
-#include <QGridLayout>
+#include "blackmisc/icons.h"
+#include "ui_navigatordialog.h"
+
 #include <QAction>
+#include <QEvent>
+#include <QFrame>
+#include <QGridLayout>
+#include <QIcon>
+#include <QList>
+#include <QMenu>
+#include <QPoint>
+#include <QSize>
+#include <QString>
+#include <QStyle>
+#include <QToolButton>
+#include <QVariant>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackGui;
 using namespace BlackMisc;

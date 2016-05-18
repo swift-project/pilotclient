@@ -7,18 +7,33 @@
  * contained in the LICENSE file.
  */
 
-#include "cockpitcomcomponent.h"
-#include "ui_cockpitcomcomponent.h"
-#include "../stylesheetutility.h"
-#include "blackgui/guiapplication.h"
+#include "blackcore/contextaudio.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
-#include "blackcore/contextaudio.h"
+#include "blackgui/components/cockpitcomcomponent.h"
+#include "blackgui/components/selcalcodeselector.h"
+#include "blackgui/components/transpondercodespinbox.h"
+#include "blackgui/components/transpondermodeselector.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/led.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/sequence.h"
+#include "ui_cockpitcomcomponent.h"
 
 #include <QDoubleSpinBox>
+#include <QLabel>
 #include <QPushButton>
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackGui;
 using namespace BlackCore;

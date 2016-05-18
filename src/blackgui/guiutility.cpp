@@ -7,25 +7,31 @@
  * contained in the LICENSE file.
  */
 
-#include "guiutility.h"
-#include "overlaymessagesframe.h"
-#include "blackcore/corefacade.h"
-#include "blackcore/cookiemanager.h"
-#include "blackmisc/filelogger.h"
-#include "blackmisc/logmessage.h"
+#include "blackgui/enableforframelesswindow.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/verify.h"
-#include <QMainWindow>
+
 #include <QApplication>
-#include <QGuiApplication>
-#include <QMessageBox>
-#include <QRegularExpression>
-#include <QThreadStorage>
-#include <QMimeData>
+#include <QCheckBox>
+#include <QComboBox>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QStandardPaths>
+#include <QJsonValue>
+#include <QLayout>
+#include <QLayoutItem>
+#include <QList>
+#include <QMainWindow>
+#include <QMetaType>
+#include <QMimeData>
+#include <QObject>
+#include <QRegularExpression>
+#include <QTabWidget>
+#include <QThreadStorage>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
-using namespace BlackCore;
 using namespace BlackMisc;
 
 namespace BlackGui

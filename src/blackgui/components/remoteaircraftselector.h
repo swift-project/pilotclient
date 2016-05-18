@@ -16,10 +16,14 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
-
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
 
+class QShowEvent;
+class QWidget;
+
+namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CRemoteAircraftSelector; }
 
 namespace BlackGui

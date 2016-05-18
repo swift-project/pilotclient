@@ -15,6 +15,11 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/dockwidget.h"
 
+#include <QObject>
+
+class QMenu;
+class QWidget;
+
 namespace BlackGui
 {
 

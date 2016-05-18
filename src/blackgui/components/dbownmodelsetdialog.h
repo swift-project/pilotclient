@@ -12,13 +12,17 @@
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETDIALOG_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETDIALOG_H
 
+#include "blackgui/components/dbmappingcomponentaware.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+
 #include <QDialog>
+#include <QObject>
 #include <QScopedPointer>
 
-#include "blackmisc/logcategorylist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackgui/components/dbmappingcomponentaware.h"
+class QWidget;
 
+namespace BlackMisc { class CLogCategoryList; }
 namespace Ui { class CDbOwnModelSetDialog; }
 
 namespace BlackGui

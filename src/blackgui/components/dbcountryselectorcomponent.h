@@ -13,12 +13,21 @@
 #define BLACKGUI_DBCOUNTRYSELECTORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/webdataservices.h"
 #include "blackgui/dropbase.h"
 #include "blackmisc/country.h"
+#include "blackmisc/network/entityflags.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
-#include <QCompleter>
+#include <QString>
+
+class QCompleter;
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QDragMoveEvent;
+class QDropEvent;
+class QWidget;
 
 namespace Ui { class CDbCountrySelectorComponent; }
 

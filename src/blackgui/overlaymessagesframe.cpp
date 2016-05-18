@@ -8,9 +8,15 @@
  */
 
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/overlaymessages.h"
 #include "blackgui/stylesheetutility.h"
-#include <QPainter>
+#include "blackmisc/network/textmessage.h"
+
 #include <QKeyEvent>
+#include <QPoint>
+#include <QRect>
+#include <QStyle>
+#include <Qt>
 
 namespace BlackGui
 {

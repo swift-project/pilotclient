@@ -7,15 +7,34 @@
  * contained in the LICENSE file.
  */
 
-#include "dbownmodelsetcomponent.h"
-#include "blackgui/models/aircrafticaolistmodel.h"
+#include "blackgui/components/dbmappingcomponent.h"
+#include "blackgui/components/dbownmodelsetcomponent.h"
+#include "blackgui/components/dbownmodelsetdialog.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/models/aircraftmodellistmodel.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/verify.h"
-#include "dbmappingcomponent.h"
-#include "dbownmodelsetdialog.h"
+#include "blackmisc/orderable.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/distributorlistpreferences.h"
 #include "ui_dbownmodelsetcomponent.h"
+
+#include <QAction>
+#include <QDialog>
+#include <QFlags>
+#include <QIcon>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QString>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

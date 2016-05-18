@@ -7,10 +7,19 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/dbdistributorselectorcomponent.h"
+#include "blackgui/dropsite.h"
+#include "blackgui/editors/distributorform.h"
+#include "blackgui/editors/validationindicator.h"
+#include "blackgui/labelandicon.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/country.h"
 #include "distributorform.h"
 #include "ui_distributorform.h"
+
+#include <QLineEdit>
+#include <QMetaType>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

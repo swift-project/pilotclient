@@ -15,9 +15,16 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodeldbobjects.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include <QStringList>
-#include <QAbstractItemModel>
+
 #include <QBrush>
+#include <QStringList>
+#include <QVariant>
+#include <Qt>
+
+class QModelIndex;
+class QObject;
+
+namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 
 namespace BlackGui
 {

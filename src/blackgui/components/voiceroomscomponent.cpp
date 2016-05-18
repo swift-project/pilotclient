@@ -7,12 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "voiceroomscomponent.h"
-#include "ui_voiceroomscomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/contextownaircraft.h"
+#include "blackgui/components/voiceroomscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/userview.h"
 #include "blackmisc/audio/notificationsounds.h"
+#include "blackmisc/audio/voiceroom.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/sequence.h"
+#include "ui_voiceroomscomponent.h"
+
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc::Audio;

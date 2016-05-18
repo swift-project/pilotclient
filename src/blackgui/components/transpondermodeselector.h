@@ -14,10 +14,14 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/transponder.h"
-#include <QTimer>
-#include <QComboBox>
-#include <QStringList>
 
+#include <QComboBox>
+#include <QObject>
+#include <QString>
+#include <QTimer>
+
+class QStringList;
+class QWidget;
 
 namespace BlackGui
 {

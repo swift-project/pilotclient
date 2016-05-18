@@ -11,10 +11,17 @@
 #define BLACKGUI_MENUS_MENUACTION_H
 
 #include "blackmisc/slot.h"
-#include <QMenu>
-#include <QAction>
+
 #include <QIcon>
+#include <QKeySequence>
+#include <QList>
+#include <QMap>
 #include <QMultiMap>
+#include <QString>
+
+class QAction;
+class QMenu;
+class QObject;
 
 namespace BlackGui
 {

@@ -14,7 +14,19 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/rgbcolor.h"
+
+#include <QColor>
 #include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QDragMoveEvent;
+class QDropEvent;
+class QMouseEvent;
+class QWidget;
 
 namespace Ui { class CColorSelector; }
 

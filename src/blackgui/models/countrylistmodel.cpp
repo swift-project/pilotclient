@@ -7,8 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "countrylistmodel.h"
-#include <QMetaProperty>
+#include "blackgui/models/columns.h"
+#include "blackgui/models/countrylistmodel.h"
+#include "blackmisc/country.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/timestampbased.h"
+
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

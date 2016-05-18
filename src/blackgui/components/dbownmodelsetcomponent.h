@@ -12,22 +12,35 @@
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 
-#include "blackgui/menus/menudelegate.h"
 #include "blackcore/settings/distributorpreferences.h"
+#include "blackgui/components/dbmappingcomponentaware.h"
+#include "blackgui/menus/menudelegate.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
-#include "dbmappingcomponentaware.h"
-#include <QFrame>
-#include <QScopedPointer>
-#include <QMenu>
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessage.h"
 
+#include <QFrame>
+#include <QList>
+#include <QObject>
+#include <QScopedPointer>
+
+class QAction;
+class QWidget;
+
+namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace Ui { class CDbOwnModelSetComponent; }
 
 namespace BlackGui
 {
+    namespace Menus { class CMenuActions; }
     namespace Views { class CAircraftModelView; }
+
     namespace Components
     {
+        class CDbMappingComponent;
         class CDbOwnModelSetDialog;
 
         /*!
@@ -67,7 +80,7 @@ namespace BlackGui
             const BlackMisc::Simulation::CAircraftModelList &getModelSet() const;
 
             //! Model set is for simulator
-            const Simulation::CSimulatorInfo getModelSetSimulator() const;
+            const BlackMisc::Simulation::CSimulatorInfo getModelSetSimulator() const;
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;

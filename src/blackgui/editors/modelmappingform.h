@@ -12,10 +12,15 @@
 #ifndef BLACKGUI_EDITORS_MODELMAPPINGFORM_H
 #define BLACKGUI_EDITORS_MODELMAPPINGFORM_H
 
-#include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/statusmessagelist.h"
+
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CModelMappingForm; }
 

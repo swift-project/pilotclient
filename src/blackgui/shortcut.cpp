@@ -9,7 +9,10 @@
  * Class based on qLed: Copyright (C) 2010 by P. Sereno, http://www.sereno-online.com
  */
 
-#include "shortcut.h"
+#include "blackgui/shortcut.h"
+
+#include <QKeySequence>
+#include <Qt>
 
 namespace BlackGui
 {

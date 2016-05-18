@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "modelmodeselector.h"
+#include "blackgui/components/modelmodeselector.h"
 #include "ui_modelmodeselector.h"
+
+#include <QRadioButton>
 
 using namespace BlackMisc::Simulation;
 

@@ -13,9 +13,14 @@
 #define BLACKGUI_CLIENTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include <QAbstractItemModel>
-#include "blackmisc/network/clientlist.h"
 #include "blackgui/models/listmodelbase.h"
+#include "blackmisc/network/client.h"
+#include "blackmisc/network/clientlist.h"
+
+#include <QVariant>
+
+class QModelIndex;
+class QObject;
 
 namespace BlackGui
 {

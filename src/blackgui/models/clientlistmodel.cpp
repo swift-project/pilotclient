@@ -7,10 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "clientlistmodel.h"
-#include "blackmisc/icons.h"
-#include <QMetaProperty>
-#include <QBrush>
+#include "blackgui/models/clientlistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

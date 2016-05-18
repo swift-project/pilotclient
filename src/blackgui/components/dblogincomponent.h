@@ -12,12 +12,17 @@
 #ifndef BLACKGUI_COMPONENTS_DBLOGINCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBLOGINCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackcore/databaseauthentication.h"
-#include "blackcore/data/globalsetup.h"
+#include "blackgui/blackguiexport.h"
+#include "blackmisc/statusmessagelist.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
 
+class QWidget;
+
+namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
 namespace Ui { class CDbLoginComponent; }
 
 namespace BlackGui

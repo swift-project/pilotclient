@@ -12,11 +12,17 @@
 #ifndef BLACKGUI_FILTERS_COUNTRYFILTERBAR_H
 #define BLACKGUI_FILTERS_COUNTRYFILTERBAR_H
 
-#include "blackguiexport.h"
+#include "blackgui/blackguiexport.h"
 #include "blackgui/filters/filterwidget.h"
-#include "blackgui/models/countryfilter.h"
-#include <QScopedPointer>
+#include "blackgui/models/modelfilter.h"
 
+#include <QObject>
+#include <QScopedPointer>
+#include <memory>
+
+class QWidget;
+
+namespace BlackMisc { class CCountryList; }
 namespace Ui { class CCountryFilterBar; }
 
 namespace BlackGui

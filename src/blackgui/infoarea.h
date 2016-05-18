@@ -13,15 +13,34 @@
 #define BLACKGUI_INFOAREA_H
 
 #include "blackgui/blackguiexport.h"
-#include "dockwidgetinfoarea.h"
-#include "enableforframelesswindow.h"
-#include <QMainWindow>
-#include <QTabBar>
-#include <QPixmap>
+#include "blackgui/enableforframelesswindow.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+
+#include <QDockWidget>
 #include <QList>
+#include <QMainWindow>
+#include <QObject>
+#include <QSize>
+#include <QString>
+#include <QTabWidget>
+#include <Qt>
+
+class QAction;
+class QCloseEvent;
+class QKeyEvent;
+class QMenu;
+class QPaintEvent;
+class QPixmap;
+class QPoint;
+class QTabBar;
+class QWidget;
 
 namespace BlackGui
 {
+    class CDockWidget;
+    class CDockWidgetInfoArea;
+
     //! Info area, hosting dockable widgets
     //! \sa CDockWidgetInfoArea
     class BLACKGUI_EXPORT CInfoArea : public QMainWindow, CEnableForFramelessWindow

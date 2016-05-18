@@ -7,13 +7,25 @@
  * contained in the LICENSE file.
  */
 
-#include "enableforframelesswindow.h"
+#include "blackgui/enableforframelesswindow.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/worker.h"
-#include <QStatusBar>
+
+#include <QEvent>
+#include <QFlags>
+#include <QHBoxLayout>
+#include <QMenuBar>
+#include <QMouseEvent>
+#include <QObject>
 #include <QPushButton>
+#include <QRect>
+#include <QSizeGrip>
+#include <QStatusBar>
 #include <QThread>
+#include <QVariant>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

@@ -13,8 +13,12 @@
 #define BLACKGUI_UPDATETIMER_H
 
 #include "blackgui/blackguiexport.h"
-#include <QTimer>
+
 #include <QDateTime>
+#include <QObject>
+#include <QString>
+#include <QTimer>
+#include <QtGlobal>
 
 namespace BlackGui
 {

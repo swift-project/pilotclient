@@ -12,15 +12,24 @@
 #ifndef BLACKGUI_DOCKWIDGET_H
 #define BLACKGUI_DOCKWIDGET_H
 
-#include "blackguiexport.h"
-#include "managedstatusbar.h"
-#include "enableforframelesswindow.h"
+#include "blackgui/blackguiexport.h"
+#include "blackgui/enableforframelesswindow.h"
+#include "blackgui/managedstatusbar.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QDockWidget>
-#include <QTabWidget>
-#include <QStatusBar>
-#include <QMenu>
-#include <QLabel>
+#include <QMargins>
+#include <QObject>
+#include <QPoint>
+#include <QSize>
+#include <QString>
+
+class QCloseEvent;
+class QMenu;
+class QMouseEvent;
+class QPaintEvent;
+class QWidget;
 
 namespace BlackGui
 {

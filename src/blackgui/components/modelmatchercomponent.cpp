@@ -7,11 +7,35 @@
  * contained in the LICENSE file.
  */
 
-#include "modelmatchercomponent.h"
-#include "guiapplication.h"
-#include "guiutility.h"
-#include "uppercasevalidator.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/components/aircraftcombinedtypeselector.h"
+#include "blackgui/components/dbaircrafticaoselectorcomponent.h"
+#include "blackgui/components/dbairlineicaoselectorcomponent.h"
+#include "blackgui/components/dbliveryselectorcomponent.h"
+#include "blackgui/components/modelmatchercomponent.h"
+#include "blackgui/components/simulatorselector.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/uppercasevalidator.h"
+#include "blackgui/views/statusmessageview.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/statusmessagelist.h"
 #include "ui_modelmatchercomponent.h"
+
+#include <QCheckBox>
+#include <QCompleter>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QString>
+#include <QStringList>
+#include <QTabWidget>
+#include <QTextEdit>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

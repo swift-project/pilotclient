@@ -7,11 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/guiapplication.h"
-#include "blackcore/contextaudio.h"
-#include "blackmisc/audio/audioutils.h"
 #include "audiovolumecomponent.h"
+#include "blackcore/contextaudio.h"
+#include "blackgui/components/audiovolumecomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/audio/audioutils.h"
 #include "ui_audiovolumecomponent.h"
+
+#include <QLabel>
+#include <QPushButton>
+#include <QSlider>
+#include <QSpinBox>
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackCore;
 

@@ -7,11 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "textmessagetextedit.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackgui/textmessagetextedit.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/iconlist.h"
-#include "stylesheetutility.h"
-#include "guiapplication.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/network/textmessage.h"
+
+#include <QAction>
 #include <QMenu>
+#include <QScopedPointer>
+#include <QTextDocument>
+#include <QTextOption>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

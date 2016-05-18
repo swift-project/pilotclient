@@ -12,7 +12,9 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/statusmessage.h"
-#include <QStatusBar>
+
+#include <QObject>
+#include <QString>
 
 namespace BlackGui
 {

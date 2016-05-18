@@ -13,9 +13,18 @@
 #define BLACKGUI_LIVERYLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/aviation/liverylist.h"
 #include "blackgui/models/listmodeldbobjects.h"
-#include <QAbstractItemModel>
+
+class QObject;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CLivery;
+        class CLiveryList;
+    }
+}
 
 namespace BlackGui
 {

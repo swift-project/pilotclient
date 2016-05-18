@@ -13,15 +13,22 @@
 #define BLACKGUI_INFOBARWEBREADERSSTATUSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/led.h"
 #include "blackmisc/network/entityflags.h"
+
 #include <QFrame>
+#include <QList>
+#include <QObject>
 #include <QScopedPointer>
 #include <QTimer>
 
+class QWidget;
+
 namespace Ui { class CInfoBarWebReadersStatusComponent; }
+
 namespace BlackGui
 {
+    class CLedWidget;
+
     namespace Components
     {
         //! Info bar displaying status of web readers(swift DB, ...)

@@ -13,10 +13,11 @@
 #define BLACKGUI_STATUSMESSAGELISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include <QAbstractItemModel>
-#include <QDBusConnection>
-#include "blackmisc/statusmessagelist.h"
 #include "blackgui/models/listmodelbase.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+
+class QObject;
 
 namespace BlackGui
 {

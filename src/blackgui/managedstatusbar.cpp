@@ -7,8 +7,18 @@
  * contained in the LICENSE file.
  */
 
-#include "managedstatusbar.h"
-#include <QLayout>
+#include "blackgui/managedstatusbar.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/sequence.h"
+
+#include <QLabel>
+#include <QSize>
+#include <QSizePolicy>
+#include <QStatusBar>
+#include <QString>
+#include <QTimer>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

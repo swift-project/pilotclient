@@ -12,9 +12,14 @@
 #ifndef BLACKGUI_COUNTRYVIEW_H
 #define BLACKGUI_COUNTRYVIEW_H
 
-#include "viewbase.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/countrylistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/countrylist.h"
+
+class QWidget;
+
+namespace BlackMisc { class CCountry; }
 
 namespace BlackGui
 {

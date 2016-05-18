@@ -11,10 +11,20 @@
 #define BLACKGUI_DROPSITE_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/variant.h"
 #include "blackgui/dropbase.h"
+#include "blackmisc/variant.h"
+
 #include <QLabel>
-#include <QMimeData>
+#include <QList>
+#include <QObject>
+#include <QString>
+
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QDragMoveEvent;
+class QDropEvent;
+class QPaintEvent;
+class QWidget;
 
 namespace BlackGui
 {

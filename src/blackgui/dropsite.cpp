@@ -7,9 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "dropsite.h"
-#include "guiapplication.h"
+#include "blackgui/dropsite.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/stylesheetutility.h"
+
 #include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QFrame>
+#include <QPalette>
+#include <QStyle>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

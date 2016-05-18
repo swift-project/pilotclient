@@ -12,24 +12,39 @@
 #ifndef BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
 
+#include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/components/updatetimer.h"
-#include "blackgui/views/checkboxdelegate.h"
-#include "blackcore/network.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include <QTabWidget>
-#include <QScopedPointer>
-#include <QCompleter>
+#include "blackmisc/variant.h"
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <Qt>
+
+class QCompleter;
+class QModelIndex;
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation { class CCallsign; }
+    namespace Simulation { class CSimulatedAircraft; }
+}
 namespace Ui { class CMappingComponent; }
 
 namespace BlackGui
 {
+    namespace Views { class CCheckBoxDelegate; }
+
     namespace Components
     {
+        class CUpdateTimer;
+
         //! Mappings, models etc.
         class BLACKGUI_EXPORT CMappingComponent :
             public QFrame,

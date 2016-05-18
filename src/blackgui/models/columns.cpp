@@ -7,8 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "columns.h"
+#include "blackgui/models/columns.h"
+#include "blackmisc/compare.h"
+
+#include <QByteArray>
 #include <QCoreApplication>
+#include <QModelIndex>
 
 using namespace BlackMisc;
 

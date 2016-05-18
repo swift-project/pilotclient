@@ -7,7 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "serverlistselector.h"
+#include "blackgui/components/serverlistselector.h"
+#include "blackmisc/sequence.h"
+
+#include <QString>
 
 using namespace BlackMisc::Network;
 

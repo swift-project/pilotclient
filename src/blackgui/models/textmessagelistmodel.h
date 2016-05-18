@@ -13,11 +13,12 @@
 #define BLACKGUI_TEXTMESSAGELISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/network/textmessagelist.h"
 #include "blackgui/models/listmodelbase.h"
-#include <QAbstractItemModel>
-#include <QStandardItemModel>
-#include <QDBusConnection>
+#include "blackmisc/network/textmessagelist.h"
+
+class QObject;
+
+namespace BlackMisc { namespace Network { class CTextMessage; } }
 
 namespace BlackGui
 {

@@ -13,14 +13,19 @@
 #define BLACKGUI_COCKPITCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "enablefordockwidgetinfoarea.h"
-#include <QWidget>
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+
+#include <QObject>
 #include <QScopedPointer>
+#include <QSize>
+#include <QWidget>
 
 namespace Ui { class CCockpitComponent; }
 
 namespace BlackGui
 {
+    class CDockWidgetInfoArea;
+
     namespace Components
     {
         //! Cockpit component: COM unit, show / hide bar, voice rooms

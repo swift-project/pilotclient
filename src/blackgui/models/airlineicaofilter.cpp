@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "airlineicaofilter.h"
+#include "blackgui/models/airlineicaofilter.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 
 using namespace BlackMisc::Aviation;

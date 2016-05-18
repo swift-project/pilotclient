@@ -7,8 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "checkboxdelegate.h"
-#include "../stylesheetutility.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackgui/views/checkboxdelegate.h"
+
+#include <QAbstractItemModel>
+#include <QCheckBox>
+#include <QModelIndex>
+#include <QVariant>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackGui;
 

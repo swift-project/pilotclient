@@ -13,9 +13,11 @@
 #define BLACKGUI_IDENTIFIERLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/identifierlist.h"
 #include "blackgui/models/listmodelbase.h"
-#include <QAbstractItemModel>
+#include "blackmisc/identifier.h"
+#include "blackmisc/identifierlist.h"
+
+class QObject;
 
 namespace BlackGui
 {

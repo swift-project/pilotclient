@@ -7,16 +7,28 @@
  * contained in the LICENSE file.
  */
 
-#include "dockwidget.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/logmessage.h"
-#include "blackgui/stylesheetutility.h"
+#include "blackgui/dockwidget.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/logmessage.h"
+
 #include <QCloseEvent>
-#include <QStyleOption>
-#include <QPainter>
+#include <QFrame>
 #include <QLayout>
+#include <QLayoutItem>
+#include <QMenu>
+#include <QScopedPointer>
+#include <QSettings>
+#include <QSizePolicy>
+#include <QStatusBar>
+#include <QStyle>
+#include <QVBoxLayout>
+#include <QVariant>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

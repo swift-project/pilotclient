@@ -7,11 +7,15 @@
  * contained in the LICENSE file.
  */
 
-#include "cockpittranspondermodeledscomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/contextownaircraft.h"
-#include <QVBoxLayout>
+#include "blackgui/components/cockpittranspondermodeledscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/led.h"
+
+#include <QBoxLayout>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QWidget>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

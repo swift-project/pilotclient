@@ -7,10 +7,19 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelfilterbar.h"
-#include "ui_aircraftmodelfilterbar.h"
+#include "blackgui/components/dbdistributorselectorcomponent.h"
+#include "blackgui/components/simulatorselector.h"
+#include "blackgui/filters/aircraftmodelfilterbar.h"
+#include "blackgui/filters/filterbarbuttons.h"
+#include "blackgui/models/aircraftmodelfilter.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "ui_aircraftmodelfilterbar.h"
+
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
 using namespace BlackGui;

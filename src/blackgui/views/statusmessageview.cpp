@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "statusmessageview.h"
-#include <QHeaderView>
-#include <QMenu>
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/views/statusmessageview.h"
+
+#include <QFlags>
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

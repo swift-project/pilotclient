@@ -7,9 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "countryfilterbar.h"
-#include "ui_countryfilterbar.h"
+#include "blackgui/filters/countryfilterbar.h"
+#include "blackgui/filters/filterbarbuttons.h"
+#include "blackgui/models/countryfilter.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackmisc/countrylist.h"
+#include "ui_countryfilterbar.h"
+
+#include <QLineEdit>
 
 using namespace BlackGui;
 using namespace BlackGui::Models;

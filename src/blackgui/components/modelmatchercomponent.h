@@ -12,14 +12,19 @@
 #ifndef BLACKGUI_COMPONENT_MODELMATCHERCOMPONENT_H
 #define BLACKGUI_COMPONENT_MODELMATCHERCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackcore/aircraftmatcher.h"
+#include "blackgui/blackguiexport.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CModelMatcherComponent; }
 

@@ -13,9 +13,14 @@
 #define BLACKGUI_DISTRIBUTORLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/simulation/distributorlist.h"
 #include "blackgui/models/listmodeldbobjects.h"
-#include <QAbstractItemModel>
+#include "blackmisc/simulation/distributorlist.h"
+
+#include <QString>
+
+class QObject;
+
+namespace BlackMisc { namespace Simulation { class CDistributor; } }
 
 namespace BlackGui
 {

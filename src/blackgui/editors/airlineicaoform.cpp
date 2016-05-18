@@ -7,11 +7,23 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/dbairlineicaoselectorcomponent.h"
+#include "blackgui/components/dbairlinenameselectorcomponent.h"
+#include "blackgui/components/dbcountryselectorcomponent.h"
+#include "blackgui/dropsite.h"
+#include "blackgui/editors/airlineicaoform.h"
+#include "blackgui/editors/validationindicator.h"
 #include "blackgui/guiutility.h"
+#include "blackgui/labelandicon.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/country.h"
-#include "airlineicaoform.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icons.h"
 #include "ui_airlineicaoform.h"
+
+#include <QCheckBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMetaType>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

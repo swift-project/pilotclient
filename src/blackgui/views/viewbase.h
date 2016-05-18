@@ -12,29 +12,58 @@
 #ifndef BLACKGUI_VIEWBASE_H
 #define BLACKGUI_VIEWBASE_H
 
-#include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/filters/filterdialog.h"
-#include "blackgui/filters/filterwidget.h"
-#include "blackgui/models/modelfilter.h"
-#include "blackgui/menus/menudelegate.h"
-#include "blackgui/menus/menuaction.h"
-#include "blackgui/loadindicator.h"
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/variant.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/models/modelfilter.h"
+#include "blackmisc/namevariantpair.h"
+#include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/propertyindex.h"
-#include <QTableView>
-#include <QWizardPage>
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/variant.h"
+
+#include <QAbstractItemView>
+#include <QFlags>
 #include <QHeaderView>
-#include <QMenu>
-#include <QPoint>
-#include <QFont>
-#include <QList>
-#include <QMultiMap>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QMap>
+#include <QModelIndexList>
+#include <QObject>
+#include <QString>
+#include <QTableView>
+#include <Qt>
+#include <QtGlobal>
+#include <memory>
+
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QDragMoveEvent;
+class QFont;
+class QItemSelectionModel;
+class QMimeData;
+class QModelIndex;
+class QPaintEvent;
+class QPoint;
+class QShowEvent;
+class QWidget;
+
+namespace BlackMisc { class CWorker; }
 
 namespace BlackGui
 {
+    class CDockWidgetInfoArea;
+    class CLoadIndicator;
+
+    namespace Filters
+    {
+        class CFilterDialog;
+        class CFilterWidget;
+    }
+
+    namespace Menus { class IMenuDelegate; }
+
     namespace Views
     {
         //! Non templated base class, allows Q_OBJECT and signals / slots to be used

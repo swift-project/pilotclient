@@ -7,13 +7,28 @@
  * contained in the LICENSE file.
  */
 
-#include "distributorpreferencescomponent.h"
-#include "ui_distributorpreferencescomponent.h"
-#include "blackgui/overlaymessagesframe.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/components/distributorpreferencescomponent.h"
+#include "blackgui/components/simulatorselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/webdataservices.h"
+#include "blackgui/models/distributorlistmodel.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/views/distributorview.h"
+#include "blackgui/views/viewbase.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/orderable.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlistpreferences.h"
+#include "blackmisc/statusmessage.h"
+#include "ui_distributorpreferencescomponent.h"
+
+#include <QFlags>
+#include <QPushButton>
+#include <QTimer>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

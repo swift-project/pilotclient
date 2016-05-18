@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "updatetimer.h"
+#include "blackgui/components/updatetimer.h"
 
 namespace BlackGui
 {

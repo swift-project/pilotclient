@@ -13,9 +13,13 @@
 #define BLACKGUI_ACTIONMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/actionbind.h"
+
 #include <QAbstractItemModel>
+#include <QModelIndex>
+#include <QObject>
 #include <QScopedPointer>
+#include <QVariant>
+#include <Qt>
 
 namespace BlackGui
 {

@@ -10,13 +10,23 @@
 #ifndef BLACKGUI_MENUS_AIRCRAFTMODELMENUS_H
 #define BLACKGUI_MENUS_AIRCRAFTMODELMENUS_H
 
-#include "menudelegate.h"
-#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
-#include "blackmisc/simulation/aircraftmodelinterfaces.h"
-#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
+#include "blackgui/views/aircraftmodelview.h"
+
 #include <QMenu>
 #include <QObject>
+
+class QAction;
+
+namespace BlackMisc
+{
+    namespace Simulation
+    {
+        class IModelsSetable;
+        class IModelsUpdatable;
+    }
+}
 
 namespace BlackGui
 {

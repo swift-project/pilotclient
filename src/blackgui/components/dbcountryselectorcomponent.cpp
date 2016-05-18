@@ -7,12 +7,26 @@
  * contained in the LICENSE file.
  */
 
-#include "dbcountryselectorcomponent.h"
-#include "ui_dbcountryselectorcomponent.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/components/dbcountryselectorcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
 #include "blackgui/uppercasevalidator.h"
-#include <QMimeData>
+#include "blackmisc/compare.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/variant.h"
+#include "ui_dbcountryselectorcomponent.h"
+
+#include <QCompleter>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMetaType>
+#include <QPalette>
+#include <QPixmap>
+#include <Qt>
 
 using namespace BlackGui;
 using namespace BlackCore;

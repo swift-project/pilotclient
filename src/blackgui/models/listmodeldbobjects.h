@@ -12,8 +12,28 @@
 #ifndef BLACKGUI_LISTMODELDBOBJECTS_H
 #define BLACKGUI_LISTMODELDBOBJECTS_H
 
-#include "listmodelbase.h"
-#include "blackgui/blackguiexport.h"
+#include "blackgui/models/listmodelbase.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/country.h"
+#include "blackmisc/countrylist.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
+
+#include <QColor>
+#include <QList>
+#include <QString>
+#include <QVariant>
+#include <Qt>
+
+class QModelIndex;
+class QObject;
 
 namespace BlackGui
 {

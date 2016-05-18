@@ -15,8 +15,13 @@
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/statusmessagelist.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+#include <QString>
+
+class QWidget;
 
 namespace Ui { class CNetworkServerForm; }
 

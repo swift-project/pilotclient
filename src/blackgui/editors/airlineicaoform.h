@@ -13,10 +13,15 @@
 #define BLACKGUI_EDITORS_AIRLINEICAOFORM_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackgui/editors/form.h"
+#include "blackmisc/variant.h"
+
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CAirlineIcaoForm; }
 

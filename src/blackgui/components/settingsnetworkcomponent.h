@@ -13,7 +13,12 @@
 #define BLACKGUI_COMPONENTS_SETTINGSNETWORKCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+
 #include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CSettingsNetworkComponent; }
 

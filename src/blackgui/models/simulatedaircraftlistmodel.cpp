@@ -7,9 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatedaircraftlistmodel.h"
-#include "blackmisc/network/user.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/modulator.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;

@@ -13,10 +13,19 @@
 #define BLACKGUI_NAMEVARIANTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackmisc/namevariantpairlist.h"
 #include "blackgui/models/listmodelbase.h"
-#include <QAbstractItemModel>
-#include <QMap>
+#include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/variant.h"
+
+#include <QString>
+
+class QObject;
+
+namespace BlackMisc
+{
+    class CIcon;
+    class CNameVariantPair;
+}
 
 namespace BlackGui
 {

@@ -7,7 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "textmessagelistmodel.h"
+#include "blackgui/models/columnformatters.h"
+#include "blackgui/models/columns.h"
+#include "blackgui/models/textmessagelistmodel.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/timestampbased.h"
+
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;

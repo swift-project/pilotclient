@@ -7,13 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "infobarwebreadersstatuscomponent.h"
-#include "ui_infobarwebreadersstatuscomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackcore/webreaderflags.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/icons.h"
+#include "blackgui/components/infobarwebreadersstatuscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/led.h"
 #include "blackmisc/verify.h"
+#include "ui_infobarwebreadersstatuscomponent.h"
+
+#include <QtGlobal>
 
 using namespace BlackGui;
 using namespace BlackMisc;

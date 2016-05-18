@@ -7,21 +7,27 @@
  * contained in the LICENSE file.
  */
 
-#include "infobarstatuscomponent.h"
-#include "ui_infobarstatuscomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackcore/contextsimulator.h"
-#include "blackcore/contextnetwork.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextaudio.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/contextsimulator.h"
 #include "blackcore/simulator.h"
+#include "blackgui/components/infobarstatuscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/led.h"
 #include "blackmisc/audio/audioutils.h"
 #include "blackmisc/buildconfig.h"
-#include "blackmisc/icons.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "ui_infobarstatuscomponent.h"
 
-#include <QPoint>
+#include <QLabel>
+#include <QList>
 #include <QMenu>
-#include <QProcess>
+#include <QPoint>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackGui;

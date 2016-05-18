@@ -7,20 +7,32 @@
  * contained in the LICENSE file.
  */
 
-#include "aircraftmodelview.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/simulation/distributorlist.h"
-#include "blackmisc/simulation/simulatorinfolist.h"
-#include "blackgui/shortcut.h"
+#include "blackgui/filters/aircraftmodelfilterdialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackgui/filters/aircraftmodelfilterdialog.h"
-#include <QHeaderView>
+#include "blackgui/menus/menuaction.h"
+#include "blackgui/shortcut.h"
+#include "blackgui/views/aircraftmodelview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfolist.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/variant.h"
+
+#include <QAction>
+#include <QDropEvent>
+#include <QMap>
 #include <QShortcut>
-#include <iostream>
-#include <memory>
+#include <QString>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

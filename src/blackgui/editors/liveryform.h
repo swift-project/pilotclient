@@ -12,10 +12,17 @@
 #ifndef BLACKGUI_EDITORS_LIVERYFORM_H
 #define BLACKGUI_EDITORS_LIVERYFORM_H
 
-#include "blackgui/editors/form.h"
 #include "blackgui/blackguiexport.h"
+#include "blackgui/editors/form.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/variant.h"
+
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CLiveryForm; }
 

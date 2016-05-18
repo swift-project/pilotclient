@@ -7,9 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "statusmessageformsmall.h"
+#include "blackgui/components/statusmessageformsmall.h"
 #include "ui_statusmessageformsmall.h"
+
 #include <QLabel>
+#include <QLineEdit>
+#include <QPlainTextEdit>
 
 using namespace BlackMisc;
 

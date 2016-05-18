@@ -13,11 +13,15 @@
 #define BLACKGUI_COMPONENTS_DBDISTRIBUTORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/enableforviewbasedindicator.h"
 #include "blackmisc/network/entityflags.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CDbDistributorComponent; }
 

@@ -12,9 +12,11 @@
 
 #include "blackmisc/logcategorylist.h"
 #include "blackgui/menus/menuaction.h"
+
+#include <QMenu>
 #include <QObject>
 
-using namespace BlackMisc;
+class QWidget;
 
 namespace BlackGui
 {
@@ -41,9 +43,9 @@ namespace BlackGui
             virtual ~IMenuDelegate() {}
 
             //! Log categories
-            const CLogCategoryList &getLogCategories()
+            const BlackMisc::CLogCategoryList &getLogCategories()
             {
-                static const CLogCategoryList cats({CLogCategory::guiComponent()});
+                static const BlackMisc::CLogCategoryList cats({BlackMisc::CLogCategory::guiComponent()});
                 return cats;
             }
 

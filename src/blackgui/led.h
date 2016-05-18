@@ -15,11 +15,19 @@
 #define BLACKGUI_LED_H
 
 #include "blackgui/blackguiexport.h"
-#include <Qt>
-#include <QWidget>
-#include <QSvgRenderer>
-#include <QColor>
+
+#include <QList>
+#include <QObject>
+#include <QPixmap>
+#include <QScopedPointer>
+#include <QString>
 #include <QTimer>
+#include <QWidget>
+
+class QMouseEvent;
+class QPaintEvent;
+class QStringList;
+class QSvgRenderer;
 
 namespace BlackGui
 {

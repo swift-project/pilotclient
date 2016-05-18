@@ -7,11 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "dbairlineicaocomponent.h"
-#include "ui_dbairlineicaocomponent.h"
-#include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
-#include <functional>
+#include "blackgui/components/dbairlineicaocomponent.h"
+#include "blackgui/filters/airlineicaofilterbar.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/airlineicaoview.h"
+#include "blackgui/views/viewbase.h"
+#include "ui_dbairlineicaocomponent.h"
+
+#include <QDateTime>
+#include <QtGlobal>
 
 using namespace BlackCore;
 using namespace BlackMisc::Network;

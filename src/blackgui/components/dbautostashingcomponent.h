@@ -13,16 +13,28 @@
 #define BLACKGUI_COMPONENTS_DBAUTOSTASHINGCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/webdataservices.h"
-#include "dbmappingcomponentaware.h"
-#include "blackmisc/logcategorylist.h"
-#include "blackgui/views/aircraftmodelview.h"
-#include <QDialog>
+#include "blackgui/components/dbmappingcomponentaware.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/statusmessage.h"
 
+#include <QDialog>
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
+
+namespace BlackMisc
+{
+    class CLogCategoryList;
+    namespace Simulation { class CAircraftModel; }
+}
 namespace Ui { class CDbAutoStashingComponent; }
 
 namespace BlackGui
 {
+    namespace Views { class CAircraftModelView; }
+
     namespace Components
     {
         /*!

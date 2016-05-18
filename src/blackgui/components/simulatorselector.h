@@ -12,8 +12,12 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
-#include <QScopedPointer>
+
 #include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CSimulatorSelector; }
 

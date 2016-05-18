@@ -13,12 +13,40 @@
 #define BLACKGUI_AIRCRAFTMODELVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/filters/aircraftmodelfilterdialog.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
-#include "viewdbobjects.h"
+#include "blackgui/views/viewdbobjects.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QBrush>
+#include <QFlags>
+#include <QMetaType>
+#include <QObject>
+#include <QStringList>
+#include <Qt>
+
+class QDropEvent;
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CAircraftIcaoCode;
+        class CLivery;
+    }
+}
+namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 
 namespace BlackGui
 {
+    namespace Filters { class CAircraftModelFilterDialog; }
+    namespace Menus { class CMenuActions; }
+
     namespace Views
     {
         //! Aircraft view

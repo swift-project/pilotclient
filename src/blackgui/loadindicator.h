@@ -15,8 +15,16 @@
 #define BLACKGUI_LOADINDICATOR_H
 
 #include "blackgui/blackguiexport.h"
+
+#include <QColor>
+#include <QObject>
+#include <QSize>
 #include <QWidget>
-#include <QTimer>
+#include <Qt>
+
+class QPaintEvent;
+class QPainter;
+class QTimerEvent;
 
 namespace BlackGui
 {

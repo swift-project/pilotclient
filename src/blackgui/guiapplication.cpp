@@ -7,20 +7,40 @@
  * contained in the LICENSE file.
  */
 
-#include "guiapplication.h"
-#include "guiutility.h"
-#include "stylesheetutility.h"
-#include "registermetadata.h"
-#include "blackmisc/logmessage.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/data/updateinfo.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/registermetadata.h"
 #include "blackmisc/buildconfig.h"
-#include "blackmisc/verify.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/metadatautils.h"
+#include "blackmisc/registermetadata.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/verify.h"
+
+#include <QAction>
 #include <QApplication>
-#include <QMessageBox>
+#include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QDesktopServices>
 #include <QDir>
+#include <QEventLoop>
+#include <QGuiApplication>
+#include <QIcon>
 #include <QKeySequence>
+#include <QMenu>
+#include <QMessageBox>
+#include <QRegExp>
+#include <QSplashScreen>
+#include <QStringList>
+#include <QStyle>
+#include <QUrl>
+#include <QWidget>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 

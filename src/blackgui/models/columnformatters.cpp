@@ -7,13 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "columnformatters.h"
-#include "blackmisc/geo/latitude.h"
+#include "blackgui/models/columnformatters.h"
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/rgbcolor.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/rgbcolor.h"
+#include "blackmisc/variant.h"
+
+#include <QDate>
+#include <QDateTime>
+#include <QImage>
+#include <QMetaType>
+#include <QTime>
+#include <QVariant>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

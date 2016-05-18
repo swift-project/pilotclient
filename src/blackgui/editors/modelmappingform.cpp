@@ -7,8 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "modelmappingform.h"
+#include "blackgui/components/modelmodeselector.h"
+#include "blackgui/components/simulatorselector.h"
+#include "blackgui/editors/modelmappingform.h"
+#include "blackgui/editors/validationindicator.h"
+#include "blackgui/labelandicon.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/network/authenticateduser.h"
 #include "ui_modelmappingform.h"
+
+#include <QLineEdit>
+#include <QPushButton>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

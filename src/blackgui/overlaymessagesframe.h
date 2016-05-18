@@ -13,11 +13,28 @@
 #define BLACKGUI_OVERLAYMESSAGES_FRAME_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/overlaymessages.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/variant.h"
+
 #include <QFrame>
+#include <QMessageBox>
+#include <QObject>
+#include <QSize>
+#include <QString>
+#include <functional>
+
+class QKeyEvent;
+class QPaintEvent;
+class QWidget;
+
+namespace BlackMisc { namespace Network { class CTextMessage; } }
 
 namespace BlackGui
 {
+    class COverlayMessages;
+
     /*!
      * Display status messages (nested in another widget)
      */

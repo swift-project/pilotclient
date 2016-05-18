@@ -13,8 +13,17 @@
 #define BLACKGUI_NAMEVARIANTPAIRVIEW_H
 
 #include "blackgui/blackguiexport.h"
-#include "viewbase.h"
-#include "../models/namevariantpairlistmodel.h"
+#include "blackgui/models/namevariantpairlistmodel.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/namevariantpairlist.h"
+#include "blackmisc/variant.h"
+
+#include <QString>
+
+class QWidget;
+
+namespace BlackMisc { class CNameVariantPair; }
 
 namespace BlackGui
 {

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "audiocomponent.h"
+#include "blackgui/components/audiocomponent.h"
 #include "ui_audiocomponent.h"
 
 namespace BlackGui

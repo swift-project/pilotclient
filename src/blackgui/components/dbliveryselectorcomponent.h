@@ -13,15 +13,24 @@
 #define BLACKGUI_COMPONENTS_CDBLIVERYSELECTORCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/dropbase.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/network/entityflags.h"
-#include "blackgui/dropbase.h"
+
 #include <QFrame>
+#include <QMetaObject>
+#include <QObject>
 #include <QScopedPointer>
-#include <QCompleter>
+#include <QString>
+
+class QCompleter;
+class QDragEnterEvent;
+class QDragLeaveEvent;
+class QDragMoveEvent;
+class QDropEvent;
+class QWidget;
 
 namespace Ui { class CDbLiverySelectorComponent; }
-
 
 namespace BlackGui
 {

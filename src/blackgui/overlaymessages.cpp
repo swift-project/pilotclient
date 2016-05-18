@@ -8,9 +8,29 @@
  */
 
 #include "blackgui/overlaymessages.h"
+#include "blackgui/components/statusmessageform.h"
+#include "blackgui/components/statusmessageformsmall.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackgui/views/statusmessageview.h"
+#include "blackgui/views/viewbase.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/network/textmessage.h"
 #include "ui_overlaymessages.h"
+
 #include <QKeyEvent>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPixmap>
+#include <QPushButton>
+#include <QSize>
+#include <QStackedWidget>
+#include <QStyle>
+#include <QTextEdit>
+#include <QToolButton>
+#include <Qt>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;

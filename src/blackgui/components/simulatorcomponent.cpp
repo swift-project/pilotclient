@@ -7,13 +7,25 @@
  * contained in the LICENSE file.
  */
 
-#include "simulatorcomponent.h"
-#include "ui_simulatorcomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackcore/contextsimulator.h"
 #include "blackcore/contextownaircraft.h"
+#include "blackcore/contextsimulator.h"
 #include "blackcore/simulator.h"
+#include "blackgui/components/simulatorcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/views/namevariantpairview.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
 #include "blackmisc/iconlist.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "ui_simulatorcomponent.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

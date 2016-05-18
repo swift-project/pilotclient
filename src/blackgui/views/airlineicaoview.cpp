@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "airlineicaoview.h"
-#include <QHeaderView>
+#include "blackgui/models/airlineicaolistmodel.h"
+#include "blackgui/views/airlineicaoview.h"
+#include "blackgui/views/viewbase.h"
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

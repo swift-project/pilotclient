@@ -12,16 +12,33 @@
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 
-#include "blackgui/models/aircraftmodellistmodel.h"
 #include "blackgui/menus/menudelegate.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
+#include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/statusmessage.h"
+
 #include <QFrame>
+#include <QList>
+#include <QObject>
 #include <QScopedPointer>
+#include <QString>
+#include <memory>
+
+class QAction;
+class QWidget;
 
 namespace Ui { class CDbOwnModelsComponent; }
+
 namespace BlackGui
 {
+    namespace Menus { class CMenuActions; }
+    namespace Models { class CAircraftModelListModel; }
     namespace Views { class CAircraftModelView; }
+
     namespace Components
     {
         /*!
@@ -87,7 +104,7 @@ namespace BlackGui
             BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection>     m_simulatorSelection {this }; //!< last selection
 
             //! Init model loader
-            bool initModelLoader(const Simulation::CSimulatorInfo &simulator);
+            bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! File name for savinf
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);

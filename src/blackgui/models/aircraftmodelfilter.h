@@ -13,8 +13,13 @@
 #define BLACKGUI_AIRCRAFTMODELFILTER_H
 
 #include "blackgui/blackguiexport.h"
-#include "modelfilter.h"
+#include "blackgui/models/modelfilter.h"
+#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+
+#include <QString>
 
 namespace BlackGui
 {

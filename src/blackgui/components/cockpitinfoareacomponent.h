@@ -13,11 +13,17 @@
 #define BLACKGUI_COCKPITINFOAREACOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "../infoarea.h"
-#include <QMainWindow>
+#include "blackgui/infoarea.h"
+
+#include <QObject>
 #include <QScopedPointer>
+#include <QSize>
+
+class QPixmap;
+class QWidget;
 
 namespace Ui { class CCockpitInfoAreaComponent; }
+
 namespace BlackGui
 {
     namespace Components

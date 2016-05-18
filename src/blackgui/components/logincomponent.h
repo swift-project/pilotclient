@@ -12,15 +12,31 @@
 #ifndef BLACKGUI_LOGINCOMPONENT_H
 #define BLACKGUI_LOGINCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackcore/settings/network.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/network/server.h"
+#include "blackgui/blackguiexport.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/entityflags.h"
-#include <QFrame>
-#include <QScopedPointer>
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
+class QTimer;
+class QWidget;
+
+namespace BlackMisc
+{
+    namespace Simulation
+    {
+        class CAircraftModel;
+        class CSimulatedAircraft;
+    }
+}
 namespace Ui { class CLoginComponent; }
 
 namespace BlackGui

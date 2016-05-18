@@ -7,9 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "clientview.h"
-#include <QHeaderView>
-#include <QDebug>
+#include "blackgui/models/clientlistmodel.h"
+#include "blackgui/views/clientview.h"
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;

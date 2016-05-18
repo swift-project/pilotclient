@@ -12,13 +12,19 @@
 #ifndef BLACKGUI_INFOBARSTATUSCOMPONENT_H
 #define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackcore/network.h"
-#include "../led.h"
+#include "blackgui/blackguiexport.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
+#include <QString>
+
+class QPoint;
+class QWidget;
 
 namespace Ui { class CInfoBarStatusComponent; }
+
 namespace BlackGui
 {
     namespace Components

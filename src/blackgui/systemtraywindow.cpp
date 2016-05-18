@@ -7,16 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "systemtraywindow.h"
-#include "blackmisc/icons.h"
-#include <QStatusBar>
-#include <QPushButton>
-#include <QApplication>
-#include <QMessageBox>
-#include <QCloseEvent>
-#include <QObject>
+#include "blackgui/systemtraywindow.h"
 
-using namespace BlackMisc;
+#include <QAction>
+#include <QApplication>
+#include <QCloseEvent>
+#include <QEvent>
+#include <QMenu>
+#include <QMessageBox>
+#include <QObject>
+#include <QWidget>
+#include <QtGlobal>
 
 namespace BlackGui
 {

@@ -13,14 +13,23 @@
 #define BLACKGUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 
 #include "blackcore/settings/distributorpreferences.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+
 #include <QFrame>
+#include <QObject>
 #include <QScopedPointer>
 
+class QWidget;
+
 namespace Ui { class CDistributorPreferencesComponent; }
+
 namespace BlackGui
 {
     class COverlayMessagesFrame;
+
     namespace Components
     {
         /*!

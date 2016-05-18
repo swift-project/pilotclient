@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "transpondercodespinbox.h"
+#include "blackgui/components/transpondercodespinbox.h"
+
+#include <QChar>
 
 namespace BlackGui
 {

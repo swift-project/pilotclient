@@ -7,13 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#include "usercomponent.h"
-#include "ui_usercomponent.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/guiapplication.h"
-#include "blackmisc/network/userlist.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/network.h"
+#include "blackgui/components/usercomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
+#include "blackgui/views/clientview.h"
+#include "blackgui/views/userview.h"
+#include "ui_usercomponent.h"
+
+#include <QString>
+#include <QTabBar>
 
 using namespace BlackGui;
 using namespace BlackGui::Views;
