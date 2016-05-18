@@ -19,7 +19,7 @@
 
 #include <QtTest>
 
-namespace BlackCoreTest
+namespace BlackGuiTest
 {
     /*
      * Starting main, equivalent to QTEST_APPLESS_MAIN for multiple test classes.

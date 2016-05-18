@@ -19,7 +19,7 @@
 #include <QCoreApplication>
 #include <QtGlobal>
 
-using namespace BlackCoreTest;
+using namespace BlackGuiTest;
 
 //! Starter for test cases
 int main(int argc, char *argv[])

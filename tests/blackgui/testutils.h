@@ -14,12 +14,12 @@
  * \ingroup testblackgui
  */
 
-#ifndef BLACKCORETEST_TESTUTILS_H
-#define BLACKCORETEST_TESTUTILS_H
+#ifndef BLACKGUITEST_TESTUTILS_H
+#define BLACKGUITEST_TESTUTILS_H
 
 #include <QObject>
 
-namespace BlackCoreTest
+namespace BlackGuiTest
 {
     /**
      * Test GUI utilities

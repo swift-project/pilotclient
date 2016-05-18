@@ -21,7 +21,7 @@
 
 using namespace BlackGui;
 
-namespace BlackCoreTest
+namespace BlackGuiTest
 {
 
     CTestGuiUtilities::CTestGuiUtilities(QObject *parent) :

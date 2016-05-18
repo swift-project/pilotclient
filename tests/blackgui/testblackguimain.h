@@ -14,10 +14,10 @@
  * \ingroup testblackgui
  */
 
-#ifndef BLACKCORETEST_TESTMAIN_H
-#define BLACKCORETEST_TESTMAIN_H
+#ifndef BLACKGUITEST_TESTMAIN_H
+#define BLACKGUITEST_TESTMAIN_H
 
-namespace BlackCoreTest
+namespace BlackGuiTest
 {
 
     /*!
