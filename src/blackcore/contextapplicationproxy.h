@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 #define BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 

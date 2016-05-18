@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTAPPLICATION_EMPTY_H
 #define BLACKCORE_CONTEXTAPPLICATION_EMPTY_H
 

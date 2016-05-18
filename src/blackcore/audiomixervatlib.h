@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_AUDIOMIXERVATLIB_H
 #define BLACKCORE_AUDIOMIXERVATLIB_H
 
