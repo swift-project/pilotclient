@@ -8,8 +8,13 @@
  */
 
 #include "swiftguistdapplication.h"
+#include "blackcore/application.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackcore/coremodeenums.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/icons.h"
+
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackCore;

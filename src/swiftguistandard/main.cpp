@@ -7,14 +7,13 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/enableforframelesswindow.h"
+#include "blackgui/guiapplication.h"
 #include "swiftguistd.h"
 #include "swiftguistdapplication.h"
-#include "blackgui/enableforframelesswindow.h"
 
-#include <QtGlobal>
+#include <stdlib.h>
 #include <QApplication>
-#include <QPushButton>
-#include <QProcessEnvironment>
 
 using namespace BlackGui;
 using namespace BlackMisc;

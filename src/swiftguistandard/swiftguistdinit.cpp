@@ -7,21 +7,43 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/contextnetwork.h"
+#include "blackgui/components/aircraftcomponent.h"
+#include "blackgui/components/atcstationcomponent.h"
+#include "blackgui/components/cockpitcomponent.h"
+#include "blackgui/components/flightplancomponent.h"
+#include "blackgui/components/logcomponent.h"
+#include "blackgui/components/logincomponent.h"
+#include "blackgui/components/maininfoareacomponent.h"
+#include "blackgui/components/mainkeypadareacomponent.h"
+#include "blackgui/components/mappingcomponent.h"
+#include "blackgui/components/navigatordialog.h"
+#include "blackgui/components/settingscomponent.h"
+#include "blackgui/components/textmessagecomponent.h"
+#include "blackgui/components/usercomponent.h"
+#include "blackgui/dockwidgetinfobar.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/managedstatusbar.h"
+#include "blackgui/overlaymessagesframe.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackmisc/buildconfig.h"
+#include "blackmisc/loghandler.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/logpattern.h"
+#include "blackmisc/statusmessage.h"
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackcore/contextallinterfaces.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/guiutility.h"
-#include "blackgui/components/allmaininfoareacomponents.h"
-#include "blackgui/models/atcstationlistmodel.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/icons.h"
-#include "blackmisc/aviation/selcal.h"
-#include "blackmisc/buildconfig.h"
-#include "blackmisc/logmessage.h"
-#include <QSizeGrip>
+
+#include <QAction>
 #include <QHBoxLayout>
-#include <QPushButton>
+#include <QScopedPointer>
+#include <QStackedWidget>
+#include <QStatusBar>
+#include <QString>
+#include <QTimer>
+#include <QVBoxLayout>
+
+class QHBoxLayout;
 
 using namespace BlackCore;
 using namespace BlackMisc;

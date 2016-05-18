@@ -7,27 +7,48 @@
  * contained in the LICENSE file.
  */
 
-#include "swiftguistd.h"
-#include "ui_swiftguistd.h"
-#include "blackgui/stylesheetutility.h"
-#include "blackgui/models/atcstationlistmodel.h"
+#include "blackcore/contextapplication.h"
+#include "blackcore/contextaudio.h"
+#include "blackcore/contextnetwork.h"
+#include "blackcore/network.h"
+#include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextownaircraft.h"
-#include "blackcore/network.h"
-#include "blackmisc/threadutils.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/dbusserver.h"
-#include "blackmisc/logmessage.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include <QMouseEvent>
+#include "blackmisc/icons.h"
+#include "blackmisc/logcategory.h"
+#include "blackmisc/logcategorylist.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/threadutils.h"
+#include "ui_swiftguistd.h"
+
+#include "swiftguistd.h"
+#include <QAction>
+#include <QDateTime>
+#include <QIcon>
+#include <QStackedWidget>
+#include <QStyle>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
+
+class QCloseEvent;
+class QEvent;
+class QMouseEvent;
+
+class QWidget;
+
+namespace BlackGui
+{
+    class CEnableForFramelessWindow;
+    class IMainWindowAccess;
+}
+namespace BlackMisc { class CIdentifiable; }
 
 using namespace BlackCore;
-using namespace BlackSound;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Components;

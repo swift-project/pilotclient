@@ -29,6 +29,7 @@
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/restricted.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributor.h"

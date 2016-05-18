@@ -13,7 +13,11 @@
 #define SWIFTGUISTDAPPLICATION_H
 
 #include "blackgui/guiapplication.h"
-#include "blackcore/corefacadeconfig.h"
+
+#include <QCommandLineOption>
+#include <QCoreApplication>
+#include <QObject>
+#include <QString>
 
 /*!
  * Specialized GUI application for swift pilot client.

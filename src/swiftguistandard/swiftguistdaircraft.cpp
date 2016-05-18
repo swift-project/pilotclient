@@ -7,11 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "swiftguistd.h"
-#include "blackgui/models/atcstationlistmodel.h"
+#include "blackcore/contextownaircraft.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/dbusserver.h"
-#include "blackcore/contextnetwork.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "swiftguistd.h"
+
+#include <QString>
+
+namespace BlackMisc { namespace Aviation { class CAltitude; } }
 
 using namespace BlackCore;
 using namespace BlackMisc;

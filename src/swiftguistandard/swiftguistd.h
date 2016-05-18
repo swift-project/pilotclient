@@ -16,29 +16,33 @@
 #pragma push_macro("interface")
 #undef interface
 
+#include "blackcore/actionbind.h"
+#include "blackcore/network.h"
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/navigatordialog.h"
-#include "blackgui/components/transpondermodeselector.h"
-#include "blackgui/models/atcstationlistmodel.h"
-#include "blackgui/models/serverlistmodel.h"
-#include "blackgui/models/userlistmodel.h"
-#include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/enableforframelesswindow.h"
-#include "blackgui/managedstatusbar.h"
 #include "blackgui/mainwindowaccess.h"
-#include "blackcore/contextallinterfaces.h"
-#include "blackcore/actionbind.h"
-#include "blackmisc/network/textmessage.h"
-#include "blackmisc/loghandler.h"
+#include "blackgui/managedstatusbar.h"
+#include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/identifiable.h"
-#include "blacksound/soundgenerator.h"
-#include <QMainWindow>
-#include <QTextEdit>
-#include <QTableView>
-#include <QItemSelection>
-#include <QLabel>
-#include <QTimer>
+#include "blackmisc/loghandler.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/statusmessage.h"
 
+#include <QMainWindow>
+#include <QObject>
+#include <QScopedPointer>
+#include <QSize>
+#include <QString>
+
+class QAction;
+class QCloseEvent;
+class QEvent;
+class QMouseEvent;
+class QTimer;
+class QWidget;
+
+namespace BlackMisc { namespace Aviation { class CAltitude; } }
 namespace Ui { class SwiftGuiStd; }
 
 //! swift GUI

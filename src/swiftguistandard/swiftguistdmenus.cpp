@@ -7,22 +7,20 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/maininfoareacomponent.h"
+#include "blackgui/components/settingscomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/pq/units.h"
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
-#include "blackcore/application.h"
-#include "blackgui/guiapplication.h"
-#include "blackgui/components/settingscomponent.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/metadatautils.h"
-#include "blackmisc/aviation/altitude.h"
-#include "blackmisc/logmessage.h"
-#include <QPoint>
+
+#include <QAction>
 #include <QMenu>
-#include <QDesktopServices>
-#include <QProcess>
-#include <QFontDialog>
-#include <QDir>
+#include <QObject>
+#include <QScopedPointer>
+#include <QStackedWidget>
+#include <QtGlobal>
 
 using namespace BlackGui;
 using namespace BlackCore;
