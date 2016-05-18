@@ -84,10 +84,7 @@ namespace BlackGui
         }
 
         CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
-        {
-            if (!m_enabledSimulators.isSaved())
-                sGui->getIContextApplication()->saveSettings(m_enabledSimulators.getKey());
-        }
+        { }
 
         void CSettingsSimulatorComponent::setGuiValues()
         {
