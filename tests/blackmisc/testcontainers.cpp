@@ -16,17 +16,30 @@
 
 #include "testcontainers.h"
 #include "testvalueobject.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/collection.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/callsignset.h"
+#include "blackmisc/collection.h"
 #include "blackmisc/dictionary.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/range.h"
+#include "blackmisc/registermetadata.h"
+#include "blackmisc/sequence.h"
+
+#include <QDateTime>
+#include <QJsonObject>
 #include <QList>
-#include <QVector>
 #include <QSet>
-#include <vector>
+#include <QString>
+#include <QTest>
+#include <QVector>
+#include <QtGlobal>
+#include <algorithm>
+#include <iterator>
 #include <set>
+#include <vector>
+
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

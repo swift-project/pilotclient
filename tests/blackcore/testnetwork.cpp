@@ -16,7 +16,22 @@
 
 #include "testnetwork.h"
 #include "expect.h"
+#include "blackcore/network.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/url.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/stringutils.h"
+
+#include <QString>
+#include <QTest>
+#include <QThread>
+#include <QtDebug>
 
 using namespace BlackCore;
 using namespace BlackMisc;

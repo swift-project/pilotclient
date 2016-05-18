@@ -16,8 +16,9 @@
 
 #include "testblackcoremain.h"
 #include "blackcore/application.h"
+
 #include <QCoreApplication>
-#include <QDebug>
+#include <QtGlobal>
 
 using namespace BlackCoreTest;
 

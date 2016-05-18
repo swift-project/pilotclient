@@ -16,12 +16,23 @@
  * \file
  * \ingroup testblackmisc
  */
-
-#include "blackmisc/propertyindex.h"
-#include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/dictionary.h"
+#include "blackmisc/metaclass.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/sequence.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/variant.h"
+
+#include <QDBusArgument>
+#include <QHash>
+#include <QMap>
+#include <QMetaType>
+#include <QString>
+#include <type_traits>
+
+class QJsonArray;
+class QJsonValueRef;
 
 namespace BlackMisc
 {

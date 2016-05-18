@@ -17,6 +17,8 @@
 #include "testutils.h"
 #include "blackgui/guiutility.h"
 
+#include <QtTest>
+
 using namespace BlackGui;
 
 namespace BlackCoreTest

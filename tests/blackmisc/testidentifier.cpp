@@ -15,7 +15,11 @@
  */
 
 #include "testidentifier.h"
-#include "blackmisc/identifierlist.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/identifier.h"
+
+#include <QString>
+#include <QTest>
 
 using namespace BlackMisc;
 

@@ -17,8 +17,6 @@
  * \ingroup testblackmisc
  */
 
-#include <QtTest/QtTest>
-
 namespace BlackMiscTest
 {
     /*!

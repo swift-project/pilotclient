@@ -14,10 +14,16 @@
 //! \file
 //! \ingroup testblackcore
 
-#include "blackcore/networkvatlib.h"
-#include "blackcore/modeldatareader.h"
-#include "blackcore/icaodatareader.h"
-#include <QtTest/QtTest>
+#include "blackmisc/network/url.h"
+
+#include <stdbool.h>
+#include <QObject>
+
+namespace BlackCore
+{
+    class CIcaoDataReader;
+    class CModelDataReader;
+}
 
 namespace BlackCoreTest
 {

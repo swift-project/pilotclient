@@ -15,12 +15,35 @@
  */
 
 #include "testvaluecache.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/identifier.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/dictionary.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/variantmap.h"
+#include "blackmisc/worker.h"
 
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
+#include <QFileInfo>
+#include <QFlags>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QList>
+#include <QMetaObject>
+#include <QRegularExpression>
+#include <QString>
+#include <QTest>
+#include <QThread>
+#include <QTimer>
+#include <QtDebug>
+#include <chrono>
 #include <future>
+#include <ratio>
 
 namespace BlackMiscTest
 {

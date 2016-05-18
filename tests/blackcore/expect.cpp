@@ -15,9 +15,11 @@
  */
 
 #include "expect.h"
+
 #include <QCoreApplication>
+#include <QEventLoop>
+#include <QTest>
 #include <QTimer>
-#include <QtTest/QtTest>
 
 namespace BlackCoreTest
 {

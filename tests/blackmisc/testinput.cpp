@@ -15,9 +15,17 @@
  */
 
 #include "testinput.h"
-#include "blackmisc/input/keyboardkey.h"
-#include "blackmisc/input/hotkeycombination.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/input/actionhotkey.h"
 #include "blackmisc/input/actionhotkeylist.h"
+#include "blackmisc/input/hotkeycombination.h"
+#include "blackmisc/input/keyboardkey.h"
+#include "blackmisc/input/keycodes.h"
+#include "blackmisc/variant.h"
+
+#include <QString>
+#include <QTest>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Input;

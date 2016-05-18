@@ -17,10 +17,13 @@
  * \ingroup testblackcore
  */
 
-#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftparts.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 
-#include <QtTest/QtTest>
+#include <QObject>
+#include <QtGlobal>
+
+namespace BlackMisc { namespace Aviation { class CCallsign; } }
 
 namespace BlackCoreTest
 {

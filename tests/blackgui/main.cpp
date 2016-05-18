@@ -15,8 +15,9 @@
  */
 
 #include "testblackguimain.h"
+
 #include <QCoreApplication>
-#include <QDebug>
+#include <QtGlobal>
 
 using namespace BlackCoreTest;
 

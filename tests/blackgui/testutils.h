@@ -17,8 +17,7 @@
 #ifndef BLACKCORETEST_TESTUTILS_H
 #define BLACKCORETEST_TESTUTILS_H
 
-#include "blackgui/guiutility.h"
-#include <QtTest/QtTest>
+#include <QObject>
 
 namespace BlackCoreTest
 {

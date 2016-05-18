@@ -15,6 +15,26 @@
  */
 
 #include "testphysicalquantities.h"
+#include "blackmisc/math/mathutils.h"
+#include "blackmisc/pq/acceleration.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/mass.h"
+#include "blackmisc/pq/measurementunit.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/pqstring.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/variant.h"
+
+#include <QString>
+#include <QtGlobal>
+#include <QTest>
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;

@@ -17,9 +17,7 @@
  * \ingroup testblackmisc
  */
 
-#include "blackmisc/pq/constants.h"
-#include "blackmisc/aviation/atcstation.h"
-#include <QtTest/QtTest>
+#include <QObject>
 
 namespace BlackMiscTest
 {

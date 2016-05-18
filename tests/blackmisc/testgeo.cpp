@@ -15,8 +15,12 @@
  */
 
 #include "testgeo.h"
+#include "blackmisc/geo/earthangle.h"
 #include "blackmisc/geo/latitude.h"
-#include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
+
+#include <QTest>
 
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;

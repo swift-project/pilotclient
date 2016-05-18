@@ -15,9 +15,35 @@
  */
 
 #include "testinterpolator.h"
+#include "blackcore/interpolator.h"
 #include "blackcore/interpolatorlinear.h"
+#include "blackmisc/aviation/aircraftengine.h"
+#include "blackmisc/aviation/aircraftenginelist.h"
+#include "blackmisc/aviation/aircraftlights.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
+
+#include <QCoreApplication>
+#include <QDebug>
+#include <QEventLoop>
 #include <QScopedPointer>
+#include <QTest>
+#include <QTime>
+#include <QtDebug>
 
 using namespace BlackCore;
 using namespace BlackMisc::Aviation;

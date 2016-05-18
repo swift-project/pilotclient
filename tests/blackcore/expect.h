@@ -10,11 +10,14 @@
 #ifndef BLACKCORETEST_EXPECT_H
 #define BLACKCORETEST_EXPECT_H
 
-#include <QObject>
 #include <QMetaMethod>
+#include <QMetaObject>
+#include <QObject>
 #include <QPointer>
-#include <QVector>
 #include <QSet>
+#include <QString>
+#include <QVector>
+#include <QtGlobal>
 #include <functional>
 
 //! \cond PRIVATE_TESTS
@@ -172,6 +175,7 @@ namespace BlackCoreTest
 
         // Helper traits class. Given T is a pointer-to-member-of-U, ClassOf<T>::type is U.
         template <class T> struct ClassOf;
+
         template <class U, class R> struct ClassOf<R U::*> { using type = U; };
 
         // Given T is a pointer-to-member-of-U, subject<T>() returns Expect's subject casted to U*.

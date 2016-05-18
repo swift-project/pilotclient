@@ -15,19 +15,33 @@
  */
 
 #include "testaviation.h"
-#include "blackmisc/pq/constants.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/aviation/informationmessage.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/network/user.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
 #include "blackmisc/network/server.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
+
+#include <QDateTime>
+#include <QString>
+#include <QTest>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

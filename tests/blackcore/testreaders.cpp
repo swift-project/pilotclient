@@ -13,12 +13,26 @@
 
 #include "testreaders.h"
 #include "blackcore/application.h"
-#include "blackmisc/network/networkutils.h"
+#include "blackcore/data/globalsetup.h"
+#include "blackcore/icaodatareader.h"
+#include "blackcore/modeldatareader.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/network/networkutils.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+
+#include <QDateTime>
+#include <QDebug>
+#include <QTest>
+#include <QString>
+#include <QtDebug>
 
 using namespace BlackCore;
-using namespace BlackCore::Settings;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;

@@ -15,9 +15,13 @@
 //! \ingroup testblackcore
 
 #include "blackcore/networkvatlib.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
-#include <QtTest/QtTest>
+
+#include <stdbool.h>
+#include <QObject>
+
+namespace BlackCore { class INetwork; }
+namespace BlackMisc { namespace Network { class CServer; } }
 
 namespace BlackCoreTest
 {

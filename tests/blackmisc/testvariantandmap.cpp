@@ -16,10 +16,19 @@
 
 #include "testvariantandmap.h"
 #include "blackmisc/aviation/atcstation.h"
-#include "blackmisc/propertyindexallclasses.h"
-#include <QList>
-#include <QString>
-#include <vector>
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/variant.h"
+
+#include <QDateTime>
+#include <QTest>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

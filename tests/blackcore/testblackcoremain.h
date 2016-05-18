@@ -17,8 +17,6 @@
  * \ingroup testblackcore
  */
 
-#include <QtTest/QtTest>
-
 namespace BlackCoreTest
 {
 

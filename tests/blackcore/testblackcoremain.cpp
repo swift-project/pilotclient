@@ -16,8 +16,10 @@
 
 #include "testblackcoremain.h"
 #include "testinterpolator.h"
-#include "testreaders.h"
 #include "testnetwork.h"
+#include "testreaders.h"
+
+#include <QtTest>
 
 namespace BlackCoreTest
 {

@@ -15,11 +15,31 @@
  */
 
 #include "testweather.h"
-#include "blackmisc/weather/metardecoder.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/weather/cloudlayer.h"
 #include "blackmisc/weather/cloudlayerlist.h"
+#include "blackmisc/weather/metar.h"
+#include "blackmisc/weather/metardecoder.h"
+#include "blackmisc/weather/presentweather.h"
+#include "blackmisc/weather/presentweatherlist.h"
+#include "blackmisc/weather/temperaturelayer.h"
 #include "blackmisc/weather/temperaturelayerlist.h"
+#include "blackmisc/weather/visibilitylayer.h"
 #include "blackmisc/weather/visibilitylayerlist.h"
+#include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
+
+#include <QTest>
 
 using namespace BlackMisc::Weather;
 using namespace BlackMisc::Aviation;

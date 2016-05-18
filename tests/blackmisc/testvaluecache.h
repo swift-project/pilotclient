@@ -18,7 +18,8 @@
  */
 
 #include "blackmisc/valuecache.h"
-#include <QtTest/QtTest>
+
+#include <QObject>
 #include <future>
 
 namespace BlackMiscTest

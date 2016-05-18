@@ -14,17 +14,19 @@
  * \ingroup testblackmisc
  */
 
-#include "testphysicalquantities.h"
 #include "testaviation.h"
+#include "testblackmiscmain.h"
+#include "testcontainers.h"
 #include "testgeo.h"
 #include "testidentifier.h"
-#include "testcontainers.h"
-#include "testvariantandmap.h"
 #include "testinput.h"
-#include "testvaluecache.h"
-#include "testblackmiscmain.h"
-#include "testweather.h"
 #include "testmath.h"
+#include "testphysicalquantities.h"
+#include "testvaluecache.h"
+#include "testvariantandmap.h"
+#include "testweather.h"
+
+#include <QTest>
 
 namespace BlackMiscTest
 {

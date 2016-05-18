@@ -16,8 +16,9 @@
 
 #include "testblackmiscmain.h"
 #include "blackmisc/registermetadata.h"
+
 #include <QCoreApplication>
-#include <QDebug>
+#include <QtGlobal>
 
 using namespace BlackMiscTest;
 

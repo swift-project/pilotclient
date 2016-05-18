@@ -17,8 +17,6 @@
 #ifndef BLACKCORETEST_TESTMAIN_H
 #define BLACKCORETEST_TESTMAIN_H
 
-#include <QtTest/QtTest>
-
 namespace BlackCoreTest
 {
 

@@ -17,6 +17,8 @@
 #include "testmath.h"
 #include "blackmisc/math/mathutils.h"
 
+#include <QTest>
+
 using namespace BlackMisc::Math;
 
 namespace BlackMiscTest

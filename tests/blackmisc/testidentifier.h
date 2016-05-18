@@ -18,7 +18,8 @@
  */
 
 #include "blackmisc/identifiable.h"
-#include <QtTest/QtTest>
+
+#include <QObject>
 
 namespace BlackMiscTest
 {
