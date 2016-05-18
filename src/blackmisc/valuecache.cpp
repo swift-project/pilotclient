@@ -278,19 +278,19 @@ namespace BlackMisc
         }
         if (! QDir::root().mkpath(dir))
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError, "Failed to create directory " + dir);
+            return CStatusMessage(this).error("Failed to create directory %1") << dir;
         }
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
             CAtomicFile file(dir + "/" + it.key() + ".json");
             if (! file.open(QFile::ReadWrite | QFile::Text))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, QString("Failed to open %1: %2").arg(file.fileName()).arg(file.errorString()));
+                return CStatusMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
             }
             auto json = QJsonDocument::fromJson(file.readAll());
             if (json.isArray() || (json.isNull() && ! json.isEmpty()))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid JSON format in " + file.fileName());
+                return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
             CVariantMap storedValues;
             storedValues.convertFromJson(json.object());
@@ -299,12 +299,10 @@ namespace BlackMisc
 
             if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError,
-                                      QString("Failed to write to %1: %2").arg(file.fileName()).arg(file.errorString()));
+                return CStatusMessage(this).error("Failed to write to %1: %2") << file.fileName() << file.errorString();
             }
         }
-        return CStatusMessage(this, CStatusMessage::SeverityInfo,
-                              QString("Written %1 to value cache in %2").arg(values.keys().to<QStringList>().join(",")).arg(dir));
+        return CStatusMessage(this).info("Written %1 to value cache in %2") << values.keys().to<QStringList>().join(",") << dir;
     }
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
@@ -321,7 +319,7 @@ namespace BlackMisc
     {
         if (! QDir(dir).isReadable())
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError, "Failed to create directory " + dir);
+            return CStatusMessage(this).error("Failed to create directory %1") << dir;
         }
 
         const QStringList entries(QDir(dir).entryList({ "*.json" }, QDir::Files));
@@ -330,12 +328,12 @@ namespace BlackMisc
             QFile file(dir + "/" + filename);
             if (! file.open(QFile::ReadOnly | QFile::Text))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, QString("Failed to open %1: %2").arg(file.fileName()).arg(file.errorString()));
+                return CStatusMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
             }
             auto json = QJsonDocument::fromJson(file.readAll());
             if (json.isArray() || (json.isNull() && ! json.isEmpty()))
             {
-                return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid JSON format in " + file.fileName());
+                return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
             CVariantMap temp;
             temp.convertFromJson(json.object());
@@ -346,8 +344,7 @@ namespace BlackMisc
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return CStatusMessage(this, CStatusMessage::SeverityInfo,
-                              QString("Loaded cache values %1 from %2").arg(o_values.keys().to<QStringList>().join(",")).arg(dir));
+        return CStatusMessage(this).info("Loaded cache values %1 from %2") << o_values.keys().to<QStringList>().join(",") << dir;
     }
 
     void CValueCache::markAllAsSaved(const QString &keyPrefix)
@@ -508,7 +505,7 @@ namespace BlackMisc
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
             // All good info
-            status = CStatusMessage(this, CStatusMessage::SeverityInfo, "Set values in " + element.m_key);
+            status = CStatusMessage(this).info("Set values in %1") << element.m_key;
         }
         return status;
     }
@@ -613,15 +610,15 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, invalidSeverity, "Empty cache value " + element.m_key, true);
+            return CStatusMessage(this, invalidSeverity, QString("Empty cache value %1").arg(element.m_key), true);
         }
         else if (value.userType() != element.m_metaType)
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError, QString("Expected ") + QMetaType::typeName(element.m_metaType) + " but got " + value.typeName() + " for " + element.m_key, true);
+            return CStatusMessage(this).error("Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_key;
         }
         else if (element.m_validator && ! element.m_validator(value))
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError, value.toQString() + " is not valid for " + element.m_key, true);
+            return CStatusMessage(this).error("%1 is not valid for %2") << value.toQString() << element.m_key;
         }
         else
         {
