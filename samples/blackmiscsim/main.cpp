@@ -7,19 +7,22 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/application.h"
+//! \file
+//! \ingroup sampleblackmiscsim
+
 #include "samplesfscommon.h"
 #include "samplesfsx.h"
 #include "samplesmodelmapping.h"
 #include "samplesvpilotrules.h"
+#include "blackcore/application.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <QCoreApplication>
+#include <QString>
 #include <QTextStream>
-#include <QDebug>
 #include <QTime>
-
-//! \file
-//! \ingroup sampleblackmiscsim
+#include <QtGlobal>
 
 //! main
 int main(int argc, char *argv[])

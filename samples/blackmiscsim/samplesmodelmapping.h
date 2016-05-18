@@ -13,7 +13,7 @@
 #ifndef BLACKSAMPLE_SAMPLESMODELMAPPING_H
 #define BLACKSAMPLE_SAMPLESMODELMAPPING_H
 
-#include <QTextStream>
+class QTextStream;
 
 namespace BlackSample
 {

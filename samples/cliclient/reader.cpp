@@ -11,7 +11,13 @@
 //! \ingroup samplecliclient
 
 #include "reader.h"
+
+#include <stdio.h>
+#include <QByteArray>
 #include <QFile>
+#include <QFlags>
+#include <QIODevice>
+#include <QtGlobal>
 
 namespace BlackSample
 {

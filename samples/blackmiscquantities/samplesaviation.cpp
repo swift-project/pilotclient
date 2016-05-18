@@ -11,17 +11,27 @@
 //! \ingroup sampleblackmiscquantities
 
 #include "samplesaviation.h"
-#include "blackmisc/pq/constants.h"
-#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/heading.h"
 #include "blackmisc/aviation/navsystem.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/flightplan.h"
-#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/range.h"
+#include "blackmisc/stringutils.h"
 
-
-#include <QDebug>
+#include <QDateTime>
+#include <QString>
+#include <QTextStream>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

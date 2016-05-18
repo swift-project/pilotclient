@@ -11,9 +11,18 @@
 //! \ingroup sampleblackmiscquantities
 
 #include "samplesgeo.h"
-#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/aviation/altitude.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/earthangle.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/stringutils.h"
+
+#include <QString>
+#include <QTextStream>
+#include <QVector3D>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

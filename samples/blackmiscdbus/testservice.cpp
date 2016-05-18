@@ -11,6 +11,21 @@
 //! \ingroup sampleblackmiscdbus
 
 #include "testservice.h"
+#include "servicetool.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/track.h"
+#include "blackmisc/dbus.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/stringutils.h"
+
+#include <QDBusArgument>
+#include <QDBusObjectPath>
+#include <QDebug>
+#include <QVariant>
+#include <QtDebug>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

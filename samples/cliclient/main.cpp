@@ -10,12 +10,12 @@
 //! \file
 //! \ingroup samplecliclient
 
-#include "blackcore/networkvatlib.h"
-#include "blackmisc/loghandler.h"
-#include "client.h"
 #include "reader.h"
+#include "client.h"
+#include "blackmisc/loghandler.h"
+
 #include <QCoreApplication>
-#include <QTextCodec>
+#include <QObject>
 
 using namespace BlackSample;
 

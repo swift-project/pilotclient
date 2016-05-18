@@ -11,16 +11,34 @@
 //! \ingroup sampleblackmisc
 
 #include "samplesperformance.h"
+#include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
-#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/testing.h"
+
+#include <QDateTime>
+#include <QHash>
+#include <QList>
+#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QString>
+#include <QStringList>
+#include <QTextStream>
+#include <QTime>
+#include <QVector>
+#include <Qt>
+#include <algorithm>
+#include <iterator>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
-
-#include <QRegularExpression>
 
 namespace BlackSample
 {

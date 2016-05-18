@@ -13,7 +13,7 @@
 #ifndef BLACKSAMPLE_SAMPLESAVIATION_H
 #define BLACKSAMPLE_SAMPLESAVIATION_H
 
-#include <QTextStream>
+class QTextStream;
 
 namespace BlackSample
 {

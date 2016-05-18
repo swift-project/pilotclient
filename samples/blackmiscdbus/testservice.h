@@ -17,19 +17,44 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include "blackmisc/aviation/aviation.h"
-#include "blackmisc/network/network.h"
-#include "blackmisc/pq/pq.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/client.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/math/math.h"
-#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "servicetool.h"
+#include "blackmisc/variant.h"
+
+#include <QList>
 #include <QObject>
-#include <QDebug>
-#include <QDBusVariant>
-#include <QDBusConnection>
-#include <QDBusObjectPath>
+#include <QString>
+#include <QVariantList>
+
+class QDBusObjectPath;
+class QVariant;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CCallsign;
+        class CComSystem;
+        class CTrack;
+    }
+}
 
 //! DBus interface for test service
 #define BLACKSAMPLE_TESTSERVICE_INTERFACENAME "blackmisctest.testservice"

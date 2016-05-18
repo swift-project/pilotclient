@@ -12,8 +12,34 @@
 
 #include "client.h"
 #include "blackcore/networkvatlib.h"
-#include <iostream>
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airporticaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/network/client.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/ownaircraftproviderdummy.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/stringutils.h"
+
+#include <stdbool.h>
+#include <QDateTime>
+#include <QIODevice>
+#include <QList>
 #include <QStringList>
+#include <QTextStream>
+#include <iostream>
+#include <string>
 
 using namespace BlackCore;
 using namespace BlackMisc;

@@ -12,6 +12,8 @@
 
 #include "testserviceinterface.h"
 
+class QDBusConnection;
+
 namespace BlackSample
 {
     TestServiceInterface::TestServiceInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)

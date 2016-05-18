@@ -11,15 +11,20 @@
 //! \ingroup sampleblackmisc
 
 #include "sampleschangeobject.h"
-#include "blackmisc/pq/constants.h"
-#include "blackmisc/aviation/heading.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/navsystem.h"
-#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/propertyindexallclasses.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/predicates.h"
-#include <QDebug>
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/variant.h"
+
+#include <QDateTime>
+#include <QtDebug>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

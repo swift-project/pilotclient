@@ -14,12 +14,37 @@
 #define BLACKSAMPLE_CLICLIENT_CLIENT_H
 
 #include "blackcore/network.h"
-#include "blackmisc/simulation/ownaircraftproviderdummy.h"
+#include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/identifiable.h"
-#include <QObject>
-#include <QTextStream>
+#include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/simulation/ownaircraftprovider.h"
+
 #include <QMap>
+#include <QObject>
+#include <QString>
+#include <QStringList>
+#include <QtGlobal>
 #include <functional>
+
+class QTextStream;
+
+namespace BlackMisc
+{
+    namespace Aviation
+    {
+        class CCallsign;
+        class CComSystem;
+        class CFlightPlan;
+        class CInformationMessage;
+        class CTransponder;
+    }
+    namespace Network { class CServer; }
+    namespace Simulation { class CSimulatedAircraft; }
+}
+template <class T> class QVector;
 
 namespace BlackSample
 {

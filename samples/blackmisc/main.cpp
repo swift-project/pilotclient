@@ -7,15 +7,18 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/application.h"
+#include "samplesalgorithm.h"
 #include "sampleschangeobject.h"
-#include "samplesmetadata.h"
 #include "samplescontainer.h"
 #include "samplesjson.h"
+#include "samplesmetadata.h"
 #include "samplesperformance.h"
-#include "samplesalgorithm.h"
-#include "blackcore/application.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/pq/pq.h"
+
+#include <stdio.h>
+#include <QCoreApplication>
+#include <QString>
+#include <QTextStream>
 
 //! \file
 //! \ingroup sampleblackmisc

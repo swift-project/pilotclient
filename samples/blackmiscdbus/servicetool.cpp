@@ -13,11 +13,63 @@
 #include "servicetool.h"
 #include "testservice.h"
 #include "testserviceinterface.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airport.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/track.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/iterator.h"
+#include "blackmisc/network/client.h"
+#include "blackmisc/network/server.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/constants.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+#include "blackmisc/variantlist.h"
 
-#include <QTextStream>
-#include <QString>
+#include <stdio.h>
+#include <stdlib.h>
+#include <QChar>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusError>
+#include <QDBusMessage>
+#include <QDBusObjectPath>
+#include <QDBusPendingReply>
+#include <QDBusReply>
+#include <QDBusVariant>
+#include <QDateTime>
+#include <QDebug>
 #include <QElapsedTimer>
+#include <QFlags>
+#include <QLatin1Char>
+#include <QList>
+#include <QObject>
+#include <QProcess>
+#include <QString>
+#include <QTextStream>
+#include <QThread>
+#include <QVariant>
+#include <QtDebug>
+
+class QDBusObjectPath;
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

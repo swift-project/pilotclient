@@ -11,16 +11,11 @@
 //! \ingroup sampleblackmisc
 
 #include "samplesmetadata.h"
-#include "blackmisc/registermetadata.h"
 #include "blackmisc/metadatautils.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include <QDebug>
-#include <QMetaType>
+#include "blackmisc/registermetadata.h"
 
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Geo;
-using namespace BlackMisc::Network;
+#include <stdio.h>
+#include <QTextStream>
 
 namespace BlackSample
 {

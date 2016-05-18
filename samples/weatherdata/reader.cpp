@@ -11,8 +11,20 @@
 //! \ingroup sampleweatherdata
 
 #include "reader.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/units.h"
+
+#include <stdio.h>
+#include <QByteArray>
 #include <QFile>
+#include <QFlags>
+#include <QIODevice>
 #include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QString>
+#include <QTextStream>
+#include <QtGlobal>
 
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;

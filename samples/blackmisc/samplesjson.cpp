@@ -11,10 +11,33 @@
 //! \ingroup sampleblackmisc
 
 #include "samplesjson.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/aviation/transponder.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/stringutils.h"
+
+#include <stdio.h>
+#include <QDateTime>
+#include <QDebug>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QTextStream>
+#include <QtDebug>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

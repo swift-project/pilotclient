@@ -13,23 +13,48 @@
 #ifndef BLACKSAMPLE_TESTSERVICE_INTERFACE_H
 #define BLACKSAMPLE_TESTSERVICE_INTERFACE_H
 
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/track.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/client.h"
+#include "blackmisc/network/clientlist.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/propertyindex.h"
+#include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/network/clientlist.h"
 #include "blackmisc/variantlist.h"
-#include <QtCore/QObject>
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
-#include <QtDBus/QtDBus>
+
+#include <QDBusAbstractInterface>
+#include <QDBusPendingCall>
+#include <QDBusPendingReply>
+#include <QLatin1String>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <QVariant>
+
+class QDBusConnection;
+class QDBusObjectPath;
+class QDBusVariant;
+
+namespace BlackMisc
+{
+    class CVariant;
+    namespace Simulation { namespace FsCommon { class CAircraftCfgEntriesList; } }
+}
 
 namespace BlackSample
 {

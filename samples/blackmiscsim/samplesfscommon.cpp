@@ -16,13 +16,13 @@
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
-
-#include <QDebug>
-#include <QFuture>
-#include <QTime>
-#include <QTextStream>
-#include <QTemporaryFile>
+#include <QByteArray>
 #include <QJsonDocument>
+#include <QString>
+#include <QTemporaryFile>
+#include <QTextStream>
+#include <QTime>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

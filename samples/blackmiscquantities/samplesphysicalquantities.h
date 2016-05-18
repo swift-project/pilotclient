@@ -13,8 +13,7 @@
 #ifndef BLACKSAMPLE_SAMPLESPHYSICALQUANTITIES_H
 #define BLACKSAMPLE_SAMPLESPHYSICALQUANTITIES_H
 
-#include "blackmisc/pq/constants.h"
-#include <QTextStream>
+class QTextStream;
 
 namespace BlackSample
 {

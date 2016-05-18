@@ -12,10 +12,19 @@
 
 #include "samplesalgorithm.h"
 #include "blackmisc/algorithm.h"
+#include "blackmisc/iterator.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/collection.h"
+#include "blackmisc/stringutils.h"
+
+#include <QChar>
 #include <QDebug>
+#include <QList>
 #include <QString>
+#include <QStringList>
+#include <QTypeInfo>
+#include <QtDebug>
+#include <algorithm>
+#include <cmath>
 #include <numeric>
 
 namespace BlackSample

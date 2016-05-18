@@ -6,11 +6,34 @@
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
+
 //! \file
 //! \ingroup sampleweatherdata
 
 #include "weatherdataprinter.h"
 #include "blackmisc/logmessage.h"
+#include <QTextStream>
+
+#include "weatherdataprinter.h"
+#include "blackmisc/aviation/altitude.h"
+#include "blackmisc/geo/latitude.h"
+#include "blackmisc/geo/longitude.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/range.h"
+#include "blackmisc/sequence.h"
+#include "blackmisc/weather/cloudlayer.h"
+#include "blackmisc/weather/cloudlayerlist.h"
+#include "blackmisc/weather/gridpoint.h"
+#include "blackmisc/weather/temperaturelayer.h"
+#include "blackmisc/weather/temperaturelayerlist.h"
+#include "blackmisc/weather/windlayer.h"
+#include "blackmisc/weather/windlayerlist.h"
+
+#include <stdio.h>
 #include <QTextStream>
 
 using namespace BlackMisc;

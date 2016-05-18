@@ -12,6 +12,7 @@
 
 #include "blackgui/components/settingshotkeycomponent.h"
 #include "blackgui/guiapplication.h"
+
 #include <QApplication>
 
 using namespace BlackGui;

@@ -13,8 +13,7 @@
 #ifndef BLACKSAMPLE_SAMPLESGEO_H
 #define BLACKSAMPLE_SAMPLESGEO_H
 
-#include "blackmisc/pq/constants.h"
-#include <QTextStream>
+class QTextStream;
 
 namespace BlackSample
 {

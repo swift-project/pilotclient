@@ -10,11 +10,16 @@
 //! \file
 //! \ingroup sampleblackmiscquantities
 
-#include "samplesphysicalquantities.h"
 #include "samplesaviation.h"
 #include "samplesgeo.h"
+#include "samplesphysicalquantities.h"
 #include "blackcore/application.h"
+
+#include <stdio.h>
+#include <QCoreApplication>
+#include <QIODevice>
 #include <QTextStream>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackSample;

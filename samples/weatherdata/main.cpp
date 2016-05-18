@@ -10,13 +10,15 @@
 //! \file
 //! \ingroup sampleweatherdata
 
+#include "blackmisc/loghandler.h"
+#include "blackmisc/registermetadata.h"
 #include "reader.h"
 #include "weatherdataprinter.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/loghandler.h"
+
+#include <stdio.h>
 #include <QCoreApplication>
+#include <QObject>
 #include <QTextStream>
-#include <QFile>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

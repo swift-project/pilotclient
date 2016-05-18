@@ -11,13 +11,15 @@
 //! \ingroup sampleblackmiscsim
 
 #include "samplesvpilotrules.h"
-#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/registermetadata.h"
+#include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
+#include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/sampleutils.h"
 
-#include <QDebug>
 #include <QScopedPointer>
+#include <QStringList>
+#include <QTextStream>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;

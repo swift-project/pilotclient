@@ -12,15 +12,21 @@
 
 #include "samplesmodelmapping.h"
 #include "blackcore/aircraftmatcher.h"
-#include "blackmisc/registermetadata.h"
-#include "blackmisc/stringutils.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/sampleutils.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodelloader.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
+#include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/stringutils.h"
 
-#include <QDebug>
-#include <memory>
-#include <utility>
+#include <QFlags>
+#include <QString>
+#include <QStringList>
+#include <QTextStream>
 
 using namespace BlackCore;
 using namespace BlackMisc;

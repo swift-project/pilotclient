@@ -13,8 +13,9 @@
 #ifndef BLACKSAMPLE_CLICLIENT_LINEREADER_H
 #define BLACKSAMPLE_CLICLIENT_LINEREADER_H
 
-#include <QThread>
+#include <QObject>
 #include <QString>
+#include <QThread>
 
 namespace BlackSample
 {

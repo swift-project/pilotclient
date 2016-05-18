@@ -14,8 +14,9 @@
 //! \ingroup sampleweatherdata
 
 #include "blackmisc/geo/coordinategeodetic.h"
+
+#include <QObject>
 #include <QThread>
-#include <QString>
 
 /*!
  * Class reading line input and triggering commands

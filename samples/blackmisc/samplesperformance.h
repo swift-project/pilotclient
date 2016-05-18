@@ -14,7 +14,11 @@
 #define BLACKSAMPLE_SAMPLESPERFORMANCE_H
 
 #include "blackmisc/aviation/aircraftsituationlist.h"
+
 #include <QTextStream>
+#include <QtGlobal>
+
+class QTextStream;
 
 namespace BlackSample
 {

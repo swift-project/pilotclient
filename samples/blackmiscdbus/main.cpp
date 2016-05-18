@@ -10,15 +10,20 @@
 //! \file
 //! \ingroup sampleblackmiscdbus
 
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/registermetadata.h"
 #include "servicetool.h"
-#include "blackmisc/dbusserver.h"
-#include <QDBusMetaType>
-#include <QDBusServer>
-#include <QtDBus/qdbusabstractinterface.h>
-#include <QtDBus/qdbusconnection.h>
+
+#include <stdio.h>
 #include <QCoreApplication>
-#include <QList>
+#include <QDBusServer>
+#include <QDebug>
+#include <QRegExp>
+#include <QString>
+#include <QStringList>
+#include <QTextStream>
+#include <Qt>
+#include <QtDebug>
 
 //! main
 int main(int argc, char *argv[])

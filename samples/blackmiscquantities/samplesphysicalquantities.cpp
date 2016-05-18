@@ -11,7 +11,21 @@
 //! \ingroup sampleblackmiscquantities
 
 #include "samplesphysicalquantities.h"
-#include "blackmisc/variant.h"
+#include "blackmisc/pq/acceleration.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/mass.h"
+#include "blackmisc/pq/physicalquantity.h"
+#include "blackmisc/pq/pressure.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/temperature.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/stringutils.h"
+
+#include <QString>
+#include <QTextStream>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

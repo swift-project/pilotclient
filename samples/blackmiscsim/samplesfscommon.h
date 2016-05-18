@@ -13,7 +13,7 @@
 #ifndef BLACKSAMPLE_SAMPLESFSCOMMON_H
 #define BLACKSAMPLE_SAMPLESFSCOMMON_H
 
-#include <QTextStream>
+class QTextStream;
 
 namespace BlackSample
 {

@@ -11,10 +11,24 @@
 //! \ingroup sampleblackmisc
 
 #include "samplescontainer.h"
+#include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/propertyindexallclasses.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/pq/frequency.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/propertyindexlist.h"
+#include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/range.h"
+#include "blackmisc/stringutils.h"
+#include "blackmisc/variant.h"
+
+#include <QDateTime>
 #include <QDebug>
-#include <QMetaType>
+#include <QtDebug>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;

@@ -13,7 +13,7 @@
 #ifndef BLACKSAMPLE_SAMPLESVPILOTRULES_H
 #define BLACKSAMPLE_SAMPLESVPILOTRULES_H
 
-#include <QTextStream>
+class QTextStream;
 
 namespace BlackSample
 {
