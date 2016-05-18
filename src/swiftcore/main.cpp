@@ -7,18 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "swiftcore.h"
+#include "blackcore/corefacadeconfig.h"
 #include "blackgui/guiapplication.h"
-#include "blackgui/stylesheetutility.h"
-#include "blackgui/guiutility.h"
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextapplicationimpl.h"
-#include "blackmisc/dbusserver.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/network/networkutils.h"
-#include <QMessageBox>
+#include "swiftcore.h"
+
+#include <stdlib.h>
 #include <QApplication>
+#include <QString>
+#include <QSystemTrayIcon>
+#include <Qt>
 
 using namespace BlackMisc;
 using namespace BlackCore;

@@ -12,13 +12,16 @@
 #ifndef SWIFTCORE_H
 #define SWIFTCORE_H
 
-#include "blackgui/systemtraywindow.h"
 #include "blackgui/mainwindowaccess.h"
-#include "blackcore/corefacade.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/systemtraywindow.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/statusmessage.h"
 
+#include <QObject>
 #include <QScopedPointer>
+#include <QString>
+
+class QWidget;
 
 namespace Ui { class CSwiftCore; }
 

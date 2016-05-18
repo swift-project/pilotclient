@@ -8,16 +8,27 @@
  */
 
 #include "swiftcore.h"
-#include "ui_swiftcore.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/dbusserver.h"
+#include "blackcore/corefacade.h"
+#include "blackgui/components/commandinput.h"
+#include "blackgui/components/coreinfoareacomponent.h"
+#include "blackgui/components/logcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackgui/components/logcomponent.h"
-#include <QMenu>
-#include <QMessageBox>
-#include <QCloseEvent>
+#include "blackmisc/dbusserver.h"
+#include "blackmisc/icons.h"
+#include "blackmisc/loghandler.h"
+#include "blackmisc/logpattern.h"
+#include "ui_swiftcore.h"
+
+#include <QFlags>
+#include <QGroupBox>
+#include <QIcon>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QtGlobal>
+
+class QWidget;
 
 using namespace BlackMisc;
 using namespace BlackCore;
