@@ -7,18 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "swiftdata.h"
+#include "blackcore/webreaderflags.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/application.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/worker.h"
-#include "blackmisc/network/networkutils.h"
-#include "blackmisc/loghandler.h"
-#include "blackmisc/filelogger.h"
-#include "blackgui/stylesheetutility.h"
+#include "swiftdata.h"
 
+#include <stdlib.h>
 #include <QApplication>
-#include <QMessageBox>
+#include <QtGlobal>
 
 using namespace BlackMisc;
 using namespace BlackCore;

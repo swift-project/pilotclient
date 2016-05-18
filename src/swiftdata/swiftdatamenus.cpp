@@ -7,25 +7,22 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/components/datainfoareacomponent.h"
+#include "blackgui/components/datamaininfoareacomponent.h"
+#include "blackgui/components/dbmappingcomponent.h"
+#include "blackgui/guiapplication.h"
+#include "blackmisc/buildconfig.h"
+#include "blackmisc/icons.h"
 #include "swiftdata.h"
 #include "ui_swiftdata.h"
-#include "blackgui/components/dbmappingcomponent.h"
-#include "blackgui/components/datainfoareacomponent.h"
-#include "blackgui/components/logcomponent.h"
-#include "blackgui/guiapplication.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/settingscache.h"
-#include "blackcore/webdataservices.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/logmessage.h"
-#include "blackmisc/buildconfig.h"
-#include "blackmisc/metadatautils.h"
-#include <QPoint>
-#include <QMenu>
-#include <QDesktopServices>
-#include <QProcess>
-#include <QFontDialog>
+
+#include <QAction>
 #include <QDir>
+#include <QMenu>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QtGlobal>
 
 using namespace BlackGui;
 using namespace BlackCore;

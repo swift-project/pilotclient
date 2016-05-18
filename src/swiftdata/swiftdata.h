@@ -12,16 +12,18 @@
 #ifndef SWIFTDATA_H
 #define SWIFTDATA_H
 
-#include "blackgui/systemtraywindow.h"
-#include "blackgui/managedstatusbar.h"
-#include "blackgui/mainwindowaccess.h"
-#include "blackcore/corefacade.h"
-#include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
-#include "blackcore/setupreader.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/mainwindowaccess.h"
+#include "blackgui/managedstatusbar.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/identifiable.h"
+#include "blackmisc/statusmessage.h"
+
+#include <QMainWindow>
+#include <QObject>
 #include <QScopedPointer>
+
+class QWidget;
 
 namespace Ui { class CSwiftData; }
 namespace BlackCore { class CWebDataServices; }

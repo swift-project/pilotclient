@@ -8,20 +8,24 @@
  */
 
 #include "swiftdata.h"
-#include "ui_swiftdata.h"
-#include "blackgui/guiapplication.h"
+#include "blackcore/application.h"
+#include "blackcore/data/globalsetup.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
-#include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/logcomponent.h"
+#include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackcore/webdataservices.h"
-#include "blackmisc/network/entityflags.h"
-#include "blackmisc/icon.h"
 #include "blackmisc/loghandler.h"
-#include <QMenu>
-#include <QMessageBox>
-#include <QCloseEvent>
+#include "blackmisc/logpattern.h"
+#include "blackmisc/network/url.h"
+#include "ui_swiftdata.h"
+
+#include <QAction>
+#include <QString>
+#include <QStyle>
+#include <QtGlobal>
+
+class QWidget;
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
