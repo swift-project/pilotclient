@@ -25,16 +25,8 @@ namespace BlackMisc
 {
     class CLogCategoryList;
     class CStatusMessageList;
-
-    namespace Aviation
-    {
-        class CCallsign;
-    }
-
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
+    namespace Aviation { class CCallsign; }
+    namespace Simulation { class CSimulatedAircraft; }
 }
 
 namespace BlackCore

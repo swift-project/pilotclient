@@ -39,7 +39,6 @@
 namespace BlackMisc
 {
     class CDBusServer;
-
     namespace Aviation
     {
         class CAircraftIcaoCode;

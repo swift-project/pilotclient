@@ -28,10 +28,7 @@
 
 class QNetworkReply;
 
-namespace BlackMisc
-{
-    class CLogCategoryList;
-}
+namespace BlackMisc { class CLogCategoryList; }
 
 namespace BlackCore
 {

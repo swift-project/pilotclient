@@ -16,13 +16,13 @@
 
 #include <QIcon>
 #include <QImage>
+#include <QMap>
 #include <QMetaType>
 #include <QPixmap>
 #include <QString>
 #include <Qt>
 
 class QSize;
-template <class Key, class T> class QMap;
 
 namespace BlackMisc
 {

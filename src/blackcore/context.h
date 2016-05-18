@@ -24,10 +24,7 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace BlackMisc
-{
-    class CLogCategoryList;
-}
+namespace BlackMisc { class CLogCategoryList; }
 
 namespace BlackCore
 {

@@ -15,9 +15,9 @@
 #include "blackcoreexport.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
-#include <QObject>
 
 //! \file
+#include <QObject>
 
 namespace BlackCore
 {

@@ -44,16 +44,12 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CGenericDBusInterface;
-
     namespace Aviation
     {
         class CAircraftParts;
         class CCallsign;
     }
-    namespace Simulation
-    {
-        class CAircraftModel;
-    }
+    namespace Simulation { class CAircraftModel; }
 }
 
 namespace BlackCore

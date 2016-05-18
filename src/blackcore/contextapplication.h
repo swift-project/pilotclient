@@ -36,10 +36,7 @@
 
 class QDBusConnection;
 
-namespace BlackMisc
-{
-    class CDBusServer;
-}
+namespace BlackMisc { class CDBusServer; }
 
 //! \addtogroup dbus
 //! @{

@@ -22,6 +22,7 @@
 #include "iconlist.h"
 #include "dictionary.h"
 #include "stringutils.h"
+
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>

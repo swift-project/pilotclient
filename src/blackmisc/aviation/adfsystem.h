@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/modulator.h"
+
 #include <stdexcept>
 
 namespace BlackMisc

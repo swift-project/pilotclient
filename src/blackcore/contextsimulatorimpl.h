@@ -38,16 +38,8 @@
 namespace BlackMisc
 {
     class CDBusServer;
-
-    namespace Aviation
-    {
-        class CCallsign;
-    }
-
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
+    namespace Aviation { class CCallsign; }
+    namespace Simulation { class CSimulatedAircraft; }
 }
 
 namespace BlackCore

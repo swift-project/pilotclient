@@ -18,6 +18,7 @@
 #include "logcategorylist.h"
 #include "timestampbased.h"
 #include "typetraits.h"
+
 #include <QReadWriteLock>
 
 namespace BlackMisc

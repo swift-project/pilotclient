@@ -23,15 +23,8 @@ class QObject;
 
 namespace BlackMisc
 {
-    namespace Aviation
-    {
-        class CCallsign;
-    }
-
-    namespace Simulation
-    {
-        class IRemoteAircraftProvider;
-    }
+    namespace Aviation { class CCallsign; }
+    namespace Simulation { class IRemoteAircraftProvider; }
 }
 
 namespace BlackCore

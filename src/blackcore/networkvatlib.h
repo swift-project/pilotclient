@@ -45,14 +45,8 @@ class QTextCodec;
 
 namespace BlackMisc
 {
-    namespace Aviation
-    {
-        class CFlightPlan;
-    }
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
+    namespace Aviation { class CFlightPlan; }
+    namespace Simulation { class CSimulatedAircraft; }
 }
 
 namespace BlackCore

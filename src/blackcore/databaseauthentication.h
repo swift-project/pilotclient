@@ -22,13 +22,7 @@
 
 class QNetworkReply;
 
-namespace BlackMisc
-{
-    namespace Network
-    {
-        class CAuthenticatedUser;
-    }
-}
+namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
 
 namespace BlackCore
 {

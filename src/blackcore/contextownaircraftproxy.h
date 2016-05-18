@@ -32,7 +32,6 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CGenericDBusInterface;
-
     namespace Aviation
     {
         class CAircraftIcaoCode;

@@ -21,11 +21,6 @@
 #include <QObject>
 #include <QVector>
 
-namespace BlackMisc
-{
-    template <typename F> class CSlot;
-}
-
 namespace BlackCore
 {
     class IWeatherData;

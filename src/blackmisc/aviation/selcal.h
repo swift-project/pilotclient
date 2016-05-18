@@ -25,14 +25,8 @@ class QStringList;
 
 namespace BlackMisc
 {
-    namespace PhysicalQuantities
-    {
-        class CFrequency;
-    }
-}
+    namespace PhysicalQuantities { class CFrequency; }
 
-namespace BlackMisc
-{
     namespace Aviation
     {
         /*!

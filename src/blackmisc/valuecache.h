@@ -47,10 +47,6 @@
 namespace BlackMisc
 {
     class CLogCategoryList;
-}
-
-namespace BlackMisc
-{
 
     /*!
      * Value class used for signalling changed values in the cache.

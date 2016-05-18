@@ -14,6 +14,8 @@
 
 #include "blackgui/blackguiexport.h"
 
+#include <QtPlugin>
+
 class QWidget;
 
 namespace BlackGui

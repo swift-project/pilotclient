@@ -23,10 +23,7 @@
 
 namespace BlackMisc
 {
-    namespace Aviation
-    {
-        class CAltitude;
-    }
+    namespace Aviation { class CAltitude; }
 
     namespace Weather
     {

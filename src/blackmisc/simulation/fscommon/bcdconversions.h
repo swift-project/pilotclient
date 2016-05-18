@@ -19,10 +19,7 @@
 
 namespace BlackMisc
 {
-    namespace Aviation
-    {
-        class CTransponder;
-    }
+    namespace Aviation { class CTransponder; }
 
     namespace Simulation
     {

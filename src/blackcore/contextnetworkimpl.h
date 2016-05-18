@@ -54,7 +54,6 @@ class QTimer;
 namespace BlackMisc
 {
     class CDBusServer;
-
     namespace Aviation
     {
         class CAircraftParts;

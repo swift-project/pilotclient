@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATION_XPLANE_XPLANEUTIL_H
 
 #include "blackmisc/blackmiscexport.h"
+
 #include <QString>
 
 namespace BlackMisc

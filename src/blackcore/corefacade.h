@@ -22,10 +22,7 @@
 #include <QObject>
 #include <QString>
 
-namespace BlackMisc
-{
-    class CDBusServer;
-}
+namespace BlackMisc { class CDBusServer; }
 
 namespace BlackCore
 {

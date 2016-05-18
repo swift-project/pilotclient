@@ -33,16 +33,8 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CGenericDBusInterface;
-
-    namespace Audio
-    {
-        class CAudioDeviceInfo;
-    }
-
-    namespace Aviation
-    {
-        class CCallsign;
-    }
+    namespace Audio { class CAudioDeviceInfo; }
+    namespace Aviation { class CCallsign; }
 }
 
 namespace BlackCore

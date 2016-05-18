@@ -46,11 +46,7 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CDBusServer;
-
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
+    namespace Simulation { class CSimulatedAircraft; }
 }
 
 namespace BlackCore

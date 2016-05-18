@@ -42,7 +42,6 @@ namespace BlackMisc
         class CAircraftSituation;
         class CCallsign;
     }
-
     namespace Simulation
     {
         class CAirspaceAircraftSnapshot;

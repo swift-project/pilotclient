@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
 #define BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
 
-#include "aircraftparts.h"
+#include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"

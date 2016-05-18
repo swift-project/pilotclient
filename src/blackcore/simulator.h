@@ -32,27 +32,15 @@
 namespace BlackMisc
 {
     class IPluginStorageProvider;
-
-    namespace Aviation
-    {
-        class CCallsign;
-    }
-
-    namespace Network
-    {
-        class CTextMessage;
-    }
-
+    namespace Aviation { class CCallsign; }
+    namespace Network { class CTextMessage; }
     namespace Simulation
     {
         class CSimulatorSetup;
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
     }
-    namespace Weather
-    {
-        class IWeatherGridProvider;
-    }
+    namespace Weather { class IWeatherGridProvider; }
 }
 
 namespace BlackCore

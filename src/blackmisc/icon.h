@@ -31,10 +31,7 @@
 namespace BlackMisc
 {
     class CIcon;
-    namespace PhysicalQuantities
-    {
-        class CAngle;
-    }
+    namespace PhysicalQuantities { class CAngle; }
 
     namespace Mixin
     {

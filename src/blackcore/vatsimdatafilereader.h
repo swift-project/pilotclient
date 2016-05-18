@@ -34,13 +34,7 @@
 
 class QNetworkReply;
 
-namespace BlackMisc
-{
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
-}
+namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 
 namespace BlackCore
 {

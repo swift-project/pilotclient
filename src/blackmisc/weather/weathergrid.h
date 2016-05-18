@@ -23,10 +23,7 @@
 
 namespace BlackMisc
 {
-    namespace Geo
-    {
-        class ICoordinateGeodetic;
-    }
+    namespace Geo { class ICoordinateGeodetic; }
 
     namespace Weather
     {

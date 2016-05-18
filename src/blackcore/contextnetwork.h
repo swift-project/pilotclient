@@ -43,22 +43,13 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CDBusServer;
-
     namespace Aviation
     {
         class CAircraftParts;
         class CCallsign;
     }
-
-    namespace Network
-    {
-        class CTextMessage;
-    }
-
-    namespace Simulation
-    {
-        class CAircraftModel;
-    }
+    namespace Network { class CTextMessage; }
+    namespace Simulation { class CAircraftModel; }
 }
 
 //! \addtogroup dbus

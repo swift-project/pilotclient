@@ -34,16 +34,8 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CDBusServer;
-
-    namespace Audio
-    {
-        class CAudioDeviceInfo;
-    }
-
-    namespace Aviation
-    {
-        class CCallsign;
-    }
+    namespace Audio { class CAudioDeviceInfo; }
+    namespace Aviation { class CCallsign; }
 }
 
 //! \addtogroup dbus

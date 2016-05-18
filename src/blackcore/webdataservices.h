@@ -47,18 +47,8 @@
 namespace BlackMisc
 {
     class CLogCategoryList;
-
-    namespace Aviation
-    {
-        class CCallsign;
-    }
-
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
-
-    template <typename T> class Restricted;
+    namespace Aviation { class CCallsign; }
+    namespace Simulation { class CSimulatedAircraft; }
 }
 
 namespace BlackCore

@@ -32,11 +32,7 @@ class QDBusConnection;
 namespace BlackMisc
 {
     class CGenericDBusInterface;
-
-    namespace Simulation
-    {
-        class CSimulatedAircraft;
-    }
+    namespace Simulation { class CSimulatedAircraft; }
 }
 
 namespace BlackCore

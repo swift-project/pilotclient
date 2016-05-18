@@ -13,6 +13,7 @@
 #define BLACKMISC_MATH_MATHUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+
 #include <QtCore/qmath.h>
 #include <cmath>
 
