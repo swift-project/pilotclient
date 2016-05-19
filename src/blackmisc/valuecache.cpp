@@ -91,6 +91,17 @@ namespace BlackMisc
         return result;
     }
 
+    QString CValueCachePacket::toTimestampMapString() const
+    {
+        auto map = toTimestampMap();
+        QStringList result;
+        for (auto it = map.cbegin(); it != map.cend(); ++it)
+        {
+            result.push_back(it.key() + "(" + QDateTime::fromMSecsSinceEpoch(it.value(), Qt::UTC).toString(Qt::ISODate) + ")");
+        }
+        return result.join(",");
+    }
+
     CValueCachePacket CValueCachePacket::takeByKey(const QString &key)
     {
         auto copy = *this;
@@ -269,7 +280,7 @@ namespace BlackMisc
         return status;
     }
 
-    CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values) const
+    CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values, const QString &keysMessage) const
     {
         QMap<QString, CVariantMap> namespaces;
         for (auto it = values.cbegin(); it != values.cend(); ++it)
@@ -302,7 +313,8 @@ namespace BlackMisc
                 return CStatusMessage(this).error("Failed to write to %1: %2") << file.fileName() << file.errorString();
             }
         }
-        return CStatusMessage(this).info("Written %1 to value cache in %2") << values.keys().to<QStringList>().join(",") << dir;
+        return CStatusMessage(this).info("Written %1 to value cache in %2") <<
+            (keysMessage.isEmpty() ? values.keys().to<QStringList>().join(",") : keysMessage) << dir;
     }
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
@@ -315,7 +327,7 @@ namespace BlackMisc
         return status;
     }
 
-    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values) const
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values, const QString &keysMessage) const
     {
         if (! QDir(dir).isReadable())
         {
@@ -344,7 +356,8 @@ namespace BlackMisc
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return CStatusMessage(this).info("Loaded cache values %1 from %2") << o_values.keys().to<QStringList>().join(",") << dir;
+        return CStatusMessage(this).info("Loaded cache values %1 from %2") <<
+            (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir;
     }
 
     void CValueCache::markAllAsSaved(const QString &keyPrefix)

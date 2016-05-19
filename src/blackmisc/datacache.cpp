@@ -234,7 +234,7 @@ namespace BlackMisc
         if (! lock) { return; }
         m_cache->m_revision.writeNewRevision(baseline.toTimestampMap());
 
-        auto msg = m_cache->saveToFiles(persistentStore(), values);
+        auto msg = m_cache->saveToFiles(persistentStore(), values, baseline.toTimestampMapString());
         msg.setCategories(this);
         CLogMessage::preformatted(msg);
 
@@ -247,7 +247,7 @@ namespace BlackMisc
         if (lock && m_cache->m_revision.isPendingRead())
         {
             CValueCachePacket newValues;
-            auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues);
+            auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues, m_cache->m_revision.timestampsAsString());
             msg.setCategories(this);
             CLogMessage::preformatted(msg);
             m_deferredChanges.insert(newValues);
@@ -449,6 +449,18 @@ namespace BlackMisc
 
         Q_ASSERT(m_updateInProgress);
         return std::move(m_promises); // move into the return value, so m_promises becomes empty
+    }
+
+    QString CDataCacheRevision::timestampsAsString() const
+    {
+        QMutexLocker lock(&m_mutex);
+
+        QStringList result;
+        for (auto it = m_timestamps.cbegin(); it != m_timestamps.cend(); ++it)
+        {
+            result.push_back(it.key() + "(" + QDateTime::fromMSecsSinceEpoch(it.value(), Qt::UTC).toString(Qt::ISODate) + ")");
+        }
+        return result.join(",");
     }
 
     void CDataCacheRevision::setTimeToLive(const QString &key, int ttl)

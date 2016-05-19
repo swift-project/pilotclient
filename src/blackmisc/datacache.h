@@ -126,6 +126,9 @@ namespace BlackMisc
         //! Returns (by move) the container of promises to load values.
         std::vector<std::promise<void>> loadedValuePromises();
 
+        //! Keys with timestamps.
+        QString timestampsAsString() const;
+
         //! Set TTL value that will be written to the revision file.
         void setTimeToLive(const QString &key, int ttl);
 

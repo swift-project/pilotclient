@@ -93,6 +93,9 @@ namespace BlackMisc
         //! Discard values and return as map of timestamps.
         QMap<QString, qint64> toTimestampMap() const;
 
+        //! Return map of timestamps converted to string.
+        QString toTimestampMapString() const;
+
         //! Remove value matching the given key, and return it in a separate packet.
         CValueCachePacket takeByKey(const QString &key);
 
@@ -245,11 +248,11 @@ namespace BlackMisc
 
         //! Save specific values to Json files in a given directory.
         //! \threadsafe
-        CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values) const;
+        CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values, const QString &keysMessage = {}) const;
 
         //! Load from Json files in a given directory any values which differ from the current ones, and insert them in o_values.
         //! \threadsafe
-        CStatusMessage loadFromFiles(const QString &directory, const QSet<QString> &keys, const CVariantMap &current, CValueCachePacket &o_values) const;
+        CStatusMessage loadFromFiles(const QString &directory, const QSet<QString> &keys, const CVariantMap &current, CValueCachePacket &o_values, const QString &keysMessage = {}) const;
 
         //! Mark all values with keys that start with the given prefix as having been saved.
         //! \threadsafe
