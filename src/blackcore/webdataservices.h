@@ -76,6 +76,8 @@ namespace BlackCore
         class CInfoDataReader;
     }
 
+    class CAirportDataReader;
+
     /*!
      * Encapsulates reading data from web sources
      */
@@ -343,6 +345,9 @@ namespace BlackCore
         //! Read finished from reader
         void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
+        //! Read from airport data reader
+        void ps_readFromAirportDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+
         //! Setup changed
         void ps_setupChanged();
 
@@ -371,6 +376,7 @@ namespace BlackCore
         Db::CIcaoDataReader             *m_icaoDataReader       = nullptr;
         Db::CModelDataReader            *m_modelDataReader      = nullptr;
         Db::CInfoDataReader             *m_infoDataReader       = nullptr;
+        CAirportDataReader              *m_airportDataReader    = nullptr;
 
         // writing objects directly into DB
         Db::CDatabaseWriter     *m_databaseWriter       = nullptr;

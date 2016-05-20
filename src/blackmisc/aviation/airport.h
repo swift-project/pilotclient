@@ -42,7 +42,8 @@ namespace BlackMisc
                 IndexIcao = BlackMisc::CPropertyIndex::GlobalIndexCAirport,
                 IndexDescriptiveName,
                 IndexPosition,
-                IndexElevation
+                IndexCountry,
+                IndexElevation,
             };
 
             //! Default constructor.
@@ -77,6 +78,12 @@ namespace BlackMisc
 
             //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
+
+            //! Get the country
+            QString getCountry() const { return m_country; }
+
+            //! Set the country
+            void setCountry(const QString &country) { this->m_country = country; }
 
             //! Elevation
             //! \sa geodeticHeight
@@ -123,16 +130,21 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! \copydoc BlackMisc::CValueObject::convertFromJson
+            void fromDatabaseJson(const QJsonObject &json);
+
         private:
             CAirportIcaoCode                    m_icao;
             QString                             m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
+            QString                             m_country;
 
             BLACK_METACLASS(
                 CAirport,
                 BLACK_METAMEMBER(icao),
                 BLACK_METAMEMBER(descriptiveName),
                 BLACK_METAMEMBER(position),
+                BLACK_METAMEMBER(country),
                 BLACK_METAMEMBER(relativeDistance),
                 BLACK_METAMEMBER(relativeBearing)
             );

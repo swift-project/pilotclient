@@ -45,6 +45,7 @@ namespace BlackCore
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
         if (readers.testFlag(IcaoDataReader)) { entities |= CEntityFlags::AllIcaoAndCountries; }
         if (readers.testFlag(ModelReader)) { entities |= CEntityFlags::DistributorLiveryModel; }
+        if (readers.testFlag(AirportReader)) { entities |= CEntityFlags::AirportEntity; }
         if (readers.testFlag(InfoDataReader)) { entities |= CEntityFlags::InfoObjectEntity; }
         if (readers.testFlag(VatsimBookingReader)) { entities |= CEntityFlags::BookingEntity; }
         if (readers.testFlag(VatsimMetarReader)) { entities |= CEntityFlags::MetarEntity; }

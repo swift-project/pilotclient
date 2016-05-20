@@ -36,6 +36,7 @@ namespace BlackMisc
             case NoEntity: return "no data";
             case VatsimDataFile: return "VATSIM data file";
             case VatsimStatusFile: return "VATSIM status file";
+            case AirportEntity: return "Airport";
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
@@ -56,6 +57,7 @@ namespace BlackMisc
             if (flag.testFlag(NoEntity)) list << "no data";
             if (flag.testFlag(VatsimDataFile)) list << "VATSIM data file";
             if (flag.testFlag(VatsimStatusFile)) list << "VATSIM status file";
+            if (flag.testFlag(AirportEntity)) list << "Airport";
             return list.join(',');
         }
 

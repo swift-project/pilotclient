@@ -25,6 +25,8 @@ namespace BlackCore
         class CIcaoDataReader;
         class CModelDataReader;
     }
+
+    class CAirportDataReader;
 }
 
 namespace BlackCoreTest
@@ -50,7 +52,11 @@ namespace BlackCoreTest
         //! Read model data
         void readModelData();
 
+        //! Read airport data
+        void readAirportData();
+
     private:
+        BlackCore::CAirportDataReader *m_airportReader = nullptr;
         BlackCore::Db::CIcaoDataReader  *m_icaoReader = nullptr;
         BlackCore::Db::CModelDataReader *m_modelReader = nullptr;
 

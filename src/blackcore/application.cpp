@@ -471,6 +471,35 @@ namespace BlackCore
         return reply;
     }
 
+    QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    {
+        if (this->m_shutdown) { return nullptr; }
+        return headerFromNetwork(url.toNetworkRequest(), callback);
+    }
+
+    QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    {
+        if (this->m_shutdown) { return nullptr; }
+        QWriteLocker locker(&m_accessManagerLock);
+        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        if (QThread::currentThread() != this->m_accessManager.thread())
+        {
+            QTimer::singleShot(0, this, [this, request, callback]() { this->headerFromNetwork(request, callback); });
+            return nullptr; // not yet started
+        }
+
+        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
+        QNetworkRequest r(request); // no QObject
+        CNetworkUtils::ignoreSslVerification(r);
+        CNetworkUtils::setSwiftUserAgent(r);
+        QNetworkReply *reply = this->m_accessManager.head(r);
+        if (callback)
+        {
+            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);
+        }
+        return reply;
+    }
+
     void CApplication::deleteAllCookies()
     {
         this->m_cookieManager.deleteAllCookies();

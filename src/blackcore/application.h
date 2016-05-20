@@ -325,6 +325,16 @@ namespace BlackCore
         QNetworkReply *postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart,
                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
 
+        //! Request to get network repy using HTTP's HEADER method
+        //! \threadsafe
+        QNetworkReply *headerFromNetwork(const BlackMisc::Network::CUrl &url,
+                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
+        //! Request to get network repy using HTTP's HEADER method
+        //! \threadsafe
+        QNetworkReply *headerFromNetwork(const QNetworkRequest &request,
+                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+
     signals:
         //! Setup available (cache, web load, ..)
         void setupAvailable(bool success);

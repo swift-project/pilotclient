@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/airportdatareader.h"
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/infodatareader.h"
@@ -207,6 +208,15 @@ namespace BlackCore
             }
         }
 
+        if (m_airportDataReader)
+        {
+            if (whatToRead.testFlag(CEntityFlags::AirportEntity))
+            {
+                m_airportDataReader->readInBackgroundThread();
+                triggeredRead |= CEntityFlags::AirportEntity;
+            }
+        }
+
         if (m_icaoDataReader)
         {
             if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
@@ -226,6 +236,7 @@ namespace BlackCore
                 triggeredRead |= modelEntities;
             }
         }
+
         return triggeredRead;
     }
 
@@ -524,6 +535,7 @@ namespace BlackCore
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->gracefulShutdown(); }
         if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->gracefulShutdown(); }
         if (this->m_modelDataReader)      { this->m_modelDataReader->gracefulShutdown(); }
+        if (this->m_airportDataReader)    { this->m_airportDataReader->gracefulShutdown(); }
         if (this->m_icaoDataReader)       { this->m_icaoDataReader->gracefulShutdown(); }
         if (this->m_infoDataReader)       { this->m_infoDataReader->gracefulShutdown(); }
         if (this->m_databaseWriter)       { this->m_databaseWriter->gracefulShutdown(); }
@@ -637,6 +649,16 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed models");
             this->m_modelDataReader->start(QThread::LowPriority);
         }
+
+        // 6. Airport list reader
+        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
+        {
+            this->m_airportDataReader = new CAirportDataReader(this);
+            bool c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromAirportDb);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Airport reader signals");
+            Q_UNUSED(c);
+            this->m_airportDataReader->start(QThread::LowPriority);
+        }
     }
 
     CDatabaseReader *CWebDataServices::getDbReader(CEntityFlags::Entity entity) const
@@ -702,6 +724,11 @@ namespace BlackCore
         {
             emit allSwiftDbDataRead();
         }
+    }
+
+    void CWebDataServices::ps_readFromAirportDb(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+    {
+        CLogMessage(this).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
     }
 
     void CWebDataServices::ps_setupChanged()

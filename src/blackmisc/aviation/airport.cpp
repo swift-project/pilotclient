@@ -52,6 +52,26 @@ namespace BlackMisc
             (void)QT_TRANSLATE_NOOP("Aviation", "Airport");
         }
 
+        void CAirport::fromDatabaseJson(const QJsonObject &json)
+        {
+            Q_ASSERT(json.value("icao").isString());
+            setIcao(json.value("icao").toString());
+
+            Q_ASSERT(json.value("country").isString());
+            setCountry(json.value("country").toString());
+
+            Q_ASSERT(json.value("name").isString());
+            setDescriptiveName(json.value("name").toString());
+
+            Q_ASSERT(json.value("altitude").isDouble());
+            setElevation(CLength(json.value("altitude").toInt(), CLengthUnit::ft()));
+
+            Q_ASSERT(json.value("latitude").isDouble());
+            Q_ASSERT(json.value("longitude").isDouble());
+            CCoordinateGeodetic pos(json.value("latitude").toDouble(), json.value("longitude").toDouble(), 0);
+            setPosition(pos);
+        }
+
         CVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

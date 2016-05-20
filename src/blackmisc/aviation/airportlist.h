@@ -49,6 +49,9 @@ namespace BlackMisc
 
             //! Find first station by callsign, if not return given value / default
             CAirport findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound = CAirport()) const;
+
+            //! Reads the airport list from JSON
+            static CAirportList fromDatabaseJson(const QJsonArray& json);
         };
     } //namespace
 } // namespace

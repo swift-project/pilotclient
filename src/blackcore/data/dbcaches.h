@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/countrylist.h"
@@ -107,6 +108,16 @@ namespace BlackCore
 
             //! Key in data cache
             static const char *key() { return "dbmodelreaderurl"; }
+        };
+
+        //! Trait for airport list
+        struct DbAirportCache : public BlackMisc::CDataTrait<BlackMisc::Aviation::CAirportList>
+        {
+            //! Defer loading
+            static constexpr bool isDeferred() { return true; }
+
+            //! Key in data cache
+            static const char *key() { return "dbairportcache"; }
         };
     } // ns
 } // ns

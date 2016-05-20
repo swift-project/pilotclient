@@ -13,6 +13,7 @@
 
 #include "testreaders.h"
 #include "blackcore/application.h"
+#include "blackcore/airportdatareader.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/modeldatareader.h"
@@ -44,12 +45,14 @@ namespace BlackCoreTest
 {
     CTestReaders::CTestReaders(QObject *parent) :
         QObject(parent),
+        m_airportReader(new CAirportDataReader(this)),
         m_icaoReader(new CIcaoDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess())),
         m_modelReader(new CModelDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess()))
     { }
 
     CTestReaders::~CTestReaders()
     {
+        this->m_airportReader->gracefulShutdown();
         this->m_icaoReader->gracefulShutdown();
         this->m_modelReader->gracefulShutdown();
     }
@@ -103,6 +106,34 @@ namespace BlackCoreTest
 
         const CAircraftModel model(m_modelReader->getModels().frontOrDefault());
         QVERIFY2(model.getLivery().hasCompleteData(), "Missing data for livery");
+
+        CApplication::processEventsFor(2500); // make sure events are processed
+    }
+
+    void CTestReaders::readAirportData()
+    {
+        using namespace BlackMisc::Geo;
+        using namespace BlackMisc::PhysicalQuantities;
+
+        const CUrl url(sApp->getGlobalSetup().getSwiftAirportUrls().getRandomWorkingUrl());
+        if (!this->pingServer(url)) { return; }
+        m_airportReader->start();
+        m_airportReader->readInBackgroundThread();
+
+        for (int i = 0; i < 120; ++i)
+        {
+            CApplication::processEventsFor(500);
+            if (this->m_airportReader->getAirports().size() > 0) break;
+        }
+
+        QVERIFY2(this->m_airportReader->getAirports().size() > 0, "No airports");
+        auto heathrow = this->m_airportReader->getAirports().findByIcao("EGLL");
+        QVERIFY2(heathrow.size() == 1, "No Heathrow");
+
+        auto airports = m_airportReader->getAirports();
+        airports.sortByRange(CCoordinateGeodetic(CLatitude(51.5085300, CAngleUnit::deg()), CLongitude(-0.1257400, CAngleUnit::deg()), CLength()), true);
+        qDebug() << airports[0].getIcao() << airports[1].getIcao();
+        QVERIFY2(airports[0].getIcao() == CAirportIcaoCode("EGLW"), "Wrong airport data");
 
         CApplication::processEventsFor(2500); // make sure events are processed
     }
