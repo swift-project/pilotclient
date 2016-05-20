@@ -28,6 +28,7 @@
 #include <Qt>
 #include <memory>
 #include <utility>
+#include <chrono>
 
 namespace BlackMisc
 {
@@ -107,10 +108,18 @@ namespace BlackMisc
 
     bool CDataCache::synchronize(const QString &key)
     {
+        constexpr auto timeout = std::chrono::seconds(1);
+        constexpr auto ready = std::future_status::ready;
+        constexpr auto zero = std::chrono::seconds::zero();
+
         auto future = m_revision.promiseLoadedValue(key, getTimestampSync(key));
         if (future.valid())
         {
-            future.wait();
+            std::future_status s {};
+            do { s = future.wait_for(timeout); } while (s != ready && m_revision.isNewerValueAvailable(key, getTimestampSync(key)));
+            if (s != ready) { s = future.wait_for(zero); }
+            if (s != ready) { return false; }
+            try { future.get(); } catch (const std::future_error &) { return false; } // broken promise
             return true;
         }
         return false;
@@ -285,7 +294,6 @@ namespace BlackMisc
 
         Q_ASSERT(! m_updateInProgress);
         Q_ASSERT(! m_lockFile.isLocked());
-        Q_ASSERT(m_promises.empty());
 
         if (! m_lockFile.lock())
         {
@@ -396,6 +404,7 @@ namespace BlackMisc
         m_updateInProgress = false;
         m_pendingRead = false;
         m_pendingWrite = false;
+        breakPromises();
         m_lockFile.unlock();
     }
 
@@ -449,6 +458,17 @@ namespace BlackMisc
 
         Q_ASSERT(m_updateInProgress);
         return std::move(m_promises); // move into the return value, so m_promises becomes empty
+    }
+
+    void CDataCacheRevision::breakPromises()
+    {
+        QMutexLocker lock(&m_mutex);
+
+        if (! m_promises.empty())
+        {
+            CLogMessage(this).debug() << "Breaking" << m_promises.size() << "promises";
+            m_promises.clear();
+        }
     }
 
     QString CDataCacheRevision::timestampsAsString() const

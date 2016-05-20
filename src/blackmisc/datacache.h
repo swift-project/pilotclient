@@ -126,6 +126,9 @@ namespace BlackMisc
         //! Returns (by move) the container of promises to load values.
         std::vector<std::promise<void>> loadedValuePromises();
 
+        //! Abandon all promises.
+        void breakPromises();
+
         //! Keys with timestamps.
         QString timestampsAsString() const;
 
