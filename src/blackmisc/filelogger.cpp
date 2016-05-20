@@ -88,6 +88,8 @@ namespace BlackMisc
         filename += m_applicationName;
         filename += QLatin1String("_");
         filename += QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
+        filename += QLatin1String("_");
+        filename += QString::number(QCoreApplication::applicationPid());
         filename += QLatin1String(".log");
         return filename;
     }
