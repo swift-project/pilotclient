@@ -99,38 +99,6 @@ namespace BlackMisc
         template <typename... Ts>
         constexpr auto make_tuple(Ts &&... vs) { return tuple<std::decay_t<Ts>...>(std::forward<Ts>(vs)...); }
 #endif // ! BLACK_HAS_CONSTEXPR_STDLIB
-
-        // Helper for case insensitive comparisons.
-        template <typename T>
-        struct CaseInsensitiveWrapper
-        {
-            const T &m_ref;
-
-            explicit CaseInsensitiveWrapper(const T &ref) : m_ref(ref) {}
-
-            friend int compare(CaseInsensitiveWrapper a, CaseInsensitiveWrapper b)
-            {
-                return a.m_ref.compare(b.m_ref, Qt::CaseInsensitive);
-            }
-            friend bool operator ==(CaseInsensitiveWrapper a, CaseInsensitiveWrapper b)
-            {
-                return compare(a, b) == 0;
-            }
-            friend bool operator <(CaseInsensitiveWrapper a, CaseInsensitiveWrapper b)
-            {
-                return compare(a, b) < 0;
-            }
-        };
-        template <typename T>
-        auto caseAwareWrap(std::false_type, const T &value)
-        {
-            return std::cref(value);
-        }
-        template <typename T>
-        auto caseAwareWrap(std::true_type, const T &value)
-        {
-            return CaseInsensitiveWrapper<T>(value);
-        }
     }
 }
 

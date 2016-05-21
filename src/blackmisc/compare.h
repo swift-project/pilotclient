@@ -20,56 +20,6 @@ namespace BlackMisc
 {
     class CEmpty;
 
-    //! \cond PRIVATE
-    namespace Private
-    {
-        template <typename T, typename U>
-        int compareImpl(const T &a, const U &b, std::true_type)
-        {
-            return compare(a, b);
-        }
-
-        template <typename T, typename U>
-        int compareImpl(const T &a, const U &b, std::false_type)
-        {
-            return a < b ? -1 : b < a ? 1 : 0;
-        }
-
-        template <size_t C, size_t I = 0>
-        struct CompareHelper
-        {
-            template <typename T, typename U>
-            static int compareTuples(const T &a, const U &b)
-            {
-                int cmp = compareImpl(std::get<I>(a), std::get<I>(b), HasCompare<std::tuple_element_t<I, T>, std::tuple_element_t<I, U>>());
-                return cmp ? cmp : CompareHelper<C, I + 1>::compareTuples(a, b);
-            }
-        };
-
-        template <size_t C>
-        struct CompareHelper<C, C>
-        {
-            template <typename T, typename U>
-            static int compareTuples(const T &, const U &)
-            {
-                return 0;
-            }
-        };
-    }
-    //! \endcond
-
-    /*!
-     * Lexicographically compare two tuples and return negative, positive, or zero,
-     * if a is less than, greater than, or equal to b.
-     * Each element is compared with compare(a', b') if supported by the element type, operator less-than otherwise.
-     */
-    template <typename... Ts, typename... Us>
-    int compare(const std::tuple<Ts...> &a, const std::tuple<Us...> &b)
-    {
-        static_assert(sizeof...(Ts) == sizeof...(Us), "tuples must be same size");
-        return Private::CompareHelper<sizeof...(Ts)>::compareTuples(a, b);
-    }
-
     namespace Mixin
     {
 
@@ -106,11 +56,23 @@ namespace BlackMisc
             static bool equals(const Derived &a, const Derived &b)
             {
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
-                return meta.toCaseAwareTuple(a) == meta.toCaseAwareTuple(b) && baseEquals(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
+                bool result = baseEquals(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
+                meta.forEachMemberPair(a, b, [ & ](auto &&... args) { result = result && EqualsByMetaClass::membersEqual(std::forward<decltype(args)>(args)...); });
+                return result;
             }
             template <typename T> static bool baseEquals(const T *a, const T *b) { return *a == *b; }
             static bool baseEquals(const void *, const void *) { return true; }
             static bool baseEquals(const CEmpty *, const CEmpty *) { return true; }
+
+            template <typename T, typename Flags>
+            static bool membersEqual(const T &a, const T &b, Flags)
+            {
+                return membersEqual(a, b, std::integral_constant<bool, static_cast<bool>(Flags::value & CaseInsensitiveComparison)>());
+            }
+            template <typename T>
+            static bool membersEqual(const T &a, const T &b, std::true_type) { return a.compare(b, Qt::CaseInsensitive) == 0; }
+            template <typename T>
+            static bool membersEqual(const T &a, const T &b, std::false_type) { return a == b; }
         };
 
         /*!
@@ -157,13 +119,28 @@ namespace BlackMisc
         private:
             static bool less(const Derived &a, const Derived &b)
             {
-                if (baseLess(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b))) { return true; }
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
-                return meta.toCaseAwareTuple(a) < meta.toCaseAwareTuple(b);
+                bool result = baseLess(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
+                bool gt = baseLess(static_cast<const BaseOfT<Derived> *>(&b), static_cast<const BaseOfT<Derived> *>(&a));
+                meta.forEachMemberPair(a, b, [ & ](auto &&... args) { result = result || LessThanByMetaClass::membersLess(gt, std::forward<decltype(args)>(args)...); });
+                return result;
             }
             template <typename T> static bool baseLess(const T *a, const T *b) { return *a < *b; }
             static bool baseLess(const void *, const void *) { return false; }
             static bool baseLess(const CEmpty *, const CEmpty *) { return false; }
+
+            template <typename T, typename Flags>
+            static bool membersLess(bool &io_greaterThan, const T &a, const T &b, Flags)
+            {
+                using CaseInsensitive = std::integral_constant<bool, static_cast<bool>(Flags::value & CaseInsensitiveComparison)>;
+                if (io_greaterThan) { return false; }
+                io_greaterThan = membersLess(b, a, CaseInsensitive());
+                return membersLess(a, b, CaseInsensitive());
+            }
+            template <typename T>
+            static bool membersLess(const T &a, const T &b, std::true_type) { return a.compare(b, Qt::CaseInsensitive) < 0; }
+            template <typename T>
+            static bool membersLess(const T &a, const T &b, std::false_type) { return a < b; }
         };
 
         /*!
@@ -179,14 +156,27 @@ namespace BlackMisc
         private:
             static int compareImpl(const Derived &a, const Derived &b)
             {
-                int baseCmp = baseCompare(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
-                if (baseCmp) { return baseCmp; }
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
-                return BlackMisc::compare(meta.toCaseAwareTuple(a), meta.toCaseAwareTuple(b));
+                int result = baseCompare(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
+                meta.forEachMemberPair(a, b, [ & ](auto &&... args) { result = result ? result : CompareByMetaClass::membersCompare(std::forward<decltype(args)>(args)...); });
+                return result;
             }
             template <typename T> static int baseCompare(const T *a, const T *b) { return compare(*a, *b); }
             static int baseCompare(const void *, const void *) { return 0; }
             static int baseCompare(const CEmpty *, const CEmpty *) { return 0; }
+
+            template <typename T, typename Flags>
+            static int membersCompare(const T &a, const T &b, Flags)
+            {
+                using CaseInsensitive = std::integral_constant<bool, static_cast<bool>(Flags::value & CaseInsensitiveComparison)>;
+                return membersCompare(a, b, CaseInsensitive(), HasCompare<T, T>());
+            }
+            template <typename T, typename U>
+            static int membersCompare(const T &a, const T &b, std::true_type, U) { return a.compare(b, Qt::CaseInsensitive); }
+            template <typename T>
+            static int membersCompare(const T &a, const T &b, std::false_type, std::true_type) { return compare(a, b); }
+            template <typename T>
+            static int membersCompare(const T &a, const T &b, std::false_type, std::false_type) { return a < b ? -1 : b < a ? 1 : 0; }
         };
 
     } // Mixin

@@ -199,20 +199,17 @@ namespace BlackMisc
         static auto toTuple(const T &object) { return std::tie((members().at(index<Is>()).in(object))...); }
         //! @}
 
-        //! Like toTuple, but members with the CaseInsensitiveComparison flag will be wrapped so that their comparisons are case insensitive.
-        static auto toCaseAwareTuple(const T &object) { return std::make_tuple(caseAwareWrap<Is>(members().at(index<Is>()).in(object))...); }
-
         //! For each member in object, pass member as argument to visitor function.
         //! @{
         template <typename F>
         static void forEachMember(T &object, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(object)); });
+            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object)); });
         }
         template <typename F>
         static void forEachMember(const T &object, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(object)); });
+            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object)); });
         }
         //! @}
 
@@ -221,22 +218,22 @@ namespace BlackMisc
         template <typename F>
         static void forEachMemberPair(T &left, T &right, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(left), member.in(right)); });
+            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
         }
         template <typename F>
         static void forEachMemberPair(const T &left, T &right, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(left), member.in(right)); });
+            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
         }
         template <typename F>
         static void forEachMemberPair(T &left, const T &right, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(left), member.in(right)); });
+            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
         }
         template <typename F>
         static void forEachMemberPair(const T &left, const T &right, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(left), member.in(right)); });
+            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
         }
         //! @}
 
@@ -245,12 +242,12 @@ namespace BlackMisc
         template <typename F>
         static void forEachMemberName(T &object, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(object), QString(member.m_name)); });
+            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), QString(member.m_name)); });
         }
         template <typename F>
         static void forEachMemberName(const T &object, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member) { std::forward<F>(visitor)(member.in(object), QString(member.m_name)); });
+            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), QString(member.m_name)); });
         }
         //! @}
 
@@ -270,14 +267,10 @@ namespace BlackMisc
         static void forEachImpl(F &&visitor)
         {
             // parameter pack swallow idiom
-            static_cast<void>(std::initializer_list<int> { (static_cast<void>(std::forward<F>(visitor)(members().at(index<Is>()))), 0)... });
-        }
-
-        template <size_t I, typename U>
-        static auto caseAwareWrap(const U &value)
-        {
-            using IsCaseInsensitive = std::integral_constant<bool, members().at(index<I>()).has(MetaFlags<CaseInsensitiveComparison>())>;
-            return Private::caseAwareWrap(IsCaseInsensitive(), value);
+            static_cast<void>(std::initializer_list<int>
+            {
+                (static_cast<void>(std::forward<F>(visitor)(members().at(index<Is>()), MetaFlags<members().at(index<Is>()).m_flags>())), 0)...
+            });
         }
     };
 
