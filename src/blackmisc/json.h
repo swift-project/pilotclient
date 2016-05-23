@@ -77,6 +77,15 @@ std::enable_if_t<std::is_enum<ENUM>::value, QJsonObject>
     return json;
 }
 
+//! \brief Specialized JSON serialization for QFlags generated enum
+//! \ingroup JSON
+template<class ENUM>
+QJsonObject &operator<<(QJsonObject &json, std::pair<QString, const QFlags<ENUM> &> value)
+{
+    json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
+    return json;
+}
+
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
 template<class ENUM>
@@ -87,6 +96,15 @@ const &operator>>(const QJsonValue &json, ENUM &value)
     return json;
 }
 
+//! \brief Specialized JSON deserialization for QFlags enum
+//! \ingroup JSON
+template<class ENUM>
+const QJsonValue &operator>>(const QJsonValue &json, QFlags<ENUM> &value)
+{
+    value = static_cast<QFlags<ENUM>>(json.toInt());
+    return json;
+}
+
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
 template<class ENUM>
@@ -94,6 +112,15 @@ std::enable_if_t<std::is_enum<ENUM>::value, QJsonValueRef>
 const &operator>>(const QJsonValueRef &json, ENUM &value)
 {
     value = static_cast<ENUM>(json.toInt());
+    return json;
+}
+
+//! \brief Specialized JSON deserialization for QFlags enum
+//! \ingroup JSON
+template<class ENUM>
+const QJsonValueRef &operator>>(const QJsonValueRef &json, QFlags<ENUM> &value)
+{
+    value = static_cast<QFlags<ENUM>>(json.toInt());
     return json;
 }
 
@@ -257,7 +284,7 @@ namespace BlackMisc
             {
                 QJsonObject json;
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMemberName(*derived(), [ & ](const auto &member, const QString &name)
+                meta.forEachMemberName(*derived(), [ & ](const auto & member, const QString & name)
                 {
                     json << std::pair<QString, const std::decay_t<decltype(member)> &>(name, member); // std::make_pair causes an ambiguous operator<<
                 });
@@ -276,7 +303,7 @@ namespace BlackMisc
             {
                 baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMemberName(*derived(), [ & ](auto &member, const QString &name) { json.value(name) >> member; });
+                meta.forEachMemberName(*derived(), [ & ](auto & member, const QString & name) { json.value(name) >> member; });
             }
 
             //! Assign from JSON object string
@@ -302,8 +329,8 @@ namespace BlackMisc
          * the derived class uses this macro to disambiguate the inherited members.
          */
 #       define BLACKMISC_DECLARE_USING_MIXIN_JSON(DERIVED)                      \
-        using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::toJson;             \
-        using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::convertFromJson;
+    using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::toJson;             \
+    using ::BlackMisc::Mixin::JsonByMetaClass<DERIVED>::convertFromJson;
 
     } // Mixin
 } // BlackMisc
