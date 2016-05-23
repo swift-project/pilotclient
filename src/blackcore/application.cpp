@@ -61,14 +61,14 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackCore::Data;
+using namespace BlackCore::Db;
 
 BlackCore::CApplication *sApp = nullptr; // set by constructor
 
 namespace BlackCore
 {
-    CApplication::CApplication(
-        const QString &applicationName, bool init) :
-        m_cookieManager( {}, this), m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+    CApplication::CApplication(const QString &applicationName, SwiftApplication application, bool init) :
+        m_cookieManager( {}, this), m_applicationName(applicationName), m_application(application), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -137,6 +137,20 @@ namespace BlackCore
     {
         static const QString s(QCoreApplication::instance()->applicationName() + " " + this->versionStringDevBetaInfo());
         return s;
+    }
+
+    CApplication::SwiftApplication CApplication::getSwiftApplication() const
+    {
+        if (this->m_application != Unknown) { return this->m_application; }
+
+        // if not set, guess
+        BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing application");
+        const QString a(QCoreApplication::instance()->applicationName().toLower());
+        if (a.contains("core"))     { return PilotClientCore; }
+        if (a.contains("launcher")) { return Laucher; }
+        if (a.contains("gui"))      { return PilotClientGui; }
+        if (a.contains("core"))     { return PilotClientCore; }
+        return Unknown;
     }
 
     CGlobalSetup CApplication::getGlobalSetup() const
@@ -349,6 +363,7 @@ namespace BlackCore
         Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest r(request); // no QObject
         CNetworkUtils::ignoreSslVerification(r);
+        CNetworkUtils::setSwiftUserAgent(r);
         QNetworkReply *reply = this->m_accessManager.get(r);
         if (callback)
         {
@@ -371,6 +386,7 @@ namespace BlackCore
         Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest r(request);
         CNetworkUtils::ignoreSslVerification(r);
+        CNetworkUtils::setSwiftUserAgent(r);
         QNetworkReply *reply = this->m_accessManager.post(r, data);
         if (callback)
         {
@@ -393,6 +409,7 @@ namespace BlackCore
         Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
         QNetworkRequest r(request);
         CNetworkUtils::ignoreSslVerification(r);
+        CNetworkUtils::setSwiftUserAgent(r);
         QNetworkReply *reply = this->m_accessManager.post(r, multiPart);
         if (callback)
         {
@@ -454,13 +471,13 @@ namespace BlackCore
 
         if (!this->m_useWebData)
         {
-            bool s = this->useWebDataServices(CWebReaderFlags::AllReaders, CWebReaderFlags::FromCache);
+            bool s = this->useWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
             if (!s) { return false; }
         }
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
-    bool CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReader, CWebReaderFlags::DbReaderHint hint)
+    bool CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReader, const CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(this->m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
@@ -471,7 +488,7 @@ namespace BlackCore
         }
 
         this->m_webReader = webReader;
-        this->m_dbReaderHint = hint;
+        this->m_dbReaderConfig = dbReaderConfig;
         this->m_useWebData = true;
         return this->startWebDataServices();
     }
@@ -505,7 +522,7 @@ namespace BlackCore
         {
             CLogMessage(this).info("Will start web data services now");
             this->m_webDataServices.reset(
-                new CWebDataServices(this->m_webReader, this->m_dbReaderHint, {}, this)
+                new CWebDataServices(this->m_webReader, this->m_dbReaderConfig, {}, this)
             );
         }
         return true;
@@ -899,5 +916,4 @@ namespace BlackCore
         }
         return CUrlList();
     }
-
 } // ns

@@ -60,8 +60,8 @@ namespace BlackGui
         return l;
     }
 
-    CGuiApplication::CGuiApplication(const QString &applicationName, const QPixmap &icon) :
-        CApplication(applicationName, false)
+    CGuiApplication::CGuiApplication(const QString &applicationName, SwiftApplication application, const QPixmap &icon) :
+        CApplication(applicationName, application, false)
     {
         if (!sGui)
         {

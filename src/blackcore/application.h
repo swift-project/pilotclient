@@ -29,6 +29,7 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
+#include "blackcore/db/databasereaderconfig.h"
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/urllist.h"
@@ -78,6 +79,16 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Shich swift application is running?
+        enum SwiftApplication
+        {
+            Unknown,
+            Laucher,
+            PilotClientCore,
+            PilotClientGui,
+            MappingTool
+        };
+
         //! Similar to \sa QCoreApplication::instance() returns the single instance
         static CApplication *instance();
 
@@ -85,7 +96,7 @@ namespace BlackCore
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
-        CApplication(const QString &applicationName = executable(), bool init = true);
+        CApplication(const QString &applicationName = executable(), SwiftApplication application = Unknown, bool init = true);
 
         //! Destructor
         virtual ~CApplication();
@@ -95,6 +106,9 @@ namespace BlackCore
 
         //! Version, name beta and dev info
         const QString &getApplicationNameVersionBetaDev() const;
+
+        //! swift application running
+        SwiftApplication getSwiftApplication() const;
 
         //! Global setup
         //! \threadsafe
@@ -220,7 +234,7 @@ namespace BlackCore
 
         //! Init web data services and start them
         //! \sa webDataServicesStarted
-        bool useWebDataServices(const CWebReaderFlags::WebReader webReader, CWebReaderFlags::DbReaderHint hint);
+        bool useWebDataServices(const CWebReaderFlags::WebReader webReader, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
@@ -370,22 +384,23 @@ namespace BlackCore
         //! Async. start when setup is loaded
         bool asyncWebAndContextStart();
 
-        QScopedPointer<CCoreFacade>            m_coreFacade;             //!< core facade if any
-        QScopedPointer<CSetupReader>           m_setupReader;            //!< setup reader
-        QScopedPointer<CWebDataServices>       m_webDataServices;        //!< web data services
-        QScopedPointer<BlackMisc::CFileLogger> m_fileLogger;             //!< file logger
-        QNetworkAccessManager                  m_accessManager { this }; //!< single network access manager
-        CCookieManager                         m_cookieManager;          //!< single cookie manager for our access manager
-        QString                                m_applicationName;        //!< application name
-        QReadWriteLock                         m_accessManagerLock;      //!< lock to make access manager access threadsafe
-        CCoreFacadeConfig                      m_coreFacadeConfig;       //!< Core facade config if any
-        CWebReaderFlags::WebReader             m_webReader;              //!< Readers used
-        CWebReaderFlags::DbReaderHint          m_dbReaderHint;           //!< Load or used caching?
-        std::atomic<bool>                      m_shutdown { false };     //!< is being shutdown?
-        bool                                   m_useContexts = false;    //!< use contexts
-        bool                                   m_useWebData = false;     //!< use web data
-        bool                                   m_signalStartup = true;   //!< signal startup automatically
-        bool                                   m_devEnv = false;         //!< dev. environment
+        QScopedPointer<CCoreFacade>              m_coreFacade;             //!< core facade if any
+        QScopedPointer<CSetupReader>             m_setupReader;            //!< setup reader
+        QScopedPointer<CWebDataServices>         m_webDataServices;        //!< web data services
+        QScopedPointer<BlackMisc::CFileLogger>   m_fileLogger;             //!< file logger
+        QNetworkAccessManager                    m_accessManager { this }; //!< single network access manager
+        CCookieManager                           m_cookieManager;          //!< single cookie manager for our access manager
+        QString                                  m_applicationName;        //!< application name
+        SwiftApplication                         m_application = Unknown;  //!< Application if specified
+        QReadWriteLock                           m_accessManagerLock;      //!< lock to make access manager access threadsafe
+        CCoreFacadeConfig                        m_coreFacadeConfig;       //!< Core facade config if any
+        CWebReaderFlags::WebReader               m_webReader;              //!< Readers used
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;         //!< Load or used caching?
+        std::atomic<bool>                        m_shutdown { false };     //!< is being shutdown?
+        bool                                     m_useContexts = false;    //!< use contexts
+        bool                                     m_useWebData = false;     //!< use web data
+        bool                                     m_signalStartup = true;   //!< signal startup automatically
+        bool                                     m_devEnv = false;         //!< dev. environment
     };
 } // namespace
 

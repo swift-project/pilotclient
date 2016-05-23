@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     //! [CSwiftGuiStdApplication]
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
-    CGuiApplication a("swift launcher", CIcons::swift1024());
+    CGuiApplication a("swift launcher", CGuiApplication::Laucher, CIcons::swift1024());
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup."), "installer"});
     a.parse();
     //! [CSwiftGuiStdApplication]

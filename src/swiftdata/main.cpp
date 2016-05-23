@@ -18,6 +18,7 @@
 
 using namespace BlackMisc;
 using namespace BlackCore;
+using namespace BlackCore::Db;
 using namespace BlackGui;
 
 int main(int argc, char *argv[])
@@ -25,8 +26,8 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa);
-    CGuiApplication a("swift mapping tool", CIcons::swiftDatabase48());
-    a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, BlackCore::CWebReaderFlags::FromDb);
+    CGuiApplication a("swift mapping tool", CGuiApplication::MappingTool, CIcons::swiftDatabase48());
+    a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forMappingTool());
     if (!a.start()) { return EXIT_FAILURE; }
     CSwiftData w;
     w.show();
