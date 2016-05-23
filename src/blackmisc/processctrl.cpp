@@ -45,7 +45,7 @@ namespace BlackMisc
         flags |= DETACHED_PROCESS;
 
         Q_ASSERT(command.length() <= MAX_PATH);
-        std::array<WCHAR, MAX_PATH> wszCommandLine {};
+        std::array<WCHAR, MAX_PATH> wszCommandLine = {{}};
         command.toWCharArray(wszCommandLine.data());
         int result = CreateProcess (nullptr, wszCommandLine.data(), 0, 0, inherit, flags, nullptr, nullptr, &startupInfo, &processInfo);
 
