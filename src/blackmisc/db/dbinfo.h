@@ -1,0 +1,104 @@
+/* Copyright (C) 2016
+ * Swift Project Community / Contributors
+ *
+ * This file is part of Swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKMISC_DB_DBINFO_H
+#define BLACKMISC_DB_DBINFO_H
+
+#include "blackmisc/db/datastore.h"
+#include "blackmisc/network/entityflags.h"
+#include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscexport.h"
+#include <QColor>
+
+namespace BlackMisc
+{
+    namespace Db
+    {
+        /*!
+         * Info about the latest models
+         */
+        class BLACKMISC_EXPORT CDbInfo :
+            public CValueObject<CDbInfo>,
+            public IDatastoreObjectWithIntegerKey
+        {
+        public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexTableName = BlackMisc::CPropertyIndex::GlobalIndexCDbInfo,
+                IndexEntries,
+                IndexEntity
+            };
+
+            //! Constructor
+            CDbInfo() = default;
+
+            //! Constructor
+            CDbInfo(int key, const QString &tableName, int entries);
+
+            //! Valid?
+            bool isValid() const;
+
+            //! Table name
+            const QString &getTableName() const { return m_tableName; }
+
+            //! Set table  name
+            void setTableName(const QString &tableName);
+
+            //! Get entity (based on table name
+            Network::CEntityFlags::Entity getEntity() const;
+
+            //! Set entity, should be in sync with a corresponding table name
+            void setEntity(Network::CEntityFlags::Entity entity);
+
+            //! Entry count
+            int getEntries() const { return m_entries; }
+
+            //! Matches given entity
+            bool matchesEntity(Network::CEntityFlags::Entity entity) const;
+
+            //! Set entries
+            void setEntries(int entries) { m_entries = entries; }
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
+
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const CDbInfo &compareValue) const;
+
+            //! From our database JSON format
+            static CDbInfo fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+
+        private:
+            QString m_tableName; //!< table name
+            int     m_entries;   //!< number of entries
+            BlackMisc::Network::CEntityFlags::Entity m_entity = BlackMisc::Network::CEntityFlags::NoEntity; //!< lazy initialized entity
+
+            BLACK_METACLASS(
+                CDbInfo,
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(tableName),
+                BLACK_METAMEMBER(entries)
+            );
+        };
+    } // namespace
+} // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Db::CDbInfo)
+
+#endif // guard
