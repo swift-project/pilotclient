@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/network/url.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/propertyindex.h"
 
 #include <QJsonValue>
@@ -139,7 +140,7 @@ namespace BlackMisc
 
         QNetworkRequest CUrl::toNetworkRequest() const
         {
-            return QNetworkRequest(this->toQUrl());
+            return CNetworkUtils::getNetworkRequest(*this);
         }
 
         CUrl CUrl::withAppendedPath(const QString &path) const

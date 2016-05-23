@@ -9,7 +9,7 @@
 
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/server.h"
-
+#include "blackconfig/buildconfig.h"
 #include <QAbstractSocket>
 #include <QDateTime>
 #include <QDebug>
@@ -29,6 +29,8 @@
 #include <QVariant>
 #include <QtDebug>
 
+using namespace BlackConfig;
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
 namespace BlackMisc
@@ -43,16 +45,16 @@ namespace BlackMisc
 
             for (int i = 0; i < interfaces.count(); i++)
             {
-                QNetworkInterface iface = interfaces.at(i);
+                QNetworkInterface interface = interfaces.at(i);
 
                 // details of connection
-                if (withDebugOutput) qDebug() << "name:" << iface.name() << endl << "ip addresses:" << endl << "mac:" << iface.hardwareAddress() << endl;
-                if (iface.flags().testFlag(QNetworkInterface::IsUp) && !iface.flags().testFlag(QNetworkInterface::IsLoopBack))
+                if (withDebugOutput) qDebug() << "name:" << interface.name() << endl << "ip addresses:" << endl << "mac:" << interface.hardwareAddress() << endl;
+                if (interface.flags().testFlag(QNetworkInterface::IsUp) && !interface.flags().testFlag(QNetworkInterface::IsLoopBack))
                 {
                     // this loop is important
-                    for (int j = 0; j < iface.addressEntries().count(); j++)
+                    for (int j = 0; j < interface.addressEntries().count(); j++)
                     {
-                        if (withDebugOutput) qDebug() << iface.addressEntries().at(j).ip().toString() << " / " << iface.addressEntries().at(j).netmask().toString() << endl;
+                        if (withDebugOutput) qDebug() << interface.addressEntries().at(j).ip().toString() << " / " << interface.addressEntries().at(j).netmask().toString() << endl;
 
                         // we have an interface that is up, and has an ip address, therefore the link is present
                         // we will only enable this check on first positive, all later results are incorrect
@@ -83,9 +85,6 @@ namespace BlackMisc
             return ips;
         }
 
-        /*
-         * Can connect to IP/port?
-         */
         bool CNetworkUtils::canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs)
         {
             if (!CNetworkUtils::hasConnectedInterface(false))
@@ -141,8 +140,8 @@ namespace BlackMisc
                 return false;
             }
 
-            QString host(url.host());
-            QString scheme(url.scheme().toLower());
+            const QString host(url.host());
+            const QString scheme(url.scheme().toLower());
             int p = url.port();
             if (p < 0)
             {
@@ -211,6 +210,12 @@ namespace BlackMisc
             request.setSslConfiguration(conf);
         }
 
+        void CNetworkUtils::setSwiftUserAgent(QNetworkRequest &request)
+        {
+            static const QString userAgent("swift/" + CVersion::version());
+            request.setRawHeader("User-Agent", userAgent.toLatin1());
+        }
+
         QHttpPart CNetworkUtils::getMultipartWithDebugFlag()
         {
             QHttpPart textPartDebug;
@@ -257,6 +262,7 @@ namespace BlackMisc
                 break;
             }
             CNetworkUtils::ignoreSslVerification(request);
+            CNetworkUtils::setSwiftUserAgent(request);
             return request;
         }
 

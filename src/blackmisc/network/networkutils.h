@@ -101,6 +101,9 @@ namespace BlackMisc
             //! Ignore SSL verification such as self signed certificates
             static void ignoreSslVerification(QNetworkRequest &request);
 
+            //! Set user agent for request
+            static void setSwiftUserAgent(QNetworkRequest &request);
+
             //! Multipart with DEBUG FLAG for server
             static QHttpPart getMultipartWithDebugFlag();
 
@@ -116,7 +119,7 @@ namespace BlackMisc
             //! Multipart for JSON
             static QHttpPart getJsonTextMultipart(const QByteArray &bytes);
 
-            //! Our tweakes network request
+            //! Our tweaked network request
             static QNetworkRequest getNetworkRequest(const CUrl &url, RequestType type = Get);
 
             //! Last modified from reply
