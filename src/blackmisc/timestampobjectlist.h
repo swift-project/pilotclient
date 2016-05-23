@@ -13,7 +13,6 @@
 #define BLACKMISC_TIMESTAMPOBJECTLIST_H
 
 #include "blackmisc/blackmiscexport.h"
-
 #include <QList>
 #include <QtGlobal>
 
@@ -27,7 +26,6 @@ namespace BlackMisc
     class ITimestampObjectList
     {
     public:
-
         //! List of objects before dateTime
         CONTAINER findBefore(const QDateTime &dateTime) const;
 
@@ -46,9 +44,27 @@ namespace BlackMisc
         //! List of objects after msSinceEpoch
         CONTAINER findAfter(qint64 msSinceEpoch) const;
 
+        //! Objects without valid timestamp
+        CONTAINER findInvalidTimestamps() const;
+
+        //! Has invalid timestamp
+        bool hasInvalidTimestamps() const;
+
         //! Partition into two containers, first [0,msSinceEpoch] and second (msSinceEpoch,LLONG_MAX].
         //! Within each of the two parts, the original relative ordering of the elements is preserved.
         QList<CONTAINER> splitByTime(qint64 msSinceEpoch, bool sortedLatestFirst = false) const;
+
+        //! Latest timestamp
+        QDateTime latestTimestamp() const;
+
+        //! Latest timestamp
+        qint64 latestTimestampMsecsSinceEpoch() const;
+
+        //! Oldest timestamp
+        QDateTime oldestTimestamp() const;
+
+        //! Oldest timestamp
+        qint64 oldestTimestampMsecsSinceEpoch() const;
 
         //! Latest value
         OBJ latestObject() const;
@@ -106,6 +122,12 @@ namespace BlackMisc
         class CTextMessageList;
     }
 
+    namespace Db
+    {
+        class CDbInfo;
+        class CDbInfoList;
+    }
+
     namespace Simulation
     {
         class CDistributor;
@@ -126,6 +148,7 @@ namespace BlackMisc
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;

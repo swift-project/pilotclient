@@ -7,18 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/timestampobjectlist.h"
-#include "blackmisc/predicates.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/db/dbinfolist.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/textmessagelist.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/timestampobjectlist.h"
+#include "blackmisc/predicates.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/countrylist.h"
 
@@ -86,6 +88,21 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
+    CONTAINER ITimestampObjectList<OBJ, CONTAINER>::findInvalidTimestamps() const
+    {
+        return this->container().findBy([&](const OBJ & obj)
+        {
+            return !obj.hasValidTimestamp();
+        });
+    }
+
+    template <class OBJ, class CONTAINER>
+    bool ITimestampObjectList<OBJ, CONTAINER>::hasInvalidTimestamps() const
+    {
+        return this->container().contains(&OBJ::hasValidTimestamp, false);
+    }
+
+    template <class OBJ, class CONTAINER>
     QList<CONTAINER> ITimestampObjectList<OBJ, CONTAINER>::splitByTime(qint64 msSinceEpoch, bool sortedLatestFirst) const
     {
         QList<CONTAINER> result { {}, {} };
@@ -112,10 +129,38 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
+    QDateTime ITimestampObjectList<OBJ, CONTAINER>::latestTimestamp() const
+    {
+        if (this->container().isEmpty()) { return QDateTime(); }
+        return this->latestObject().getUtcTimestamp();
+    }
+
+    template <class OBJ, class CONTAINER>
+    qint64 ITimestampObjectList<OBJ, CONTAINER>::latestTimestampMsecsSinceEpoch() const
+    {
+        const QDateTime dt(latestTimestamp());
+        return dt.isValid() ? dt.toMSecsSinceEpoch() : -1;
+    }
+
+    template <class OBJ, class CONTAINER>
+    QDateTime ITimestampObjectList<OBJ, CONTAINER>::oldestTimestamp() const
+    {
+        if (this->container().isEmpty()) { return QDateTime(); }
+        return this->oldestObject().getUtcTimestamp();
+    }
+
+    template <class OBJ, class CONTAINER>
+    qint64 ITimestampObjectList<OBJ, CONTAINER>::oldestTimestampMsecsSinceEpoch() const
+    {
+        const QDateTime dt(oldestTimestamp());
+        return dt.isValid() ? dt.toMSecsSinceEpoch() : -1;
+    }
+
+    template <class OBJ, class CONTAINER>
     OBJ ITimestampObjectList<OBJ, CONTAINER>::latestObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        auto latest = std::max_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+        const auto latest = std::max_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
         return *latest;
     }
 
@@ -123,7 +168,7 @@ namespace BlackMisc
     OBJ ITimestampObjectList<OBJ, CONTAINER>::oldestObject() const
     {
         if (this->container().isEmpty()) { return OBJ(); }
-        auto oldest = std::min_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+        const auto oldest = std::min_element(container().begin(), container().end(), [](const OBJ & a, const OBJ & b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
         return *oldest;
     }
 
@@ -189,6 +234,7 @@ namespace BlackMisc
     template class ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
     template class ITimestampObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
     template class ITimestampObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
+    template class ITimestampObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList>;
     template class ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     template class ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
     template class ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;

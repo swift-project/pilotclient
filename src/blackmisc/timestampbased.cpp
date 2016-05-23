@@ -18,7 +18,7 @@
 
 namespace BlackMisc
 {
-    ITimestampBased::ITimestampBased() : m_timestampMSecsSinceEpoch(QDateTime::currentMSecsSinceEpoch())
+    ITimestampBased::ITimestampBased()
     { }
 
     ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch)
@@ -67,7 +67,14 @@ namespace BlackMisc
 
     void ITimestampBased::setUtcTimestamp(const QDateTime &timestamp)
     {
-        this->m_timestampMSecsSinceEpoch = timestamp.toMSecsSinceEpoch();
+        if (timestamp.isValid())
+        {
+            this->m_timestampMSecsSinceEpoch = timestamp.toMSecsSinceEpoch();
+        }
+        else
+        {
+            this->m_timestampMSecsSinceEpoch = -1; // invalid
+        }
     }
 
     bool ITimestampBased::isNewerThan(const ITimestampBased &otherTimestampObj) const
@@ -119,27 +126,42 @@ namespace BlackMisc
 
     QString ITimestampBased::getFormattedUtcTimestampDhms() const
     {
-        return this->getUtcTimestamp().toString("dd hh:mm:ss");
+        return this->hasValidTimestamp() ?
+               this->getUtcTimestamp().toString("dd hh:mm:ss") :
+               "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHms() const
     {
-        return this->getUtcTimestamp().toString("hh:mm:ss");
+        return this->hasValidTimestamp() ?
+               this->getUtcTimestamp().toString("hh:mm:ss") :
+               "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHm() const
     {
-        return this->getUtcTimestamp().toString("hh::mm");
+        return this->hasValidTimestamp() ?
+               this->getUtcTimestamp().toString("hh::mm") :
+               "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhms() const
     {
-        return this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss");
+        return this->hasValidTimestamp() ?
+               this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss") :
+               "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhmsz() const
     {
-        return this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss.zzz");
+        return this->hasValidTimestamp() ?
+               this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss.zzz") :
+               "";
+    }
+
+    bool ITimestampBased::hasValidTimestamp() const
+    {
+        return this->m_timestampMSecsSinceEpoch >= 0;
     }
 
     bool ITimestampBased::canHandleIndex(const CPropertyIndex &index)

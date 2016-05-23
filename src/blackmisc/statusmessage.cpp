@@ -59,7 +59,10 @@ namespace BlackMisc
     const StatusSeverity CStatusMessage::SeverityWarning;
     const StatusSeverity CStatusMessage::SeverityError;
 
-    CStatusMessage::CStatusMessage() = default;
+    CStatusMessage::CStatusMessage(): ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    {
+        // void
+    }
 
     CStatusMessage::CStatusMessage(const CStatusMessage &other) :
         CValueObject(other),
@@ -72,6 +75,7 @@ namespace BlackMisc
 
     CStatusMessage &CStatusMessage::operator =(const CStatusMessage &other)
     {
+        // locks because of mutable members
         if (this == &other) { return *this; }
 
         static_cast<CMessageBase &>(*this) = other;
@@ -85,7 +89,7 @@ namespace BlackMisc
         return *this;
     }
 
-    CStatusMessage::CStatusMessage(const QString &message)
+    CStatusMessage::CStatusMessage(const QString &message) : ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {
         m_message = message.trimmed();
     }

@@ -95,6 +95,9 @@ namespace BlackMisc
         //! As yyyy MM dd HH mm ss.zzz
         QString getFormattedUtcTimestampYmdhmsz() const;
 
+        //! Valid timestamp?
+        bool hasValidTimestamp() const;
+
         //! Can given index be handled
         static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
@@ -117,7 +120,7 @@ namespace BlackMisc
         //! Compare for index
         int comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const;
 
-        qint64 m_timestampMSecsSinceEpoch; //!< timestamp value
+        qint64 m_timestampMSecsSinceEpoch = -1; //!< timestamp value
     };
 } // namespace
 

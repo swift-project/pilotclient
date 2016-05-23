@@ -16,7 +16,8 @@
 namespace BlackMisc
 {
     CIdentifier::CIdentifier(const QString &name)
-        : m_name(name.trimmed()),
+        : ITimestampBased(QDateTime::currentMSecsSinceEpoch()),
+          m_name(name.trimmed()),
           m_machineIdBase64(QDBusConnection::localMachineId().toBase64()),
           m_machineName(QHostInfo::localHostName()),
           m_processName(QCoreApplication::applicationName()),
