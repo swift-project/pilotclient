@@ -13,6 +13,7 @@
 #include "blackmisc/country.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/db/registermetadatadb.h"
 #include "blackmisc/geo/registermetadatageo.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/iconlist.h"
@@ -85,6 +86,7 @@ namespace BlackMisc
         // sub namespaces
         Audio::registerMetadata();
         Aviation::registerMetadata();
+        Db::registerMetadata();
         Geo::registerMetadata();
         Input::registerMetadata();
         Network::registerMetadata();

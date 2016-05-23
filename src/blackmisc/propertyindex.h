@@ -98,6 +98,7 @@ namespace BlackMisc
             GlobalIndexCSettingKeyboardHotkey           = 10000,
             GlobalIndexIDatastoreInteger                = 11000,
             GlobalIndexIDatastoreString                 = 11100,
+            GlobalIndexCDbInfo                          = 11200,
             GlobalIndexCGlobalSetup                     = 12000,
             GlobalIndexCUpdateInfo                      = 12100,
             GlobalIndexCVatsimSetup                     = 12200,

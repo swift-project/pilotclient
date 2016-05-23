@@ -9,6 +9,7 @@
 
 #include "blackcore/registermetadata.h"
 #include "blackcore/contextapplication.h"
+#include "blackcore/db/databasereader.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/data/vatsimsetup.h"
@@ -35,6 +36,9 @@ namespace BlackCore
         qDBusRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();
         qRegisterMetaType<BlackCore::CWebReaderFlags::WebReader>();
         qRegisterMetaType<BlackCore::CWebReaderFlags::WebReaderFlag>();
+
+        BlackCore::Db::CDatabaseReaderConfig::registerMetadata();
+        BlackCore::Db::CDatabaseReaderConfigList::registerMetadata();
 
         BlackCore::Data::CGlobalSetup::registerMetadata();
         BlackCore::Data::CUpdateInfo::registerMetadata();

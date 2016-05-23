@@ -27,35 +27,37 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
                 translations/blackmisc_i18n_en.ts
 
 HEADERS +=  *.h \
-            $$PWD/pq/*.h \
-            $$PWD/aviation/*.h \
-            $$PWD/math/*.h \
-            $$PWD/network/*.h \
-            $$PWD/geo/*.h \
-            $$PWD/input/*.h \
             $$PWD/audio/*.h \
             $$PWD/audio/settings/*.h \
+            $$PWD/aviation/*.h \
+            $$PWD/db/*.h \
+            $$PWD/geo/*.h \
+            $$PWD/input/*.h \
+            $$PWD/math/*.h \
+            $$PWD/network/*.h \
+            $$PWD/pq/*.h \
             $$PWD/simulation/*.h \
+            $$PWD/simulation/data/*.h \
             $$PWD/simulation/fscommon/*.h \
             $$PWD/simulation/fsx/*.h \
             $$PWD/simulation/xplane/*.h \
-            $$PWD/simulation/data/*.h \
             $$PWD/weather/*.h
 
 SOURCES +=  *.cpp \
-            $$PWD/pq/*.cpp \
-            $$PWD/aviation/*.cpp \
-            $$PWD/math/*.cpp \
-            $$PWD/network/*.cpp \
-            $$PWD/input/*.cpp \
-            $$PWD/geo/*.cpp \
             $$PWD/audio/*.cpp \
             $$PWD/audio/settings/*.cpp \
+            $$PWD/aviation/*.cpp \
+            $$PWD/db/*.cpp \
+            $$PWD/geo/*.cpp \
+            $$PWD/input/*.cpp \
+            $$PWD/math/*.cpp \
+            $$PWD/network/*.cpp \
+            $$PWD/pq/*.cpp \
             $$PWD/simulation/*.cpp \
+            $$PWD/simulation/data/*.cpp \
             $$PWD/simulation/fscommon/*.cpp \
             $$PWD/simulation/fsx/*.cpp \
             $$PWD/simulation/xplane/*.cpp \
-            $$PWD/simulation/data/*.cpp \
             $$PWD/weather/*.cpp
 
 win32 {
