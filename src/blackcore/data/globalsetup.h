@@ -90,11 +90,17 @@ namespace BlackCore
             //! Root directory of DB
             const BlackMisc::Network::CUrl &getDbRootDirectoryUrl() const { return m_dbRootDirectoryUrl; }
 
-            //! ICAO Reader location
+            //! ICAO reader URL
             BlackMisc::Network::CUrl getDbIcaoReaderUrl() const;
 
-            //! Model Reader protocol
+            //! Model reader URL
             BlackMisc::Network::CUrl getDbModelReaderUrl() const;
+
+            //! Info data reader URL
+            BlackMisc::Network::CUrl getDbInfoReaderUrl() const;
+
+            //! Shared URLs
+            const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
 
             //! URL to read VATSIM bookings
             const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
