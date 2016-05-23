@@ -12,6 +12,7 @@
 
 #include <QStringList>
 #include <QtGlobal>
+#include <bitset>
 
 namespace BlackMisc
 {
@@ -21,18 +22,20 @@ namespace BlackMisc
         {
             switch (flag)
             {
-            case NoEntity: return "no data";
-            case BookingEntity: return "VATSIM bookings";
-            case VatsimDataFile: return "VATSIM data file";
             case AircraftIcaoEntity: return "Aircraft ICAO";
             case AirlineIcaoEntity: return "Airline ICAO";
+            case AllEntities: return "All";
+            case AllIcaoAndCountries: return "All ICAO + country";
+            case AllIcaoEntities: return "All ICAO";
+            case BookingEntity: return "VATSIM bookings";
             case CountryEntity: return "Country";
             case DistributorEntity: return "Distributor";
+            case InfoObjectEntity: return "Info objects";
             case LiveryEntity: return "Livery";
             case ModelEntity: return "Model";
-            case AllIcaoEntities: return "All ICAO";
-            case AllIcaoAndCountries: return "All ICAO + country";
-            case AllEntities: return "All";
+            case NoEntity: return "no data";
+            case VatsimDataFile: return "VATSIM data file";
+            case VatsimStatusFile: return "VATSIM status file";
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
@@ -42,16 +45,29 @@ namespace BlackMisc
         QString CEntityFlags::flagToString(BlackMisc::Network::CEntityFlags::Entity flag)
         {
             QStringList list;
-            if (flag.testFlag(NoEntity)) list << "no data";
-            if (flag.testFlag(BookingEntity)) list << "VATSIM bookings";
-            if (flag.testFlag(VatsimDataFile)) list << "VATSIM data file";
             if (flag.testFlag(AircraftIcaoEntity)) list << "Aircraft ICAO";
             if (flag.testFlag(AirlineIcaoEntity)) list << "Airline ICAO";
+            if (flag.testFlag(BookingEntity)) list << "VATSIM bookings";
             if (flag.testFlag(CountryEntity)) list << "Country";
             if (flag.testFlag(DistributorEntity)) list << "Distributor";
+            if (flag.testFlag(InfoObjectEntity)) list << "Info objects";
             if (flag.testFlag(LiveryEntity)) list << "Livery";
             if (flag.testFlag(ModelEntity)) list << "Model";
+            if (flag.testFlag(NoEntity)) list << "no data";
+            if (flag.testFlag(VatsimDataFile)) list << "VATSIM data file";
+            if (flag.testFlag(VatsimStatusFile)) list << "VATSIM status file";
             return list.join(',');
+        }
+
+        bool CEntityFlags::isSingleEntity(BlackMisc::Network::CEntityFlags::Entity flag)
+        {
+            return numberOfEntities(flag) == 1;
+        }
+
+        int CEntityFlags::numberOfEntities(BlackMisc::Network::CEntityFlags::Entity flag)
+        {
+            const int c = std::bitset<sizeof(flag)>(flag).count();
+            return c;
         }
 
         QString CEntityFlags::flagToString(CEntityFlags::ReadState flag)
@@ -84,6 +100,22 @@ namespace BlackMisc
             }
         }
 
+        CEntityFlags::EntityFlag CEntityFlags::entityToEntityFlag(Entity entity)
+        {
+            return static_cast<EntityFlag>(static_cast<int>(entity));
+        }
+
+        CEntityFlags::Entity CEntityFlags::iterateDbEntities(Entity &entities)
+        {
+            if (entities == NoEntity || entities == InfoObjectEntity) { return NoEntity; }
+            if (entities.testFlag(AircraftIcaoEntity)) { entities &= ~AircraftIcaoEntity; return AircraftIcaoEntity; }
+            if (entities.testFlag(AirlineIcaoEntity))  { entities &= ~AirlineIcaoEntity; return AirlineIcaoEntity; }
+            if (entities.testFlag(LiveryEntity))       { entities &= ~LiveryEntity; return LiveryEntity; }
+            if (entities.testFlag(CountryEntity))      { entities &= ~CountryEntity; return CountryEntity; }
+            if (entities.testFlag(ModelEntity))        { entities &= ~ModelEntity; return ModelEntity; }
+            return NoEntity;
+        }
+
         bool CEntityFlags::isWarningOrAbove(CEntityFlags::ReadState state)
         {
             CStatusMessage::StatusSeverity s = flagToSeverity(state);
@@ -95,6 +127,14 @@ namespace BlackMisc
             default:
                 return false;
             }
+        }
+
+        bool CEntityFlags::anySwiftDbEntity(Entity entities)
+        {
+            return
+                entities.testFlag(AircraftIcaoEntity) || entities.testFlag(AirlineIcaoEntity) ||
+                entities.testFlag(CountryEntity) ||
+                entities.testFlag(ModelEntity) || entities.testFlag(LiveryEntity);
         }
 
         void CEntityFlags::registerMetadata()

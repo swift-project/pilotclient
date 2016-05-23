@@ -35,38 +35,26 @@ namespace BlackCore
             VatsimMetarReader    = 1 << 2,   //!< reader for VATSIM metar data
             IcaoDataReader       = 1 << 3,   //!< reader for ICAO data
             ModelReader          = 1 << 4,   //!< reader for model data such as liveries, models, etc
+            InfoDataReader       = 1 << 5,   //!< DB info data (metdata, how many data, when updated)
             AllVatsimReaders     = VatsimBookingReader | VatsimDataReader | VatsimMetarReader,  //!< all readers
-            AllSwiftDbReaders    = IcaoDataReader | ModelReader,                                //!< all swift data
+            AllSwiftDbReaders    = IcaoDataReader | ModelReader | InfoDataReader,               //!< all swift data
             AllReaders           = AllSwiftDbReaders | AllVatsimReaders                         //!< everything
         };
         Q_DECLARE_FLAGS(WebReader, WebReaderFlag)
 
-        //! How to read DB data
-        enum DbReaderHintFlag
-        {
-            NoHint        = 0,
-            FromDb        = 1 << 1,  //!< directly from DB
-            FromJsonFile  = 1 << 2,  //!< from the JSON files
-            FromCache     = 1 << 3,  //!< try cache first
-        };
-        Q_DECLARE_FLAGS(DbReaderHint, DbReaderHintFlag)
-
         //! Relationship between reader and entity
         static WebReader entityToReader(BlackMisc::Network::CEntityFlags::Entity entity);
 
-        //! Read from swift DB
+        //! Reads from swift DB?
         static bool isFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity);
 
-        //! Read from swift DB
+        //! Reader for swift DB?
         static bool isFromSwiftDb(WebReader reader);
     };
 } // namespace
 
 Q_DECLARE_METATYPE(BlackCore::CWebReaderFlags::WebReaderFlag)
 Q_DECLARE_METATYPE(BlackCore::CWebReaderFlags::WebReader)
-Q_DECLARE_METATYPE(BlackCore::CWebReaderFlags::DbReaderHintFlag)
-Q_DECLARE_METATYPE(BlackCore::CWebReaderFlags::DbReaderHint)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::CWebReaderFlags::WebReader)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackCore::CWebReaderFlags::DbReaderHint)
 
 #endif

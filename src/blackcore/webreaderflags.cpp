@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-//! \cond PRIVATE
-
-#include "blackcore/webreaderflags.h"
+#include "webreaderflags.h"
 
 using namespace BlackMisc::Network;
 
@@ -30,6 +28,11 @@ namespace BlackCore
                 entity.testFlag(CEntityFlags::LiveryEntity))
         {
             f |= ModelReader;
+        }
+
+        if (entity.testFlag(CEntityFlags::InfoObjectEntity))
+        {
+            f |= InfoDataReader;
         }
 
         if (entity.testFlag(CEntityFlags::BookingEntity))
@@ -56,9 +59,7 @@ namespace BlackCore
 
     bool CWebReaderFlags::isFromSwiftDb(WebReader reader)
     {
-        return reader.testFlag(ModelReader) || reader.testFlag(IcaoDataReader);
+        return reader.testFlag(ModelReader) || reader.testFlag(IcaoDataReader) || reader.testFlag(InfoDataReader);
     }
 
 } // namespace
-
-//! \endcond
