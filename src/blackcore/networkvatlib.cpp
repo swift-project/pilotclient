@@ -71,7 +71,7 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
-    CNetworkVatlib::CNetworkVatlib(Simulation::IOwnAircraftProvider *ownAircraft, QObject *parent)
+    CNetworkVatlib::CNetworkVatlib(IOwnAircraftProvider *ownAircraft, QObject *parent)
         : INetwork(parent), COwnAircraftAware(ownAircraft),
           m_loginMode(LoginNormal),
           m_status(vatStatusIdle),

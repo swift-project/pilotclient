@@ -30,7 +30,6 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::Fsx;
 using namespace BlackMisc::Weather;
@@ -128,7 +127,7 @@ namespace BlackSimPlugin
             return true;
         }
 
-        bool CSimulatorFsx::physicallyAddRemoteAircraft(const Simulation::CSimulatedAircraft &newRemoteAircraft)
+        bool CSimulatorFsx::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             CCallsign callsign(newRemoteAircraft.getCallsign());
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");

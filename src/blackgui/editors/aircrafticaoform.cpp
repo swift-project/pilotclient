@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/webdataservices.h"
+#include "ui_aircrafticaoform.h"
+#include "aircrafticaoform.h"
+
 #include "blackgui/components/aircraftcombinedtypeselector.h"
 #include "blackgui/components/dbaircrafticaoselectorcomponent.h"
 #include "blackgui/dropsite.h"
@@ -16,11 +18,11 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/labelandicon.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/datastore.h"
 #include "blackmisc/icons.h"
-#include "ui_aircrafticaoform.h"
 
 #include <QCheckBox>
 #include <QComboBox>

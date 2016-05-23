@@ -60,6 +60,5 @@ namespace BlackGui
             if (!sGui) { return; }
             sGui->getWebDataServices()->triggerRead(CEntityFlags::AirlineIcaoEntity, QDateTime());
         }
-
     } // ns
 } // ns

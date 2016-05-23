@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
+#include "ui_dbairlineicaoselectorcomponent.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/dbairlineicaoselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/datastoreutility.h"
 #include "blackmisc/stringutils.h"
-#include "ui_dbairlineicaoselectorcomponent.h"
 
 #include <QCompleter>
 #include <QLabel>

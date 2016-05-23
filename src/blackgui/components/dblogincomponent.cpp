@@ -28,6 +28,7 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
+using namespace BlackCore::Db;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 

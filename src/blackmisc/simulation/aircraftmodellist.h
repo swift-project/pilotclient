@@ -15,7 +15,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/aircraftmodel.h"
@@ -46,7 +46,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of aircraft models
         class BLACKMISC_EXPORT CAircraftModelList :
             public BlackMisc::CSequence<CAircraftModel>,
-            public BlackMisc::IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
+            public BlackMisc::Db::IDatastoreObjectList<CAircraftModel, CAircraftModelList, int>,
             public BlackMisc::IOrderableList<CAircraftModel, CAircraftModelList>,
             public BlackMisc::Mixin::MetaType<CAircraftModelList>
         {

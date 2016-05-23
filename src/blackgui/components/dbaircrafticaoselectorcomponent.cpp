@@ -7,17 +7,17 @@
  * contained in the LICENSE file.
  */
 
+#include "ui_dbaircrafticaoselectorcomponent.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/dbaircrafticaoselectorcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/datastoreutility.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
-#include "ui_dbaircrafticaoselectorcomponent.h"
 
 #include <QCompleter>
 #include <QDragEnterEvent>

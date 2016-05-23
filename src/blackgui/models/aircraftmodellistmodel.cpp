@@ -13,7 +13,7 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/orderable.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/distributor.h"

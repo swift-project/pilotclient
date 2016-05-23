@@ -13,7 +13,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/country.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/timestampbased.h"
 

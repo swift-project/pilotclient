@@ -9,7 +9,7 @@
 
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/datastoreutility.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include <QJsonValue>
@@ -18,6 +18,7 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackMisc
@@ -210,10 +211,10 @@ namespace BlackMisc
 
         CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString prefix)
         {
-            bool fsx = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfsx").toString());
-            bool fs9 = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfs9").toString());
-            bool xp = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simxplane").toString());
-            bool p3d = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simp3d").toString());
+            const bool fsx = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfsx").toString());
+            const bool fs9 = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simfs9").toString());
+            const bool xp = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simxplane").toString());
+            const bool p3d = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "simp3d").toString());
 
             const CSimulatorInfo simInfo(fsx, fs9, xp, p3d);
             return simInfo;

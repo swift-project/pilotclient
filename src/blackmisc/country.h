@@ -13,7 +13,7 @@
 #define BLACKMISC_COUNTRY_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
@@ -23,6 +23,8 @@
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
+
+using namespace BlackMisc::Db;
 
 namespace BlackMisc
 {

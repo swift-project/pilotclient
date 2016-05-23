@@ -9,7 +9,7 @@
 
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/datastoreutility.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"

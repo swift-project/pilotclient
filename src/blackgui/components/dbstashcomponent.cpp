@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/db/databasewriter.h"
 #include "blackcore/application.h"
-#include "blackcore/databasewriter.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbstashcomponent.h"
@@ -35,6 +35,7 @@
 #include <iterator>
 
 using namespace BlackCore;
+using namespace BlackCore::Db;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;

@@ -10,7 +10,7 @@
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/datastoreutility.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"

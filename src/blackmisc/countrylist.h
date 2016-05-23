@@ -12,10 +12,10 @@
 #ifndef BLACKMISC_COUNTRYLIST_H
 #define BLACKMISC_COUNTRYLIST_H
 
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/country.h"
-#include "blackmisc/datastoreobjectlist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 
@@ -31,7 +31,7 @@ namespace BlackMisc
     //! \remark: I do not use CCollection as I want to sort per column
     class BLACKMISC_EXPORT CCountryList :
         public CSequence<CCountry>,
-        public BlackMisc::IDatastoreObjectList<CCountry, CCountryList, QString>,
+        public BlackMisc::Db::IDatastoreObjectList<CCountry, CCountryList, QString>,
         public BlackMisc::Mixin::MetaType<CCountryList>
     {
     public:

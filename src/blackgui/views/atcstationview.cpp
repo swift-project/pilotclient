@@ -41,7 +41,7 @@ namespace BlackGui
             this->setSortIndicator();
         }
 
-        void CAtcStationView::changedAtcStationConnectionStatus(const Aviation::CAtcStation &station, bool added)
+        void CAtcStationView::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
         {
             this->m_model->changedAtcStationConnectionStatus(station, added);
             this->resizeToContents();

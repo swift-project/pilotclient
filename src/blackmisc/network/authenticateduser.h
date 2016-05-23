@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/country.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/network/rolelist.h"
@@ -37,7 +37,7 @@ namespace BlackMisc
         */
         class BLACKMISC_EXPORT CAuthenticatedUser :
             public CValueObject<CAuthenticatedUser>,
-            public BlackMisc::IDatastoreObjectWithIntegerKey
+            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index

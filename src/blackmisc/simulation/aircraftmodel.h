@@ -17,7 +17,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/metaclassprivate.h"
@@ -52,7 +52,7 @@ namespace BlackMisc
         //! \remarks Simulator independent class, supposed to be common denominator
         class BLACKMISC_EXPORT CAircraftModel :
             public CValueObject<CAircraftModel>,
-            public BlackMisc::IDatastoreObjectWithIntegerKey,
+            public BlackMisc::Db::IDatastoreObjectWithIntegerKey,
             public BlackMisc::IOrderable
         {
         public:

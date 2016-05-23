@@ -9,7 +9,7 @@
 
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/comparefunctions.h"
-#include "blackmisc/datastoreutility.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"
@@ -26,6 +26,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 
 namespace BlackMisc
 {

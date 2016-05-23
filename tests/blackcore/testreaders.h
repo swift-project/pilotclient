@@ -15,14 +15,16 @@
 //! \ingroup testblackcore
 
 #include "blackmisc/network/url.h"
-
 #include <stdbool.h>
 #include <QObject>
 
 namespace BlackCore
 {
-    class CIcaoDataReader;
-    class CModelDataReader;
+    namespace Db
+    {
+        class CIcaoDataReader;
+        class CModelDataReader;
+    }
 }
 
 namespace BlackCoreTest
@@ -49,8 +51,8 @@ namespace BlackCoreTest
         void readModelData();
 
     private:
-        BlackCore::CIcaoDataReader  *m_icaoReader = nullptr;
-        BlackCore::CModelDataReader *m_modelReader = nullptr;
+        BlackCore::Db::CIcaoDataReader  *m_icaoReader = nullptr;
+        BlackCore::Db::CModelDataReader *m_modelReader = nullptr;
 
         //! Test if server is available
         static bool pingServer(const BlackMisc::Network::CUrl &url);

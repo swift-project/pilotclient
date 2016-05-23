@@ -12,8 +12,8 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 #define BLACKMISC_AVIATION_AIRCRAFTICAOCODE_H
 
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datastore.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Value object for ICAO classification
         class BLACKMISC_EXPORT CAircraftIcaoCode :
             public CValueObject<CAircraftIcaoCode>,
-            public BlackMisc::IDatastoreObjectWithIntegerKey
+            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index

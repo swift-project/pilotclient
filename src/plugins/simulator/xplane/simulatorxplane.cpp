@@ -146,10 +146,10 @@ namespace BlackSimPlugin
                 m_service->getTransponderIdentAsync(&m_xplaneData.xpdrIdent);
                 m_service->getAllWheelsOnGroundAsync(&m_xplaneData.onGroundAll);
 
-                Aviation::CAircraftSituation situation;
+                CAircraftSituation situation;
                 situation.setPosition({ m_xplaneData.latitude, m_xplaneData.longitude, 0 });
-                situation.setAltitude({ m_xplaneData.altitude, Aviation::CAltitude::MeanSeaLevel, CLengthUnit::m() });
-                situation.setHeading({ m_xplaneData.trueHeading, Aviation::CHeading::True, CAngleUnit::deg() });
+                situation.setAltitude({ m_xplaneData.altitude, CAltitude::MeanSeaLevel, CLengthUnit::m() });
+                situation.setHeading({ m_xplaneData.trueHeading, CHeading::True, CAngleUnit::deg() });
                 situation.setPitch({ m_xplaneData.pitch, CAngleUnit::deg() });
                 situation.setBank({ m_xplaneData.roll, CAngleUnit::deg() });
                 situation.setGroundSpeed({ m_xplaneData.groundspeed, CSpeedUnit::m_s() });
@@ -158,14 +158,14 @@ namespace BlackSimPlugin
                 updateOwnIcaoCodes(m_xplaneData.aircraftIcaoCode, CAirlineIcaoCode());
                 updateOwnSituation(situation);
                 updateCockpit(
-                    Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }),
-                    Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }),
-                    Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)),
+                    CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() }),
+                    CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() }),
+                    CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent)),
                     identifier()
                 );
 
                 const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude(), {0} };
-                if (calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
+                if (calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
                 {
                     m_lastWeatherPosition = currentPosition;
                     const auto weatherGrid = CWeatherGrid { { "", currentPosition } };
@@ -199,7 +199,7 @@ namespace BlackSimPlugin
                     engines.push_back(engine);
                 }
 
-                Aviation::CAircraftParts parts { {
+                CAircraftParts parts { {
                         m_xplaneData.strobeLightsOn, m_xplaneData.landingLightsOn, m_xplaneData.taxiLightsOn,
                         m_xplaneData.beaconLightsOn, m_xplaneData.navLightsOn, false
                     },
@@ -420,9 +420,9 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
             if (originator == this->identifier()) { return false; }
-            auto com1 = Aviation::CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
-            auto com2 = Aviation::CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
-            auto xpdr = Aviation::CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
+            auto com1 = CComSystem::getCom1System({ m_xplaneData.com1Active, CFrequencyUnit::kHz() }, { m_xplaneData.com1Standby, CFrequencyUnit::kHz() });
+            auto com2 = CComSystem::getCom2System({ m_xplaneData.com2Active, CFrequencyUnit::kHz() }, { m_xplaneData.com2Standby, CFrequencyUnit::kHz() });
+            auto xpdr = CTransponder::getStandardTransponder(m_xplaneData.xpdrCode, xpdrMode(m_xplaneData.xpdrMode, m_xplaneData.xpdrIdent));
             if (aircraft.hasChangedCockpitData(com1, com2, xpdr))
             {
                 m_xplaneData.com1Active = aircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::kHz(), 0);
@@ -587,7 +587,7 @@ namespace BlackSimPlugin
                 int top = cloudLayer.getTop().value(CLengthUnit::m());
 
                 int coverage = 0;
-                switch(cloudLayer.getCoverage())
+                switch (cloudLayer.getCoverage())
                 {
                 case CCloudLayer::None: coverage = 0; break;
                 case CCloudLayer::Few: coverage = 2; break;
@@ -599,7 +599,7 @@ namespace BlackSimPlugin
 
                 // Clear = 0, High Cirrus = 1, Scattered = 2, Broken = 3, Overcast = 4, Stratus = 5
                 int type = 0;
-                switch(cloudLayer.getClouds())
+                switch (cloudLayer.getClouds())
                 {
                 case CCloudLayer::NoClouds: type = 0; break;
                 case CCloudLayer::Cirrus: type = 1; break;
@@ -697,7 +697,8 @@ namespace BlackSimPlugin
         void CSimulatorXPlaneListener::ps_xbusServerSettingChanged()
         {
             // user changed settings, restart the listener
-            if (m_watcher) {
+            if (m_watcher)
+            {
                 stop();
                 start();
             }

@@ -7,12 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/webdataservices.h"
 #include "blackgui/components/dbairlineicaoselectorbase.h"
 #include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/datastoreutility.h"
 #include "blackmisc/variant.h"
 
 #include <QCompleter>
@@ -42,7 +42,17 @@ namespace BlackGui
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::ps_codesRead);
-            this->ps_codesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
+
+            // when we already have data, init completers. This can not be done directly in the
+            // constructor due to virtual functions
+            const int c =  sGui->getWebDataServices()->getAirlineIcaoCodesCount();
+            if (c > 0)
+            {
+                QTimer::singleShot(500, [this, c]()
+                {
+                    this->ps_codesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c);
+                });
+            }
         }
 
         CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase()
@@ -135,6 +145,5 @@ namespace BlackGui
             if (dbKey < 0) { return; }
             this->setAirlineIcao(dbKey);
         }
-
     }// class
 } // ns

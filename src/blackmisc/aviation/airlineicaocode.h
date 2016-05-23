@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/country.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Value object for ICAO classification
         class BLACKMISC_EXPORT CAirlineIcaoCode :
             public CValueObject<CAirlineIcaoCode>,
-            public BlackMisc::IDatastoreObjectWithIntegerKey
+            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index

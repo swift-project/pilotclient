@@ -14,6 +14,7 @@
 #include <QWidget>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
 
 namespace BlackGui
 {
@@ -37,7 +38,7 @@ namespace BlackGui
             return (ui->editor_ModelMappingModify->getValues());
         }
 
-        void CDbModelMappingModifyComponent::setValue(const Simulation::CAircraftModel &model)
+        void CDbModelMappingModifyComponent::setValue(const CAircraftModel &model)
         {
             this->ui->editor_ModelMappingModify->setValue(model);
         }

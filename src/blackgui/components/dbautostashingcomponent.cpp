@@ -260,7 +260,7 @@ namespace BlackGui
             this->m_state = Completed;
         }
 
-        bool CDbAutoStashingComponent::tryToStashModel(Simulation::CAircraftModel &model)
+        bool CDbAutoStashingComponent::tryToStashModel(CAircraftModel &model)
         {
             bool stashed = false;
 

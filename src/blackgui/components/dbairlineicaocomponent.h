@@ -56,6 +56,6 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbAirlineIcaoComponent> ui;
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

@@ -14,7 +14,7 @@
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/distributor.h"
@@ -32,7 +32,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of distributors.
         class BLACKMISC_EXPORT CDistributorList :
             public BlackMisc::CSequence<CDistributor>,
-            public BlackMisc::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
+            public BlackMisc::Db::IDatastoreObjectList<CDistributor, CDistributorList, QString>,
             public BlackMisc::IOrderableList<CDistributor, CDistributorList>,
             public BlackMisc::Mixin::MetaType<CDistributorList>
         {

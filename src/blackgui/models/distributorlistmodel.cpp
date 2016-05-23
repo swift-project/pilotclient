@@ -9,7 +9,7 @@
 
 #include "blackgui/models/columns.h"
 #include "blackgui/models/distributorlistmodel.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/simulatorinfo.h"

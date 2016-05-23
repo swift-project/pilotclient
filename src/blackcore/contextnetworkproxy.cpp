@@ -20,7 +20,9 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Weather;
+using namespace BlackMisc::Simulation;
 
 namespace BlackCore
 {
@@ -73,8 +75,6 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "textMessageSent", this, SIGNAL(textMessageSent(BlackMisc::Network::CTextMessage)));
         Q_ASSERT(s);
-//        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-//                               "webServiceDataRead", this, SIGNAL(webServiceDataRead(BlackMisc::Network::CEntityFlags::Entity, BlackMisc::Network::CEntityFlags::ReadState, int)));
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "webServiceDataRead", this, SIGNAL(webServiceDataRead(int, int, int)));
 
@@ -109,7 +109,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsBooked"));
     }
 
-    Simulation::CSimulatedAircraftList CContextNetworkProxy::getAircraftInRange() const
+    CSimulatedAircraftList CContextNetworkProxy::getAircraftInRange() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1Literal("getAircraftInRange"));
     }
@@ -119,7 +119,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<int>(QLatin1Literal("getAircraftInRangeCount"));
     }
 
-    Simulation::CSimulatedAircraft CContextNetworkProxy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
+    CSimulatedAircraft CContextNetworkProxy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1Literal("getAircraftInRangeForCallsign"), callsign);
     }
@@ -129,47 +129,47 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStation>(QLatin1Literal("getOnlineStationForCallsign"), callsign);
     }
 
-    BlackMisc::Network::CUserList CContextNetworkProxy::getUsers() const
+    CUserList CContextNetworkProxy::getUsers() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getUsers"));
     }
 
-    BlackMisc::Network::CUserList CContextNetworkProxy::getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
+    CUserList CContextNetworkProxy::getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getUsersForCallsigns"), callsigns);
     }
 
-    BlackMisc::Network::CUser CContextNetworkProxy::getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
+    CUser CContextNetworkProxy::getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUser>(QLatin1Literal("getUserForCallsign"), callsign);
     }
 
-    BlackMisc::Network::CClientList CContextNetworkProxy::getOtherClients() const
+    CClientList CContextNetworkProxy::getOtherClients() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1Literal("getOtherClients"));
     }
 
-    BlackMisc::Network::CServerList CContextNetworkProxy::getVatsimFsdServers() const
+    CServerList CContextNetworkProxy::getVatsimFsdServers() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1Literal("getVatsimFsdServers"));
     }
 
-    BlackMisc::Network::CServerList CContextNetworkProxy::getVatsimVoiceServers() const
+    CServerList CContextNetworkProxy::getVatsimVoiceServers() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1Literal("getVatsimVoiceServers"));
     }
 
-    BlackMisc::Network::CClientList CContextNetworkProxy::getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
+    CClientList CContextNetworkProxy::getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1Literal("getOtherClientsForCallsigns"), callsigns);
     }
 
-    BlackMisc::Audio::CVoiceRoomList CContextNetworkProxy::getSelectedVoiceRooms() const
+    CVoiceRoomList CContextNetworkProxy::getSelectedVoiceRooms() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Audio::CVoiceRoomList>(QLatin1Literal("getSelectedVoiceRooms"));
     }
 
-    BlackMisc::Aviation::CAtcStationList CContextNetworkProxy::getSelectedAtcStations() const
+    CAtcStationList CContextNetworkProxy::getSelectedAtcStations() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getSelectedAtcStations"));
     }
@@ -189,7 +189,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftEnabled"), callsign, enabledForRedering, originator);
     }
 
-    bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const Simulation::CAircraftModel &model, const CIdentifier &originator)
+    bool CContextNetworkProxy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateAircraftModel"), callsign, model, originator);
     }

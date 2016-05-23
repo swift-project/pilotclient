@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 
@@ -31,7 +31,7 @@ namespace BlackMisc
         //! Value object for a list of airports.
         class BLACKMISC_EXPORT CLiveryList :
             public CSequence<CLivery>,
-            public BlackMisc::IDatastoreObjectList<CLivery, CLiveryList, int>,
+            public BlackMisc::Db::IDatastoreObjectList<CLivery, CLiveryList, int>,
             public BlackMisc::Mixin::MetaType<CLiveryList>
         {
         public:

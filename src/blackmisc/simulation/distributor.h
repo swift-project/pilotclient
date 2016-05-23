@@ -13,7 +13,7 @@
 #define BLACKMISC_SIMULATION_DISTRIBUTOR_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/orderable.h"
 #include "blackmisc/propertyindex.h"
@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Value object encapsulating information of software distributor.
         class BLACKMISC_EXPORT CDistributor :
             public BlackMisc::CValueObject<CDistributor>,
-            public BlackMisc::IDatastoreObjectWithStringKey,
+            public BlackMisc::Db::IDatastoreObjectWithStringKey,
             public BlackMisc::IOrderable
         {
         public:

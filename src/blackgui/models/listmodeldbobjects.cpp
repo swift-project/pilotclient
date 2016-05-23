@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/models/listmodeldbobjects.h"
+#include "listmodeldbobjects.h"
+#include "allmodelcontainers.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/orderable.h"
 
 #include <QBrush>

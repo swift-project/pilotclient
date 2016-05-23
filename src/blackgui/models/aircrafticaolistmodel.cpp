@@ -11,7 +11,7 @@
 #include "blackgui/models/columnformatters.h"
 #include "blackgui/models/columns.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/timestampbased.h"
 
 #include <Qt>

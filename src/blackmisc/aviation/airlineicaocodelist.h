@@ -16,7 +16,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/datastoreobjectlist.h"
+#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 
@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Value object encapsulating a list of ICAO codes.
         class BLACKMISC_EXPORT CAirlineIcaoCodeList :
             public CSequence<CAirlineIcaoCode>,
-            public BlackMisc::IDatastoreObjectList<CAirlineIcaoCode, CAirlineIcaoCodeList, int>,
+            public BlackMisc::Db::IDatastoreObjectList<CAirlineIcaoCode, CAirlineIcaoCodeList, int>,
 
             public BlackMisc::Mixin::MetaType<CAirlineIcaoCodeList>
         {

@@ -14,8 +14,8 @@
 #include "testreaders.h"
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/icaodatareader.h"
-#include "blackcore/modeldatareader.h"
+#include "blackcore/db/icaodatareader.h"
+#include "blackcore/db/modeldatareader.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -32,18 +32,20 @@
 #include <QString>
 #include <QtDebug>
 
-using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
+using namespace BlackCore;
+using namespace BlackCore::Db;
 
 namespace BlackCoreTest
 {
     CTestReaders::CTestReaders(QObject *parent) :
         QObject(parent),
-        m_icaoReader(new CIcaoDataReader(this)),
-        m_modelReader(new CModelDataReader(this))
+        m_icaoReader(new CIcaoDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess())),
+        m_modelReader(new CModelDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess()))
     { }
 
     CTestReaders::~CTestReaders()

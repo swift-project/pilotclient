@@ -14,7 +14,7 @@
 
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/datastore.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/rgbcolor.h"
@@ -33,7 +33,7 @@ namespace BlackMisc
         //! Value object encapsulating information about an airpot.
         class BLACKMISC_EXPORT CLivery :
             public CValueObject<CLivery>,
-            public BlackMisc::IDatastoreObjectWithIntegerKey
+            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
