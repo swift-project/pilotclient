@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/webreaderflags.h"
+#include "blackcore/db/databasereader.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -48,6 +49,8 @@
 namespace BlackMisc
 {
     class CLogCategoryList;
+    template <typename T> class Restricted;
+
     namespace Aviation { class CCallsign; }
     namespace Simulation { class CSimulatedAircraft; }
 }
@@ -55,13 +58,18 @@ namespace BlackMisc
 namespace BlackCore
 {
     class CApplication;
-    class CDatabaseWriter;
-    class CIcaoDataReader;
-    class CModelDataReader;
     class CVatsimBookingReader;
     class CVatsimDataFileReader;
     class CVatsimMetarReader;
     class CVatsimStatusFileReader;
+
+    namespace Db
+    {
+        class CDatabaseWriter;
+        class CIcaoDataReader;
+        class CModelDataReader;
+        class CInfoDataReader;
+    }
 
     /*!
      * Encapsulates reading data from web sources
@@ -76,7 +84,7 @@ namespace BlackCore
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor, only allowed from BlackCore::CApplication
-        CWebDataServices(CWebReaderFlags::WebReader readerFlags, CWebReaderFlags:: DbReaderHint hint, BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);
+        CWebDataServices(CWebReaderFlags::WebReader readerFlags, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent = nullptr);
 
         //! Shutdown
         void gracefulShutdown();
@@ -93,14 +101,14 @@ namespace BlackCore
         //! Metar reader
         CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
 
+        //! Info data reader
+        Db::CInfoDataReader *getInfoDataReader() const { return m_infoDataReader; }
+
         //! DB writer class
-        CDatabaseWriter *getDatabaseWriter() const { return m_databaseWriter; }
+        Db::CDatabaseWriter *getDatabaseWriter() const { return m_databaseWriter; }
 
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readerFlags; }
-
-        //! Reader flags
-        CWebReaderFlags::DbReaderHint getDbHint() const { return m_dbHint; }
 
         //! FSD servers
         //! \threadsafe
@@ -295,7 +303,7 @@ namespace BlackCore
         //! Data file has been read
         void ps_dataFileRead(int lines);
 
-        //! Read from model reader
+        //! Read finished from reader
         void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
         //! Setup changed
@@ -308,20 +316,25 @@ namespace BlackCore
         //! Init the writers
         void initWriters();
 
-        CWebReaderFlags::WebReader m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
-        CWebReaderFlags::DbReaderHint m_dbHint   = CWebReaderFlags::NoHint;              //!< how to read DB data
-        bool m_initialRead                       = false;                                //!< Initial read conducted
+        //! Call CWebDataServices::readInBackground by single shot
+        void singleShotReadInBackground(BlackMisc::Network::CEntityFlags::Entity entities, int delayMs);
+
+        CWebReaderFlags::WebReader               m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                     //!< how to read DB data
+        bool                                     m_initialRead = false;                                //!< Initial read started
+        int                                      m_infoObjectTrials = 0;                               //!< Tried to read info objects
 
         // for reading XML and VATSIM data files
         CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;
         CVatsimBookingReader    *m_vatsimBookingReader  = nullptr;
         CVatsimDataFileReader   *m_vatsimDataFileReader = nullptr;
         CVatsimMetarReader      *m_vatsimMetarReader    = nullptr;
-        CIcaoDataReader         *m_icaoDataReader       = nullptr;
-        CModelDataReader        *m_modelDataReader      = nullptr;
+        Db::CIcaoDataReader     *m_icaoDataReader       = nullptr;
+        Db::CModelDataReader    *m_modelDataReader      = nullptr;
+        Db::CInfoDataReader     *m_infoDataReader       = nullptr;
 
         // writing objects directly into DB
-        CDatabaseWriter         *m_databaseWriter       = nullptr;
+        Db::CDatabaseWriter     *m_databaseWriter       = nullptr;
     };
 } // namespace
 
