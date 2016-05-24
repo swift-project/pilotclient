@@ -36,13 +36,11 @@ namespace BlackCore
     CSimulatorCommon::CSimulatorCommon(const CSimulatorPluginInfo &info,
                                        BlackMisc::Simulation::IOwnAircraftProvider    *ownAircraftProvider,
                                        BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                       IPluginStorageProvider                         *pluginStorageProvider,
                                        IWeatherGridProvider                           *weatherGridProvider,
                                        QObject *parent)
         : ISimulator(parent),
           COwnAircraftAware(ownAircraftProvider),
           CRemoteAircraftAware(remoteAircraftProvider),
-          CPluginStorageAware(pluginStorageProvider),
           CWeatherGridAware(weatherGridProvider),
           m_simulatorPluginInfo(info)
     {

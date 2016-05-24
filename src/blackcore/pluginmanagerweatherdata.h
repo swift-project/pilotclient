@@ -62,7 +62,6 @@ namespace BlackCore
         struct PluginExtended
         {
             BlackMisc::Weather::CWeatherDataPluginInfo info;
-            QHash<QString, BlackMisc::CVariant> storage; //!< Permanent plugin storage - data stored here will be kept even when plugin is unloaded
         };
 
         QMap<QString, PluginExtended> m_plugins; //!< Id <-> extended data pairs

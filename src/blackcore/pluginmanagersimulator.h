@@ -14,7 +14,6 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/pluginmanager.h"
-#include "blackmisc/pluginstorageprovider.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
@@ -34,20 +33,13 @@ namespace BlackCore
      * Manages plugins for the simulator context.
      */
     class BLACKCORE_EXPORT CPluginManagerSimulator :
-        public BlackCore::IPluginManager,
-        public BlackMisc::IPluginStorageProvider
+        public BlackCore::IPluginManager
     {
         Q_OBJECT
 
     public:
         //! Ctor
         CPluginManagerSimulator(QObject *parent = nullptr);
-
-        //! \copydoc BlackMisc::IPluginStorageProvider::getPluginData
-        virtual BlackMisc::CVariant getPluginData(const QObject *obj, const QString &key) const override;
-
-        //! \copydoc BlackMisc::IPluginStorageProvider::setPluginData
-        virtual void setPluginData(const QObject *obj, const QString &key, const BlackMisc::CVariant &value) override;
 
         //! Get simulator factory from the plugin
         ISimulatorFactory *getFactory(const QString &pluginId);
@@ -81,7 +73,6 @@ namespace BlackCore
         {
             BlackMisc::Simulation::CSimulatorPluginInfo info;
             ISimulatorListener *listener = nullptr;
-            QHash<QString, BlackMisc::CVariant> storage; //!< Permanent plugin storage - data stored here will be kept even when plugin is unloaded
         };
 
         QMap<QString, PluginExtended> m_plugins; //!< Id <-> extended data pairs

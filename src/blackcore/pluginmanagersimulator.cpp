@@ -27,38 +27,6 @@ namespace BlackCore
     {
     }
 
-    CVariant CPluginManagerSimulator::getPluginData(const QObject *obj, const QString &key) const
-    {
-        const QObject *p = obj;
-        while (p && !p->inherits("BlackCore::ISimulatorFactory"))
-        {
-            p = p->parent();
-        }
-
-        if (!p) return CVariant();
-
-        QString id = getIdByPlugin(p);
-        Q_ASSERT(!id.isEmpty());
-        const PluginExtended &pe = m_plugins[id];
-        return pe.storage.value(key);
-    }
-
-    void CPluginManagerSimulator::setPluginData(const QObject *obj, const QString &key, const CVariant &value)
-    {
-        const QObject *p = obj;
-        while (p && !p->inherits("BlackCore::ISimulatorFactory"))
-        {
-            p = p->parent();
-        }
-
-        if (!p) return;
-
-        QString id = getIdByPlugin(p);
-        Q_ASSERT(!id.isEmpty());
-        PluginExtended &pe = m_plugins[id];
-        pe.storage.insert(key, value);
-    }
-
     ISimulatorFactory *CPluginManagerSimulator::getFactory(const QString &pluginId)
     {
         return getPluginById<ISimulatorFactory>(pluginId);

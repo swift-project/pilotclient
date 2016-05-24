@@ -342,7 +342,7 @@ namespace BlackCore
         Q_ASSERT(this->getIContextNetwork()->isUsingImplementingObject());
         IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
         IRemoteAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
-        ISimulator *simulator = factory->create(simulatorInfo, ownAircraftProvider, renderedAircraftProvider, m_plugins, &m_weatherManager);
+        ISimulator *simulator = factory->create(simulatorInfo, ownAircraftProvider, renderedAircraftProvider, &m_weatherManager);
         Q_ASSERT_X(simulator, Q_FUNC_INFO, "no simulator driver can be created");
 
         bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);

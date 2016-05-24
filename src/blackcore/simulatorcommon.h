@@ -21,7 +21,6 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/connectionguard.h"
-#include "blackmisc/pluginstorageprovider.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
@@ -58,7 +57,6 @@ namespace BlackCore
         public BlackCore::ISimulator,
         public BlackMisc::Simulation::COwnAircraftAware,    // gain access to in memory own aircraft data
         public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
-        public BlackMisc::CPluginStorageAware,              // gain access to in memory plugin storage
         public BlackMisc::Weather::CWeatherGridAware        // gain access to in memory weather grid
     {
         Q_OBJECT
@@ -110,7 +108,6 @@ namespace BlackCore
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
                          BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
                          BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                         BlackMisc::IPluginStorageProvider *pluginStorageProvider,
                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                          QObject *parent);
 

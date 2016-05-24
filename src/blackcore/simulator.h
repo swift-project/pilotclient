@@ -31,7 +31,6 @@
 
 namespace BlackMisc
 {
-    class IPluginStorageProvider;
     namespace Aviation { class CCallsign; }
     namespace Network { class CTextMessage; }
     namespace Simulation
@@ -291,14 +290,12 @@ namespace BlackCore
         //! \param info                      metadata about simulator
         //! \param ownAircraftProvider       in memory access to own aircraft data
         //! \param remoteAircraftProvider    in memory access to rendered aircraft data such as situation history and aircraft itself
-        //! \param pluginStorageProvider     in memory access to persistent plugin data store
         //! \param weatherGridProvider       in memory access to weather grid data
         //! \return driver instance
         virtual ISimulator *create(
             const BlackMisc::Simulation::CSimulatorPluginInfo &info,
             BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider,
             BlackMisc::Simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            BlackMisc::IPluginStorageProvider *pluginStorageProvider,
             BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider) = 0;
 
         //! Simulator listener instance

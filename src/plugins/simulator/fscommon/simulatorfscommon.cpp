@@ -27,10 +27,9 @@ namespace BlackSimPlugin
             const CSimulatorPluginInfo &info,
             IOwnAircraftProvider *ownAircraftProvider,
             IRemoteAircraftProvider *renderedAircraftProvider,
-            IPluginStorageProvider *pluginStorageProvider,
             Weather::IWeatherGridProvider *weatherGridProvider,
             QObject *parent) :
-            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, pluginStorageProvider, weatherGridProvider, parent),
+            CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, parent),
             m_fsuipc(new CFsuipc())
         { }
 
