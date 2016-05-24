@@ -56,17 +56,18 @@ namespace BlackCore
             // without any information we can not use them
             modelSet = modelSet.findWithKnownAircraftDesignator();
         }
+
+        modelSet = modelSet.matchesSimulator(simulator);
         modelSet.setModelMode(CAircraftModel::Include); // in sets we only include, exclude means not present in set
+
         if (oprions.testFlag(Incremental))
         {
             if (currentSet.isEmpty()) { return modelSet; }
             CAircraftModelList copy(currentSet);
             copy.replaceOrAddModelsWithString(modelSet, Qt::CaseInsensitive); // incremental
-            return copy.matchesSimulator(simulator);
         }
-        else
-        {
-            return modelSet.matchesSimulator(simulator);
-        }
+
+        modelSet.resetOrder();
+        return modelSet;
     }
 } // ns
