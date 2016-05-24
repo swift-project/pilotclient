@@ -16,6 +16,8 @@
 
 namespace BlackMisc
 {
+    CCountryList::CCountryList() {}
+
     CCountryList::CCountryList(const CSequence<CCountry> &other) :
         CSequence<CCountry>(other)
     { }

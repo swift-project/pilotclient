@@ -35,7 +35,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDbInfoList)
 
             //! Default constructor.
-            CDbInfoList() = default;
+            CDbInfoList();
 
             //! Construct from a base class object.
             CDbInfoList(const CSequence<CDbInfo> &other);

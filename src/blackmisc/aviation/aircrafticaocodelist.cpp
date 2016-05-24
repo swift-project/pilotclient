@@ -18,6 +18,9 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        CAircraftIcaoCodeList::CAircraftIcaoCodeList()
+        { }
+
         CAircraftIcaoCodeList::CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other) :
             CSequence<CAircraftIcaoCode>(other)
         { }

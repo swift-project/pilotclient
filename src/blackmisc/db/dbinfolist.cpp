@@ -15,6 +15,8 @@ namespace BlackMisc
 {
     namespace Db
     {
+        CDbInfoList::CDbInfoList() { }
+
         CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) :
             CSequence<CDbInfo>(other)
         { }

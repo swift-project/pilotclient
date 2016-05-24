@@ -41,7 +41,7 @@ namespace BlackMisc
             BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CAirlineIcaoCodeList)
 
             //! Default constructor.
-            CAirlineIcaoCodeList() = default;
+            CAirlineIcaoCodeList();
 
             //! Construct from a base class object.
             CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other);

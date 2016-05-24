@@ -38,7 +38,7 @@ namespace BlackMisc
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CCountryList)
 
         //! Default constructor.
-        CCountryList() = default;
+        CCountryList();
 
         //! Construct from a base class object.
         CCountryList(const CSequence<CCountry> &other);
