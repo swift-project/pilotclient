@@ -171,6 +171,7 @@ namespace BlackMisc
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                     model.setSimulator(this->getSimulator());
                     model.setFileName(aircraftIt.filePath());
+                    model.setUtcTimestamp(aircraftIt.fileInfo().lastModified());
                     model.setModelString(modelString);
 
                     QFile file(aircraftIt.filePath());
@@ -263,6 +264,7 @@ namespace BlackMisc
 
                         CAircraftModel model(plane.getModelName(), CAircraftModel::TypeOwnSimulatorModel);
                         model.setFileName(plane.filePath);
+                        model.setUtcTimestamp(QFileInfo(plane.filePath).lastModified());
 
                         CAircraftIcaoCode icao(plane.icao);
                         model.setAircraftIcaoCode(icao);
