@@ -62,10 +62,12 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuOrderable);
             ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
+            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
 
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(&this->m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelChanged, this, &CDbOwnModelSetComponent::ps_modelChanged);
@@ -74,10 +76,13 @@ namespace BlackGui
             const CSimulatorInfo sim = this->m_modelSetLoader.getSimulator();
             if (sim.isSingleSimulator())
             {
-                ui->tvp_OwnModelSet->updateContainerMaybeAsync(this->m_modelSetLoader.getAircraftModels());
+                // update display when all is set up
+                this->m_modelSetLoader.syncronizeCache(); // make sure data are loaded
+                QTimer::singleShot(500, [this, sim]()
+                {
+                    this->ps_changeSimulator(sim);
+                });
             }
-            const int c = this->m_modelSetLoader.getAircraftModelsCount();
-            this->ps_onRowCountChanged(c, ui->tvp_OwnModelSet->hasFilter());
         }
 
         CDbOwnModelSetComponent::~CDbOwnModelSetComponent()
@@ -294,7 +299,8 @@ namespace BlackGui
         {
             if (this->m_modelSetLoader.getSimulator() == simulator) { return; } // avoid unnecessary signals
             this->m_modelSetLoader.changeSimulator(simulator);
-            this->ui->le_Simulator->setText(simulator.toQString(true));
+            ui->le_Simulator->setText(simulator.toQString(true));
+            ui->comp_SimulatorSelector->setValue(simulator);
         }
 
         void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)

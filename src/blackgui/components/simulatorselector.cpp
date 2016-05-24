@@ -84,15 +84,17 @@ namespace BlackGui
             const CSimulatorInfo current(getValue());
             if (simulator == current) { return; } // avoid unnecessary signals
 
+            // checkboxes
             this->ui->cb_FSX->setChecked(simulator.fsx());
             this->ui->cb_FS9->setChecked(simulator.fs9());
             this->ui->cb_XPlane->setChecked(simulator.xplane());
             this->ui->cb_P3D->setChecked(simulator.p3d());
 
-            if (simulator.fsx()) { this->ui->cb_FSX->setChecked(simulator.fsx()); return; }
-            if (simulator.fs9()) { this->ui->cb_FS9->setChecked(simulator.fs9()); return; }
-            if (simulator.xplane()) { this->ui->cb_XPlane->setChecked(simulator.xplane()); return; }
-            if (simulator.p3d()) { this->ui->cb_P3D->setChecked(simulator.p3d()); return; }
+            // radio buttons
+            if (simulator.fsx())    { this->ui->rb_FSX->setChecked(simulator.fsx()); return; }
+            if (simulator.fs9())    { this->ui->rb_FS9->setChecked(simulator.fs9()); return; }
+            if (simulator.xplane()) { this->ui->rb_XPlane->setChecked(simulator.xplane()); return; }
+            if (simulator.p3d())    { this->ui->rb_P3D->setChecked(simulator.p3d()); return; }
         }
 
         void CSimulatorSelector::setAll()

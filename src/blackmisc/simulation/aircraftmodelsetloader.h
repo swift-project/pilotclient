@@ -51,6 +51,9 @@ namespace BlackMisc
             //! Destructor
             virtual ~CAircraftModelSetLoader();
 
+            //! Make sure cache is syncronized
+            bool syncronizeCache();
+
             //! The loaded models
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getAircraftModels() const;
@@ -61,7 +64,7 @@ namespace BlackMisc
 
             //! Count of loaded models
             //! \threadsafe
-            int getAircraftModelsCount() const { return getAircraftModels().size(); }
+            int getAircraftModelsCount() const;
 
             //! Model for given model string
             //! \threadsafe
@@ -109,9 +112,6 @@ namespace BlackMisc
         protected:
             //! Cache timestamp
             QDateTime getCacheTimestamp() const;
-
-            //! Make sure cache is syncronized
-            bool syncronizeCache();
 
             //! Any cached data?
             bool hasCachedData() const;

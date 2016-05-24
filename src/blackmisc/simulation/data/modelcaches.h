@@ -72,6 +72,9 @@ namespace BlackMisc
             //! Last selection
             struct ModelCacheLastSelection : public BlackMisc::CDataTrait<BlackMisc::Simulation::CSimulatorInfo>
             {
+                //! First load is synchronous
+                static constexpr bool isPinned() { return true; }
+
                 //! Key
                 static const char *key() { return "modelcachelastselection"; }
             };
@@ -111,6 +114,9 @@ namespace BlackMisc
             //! Last selection
             struct ModelSetLastSelection : public BlackMisc::CDataTrait<BlackMisc::Simulation::CSimulatorInfo>
             {
+                //! First load is synchronous
+                static constexpr bool isPinned() { return true; }
+
                 //! Key
                 static const char *key() { return "modelsetlastselection"; }
             };
@@ -231,7 +237,6 @@ namespace BlackMisc
                 //! @}
 
             private:
-                //! \todo Why can`t I keep the changed functions in IMultiSimulatorModelCaches -> C2039 not a member
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFsx> m_modelCacheFsx {this, &CModelSetCaches::changedFsx };  //!< FSX cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::changedFs9};   //!< FS9 cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache

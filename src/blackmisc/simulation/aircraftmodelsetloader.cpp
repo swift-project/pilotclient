@@ -59,7 +59,8 @@ namespace BlackMisc
         void CAircraftModelSetLoader::changeSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-            this->m_caches.syncronizeCache(simulator);
+            if (this->getSimulator() == simulator) { return; }
+            this->m_caches.syncronizeCache(simulator); // also changes current simulator of caches
             emit simulatorChanged(simulator);
         }
 
@@ -72,6 +73,11 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             return this->m_caches.getCachedModels(simulator);
+        }
+
+        int CAircraftModelSetLoader::getAircraftModelsCount() const
+        {
+            return getAircraftModels().size();
         }
 
         CAircraftModel CAircraftModelSetLoader::getModelForModelString(const QString &modelString) const
