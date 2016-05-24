@@ -65,6 +65,17 @@ namespace BlackConfig
 #endif
     }
 
+    bool CBuildConfig::isRunningOnWindows10()
+    {
+#ifdef Q_OS_WIN
+        // QSysInfo::WindowsVersion only available on Win platforms
+        if (!isRunningOnWindowsNtPlatform()) { return false; }
+        return (QSysInfo::WindowsVersion == QSysInfo::WV_10_0);
+#else
+        return false;
+#endif
+    }
+
     bool CBuildConfig::isRunningOnMacOSXPlatform()
     {
 #ifdef Q_OS_OSX

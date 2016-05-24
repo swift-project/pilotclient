@@ -72,6 +72,9 @@ namespace BlackConfig
         //! Running on Windows NT platform?
         static bool isRunningOnWindowsNtPlatform();
 
+        //! Windows 10
+        static bool isRunningOnWindows10();
+
         //! Running on Mac OS X platform?
         static bool isRunningOnMacOSXPlatform();
 
