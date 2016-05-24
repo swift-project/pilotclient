@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/buildconfig.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
@@ -15,6 +15,7 @@
 
 #include <QString>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation;

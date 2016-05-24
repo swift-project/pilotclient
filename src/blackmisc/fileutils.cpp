@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/buildconfig.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/worker.h"
 
@@ -20,6 +20,8 @@
 #include <QTextStream>
 #include <QtGlobal>
 #include <algorithm>
+
+using namespace BlackConfig;
 
 namespace BlackMisc
 {

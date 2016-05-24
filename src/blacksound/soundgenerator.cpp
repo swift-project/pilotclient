@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/filedeleter.h"
-#include "blackmisc/buildconfig.h"
 #include <QtCore/qendian.h>
 #include <math.h>
 #include <qmath.h>
@@ -23,6 +23,7 @@
 #include <QFile>
 #include <QDir>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

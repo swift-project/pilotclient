@@ -9,7 +9,7 @@
 
 //! \cond PRIVATE
 
-#include "blackmisc/buildconfig.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/icons.h"
 
@@ -20,6 +20,8 @@
 #include <QPainter>
 #include <QSize>
 #include <QtGlobal>
+
+using namespace BlackConfig;
 
 namespace BlackMisc
 {

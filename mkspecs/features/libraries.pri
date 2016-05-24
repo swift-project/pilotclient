@@ -83,3 +83,9 @@ blackmisc {
         LIBS *= -lShell32
     }
 }
+
+blackconfig {
+    win32-msvc*:    PRE_TARGETDEPS += $$DestRoot/lib/blackconfig.lib
+    else:           PRE_TARGETDEPS += $$DestRoot/lib/libblackconfig.a
+    LIBS *= -lblackconfig
+}

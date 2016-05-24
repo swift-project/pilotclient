@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/contextnetwork.h"
@@ -16,7 +17,6 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/led.h"
 #include "blackmisc/audio/audioutils.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "ui_infobarstatuscomponent.h"
@@ -29,6 +29,7 @@
 #include <Qt>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackCore;
 using namespace BlackGui;
 using namespace BlackMisc;

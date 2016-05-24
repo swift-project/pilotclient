@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackgui/dockwidgetinfoarea.h"
 #include "blackgui/filters/filterdialog.h"
 #include "blackgui/filters/filterwidget.h"
@@ -28,7 +29,6 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/country.h"
 #include "blackmisc/countrylist.h"
 #include "blackmisc/fileutils.h"
@@ -78,6 +78,7 @@
 #include <QWidget>
 #include <limits>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Menus;

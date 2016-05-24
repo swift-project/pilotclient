@@ -4,7 +4,7 @@ QT       += network dbus gui multimedia
 
 TARGET = blacksound
 TEMPLATE = lib
-CONFIG += blackmisc
+CONFIG += blackconfig blackmisc
 
 contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib

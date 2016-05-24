@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/contextaudio.h"
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
@@ -24,7 +25,6 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/airporticaocode.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
@@ -45,6 +45,7 @@
 #include <QToolButton>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;

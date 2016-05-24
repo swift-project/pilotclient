@@ -6,7 +6,7 @@ QT       += network dbus xml multimedia
 
 TARGET = blackcore
 TEMPLATE = lib
-CONFIG += blackmisc blackinput blacksound
+CONFIG += blackconfig blackmisc blackinput blacksound
 
 contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib

@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/contextnetwork.h"
 #include "blackgui/components/aircraftcomponent.h"
 #include "blackgui/components/atcstationcomponent.h"
@@ -26,7 +27,6 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
@@ -45,6 +45,7 @@
 
 class QHBoxLayout;
 
+using namespace BlackConfig;
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Input;

@@ -7,11 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "audioutils.h"
-#include "blackmisc/buildconfig.h"
+#include "blackconfig/buildconfig.h"
+#include "blackmisc/audio/audioutils.h"
 
 #include <QProcess>
 #include <QStringList>
+
+using namespace BlackConfig;
 
 namespace BlackMisc
 {

@@ -9,6 +9,7 @@
 
 //! \cond PRIVATE
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/application.h"
 #include "blackcore/networkvatlib.h"
 #include "blackmisc/aviation/aircraftsituation.h"
@@ -19,7 +20,6 @@
 #include "blackmisc/aviation/informationmessage.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
@@ -60,6 +60,7 @@
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
 static_assert(VAT_LIBVATLIB_VERSION == 905, "Wrong vatlib header installed");
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/buildconfig.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 #include <QDir>
@@ -17,6 +17,7 @@
 #include <QStringList>
 #include <QVariant>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 
 namespace BlackMisc

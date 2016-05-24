@@ -7,13 +7,13 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/serverform.h"
 #include "blackgui/components/settingsnetworkserverscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/serverview.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/serverlist.h"
@@ -25,6 +25,7 @@
 #include <QString>
 #include <QTableView>
 
+using namespace BlackConfig;
 using namespace BlackCore;
 using namespace BlackCore::Data;
 using namespace BlackGui;

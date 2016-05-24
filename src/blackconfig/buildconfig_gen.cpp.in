@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include \"blackmisc/buildconfig.h\"
+#include \"blackconfig/buildconfig.h\"
 #include <QString>
 #include <QDateTime>
 
@@ -24,7 +24,7 @@ $$DEFINE_WITH_XPLANE#define WITH_XPLANE
 $$DEFINE_SWIFT_BETA#define SWIFT_BETA
 $$DEFINE_SWIFT_SHIPPED#define SWIFT_SHIPPED
 
-bool BlackMisc::CBuildConfig::isCompiledWithBlackCore()
+bool BlackConfig::CBuildConfig::isCompiledWithBlackCore()
 {
 #ifdef WITH_BLACKCORE
     return true;
@@ -33,7 +33,7 @@ bool BlackMisc::CBuildConfig::isCompiledWithBlackCore()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isCompiledWithBlackSound()
+bool BlackConfig::CBuildConfig::isCompiledWithBlackSound()
 {
 #ifdef WITH_BLACKSOUND
     return true;
@@ -42,7 +42,7 @@ bool BlackMisc::CBuildConfig::isCompiledWithBlackSound()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isCompiledWithBlackInput()
+bool BlackConfig::CBuildConfig::isCompiledWithBlackInput()
 {
 #ifdef WITH_BLACKINPUT
     return true;
@@ -51,7 +51,7 @@ bool BlackMisc::CBuildConfig::isCompiledWithBlackInput()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isCompiledWithFs9Support()
+bool BlackConfig::CBuildConfig::isCompiledWithFs9Support()
 {
 #ifdef WITH_FS9
     return true;
@@ -60,7 +60,7 @@ bool BlackMisc::CBuildConfig::isCompiledWithFs9Support()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isCompiledWithFsxSupport()
+bool BlackConfig::CBuildConfig::isCompiledWithFsxSupport()
 {
 #ifdef WITH_FSX
     return true;
@@ -69,7 +69,7 @@ bool BlackMisc::CBuildConfig::isCompiledWithFsxSupport()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isCompiledWithXPlaneSupport()
+bool BlackConfig::CBuildConfig::isCompiledWithXPlaneSupport()
 {
 #ifdef WITH_XPLANE
     return true;
@@ -78,7 +78,7 @@ bool BlackMisc::CBuildConfig::isCompiledWithXPlaneSupport()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isCompiledWithGui()
+bool BlackConfig::CBuildConfig::isCompiledWithGui()
 {
 #ifdef WITH_BLACKGUI
     return true;
@@ -87,7 +87,7 @@ bool BlackMisc::CBuildConfig::isCompiledWithGui()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isBetaTest()
+bool BlackConfig::CBuildConfig::isBetaTest()
 {
 #ifdef SWIFT_BETA
         return true;
@@ -96,7 +96,7 @@ bool BlackMisc::CBuildConfig::isBetaTest()
 #endif
 }
 
-bool BlackMisc::CBuildConfig::isShippedVersion()
+bool BlackConfig::CBuildConfig::isShippedVersion()
 {
 #ifdef SWIFT_SHIPPED
     return true;
@@ -105,32 +105,32 @@ bool BlackMisc::CBuildConfig::isShippedVersion()
 #endif
 }
 
-const QDateTime &BlackMisc::CBuildConfig::getEol()
+const QDateTime &BlackConfig::CBuildConfig::getEol()
 {
     static const QString eol(\"$$BLACK_EOL\");
     static const QDateTime dt(eol.isEmpty() ? QDateTime() : QDateTime::fromString(eol, \"yyyyMMdd\"));
     return dt;
 }
 
-int BlackMisc::CBuildConfig::vatsimClientId()
+int BlackConfig::CBuildConfig::vatsimClientId()
 {
     static const int id { $$VATSIM_CLIENT_ID };
     return id;
 }
 
-const QString &BlackMisc::CBuildConfig::vatsimPrivateKey()
+const QString &BlackConfig::CBuildConfig::vatsimPrivateKey()
 {
     static const auto pk = QString { \"$$VATSIM_CLIENT_PRIVATE_KEY\" };
     return pk;
 }
 
-const QString &BlackMisc::CVersion::version()
+const QString &BlackConfig::CVersion::version()
 {
     static const QString version(\"$$BLACK_VERSION\");
     Q_ASSERT(!version.isEmpty());
     return version;
 }
 
-int BlackMisc::CVersion::versionMajor() { return $$BLACK_VER_MAJ; }
-int BlackMisc::CVersion::versionMinor() { return $$BLACK_VER_MIN; }
-int BlackMisc::CVersion::versionPatch() { return $$BLACK_VER_PAT; }
+int BlackConfig::CVersion::versionMajor() { return $$BLACK_VER_MAJ; }
+int BlackConfig::CVersion::versionMinor() { return $$BLACK_VER_MIN; }
+int BlackConfig::CVersion::versionPatch() { return $$BLACK_VER_PAT; }

@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/application.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/cookiemanager.h"
@@ -15,7 +16,6 @@
 #include "blackcore/registermetadata.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/filelogger.h"
@@ -53,6 +53,7 @@
 #include <QtGlobal>
 #include <cstdlib>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;

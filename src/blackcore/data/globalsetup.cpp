@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/json.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/user.h"
@@ -17,6 +17,7 @@
 #include <QJsonObject>
 #include <QStringList>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Json;
 using namespace BlackMisc::Network;

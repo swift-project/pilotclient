@@ -10,7 +10,7 @@ TEMPLATE = app
 SOURCES += *.cpp
 HEADERS += *.h
 FORMS   += *.ui
-CONFIG  += blackmisc blacksound blackinput blackcore blackgui
+CONFIG  += blackconfig blackmisc blacksound blackinput blackcore blackgui
 
 DEPENDPATH += . $$SourceRoot/src/blackmisc \
                 $$SourceRoot/src/blacksound \

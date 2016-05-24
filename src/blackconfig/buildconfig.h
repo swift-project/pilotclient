@@ -9,10 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_BUILDCONFIG_H
-#define BLACKMISC_BUILDCONFIG_H
-
-#include "blackmisc/blackmiscexport.h"
+#ifndef BLACKCONFIG_BUILDCONFIG_H
+#define BLACKCONFIG_BUILDCONFIG_H
 
 #include <QList>
 #include <QString>
@@ -20,10 +18,10 @@
 class QDateTime;
 class QStringList;
 
-namespace BlackMisc
+namespace BlackConfig
 {
     //! Build configuration
-    class BLACKMISC_EXPORT CBuildConfig
+    class CBuildConfig
     {
     public:
         //! with BlackCore?
@@ -137,7 +135,7 @@ namespace BlackMisc
     };
 
     //! Version
-    class BLACKMISC_EXPORT CVersion
+    class CVersion
     {
     public:
         //! Version info

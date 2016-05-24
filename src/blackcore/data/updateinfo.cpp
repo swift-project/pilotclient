@@ -7,11 +7,12 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/data/updateinfo.h"
-#include "blackmisc/buildconfig.h"
 
 #include <QStringList>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 

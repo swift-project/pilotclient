@@ -4,7 +4,7 @@ QT       += network dbus gui svg widgets
 
 TARGET = blackgui
 TEMPLATE = lib
-CONFIG += blackmisc blackcore
+CONFIG += blackconfig blackmisc blackcore
 
 contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib

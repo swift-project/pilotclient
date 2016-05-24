@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/processctrl.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/logmessage.h"
 
 #include <array>

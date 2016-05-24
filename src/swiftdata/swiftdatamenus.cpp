@@ -7,11 +7,11 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/datamaininfoareacomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/icons.h"
 #include "swiftdata.h"
 #include "ui_swiftdata.h"
@@ -24,6 +24,7 @@
 #include <QString>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackGui::Components;

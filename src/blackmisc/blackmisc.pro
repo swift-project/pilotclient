@@ -4,16 +4,11 @@ QT       += network dbus xml
 
 TARGET = blackmisc
 TEMPLATE = lib
-CONFIG += c++11
+CONFIG += blackconfig
 
 contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib
 }
-
-buildconfig.input = buildconfig.cpp.in
-buildconfig.output = $$DestRoot/buildconfig_gen.cpp
-GENERATED_SOURCES += $$DestRoot/buildconfig_gen.cpp
-QMAKE_SUBSTITUTES += buildconfig
 
 INCLUDEPATH += ..
 # DEPENDPATH += . .. // BlackMisc should be independent

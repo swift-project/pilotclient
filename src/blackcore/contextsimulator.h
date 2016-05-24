@@ -23,13 +23,13 @@
 
 //! @}
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -175,7 +175,7 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Simulator avialable (driver available)?
-        bool isSimulatorAvailable() const { return BlackMisc::CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
+        bool isSimulatorAvailable() const { return BlackConfig::CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
 
         //! Icon representing the model
         virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;

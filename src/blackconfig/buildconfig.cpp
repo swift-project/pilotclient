@@ -9,10 +9,7 @@
 
 //! \cond PRIVATE
 
-#include "buildconfig.h"
-#include "blackmisc/buildconfig.h"
-#include "blackmisc/fileutils.h"
-#include "blackmisc/stringutils.h"
+#include "blackconfig/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -23,7 +20,7 @@
 #include <QStringList>
 #include <QtGlobal>
 
-namespace BlackMisc
+namespace BlackConfig
 {
     bool CBuildConfig::isCompiledWithP3DSupport()
     {
@@ -181,7 +178,7 @@ namespace BlackMisc
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        const QFile file(CFileUtils::appendFilePaths(d, "shared/boostrap/boostrap.json"));
+        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/boostrap/boostrap.json"));
         Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing dir");
         return QFileInfo(file).absoluteFilePath();
     }
@@ -196,7 +193,7 @@ namespace BlackMisc
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        QDir dir(CFileUtils::appendFilePaths(d, "shared/dbdata"));
+        QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -211,7 +208,7 @@ namespace BlackMisc
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        QDir dir(CFileUtils::appendFilePaths(d, "sounds"));
+        QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -226,7 +223,7 @@ namespace BlackMisc
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        QDir dir(CFileUtils::appendFilePaths(d, "qss"));
+        QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -240,7 +237,7 @@ namespace BlackMisc
     QString getImagesDirImpl()
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
-        QDir dir(CFileUtils::appendFilePaths(d, "images"));
+        QDir dir(QDir::cleanPath(d + QDir::separator() + "images"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -261,7 +258,7 @@ namespace BlackMisc
     {
         QStringList pathes(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
         QString d = pathes.first();
-        d = CFileUtils::appendFilePaths(d, "/swift");
+        d = QDir::cleanPath(d + QDir::separator() + "swift");
         QDir dir(d);
         if (dir.exists()) { return dir.absolutePath(); }
         return pathes.first();
@@ -271,6 +268,11 @@ namespace BlackMisc
     {
         static const QString d(getDocumentationDirectoryImpl());
         return d;
+    }
+
+    QString boolToYesNo(bool v)
+    {
+        return v ? "yes" : "no";
     }
 
     const QString &CBuildConfig::compiledWithInfo(bool shortVersion)
@@ -299,15 +301,15 @@ namespace BlackMisc
             static QString infoLong;
             if (infoLong.isEmpty())
             {
-                infoLong = infoLong.append("BlackCore: ").append(BlackMisc::boolToYesNo(isCompiledWithBlackCore()));
-                infoLong = infoLong.append(" BlackInput: ").append(BlackMisc::boolToYesNo(isCompiledWithBlackInput()));
-                infoLong = infoLong.append(" BlackSound: ").append(BlackMisc::boolToYesNo(isCompiledWithBlackSound()));
-                infoLong = infoLong.append(" GUI: ").append(BlackMisc::boolToYesNo(isCompiledWithGui()));
+                infoLong = infoLong.append("BlackCore: ").append(boolToYesNo(isCompiledWithBlackCore()));
+                infoLong = infoLong.append(" BlackInput: ").append(boolToYesNo(isCompiledWithBlackInput()));
+                infoLong = infoLong.append(" BlackSound: ").append(boolToYesNo(isCompiledWithBlackSound()));
+                infoLong = infoLong.append(" GUI: ").append(boolToYesNo(isCompiledWithGui()));
 
-                infoLong = infoLong.append(" FS9: ").append(BlackMisc::boolToYesNo(isCompiledWithFs9Support()));
-                infoLong = infoLong.append(" FSX: ").append(BlackMisc::boolToYesNo(isCompiledWithFsxSupport()));
-                infoLong = infoLong.append(" P3D: ").append(BlackMisc::boolToYesNo(isCompiledWithP3DSupport()));
-                infoLong = infoLong.append(" XPlane: ").append(BlackMisc::boolToYesNo(isCompiledWithXPlaneSupport()));
+                infoLong = infoLong.append(" FS9: ").append(boolToYesNo(isCompiledWithFs9Support()));
+                infoLong = infoLong.append(" FSX: ").append(boolToYesNo(isCompiledWithFsxSupport()));
+                infoLong = infoLong.append(" P3D: ").append(boolToYesNo(isCompiledWithP3DSupport()));
+                infoLong = infoLong.append(" XPlane: ").append(boolToYesNo(isCompiledWithXPlaneSupport()));
             }
             return infoLong;
         }

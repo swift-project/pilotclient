@@ -7,11 +7,11 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/views/simulatedaircraftview.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
@@ -48,7 +48,7 @@ namespace BlackGui
 
         void CSimulatedAircraftView::customMenu(CMenuActions &menuActions)
         {
-            if (BlackMisc::CBuildConfig::isDebugBuild())
+            if (BlackConfig::CBuildConfig::isDebugBuild())
             {
                 // tbd
             }

@@ -7,6 +7,7 @@ TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += blackconfig
 CONFIG   += blackmisc
 CONFIG   += testcase
 CONFIG   += no_testcase_installs

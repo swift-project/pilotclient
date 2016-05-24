@@ -7,12 +7,12 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/views/atcstationview.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/icons.h"
 
 #include <QFlags>
@@ -49,7 +49,7 @@ namespace BlackGui
 
         void CAtcStationView::customMenu(CMenuActions &menuActions)
         {
-            if (BlackMisc::CBuildConfig::isDebugBuild())
+            if (BlackConfig::CBuildConfig::isDebugBuild())
             {
                 if (this->m_debugActions.isEmpty()) { this->m_actions = QList<QAction *>({nullptr, nullptr}); }
                 this->m_actions[0] = menuActions.addAction(this->m_actions[0], CIcons::tableSheet16(), "Test: 1k ATC online stations", CMenuAction::pathClientCom(), { this, &CAtcStationView::ps_testRequest1kAtcOnlineDummies });

@@ -15,14 +15,14 @@
  */
 
 #include "testlibrarypath.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/librarypath.h"
-#include "blackmisc/buildconfig.h"
 
 namespace BlackMiscTest
 {
     void CTestLibraryPath::libraryPath()
     {
-        if (!BlackMisc::CBuildConfig::isRunningOnWindowsNtPlatform()) { return; }
+        if (!BlackConfig::CBuildConfig::isRunningOnWindowsNtPlatform()) { return; }
 
         auto emptyPath = BlackMisc::getCustomLibraryPath();
         QVERIFY2(emptyPath.isEmpty(), "Default path should be empty");

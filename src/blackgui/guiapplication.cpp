@@ -7,12 +7,12 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -42,6 +42,7 @@
 #include <QWidget>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 
 BlackGui::CGuiApplication *sGui = nullptr; // set by constructor

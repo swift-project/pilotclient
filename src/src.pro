@@ -3,6 +3,7 @@ load(common_pre)
 TEMPLATE = subdirs
 CONFIG += ordered
 
+SUBDIRS += blackconfig
 SUBDIRS += blackmisc
 contains(BLACK_CONFIG,BlackSound) {
     SUBDIRS += blacksound

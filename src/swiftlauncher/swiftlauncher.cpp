@@ -9,13 +9,13 @@
 
 #include "swiftlauncher.h"
 #include "ui_swiftlauncher.h"
+#include "blackconfig/buildconfig.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/icons.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
 #include <QPixmap>
@@ -26,6 +26,7 @@
 #include <QShortcut>
 #include <qcompilerdetection.h>
 
+using namespace BlackConfig;
 using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackCore::Data;

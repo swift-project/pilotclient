@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackgui/stylesheetutility.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/restricted.h"
 
@@ -28,6 +28,7 @@
 #include <QWidget>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 
 namespace BlackGui

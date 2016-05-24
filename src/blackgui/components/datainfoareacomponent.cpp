@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/datainfoareacomponent.h"
 #include "blackgui/components/dbaircrafticaocomponent.h"
@@ -16,7 +17,6 @@
 #include "blackgui/components/dbliverycomponent.h"
 #include "blackgui/components/dbmodelcomponent.h"
 #include "blackgui/guiapplication.h"
-#include "blackmisc/buildconfig.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/entityflags.h"
@@ -29,6 +29,7 @@
 #include <QTabWidget>
 #include <QtGlobal>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackGui;

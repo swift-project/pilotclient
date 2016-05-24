@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/buildconfig.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/datastoreutility.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
@@ -16,6 +16,7 @@
 #include <QtGlobal>
 #include <algorithm>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation::FsCommon;
 
