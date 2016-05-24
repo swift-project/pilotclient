@@ -58,15 +58,15 @@ namespace BlackGui
 
         void CSettingsNetworkServersComponent::ps_reloadSettings()
         {
-            CServerList serverList(m_trafficNetworkServers.get());
+            CServerList serverList(m_trafficNetworkServers.getCopy());
 
             // add swift test servers in case we have no servers:
             // this is debug/bootstrap feature we can continue to test when something goes wrong
             if (serverList.isEmpty() && (CBuildConfig::isBetaTest() || sGui->isRunningInDeveloperEnvironment()))
             {
                 serverList.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
-                this->ui->tvp_Servers->updateContainer(serverList);
             }
+            this->ui->tvp_Servers->updateContainer(serverList);
         }
 
         void CSettingsNetworkServersComponent::ps_serverSelected(const QModelIndex &index)
@@ -85,6 +85,7 @@ namespace BlackGui
             QObject *sender = QObject::sender();
             CStatusMessage msg;
             bool changed = false;
+            bool save = false;
             if (sender == this->ui->pb_RemoveServer)
             {
                 // lenient name removal
@@ -103,6 +104,7 @@ namespace BlackGui
             }
             else if (sender == this->ui->pb_SaveServer)
             {
+                save = true;
                 if (msgs.isEmpty() && server.hasAddressAndPort())
                 {
                     // update in any case to list before saving if we have a valid form
@@ -113,13 +115,8 @@ namespace BlackGui
 
             if (changed)
             {
-                msg = m_trafficNetworkServers.set(serverList);
+                msg = save ? m_trafficNetworkServers.setAndSave(serverList) : m_trafficNetworkServers.set(serverList);
                 this->ps_reloadSettings(); // call manually as local object
-            }
-
-            if (msgs.isEmpty() && sender == this->ui->pb_SaveServer)
-            {
-                msg = sGui->getIContextApplication()->saveSettings(m_trafficNetworkServers.getKey());
             }
 
             if (!msg.isEmpty())
