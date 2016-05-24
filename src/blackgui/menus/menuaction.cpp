@@ -48,6 +48,17 @@ namespace BlackGui
             if (this->m_action) { m_action->setChecked(checked); }
         }
 
+        bool CMenuAction::isActionEnabled() const
+        {
+            if (!this->m_action) { return false; }
+            return this->m_action->isEnabled();
+        }
+
+        void CMenuAction::setActionEnabled(bool enabled)
+        {
+            if (this->m_action) { m_action->setEnabled(enabled); }
+        }
+
         bool CMenuAction::hasNoPathWithSeparator() const
         {
             return this->m_separator && this->hasNoPath();
@@ -242,6 +253,11 @@ namespace BlackGui
                 Q_UNUSED(checked);
             });
             return action;
+        }
+
+        CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path)
+        {
+            return this->addAction(actionIcon, text, path, nullptr);
         }
 
         CMenuAction CMenuActions::addAction(const QIcon &actionIcon, const QString &text, const QString &path, const BlackMisc::CSlot<void ()> &slot, const QKeySequence &shortcut)

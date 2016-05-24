@@ -60,6 +60,12 @@ namespace BlackGui
             //! Set a checkable action, QAction::setChecked
             void setActionChecked(bool checked);
 
+            //! Enabled action?
+            bool isActionEnabled() const;
+
+            //! Enable action (allow gray out)
+            void setActionEnabled(bool enabled);
+
             //! Path
             const QString &getPath() const  { return m_path; }
 
@@ -240,6 +246,9 @@ namespace BlackGui
 
             //! Add action
             CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+
+            //! Add action without slot
+            CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path);
 
             //! Add action
             CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, const BlackMisc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);

@@ -233,6 +233,7 @@ namespace BlackGui
                 }
 
                 // with models loaded I allow a refresh reload
+                // I need those models because I want to merge with DM data in the loader
                 if (sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
                 {
                     if (this->m_reloadActions.isEmpty()) { this->m_reloadActions = QList<QAction *>({nullptr, nullptr, nullptr, nullptr}); }
@@ -289,6 +290,12 @@ namespace BlackGui
                         }
                         menuActions.addAction(this->m_reloadActions[3], CMenuAction::pathSimulatorModelsReload());
                     }
+                }
+                else
+                {
+                    // dummy action grayed out
+                    CMenuAction a = menuActions.addAction(CIcons::refresh16(), "Force model reload impossible, no DB data", CMenuAction::pathSimulator());
+                    a.setActionEnabled(false); // gray out
                 }
             }
             this->nestedCustomMenu(menuActions);
