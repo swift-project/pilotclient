@@ -62,19 +62,25 @@ namespace BlackMisc
         //! True if the slot can be called, false if it is empty.
         operator bool() const
         {
-            return !this->isEmpty();
+            return !this->isEmpty() && !this->hasNullObject();
         }
 
-        //! True if the slot is empty, false if it can be called.
+        //! True if the slot is empty or object is null, false if it can be called.
         bool operator !() const
         {
-            return this->isEmpty();
+            return this->isEmpty() || this->hasNullObject();
         }
 
         //! True if the slot is empty, false if it can be called.
         bool isEmpty() const
         {
             return ! m_function;
+        }
+
+        //! True if the object is null
+        bool hasNullObject() const
+        {
+            return m_object.isNull();
         }
 
     private:

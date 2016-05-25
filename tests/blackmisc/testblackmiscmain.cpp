@@ -23,6 +23,7 @@
 #include "testlibrarypath.h"
 #include "testmath.h"
 #include "testphysicalquantities.h"
+#include "testslot.h"
 #include "testvaluecache.h"
 #include "testvariantandmap.h"
 #include "testweather.h"
@@ -45,6 +46,7 @@ namespace BlackMiscTest
             CTestVariantAndMap variantAndMap;
             CTestInput inputTests;
             CTestIdentifier identifierTests;
+            CTestSlot slotTests;
             CTestValueCache valueCacheTests;
             CTestWeather weatherTests;
             CTestMath mathTests;
@@ -56,6 +58,7 @@ namespace BlackMiscTest
             status |= QTest::qExec(&containerTests, argc, argv);
             status |= QTest::qExec(&variantAndMap, argc, argv);
             status |= QTest::qExec(&inputTests, argc, argv);
+            status |= QTest::qExec(&slotTests, argc, argv);
             status |= QTest::qExec(&valueCacheTests, argc, argv);
             status |= QTest::qExec(&weatherTests, argc, argv);
             status |= QTest::qExec(&mathTests, argc, argv);
