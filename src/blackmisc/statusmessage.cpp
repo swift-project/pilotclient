@@ -59,10 +59,24 @@ namespace BlackMisc
     const StatusSeverity CStatusMessage::SeverityWarning;
     const StatusSeverity CStatusMessage::SeverityError;
 
+    CStatusMessage::CStatusMessage(const CLogCategory &category) :
+        CMessageBase(category), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    {}
+
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories) :
+        CMessageBase(categories), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    {}
+
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, const CLogCategory &extra) :
+        CMessageBase(categories, extra), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    {}
+
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, const CLogCategoryList &extra) :
+        CMessageBase(categories, extra), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    {}
+
     CStatusMessage::CStatusMessage(): ITimestampBased(QDateTime::currentMSecsSinceEpoch())
-    {
-        // void
-    }
+    {}
 
     CStatusMessage::CStatusMessage(const CStatusMessage &other) :
         CValueObject(other),

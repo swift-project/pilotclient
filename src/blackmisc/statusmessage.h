@@ -153,8 +153,17 @@ namespace BlackMisc
             IndexMessage
         };
 
-        //! Inheriting constructors.
-        using CMessageBase::CMessageBase;
+        //! Construct a message with some specific category.
+        explicit CStatusMessage(const CLogCategory &category);
+
+        //! Construct a message with some specific categories.
+        explicit CStatusMessage(const CLogCategoryList &categories);
+
+        //! Construct a message with some specific categories.
+        CStatusMessage(const CLogCategoryList &categories, const CLogCategory &extra);
+
+        //! Construct a message with some specific categories.
+        CStatusMessage(const CLogCategoryList &categories, const CLogCategoryList &extra);
 
         //! Constructor
         CStatusMessage();
