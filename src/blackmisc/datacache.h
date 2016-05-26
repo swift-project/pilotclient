@@ -332,7 +332,7 @@ namespace BlackMisc
 
         //! If true, then value will be synchronously loaded when CDataCache is constructed.
         //! Good for small, important values; bad for large ones.
-        static bool isPinned() { return false; }
+        static constexpr bool isPinned() { return false; }
 
         //! Deleted default constructor.
         CDataTrait() = delete;

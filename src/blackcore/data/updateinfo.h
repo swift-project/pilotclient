@@ -125,7 +125,7 @@ namespace BlackCore
             static const char *key() { return "version"; }
 
             //! First load is synchronous
-            static bool isPinned() { return true; }
+            static constexpr bool isPinned() { return true; }
 
             //! Default value
             static const CUpdateInfo &defaultValue()
