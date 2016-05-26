@@ -117,6 +117,9 @@ namespace BlackMisc
         //! During update, returns keys which have on-disk timestamps newer than in-memory. Guaranteed not empty.
         QSet<QString> keysWithNewerTimestamps() const;
 
+        //! During update, returns timestamps which have on-disk timestamps newer than in-memory. Guaranteed not empty.
+        const QMap<QString, qint64> &newerTimestamps() const;
+
         //! During update, returns true if the on-disk timestamp of this key is newer than in-memory.
         bool isNewerValueAvailable(const QString &key, qint64 timestamp);
 

@@ -257,6 +257,8 @@ namespace BlackMisc
         {
             CValueCachePacket newValues;
             auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues, m_cache->m_revision.timestampsAsString());
+            newValues.setTimestamps(m_cache->m_revision.newerTimestamps());
+
             msg.setCategories(this);
             CLogMessage::preformatted(msg);
             m_deferredChanges.insert(newValues);
@@ -429,6 +431,14 @@ namespace BlackMisc
 
         Q_ASSERT(m_updateInProgress);
         return QSet<QString>::fromList(m_timestamps.keys());
+    }
+
+    const QMap<QString, qint64> &CDataCacheRevision::newerTimestamps() const
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        return m_timestamps;
     }
 
     bool CDataCacheRevision::isNewerValueAvailable(const QString &key, qint64 timestamp)

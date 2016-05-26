@@ -96,6 +96,9 @@ namespace BlackMisc
         //! Return map of timestamps converted to string.
         QString toTimestampMapString(const QStringList &keys) const;
 
+        //! Change the timestamps of values.
+        void setTimestamps(const QMap<QString, qint64> &);
+
         //! Remove value matching the given key, and return it in a separate packet.
         CValueCachePacket takeByKey(const QString &key);
 

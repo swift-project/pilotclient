@@ -102,6 +102,15 @@ namespace BlackMisc
         return result.join(",");
     }
 
+    void CValueCachePacket::setTimestamps(const QMap<QString, qint64> &times)
+    {
+        for (auto it = times.cbegin(); it != times.cend(); ++it)
+        {
+            if (! contains(it.key())) { continue; }
+            (*this)[it.key()].second = it.value();
+        }
+    }
+
     CValueCachePacket CValueCachePacket::takeByKey(const QString &key)
     {
         auto copy = *this;
