@@ -62,6 +62,8 @@ namespace BlackGui
                 }
                 break;
 
+            case MinimalWithOrder:
+                this->m_columns.addColumn(CColumn::orderColumn());
             case Minimal:
                 {
                     this->m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));

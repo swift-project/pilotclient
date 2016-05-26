@@ -37,7 +37,8 @@ namespace BlackGui
                 NotSet,
                 Normal,
                 NormalWithOrder,
-                Minimal
+                Minimal,
+                MinimalWithOrder
             };
 
             //! Constructor

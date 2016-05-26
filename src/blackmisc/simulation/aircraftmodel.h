@@ -207,6 +207,9 @@ namespace BlackMisc
             //! Get distributor
             const CDistributor &getDistributor() const { return m_distributor; }
 
+            //! Get distributor`s order value
+            int getDistributorOrder() const { return m_distributor.getOrder(); }
+
             //! Set distributor
             void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
 
