@@ -140,6 +140,11 @@ namespace BlackMisc
         QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.pinValue(key); });
     }
 
+    void CDataCache::deferValue(const QString &key)
+    {
+        QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.deferValue(key); });
+    }
+
     QString lockFileError(const QLockFile &lock)
     {
         switch (lock.error())
@@ -352,6 +357,12 @@ namespace BlackMisc
                         if (! pins.contains(key)) { m_timestamps.remove(key); }
                     }
                 }
+
+                auto deferrals = fromJson(json.value("deferrals").toArray());
+                for (const auto &key : m_timestamps.keys())
+                {
+                    if (deferrals.contains(key)) { m_timestamps.remove(key); }
+                }
             }
             else if (revisionFile.size() > 0)
             {
@@ -393,6 +404,7 @@ namespace BlackMisc
         json.insert("timestamps", toJson(timestamps));
         json.insert("ttl", toJson(m_timesToLive));
         json.insert("pins", toJson(m_pinnedValues));
+        json.insert("deferrals", toJson(m_deferredValues));
         revisionFile.write(QJsonDocument(json).toJson());
     }
 
@@ -540,6 +552,13 @@ namespace BlackMisc
         Q_ASSERT(! m_updateInProgress);
 
         m_pinnedValues.insert(key);
+    }
+
+    void CDataCacheRevision::deferValue(const QString &key)
+    {
+        Q_ASSERT(! m_updateInProgress);
+
+        m_deferredValues.insert(key);
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)

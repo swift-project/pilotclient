@@ -144,6 +144,9 @@ namespace BlackMisc
         //! Set the flag which will cause the value to be pre-loaded.
         void pinValue(const QString &key);
 
+        //! Set the flag which will cause the value to be deferred-loaded.
+        void deferValue(const QString &key);
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -155,6 +158,7 @@ namespace BlackMisc
         QMap<QString, qint64> m_timestamps;
         QMap<QString, qint64> m_timesToLive;
         QSet<QString> m_pinnedValues;
+        QSet<QString> m_deferredValues;
         std::vector<std::promise<void>> m_promises;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
@@ -235,6 +239,9 @@ namespace BlackMisc
         //! Method used for implementing pinning values.
         void pinValue(const QString &key);
 
+        //! Method used for implementing deferring values.
+        void deferValue(const QString &key);
+
     private:
         CDataCache();
 
@@ -273,6 +280,8 @@ namespace BlackMisc
         {
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(Trait::key(), Trait::timeToLive()); }
             if (Trait::isPinned()) { CDataCache::instance()->pinValue(Trait::key()); }
+            if (Trait::isDeferred()) { CDataCache::instance()->deferValue(Trait::key()); }
+            static_assert(! (Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
         //! Reset the data to its default value.
@@ -333,6 +342,10 @@ namespace BlackMisc
         //! If true, then value will be synchronously loaded when CDataCache is constructed.
         //! Good for small, important values; bad for large ones.
         static constexpr bool isPinned() { return false; }
+
+        //! If true, then value will not be loaded until it is explicitly admitted.
+        //! Good for large values the loading of which might depend on some other condition.
+        static constexpr bool isDeferred() { return false; }
 
         //! Deleted default constructor.
         CDataTrait() = delete;
