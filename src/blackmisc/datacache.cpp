@@ -145,6 +145,12 @@ namespace BlackMisc
         QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.deferValue(key); });
     }
 
+    void CDataCache::admitValue(const QString &key, bool triggerLoad)
+    {
+        QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.admitValue(key); });
+        if (triggerLoad) { loadFromStoreAsync(); }
+    }
+
     QString lockFileError(const QLockFile &lock)
     {
         switch (lock.error())
@@ -361,7 +367,7 @@ namespace BlackMisc
                 auto deferrals = fromJson(json.value("deferrals").toArray());
                 for (const auto &key : m_timestamps.keys())
                 {
-                    if (deferrals.contains(key)) { m_timestamps.remove(key); }
+                    if (deferrals.contains(key) && ! m_admittedValues.contains(key)) { m_timestamps.remove(key); }
                 }
             }
             else if (revisionFile.size() > 0)
@@ -559,6 +565,13 @@ namespace BlackMisc
         Q_ASSERT(! m_updateInProgress);
 
         m_deferredValues.insert(key);
+    }
+
+    void CDataCacheRevision::admitValue(const QString &key)
+    {
+        Q_ASSERT(! m_updateInProgress);
+
+        m_admittedValues.insert(key);
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)

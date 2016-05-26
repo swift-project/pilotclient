@@ -147,6 +147,9 @@ namespace BlackMisc
         //! Set the flag which will cause the value to be deferred-loaded.
         void deferValue(const QString &key);
 
+        //! Set the flag which will cause a deferred-load value to be loaded.
+        void admitValue(const QString &key);
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -159,6 +162,7 @@ namespace BlackMisc
         QMap<QString, qint64> m_timesToLive;
         QSet<QString> m_pinnedValues;
         QSet<QString> m_deferredValues;
+        QSet<QString> m_admittedValues;
         std::vector<std::promise<void>> m_promises;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
@@ -242,6 +246,9 @@ namespace BlackMisc
         //! Method used for implementing deferring values.
         void deferValue(const QString &key);
 
+        //! Method used for implementing deferring values.
+        void admitValue(const QString &key, bool triggerLoad);
+
     private:
         CDataCache();
 
@@ -284,6 +291,13 @@ namespace BlackMisc
             static_assert(! (Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
+        //! \copydoc BlackMisc::CCached::set
+        CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0)
+        {
+            CDataCache::instance()->admitValue(Trait::key(), false);
+            return CCached<typename Trait::type>::set(value, timestamp);
+        }
+
         //! Reset the data to its default value.
         void setDefault() { this->set(Trait::defaultValue()); }
 
@@ -296,12 +310,17 @@ namespace BlackMisc
         //! Don't change the value, but write a new timestamp, to extend the life of the value.
         void renewTimestamp(qint64 timestamp) { return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp); }
 
+        //! If the value is load-deferred, trigger the deferred load (async).
+        void admit() { CDataCache::instance()->admitValue(Trait::key(), true); }
+
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()
         {
             auto *queue = this->m_page.template findChild<Private::CDataPageQueue *>();
             Q_ASSERT(queue);
+            admit();
             CDataCache::instance()->synchronize(this->getKey());
+            CDataCache::instance()->synchronize(this->getKey()); // if load was in progress when admit() was called, synchronize with the next load
             queue->setQueuedValueFromCache(this->getKey());
         }
 
