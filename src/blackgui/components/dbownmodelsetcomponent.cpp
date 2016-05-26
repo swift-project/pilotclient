@@ -193,6 +193,9 @@ namespace BlackGui
             const QObject *sender = QObject::sender();
             if (sender == ui->pb_CreateNewSet)
             {
+                // make sure both tabs display the same simulator
+                Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
+                this->getMappingComponent()->setOwnModelsSimulator(this->getModelSetSimulator());
                 if (!this->m_modelSetDialog)
                 {
                     this->m_modelSetDialog.reset(new CDbOwnModelSetDialog(this));
@@ -211,7 +214,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    static const CStatusMessage m(CStatusMessage(this, CStatusMessage::SeverityError, "No model data"));
+                    static const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << this->m_modelSetDialog->getSimulatorInfo().toQString(true);
                     this->getMappingComponent()->showOverlayMessage(m);
                 }
             }

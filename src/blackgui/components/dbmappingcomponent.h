@@ -262,7 +262,7 @@ namespace BlackGui
             void ps_toggleAutoFiltering();
 
             //! Apply current DB data from form
-            void ps_applyDbData();
+            void ps_applyFormData();
 
             //! Open model modify dialog
             void ps_modifyModelDialog();

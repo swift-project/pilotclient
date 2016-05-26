@@ -124,13 +124,14 @@ namespace BlackGui
             const CAircraftModelList models = this->getMappingComponent()->getOwnModels();
             this->m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
             const CDistributorList distributors = selectedProviders ?
-                                                  this->ui->form_OwnModelSet->getSelectedDistributors() :
-                                                  CDistributorList();
+                                                  ui->form_OwnModelSet->getSelectedDistributors() :
+                                                  ui->form_OwnModelSet->getDistributors();
             const CModelSetBuilder builder(this);
             CModelSetBuilder::Builder options = selectedProviders ? CModelSetBuilder::FilterDistributos : CModelSetBuilder::NoOptions;
-            if (dbDataOnly) { options |= CModelSetBuilder::OnlyDbData; }
-            if (dbIcaoOnly) { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
+            if (dbDataOnly)   { options |= CModelSetBuilder::OnlyDbData; }
+            if (dbIcaoOnly)   { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
             if (incremnental) { options |= CModelSetBuilder::Incremental; }
+            if (ui->form_OwnModelSet->hasDIstributorPreferences()) { options |= CModelSetBuilder::SortByDistributors; }
             return builder.buildModelSet(simulator, models, currentSet, options, distributors);
         }
     } // ns

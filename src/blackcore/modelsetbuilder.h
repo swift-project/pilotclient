@@ -38,7 +38,8 @@ namespace BlackCore
             FilterDistributos      = 1 << 0,
             OnlyDbData             = 1 << 1,
             OnlyDbIcaoCodes        = 1 << 2,
-            Incremental            = 1 << 3
+            Incremental            = 1 << 3,
+            SortByDistributors     = 1 << 4
         };
         Q_DECLARE_FLAGS(Builder, BuilderFlag)
 

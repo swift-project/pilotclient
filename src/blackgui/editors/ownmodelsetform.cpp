@@ -51,6 +51,7 @@ namespace BlackGui
             const bool hasPreferences = this->hasDIstributorPreferences();
             ui->cb_Preferences->setChecked(hasPreferences);
             ui->comp_SimulatorSelector->setValue(this->m_simulator);
+            ui->tvp_Distributors->setDistributorMode(hasPreferences ? CDistributorListModel::MinimalWithOrder : CDistributorListModel::Minimal);
             if (!distributors.isEmpty())
             {
                 this->ui->tvp_Distributors->updateContainerMaybeAsync(distributors);
@@ -87,6 +88,7 @@ namespace BlackGui
         CDistributorList COwnModelSetForm::getDistributors() const
         {
             Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
+            Q_ASSERT_X(this->m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             const CDistributorListPreferences prefs(this->m_distributorPreferences.getCopy());
             const CDistributorList distributors(prefs.getDistributors(this->m_simulator));
             if (!distributors.isEmpty()) { return distributors; }

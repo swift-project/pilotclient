@@ -59,7 +59,7 @@ namespace BlackGui
             //! Request incremental build
             bool incrementalBuild() const;
 
-            //! Distributors
+            //! Distributors (from preferences or web)
             BlackMisc::Simulation::CDistributorList getDistributors() const;
 
             //! Preferences for given simulator

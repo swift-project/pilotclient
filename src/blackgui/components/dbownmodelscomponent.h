@@ -106,7 +106,7 @@ namespace BlackGui
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>               m_modelLoader;                //!< read own aircraft models
             BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection>     m_simulatorSelection {this }; //!< last selection
 
-            //! Init model loader
+            //! Init or change model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! File name for savinf

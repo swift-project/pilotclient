@@ -26,15 +26,15 @@ namespace BlackCore
         // void
     }
 
-    CAircraftModelList CModelSetBuilder::buildModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &models, const CAircraftModelList &currentSet, Builder oprions, const CDistributorList &onlyByDistributors) const
+    CAircraftModelList CModelSetBuilder::buildModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &models, const CAircraftModelList &currentSet, Builder oprions, const CDistributorList &distributors) const
     {
         if (models.isEmpty()) { return CAircraftModelList(); }
         CAircraftModelList modelSet;
 
         // I avoid and empty distributor set wipes out everything
-        if (oprions.testFlag(FilterDistributos) && !onlyByDistributors.isEmpty())
+        if (oprions.testFlag(FilterDistributos) && !distributors.isEmpty())
         {
-            modelSet = models.findByDistributors(onlyByDistributors);
+            modelSet = models.findByDistributors(distributors);
         }
         else
         {
@@ -68,6 +68,12 @@ namespace BlackCore
         }
 
         modelSet.resetOrder();
+        if (oprions.testFlag(SortByDistributors))
+        {
+            modelSet.updateDistributorOrder(distributors);
+            modelSet.sortBy(&CAircraftModel::getDistributorOrder);
+        }
+
         return modelSet;
     }
 } // ns

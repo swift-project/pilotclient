@@ -114,6 +114,7 @@ namespace BlackGui
             // initial values
             this->ps_onModelSetChanged(ui->comp_OwnModelSet->view()->rowCount(), ui->comp_OwnModelSet->view()->hasFilter());
             this->ps_onStashedModelsDataChanged(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
+            this->ps_onOwnModelsChanged(ui->comp_OwnAircraftModels->view()->rowCount(), ui->comp_OwnAircraftModels->view()->hasFilter());
 
             // how to display forms
             ui->editor_AircraftIcao->setSelectOnly();
@@ -389,11 +390,11 @@ namespace BlackGui
             this->m_autoFilterInDbViews = !this->m_autoFilterInDbViews;
         }
 
-        void CDbMappingComponent::ps_applyDbData()
+        void CDbMappingComponent::ps_applyFormData()
         {
-            QAction *sender = qobject_cast<QAction *>(this->sender());
+            const QAction *sender = qobject_cast<QAction *>(this->sender());
             if (!sender) { return; }
-            QString cn(sender->data().toString());
+            const QString cn(sender->data().toString());
             if (cn.isEmpty()) { return; }
             if (this->ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
 
@@ -915,16 +916,16 @@ namespace BlackGui
                 // stash view and selection
                 menuActions.addMenuStashEditor();
 
-                this->m_menuActions[0] = menuActions.addAction(this->m_menuActions[0], CIcons::appAircraftIcao16(), "Current aircraft ICAO", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyDbData });
+                this->m_menuActions[0] = menuActions.addAction(this->m_menuActions[0], CIcons::appAircraftIcao16(), "Current aircraft ICAO", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyFormData });
                 this->m_menuActions[0]->setData(CAircraftIcaoCode().getClassName());
 
-                this->m_menuActions[1] = menuActions.addAction(this->m_menuActions[1], CIcons::appDistributors16(), "Current distributor", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyDbData });
+                this->m_menuActions[1] = menuActions.addAction(this->m_menuActions[1], CIcons::appDistributors16(), "Current distributor", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyFormData });
                 this->m_menuActions[1]->setData(CDistributor().getClassName());
 
-                this->m_menuActions[2] = menuActions.addAction(this->m_menuActions[2], CIcons::appLiveries16(), "Current livery", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyDbData });
+                this->m_menuActions[2] = menuActions.addAction(this->m_menuActions[2], CIcons::appLiveries16(), "Current livery", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyFormData });
                 this->m_menuActions[2]->setData(CLivery().getClassName());
 
-                this->m_menuActions[3] = menuActions.addAction(this->m_menuActions[3], CIcons::databaseTable16(), "Modify DB model data", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyDbData });
+                this->m_menuActions[3] = menuActions.addAction(this->m_menuActions[3], CIcons::databaseTable16(), "Modify DB model data", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyFormData });
                 this->m_menuActions[3]->setData(CAircraftModel().getClassName());
             }
             this->nestedCustomMenu(menuActions);
