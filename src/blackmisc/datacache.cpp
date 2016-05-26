@@ -243,7 +243,7 @@ namespace BlackMisc
         if (! lock) { return; }
         m_cache->m_revision.writeNewRevision(baseline.toTimestampMap());
 
-        auto msg = m_cache->saveToFiles(persistentStore(), values, baseline.toTimestampMapString());
+        auto msg = m_cache->saveToFiles(persistentStore(), values, baseline.toTimestampMapString(values.keys()));
         msg.setCategories(this);
         CLogMessage::preformatted(msg);
 

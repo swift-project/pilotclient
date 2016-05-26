@@ -91,13 +91,13 @@ namespace BlackMisc
         return result;
     }
 
-    QString CValueCachePacket::toTimestampMapString() const
+    QString CValueCachePacket::toTimestampMapString(const QStringList &keys) const
     {
-        auto map = toTimestampMap();
         QStringList result;
-        for (auto it = map.cbegin(); it != map.cend(); ++it)
+        for (const auto &key : keys)
         {
-            result.push_back(it.key() + "(" + QDateTime::fromMSecsSinceEpoch(it.value(), Qt::UTC).toString(Qt::ISODate) + ")");
+            QString time = contains(key) ? QDateTime::fromMSecsSinceEpoch(value(key).second, Qt::UTC).toString(Qt::ISODate) : "no timestamp";
+            result.push_back(key + "(" + time + ")");
         }
         return result.join(",");
     }
