@@ -7,6 +7,9 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+// without the Doxygen exclusion I get a strange no matching class member found for warning in the gcc build
+
 #include "blackcore/db/databasereaderconfig.h"
 
 using namespace BlackMisc;
@@ -127,3 +130,5 @@ namespace BlackCore
         }
     } // ns
 } // ns
+
+//! \endcond
