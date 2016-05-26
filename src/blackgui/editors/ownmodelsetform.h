@@ -12,16 +12,14 @@
 #ifndef BLACKGUI_EDITORS_OWNMODELSETFORM_H
 #define BLACKGUI_EDITORS_OWNMODELSETFORM_H
 
+#include "form.h"
+#include "blackcore/settings/distributorpreferences.h"
 #include "blackmisc/simulation/distributorlist.h"
 
-#include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 
-class QWidget;
-
 namespace Ui { class COwnModelSetForm; }
-
 namespace BlackGui
 {
     namespace Editors
@@ -29,7 +27,7 @@ namespace BlackGui
         /*!
          * Selection for own model set
          */
-        class COwnModelSetForm : public QFrame
+        class COwnModelSetForm : public CForm
         {
             Q_OBJECT
 
@@ -49,6 +47,9 @@ namespace BlackGui
             //! Get selected providers
             BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
 
+            //! Current simulator
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             //! Only DB data
             bool dbDataOnly() const;
 
@@ -58,8 +59,33 @@ namespace BlackGui
             //! Request incremental build
             bool incrementalBuild() const;
 
+            //! Distributors
+            BlackMisc::Simulation::CDistributorList getDistributors() const;
+
+            //! Preferences for given simulator
+            bool hasDIstributorPreferences() const;
+
+            //! \name Form functions, here not used
+            //! \@{
+            virtual void setReadOnly(bool readOnly) override { Q_UNUSED(readOnly); }
+            virtual void setSelectOnly() override {}
+            //! \@}
+
+        signals:
+            //! Simulator changed
+            void simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+        private slots:
+            //! Changed preferences
+            void ps_preferencesChanged();
+
+            //! Simulator changed
+            void ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         private:
-            QScopedPointer<Ui::COwnModelSetForm> ui;
+            QScopedPointer<Ui::COwnModelSetForm>  ui;
+            BlackMisc::Simulation::CSimulatorInfo m_simulator;
+            BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::ps_preferencesChanged };
         };
     } // ns
 } // ns

@@ -785,9 +785,20 @@ namespace BlackGui
             return this->ui->comp_OwnAircraftModels->getOwnModelsSimulator();
         }
 
+        void CDbMappingComponent::setOwnModelsSimulator(const CSimulatorInfo &simulator)
+        {
+            this->ui->comp_OwnAircraftModels->setSimulator(simulator);
+        }
+
         int CDbMappingComponent::getOwnModelsCount() const
         {
             return this->ui->comp_OwnAircraftModels->getOwnModelsCount();
+        }
+
+        void CDbMappingComponent::setOwnModelSetSimulator(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            this->ui->comp_OwnModelSet->setModelSetSimulator(simulator);
         }
 
         CStatusMessage CDbMappingComponent::stashModel(const CAircraftModel &model, bool replace)

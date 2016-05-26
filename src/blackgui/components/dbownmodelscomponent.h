@@ -67,6 +67,9 @@ namespace BlackGui
             //! Own models for simulator
             const BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
+            //! Change current simulator for own models
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             //! Number of own models
             int getOwnModelsCount() const;
 

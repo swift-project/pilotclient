@@ -12,8 +12,9 @@
 #ifndef BLACKGUI_EDITORS_FORM_H
 #define BLACKGUI_EDITORS_FORM_H
 
-#include "blackcore/data/authenticateduser.h"
+#include "blackgui/overlaymessagesframe.h"
 #include "blackgui/blackguiexport.h"
+#include "blackcore/data/authenticateduser.h"
 #include "blackmisc/datacache.h"
 
 #include <QFrame>
@@ -30,7 +31,7 @@ namespace BlackGui
         /*!
          * Form base class
          */
-        class BLACKGUI_EXPORT CForm : public QFrame
+        class BLACKGUI_EXPORT CForm : public COverlayMessagesFrame
         {
             Q_OBJECT
 
@@ -51,7 +52,7 @@ namespace BlackGui
             //! Is read only?
             bool isReadOnly() const { return m_readOnly; }
 
-            //! Authenticated user
+            //! Authenticated DB user
             const BlackMisc::Network::CAuthenticatedUser &getSwiftDbUser() const;
 
         protected:

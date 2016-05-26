@@ -82,6 +82,9 @@ namespace BlackGui
             //! Model set is for simulator
             const BlackMisc::Simulation::CSimulatorInfo getModelSetSimulator() const;
 
+            //! Simulator
+            void setModelSetSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             //! \copydoc CDbMappingComponentAware::setMappingComponent
             virtual void setMappingComponent(CDbMappingComponent *component) override;
 
@@ -94,10 +97,10 @@ namespace BlackGui
             //! @}
 
         public slots:
-            //! Set the model set
+            //! Set the model set for a given simulator
             void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            //! Replace or add models provided
+            //! Replace or add models provided for a given simulator
             void replaceOrAddModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         private slots:
@@ -128,9 +131,6 @@ namespace BlackGui
         private:
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
-
-            //! Simulator
-            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Update distributor order
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);

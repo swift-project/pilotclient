@@ -145,6 +145,17 @@ namespace BlackGui
             return c;
         }
 
+        void CSimulatorSelector::setLeftMargin(int margin)
+        {
+            QMargins m = ui->hl_RadioButtons->contentsMargins();
+            m.setLeft(margin);
+            ui->hl_RadioButtons->setContentsMargins(m);
+
+            m = ui->hl_CheckBoxes->contentsMargins();
+            m.setLeft(margin);
+            ui->hl_CheckBoxes->setContentsMargins(m);
+        }
+
         void CSimulatorSelector::ps_RadioButtonChanged(bool checked)
         {
             if (this->m_mode != RadioButtons) { return; }

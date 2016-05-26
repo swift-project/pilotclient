@@ -24,6 +24,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackGui::Editors;
 
 namespace BlackGui
 {
@@ -43,6 +44,7 @@ namespace BlackGui
             ui->setupUi(this);
             connect(ui->pb_Cancel, &QPushButton::clicked, this, &CDbOwnModelSetDialog::ps_buttonClicked);
             connect(ui->pb_Ok, &QPushButton::clicked, this, &CDbOwnModelSetDialog::ps_buttonClicked);
+            connect(ui->form_OwnModelSet, &COwnModelSetForm::simulatorChanged, this, &CDbOwnModelSetDialog::ps_simulatorChanged);
         }
 
         CDbOwnModelSetDialog::~CDbOwnModelSetDialog()
@@ -52,14 +54,17 @@ namespace BlackGui
 
         void CDbOwnModelSetDialog::reloadData()
         {
+            this->m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
+            Q_ASSERT_X(this->m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            ui->form_OwnModelSet->setSimulator(this->m_simulatorInfo);
             this->ui->form_OwnModelSet->reloadData();
         }
 
         int CDbOwnModelSetDialog::exec()
         {
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
-            this->m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
-            this->setWindowTitle("Create model set for " + this->m_simulatorInfo.toQString(true));
+            this->setSimulator(this->getMappingComponent()->getOwnModelsSimulator());
+            this->checkData();
             return QDialog::exec();
         }
 
@@ -75,6 +80,37 @@ namespace BlackGui
                 this->m_modelSet = this->buildSet(this->m_simulatorInfo, this->m_modelSet);
                 this->accept();
             }
+        }
+
+        void CDbOwnModelSetDialog::ps_simulatorChanged(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
+            this->setSimulator(simulator);
+            this->getMappingComponent()->setOwnModelsSimulator(simulator);
+            this->getMappingComponent()->setOwnModelSetSimulator(simulator);
+            this->checkData();
+        }
+
+        bool CDbOwnModelSetDialog::checkData()
+        {
+            // models
+            Q_ASSERT_X(this->m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const int c = this->getMappingComponent()->getOwnModelsCount();
+            if (c < 1)
+            {
+                const CStatusMessage m = CStatusMessage(this).error("No models for %1") << this->m_simulatorInfo.toQString(true);
+                ui->form_OwnModelSet->showOverlayMessage(m);
+                return false;
+            }
+            return true;
+        }
+
+        void CDbOwnModelSetDialog::setSimulator(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(this->m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            this->m_simulatorInfo = simulator;
+            ui->form_OwnModelSet->setSimulator(this->m_simulatorInfo);
+            this->setWindowTitle("Create model set for " + this->m_simulatorInfo.toQString(true));
         }
 
         CAircraftModelList CDbOwnModelSetDialog::buildSet(const CSimulatorInfo &simulator, const CAircraftModelList &currentSet)

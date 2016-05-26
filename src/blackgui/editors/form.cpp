@@ -16,8 +16,7 @@ namespace BlackGui
 {
     namespace Editors
     {
-        CForm::CForm(QWidget *parent) :
-            QFrame(parent)
+        CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent)
         {  }
 
         CForm::~CForm() { }
@@ -31,6 +30,5 @@ namespace BlackGui
         {
             // void
         }
-
     } // ns
 } // ns

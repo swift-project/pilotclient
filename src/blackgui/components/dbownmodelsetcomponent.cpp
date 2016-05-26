@@ -98,7 +98,7 @@ namespace BlackGui
         void CDbOwnModelSetComponent::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            this->setSimulator(simulator);
+            this->setModelSetSimulator(simulator);
             if (models.isEmpty())
             {
                 this->ui->tvp_OwnModelSet->clear();
@@ -153,7 +153,7 @@ namespace BlackGui
             if (!this->getModelSetSimulator().isSingleSimulator())
             {
                 // no sim yet, we set it
-                this->setSimulator(simulator);
+                this->setModelSetSimulator(simulator);
             }
             if (simulator != this->getModelSetSimulator())
             {
@@ -235,7 +235,7 @@ namespace BlackGui
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             if (this->getModelSetSimulator() == simulator) { return; } // avoid endless loops
 
-            this->setSimulator(simulator);
+            this->setModelSetSimulator(simulator);
             const CAircraftModelList models(this->m_modelSetLoader.getAircraftModels());
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
         }
@@ -269,7 +269,7 @@ namespace BlackGui
         {
             if (simulator.isSingleSimulator())
             {
-                this->setSimulator(simulator);
+                this->setModelSetSimulator(simulator);
             }
         }
 
@@ -295,7 +295,7 @@ namespace BlackGui
             this->ui->tvp_OwnModelSet->setSaveFileName(name);
         }
 
-        void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
+        void CDbOwnModelSetComponent::setModelSetSimulator(const CSimulatorInfo &simulator)
         {
             if (this->m_modelSetLoader.getSimulator() == simulator) { return; } // avoid unnecessary signals
             this->m_modelSetLoader.changeSimulator(simulator);

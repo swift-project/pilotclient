@@ -50,7 +50,6 @@ namespace BlackMisc
     }
 }
 namespace Ui { class CDbMappingComponent; }
-
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
@@ -93,7 +92,7 @@ namespace BlackGui
             //! Graceful shutdown
             void gracefulShutdown();
 
-            //! With vPilot rules
+            //! With vPilot rules?
             bool withVPilot() const { return m_vPilotEnabled; }
 
             //! Any models which can be stashed?
@@ -115,6 +114,8 @@ namespace BlackGui
             //! \note not guaranteed to be valid, just a snapshot of its current editor state
             BlackMisc::Simulation::CAircraftModel getEditorAircraftModel() const;
 
+            // ---------------- stash -----------------
+
             //! \name Models from BlackGui::Components::CDbStashComponent
             //! @{
             //! Stashed models
@@ -123,6 +124,8 @@ namespace BlackGui
             //! Stashed model strings
             QStringList getStashedModelStrings() const;
             //! @}
+
+            // ---------------- own models -----------------
 
             //! \name Own models from BlackGui::Components::CDbOwnModelsComponent
             //! @{
@@ -138,9 +141,17 @@ namespace BlackGui
             //! Own models for simulator
             const BlackMisc::Simulation::CSimulatorInfo getOwnModelsSimulator() const;
 
+            //! Set simulator for own models
+            void setOwnModelsSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             //! Number of own models
             int getOwnModelsCount() const;
             //! @}
+
+            // ---------------- own models -----------------
+
+            //! Set simulator for own models
+            void setOwnModelSetSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         public slots:
             //! \copydoc CDbStashComponent::stashModel
@@ -376,7 +387,7 @@ namespace BlackGui
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
 
-                QList<QAction *> m_menuActions;
+                QList<QAction *> m_menuActions;  //!< actions, kept when once initialized
             };
 
             //! Merge with vPilot data
@@ -393,7 +404,7 @@ namespace BlackGui
                 CDbMappingComponent *mappingComponent() const;
 
             private:
-                QList<QAction *> m_menuActions;
+                QList<QAction *> m_menuActions; //!< actions, kept when once initialized
             };
         };
     } // ns

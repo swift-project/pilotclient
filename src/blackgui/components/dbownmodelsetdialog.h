@@ -64,10 +64,19 @@ namespace BlackGui
             //! Button clicked
             void ps_buttonClicked();
 
+            //! Simulator changed
+            void ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         private:
             QScopedPointer<Ui::CDbOwnModelSetDialog>  ui;
             BlackMisc::Simulation::CAircraftModelList m_modelSet;
             BlackMisc::Simulation::CSimulatorInfo     m_simulatorInfo;
+
+            //! Check data
+            bool checkData();
+
+            //! Set current simulator
+            void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Build the set
             BlackMisc::Simulation::CAircraftModelList buildSet(const BlackMisc::Simulation::CSimulatorInfo &simulator, const BlackMisc::Simulation::CAircraftModelList &currentSet = {});

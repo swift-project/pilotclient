@@ -69,7 +69,7 @@ namespace BlackGui
             void ps_deferredInit();
 
         private:
-            BlackGui::COverlayMessagesFrame                     *m_overlayMessageFrame = nullptr;
+            BlackGui::COverlayMessagesFrame *m_overlayMessageFrame = nullptr;
             QScopedPointer<Ui::CDistributorPreferencesComponent> ui;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
             BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };

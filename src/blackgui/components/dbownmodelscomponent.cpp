@@ -105,6 +105,12 @@ namespace BlackGui
             return this->m_modelLoader->getSimulator();
         }
 
+        void CDbOwnModelsComponent::setSimulator(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            this->ps_loadInstalledModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
+        }
+
         int CDbOwnModelsComponent::getOwnModelsCount() const
         {
             if (!this->m_modelLoader) { return 0; }

@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Components
     {
         /*!
-         * Select simulator
+         * Select simulator (as radio buttons or checkboxes)
          */
         class BLACKGUI_EXPORT CSimulatorSelector : public QFrame
         {
@@ -66,6 +66,9 @@ namespace BlackGui
 
             //! All selected
             bool areAllSelected() const;
+
+            //! Set left margin
+            void setLeftMargin(int margin);
 
         signals:
             //! Value has been changed

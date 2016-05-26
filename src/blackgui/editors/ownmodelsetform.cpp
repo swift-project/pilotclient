@@ -9,8 +9,9 @@
 
 #include "blackcore/webdataservices.h"
 #include "blackgui/editors/ownmodelsetform.h"
-#include "blackgui/guiapplication.h"
 #include "blackgui/models/distributorlistmodel.h"
+#include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackgui/views/distributorview.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "ui_ownmodelsetform.h"
@@ -20,17 +21,23 @@
 
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Models;
+using namespace BlackGui::Components;
 
 namespace BlackGui
 {
     namespace Editors
     {
         COwnModelSetForm::COwnModelSetForm(QWidget *parent) :
-            QFrame(parent),
+            CForm(parent),
             ui(new Ui::COwnModelSetForm)
         {
             ui->setupUi(this);
-            this->ui->tvp_Distributors->setDistributorMode(CDistributorListModel::Minimal);
+            ui->tvp_Distributors->setDistributorMode(CDistributorListModel::Minimal);
+            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
+            ui->comp_SimulatorSelector->setLeftMargin(0);
+            CGuiUtility::checkBoxReadOnly(ui->cb_Preferences, true);
+
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::ps_simulatorChanged);
         }
 
         COwnModelSetForm::~COwnModelSetForm()
@@ -40,8 +47,10 @@ namespace BlackGui
 
         void COwnModelSetForm::reloadData()
         {
-            Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-            const CDistributorList distributors(sGui->getWebDataServices()->getDistributors());
+            const CDistributorList distributors(this->getDistributors());
+            const bool hasPreferences = this->hasDIstributorPreferences();
+            ui->cb_Preferences->setChecked(hasPreferences);
+            ui->comp_SimulatorSelector->setValue(this->m_simulator);
             if (!distributors.isEmpty())
             {
                 this->ui->tvp_Distributors->updateContainerMaybeAsync(distributors);
@@ -63,6 +72,29 @@ namespace BlackGui
             return ui->rb_Incremental->isChecked();
         }
 
+        void COwnModelSetForm::ps_preferencesChanged()
+        {
+            // void
+        }
+
+        void COwnModelSetForm::ps_simulatorChanged(const CSimulatorInfo &simulator)
+        {
+            this->setSimulator(simulator);
+            this->reloadData();
+            emit simulatorChanged(simulator);
+        }
+
+        CDistributorList COwnModelSetForm::getDistributors() const
+        {
+            Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
+            const CDistributorListPreferences prefs(this->m_distributorPreferences.getCopy());
+            const CDistributorList distributors(prefs.getDistributors(this->m_simulator));
+            if (!distributors.isEmpty()) { return distributors; }
+
+            // no preferences
+            return sGui->getWebDataServices()->getDistributors().matchesSimulator(this->m_simulator);
+        }
+
         bool COwnModelSetForm::dbIcaoCodesOnly() const
         {
             return this->ui->rb_DbIcaoCodesOnly->isChecked();
@@ -71,6 +103,18 @@ namespace BlackGui
         CDistributorList COwnModelSetForm::getSelectedDistributors() const
         {
             return ui->tvp_Distributors->selectedObjects();
+        }
+
+        void COwnModelSetForm::setSimulator(const CSimulatorInfo &simulator)
+        {
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            m_simulator = simulator;
+        }
+
+        bool COwnModelSetForm::hasDIstributorPreferences() const
+        {
+            const CDistributorListPreferences prefs(this->m_distributorPreferences.getCopy());
+            return !prefs.getDistributors(this->m_simulator).isEmpty();
         }
     } // ns
 } // ns
