@@ -184,7 +184,6 @@ namespace BlackGui
         {
             if (!code.hasCompleteData()) { return; }
             if (!code.hasValidDbKey()) { return; }
-//            if (this->m_originalLivery.getAirlineIcaoCode() == code) { return; } // avoid redundant updates
 
             const CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoDesignator(code));
             if (stdLivery.hasValidDbKey())
