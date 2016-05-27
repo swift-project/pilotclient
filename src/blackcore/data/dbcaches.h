@@ -84,11 +84,12 @@ namespace BlackCore
             //! Default value
             static const BlackMisc::Network::CUrl &defaultValue();
 
+            //! First load is synchronous
+            static constexpr bool isPinned() { return true; }
+
             //! Key in data cache
             static const char *key() { return "dbicaoreaderurl"; }
         };
-
-
     } // ns
 } // ns
 

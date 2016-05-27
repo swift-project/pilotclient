@@ -51,6 +51,7 @@ namespace BlackCore
             CEntityFlags::Entity allEntities = entities;
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
             const bool hasInfoObjects = this->hasInfoObjects();
+            const bool changedUrl = this->hasChangedUrl(currentEntity);
             while (currentEntity)
             {
                 const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
@@ -63,7 +64,7 @@ namespace BlackCore
                         const qint64 cacheTimestamp = cacheTs.isValid() ? cacheTs.toMSecsSinceEpoch() : -1;
                         const qint64 latestEntityTimestamp = latestEntityTs.isValid() ? latestEntityTs.toMSecsSinceEpoch() : -1;
                         Q_ASSERT_X(latestEntityTimestamp > 0, Q_FUNC_INFO, "Missing timestamp");
-                        if (cacheTimestamp >= latestEntityTimestamp && cacheTimestamp > 0)
+                        if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp > 0)
                         {
                             this->syncronizeCaches(currentEntity);
                             entities &= ~currentEntity; // do not load from web
@@ -73,13 +74,21 @@ namespace BlackCore
                         }
                         else
                         {
-                            CLogMessage(this).info("Cache for %1 outdated, latest entity (%2, %3)")
-                                    << CEntityFlags::flagToString(currentEntity)
-                                    << latestEntityTs.toString() << latestEntityTimestamp;
+                            if (changedUrl)
+                            {
+                                CLogMessage(this).info("Data location changed, will override cache");
+                            }
+                            else
+                            {
+                                CLogMessage(this).info("Cache for %1 outdated, latest entity (%2, %3)")
+                                        << CEntityFlags::flagToString(currentEntity)
+                                        << latestEntityTs.toString() << latestEntityTimestamp;
+                            }
                         }
                     }
                     else
                     {
+                        // no info objects, server down
                         this->syncronizeCaches(currentEntity);
                         CLogMessage(this).info("No info object for %1, using cache") << CEntityFlags::flagToString(currentEntity);
                     }
@@ -179,6 +188,16 @@ namespace BlackCore
         CDatabaseReaderConfig CDatabaseReader::getConfigForEntity(CEntityFlags::Entity entity) const
         {
             return this->m_config.findFirstOrDefaultForEntity(entity);
+        }
+
+        bool CDatabaseReader::isChangedUrl(const CUrl &oldUrl, const CUrl &currentUrl)
+        {
+            if (oldUrl.isEmpty()) { return true; }
+            Q_ASSERT_X(!currentUrl.isEmpty(), Q_FUNC_INFO, "No base URL");
+
+            const QString oldS(oldUrl.getFullUrl(false));
+            const QString currentS(currentUrl.getFullUrl(false));
+            return oldS != currentS;
         }
 
         bool CDatabaseReader::canConnect() const

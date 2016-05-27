@@ -107,14 +107,14 @@ namespace BlackMisc
             return m_query;
         }
 
-        QString CUrl::getFullUrl() const
+        QString CUrl::getFullUrl(bool withQuery) const
         {
             if (m_host.isEmpty()) { return ""; }
 
             QString qn(m_host);
             if (!hasDefaultPort() && hasPort()) { qn = qn.append(":").append(QString::number(m_port)); }
             if (hasPath()) { qn = qn.append("/").append(m_path).replace("//", "/"); }
-            if (hasQuery()) { qn = qn.append("?").append(m_query); }
+            if (hasQuery() && withQuery) { qn = qn.append("?").append(m_query); }
             if (hasScheme()) { qn = QString(this->getScheme()).append("://").append(qn); }
             return qn;
         }

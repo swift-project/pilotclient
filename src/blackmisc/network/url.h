@@ -110,7 +110,7 @@ namespace BlackMisc
             bool isEmpty() const;
 
             //! Qualified name
-            QString getFullUrl() const;
+            QString getFullUrl(bool withQuery = true) const;
 
             //! Set full URL
             void setFullUrl(const QString &fullUrl);

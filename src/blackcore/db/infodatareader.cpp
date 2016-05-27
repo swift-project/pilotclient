@@ -69,6 +69,13 @@ namespace BlackCore
             return QDateTime();
         }
 
+        bool CInfoDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
+        {
+            // not implemented
+            Q_UNUSED(entity);
+            return false;
+        }
+
         void CInfoDataReader::read(CEntityFlags::Entity entities, const QDateTime &newerThan)
         {
             this->ps_read(entities, newerThan);

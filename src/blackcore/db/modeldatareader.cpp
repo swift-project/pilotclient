@@ -443,6 +443,12 @@ namespace BlackCore
             return QDateTime();
         }
 
+        bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
+        {
+            Q_UNUSED(entity);
+            return CDatabaseReader::isChangedUrl(CUrl(), this->getBaseUrl());
+        }
+
         CUrl CModelDataReader::getBaseUrl() const
         {
             const CUrl baseUrl(sApp->getGlobalSetup().getDbModelReaderUrl());

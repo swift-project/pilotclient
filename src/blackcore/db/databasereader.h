@@ -154,6 +154,12 @@ namespace BlackCore
             //! Invalidate the caches for given entities
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
 
+            //! Changed URL, means the cache values have been read from elsewhere
+            virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
+
+            //! Has URL been changed? Means we load from a differrent server
+            static bool isChangedUrl(const BlackMisc::Network::CUrl &oldUrl, const BlackMisc::Network::CUrl &currentUrl);
+
         private:
             //! Check if terminated or error, otherwise split into array of objects
             JsonDatastoreResponse transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const;
