@@ -33,6 +33,9 @@ namespace BlackCore
             //! Default value
             static const BlackMisc::Simulation::CAircraftModelList &defaultValue();
 
+            //! Defer loading
+            static constexpr bool isDeferred() { return true; }
+
             //! Key in data cache
             static const char *key() { return "dbmodelcache"; }
         };
@@ -42,6 +45,9 @@ namespace BlackCore
         {
             //! Default value
             static const BlackMisc::Aviation::CAirlineIcaoCodeList &defaultValue();
+
+            //! Defer loading
+            static constexpr bool isDeferred() { return true; }
 
             //! Key in data cache
             static const char *key() { return "dbairlineicaocache"; }
@@ -54,6 +60,9 @@ namespace BlackCore
             //! Default value
             static const BlackMisc::Aviation::CAircraftIcaoCodeList &defaultValue();
 
+            //! Defer loading
+            static constexpr bool isDeferred() { return true; }
+
             //! Key in data cache
             static const char *key() { return "dbaircrafticaocache"; }
         };
@@ -64,6 +73,9 @@ namespace BlackCore
             //! Default value
             static const BlackMisc::CCountryList &defaultValue();
 
+            //! Defer loading (no currently small)
+            static constexpr bool isDeferred() { return false; }
+
             //! Key in data cache
             static const char *key() { return "dbcountrycache"; }
         };
@@ -73,6 +85,9 @@ namespace BlackCore
         {
             //! Default value
             static const BlackMisc::Aviation::CLiveryList &defaultValue();
+
+            //! Defer loading
+            static constexpr bool isDeferred() { return true; }
 
             //! Key in data cache
             static const char *key() { return "dbliverycache"; }

@@ -30,6 +30,9 @@ namespace BlackMisc
             //! Trait for model cache
             struct ModelCache : public BlackMisc::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
             {
+                //! Defer loading
+                static constexpr bool isDeferred() { return true; }
+
                 //! Default value
                 static const BlackMisc::Simulation::CAircraftModelList &defaultValue()
                 {

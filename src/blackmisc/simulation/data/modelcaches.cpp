@@ -43,6 +43,7 @@ namespace BlackMisc
             CModelCaches::CModelCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
+                this->syncronizeCache(this->m_currentSimulator.getCopy());
             }
 
             CAircraftModelList CModelCaches::getCachedModels(const CSimulatorInfo &simulator) const
@@ -123,6 +124,7 @@ namespace BlackMisc
             CModelSetCaches::CModelSetCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
+                this->syncronizeCache(this->m_currentSimulator.getCopy());
             }
 
             CAircraftModelList CModelSetCaches::getCachedModels(const CSimulatorInfo &simulator) const
@@ -189,10 +191,10 @@ namespace BlackMisc
                 if (m.isFailure()) { CLogMessage::preformatted(m); }
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.synchronize(); break;
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.synchronize(); break;
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.synchronize(); break;
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.synchronize(); break;
+                case CSimulatorInfo::FS9: this->m_modelCacheFs9.synchronize(); break;
+                case CSimulatorInfo::FSX: this->m_modelCacheFsx.synchronize(); break;
+                case CSimulatorInfo::P3D: this->m_modelCacheP3D.synchronize(); break;
+                case CSimulatorInfo::XPLANE: this->m_modelCacheXP.synchronize(); break;
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 }
