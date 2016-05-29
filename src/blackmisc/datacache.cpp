@@ -147,7 +147,7 @@ namespace BlackMisc
 
     void CDataCache::admitValue(const QString &key, bool triggerLoad)
     {
-        QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.admitValue(key); });
+        m_revision.admitValue(key);
         if (triggerLoad) { loadFromStoreAsync(); }
     }
 
@@ -331,7 +331,7 @@ namespace BlackMisc
             if (json.contains("uuid") && json.contains("timestamps"))
             {
                 QUuid uuid(json.value("uuid").toString());
-                if (uuid == m_uuid)
+                if (uuid == m_uuid && m_admittedQueue.isEmpty())
                 {
                     if (m_pendingWrite) { return guard; }
                     return {};
@@ -365,6 +365,8 @@ namespace BlackMisc
                 }
 
                 auto deferrals = fromJson(json.value("deferrals").toArray());
+                m_admittedValues.unite(m_admittedQueue);
+                if (updateUuid) { m_admittedQueue.clear(); }
                 for (const auto &key : m_timestamps.keys())
                 {
                     if (deferrals.contains(key) && ! m_admittedValues.contains(key)) { m_timestamps.remove(key); }
@@ -463,7 +465,10 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        return (m_updateInProgress || m_pendingWrite || beginUpdate({{ key, timestamp }}, false)) && m_timestamps.contains(key);
+        // Temporary guard object returned by beginUpdate is deleted at the end of the full expression,
+        // don't try to split the conditional into multiple statements.
+        return (m_updateInProgress || m_pendingWrite || beginUpdate({{ key, timestamp }}, false))
+            && (m_timestamps.contains(key) || m_admittedQueue.contains(key));
     }
 
     std::future<void> CDataCacheRevision::promiseLoadedValue(const QString &key, qint64 currentTimestamp)
@@ -569,9 +574,9 @@ namespace BlackMisc
 
     void CDataCacheRevision::admitValue(const QString &key)
     {
-        Q_ASSERT(! m_updateInProgress);
+        QMutexLocker lock(&m_mutex);
 
-        m_admittedValues.insert(key);
+        m_admittedQueue.insert(key);
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)

@@ -163,6 +163,7 @@ namespace BlackMisc
         QSet<QString> m_pinnedValues;
         QSet<QString> m_deferredValues;
         QSet<QString> m_admittedValues;
+        QSet<QString> m_admittedQueue;
         std::vector<std::promise<void>> m_promises;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
@@ -311,7 +312,7 @@ namespace BlackMisc
         void renewTimestamp(qint64 timestamp) { return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp); }
 
         //! If the value is load-deferred, trigger the deferred load (async).
-        void admit() { CDataCache::instance()->admitValue(Trait::key(), true); }
+        void admit() { if (Trait::isDeferred()) { CDataCache::instance()->admitValue(Trait::key(), true); } }
 
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()
