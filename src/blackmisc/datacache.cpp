@@ -135,6 +135,11 @@ namespace BlackMisc
         QTimer::singleShot(0, &m_serializer, [this, key, timestamp] { m_revision.overrideTimestamp(key, timestamp); });
     }
 
+    qint64 CDataCache::getTimestampOnDisk(const QString &key)
+    {
+        return m_revision.getTimestampOnDisk(key);
+    }
+
     void CDataCache::pinValue(const QString &key)
     {
         QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.pinValue(key); });
@@ -556,6 +561,37 @@ namespace BlackMisc
             }
         }
         m_lockFile.unlock();
+    }
+
+    qint64 CDataCacheRevision::getTimestampOnDisk(const QString &key)
+    {
+        QMutexLocker lock(&m_mutex);
+
+        if (m_lockFile.isLocked()) { return m_timestamps.value(key); }
+
+        if (! m_lockFile.lock())
+        {
+            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << lockFileError(m_lockFile);
+            m_lockFile.unlock();
+            return 0;
+        }
+
+        qint64 result = 0;
+        QFile revisionFile(m_basename + "/.rev");
+        if (revisionFile.exists())
+        {
+            if (revisionFile.open(QFile::ReadOnly | QFile::Text))
+            {
+                auto json = QJsonDocument::fromJson(revisionFile.readAll()).object();
+                result = static_cast<qint64>(json.value("timestamps").toObject().value(key).toDouble());
+            }
+            else
+            {
+                CLogMessage(this).error("Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+            }
+        }
+        m_lockFile.unlock();
+        return result;
     }
 
     void CDataCacheRevision::pinValue(const QString &key)

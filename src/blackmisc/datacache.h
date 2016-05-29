@@ -141,6 +141,9 @@ namespace BlackMisc
         //! Causes the new timestamp to be written to the revision file.
         void overrideTimestamp(const QString &key, qint64 timestamp);
 
+        //! Read the revision file to get a timestamp.
+        qint64 getTimestampOnDisk(const QString &key);
+
         //! Set the flag which will cause the value to be pre-loaded.
         void pinValue(const QString &key);
 
@@ -241,6 +244,9 @@ namespace BlackMisc
         //! Method used for implementing timestamp renewal.
         void renewTimestamp(const QString &key, qint64 timestamp);
 
+        //! Method used for implementing loading timestamp without value.
+        qint64 getTimestampOnDisk(const QString &key);
+
         //! Method used for implementing pinning values.
         void pinValue(const QString &key);
 
@@ -310,6 +316,13 @@ namespace BlackMisc
 
         //! Don't change the value, but write a new timestamp, to extend the life of the value.
         void renewTimestamp(qint64 timestamp) { return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp); }
+
+        //! Get the timestamp of the value, or of the deferred value that is available to be loaded.
+        QDateTime getAvailableTimestamp() const
+        {
+            if (Trait::isDeferred()) { return QDateTime::fromMSecsSinceEpoch(CDataCache::instance()->getTimestampOnDisk(this->getKey())); }
+            return this->getTimestamp();
+        }
 
         //! If the value is load-deferred, trigger the deferred load (async).
         void admit() { if (Trait::isDeferred()) { CDataCache::instance()->admitValue(Trait::key(), true); } }
