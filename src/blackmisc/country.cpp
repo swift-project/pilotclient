@@ -126,9 +126,9 @@ namespace BlackMisc
             this->setName(variant.toQString());
             break;
         default:
-            return (IDatastoreObjectWithStringKey::canHandleIndex(index)) ?
-                   IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant) :
-                   CValueObject::setPropertyByIndex(index, variant);
+            IDatastoreObjectWithStringKey::canHandleIndex(index) ?
+            IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant) :
+            CValueObject::setPropertyByIndex(index, variant);
             break;
         }
     }
@@ -157,8 +157,8 @@ namespace BlackMisc
             // when using relationship, this can be null
             return CCountry();
         }
-        QString iso(json.value(prefix + "id").toString());
-        QString name(json.value(prefix + "country").toString());
+        const QString iso(json.value(prefix + "id").toString());
+        const QString name(json.value(prefix + "country").toString());
         CCountry country(iso, name);
         country.setKeyAndTimestampFromDatabaseJson(json, prefix);
         return country;
