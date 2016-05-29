@@ -187,7 +187,7 @@ namespace BlackMisc
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const = 0;
 
                 //!Selected simulator
-                virtual void setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+                virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
                 //! \copydoc IModelsPerSimulatorSetable::setModels
                 virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
@@ -207,6 +207,7 @@ namespace BlackMisc
             };
 
             //! Bundle of caches for all simulators
+            //! \remark remembers its last simulator selection
             class CModelCaches : public IMultiSimulatorModelCaches
             {
                 Q_OBJECT
@@ -222,7 +223,7 @@ namespace BlackMisc
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.getCopy(); }
-                virtual void setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
 
             private:
@@ -234,7 +235,7 @@ namespace BlackMisc
             };
 
             //! Bundle of caches for model sets of all simulators
-            //! \remark Temp. workaround
+            //! \remark remembers its last simulator selection
             class CModelSetCaches : public IMultiSimulatorModelCaches
             {
                 Q_OBJECT
@@ -250,7 +251,7 @@ namespace BlackMisc
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.getCopy(); }
-                virtual void setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
 
             private:

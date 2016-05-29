@@ -146,7 +146,7 @@ namespace BlackMisc
 
             QString CFsCommonUtil::fs9AircraftDir()
             {
-                QString dir(fs9AircraftDirFromRegistry());
+                const QString dir(fs9AircraftDirFromRegistry());
                 if (!dir.isEmpty()) { return dir; }
                 //! \todo hardcoded sim parts should come from settings
                 return "C:/Flight Simulator 9/Aircraft";

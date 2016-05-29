@@ -437,10 +437,16 @@ namespace BlackCore
             Q_UNUSED(entities);
         }
 
-        QDateTime CModelDataReader::getCacheTimestamp(CEntityFlags::Entity entity)
+        QDateTime CModelDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
             return QDateTime();
+        }
+
+        int CModelDataReader::getCacheCount(CEntityFlags::Entity entity) const
+        {
+            Q_UNUSED(entity);
+            return 0;
         }
 
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity) const

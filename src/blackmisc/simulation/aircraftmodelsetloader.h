@@ -46,7 +46,7 @@ namespace BlackMisc
 
         public:
             //! Constructor
-            CAircraftModelSetLoader(const CSimulatorInfo &simulator, QObject *parent = nullptr);
+            CAircraftModelSetLoader(QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CAircraftModelSetLoader();

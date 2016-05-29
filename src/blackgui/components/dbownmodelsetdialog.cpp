@@ -63,7 +63,9 @@ namespace BlackGui
         int CDbOwnModelSetDialog::exec()
         {
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
-            this->setSimulator(this->getMappingComponent()->getOwnModelsSimulator());
+            const CSimulatorInfo sim(this->getMappingComponent()->getOwnModelsSimulator());
+            Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+            this->setSimulator(sim);
             this->checkData();
             return QDialog::exec();
         }

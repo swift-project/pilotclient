@@ -128,7 +128,8 @@ namespace BlackCore
             //! @{
             virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) override;
+            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             //! @}
 

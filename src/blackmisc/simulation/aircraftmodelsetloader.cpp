@@ -18,11 +18,9 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftModelSetLoader::CAircraftModelSetLoader(const CSimulatorInfo &simulator, QObject *parent) :
+        CAircraftModelSetLoader::CAircraftModelSetLoader(QObject *parent) :
             QObject(parent)
         {
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-            this->syncronizeCache();
             connect(&this->m_caches, &CModelSetCaches::cacheChanged, this, &CAircraftModelSetLoader::cacheChanged);
         }
 

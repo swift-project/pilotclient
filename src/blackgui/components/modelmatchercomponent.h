@@ -77,7 +77,7 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel defaultModel() const;
 
             QScopedPointer<Ui::CModelMatcherComponent>     ui;
-            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
+            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
             BlackCore::CAircraftMatcher                    m_matcher { BlackCore::CAircraftMatcher::All, this };
         };
     } // ns

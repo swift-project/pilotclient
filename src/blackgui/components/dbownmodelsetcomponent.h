@@ -123,22 +123,27 @@ namespace BlackGui
             void ps_onJsonDataLoaded(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Preferences changed
-            void ps_preferencesChanged();
+            void ps_distributorPreferencesChanged();
 
-            //! Model has been changed
-            void ps_modelChanged();
+            //! Model (of view) has been changed
+            void ps_viewModelChanged();
 
         private:
             //! Default file name
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
+            //! Update view to current models
+            void updateViewToCurrentModels();
+
             //! Update distributor order
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
-            QScopedPointer<Ui::CDbOwnModelSetComponent> ui;
+            QScopedPointer<Ui::CDbOwnModelSetComponent>    ui;
             QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
-            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this };
-            BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_preferencesChanged };
+            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
+            BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged };
+
+            // -------------------------- custom menus -----------------------------------
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component

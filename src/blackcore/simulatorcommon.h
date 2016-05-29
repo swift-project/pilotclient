@@ -133,7 +133,7 @@ namespace BlackCore
 
         //! \todo unclear if this is valid for all simulators or for MS/P3D simulators only
         BlackCore::CAircraftMatcher m_modelMatcher;              //!< Model matcher
-        BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX), this }; //!< load model set from caches
+        BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
 
     private:
         bool m_debugMessages = false;             //!< Display debug messages

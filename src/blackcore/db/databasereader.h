@@ -149,7 +149,10 @@ namespace BlackCore
             virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
 
             //! Cache`s timestamp for given entity
-            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
+            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const = 0;
+
+            //! Cache`s number of entities
+            virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
 
             //! Invalidate the caches for given entities
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;

@@ -51,7 +51,6 @@ namespace BlackCore
             CEntityFlags::Entity allEntities = entities;
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
             const bool hasInfoObjects = this->hasInfoObjects();
-            const bool changedUrl = this->hasChangedUrl(currentEntity);
             while (currentEntity)
             {
                 const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
@@ -59,6 +58,7 @@ namespace BlackCore
                 {
                     if (hasInfoObjects)
                     {
+                        const bool changedUrl = this->hasChangedUrl(currentEntity);
                         const QDateTime cacheTs(this->getCacheTimestamp(currentEntity));
                         const QDateTime latestEntityTs(this->getLatestEntityTimestamp(currentEntity));
                         const qint64 cacheTimestamp = cacheTs.isValid() ? cacheTs.toMSecsSinceEpoch() : -1;
@@ -76,7 +76,8 @@ namespace BlackCore
                         {
                             if (changedUrl)
                             {
-                                CLogMessage(this).info("Data location changed, will override cache");
+                                CLogMessage(this).info("Data location changed, will override cache for %1")
+                                        << CEntityFlags::flagToString(currentEntity);
                             }
                             else
                             {
@@ -90,7 +91,11 @@ namespace BlackCore
                     {
                         // no info objects, server down
                         this->syncronizeCaches(currentEntity);
-                        CLogMessage(this).info("No info object for %1, using cache") << CEntityFlags::flagToString(currentEntity);
+                        const int c = this->getCacheCount(currentEntity);
+                        CLogMessage(this).info("No info object for %1, using cache with %2 objects")
+                                << CEntityFlags::flagToString(currentEntity)
+                                << c;
+                        entities &= ~currentEntity; // do not load from web
                     }
                 }
                 currentEntity = CEntityFlags::iterateDbEntities(allEntities);

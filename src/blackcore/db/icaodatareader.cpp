@@ -399,7 +399,7 @@ namespace BlackCore
             if (entities.testFlag(CEntityFlags::CountryEntity)) {CDataCache::instance()->clearAllValues(this->m_countryCache.getKey()); }
         }
 
-        QDateTime CIcaoDataReader::getCacheTimestamp(CEntityFlags::Entity entity)
+        QDateTime CIcaoDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
         {
             switch (entity)
             {
@@ -407,6 +407,17 @@ namespace BlackCore
             case CEntityFlags::AirlineIcaoEntity:  return this->m_airlineIcaoCache.getTimestamp();
             case CEntityFlags::CountryEntity:      return this->m_countryCache.getTimestamp();
             default: return QDateTime();
+            }
+        }
+
+        int CIcaoDataReader::getCacheCount(CEntityFlags::Entity entity) const
+        {
+            switch (entity)
+            {
+            case CEntityFlags::AircraftIcaoEntity: return this->m_aircraftIcaoCache.getCopy().size();
+            case CEntityFlags::AirlineIcaoEntity:  return this->m_airlineIcaoCache.getCopy().size();
+            case CEntityFlags::CountryEntity:      return this->m_countryCache.getCopy().size();
+            default: return 0;
             }
         }
 
