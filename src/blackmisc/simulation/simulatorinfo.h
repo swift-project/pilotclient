@@ -155,6 +155,9 @@ namespace BlackMisc
             //! Locally installed simulators
             static const CSimulatorInfo getLocallyInstalledSimulators();
 
+            //! Guess a default simulator
+            static const CSimulatorInfo guessDefaultSimulator();
+
             //! From database JSON
             static CSimulatorInfo fromDatabaseJson(const QJsonObject &json, const QString prefix);
 

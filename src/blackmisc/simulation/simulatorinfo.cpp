@@ -189,24 +189,44 @@ namespace BlackMisc
         {
             //! \todo add XP, ...
             CSimulatorInfo sim;
-            bool fs9 =
-                CBuildConfig::isRunningOnWindowsNtPlatform() &&
-                !CFsCommonUtil::fs9AircraftDir().isEmpty() &&
-                !CFsCommonUtil::fs9Dir().isEmpty();
-            bool fsx =
-                CBuildConfig::isRunningOnWindowsNtPlatform() &&
-                !CFsCommonUtil::fsxSimObjectsDir().isEmpty() &&
-                !CFsCommonUtil::fsxDir().isEmpty();
-            bool p3d =
-                CBuildConfig::isRunningOnWindowsNtPlatform() &&
-                !CFsCommonUtil::p3dDir().isEmpty() &&
-                !CFsCommonUtil::p3dSimObjectsDir().isEmpty();
+            bool fs9 = false;
+            bool fsx = false;
+            bool p3d = false;
+
+            if (CBuildConfig::isRunningOnWindowsNtPlatform())
+            {
+                fs9 =
+                    CBuildConfig::isRunningOnWindowsNtPlatform() &&
+                    !CFsCommonUtil::fs9AircraftDir().isEmpty() &&
+                    !CFsCommonUtil::fs9Dir().isEmpty();
+                fsx =
+                    CBuildConfig::isRunningOnWindowsNtPlatform() &&
+                    !CFsCommonUtil::fsxSimObjectsDir().isEmpty() &&
+                    !CFsCommonUtil::fsxDir().isEmpty();
+                p3d =
+                    CBuildConfig::isRunningOnWindowsNtPlatform() &&
+                    !CFsCommonUtil::p3dDir().isEmpty() &&
+                    !CFsCommonUtil::p3dSimObjectsDir().isEmpty();
+            }
             bool xp = true; //! \todo XP resolution
 
-            sim.setSimulator(
-                CSimulatorInfo::boolToFlag(fsx, fs9, xp, p3d)
-            );
+            sim.setSimulator(CSimulatorInfo::boolToFlag(fsx, fs9, xp, p3d));
             return sim;
+        }
+
+        const CSimulatorInfo CSimulatorInfo::guessDefaultSimulator()
+        {
+            CSimulatorInfo locallyInstalled(getLocallyInstalledSimulators());
+            if (CBuildConfig::isRunningOnLinuxPlatform())
+            {
+                return CSimulatorInfo("XPLANE");
+            }
+            if (locallyInstalled.p3d()) { return CSimulatorInfo("P3D"); }
+            if (locallyInstalled.fsx()) { return CSimulatorInfo("FSX"); }
+            if (locallyInstalled.fs9()) { return CSimulatorInfo("FS9"); }
+
+            // fallback
+            return CSimulatorInfo("FSX");
         }
 
         CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString prefix)
