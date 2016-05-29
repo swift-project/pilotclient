@@ -211,7 +211,7 @@ namespace BlackGui
                 else
                 {
                     QPixmap qpm = pm.pixmap();
-                    if (qpm.height() > MaxHeight)
+                    if (qpm.height() > MaxHeight && !qpm.isNull())
                     {
                         qpm = qpm.scaledToWidth(MaxHeight, Qt::SmoothTransformation);
                     }

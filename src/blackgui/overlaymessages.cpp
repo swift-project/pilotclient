@@ -167,9 +167,17 @@ namespace BlackGui
         }
 
         this->ui->lbl_Image->setText("");
-        this->ui->lbl_Image->setPixmap(
-            image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation)
-        );
+        if (image.isNull())
+        {
+            static const QPixmap e;
+            this->ui->lbl_Image->setPixmap(e);
+        }
+        else
+        {
+            this->ui->lbl_Image->setPixmap(
+                image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation)
+            );
+        }
         this->display(timeOutMs);
     }
 
