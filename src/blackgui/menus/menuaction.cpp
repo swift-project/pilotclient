@@ -69,6 +69,12 @@ namespace BlackGui
             return this->m_path.isEmpty() || this->m_path == pathNone();
         }
 
+        QPixmap CMenuAction::getPixmap() const
+        {
+            if (this->m_icon.isNull()) { return QPixmap(); }
+            return this->m_icon.pixmap(this->m_icon.actualSize(QSize(16, 16)));
+        }
+
         QString CMenuAction::getLastPathPart() const
         {
             if (this->m_path.contains('/'))

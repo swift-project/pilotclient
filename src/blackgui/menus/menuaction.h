@@ -93,6 +93,9 @@ namespace BlackGui
             //! Icon
             const QIcon &getIcon() const { return m_icon; }
 
+            //! Icon as pixmap
+            QPixmap getPixmap() const;
+
             //! Has icon?
             bool hasIcon() const { return !m_icon.isNull(); }
 
