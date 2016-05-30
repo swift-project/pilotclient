@@ -103,8 +103,7 @@ namespace BlackGui
         void CDistributorPreferencesComponent::ps_loadDistributorsFromSet()
         {
             const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
-            this->m_modelSetLoader.changeSimulator(sim);
-            const CAircraftModelList models = this->m_modelSetLoader.getAircraftModels();
+            const CAircraftModelList models = this->m_modelSetLoader.getAircraftModels(sim);
             if (models.isEmpty())
             {
                 const CStatusMessage m = CStatusMessage(this).error("No data in model set %1") << sim.toQString();
