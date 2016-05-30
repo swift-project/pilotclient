@@ -347,7 +347,7 @@ namespace BlackMisc
                 auto newTimestamps = fromJson(json.value("timestamps").toObject());
                 for (auto it = newTimestamps.cbegin(); it != newTimestamps.cend(); ++it)
                 {
-                    auto current = timestamps.value(it.key(), 0);
+                    auto current = timestamps.value(it.key(), -1);
                     auto ttl = timesToLive.value(it.key(), -1);
                     if (current < it.value() && (ttl < 0 || QDateTime::currentMSecsSinceEpoch() < it.value() + ttl))
                     {
