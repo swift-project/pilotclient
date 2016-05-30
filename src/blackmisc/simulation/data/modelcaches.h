@@ -163,6 +163,10 @@ namespace BlackMisc
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
                 //! Models
+                //! \todo is that threadsafe?
+                CAircraftModelList getSyncronizedCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+                //! Models
                 //! \threadsafe
                 CAircraftModelList getCurrentCachedModels() const;
 
@@ -170,13 +174,19 @@ namespace BlackMisc
                 //! \threadsafe
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
+                //! Timestamp
+                //! \todo is that threadsafe?
+                QDateTime getSyncronizedTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
                 //! Last selection`s timestamp
+                //! \threadsafe
                 QDateTime getCurrentCacheTimestamp() const;
 
                 //! Set cache
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
                 //! Syncronize
+                //! \todo is that threadsafe?
                 virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
                 //! Last cache

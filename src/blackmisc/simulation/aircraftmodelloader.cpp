@@ -58,7 +58,7 @@ namespace BlackMisc
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
-            CAircraftModelList allModels(this->m_caches.getCachedModels(sim));
+            CAircraftModelList allModels(this->m_caches.getSyncronizedCachedModels(sim));
             int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {

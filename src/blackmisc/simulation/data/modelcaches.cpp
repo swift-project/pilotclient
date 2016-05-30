@@ -26,12 +26,26 @@ namespace BlackMisc
                 this->setCachedModels(models, simulator);
             }
 
+            CAircraftModelList IMultiSimulatorModelCaches::getSyncronizedCachedModels(const CSimulatorInfo &simulator)
+            {
+                BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+                this->syncronizeCache(simulator);
+                return this->getCachedModels(simulator);
+            }
+
             CAircraftModelList IMultiSimulatorModelCaches::getCurrentCachedModels() const
             {
                 const CSimulatorInfo sim(this->getCurrentSimulator());
                 BLACK_VERIFY_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
                 if (!sim.isSingleSimulator()) { return CAircraftModelList(); }
                 return this->getCachedModels(sim);
+            }
+
+            QDateTime IMultiSimulatorModelCaches::getSyncronizedTimestamp(const CSimulatorInfo &simulator)
+            {
+                BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+                this->syncronizeCache(simulator);
+                return this->getCacheTimestamp(simulator);
             }
 
             bool IMultiSimulatorModelCaches::syncronizeCurrentCache()

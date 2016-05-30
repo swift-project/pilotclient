@@ -42,8 +42,9 @@ namespace BlackMisc
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_caches.getCurrentSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
-            CAircraftModelList allModels(this->m_caches.getCachedModels(sim));
-            int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
+            this->m_caches.syncronizeCache(sim);
+            CAircraftModelList allModels(this->m_caches.getSyncronizedCachedModels(sim));
+            const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {
                 return this->setCachedModels(models, sim);
@@ -67,10 +68,10 @@ namespace BlackMisc
             return this->m_caches.getCurrentCachedModels();
         }
 
-        CAircraftModelList CAircraftModelSetLoader::getAircraftModels(const CSimulatorInfo &simulator) const
+        CAircraftModelList CAircraftModelSetLoader::getAircraftModels(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            return this->m_caches.getCachedModels(simulator);
+            return this->m_caches.getSyncronizedCachedModels(simulator);
         }
 
         int CAircraftModelSetLoader::getAircraftModelsCount() const

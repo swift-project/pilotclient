@@ -60,7 +60,8 @@ namespace BlackMisc
 
             //! The loaded models for given simulator
             //! \threadsafe
-            BlackMisc::Simulation::CAircraftModelList getAircraftModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            //! \remark non-const because it syncronizes cache
+            BlackMisc::Simulation::CAircraftModelList getAircraftModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Count of loaded models
             //! \threadsafe
