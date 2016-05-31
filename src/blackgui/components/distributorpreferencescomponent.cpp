@@ -32,6 +32,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Network;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 
@@ -43,8 +44,11 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CDistributorPreferencesComponent)
         {
+            const CSimulatorInfo simulator = this->m_modelSetLoader.getSimulator();
+
             ui->setupUi(this);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
+            ui->comp_SimulatorSelector->setValue(simulator);
 
             connect(ui->pb_All, &QPushButton::pressed, this, &CDistributorPreferencesComponent::ps_loadAll);
             connect(ui->pb_AllForSimulator, &QPushButton::pressed, this, &CDistributorPreferencesComponent::ps_loadAllForSimulator);
