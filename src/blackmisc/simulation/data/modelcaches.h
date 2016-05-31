@@ -202,18 +202,22 @@ namespace BlackMisc
                 //! \copydoc IModelsPerSimulatorSetable::setModels
                 virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
 
-            protected:
-                //! \name Cache has been changed
-                //! @{
-                void changedFsx() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
-                void changedFs9() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FS9)); }
-                void changedP3D() { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::P3D)); }
-                void changedXP()  { emit cacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
-                //! @}
-
             signals:
                 //! Cache has been changed
                 void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            protected:
+                //! \name Cache has been changed
+                //! @{
+                void changedFsx() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
+                void changedFs9() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FS9)); }
+                void changedP3D() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::P3D)); }
+                void changedXP()  { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::XPLANE)); }
+                //! @}
+
+            private:
+                //! Emit cacheChanged() utility function (allows breakpoint)
+                void emitCacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };
 
             //! Bundle of caches for all simulators

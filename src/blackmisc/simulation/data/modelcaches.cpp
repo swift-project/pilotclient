@@ -26,6 +26,11 @@ namespace BlackMisc
                 this->setCachedModels(models, simulator);
             }
 
+            void IMultiSimulatorModelCaches::emitCacheChanged(const CSimulatorInfo &simulator)
+            {
+                emit cacheChanged(simulator);
+            }
+
             CAircraftModelList IMultiSimulatorModelCaches::getSyncronizedCachedModels(const CSimulatorInfo &simulator)
             {
                 BLACK_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
