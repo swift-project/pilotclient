@@ -71,8 +71,8 @@ namespace BlackGui
             connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::ps_reverseLookup);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::ps_webDataRed);
 
-            const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
-            this->m_modelSetLoader.changeSimulator(sim);
+            const CSimulatorInfo sim(this->m_modelSetLoader.getSimulator());
+            ui->comp_SimulatorSelector->setValue(sim);
             this->redisplay();
         }
 

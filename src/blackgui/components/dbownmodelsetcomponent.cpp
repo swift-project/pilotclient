@@ -76,6 +76,8 @@ namespace BlackGui
             const CSimulatorInfo simulator = this->m_modelSetLoader.getSimulator();
             if (simulator.isSingleSimulator())
             {
+                ui->comp_SimulatorSelector->setValue(simulator);
+                ui->le_Simulator->setText(simulator.toQString(true));
                 QTimer::singleShot(500, [this]()
                 {
                     this->updateViewToCurrentModels();
