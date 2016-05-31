@@ -66,6 +66,8 @@ namespace BlackGui
                 this->insertOwnActions();
             }
 
+            this->ps_onStyleSheetsChanged();
+
             // remove old layout
             CGuiUtility::deleteLayout(this->ui->fr_NavigatorDialogInner->layout(), false);
 
@@ -147,7 +149,6 @@ namespace BlackGui
         void CNavigatorDialog::windowFlagsChanged()
         {
             if (this->m_firstBuild) { return; }
-            this->ps_onStyleSheetsChanged();
             this->buildNavigator(this->m_currentColumns);
         }
 
@@ -201,13 +202,13 @@ namespace BlackGui
 
         void CNavigatorDialog::addToContextMenu(QMenu *contextMenu) const
         {
-            QAction *a = contextMenu->addAction(CIcons::resize16(), "1 row", this, SLOT(ps_changeLayout()));
+            QAction *a = contextMenu->addAction(CIcons::resize16(), "1 row", this, &CNavigatorDialog::ps_changeLayout);
             a->setData("1r");
-            a = contextMenu->addAction(CIcons::resize16(), "2 rows", this, SLOT(ps_changeLayout()));
+            a = contextMenu->addAction(CIcons::resize16(), "2 rows", this, &CNavigatorDialog::ps_changeLayout);
             a->setData("2r");
-            a = contextMenu->addAction(CIcons::resize16(), "1 column", this, SLOT(ps_changeLayout()));
+            a = contextMenu->addAction(CIcons::resize16(), "1 column", this, &CNavigatorDialog::ps_changeLayout);
             a->setData("1c");
-            a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, SLOT(ps_changeLayout()));
+            a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, &CNavigatorDialog::ps_changeLayout);
             a->setData("2c");
 
             contextMenu->addSeparator();
