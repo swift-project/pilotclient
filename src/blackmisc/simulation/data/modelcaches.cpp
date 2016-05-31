@@ -109,10 +109,10 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.getTimestamp();
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.getTimestamp();
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.getTimestamp();
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.getTimestamp();
+                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.getAvailableTimestamp();
+                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.getAvailableTimestamp();
+                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.getAvailableTimestamp();
+                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.getAvailableTimestamp();
                 default:
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return QDateTime();
@@ -198,10 +198,10 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.getTimestamp();
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.getTimestamp();
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.getTimestamp();
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.getTimestamp();
+                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.getAvailableTimestamp();
+                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.getAvailableTimestamp();
+                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.getAvailableTimestamp();
+                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.getAvailableTimestamp();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     return QDateTime();

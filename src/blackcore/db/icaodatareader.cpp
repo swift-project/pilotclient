@@ -403,9 +403,9 @@ namespace BlackCore
         {
             switch (entity)
             {
-            case CEntityFlags::AircraftIcaoEntity: return this->m_aircraftIcaoCache.getTimestamp();
-            case CEntityFlags::AirlineIcaoEntity:  return this->m_airlineIcaoCache.getTimestamp();
-            case CEntityFlags::CountryEntity:      return this->m_countryCache.getTimestamp();
+            case CEntityFlags::AircraftIcaoEntity: return this->m_aircraftIcaoCache.getAvailableTimestamp();
+            case CEntityFlags::AirlineIcaoEntity:  return this->m_airlineIcaoCache.getAvailableTimestamp();
+            case CEntityFlags::CountryEntity:      return this->m_countryCache.getAvailableTimestamp();
             default: return QDateTime();
             }
         }
