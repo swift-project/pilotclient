@@ -322,6 +322,7 @@ namespace BlackMisc
         LockGuard guard(this);
 
         m_timestamps.clear();
+        m_originalTimestamps.clear();
 
         QFile revisionFile(m_basename + "/.rev");
         if (revisionFile.exists())
@@ -335,6 +336,8 @@ namespace BlackMisc
             auto json = QJsonDocument::fromJson(revisionFile.readAll()).object();
             if (json.contains("uuid") && json.contains("timestamps"))
             {
+                m_originalTimestamps = fromJson(json.value("timestamps").toObject());
+
                 QUuid uuid(json.value("uuid").toString());
                 if (uuid == m_uuid && m_admittedQueue.isEmpty())
                 {
@@ -344,8 +347,7 @@ namespace BlackMisc
                 if (updateUuid) { m_uuid = uuid; }
 
                 auto timesToLive = fromJson(json.value("ttl").toObject());
-                auto newTimestamps = fromJson(json.value("timestamps").toObject());
-                for (auto it = newTimestamps.cbegin(); it != newTimestamps.cend(); ++it)
+                for (auto it = m_originalTimestamps.cbegin(); it != m_originalTimestamps.cend(); ++it)
                 {
                     auto current = timestamps.value(it.key(), -1);
                     auto ttl = timesToLive.value(it.key(), -1);
@@ -406,7 +408,7 @@ namespace BlackMisc
         }
 
         m_uuid = CIdentifier().toUuid();
-        auto timestamps = m_timestamps;
+        auto timestamps = m_originalTimestamps;
         for (auto it = i_timestamps.cbegin(); it != i_timestamps.cend(); ++it)
         {
             timestamps.insert(it.key(), it.value());

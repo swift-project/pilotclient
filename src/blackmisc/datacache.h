@@ -162,6 +162,7 @@ namespace BlackMisc
         QLockFile m_lockFile { m_basename + "/.lock" };
         QUuid m_uuid;
         QMap<QString, qint64> m_timestamps;
+        QMap<QString, qint64> m_originalTimestamps;
         QMap<QString, qint64> m_timesToLive;
         QSet<QString> m_pinnedValues;
         QSet<QString> m_deferredValues;
