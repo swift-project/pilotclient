@@ -308,12 +308,6 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
           <property name="toolTip">
            <string>Toggle COM 1 standby/active</string>
           </property>
@@ -367,12 +361,6 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
           </property>
           <property name="toolTip">
            <string>Toggle COM 2 standby/active</string>

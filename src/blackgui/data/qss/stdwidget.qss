@@ -62,29 +62,30 @@ QFileDialog QToolButton {
   3) Borders between this widget and the inner child is the margin in gui.ini
 */
 BlackGui--CDockWidgetInfoArea {
-  background-color: green; /* I use green here so I can adjust the borders in gui.ini */
+  background-color: green; /* Use green or red here to adjust the borders */
 }
 
-BlackGui--CDockWidgetInfoArea > QWidget {
+/* outer widget in dock widget */
+BlackGui--CDockWidgetInfoArea > QWidget[dockwidget="outerwidget"] {
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
 /* this is the first widget in the dock area */
 /* all dock widgets shall have this QWidget as container */
-BlackGui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame {
+BlackGui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame[dockwidget="innerwidget"] {
   margin: 0px;
   padding: 3px;
   border: 2px solid green;
   border-radius: 10px;
 }
 
-/* fix the menu, which is overridden by the above QWidget */
-BlackGui--CDockWidgetInfoArea > QMenu {
-  border: 1px solid darkslategray; /* reserve space for selection border */
-  background: lightgray;
-  color: black;           /* text color */
-  padding: 3px;           /* some space for border needed */
+BlackGui--CDockWidgetInfoArea[framelessDockWidget="false"] > QWidget > QFrame[dockwidget="innerwidget"] {
+
+}
+
+BlackGui--CDockWidgetInfoArea > QMenu > QMenuWidget {
+  border: 0px; /* reserve space for selection border */
 }
 
 /* required when info area is not floating */

@@ -30,6 +30,7 @@ class QMenu;
 class QMouseEvent;
 class QPaintEvent;
 class QWidget;
+class QWidgetAction;
 
 namespace BlackGui
 {
@@ -116,6 +117,12 @@ namespace BlackGui
         //! \copydoc CEnableForFramelessWindow::setFrameless
         virtual void setFrameless(bool frameless) override;
 
+        //! Value for dynamic property "dockwidget"
+        static const QString &propertyOuterWidget();
+
+        //! Value for dynamic property "dockwidget"
+        static const QString &propertyInnerWidget();
+
     public slots:
         //! Toggle floating
         void toggleFloating();
@@ -180,9 +187,19 @@ namespace BlackGui
         //! Visibility has changed
         void ps_onVisibilityChanged(bool visible);
 
+        //! Change margins
+        void ps_menuChangeMargins(const QMargins &margins);
+
+        //! Changed settings
+        void ps_settingsChanged();
+
+        //! Dummy slot for QAction
+        void ps_dummy();
+
     private:
         QWidget *m_titleBarWidgetEmpty    = nullptr; //!< replacing default title bar
         QWidget *m_titleBarWidgetOriginal = nullptr; //!< the original title bar
+        QWidgetAction *m_marginMenuAction = nullptr; //!< menu action for margins
         QMargins m_marginsWhenFloating;              //!< Offsets when window is floating
         QMargins m_marginsWhenFramelessFloating;     //!< Offsets when window is frameless floating
         QMargins m_marginsWhenDocked;                //!< Offsets when window is docked
@@ -203,7 +220,7 @@ namespace BlackGui
         void initTitleBarWidgets();
 
         //! Init status bar
-        void initStatusBar();
+        void initStatusBarAndProperties();
 
         //! Force a style sheet update
         void forceStyleSheetUpdate();
