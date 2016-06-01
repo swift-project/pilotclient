@@ -407,12 +407,14 @@ namespace BlackCore
 
     const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes)
     {
-        QStringList clientParts = currentLine.split(':');
         QMap<QString, QString> parts;
+        if (currentLine.isEmpty()) { return parts; }
+        const QStringList clientParts = currentLine.split(':');
         for (int i = 0; i < clientSectionAttributes.size(); i++)
         {
             BLACK_VERIFY_X(i < clientSectionAttributes.size(), Q_FUNC_INFO, "Wrong section attribute size");
             BLACK_VERIFY_X(i < clientParts.size(), Q_FUNC_INFO, "Wrong parts size");
+            if (i < clientSectionAttributes.size() || i < clientParts.size()) { continue; }
             parts.insert(clientSectionAttributes.at(i).toLower(), clientParts.at(i));
         }
         return parts;
