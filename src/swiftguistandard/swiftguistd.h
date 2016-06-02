@@ -73,7 +73,7 @@ public:
     ~SwiftGuiStd();
 
     //! Log message category
-    static QString getMessageCategory() { return "swift.gui.stdgui"; }
+    static QString getLogCategory() { return "swift.gui.stdgui"; }
 
 signals:
     //! \remarks using widget pointer allows the component itself to identify if it is current

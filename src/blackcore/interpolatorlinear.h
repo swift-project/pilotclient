@@ -42,7 +42,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const override;
 
         //! Log category
-        static QString getMessageCategory() { return "swift.interpolatorlinear"; }
+        static QString getLogCategory() { return "swift.interpolatorlinear"; }
    };
 
 } // guard

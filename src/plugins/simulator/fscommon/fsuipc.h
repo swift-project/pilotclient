@@ -101,7 +101,7 @@ namespace BlackSimPlugin
             }
 
             //! Log message category
-            static QString getMessageCategory() { return "swift.fscommon.fsuipc"; }
+            static QString getLogCategory() { return "swift.fscommon.fsuipc"; }
 
         protected:
             //! \copydoc QObject::timerEvent

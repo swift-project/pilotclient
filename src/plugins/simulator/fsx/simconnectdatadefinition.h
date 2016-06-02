@@ -165,7 +165,7 @@ namespace BlackSimPlugin
             static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect);
 
             //! Log message category
-            static QString getMessageCategory() { return "swift.fsx.simconnect"; }
+            static QString getLogCategory() { return "swift.fsx.simconnect"; }
 
         private:
 

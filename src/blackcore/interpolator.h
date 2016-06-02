@@ -37,7 +37,7 @@ namespace BlackCore
         virtual ~IInterpolator() {}
 
         //! Log category
-        static QString getMessageCategory() { return "swift.interpolator"; }
+        static QString getLogCategory() { return "swift.interpolator"; }
 
         //! Status of interpolation
         struct BLACKCORE_EXPORT InterpolationStatus
