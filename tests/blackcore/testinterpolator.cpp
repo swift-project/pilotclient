@@ -15,8 +15,6 @@
  */
 
 #include "testinterpolator.h"
-#include "blackcore/interpolator.h"
-#include "blackcore/interpolatorlinear.h"
 #include "blackmisc/aviation/aircraftengine.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
@@ -29,6 +27,8 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
+#include "blackmisc/interpolator.h"
+#include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
@@ -45,7 +45,7 @@
 #include <QTime>
 #include <QtDebug>
 
-using namespace BlackCore;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;

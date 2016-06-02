@@ -8,9 +8,6 @@
  */
 
 #include "simconnectobject.h"
-#include "blackcore/interpolatorlinear.h"
-
-using namespace BlackCore;
 
 namespace BlackSimPlugin
 {

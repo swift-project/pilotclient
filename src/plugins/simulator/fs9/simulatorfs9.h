@@ -17,7 +17,7 @@
 #include "lobbyclient.h"
 #include "../fscommon/simulatorfscommon.h"
 #include "blackcore/simulator.h"
-#include "blackcore/interpolator.h"
+#include "blackmisc/interpolator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/pixmap.h"

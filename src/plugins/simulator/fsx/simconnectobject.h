@@ -15,7 +15,8 @@
 #include "blackmisc/aviation/callsign.h"
 #include <QSharedPointer>
 
-namespace BlackCore { class IInterpolator; }
+namespace BlackMisc { class IInterpolator; }
+
 namespace BlackSimPlugin
 {
     namespace Fsx

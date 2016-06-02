@@ -14,7 +14,7 @@
 #include "multiplayerpackets.h"
 #include "multiplayerpacketparser.h"
 #include "registermetadata.h"
-#include "blackcore/interpolatorlinear.h"
+#include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"
@@ -106,7 +106,7 @@ namespace BlackSimPlugin
             m_lobbyClient(lobbyClient)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
-            this->m_interpolator = new BlackCore::CInterpolatorLinear(remoteAircraftProvider, this);
+            this->m_interpolator = new BlackMisc::CInterpolatorLinear(remoteAircraftProvider, this);
             m_modelMatcher.setDefaultModel(CAircraftModel(
                                                "Boeing 737-400",
                                                CAircraftModel::TypeModelMatchingDefaultModel,

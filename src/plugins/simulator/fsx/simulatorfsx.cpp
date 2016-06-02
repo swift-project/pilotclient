@@ -8,8 +8,8 @@
  */
 
 #include "simulatorfsx.h"
-#include "blackcore/interpolatorlinear.h"
 #include "blackcore/application.h"
+#include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/interpolatorlinear.h"
+#include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
@@ -29,13 +29,12 @@
 #include <QList>
 #include <array>
 
-using namespace BlackMisc;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
-namespace BlackCore
+namespace BlackMisc
 {
     CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const
     {

@@ -7,14 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/interpolator.h"
+#include "blackmisc/interpolator.h"
 #include "blackmisc/aviation/callsign.h"
 
-using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 
-namespace BlackCore
+namespace BlackMisc
 {
 
     IInterpolator::IInterpolator(IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent) :
@@ -25,7 +24,7 @@ namespace BlackCore
         this->setObjectName(objectName);
     }
 
-    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackCore::IInterpolator::PartsStatus &partsStatus)
+    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackMisc::IInterpolator::PartsStatus &partsStatus)
     {
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         partsStatus.reset();

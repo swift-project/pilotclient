@@ -35,6 +35,8 @@
 
 namespace BlackMisc
 {
+    class IInterpolator;
+
     namespace Aviation
     {
         class CAircraftParts;
@@ -50,8 +52,6 @@ namespace BlackMisc
 
 namespace BlackCore
 {
-    class IInterpolator;
-
     //! Common base class with providers, interface and some base functionality
     class BLACKCORE_EXPORT CSimulatorCommon :
         public BlackCore::ISimulator,
@@ -127,7 +127,7 @@ namespace BlackCore
         bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
     protected:
-        IInterpolator *m_interpolator = nullptr;                 //!< interpolator instance
+        BlackMisc::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
 

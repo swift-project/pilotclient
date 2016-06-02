@@ -9,11 +9,11 @@
 
 //! \file
 
-#ifndef BLACKCORE_INTERPOLATOR_LINEAR_H
-#define BLACKCORE_INTERPOLATOR_LINEAR_H
+#ifndef BLACKMISC_INTERPOLATOR_LINEAR_H
+#define BLACKMISC_INTERPOLATOR_LINEAR_H
 
-#include "blackcore/blackcoreexport.h"
-#include "blackcore/interpolator.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/interpolator.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 
 #include <QString>
@@ -25,12 +25,9 @@ namespace BlackMisc
 {
     namespace Aviation { class CCallsign; }
     namespace Simulation { class IRemoteAircraftProvider; }
-}
 
-namespace BlackCore
-{
     //! Linear interpolator, calculation inbetween positions
-    class BLACKCORE_EXPORT CInterpolatorLinear : public IInterpolator
+    class BLACKMISC_EXPORT CInterpolatorLinear : public IInterpolator
     {
     public:
         //! Constructor

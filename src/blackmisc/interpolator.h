@@ -9,10 +9,10 @@
 
 //! \file
 
-#ifndef BLACKCORE_INTERPOLATOR_H
-#define BLACKCORE_INTERPOLATOR_H
+#ifndef BLACKMISC_INTERPOLATOR_H
+#define BLACKMISC_INTERPOLATOR_H
 
-#include "blackcore/blackcoreexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -21,12 +21,12 @@
 #include <QString>
 #include <QtGlobal>
 
-namespace BlackMisc { namespace Aviation { class CCallsign; } }
-
-namespace BlackCore
+namespace BlackMisc
 {
+    namespace Aviation { class CCallsign; }
+
     //! Interpolator, calculation inbetween positions
-    class BLACKCORE_EXPORT IInterpolator :
+    class BLACKMISC_EXPORT IInterpolator :
         public QObject,
         public BlackMisc::Simulation::CRemoteAircraftAware
     {
@@ -40,7 +40,7 @@ namespace BlackCore
         static QString getLogCategory() { return "swift.interpolator"; }
 
         //! Status of interpolation
-        struct BLACKCORE_EXPORT InterpolationStatus
+        struct BLACKMISC_EXPORT InterpolationStatus
         {
         public:
             bool changedPosition = false;        //!< position was changed
@@ -54,7 +54,7 @@ namespace BlackCore
         };
 
         //! Status regarding parts
-        struct PartsStatus
+        struct BLACKMISC_EXPORT PartsStatus
         {
             bool supportsParts = false;   //!< supports parts for given callsign
 

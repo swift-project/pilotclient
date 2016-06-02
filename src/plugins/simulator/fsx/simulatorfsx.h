@@ -16,7 +16,7 @@
 #include "simconnectobject.h"
 #include "../fscommon/simulatorfscommon.h"
 #include "blackcore/simulator.h"
-#include "blackcore/interpolatorlinear.h"
+#include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -171,7 +171,7 @@ namespace BlackSimPlugin
 
             //! Update remote airacraft parts (send to FSX)
             bool updateRemoteAircraftParts(const CSimConnectObject &simObj, const BlackMisc::Aviation::CAircraftPartsList &parts,
-                                           BlackCore::IInterpolator::PartsStatus partsStatus, const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, bool isOnGround) const;
+                                           BlackMisc::IInterpolator::PartsStatus partsStatus, const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, bool isOnGround) const;
 
             //! Format conversion
             SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxInitPosition(const BlackMisc::Aviation::CAircraftSituation &situation);

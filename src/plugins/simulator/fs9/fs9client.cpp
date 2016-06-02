@@ -20,7 +20,6 @@
 #include <QScopedArrayPointer>
 
 using namespace BlackMisc;
-using namespace BlackCore;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -114,7 +113,7 @@ namespace BlackSimPlugin
         }
 
         CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
-            BlackCore::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
+            BlackMisc::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
             CDirectPlayPeer(owner, callsign),
             m_updateInterval(updateInterval), m_interpolator(interpolator), m_modelName(modelName)
         {
