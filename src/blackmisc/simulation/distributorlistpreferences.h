@@ -38,9 +38,6 @@ namespace BlackMisc
             //! Default constructor.
             CDistributorListPreferences();
 
-            //! \copydoc BlackMisc::CValueObject::registerMetadata
-            static void registerMetadata();
-
             //! Get distributors
             const CDistributorList &getDistributors(const CSimulatorInfo &simulator) const;
 

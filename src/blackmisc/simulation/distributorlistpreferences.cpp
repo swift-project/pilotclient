@@ -17,11 +17,6 @@ namespace BlackMisc
     {
         CDistributorListPreferences::CDistributorListPreferences() { }
 
-        void CDistributorListPreferences::registerMetadata()
-        {
-            CValueObject<CDistributorListPreferences>::registerMetadata();
-        }
-
         const CDistributorList &CDistributorListPreferences::getDistributors(const CSimulatorInfo &simulator) const
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
