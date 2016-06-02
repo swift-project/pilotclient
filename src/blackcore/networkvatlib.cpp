@@ -745,7 +745,7 @@ namespace BlackCore
     void CNetworkVatlib::onPilotPositionUpdate(VatSessionID, const char *callsignChar , const VatPilotPosition *position, void *cbvar)
     {
         const CCallsign callsign(callsignChar, CCallsign::Aircraft);
-        const CAircraftSituation situation(
+        CAircraftSituation situation(
             callsign,
             CCoordinateGeodetic(position->latitude, position->longitude, 0.0),
             CAltitude(position->altitudeTrue, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
@@ -754,6 +754,7 @@ namespace BlackCore
             CAngle(position->bank, CAngleUnit::deg()),
             CSpeed(position->groundSpeed, CSpeedUnit::kts())
         );
+        situation.setTimeOffsetMs(6000);
 
         QString transponderName("transponder ");
         transponderName.append(callsign.asString());
@@ -820,9 +821,8 @@ namespace BlackCore
 
     void CNetworkVatlib::onInterimPilotPositionUpdate(VatSessionID, const char *sender, const VatInterimPilotPosition *position, void *cbvar)
     {
-        const CCallsign callsign(sender);
-        const CAircraftSituation situation(
-            callsign,
+        CAircraftSituation situation(
+            CCallsign(sender),
             CCoordinateGeodetic(position->latitude, position->longitude, 0.0),
             CAltitude(position->altitudeTrue, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
             CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
@@ -831,6 +831,8 @@ namespace BlackCore
             // There is no speed information in a interim packet
             CSpeed(0.0, CSpeedUnit::kts())
         );
+        situation.setTimeOffsetMs(2000);
+        situation.setInterimFlag(true);
 
         emit cbvar_cast(cbvar)->aircraftInterimPositionUpdate(situation);
     }

@@ -1113,6 +1113,12 @@ namespace BlackCore
 
         // check sort order
         Q_ASSERT_X(l.size() < 2 || l[0].getMSecsSinceEpoch() >= l[1].getMSecsSinceEpoch(), Q_FUNC_INFO, "wrong sort order");
+
+        // a full position update received after an interim position update should use the time offset of the interim position
+        if (l.size() >= 2 && (l[0].isInterim() || l[1].isInterim()))
+        {
+            l[0].setTimeOffsetMs(std::min(l[0].getTimeOffsetMs(), l[1].getTimeOffsetMs()));
+        }
     }
 
     void CAirspaceMonitor::storeAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)

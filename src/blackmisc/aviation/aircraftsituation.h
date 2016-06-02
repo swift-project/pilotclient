@@ -154,6 +154,21 @@ namespace BlackMisc
             //! Corresponding callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Milliseconds to add to timestamp for interpolation
+            void setTimeOffsetMs(qint64 offset) { this->m_timeOffsetMs = offset; }
+
+            //! Milliseconds to add to timestamp for interpolation
+            qint64 getTimeOffsetMs() const { return this->m_timeOffsetMs; }
+
+            //! Timestamp with offset added for interpolation
+            qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }
+
+            //! Set flag indicating this is an interim position update
+            void setInterimFlag(bool flag) { this->m_isInterim = flag; }
+
+            //! Get flag indicating this is an interim position update
+            bool isInterim() const { return this->m_isInterim; }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -165,6 +180,8 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_pitch;
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundSpeed;
+            qint64 m_timeOffsetMs = 0;
+            bool m_isInterim = false;
 
             BLACK_METACLASS(
                 CAircraftSituation,
@@ -175,7 +192,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER(pitch),
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
-                BLACK_METAMEMBER(timestampMSecsSinceEpoch)
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(timeOffsetMs),
+                BLACK_METAMEMBER(isInterim)
             );
         };
     } // namespace
