@@ -478,13 +478,14 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
             using namespace BlackMisc::PhysicalQuantities;
-            m_traffic->setPlanePosition(situation.getCallsign().asString(),
+            m_traffic->addPlanePosition(situation.getCallsign().asString(),
                                         situation.latitude().value(CAngleUnit::deg()),
                                         situation.longitude().value(CAngleUnit::deg()),
                                         situation.getAltitude().value(CLengthUnit::ft()),
                                         situation.getPitch().value(CAngleUnit::deg()),
                                         situation.getBank().value(CAngleUnit::deg()),
-                                        situation.getHeading().value(CAngleUnit::deg()));
+                                        situation.getHeading().value(CAngleUnit::deg()),
+                                        situation.getAdjustedMSecsSinceEpoch()); // fixme sim machine's clock must be synchronized
         }
 
         void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)

@@ -225,7 +225,7 @@ namespace XBus
         m_planesById.clear();
     }
 
-    void CTraffic::setPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading)
+    void CTraffic::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 time)
     {
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
         if (plane)
