@@ -14,6 +14,9 @@
 #endif
 #include "traffic.h"
 #include "utils.h"
+#include "blackmisc/interpolator.h"
+#include "blackmisc/interpolatorlinear.h"
+#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "XPMPMultiplayer.h"
 #include "XPMPMultiplayerCSL.h"
 #include <XPLM/XPLMProcessing.h>
@@ -32,16 +35,37 @@ namespace XBus
         std::memset(static_cast<void*>(&surfaces), 0, sizeof(surfaces));
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
 
-        position0.size = sizeof(position0);
-        position1.size = sizeof(position1);
         surfaces.size = sizeof(surfaces);
         xpdr.size = sizeof(xpdr);
 
-        std::strncpy(position1.label, qPrintable(callsign), sizeof(position1.label));
+        std::strncpy(label, qPrintable(callsign), sizeof(label));
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
-    CTraffic::CTraffic(QObject *parent) : QObject(parent)
+    class CTraffic::AircraftProvider : public BlackMisc::Simulation::CRemoteAircraftProviderDummy
+    {
+    public:
+        //! Constructor.
+        AircraftProvider(QObject *parent = nullptr) : CRemoteAircraftProviderDummy(parent) {}
+
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
+        //! \todo return reference not copy, thread safety not needed
+        virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &) const override { return *m_situations; }
+
+        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
+        virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &) const override { return m_situations->size(); }
+
+        //! Inject the situations to be interpolated (for performance, no lookup by callsign).
+        void setSituations(const BlackMisc::Aviation::CAircraftSituationList *situations) { m_situations = situations; }
+
+    private:
+        const BlackMisc::Aviation::CAircraftSituationList *m_situations = nullptr;
+    };
+
+    CTraffic::CTraffic(QObject *parent) :
+        QObject(parent),
+        m_provider(new AircraftProvider(this)),
+        m_interpolator(new BlackMisc::CInterpolatorLinear(m_provider, this))
     {
     }
 
@@ -230,19 +254,20 @@ namespace XBus
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
         if (plane)
         {
-            plane->time0 = plane->time1;
-            plane->time1 = QDateTime::currentMSecsSinceEpoch();
-
-            std::memcpy(reinterpret_cast<char *>(&plane->position0) + sizeof(plane->position0.size),
-                        reinterpret_cast<char *>(&plane->position1) + sizeof(plane->position1.size),
-                        sizeof(plane->position0) - sizeof(plane->position0.size));
-
-            plane->position1.lat = latitude;
-            plane->position1.lon = longitude;
-            plane->position1.elevation = altitude;
-            plane->position1.pitch = static_cast<float>(pitch);
-            plane->position1.roll = static_cast<float>(roll);
-            plane->position1.heading = static_cast<float>(heading);
+            using namespace BlackMisc::PhysicalQuantities;
+            using namespace BlackMisc::Aviation;
+            constexpr int maxSituationCount = 6;
+            plane->situations.push_frontMaxElements(
+            {
+                callsign,
+                BlackMisc::Geo::CCoordinateGeodetic(latitude, longitude, 0),
+                CAltitude(altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+                CHeading(heading, CHeading::True, CAngleUnit::deg()),
+                CAngle(pitch, CAngleUnit::deg()),
+                CAngle(roll, CAngleUnit::deg()),
+                CSpeed(0, CSpeedUnit::kts())
+            }, maxSituationCount);
+            plane->situations.front().setMSecsSinceEpoch(time);
         }
     }
 
@@ -293,18 +318,6 @@ namespace XBus
                            sizeof(*dst) - sizeof(dst->size));
     }
 
-    //! linearly interpolate angle in degrees
-    template <typename T>
-    T lerpDegrees(T from, T to, double factor)
-    {
-        if (std::fabs(to - from) > 180)
-        {
-            if (to > from) { to -= 360; }
-            else { to += 360; }
-        }
-        return from + (to - from) * static_cast<T>(factor);
-    }
-
     int CTraffic::getPlaneData(void *id, int dataType, void *io_data)
     {
         auto plane = m_planesById.value(id, nullptr);
@@ -313,33 +326,25 @@ namespace XBus
         switch (dataType)
         {
         case xpmpDataType_Position:
-            if (plane->time1)
             {
-                const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
+                BlackMisc::IInterpolator::InterpolationStatus status;
+                m_provider->setSituations(&plane->situations);
+                auto situation = m_interpolator->getInterpolatedSituation(plane->callsign, -1, false, status);
+                if (! status.interpolationSucceeded) { return xpmpData_Unavailable; }
+                if (! status.changedPosition) { return xpmpData_Unchanged; }
 
-                if (plane->time0) // we have two positions between which to interpolate
-                {
-                    const auto currentTime = QDateTime::currentMSecsSinceEpoch();
-                    const auto factor = static_cast<double>(currentTime - plane->time0) / (plane->time1 - plane->time0);
-                    io_position->lat = lerpDegrees(plane->position0.lat, plane->position1.lat, factor);
-                    io_position->lon = lerpDegrees(plane->position0.lon, plane->position1.lon, factor);
-                    io_position->pitch = lerpDegrees(plane->position0.pitch, plane->position1.pitch, factor);
-                    io_position->roll = lerpDegrees(plane->position0.roll, plane->position1.roll, factor);
-                    io_position->heading = lerpDegrees(plane->position0.heading, plane->position1.heading, factor);
-                    io_position->elevation = plane->position0.elevation + (plane->position1.elevation - plane->position0.elevation) * factor;
-                    return xpmpData_NewData;
-                }
-                else // we only received one position so far
-                {
-                    if (memcmpPayload(io_position, &plane->position1))
-                    {
-                        std::memcpy(io_position, &plane->position1, sizeof(*io_position));
-                        return xpmpData_NewData;
-                    }
-                    else { return xpmpData_Unchanged; }
-                }
+                using namespace BlackMisc::PhysicalQuantities;
+                using namespace BlackMisc::Aviation;
+                const auto io_position = static_cast<XPMPPlanePosition_t *>(io_data);
+                io_position->lat = situation.latitude().value(CAngleUnit::deg());
+                io_position->lon = situation.longitude().value(CAngleUnit::deg());
+                io_position->elevation = situation.getAltitude().value(CLengthUnit::ft());
+                io_position->pitch = static_cast<float>(situation.getPitch().value(CAngleUnit::deg()));
+                io_position->roll = static_cast<float>(situation.getBank().value(CAngleUnit::deg()));
+                io_position->heading = static_cast<float>(situation.getHeading().value(CAngleUnit::deg()));
+                std::strncpy(io_position->label, plane->label, sizeof(plane->label)); // fixme don't need to copy on every frame
+                return xpmpData_NewData;
             }
-            else { return xpmpData_Unavailable; }
 
         case xpmpDataType_Surfaces:
             if (plane->hasSurfaces)

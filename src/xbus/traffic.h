@@ -13,6 +13,7 @@
 //! \file
 
 #include "datarefs.h"
+#include "blackmisc/aviation/aircraftsituationlist.h"
 #include <QObject>
 #include <QHash>
 #include <QVector>
@@ -23,6 +24,8 @@
 #define XBUS_TRAFFIC_INTERFACENAME "org.swift_project.xbus.traffic"
 #define XBUS_TRAFFIC_OBJECTPATH "/xbus/traffic"
 //! \endcond
+
+namespace BlackMisc { class IInterpolator; }
 
 namespace XBus
 {
@@ -124,12 +127,10 @@ namespace XBus
             QString aircraftIcao;
             QString airlineIcao;
             QString livery;
-            qint64 time0 = 0;
-            qint64 time1 = 0;
             bool hasSurfaces = false;
             bool hasXpdr = false;
-            XPMPPlanePosition_t position0;
-            XPMPPlanePosition_t position1;
+            char label[32] {};
+            BlackMisc::Aviation::CAircraftSituationList situations;
             XPMPPlaneSurfaces_t surfaces;
             XPMPPlaneRadar_t xpdr;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);
@@ -142,6 +143,10 @@ namespace XBus
         {
             return static_cast<CTraffic *>(self)->getPlaneData(id, dataType, io_data);
         }
+
+        class AircraftProvider;
+        AircraftProvider *m_provider = nullptr;
+        BlackMisc::IInterpolator *m_interpolator = nullptr;
     };
 
 }
