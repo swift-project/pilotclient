@@ -15,6 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
+#include "blackgui/settings/settingsdockwidget.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -215,6 +216,7 @@ namespace BlackGui
         bool m_selected              = false;        //!< selected when tabbed
         bool m_dockWidgetVisible     = false;        //!< logical visible, not to be confused with QDockWidget::isVisible()
         bool m_wasFrameless          = false;        //!< frameless when last floating
+        BlackMisc::CSetting<BlackGui::Settings::SettingsDockWidgets> m_settings { this, &CDockWidget::ps_settingsChanged };
 
         //! Empty widget with no size
         void initTitleBarWidgets();
@@ -224,8 +226,16 @@ namespace BlackGui
 
         //! Force a style sheet update
         void forceStyleSheetUpdate();
-    };
 
+        //! Name used as key for settings
+        QString getNameForSettings() const;
+
+        //! This widget`s settings
+        BlackGui::Settings::CSettingsDockWidget getSettings() const;
+
+        //! Save my updated settings
+        void setAndSaveSettings(const BlackGui::Settings::CSettingsDockWidget &settings);
+    };
 } // namespace
 
 #endif // guard

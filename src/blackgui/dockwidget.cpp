@@ -541,4 +541,30 @@ namespace BlackGui
         this->setStyleSheet(qss);
     }
 
+    QString CDockWidget::getNameForSettings() const
+    {
+        return this->m_windowTitleBackup.toLower().remove(' '); // let`s see how far I get with that
+    }
+
+    CSettingsDockWidget CDockWidget::getSettings() const
+    {
+        const CSettingsDockWidgets all = this->m_settings.getCopy();
+        const QString name(this->getNameForSettings());
+        const CSettingsDockWidget s = all.value(name);
+        return s;
+    }
+
+    void CDockWidget::setSettings(const CSettingsDockWidget &settings)
+    {
+        const CSettingsDockWidget current = getSettings();
+        if (current == settings) { return; }
+        CSettingsDockWidgets all = this->m_settings.getCopy();
+        const QString name(this->getNameForSettings());
+        all.insert(name, settings);
+        const CStatusMessage m = this->m_settings.setAndSave(all);
+        if (m.isFailure())
+        {
+            CLogMessage::preformatted(m);
+        }
+    }
 } // namespace
