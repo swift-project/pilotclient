@@ -155,6 +155,7 @@ namespace BlackCore
 
     CGlobalSetup CApplication::getGlobalSetup() const
     {
+        if (this->m_shutdown) { return CGlobalSetup(); }
         const CSetupReader *r = this->m_setupReader.data();
         if (!r) { return CGlobalSetup(); }
         return r->getSetup();
@@ -162,6 +163,7 @@ namespace BlackCore
 
     CUpdateInfo CApplication::getUpdateInfo() const
     {
+        if (this->m_shutdown) { return CUpdateInfo(); }
         const CSetupReader *r = this->m_setupReader.data();
         if (!r) { return CUpdateInfo(); }
         return r->getUpdateInfo();
@@ -596,6 +598,7 @@ namespace BlackCore
         {
             if (this->supportsContexts())
             {
+                // this will eventually also call saveToStore
                 m = this->getIContextApplication()->saveSettings();
             }
             else

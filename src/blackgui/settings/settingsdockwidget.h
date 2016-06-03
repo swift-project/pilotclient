@@ -36,7 +36,9 @@ namespace BlackGui
             {
                 IndexFloatingMargins = BlackMisc::CPropertyIndex::GlobalIndexCSettingsDockWidget,
                 IndexFloatingFramelessMargins,
-                IndexDockedMargins
+                IndexDockedMargins,
+                IndexFrameless,
+                IndexFloating
             };
 
             //! Default constructor
@@ -46,22 +48,40 @@ namespace BlackGui
             ~CSettingsDockWidget() {}
 
             //! Set margins for given dock widget
-            void setFloatingFramelessMargins(const QMargins &margins);
+            void setMarginsWhenFramelessFloating(const QMargins &margins);
 
             //! Margins for given dock widget
-            QMargins getFloatingFramelessMargins() const;
+            QMargins getMarginsWhenFramelessFloating() const;
 
             //! Set margins for given dock widget
-            void setFloatingMargins(const QMargins &margins);
+            void setMarginsWhenFloating(const QMargins &margins);
 
             //! Margins for given dock widget
-            QMargins getFloatingMargins() const;
+            QMargins getMarginsWhenFloating() const;
 
             //! Set margins for given dock widget
-            void setDockedMargins(const QMargins &margins);
+            void setMarginsWhenDocked(const QMargins &margins);
 
             //! Margins for given dock widget
-            QMargins getDockedMargins() const;
+            QMargins getMarginsWhenDocked() const;
+
+            //! Floating?
+            bool isFloating() const { return m_floating; }
+
+            //! Frameless?
+            bool isFramless() const { return m_frameless; }
+
+            //! Floating
+            void setFloating(bool floating) { m_floating = floating; }
+
+            //! Frameless
+            void setFrameless(bool frameless) { m_frameless = frameless; }
+
+            //! Geometry
+            QByteArray getGeometry() const;
+
+            //! Set geometry
+            void setGeometry(const QByteArray &ba);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -78,7 +98,10 @@ namespace BlackGui
         private:
             QString m_floatingMargins {"0:0:0:0"};          //!< margins: when floating
             QString m_floatingFramelessMargins {"0:0:0:0"}; //!< margins, when floating and frameless
-            QString m_dockedMargins {"0:0:0:0"};            //!< margins, when floating and frameless
+            QString m_dockedMargins {"0:0:0:0"};            //!< margins, when docked
+            QString m_geometry;                             //!< geometry as HEX values
+            bool m_floating = false;                        //!< floating
+            bool m_frameless = false;                       //!< frameless
 
             //! Convert to string
             static QString marginsToString(const QMargins &margins);
@@ -90,7 +113,10 @@ namespace BlackGui
                 CSettingsDockWidget,
                 BLACK_METAMEMBER(floatingMargins),
                 BLACK_METAMEMBER(floatingFramelessMargins),
-                BLACK_METAMEMBER(dockedMargins)
+                BLACK_METAMEMBER(dockedMargins),
+                BLACK_METAMEMBER(floating),
+                BLACK_METAMEMBER(frameless),
+                BLACK_METAMEMBER(geometry)
             );
         };
 
@@ -109,6 +135,8 @@ namespace BlackGui
             //! Default constructor.
             CSettingsDockWidgets() {}
 
+            //! Get setting or init by estimated default values
+            CSettingsDockWidget getByNameOrInitToDefault(const QString &name);
         };
 
         //! Trait for settings for dock widget

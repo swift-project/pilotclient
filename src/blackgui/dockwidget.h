@@ -35,6 +35,7 @@ class QWidgetAction;
 
 namespace BlackGui
 {
+    namespace Components { class CMarginsInput; }
 
     //! \brief Our base class for dockable widgets containing some specialized functionality on top of QDockWidget.
     //! \details We currently use dockable widgets either as "info area" or "info bar" dockable widget.
@@ -59,27 +60,6 @@ namespace BlackGui
 
         //! Set null (nullptr) title bar
         void setNullTitleBarWidget();
-
-        //! Margins when window is floating
-        void setMarginsWhenFloating(const QMargins &margins);
-
-        //! Margins when window is floating
-        void setMarginsWhenFloating(int left, int top, int right, int bottom);
-
-        //! Margins when window is floating (frameless)
-        void setMarginsWhenFramelessFloating(const QMargins &margins);
-
-        //! Margins when window is floating (frameless)
-        void setMarginsWhenFramelessFloating(int left, int top, int right, int bottom);
-
-        //! Margins when widget is floating
-        void setMarginsWhenDocked(const QMargins &margins);
-
-        //! Margins when widget is floating
-        void setMarginsWhenDocked(int left, int top, int right, int bottom);
-
-        //! Set margings from .ini file
-        bool setMarginsFromSettings(const QString &section = "");
 
         //! Window title backup
         const QString &windowTitleBackup() const { return this->m_windowTitleBackup; }
@@ -134,6 +114,12 @@ namespace BlackGui
         //! Toggle frameless mode (EXPERIMENTAL)
         void toggleFrameless();
 
+        //! Restore from settings
+        bool restoreFromSettings();
+
+        //! Remember widget state
+        void saveToSettings();
+
         //! Set title and internally keep a backup
         void setWindowTitle(const QString &title);
 
@@ -153,6 +139,33 @@ namespace BlackGui
 
         //! Constructor
         CDockWidget(bool allowStatusBar, QWidget *parent = nullptr);
+
+        //! Margins when window is floating
+        void setMarginsWhenFloating(const QMargins &margins);
+
+        //! Margins when window is floating
+        void setMarginsWhenFloating(int left, int top, int right, int bottom);
+
+        //! Margins when floating
+        QMargins getMarginsWhenFloating() const;
+
+        //! Margins when window is floating (frameless)
+        void setMarginsWhenFramelessFloating(const QMargins &margins);
+
+        //! Margins when window is floating (frameless)
+        void setMarginsWhenFramelessFloating(int left, int top, int right, int bottom);
+
+        //! Margins when floating and frameless
+        QMargins getMarginsWhenFramelessFloating() const;
+
+        //! Margins when widget is floating
+        void setMarginsWhenDocked(const QMargins &margins);
+
+        //! Margins when widget is floating
+        void setMarginsWhenDocked(int left, int top, int right, int bottom);
+
+        //! Margins when docked
+        QMargins getMarginsWhenDocked() const;
 
         //! Override close event
         virtual void closeEvent(QCloseEvent *event) override;
@@ -198,25 +211,23 @@ namespace BlackGui
         void ps_dummy();
 
     private:
-        QWidget *m_titleBarWidgetEmpty    = nullptr; //!< replacing default title bar
-        QWidget *m_titleBarWidgetOriginal = nullptr; //!< the original title bar
-        QWidgetAction *m_marginMenuAction = nullptr; //!< menu action for margins
-        QMargins m_marginsWhenFloating;              //!< Offsets when window is floating
-        QMargins m_marginsWhenFramelessFloating;     //!< Offsets when window is frameless floating
-        QMargins m_marginsWhenDocked;                //!< Offsets when window is docked
-        CManagedStatusBar m_statusBar;               //!< Status bar when floating
-        QString  m_windowTitleBackup;                //!< original title, even if the widget title is deleted for layout purposes
-        QSize m_preferredSizeWhenFloating;           //!< preferred size when floating 1st time
-        QSize m_initialDockedMinimumSize;            //!< minimum size before first floating
-        QPoint m_offsetWhenFloating;                 //!< initial offset to main window when floating first time
+        QWidget *m_titleBarWidgetEmpty    = nullptr;  //!< replacing default title bar
+        QWidget *m_titleBarWidgetOriginal = nullptr;  //!< the original title bar
+        QWidgetAction *m_marginMenuAction = nullptr;  //!< menu action for margins
+        Components::CMarginsInput *m_input = nullptr; //!< margins widget
+        CManagedStatusBar m_statusBar;                //!< Status bar when floating
+        QString m_windowTitleBackup;                  //!< original title, even if the widget title is deleted for layout purposes
+        QSize m_preferredSizeWhenFloating;            //!< preferred size when floating 1st time
+        QSize m_initialDockedMinimumSize;             //!< minimum size before first floating
+        QPoint m_offsetWhenFloating;                  //!< initial offset to main window when floating first time
         bool m_allowStatusBar        = true;
         bool m_windowTitleWhenDocked = true;
         bool m_wasAlreadyFloating    = false;
         bool m_resetedFloating       = false;
-        bool m_selected              = false;        //!< selected when tabbed
-        bool m_dockWidgetVisible     = false;        //!< logical visible, not to be confused with QDockWidget::isVisible()
-        bool m_wasFrameless          = false;        //!< frameless when last floating
-        BlackMisc::CSetting<BlackGui::Settings::SettingsDockWidgets> m_settings { this, &CDockWidget::ps_settingsChanged };
+        bool m_selected              = false;         //!< selected when tabbed
+        bool m_dockWidgetVisible     = false;         //!< logical visible, not to be confused with QDockWidget::isVisible()
+        bool m_wasFrameless          = false;         //!< frameless when last floating
+        BlackMisc::CSetting<BlackGui::Settings::SettingsDockWidgets> m_settings { this, &CDockWidget::ps_settingsChanged }; //!< all docked wigets settings
 
         //! Empty widget with no size
         void initTitleBarWidgets();
@@ -227,6 +238,9 @@ namespace BlackGui
         //! Force a style sheet update
         void forceStyleSheetUpdate();
 
+        //! Init settings
+        void initSettings();
+
         //! Name used as key for settings
         QString getNameForSettings() const;
 
@@ -234,7 +248,7 @@ namespace BlackGui
         BlackGui::Settings::CSettingsDockWidget getSettings() const;
 
         //! Save my updated settings
-        void setAndSaveSettings(const BlackGui::Settings::CSettingsDockWidget &settings);
+        void setSettings(const BlackGui::Settings::CSettingsDockWidget &settings);
     };
 } // namespace
 

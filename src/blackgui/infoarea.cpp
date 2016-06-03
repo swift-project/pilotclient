@@ -543,33 +543,6 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::setMarginsWhenFloating(int left, int top, int right, int bottom)
-    {
-        for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
-        {
-            //! Margins when window is floating
-            dw->setMarginsWhenFloating(left, top, right, bottom);
-        }
-    }
-
-    void CInfoArea::setMarginsWhenFramelessFloating(int left, int top, int right, int bottom)
-    {
-        for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
-        {
-            //! Margins when window is floating
-            dw->setMarginsWhenFramelessFloating(left, top, right, bottom);
-        }
-    }
-
-    void CInfoArea::setMarginsWhenDocked(int left, int top, int right, int bottom)
-    {
-        for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
-        {
-            //! Margins when window is docked
-            dw->setMarginsWhenDocked(left, top, right, bottom);
-        }
-    }
-
     QList<CDockWidgetInfoArea *> CInfoArea::findOwnDockWidgetInfoAreas() const
     {
         QList<CDockWidgetInfoArea *> infoAreas = this->findChildren<CDockWidgetInfoArea *>();

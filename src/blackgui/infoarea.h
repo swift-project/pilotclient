@@ -210,15 +210,6 @@ namespace BlackGui
         //! Connect all widgets
         void connectTopLevelChanged();
 
-        //! Margins for the floating widgets
-        void setMarginsWhenFloating(int left, int top, int right, int bottom);
-
-        //! Margins for the floating widgets (when frameless)
-        void setMarginsWhenFramelessFloating(int left, int top, int right, int bottom);
-
-        //! Margins for the dockable widgets
-        void setMarginsWhenDocked(int left, int top, int right, int bottom);
-
         //! Nested info areas
         QList<CInfoArea *> getChildInfoAreas() const { return this->findChildren<CInfoArea *>(); }
 

@@ -43,18 +43,19 @@ namespace BlackGui
         CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessDockWidget", this),
         m_allowStatusBar(allowStatusBar)
     {
+        // init settings
         this->ps_onStyleSheetsChanged();
         this->initTitleBarWidgets();
 
         // context menu
-        CMarginsInput *mi = new CMarginsInput(this);
-        mi->setMaximumWidth(150);
+        this->m_input = new CMarginsInput(this);
+        this->m_input->setMaximumWidth(150);
         this->m_marginMenuAction = new QWidgetAction(this);
-        this->m_marginMenuAction->setDefaultWidget(mi);
+        this->m_marginMenuAction->setDefaultWidget(this->m_input);
 
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::ps_showContextMenu);
-        connect(mi, &CMarginsInput::changedMargins, this, &CDockWidget::ps_menuChangeMargins);
+        connect(this->m_input, &CMarginsInput::changedMargins, this, &CDockWidget::ps_menuChangeMargins);
 
         // connect
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::ps_onTopLevelChanged);
@@ -86,9 +87,8 @@ namespace BlackGui
 
     void CDockWidget::setMarginsWhenFloating(const QMargins &margins)
     {
-        this->m_marginsWhenFloating = margins;
         CSettingsDockWidget s = this->getSettings();
-        s.setFloatingMargins(margins);
+        s.setMarginsWhenFloating(margins);
         this->setSettings(s);
     }
 
@@ -97,11 +97,15 @@ namespace BlackGui
         this->setMarginsWhenFloating(QMargins(left, top, right, bottom));
     }
 
+    QMargins CDockWidget::getMarginsWhenFloating() const
+    {
+        return this->getSettings().getMarginsWhenFloating();
+    }
+
     void CDockWidget::setMarginsWhenFramelessFloating(const QMargins &margins)
     {
-        this->m_marginsWhenFramelessFloating = margins;
         CSettingsDockWidget s = this->getSettings();
-        s.setFloatingFramelessMargins(margins);
+        s.setMarginsWhenFramelessFloating(margins);
         this->setSettings(s);
     }
 
@@ -110,17 +114,26 @@ namespace BlackGui
         this->setMarginsWhenFramelessFloating(QMargins(left, top, right, bottom));
     }
 
+    QMargins CDockWidget::getMarginsWhenFramelessFloating() const
+    {
+        return this->getSettings().getMarginsWhenFramelessFloating();
+    }
+
     void CDockWidget::setMarginsWhenDocked(const QMargins &margins)
     {
-        this->m_marginsWhenDocked = margins;
         CSettingsDockWidget s = this->getSettings();
-        s.setDockedMargins(margins);
+        s.setMarginsWhenDocked(margins);
         this->setSettings(s);
     }
 
     void CDockWidget::setMarginsWhenDocked(int left, int top, int right, int bottom)
     {
         this->setMarginsWhenDocked(QMargins(left, top, right, bottom));
+    }
+
+    QMargins CDockWidget::getMarginsWhenDocked() const
+    {
+        return this->getSettings().getMarginsWhenDocked();
     }
 
     bool CDockWidget::isWidgetVisible() const
@@ -194,7 +207,7 @@ namespace BlackGui
         // margins
         if (this->isFloating())
         {
-            this->setContentsMargins(frameless ? this->m_marginsWhenFramelessFloating : this->m_marginsWhenFloating);
+            this->setContentsMargins(frameless ? this->getMarginsWhenFramelessFloating() : this->getMarginsWhenFloating());
         }
 
         // resize
@@ -251,6 +264,25 @@ namespace BlackGui
         }
     }
 
+    bool CDockWidget::restoreFromSettings()
+    {
+        const CSettingsDockWidget s = this->getSettings();
+        if (s.isFloating() != this->isFloating())
+        {
+            this->toggleFloating();
+        }
+        if (s.isFramless() != this->isFrameless())
+        {
+            this->toggleFrameless();
+        }
+        const QByteArray geo(s.getGeometry());
+        if (!geo.isEmpty())
+        {
+            return this->restoreGeometry(geo);
+        }
+        return true;
+    }
+
     void CDockWidget::closeEvent(QCloseEvent *event)
     {
         if (this->isFloating())
@@ -299,10 +331,13 @@ namespace BlackGui
         {
             contextMenu->addAction(BlackMisc::CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
         }
+        contextMenu->addAction(BlackMisc::CIcons::load16(), "Restore", this, &CDockWidget::restoreFromSettings);
+        contextMenu->addAction(BlackMisc::CIcons::save16(), "Save state", this, &CDockWidget::saveToSettings);
 
         // Margin action
         if (this->isFloating())
         {
+            this->m_input->setMargins(this->contentsMargins());
             contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Margins", this, &CDockWidget::ps_dummy);
             contextMenu->addAction(this->m_marginMenuAction);
         }
@@ -310,6 +345,9 @@ namespace BlackGui
 
     void CDockWidget::initialFloating()
     {
+        // settings, ii here because name now is set
+        this->initSettings();
+
         // init status bar, as we have now all structures set
         this->initStatusBarAndProperties();
 
@@ -328,52 +366,6 @@ namespace BlackGui
             int y = mainWindowPos.y() + this->m_offsetWhenFloating.y();
             this->move(x, y);
         }
-    }
-
-    bool CDockWidget::setMarginsFromSettings(const QString &section)
-    {
-        QString sectionUsed(section.isEmpty() ? this->objectName() : section);
-        if (sectionUsed.isEmpty()) { return false; }
-        const QSettings *settings = sGui->getStyleSheetUtility().iniFile();
-        Q_ASSERT_X(settings, "CDockWidget::setMarginsFromSettings", "Missing ini settings");
-        if (!settings) { return false; }
-
-        // check if value exists as there is no way to check if key/section exist
-        if (settings->value(sectionUsed + "/margindocked.left").toString().isEmpty())
-        {
-            // no values considered as no section, now we check if an alias exists
-            sectionUsed = settings->value("alias/" + sectionUsed).toString();
-            if (sectionUsed.isEmpty()) { return false; }
-            if (settings->value(sectionUsed + "/margindocked.left").toString().isEmpty())
-            {
-                Q_ASSERT_X(false, "CDockWidget::setMarginsFromSettings", "Wrong ini settings");
-                return false;
-            }
-        }
-
-        bool ok = true, ok1, ok2, ok3, ok4;
-        this->setMarginsWhenDocked(
-            settings->value(sectionUsed + "/margindocked.left", 1).toInt(&ok1),
-            settings->value(sectionUsed + "/margindocked.top", 1).toInt(&ok2),
-            settings->value(sectionUsed + "/margindocked.right", 1).toInt(&ok3),
-            settings->value(sectionUsed + "/margindocked.bottom", 1).toInt(&ok4));
-        if (!(ok1 && ok2 && ok3 && ok4)) { CLogMessage(this).error("Error in docked margins"); ok = false; }
-
-        this->setMarginsWhenFloating(
-            settings->value(sectionUsed + "/marginfloating.left", 10).toInt(&ok1),
-            settings->value(sectionUsed + "/marginfloating.top", 10).toInt(&ok2),
-            settings->value(sectionUsed + "/marginfloating.right", 10).toInt(&ok3),
-            settings->value(sectionUsed + "/marginfloating.bottom", 10).toInt(&ok4));
-        if (!(ok1 && ok2 && ok3 && ok4)) { CLogMessage(this).error("Error in floating margins"); ok = false; }
-
-        this->setMarginsWhenFramelessFloating(
-            settings->value(sectionUsed + "/marginfloating.frameless.left", 5).toInt(&ok1),
-            settings->value(sectionUsed + "/marginfloating.frameless.top", 5).toInt(&ok2),
-            settings->value(sectionUsed + "/marginfloating.frameless.right", 5).toInt(&ok3),
-            settings->value(sectionUsed + "/marginfloating.frameless.bottom", 5).toInt(&ok4));
-        if (!(ok1 && ok2 && ok3 && ok4)) { CLogMessage(this).error("Error in floating (frameless) margins"); ok = false; }
-
-        return ok;
     }
 
     QString CDockWidget::windowTitleOrBackup() const
@@ -403,8 +395,8 @@ namespace BlackGui
 
             this->setContentsMargins(
                 this->isFrameless() ?
-                this->m_marginsWhenFramelessFloating :
-                this->m_marginsWhenFloating
+                this->getMarginsWhenFramelessFloating() :
+                this->getMarginsWhenFloating()
             );
             this->m_statusBar.show();
             this->m_wasAlreadyFloating = true;
@@ -417,7 +409,7 @@ namespace BlackGui
             if (!this->m_windowTitleWhenDocked) { QDockWidget::setWindowTitle(""); }
             this->m_statusBar.hide();
             this->setEmptyTitleBar();
-            this->setContentsMargins(this->m_marginsWhenDocked);
+            this->setContentsMargins(this->getMarginsWhenDocked());
 
             // sometimes floating sets a new minimum size, here we reset it
             if (this->minimumHeight() > this->m_initialDockedMinimumSize.height())
@@ -541,9 +533,20 @@ namespace BlackGui
         this->setStyleSheet(qss);
     }
 
+    void CDockWidget::initSettings()
+    {
+        const QString name(this->getNameForSettings());
+        CSettingsDockWidgets all = this->m_settings.getCopy();
+        if (all.contains(name)) { return; }
+        all.getByNameOrInitToDefault(name);
+        this->m_settings.set(all);
+    }
+
     QString CDockWidget::getNameForSettings() const
     {
-        return this->m_windowTitleBackup.toLower().remove(' '); // let`s see how far I get with that
+        const QString name(this->m_windowTitleBackup.toLower().remove(' ')); // let`s see how far I get with that
+        Q_ASSERT_X(!name.isEmpty(), Q_FUNC_INFO, "no name");
+        return name;
     }
 
     CSettingsDockWidget CDockWidget::getSettings() const
@@ -561,10 +564,19 @@ namespace BlackGui
         CSettingsDockWidgets all = this->m_settings.getCopy();
         const QString name(this->getNameForSettings());
         all.insert(name, settings);
-        const CStatusMessage m = this->m_settings.setAndSave(all);
+        const CStatusMessage m = this->m_settings.set(all); // saved when shutdown
         if (m.isFailure())
         {
             CLogMessage::preformatted(m);
         }
+    }
+
+    void CDockWidget::saveToSettings()
+    {
+        CSettingsDockWidget s = this->getSettings();
+        s.setFloating(this->isFloating());
+        s.setFrameless(this->isFrameless());
+        s.setGeometry(this->saveGeometry());
+        this->setSettings(s);
     }
 } // namespace
