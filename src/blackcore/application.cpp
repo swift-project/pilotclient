@@ -18,6 +18,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -456,14 +457,6 @@ namespace BlackCore
         }
     }
 
-    QString CApplication::applicationDirPath()
-    {
-        QString appDirectoryString(qApp->applicationDirPath());
-        if (appDirectoryString.endsWith("Contents/MacOS")) { appDirectoryString += "/../../.."; }
-        QDir appDirectory(appDirectoryString);
-        return appDirectory.absolutePath();
-    }
-
     bool CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
     {
         Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
@@ -535,7 +528,10 @@ namespace BlackCore
         CLogHandler::instance()->install(); // make sure we have a log handler!
 
         // File logger
-        static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/logs";
+        static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                "/org.swift-project/" +
+                CDirectoryUtils::normalizedApplicationDirectory() +
+                "/logs";
         this->m_fileLogger.reset(new CFileLogger(executable(), logPath));
         this->m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
     }

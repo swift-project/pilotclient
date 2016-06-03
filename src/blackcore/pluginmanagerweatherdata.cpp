@@ -10,8 +10,8 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagerweatherdata.h"
 #include "blackcore/weatherdata.h"
+#include "blackmisc/directoryutils.h"
 
-#include <QCoreApplication>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QStringBuilder>
@@ -67,7 +67,7 @@ namespace BlackCore
 
     QString CPluginManagerWeatherData::pluginDirectory() const
     {
-        return sApp->applicationDirPath() % QStringLiteral("/plugins/weatherdata");
+        return CDirectoryUtils::applicationDirectoryPath() % QStringLiteral("/plugins/weatherdata");
     }
 
 }

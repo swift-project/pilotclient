@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingscache.h"
 
@@ -26,7 +27,10 @@ namespace BlackMisc
 
     const QString &CSettingsCache::persistentStore()
     {
-        static const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/settings/core";
+        static const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                "/org.swift-project/" +
+                CDirectoryUtils::normalizedApplicationDirectory() +
+                "/settings/core";
         return dir;
     }
 

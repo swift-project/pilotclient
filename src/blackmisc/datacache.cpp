@@ -11,6 +11,7 @@
 
 #include "blackmisc/atomicfile.h"
 #include "blackmisc/datacache.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
 
@@ -99,7 +100,10 @@ namespace BlackMisc
 
     const QString &CDataCache::persistentStore()
     {
-        static const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/data/cache/core";
+        static const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                "/org.swift-project/" +
+                CDirectoryUtils::normalizedApplicationDirectory() +
+                "/data/cache/core";
         return dir;
     }
 

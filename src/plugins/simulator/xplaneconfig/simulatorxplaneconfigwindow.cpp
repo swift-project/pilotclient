@@ -9,13 +9,13 @@
 
 #include "simulatorxplaneconfigwindow.h"
 #include "blackcore/application.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "ui_simulatorxplaneconfigwindow.h"
 
 #include <QComboBox>
-#include <QCoreApplication>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QFileDialog>
@@ -28,12 +28,13 @@
 class QWidget;
 
 using namespace BlackGui;
+using namespace BlackMisc;
 
 namespace
 {
     QString xBusOriginDir()
     {
-        return sApp->applicationDirPath() % QStringLiteral("/../xbus");
+        return CDirectoryUtils::applicationDirectoryPath() % QStringLiteral("/../xbus");
     }
 }
 

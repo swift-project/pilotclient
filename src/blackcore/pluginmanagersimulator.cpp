@@ -10,8 +10,8 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/directoryutils.h"
 
-#include <QCoreApplication>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QStringBuilder>
@@ -103,7 +103,7 @@ namespace BlackCore
 
     QString CPluginManagerSimulator::pluginDirectory() const
     {
-        return sApp->applicationDirPath() % QStringLiteral("/plugins/simulator");
+        return CDirectoryUtils::applicationDirectoryPath() % QStringLiteral("/plugins/simulator");
     }
 
 }

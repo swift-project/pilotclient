@@ -9,10 +9,10 @@
 
 #include "blackcore/pluginmanager.h"
 #include "blackcore/application.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 
-#include <QCoreApplication>
 #include <QDir>
 #include <QDirIterator>
 #include <QJsonValue>
@@ -55,7 +55,7 @@ namespace BlackCore
 
     QString IPluginManager::pluginDirectory() const
     {
-        return sApp->applicationDirPath() % QStringLiteral("/plugins");
+        return CDirectoryUtils::applicationDirectoryPath() % QStringLiteral("/plugins");
     }
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const
