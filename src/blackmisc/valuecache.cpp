@@ -312,10 +312,8 @@ namespace BlackMisc
             {
                 return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
-            CVariantMap storedValues;
-            storedValues.convertFromJson(json.object());
-            storedValues.insert(*it);
-            json.setObject(storedValues.toJson());
+            auto object = json.object();
+            json.setObject(it->mergeToJson(object));
 
             if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
             {
@@ -343,10 +341,25 @@ namespace BlackMisc
             return CStatusMessage(this).error("Failed to create directory %1") << dir;
         }
 
-        const QStringList entries(QDir(dir).entryList({ "*.json" }, QDir::Files));
-        for (const auto &filename : entries)
+        QMap<QString, QStringList> keysInFiles;
+        for (const auto &key : keys)
         {
-            QFile file(dir + "/" + filename);
+            keysInFiles[key.section('/', 0, 0)].push_back(key);
+        }
+        if (keys.isEmpty())
+        {
+            for (const auto &filename : QDir(dir).entryInfoList({ "*.json" }, QDir::Files))
+            {
+                keysInFiles.insert(filename.completeBaseName(), {});
+            }
+        }
+        for (auto it = keysInFiles.cbegin(); it != keysInFiles.cend(); ++it)
+        {
+            QFile file(dir + "/" + it.key() + ".json");
+            if (! file.exists())
+            {
+                continue;
+            }
             if (! file.open(QFile::ReadOnly | QFile::Text))
             {
                 return CStatusMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
@@ -357,11 +370,8 @@ namespace BlackMisc
                 return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
             CVariantMap temp;
-            temp.convertFromJson(json.object());
-            if (! keys.isEmpty())
-            {
-                temp.removeByKeyIf([&keys](const QString & key) { return ! keys.contains(key); }); // TODO optimize by skipping files
-            }
+            temp.convertFromJson(json.object(), it.value());
+            if (it.value().isEmpty()) { temp.convertFromJson(json.object()); }
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }

@@ -14,13 +14,19 @@
 namespace BlackMisc
 {
 
-    QJsonObject CVariantMap::toJson() const
+    QJsonObject &CVariantMap::mergeToJson(QJsonObject &json) const
     {
-        QJsonObject json;
         for (auto it = cbegin(); it != cend(); ++it)
         {
             json.insert(it.key(), it.value().toJson());
         }
+        return json;
+    }
+
+    QJsonObject CVariantMap::toJson() const
+    {
+        QJsonObject json;
+        mergeToJson(json);
         return json;
     }
 
@@ -32,6 +38,19 @@ namespace BlackMisc
             CVariant value;
             value.convertFromJson(it.value().toObject());
             implementationOf(*this).insert(cend(), it.key(), value);
+        }
+    }
+
+    void CVariantMap::convertFromJson(const QJsonObject &json, const QStringList &keys)
+    {
+        clear();
+        for (const auto &key : keys)
+        {
+            auto value = json.value(key);
+            if (value.isUndefined()) { continue; }
+            CVariant var;
+            var.convertFromJson(value.toObject());
+            insert(key, var);
         }
     }
 
