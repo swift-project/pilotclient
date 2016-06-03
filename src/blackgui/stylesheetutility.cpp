@@ -112,10 +112,6 @@ namespace BlackGui
         QDir directory(CBuildConfig::getStylesheetsDir());
         if (!directory.exists()) { return false; }
 
-        // ini file
-        const QString iniFile = CFileUtils::appendFilePaths(directory.absolutePath(), fileNameIniFile());
-        m_iniFile.reset(new QSettings(iniFile, QSettings::IniFormat));
-
         // qss/css files
         directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
@@ -332,12 +328,6 @@ namespace BlackGui
     const QString &CStyleSheetUtility::fileNameSwiftLauncher()
     {
         static const QString f("swiftlauncher.qss");
-        return f;
-    }
-
-    const QString &CStyleSheetUtility::fileNameIniFile()
-    {
-        static const QString f("gui.ini");
         return f;
     }
 

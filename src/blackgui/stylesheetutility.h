@@ -61,9 +61,6 @@ namespace BlackGui
         //! Read the *.qss files
         bool read();
 
-        //! GUI ini file data
-        const QSettings *iniFile() const { return m_iniFile.data(); }
-
         //! Get the font style
         static QString fontStyle(const QString &combinedStyleAndWeight);
 
@@ -109,9 +106,6 @@ namespace BlackGui
         //! File name swiftlauncher.qss
         static const QString &fileNameSwiftLauncher();
 
-        //! File name ini file
-        static const QString &fileNameIniFile();
-
         //! Font weights
         static const QStringList &fontWeights();
 
@@ -151,7 +145,6 @@ namespace BlackGui
 
     private:
         QMap<QString, QString>    m_styleSheets;         //!< filename, stylesheet
-        QScopedPointer<QSettings> m_iniFile;
         QFileSystemWatcher        m_fileWatcher {this};  //!< Monitor my qss files
     };
 }

@@ -226,9 +226,6 @@ namespace BlackGui
         //! \remarks result stored in m_dockableWidgets
         QList<CDockWidgetInfoArea *> findOwnDockWidgetInfoAreas() const;
 
-        //! Settings based on ini file
-        void iniFileBasedSettings();
-
     private slots:
         //! Tab bar has been double clicked
         void ps_tabBarDoubleClicked(int tabBarIndex);

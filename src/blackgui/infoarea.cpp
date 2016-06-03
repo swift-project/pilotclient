@@ -58,7 +58,6 @@ namespace BlackGui
         }
 
         this->ps_setDockArea(Qt::TopDockWidgetArea);
-        this->iniFileBasedSettings();
         this->connectTopLevelChanged();
         this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
         this->tabifyAllWidgets();
@@ -595,28 +594,6 @@ namespace BlackGui
         return infoAreas;
     }
 
-    void CInfoArea::iniFileBasedSettings()
-    {
-        // with Qt 5.5 still needed
-        const QString section(this->objectName());
-        const QSettings *settings = sGui->getStyleSheetUtility().iniFile();
-        if (settings && !section.isEmpty())
-        {
-            for (CDockWidgetInfoArea *dw : this->m_dockWidgetInfoAreas)
-            {
-                //! Margins when window is floating
-                dw->setMarginsFromSettings(section);
-            }
-        }
-        else
-        {
-            // some defaults if not available
-            this->setMarginsWhenFloating(10, 10, 10, 10); // left, top, right, bottom
-            this->setMarginsWhenFramelessFloating(5, 5, 5, 5); // left, top, right, bottom
-            this->setMarginsWhenDocked(1, 1, 1, 1);   // top has no effect
-        }
-    }
-
     void CInfoArea::ps_emitInfoAreaStatus()
     {
         int sia = this->getSelectedDockInfoAreaIndex();
@@ -764,7 +741,6 @@ namespace BlackGui
 
     void CInfoArea::ps_onStyleSheetChanged()
     {
-        this->iniFileBasedSettings();
         if (this->m_tabBar)
         {
             QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameDockWidgetTab());

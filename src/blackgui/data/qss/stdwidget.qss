@@ -59,7 +59,7 @@ QFileDialog QToolButton {
   Required when dock widget is floating
   1) background-image not working on QDockWidget, so I use direct children for that
   2) seems to have only effect as normal (floating) window
-  3) Borders between this widget and the inner child is the margin in gui.ini
+  3) Borders between this widget and the inner child are the margins defined in dockwidget
 */
 BlackGui--CDockWidgetInfoArea {
   background-color: green; /* Use green or red here to adjust the borders */
