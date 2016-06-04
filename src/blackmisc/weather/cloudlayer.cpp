@@ -64,6 +64,12 @@ namespace BlackMisc
                 return CVariant::fromValue(m_base);
             case IndexTop:
                 return CVariant::fromValue(m_top);
+            case IndexPrecipitationRate:
+                return CVariant::fromValue(m_precipitationRate);
+            case IndexPrecipitation:
+                return CVariant::fromValue(m_precipitation);
+            case IndexClouds:
+                return CVariant::fromValue(m_clouds);
             case IndexCoveragePercent:
                 return CVariant::fromValue(m_coveragePercent);
             default:
@@ -82,6 +88,15 @@ namespace BlackMisc
                 break;
             case IndexTop:
                 setTop(variant.value<CAltitude>());
+                break;
+            case IndexPrecipitationRate:
+                setPrecipitationRate(variant.value<int>());
+                break;
+            case IndexPrecipitation:
+                setPrecipitation(variant.value<Precipitation>());
+                break;
+            case IndexClouds:
+                setClouds(variant.value<Clouds>());
                 break;
             case IndexCoveragePercent:
                 setCoveragePercent(variant.value<int>());

@@ -65,6 +65,9 @@ namespace BlackMisc
             {
                 IndexBase = BlackMisc::CPropertyIndex::GlobalIndexCCloudLayer,
                 IndexTop,
+                IndexPrecipitationRate,
+                IndexPrecipitation,
+                IndexClouds,
                 IndexCoveragePercent
             };
 
@@ -158,5 +161,7 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer)
 Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer::Coverage)
+Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer::Clouds)
+Q_DECLARE_METATYPE(BlackMisc::Weather::CCloudLayer::Precipitation)
 
 #endif // guard
