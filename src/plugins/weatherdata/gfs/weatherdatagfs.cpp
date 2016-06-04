@@ -12,9 +12,11 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/pq/temperature.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QEventLoop>
+#include <cmath>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -256,8 +258,11 @@ namespace BlackWxPlugin
                     GfsIsobaricLayer isobaricLayer = isobaricLayerIt.value();
                     CAltitude level(isobaricLayerIt.key(), CAltitude::MeanSeaLevel, CLengthUnit::ft());
 
-                    CTemperatureLayer temperature(level, CTemperature(isobaricLayer.temperature, CTemperatureUnit::K()), {}, isobaricLayer.relativeHumidity);
-                    temperatureLayers.insert(temperature);
+                    auto temperature = CTemperature { isobaricLayer.temperature, CTemperatureUnit::K() };
+                    auto dewPoint = calculateDewPoint(temperature, isobaricLayer.relativeHumidity);
+
+                    CTemperatureLayer temperatureLayer(level, temperature, dewPoint, isobaricLayer.relativeHumidity);
+                    temperatureLayers.insert(temperatureLayer);
 
                     double windDirection = -1 * CMathUtils::rad2deg(std::atan2(-isobaricLayer.windU, isobaricLayer.windV));
                     windDirection += 180.0;
@@ -670,6 +675,15 @@ namespace BlackWxPlugin
             {
                 gridPoint.surfaceSnowRate = fld[gridPoint.fieldPosition];
             }
+        }
+
+        CTemperature CWeatherDataGfs::calculateDewPoint(const CTemperature &temperature, double relativeHumidity)
+        {
+            double temperatureInCelsius = temperature.value(CTemperatureUnit::C());
+            double saturationVaporPressure = 6.112 * std::exp((17.67 * temperatureInCelsius)/(temperatureInCelsius + 243.5));
+            double vaporPressure = saturationVaporPressure * ( relativeHumidity / 100.0);
+            double dewPointInCelsius = std::log(vaporPressure / 6.112) * 243.5 / (17.67 - std::log(vaporPressure / 6.112));
+            return { dewPointInCelsius, CTemperatureUnit::C() };
         }
 
         BlackCore::IWeatherData *CWeatherDataGfsFactory::create(QObject *parent)

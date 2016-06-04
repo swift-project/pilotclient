@@ -25,6 +25,8 @@
 
 class QNetworkAccessManager;
 
+namespace BlackMisc { namespace PhysicalQuantities { class CTemperature; }}
+
 namespace BlackWxPlugin
 {
     namespace Gfs
@@ -144,6 +146,8 @@ namespace BlackWxPlugin
             void setCloudPressure(const g2float *fld, double level);
             void setSurfaceRain(const g2float *fld);
             void setSurfaceSnow(const g2float *fld);
+
+            BlackMisc::PhysicalQuantities::CTemperature calculateDewPoint(const BlackMisc::PhysicalQuantities::CTemperature &temperature, double relativeHumidity);
 
             BlackMisc::Weather::CWeatherGrid m_grid;
             BlackMisc::PhysicalQuantities::CLength m_maxRange;
