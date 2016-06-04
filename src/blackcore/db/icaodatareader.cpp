@@ -124,6 +124,7 @@ namespace BlackCore
         void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan)
         {
             this->threadAssertCheck(); // runs in background thread
+            if (this->isAbandoned()) { return; }
 
             CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
@@ -219,6 +220,8 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            if (this->isAbandoned()) { return; }
+
             QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
@@ -245,6 +248,8 @@ namespace BlackCore
         void CIcaoDataReader::ps_parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            if (this->isAbandoned()) { return; }
+
             QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
