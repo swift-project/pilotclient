@@ -156,7 +156,8 @@ namespace BlackCore
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);
 
             //! Base URL
-            BlackMisc::Network::CUrl getBaseUrl() const;
+            //! \threadsafe
+            static const BlackMisc::Network::CUrl &getBaseUrl();
 
             //! URL
             BlackMisc::Network::CUrl getAircraftIcaoUrl(bool shared = false) const;

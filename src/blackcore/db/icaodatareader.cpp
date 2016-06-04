@@ -41,7 +41,8 @@ namespace BlackCore
         CIcaoDataReader::CIcaoDataReader(QObject *owner, const CDatabaseReaderConfigList &confg) :
             CDatabaseReader(owner, confg, "CIcaoDataReader")
         {
-            // void
+            // init to avoid threading issues
+            getBaseUrl();
         }
 
         CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodes() const
@@ -209,9 +210,9 @@ namespace BlackCore
             }
         }
 
-        CUrl CIcaoDataReader::getBaseUrl() const
+        const CUrl &CIcaoDataReader::getBaseUrl()
         {
-            const CUrl baseUrl(sApp->getGlobalSetup().getDbIcaoReaderUrl());
+            static const CUrl baseUrl(sApp->getGlobalSetup().getDbIcaoReaderUrl());
             return baseUrl;
         }
 

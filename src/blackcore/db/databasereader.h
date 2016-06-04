@@ -120,7 +120,7 @@ namespace BlackCore
 
         protected:
             CDatabaseReaderConfigList m_config;                 //!< DB reder configuration
-            BlackMisc::Network::CUrl  m_sharedUrl;              //!< URL for checking if alive
+            BlackMisc::Network::CUrl  m_sharedUrl;              //!< URL for shared files
             QString                   m_statusMessage;          //!< Returned status message from watchdog
             bool                      m_canConnect = false;     //!< Successful connection?
             mutable QReadWriteLock    m_statusLock;             //!< Lock

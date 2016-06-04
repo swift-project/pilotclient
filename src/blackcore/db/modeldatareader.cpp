@@ -41,7 +41,8 @@ namespace BlackCore
         CModelDataReader::CModelDataReader(QObject *owner, const CDatabaseReaderConfigList &config) :
             CDatabaseReader(owner, config, "CModelDataReader")
         {
-            // void
+            // init to avoid threading issues
+            getBaseUrl();
         }
 
         CLiveryList CModelDataReader::getLiveries() const
@@ -463,9 +464,9 @@ namespace BlackCore
             return CDatabaseReader::isChangedUrl(CUrl(), this->getBaseUrl());
         }
 
-        CUrl CModelDataReader::getBaseUrl() const
+        const CUrl &CModelDataReader::getBaseUrl()
         {
-            const CUrl baseUrl(sApp->getGlobalSetup().getDbModelReaderUrl());
+            static const CUrl baseUrl(sApp->getGlobalSetup().getDbModelReaderUrl());
             return baseUrl;
         }
 

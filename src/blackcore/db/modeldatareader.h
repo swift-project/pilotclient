@@ -159,7 +159,8 @@ namespace BlackCore
             mutable QReadWriteLock m_lockModels;
 
             //! Base URL
-            BlackMisc::Network::CUrl getBaseUrl() const;
+            //! \threadsafe
+            static const BlackMisc::Network::CUrl &getBaseUrl();
 
             //! URL livery web service
             BlackMisc::Network::CUrl getLiveryUrl(bool shared = false) const;
