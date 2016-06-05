@@ -103,7 +103,7 @@ namespace BlackSimPlugin
             m_slowTimer->start(1000);
 
             m_modelMatcher.setDefaultModel(CAircraftModel(
-                                               "__XPFW_Jets/A320_a/A320_a_Austrian_Airlines.obj __XPFW_Jets/A320_a/A320_a_Austrian_Airlines.png",
+                                               "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines",
                                                CAircraftModel::TypeModelMatchingDefaultModel,
                                                "A320 AUA",
                                                CAircraftIcaoCode("A320", "L2J")
