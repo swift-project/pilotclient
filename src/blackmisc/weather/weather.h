@@ -31,6 +31,7 @@
 #include "blackmisc/weather/weatherdataplugininfo.h"
 #include "blackmisc/weather/weatherdataplugininfolist.h"
 #include "blackmisc/weather/weathergrid.h"
+#include "blackmisc/weather/weatherscenario.h"
 #include "blackmisc/weather/windlayer.h"
 #include "blackmisc/weather/windlayerlist.h"
 

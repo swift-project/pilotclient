@@ -55,6 +55,28 @@ namespace BlackMisc
             return closest;
         }
 
+        const QVector<CWeatherScenario> &CWeatherGrid::getAllScenarios()
+        {
+            static const QVector<CWeatherScenario> scenarios =
+            {
+                { CWeatherScenario::ClearSky, "Clear Sky", "Clear sky, no clouds" },
+                { CWeatherScenario::Thunderstorm, "Thunderstorm", "Raining, lightning, several cloud layers" },
+                { CWeatherScenario::RealWeather, "Realtime Weather", "As real as it gets..." },
+            };
+            return scenarios;
+        }
+
+        const CWeatherGrid &CWeatherGrid::getByScenario(const CWeatherScenario &scenario)
+        {
+            static const CWeatherGrid emptyGrid {};
+            switch(scenario.getIndex())
+            {
+            case CWeatherScenario::ClearSky: return getClearWeatherGrid();
+            case CWeatherScenario::Thunderstorm: return getThunderStormGrid();
+            default: Q_ASSERT_X(false, Q_FUNC_INFO, "Unknown fixed scenario index requested."); return emptyGrid;
+            }
+        }
+
         const CWeatherGrid &CWeatherGrid::getClearWeatherGrid()
         {
             static const CVisibilityLayer visibilityLayer(

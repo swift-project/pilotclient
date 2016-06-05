@@ -17,6 +17,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/weather/gridpoint.h"
+#include "blackmisc/weather/weatherscenario.h"
 
 #include <QMetaType>
 #include <initializer_list>
@@ -51,6 +52,12 @@ namespace BlackMisc
 
             //! \copydoc Geo::IGeoObjectList::findClosest
             CWeatherGrid findClosest(int number, const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
+
+            //! Get all available weather scenarios
+            static const QVector<CWeatherScenario> &getAllScenarios ();
+
+            //! Get weather grid by fixed scenario
+            static const CWeatherGrid &getByScenario(const CWeatherScenario &scenario);
 
             //! Clear weather grid
             static const BlackMisc::Weather::CWeatherGrid &getClearWeatherGrid();
