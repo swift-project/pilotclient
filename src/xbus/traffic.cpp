@@ -249,7 +249,7 @@ namespace XBus
         m_planesById.clear();
     }
 
-    void CTraffic::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 time)
+    void CTraffic::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime)
     {
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
         if (plane)
@@ -267,7 +267,7 @@ namespace XBus
                 CAngle(roll, CAngleUnit::deg()),
                 CSpeed(0, CSpeedUnit::kts())
             }, maxSituationCount);
-            plane->situations.front().setMSecsSinceEpoch(time);
+            plane->situations.front().setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
         }
     }
 

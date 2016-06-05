@@ -86,9 +86,9 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("removeAllPlanes"));
         }
 
-        void CXBusTrafficProxy::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 time)
+        void CXBusTrafficProxy::addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime)
         {
-            m_dbusInterface->callDBus(QLatin1String("addPlanePosition"), callsign, latitude, longitude, altitude, pitch, roll, heading, time);
+            m_dbusInterface->callDBus(QLatin1String("addPlanePosition"), callsign, latitude, longitude, altitude, pitch, roll, heading, relativeTime);
         }
 
         void CXBusTrafficProxy::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,

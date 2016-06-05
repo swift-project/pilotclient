@@ -485,7 +485,7 @@ namespace BlackSimPlugin
                                         situation.getPitch().value(CAngleUnit::deg()),
                                         situation.getBank().value(CAngleUnit::deg()),
                                         situation.getHeading().value(CAngleUnit::deg()),
-                                        situation.getAdjustedMSecsSinceEpoch()); // fixme sim machine's clock must be synchronized
+                                        situation.getAdjustedMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch());
         }
 
         void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)

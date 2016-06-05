@@ -103,7 +103,7 @@ namespace BlackSimPlugin
             void removeAllPlanes();
 
             //! \copydoc XBus::CTraffic::addPlanePosition
-            void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 time);
+            void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime);
 
             //! \copydoc XBus::CTraffic::setPlaneSurfaces
             void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
