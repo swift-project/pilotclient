@@ -54,6 +54,9 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/weather/cloudlayerlist.h"
+#include "blackmisc/weather/temperaturelayerlist.h"
+#include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/worker.h"
 
 #include <QAction>
@@ -1300,6 +1303,10 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CStatusMessageListModel, BlackMisc::CStatusMessageList, BlackMisc::CStatusMessage>;
         template class CViewBase<BlackGui::Models::CTextMessageListModel, BlackMisc::Network::CTextMessageList, BlackMisc::Network::CTextMessage>;
         template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList, BlackMisc::Network::CUser>;
+
+        template class CViewBase<BlackGui::Models::CTemperatureLayerListModel, BlackMisc::Weather::CTemperatureLayerList, BlackMisc::Weather::CTemperatureLayer>;
+        template class CViewBase<BlackGui::Models::CCloudLayerListModel, BlackMisc::Weather::CCloudLayerList, BlackMisc::Weather::CCloudLayer>;
+        template class CViewBase<BlackGui::Models::CWindLayerListModel, BlackMisc::Weather::CWindLayerList, BlackMisc::Weather::CWindLayer>;
 
     } // namespace
 } // namespace
