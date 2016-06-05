@@ -110,6 +110,7 @@ namespace BlackSimPlugin
                                            ));
 
             resetData();
+            ps_reloadSettings();
         }
 
         // convert xplane squawk mode to swift squawk mode
@@ -165,7 +166,8 @@ namespace BlackSimPlugin
                 );
 
                 const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude(), {0} };
-                if (calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
+                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
                 {
                     m_lastWeatherPosition = currentPosition;
                     const auto weatherGrid = CWeatherGrid { { "", currentPosition } };
@@ -226,6 +228,16 @@ namespace BlackSimPlugin
                 livery.setAirlineIcaoCode(CAirlineIcaoCode(*airlinesIt));
                 CAircraftModel aircraftModel(*modelStringsIt, CAircraftModel::TypeDatabaseEntry, QString(), aircraftIcao, livery);
                 m_installedModels.push_back(aircraftModel);
+            }
+        }
+
+        void CSimulatorXPlane::ps_reloadSettings()
+        {
+            auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+            if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+            {
+                m_lastWeatherPosition = {};
+                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
             }
         }
 

@@ -113,6 +113,7 @@ namespace BlackSimPlugin
                                                "B737-400 default model",
                                                CAircraftIcaoCode("B734", "L2J")
                                            ));
+            ps_reloadSettings();
         }
 
         bool CSimulatorFs9::isConnected() const
@@ -332,7 +333,8 @@ namespace BlackSimPlugin
                     updateOwnSituation(aircraftSituation);
 
                     const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
-                    if (calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
+                    if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
+                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
                     {
                         m_lastWeatherPosition = currentPosition;
                         const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
@@ -350,6 +352,16 @@ namespace BlackSimPlugin
 
             default:
                 break;
+            }
+        }
+
+        void CSimulatorFs9::ps_reloadSettings()
+        {
+            auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+            if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+            {
+                m_lastWeatherPosition = {};
+                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
             }
         }
 

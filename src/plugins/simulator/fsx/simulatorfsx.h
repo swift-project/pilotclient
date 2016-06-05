@@ -15,6 +15,7 @@
 #include "simconnectdatadefinition.h"
 #include "simconnectobject.h"
 #include "../fscommon/simulatorfscommon.h"
+#include "blackcore/settings/simulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
@@ -141,6 +142,9 @@ namespace BlackSimPlugin
             //! Dispatch SimConnect messages
             void ps_dispatch();
 
+            //! Reload settings
+            void ps_reloadSettings();
+
         private:
             //! Called when sim has started
             void onSimRunning();
@@ -202,6 +206,7 @@ namespace BlackSimPlugin
             int    m_statsUpdateAircraftCount = 0;
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
+            BlackMisc::CSetting<BlackCore::Settings::Simulator::SelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::ps_reloadSettings };
         };
 
         //! Listener for FSX
