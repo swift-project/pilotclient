@@ -80,7 +80,7 @@ namespace BlackMisc
         {}
 
         //! Reset the setting to its default value.
-        void setDefault() { this->set(Trait::defaultValue()); }
+        CStatusMessage setDefault() { return this->set(Trait::defaultValue()); }
 
         //! Return the file that is used for persistence for this value.
         QString getFilename() const { return CSettingsCache::filenameForKey(this->getKey()); }

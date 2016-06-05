@@ -306,8 +306,15 @@ namespace BlackMisc
             return CCached<typename Trait::type>::set(value, timestamp);
         }
 
+        //! \copydoc BlackMisc::CCached::setProperty
+        CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0)
+        {
+            CDataCache::instance()->admitValue(Trait::key(), false);
+            return CCached<typename Trait::type>::setProperty(index, value, timestamp);
+        }
+
         //! Reset the data to its default value.
-        void setDefault() { this->set(Trait::defaultValue()); }
+        CStatusMessage setDefault() { return this->set(Trait::defaultValue()); }
 
         //! Return the file that is used for persistence for this value.
         QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
