@@ -381,6 +381,8 @@ namespace BlackMisc
                 auto deferrals = fromJson(json.value("deferrals").toArray());
                 m_admittedValues.unite(m_admittedQueue);
                 if (updateUuid) { m_admittedQueue.clear(); }
+                else if (! m_admittedQueue.isEmpty()) { m_admittedQueue.intersect(QSet<QString>::fromList(m_timestamps.keys())); }
+
                 for (const auto &key : m_timestamps.keys())
                 {
                     if (deferrals.contains(key) && ! m_admittedValues.contains(key)) { m_timestamps.remove(key); }
