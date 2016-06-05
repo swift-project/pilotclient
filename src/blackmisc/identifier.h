@@ -88,6 +88,9 @@ namespace BlackMisc
         //! Check if originating from the same process name
         bool isFromSameProcessName() const;
 
+        //! Check if it is anonymous identifier
+        bool isAnonymous() const;
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 

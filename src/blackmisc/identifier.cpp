@@ -68,6 +68,11 @@ namespace BlackMisc
         return QCoreApplication::applicationName() == getProcessName();
     }
 
+    bool CIdentifier::isAnonymous() const
+    {
+        return anonymous() == *this;
+    }
+
     QString CIdentifier::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
