@@ -285,6 +285,7 @@ namespace BlackWxPlugin
                         cloudLayer.setPrecipitation(CCloudLayer::Rain);
                         cloudLayer.setPrecipitationRate(gfsGridPoint.surfaceRainRate);
                     }
+                    cloudLayer.setClouds(CCloudLayer::CloudsUnknown);
                     cloudLayers.insert(cloudLayer);
                 }
 

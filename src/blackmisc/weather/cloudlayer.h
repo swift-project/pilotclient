@@ -39,7 +39,8 @@ namespace BlackMisc
                 Few,
                 Scattered,
                 Broken,
-                Overcast
+                Overcast,
+                CoverageUnknown
             };
 
             //! Cloud type
@@ -49,7 +50,8 @@ namespace BlackMisc
                 Cirrus,
                 Stratus,
                 Cumulus,
-                Thunderstorm
+                Thunderstorm,
+                CloudsUnknown
             };
 
             //! Precipitation Type
@@ -57,7 +59,8 @@ namespace BlackMisc
             {
                 NoPrecipitation,
                 Rain,
-                Snow
+                Snow,
+                PrecipitationUnknown
             };
 
             //! Properties by index
