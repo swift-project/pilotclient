@@ -357,6 +357,26 @@ namespace BlackMisc
     };
 
     /*!
+     * Class template for read-only access to a specific value in the CDataCache.
+     * \tparam Trait A subclass of BlackMisc::CDataTrait that identifies the value's key and other metadata.
+     */
+    template <typename Trait>
+    class CDataReadOnly : public BlackMisc::CData<Trait>
+    {
+    public:
+        //! Inherited constructor.
+        using CData<Trait>::CData;
+
+        //! Deleted mutators.
+        //! @{
+        CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setDefault() = delete;
+        void renewTimestamp(qint64 timestamp) = delete;
+        //! @}
+    };
+
+    /*!
      * Base class for traits to be used as template argument to BlackMisc::CData.
      */
     template <typename T>

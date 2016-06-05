@@ -87,6 +87,28 @@ namespace BlackMisc
     };
 
     /*!
+     * Class template for accessing a specific value in the CSettingsCache.
+     * \tparam Trait A subclass of BlackMisc::CSettingTrait that identifies the value's key and other metadata.
+     */
+    template <typename Trait>
+    class CSettingReadOnly : public BlackMisc::CSetting<Trait>
+    {
+    public:
+        //! Inherited constructor.
+        using CSetting<Trait>::CSetting;
+
+        //! Deleted mutators.
+        //! @{
+        CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
+        CStatusMessage save() = delete;
+        CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setAndSaveProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setDefault() = delete;
+        //! @}
+    };
+
+    /*!
      * Base class for traits to be used as template argument to BlackMisc::CSetting.
      */
     template <typename T>
