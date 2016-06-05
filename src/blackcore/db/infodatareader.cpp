@@ -30,7 +30,8 @@ namespace BlackCore
         CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config) :
             CDatabaseReader(owner, config, "CInfoDataReader")
         {
-            // void
+            // init to avoid threading issues
+            getBaseUrl();
         }
 
         CDbInfoList CInfoDataReader::getDbInfoObjects() const
@@ -121,6 +122,8 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            if (this->isAbandoned()) { return; }
+
             QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
@@ -146,9 +149,9 @@ namespace BlackCore
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::InfoObjectEntity) << urlString;
         }
 
-        CUrl CInfoDataReader::getBaseUrl() const
+        const CUrl &CInfoDataReader::getBaseUrl()
         {
-            const CUrl baseUrl(sApp->getGlobalSetup().getDbInfoReaderUrl());
+            static const CUrl baseUrl(sApp->getGlobalSetup().getDbInfoReaderUrl());
             return baseUrl;
         }
 
@@ -156,6 +159,5 @@ namespace BlackCore
         {
             return getBaseUrl().withAppendedPath("service/jsondbinfo.php");
         }
-
     } // namespace
 } // namespace

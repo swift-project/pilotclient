@@ -394,7 +394,7 @@ namespace BlackCore
         SwiftApplication                         m_application = Unknown;  //!< Application if specified
         QReadWriteLock                           m_accessManagerLock;      //!< lock to make access manager access threadsafe
         CCoreFacadeConfig                        m_coreFacadeConfig;       //!< Core facade config if any
-        CWebReaderFlags::WebReader               m_webReader;              //!< Readers used
+        CWebReaderFlags::WebReader               m_webReadersUsed;         //!< Readers to be used
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;         //!< Load or used caching?
         std::atomic<bool>                        m_shutdown { false };     //!< is being shutdown?
         bool                                     m_useContexts = false;    //!< use contexts

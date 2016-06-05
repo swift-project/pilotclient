@@ -48,24 +48,39 @@ using namespace BlackMisc::Weather;
 
 namespace BlackCore
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readerFlags, const CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent) :
-        QObject(parent), m_readerFlags(readerFlags), m_dbReaderConfig(dbReaderConfig)
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, BlackMisc::Restricted<CApplication>, QObject *parent) :
+        QObject(parent), m_readers(readers), m_dbReaderConfig(dbReaderConfig)
     {
         if (!sApp) { return; } // shutting down
 
         Q_ASSERT_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "missing SSL support");
         Q_ASSERT_X(sApp->isSetupAvailable(), Q_FUNC_INFO, "Setup not syncronized");
         this->setObjectName("CWebDataReader");
-        this->initReaders(readerFlags);
-        this->initWriters();
 
-        const bool withInfoData = m_readerFlags.testFlag(CWebReaderFlags::WebReaderFlag::InfoDataReader);
-        CEntityFlags::Entity entities = CEntityFlags::AllEntities;
-        entities ^= CEntityFlags::InfoObjectEntity; // 2 liner because of gcc error: invalid conversion from 'int' to 'BlackMisc::Network::CEntityFlags::EntityFlag'
-        if (withInfoData) { CLogMessage(this).info("Using info objects for swift DB objects"); }
+        // check if I need info objects
+        const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // only cached?
+        if (!readFromSwiftDb && readers.testFlag(CWebReaderFlags::InfoDataReader))
+        {
+            // will remove info reader becaue not needed
+            readers &= ~CWebReaderFlags::InfoDataReader;
+            this->m_readers = readers;
+            CLogMessage(this).info("Remove info object reader because not needed");
+        }
+
+        // get entities to be read
+        CEntityFlags::Entity entities = CWebReaderFlags::allEntitiesForReaders(readers);
+        if (entities.testFlag(CEntityFlags::InfoObjectEntity))
+        {
+            Q_ASSERT_X(readers.testFlag(CWebReaderFlags::InfoDataReader), Q_FUNC_INFO, "info object but no reader");
+            CLogMessage(this).info("Using info objects for swift DB objects");
+        }
+
+        this->initReaders(readers); // reads info object if required
+        this->initWriters();
 
         // make sure this is called in event queue, so pending tasks cam be performed
         // important so info objects can be read
+        entities &= ~CEntityFlags::InfoObjectEntity;
         this->singleShotReadInBackground(entities, 1000);
     }
 
@@ -394,6 +409,7 @@ namespace BlackCore
         if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->gracefulShutdown(); }
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->gracefulShutdown(); }
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->gracefulShutdown(); }
+        if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->gracefulShutdown(); }
         if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->gracefulShutdown(); }
         if (this->m_modelDataReader)      { this->m_modelDataReader->gracefulShutdown(); }
         if (this->m_icaoDataReader)       { this->m_icaoDataReader->gracefulShutdown(); }
@@ -432,7 +448,7 @@ namespace BlackCore
         }
 
         // 2. Status file, updating the VATSIM related caches
-        if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader) || flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
+        if (flags.testFlag(CWebReaderFlags::VatsimStatusReader) || flags.testFlag(CWebReaderFlags::VatsimDataReader) || flags.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
             this->m_vatsimStatusReader = new CVatsimStatusFileReader(this);
             this->m_vatsimStatusReader->start(QThread::LowPriority);

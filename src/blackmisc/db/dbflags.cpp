@@ -17,6 +17,11 @@ namespace BlackMisc
 {
     namespace Db
     {
+        bool CDbFlags::readsFromWeb(CDbFlags::DataRetrievalMode mode)
+        {
+            return mode.testFlag(DbDirect) || mode.testFlag(Shared);
+        }
+
         QString CDbFlags::flagToString(CDbFlags::DataRetrievalModeFlag flag)
         {
             switch (flag)
@@ -31,13 +36,13 @@ namespace BlackMisc
             }
         }
 
-        QString CDbFlags::flagToString(BlackMisc::Db::CDbFlags::DataRetrievalMode flag)
+        QString CDbFlags::flagToString(CDbFlags::DataRetrievalMode mode)
         {
             QStringList list;
-            if (flag.testFlag(Unspecified)) list << "Unspecified";
-            if (flag.testFlag(DbDirect)) list << "Direct DB access";
-            if (flag.testFlag(Shared)) list << "Shared data";
-            if (flag.testFlag(Cached)) list << "Cached data";
+            if (mode.testFlag(Unspecified)) list << "Unspecified";
+            if (mode.testFlag(DbDirect)) list << "Direct DB access";
+            if (mode.testFlag(Shared)) list << "Shared data";
+            if (mode.testFlag(Cached)) list << "Cached data";
             return list.join(',');
         }
 

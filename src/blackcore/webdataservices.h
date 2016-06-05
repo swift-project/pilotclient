@@ -108,7 +108,7 @@ namespace BlackCore
         Db::CDatabaseWriter *getDatabaseWriter() const { return m_databaseWriter; }
 
         //! Reader flags
-        CWebReaderFlags::WebReader getReaderFlags() const { return m_readerFlags; }
+        CWebReaderFlags::WebReader getReaderFlags() const { return m_readers; }
 
         //! FSD servers
         //! \threadsafe
@@ -319,10 +319,10 @@ namespace BlackCore
         //! Call CWebDataServices::readInBackground by single shot
         void singleShotReadInBackground(BlackMisc::Network::CEntityFlags::Entity entities, int delayMs);
 
-        CWebReaderFlags::WebReader               m_readerFlags = CWebReaderFlags::WebReaderFlag::None; //!< which readers are available
-        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                     //!< how to read DB data
-        bool                                     m_initialRead = false;                                //!< Initial read started
-        int                                      m_infoObjectTrials = 0;                               //!< Tried to read info objects
+        CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None;  //!< which readers are available
+        BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                  //!< how to read DB data
+        bool                                     m_initialRead = false;                             //!< Initial read started
+        int                                      m_infoObjectTrials = 0;                            //!< Tried to read info objects
 
         // for reading XML and VATSIM data files
         CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;

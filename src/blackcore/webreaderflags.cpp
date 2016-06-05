@@ -16,40 +16,41 @@ namespace BlackCore
     CWebReaderFlags::WebReader CWebReaderFlags::entityToReader(CEntityFlags::Entity entity)
     {
         WebReader f = None;
-        if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) ||
-                entity.testFlag(CEntityFlags::AirlineIcaoEntity) ||
-                entity.testFlag(CEntityFlags::CountryEntity))
+        if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) || entity.testFlag(CEntityFlags::AirlineIcaoEntity) || entity.testFlag(CEntityFlags::CountryEntity))
         {
             f |= IcaoDataReader;
         }
 
-        if (entity.testFlag(CEntityFlags::ModelEntity) ||
-                entity.testFlag(CEntityFlags::DistributorEntity) ||
-                entity.testFlag(CEntityFlags::LiveryEntity))
+        if (entity.testFlag(CEntityFlags::ModelEntity) || entity.testFlag(CEntityFlags::DistributorEntity) || entity.testFlag(CEntityFlags::LiveryEntity))
         {
             f |= ModelReader;
         }
 
-        if (entity.testFlag(CEntityFlags::InfoObjectEntity))
-        {
-            f |= InfoDataReader;
-        }
+        if (entity.testFlag(CEntityFlags::InfoObjectEntity)) { f |= InfoDataReader; }
+        if (entity.testFlag(CEntityFlags::BookingEntity)) { f |= VatsimBookingReader; }
+        if (entity.testFlag(CEntityFlags::VatsimDataFile)) { f |= VatsimDataReader; }
+        if (entity.testFlag(CEntityFlags::VatsimStatusFile)) { f |= VatsimStatusReader; }
+        if (entity.testFlag(CEntityFlags::MetarEntity)) { f |= VatsimMetarReader; }
 
-        if (entity.testFlag(CEntityFlags::BookingEntity))
-        {
-            f |= VatsimBookingReader;
-        }
-
-        if (entity.testFlag(CEntityFlags::VatsimDataFile))
-        {
-            f |= VatsimDataReader;
-        }
-
-        if (entity.testFlag(CEntityFlags::MetarEntity))
-        {
-            f |= VatsimMetarReader;
-        }
         return f;
+    }
+
+    CWebReaderFlags::WebReader CWebReaderFlags::webReaderFlagToWebReader(CWebReaderFlags::WebReaderFlag flag)
+    {
+        return static_cast<WebReader>(flag);
+    }
+
+    CEntityFlags::Entity CWebReaderFlags::allEntitiesForReaders(WebReader readers)
+    {
+        CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+        if (readers.testFlag(IcaoDataReader)) { entities |= CEntityFlags::AllIcaoAndCountries; }
+        if (readers.testFlag(ModelReader)) { entities |= CEntityFlags::DistributorLiveryModel; }
+        if (readers.testFlag(InfoDataReader)) { entities |= CEntityFlags::InfoObjectEntity; }
+        if (readers.testFlag(VatsimBookingReader)) { entities |= CEntityFlags::BookingEntity; }
+        if (readers.testFlag(VatsimMetarReader)) { entities |= CEntityFlags::MetarEntity; }
+        if (readers.testFlag(VatsimDataReader)) { entities |= CEntityFlags::VatsimDataFile; }
+        if (readers.testFlag(VatsimStatusReader)) { entities |= CEntityFlags::VatsimStatusFile; }
+        return entities;
     }
 
     bool CWebReaderFlags::isFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity)

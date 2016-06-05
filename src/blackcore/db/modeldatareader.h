@@ -119,10 +119,6 @@ namespace BlackCore
             //! Write to JSON file
             bool writeToJsonFiles(const QString &dir) const;
 
-        signals:
-            //! Combined read signal
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
         protected:
             //! \name cache handling for base class
             //! @{

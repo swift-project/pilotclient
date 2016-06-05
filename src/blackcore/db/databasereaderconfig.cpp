@@ -52,6 +52,13 @@ namespace BlackCore
             this->m_cacheLifetime = time;
         }
 
+        bool CDatabaseReaderConfig::possiblyReadsFromSwiftDb() const
+        {
+            if (!this->isValid()) { return false; }
+            if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
+            return (this->getRetrievalMode().testFlag(CDbFlags::DbDirect) || this->getRetrievalMode().testFlag(CDbFlags::Shared));
+        }
+
         bool CDatabaseReaderConfig::isValid() const
         {
             return this->m_entities != BlackMisc::Network::CEntityFlags::NoEntity;
@@ -87,10 +94,19 @@ namespace BlackCore
             }
         }
 
+        bool CDatabaseReaderConfigList::possiblyReadsFromSwiftDb() const
+        {
+            for (const CDatabaseReaderConfig &config : *this)
+            {
+                if (config.possiblyReadsFromSwiftDb()) { return true; }
+            }
+            return false;
+        }
+
         CDatabaseReaderConfigList CDatabaseReaderConfigList::forMappingTool()
         {
             const CTime timeout(5.0, CTimeUnit::min());
-            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::DbCached;
+            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheThenDb;
             CDatabaseReaderConfigList l;
             l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, timeout));
             l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, timeout));
@@ -104,7 +120,7 @@ namespace BlackCore
         CDatabaseReaderConfigList CDatabaseReaderConfigList::forPilotClient()
         {
             const CTime timeout(24.0, CTimeUnit::h());
-            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::SharedCached;
+            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheThenDb;
             CDatabaseReaderConfigList l;
             l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, timeout));
             l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, timeout));

@@ -56,6 +56,9 @@ namespace BlackCore
             //! Timeout
             void setCacheLifetime(const BlackMisc::PhysicalQuantities::CTime &time);
 
+            //! Will read from swift DB
+            bool possiblyReadsFromSwiftDb() const;
+
             //! Fully initialized
             bool isValid() const;
 
@@ -90,6 +93,9 @@ namespace BlackCore
 
             //! Update lifetimes
             void setCacheLifetimes(const BlackMisc::PhysicalQuantities::CTime &time);
+
+            //! Will read from swift DB
+            bool possiblyReadsFromSwiftDb() const;
 
             //! Init for mapping tool
             static CDatabaseReaderConfigList forMappingTool();

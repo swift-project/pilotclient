@@ -52,10 +52,6 @@ namespace BlackCore
             //! Allow to call CInfoDataReader::ps_read directly, special for info objects
             void read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::InfoObjectEntity, const QDateTime &newerThan = QDateTime());
 
-        signals:
-            //! Combined read signal
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
         protected:
             //! \name cache handling for base class
             //! @{
@@ -79,7 +75,7 @@ namespace BlackCore
             mutable QReadWriteLock     m_lockInfoObjects;
 
             //! Base URL
-            BlackMisc::Network::CUrl getBaseUrl() const;
+            static const BlackMisc::Network::CUrl &getBaseUrl();
         };
     } // ns
 } // ns

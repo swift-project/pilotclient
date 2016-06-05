@@ -118,12 +118,16 @@ namespace BlackCore
             //! Name of parameter for latest id
             static const QString &parameterLatestId();
 
+        signals:
+            //! Combined read signal
+            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+
         protected:
-            CDatabaseReaderConfigList m_config;                 //!< DB reder configuration
-            BlackMisc::Network::CUrl  m_sharedUrl;              //!< URL for shared files
-            QString                   m_statusMessage;          //!< Returned status message from watchdog
-            bool                      m_canConnect = false;     //!< Successful connection?
-            mutable QReadWriteLock    m_statusLock;             //!< Lock
+            CDatabaseReaderConfigList m_config;               //!< DB reder configuration
+            BlackMisc::Network::CUrl  m_sharedUrl;            //!< URL for shared files
+            QString                   m_statusMessage;        //!< Returned status message from watchdog
+            bool                      m_canConnect = false;   //!< Successful connection?
+            mutable QReadWriteLock    m_statusLock;           //!< Lock
 
             //! Constructor
             CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name);
@@ -144,6 +148,9 @@ namespace BlackCore
 
             //! Config for given entity
             CDatabaseReaderConfig getConfigForEntity(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Split into single entity and send dataRead signal
+            void emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities);
 
             //! Syncronize caches for given entities
             virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;

@@ -31,20 +31,25 @@ namespace BlackMisc
             //! Which data to read, requires corresponding readers
             enum DataRetrievalModeFlag
             {
-                Unspecified            = 0,                  //!< Unspecified
-                DbDirect               = 1 << 0,             //!< directly from DB
-                Shared                 = 1 << 1,             //!< shared directory
-                Cached                 = 1 << 2,             //!< from cache
-                DbCached               = DbDirect | Cached,  //!< from DB, but cache when possible
-                SharedCached           = Shared | Cached     //!< from shared files, but cache when possible
+                Unspecified            = 0,                   //!< Unspecified
+                DbDirect               = 1 << 0,              //!< directly from DB
+                Shared                 = 1 << 1,              //!< shared directory
+                Cached                 = 1 << 2,              //!< from cache
+                DbFailover             = 1 << 3,              //!< read from DB if cache (and only if) cache is empty
+                SharedFailover         = 1 << 4,              //!< read shared if cache (and only if) cache is empty
+                CacheThenDb            = DbDirect | Cached,   //!< Cache when possible, otherwise DB
+                CacheThenShared        = Shared | Cached      //!< Cache when possible, otherwise shared
             };
             Q_DECLARE_FLAGS(DataRetrievalMode, DataRetrievalModeFlag)
+
+            //! Reads from web (or just cached)
+            static bool readsFromWeb(CDbFlags::DataRetrievalMode mode);
 
             //! Convert to string
             static QString flagToString(DataRetrievalModeFlag flag);
 
             //! Convert to string
-            static QString flagToString(BlackMisc::Db::CDbFlags::DataRetrievalMode flag);
+            static QString flagToString(CDbFlags::DataRetrievalMode mode);
 
             //! Register metadata
             static void registerMetadata();

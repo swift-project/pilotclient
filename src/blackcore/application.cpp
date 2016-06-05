@@ -479,7 +479,7 @@ namespace BlackCore
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
-    bool CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReader, const CDatabaseReaderConfigList &dbReaderConfig)
+    bool CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(this->m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
@@ -489,7 +489,7 @@ namespace BlackCore
             return false;
         }
 
-        this->m_webReader = webReader;
+        this->m_webReadersUsed = webReaders;
         this->m_dbReaderConfig = dbReaderConfig;
         this->m_useWebData = true;
         return this->startWebDataServices();
@@ -524,7 +524,7 @@ namespace BlackCore
         {
             CLogMessage(this).info("Will start web data services now");
             this->m_webDataServices.reset(
-                new CWebDataServices(this->m_webReader, this->m_dbReaderConfig, {}, this)
+                new CWebDataServices(this->m_webReadersUsed, this->m_dbReaderConfig, {}, this)
             );
         }
         return true;
