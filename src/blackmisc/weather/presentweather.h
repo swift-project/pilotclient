@@ -29,7 +29,7 @@ namespace BlackMisc
     namespace Weather
     {
         /*!
-         * Value object for a cloud layer
+         * Value object for present weather flags
          */
         class BLACKMISC_EXPORT CPresentWeather : public CValueObject<CPresentWeather>
         {
