@@ -18,6 +18,7 @@
 #include "blackgui/models/airportlistmodel.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/clientlistmodel.h"
+#include "blackgui/models/cloudlayerlistmodel.h"
 #include "blackgui/models/countrylistmodel.h"
 #include "blackgui/models/distributorlistmodel.h"
 #include "blackgui/models/identifierlistmodel.h"
@@ -26,7 +27,9 @@
 #include "blackgui/models/serverlistmodel.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
 #include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/models/temperaturelayerlistmodel.h"
 #include "blackgui/models/textmessagelistmodel.h"
 #include "blackgui/models/userlistmodel.h"
+#include "blackgui/models/windlayerlistmodel.h"
 
 #endif // guard
