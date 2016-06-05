@@ -21,6 +21,7 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/range.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessage.h"
 
@@ -40,26 +41,25 @@ namespace BlackCore
     {
         // has to be thread safe
 
-        static const CAircraftSituation empty;
         status.reset();
 
         // any data at all?
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
-        if (this->remoteAircraftSituationsCount(callsign) < 1) { return empty; }
+        if (this->remoteAircraftSituationsCount(callsign) < 1) { return {}; }
 
         // data, split situations by time
         if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
         qint64 splitTimeMsSinceEpoch = currentTimeMsSinceEpoc - TimeOffsetMs; // \todo needs to be variable in the future with interim positions
+        const auto situations = remoteAircraftSituations(callsign);
 
-        QList<CAircraftSituationList> splitSituations(remoteAircraftSituations(callsign).splitByTime(splitTimeMsSinceEpoch, true));
-        CAircraftSituationList &situationsNewer = splitSituations[0]; // newer part
-        CAircraftSituationList &situationsOlder = splitSituations[1]; // older part
+        // find the first situation earlier than the current time
+        auto pivot = std::partition_point(situations.begin(), situations.end(), [ = ](auto &&s) { return s.getMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
+        auto situationsNewer = makeRange(situations.begin(), pivot);
+        auto situationsOlder = makeRange(pivot, situations.end());
 
         // interpolation situations
         CAircraftSituation oldSituation;
         CAircraftSituation newSituation;
-        int situationsNewerNo = situationsNewer.size();
-        int situationsOlderNo = situationsOlder.size();
 
         // latest first, now 00:26 -> 00:26 - 6000ms -> 00:20 split time
         // time     pos
@@ -72,24 +72,23 @@ namespace BlackCore
 
         // The first condition covers a situation, when there are no before / after situations.
         // We just place at he last position until we get before / after situations
-        if (situationsOlderNo < 1 || situationsNewerNo < 1)
+        if (situationsOlder.isEmpty() || situationsNewer.isEmpty())
         {
-            // no after situations
-            if (situationsOlderNo < 1) { return situationsNewer.back(); }  // oldest newest
-
             // no before situations
+            if (situationsOlder.isEmpty()) { return *(situationsNewer.end() - 1); } // oldest newest
+
+            // only one before situation
             if (situationsOlder.size() < 2) { return situationsOlder.front(); } // latest older
 
-            // this will lead to extrapolation
-            oldSituation = situationsOlder[1];       // before newest
-            newSituation = situationsOlder.front();  // newest
-
+            // extrapolate from two before situations
+            oldSituation = *(situationsOlder.begin() + 1); // before newest
+            newSituation = situationsOlder.front(); // newest
         }
         else
         {
             oldSituation = situationsOlder.front(); // first oldest (aka newest oldest)
-            newSituation = situationsNewer.back();  // latest newest (aka oldest of newer block)
-            Q_ASSERT(oldSituation.getMSecsSinceEpoch() < newSituation.getMSecsSinceEpoch());
+            newSituation = *(situationsNewer.end() - 1); // latest newest (aka oldest of newer block)
+            Q_ASSERT(oldSituation.getAdjustedMSecsSinceEpoch() < newSituation.getAdjustedMSecsSinceEpoch());
         }
 
         CAircraftSituation currentSituation(oldSituation);

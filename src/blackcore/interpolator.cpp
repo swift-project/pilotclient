@@ -27,12 +27,11 @@ namespace BlackCore
 
     CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackCore::IInterpolator::PartsStatus &partsStatus)
     {
-        static const CAircraftPartsList empty;
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         partsStatus.reset();
 
         partsStatus.supportsParts = this->isRemoteAircraftSupportingParts(callsign);
-        if (!partsStatus.supportsParts) { return empty; }
+        if (!partsStatus.supportsParts) { return {}; }
         return this->remoteAircraftParts(callsign, cutoffTime);
     }
 
