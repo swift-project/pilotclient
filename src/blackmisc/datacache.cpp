@@ -42,11 +42,16 @@ namespace BlackMisc
         LockGuard(const LockGuard &) = delete;
         LockGuard &operator =(const LockGuard &) = delete;
         LockGuard(LockGuard &&other) noexcept : m_movedFrom(true) { *this = std::move(other); }
-        LockGuard &operator =(LockGuard &&other) noexcept { std::swap(m_movedFrom, other.m_movedFrom); std::swap(m_rev, other.m_rev); return *this; }
+        LockGuard &operator =(LockGuard &&other) noexcept
+        {
+            auto tuple = std::tie(other.m_movedFrom, other.m_keepPromises, other.m_rev);
+            std::tie(m_movedFrom, m_keepPromises, m_rev).swap(tuple);
+            return *this;
+        }
 
         ~LockGuard()
         {
-            if (! m_movedFrom) { m_rev->finishUpdate(); }
+            if (! m_movedFrom) { m_rev->finishUpdate(m_keepPromises); }
         }
 
         operator bool() const { return ! m_movedFrom; }
@@ -54,9 +59,11 @@ namespace BlackMisc
     private:
         LockGuard() : m_movedFrom(true) {}
         LockGuard(CDataCacheRevision *rev) : m_movedFrom(! rev), m_rev(rev) {}
+        LockGuard &keepPromises() { m_keepPromises = true; return *this; }
         friend class CDataCacheRevision;
 
         bool m_movedFrom = false;
+        bool m_keepPromises = false;
         CDataCacheRevision *m_rev = nullptr;
     };
 
@@ -423,7 +430,7 @@ namespace BlackMisc
         revisionFile.write(QJsonDocument(json).toJson());
     }
 
-    void CDataCacheRevision::finishUpdate()
+    void CDataCacheRevision::finishUpdate(bool keepPromises)
     {
         QMutexLocker lock(&m_mutex);
 
@@ -433,7 +440,7 @@ namespace BlackMisc
         m_updateInProgress = false;
         m_pendingRead = false;
         m_pendingWrite = false;
-        breakPromises();
+        if (! keepPromises) { breakPromises(); }
         m_lockFile.unlock();
     }
 
@@ -474,7 +481,8 @@ namespace BlackMisc
 
         // Temporary guard object returned by beginUpdate is deleted at the end of the full expression,
         // don't try to split the conditional into multiple statements.
-        return (m_updateInProgress || m_pendingWrite || beginUpdate({{ key, timestamp }}, false))
+        // If a future is still waiting for the next update to begin, we don't want to break its associated promise.
+        return (m_updateInProgress || m_pendingWrite || beginUpdate({{ key, timestamp }}, false).keepPromises())
             && (m_timestamps.contains(key) || m_admittedQueue.contains(key));
     }
 

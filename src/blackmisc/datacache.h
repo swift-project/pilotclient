@@ -106,7 +106,8 @@ namespace BlackMisc
         void writeNewRevision(const QMap<QString, qint64> &timestamps);
 
         //! Release the revision file lock and mark everything up-to-date (called by LockGuard destructor).
-        void finishUpdate();
+        //! \param keepPromises Don't break pending promises.
+        void finishUpdate(bool keepPromises = false);
 
         //! True if beginUpdate found some values with timestamps newer than in memory.
         bool isPendingRead() const;
