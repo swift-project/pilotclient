@@ -49,19 +49,22 @@ namespace BlackCore
 
         // data, split situations by time
         if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
-        qint64 splitTimeMsSinceEpoch = currentTimeMsSinceEpoc - TimeOffsetMs; // \todo needs to be variable in the future with interim positions
         const auto situations = remoteAircraftSituations(callsign);
 
+        // find the first situation not in the correct order, keep only the situations before that one
+        auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto &&a, auto &&b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+        auto validSituations = makeRange(situations.begin(), end);
+
         // find the first situation earlier than the current time
-        auto pivot = std::partition_point(situations.begin(), situations.end(), [ = ](auto &&s) { return s.getMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
-        auto situationsNewer = makeRange(situations.begin(), pivot);
-        auto situationsOlder = makeRange(pivot, situations.end());
+        auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
+        auto situationsNewer = makeRange(validSituations.begin(), pivot);
+        auto situationsOlder = makeRange(pivot, validSituations.end());
 
         // interpolation situations
         CAircraftSituation oldSituation;
         CAircraftSituation newSituation;
 
-        // latest first, now 00:26 -> 00:26 - 6000ms -> 00:20 split time
+        // latest first, now 00:20 split time
         // time     pos
         // 00:25    10    newer
         // 00:20    11    newer
@@ -96,13 +99,13 @@ namespace BlackCore
         status.interpolationSucceeded = true;
 
         // Time between start and end packet
-        double deltaTime = oldSituation.absMsecsTo(newSituation);
+        double deltaTime = std::abs(oldSituation.getAdjustedMSecsSinceEpoch() - newSituation.getAdjustedMSecsSinceEpoch());
 
         // Fraction of the deltaTime, ideally [0.0 - 1.0]
         // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
         // 1) values > 1 mean extrapolation
         // 2) values > 2 mean no new situations coming in
-        double distanceToSplitTime = newSituation.getMSecsSinceEpoch() - splitTimeMsSinceEpoch;
+        double distanceToSplitTime = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
         double simulationTimeFraction = 1 - (distanceToSplitTime / deltaTime);
         if (simulationTimeFraction > 2.0)
         {

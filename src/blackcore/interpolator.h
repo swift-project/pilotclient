@@ -80,8 +80,6 @@ namespace BlackCore
         //! Enable debug messages
         void enableDebugMessages(bool enabled);
 
-        static const qint64 TimeOffsetMs = 6000; //!< offset for interpolation
-
     protected:
         //! Constructor
         IInterpolator(BlackMisc::Simulation::IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent);

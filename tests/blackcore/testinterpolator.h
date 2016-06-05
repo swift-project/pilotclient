@@ -45,7 +45,7 @@ namespace BlackCoreTest
 
     private:
         //! Test situation for testing
-        static BlackMisc::Aviation::CAircraftSituation getTestSituation(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT);
+        static BlackMisc::Aviation::CAircraftSituation getTestSituation(const BlackMisc::Aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset);
 
         //! Test parts
         static BlackMisc::Aviation::CAircraftParts getTestParts(int number, qint64 ts, qint64 deltaT);

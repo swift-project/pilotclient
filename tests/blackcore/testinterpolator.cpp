@@ -62,10 +62,11 @@ namespace BlackCoreTest
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
+        const qint64 offset = 5000;
         CCallsign cs("SWIFT");
         for (int i = 0; i < IRemoteAircraftProvider::MaxSituationsPerCallsign; i++)
         {
-            CAircraftSituation s(getTestSituation(cs, i, ts, deltaT));
+            CAircraftSituation s(getTestSituation(cs, i, ts, deltaT, offset));
 
             // check height above ground
             CLength hag = (s.getAltitude() - s.geodeticHeight());
@@ -90,11 +91,11 @@ namespace BlackCoreTest
         IInterpolator::InterpolationStatus status;
         double latOld = 360.0;
         double lngOld = 360.0;
-        for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += (deltaT / 20))
+        for (qint64 currentTime = ts - 2 * deltaT + offset; currentTime < ts + offset; currentTime += (deltaT / 20))
         {
             // This will use time range
-            // from:  ts - 2* deltaT - IInterpolator::TimeOffsetMs
-            // to:    ts             - IInterpolator::TimeOffsetMs
+            // from:  ts - 2 * deltaT + offset
+            // to:    ts              + offset
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
                                                 (cs, currentTime, false, status)
                                                );
@@ -103,6 +104,7 @@ namespace BlackCoreTest
             double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
             double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
             QVERIFY2(latDeg < latOld && lngDeg < lngOld, "Values shall decrease");
+            QVERIFY2(latDeg >= 0 && latDeg <= IRemoteAircraftProvider::MaxSituationsPerCallsign, "Values shall be in range");
             latOld = latDeg;
             lngOld = lngDeg;
         }
@@ -120,11 +122,11 @@ namespace BlackCoreTest
 
         for (int loops = 0; loops < 20; loops++)
         {
-            for (qint64 currentTime = startTimeMsSinceEpoch; currentTime < ts; currentTime += (deltaT / 20))
+            for (qint64 currentTime = startTimeMsSinceEpoch + offset; currentTime < ts + offset; currentTime += (deltaT / 20))
             {
                 // This will use range
-                // from:  ts - 2* deltaT - IInterpolator::TimeOffsetMs
-                // to:    ts             - IInterpolator::TimeOffsetMs
+                // from:  ts - 2* deltaT + offset
+                // to:    ts             + offset
                 CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
                                                     (cs, currentTime, false, status)
                                                    );
@@ -155,7 +157,7 @@ namespace BlackCoreTest
         qDebug() << timeMs << "ms" << "for" << fetchedParts << "fetched parts";
     }
 
-    CAircraftSituation CTestInterpolator::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT)
+    CAircraftSituation CTestInterpolator::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset)
     {
         CAltitude a(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
         CLatitude lat(number, CAngleUnit::deg());
@@ -168,6 +170,7 @@ namespace BlackCoreTest
         CCoordinateGeodetic c(lat, lng, height);
         CAircraftSituation s(callsign, c, a, heading, pitch, bank, gs);
         s.setMSecsSinceEpoch(ts - deltaT * number); // values in past
+        s.setTimeOffsetMs(offset);
         return s;
     }
 
