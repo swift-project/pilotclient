@@ -58,6 +58,9 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "airspaceSnapshotHandled", this, SIGNAL(airspaceSnapshotHandled()));
         Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "weatherGridReceived", this, SIGNAL(weatherGridReceived()));
+        Q_ASSERT(s);
         Q_UNUSED(s);
     }
 
@@ -184,6 +187,11 @@ namespace BlackCore
     void CContextSimulatorProxy::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
     {
         m_dBusInterface->callDBus(QLatin1Literal("highlightAircraft"), aircraftToHighlight, enableHighlight, displayTime);
+    }
+
+    void CContextSimulatorProxy::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
+    {
+        m_dBusInterface->callDBus(QLatin1Literal("requestWeatherGrid"), weatherGrid, identifier);
     }
 
     void CContextSimulatorProxy::enableDebugMessages(bool driver, bool interpolator)

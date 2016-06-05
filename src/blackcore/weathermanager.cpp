@@ -12,6 +12,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/range.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/weather/weatherdataplugininfo.h"
@@ -39,6 +40,14 @@ namespace BlackCore
         // todo: send weather grid to drivers from here
     }
 
+    void CWeatherManager::requestWeatherGrid(const CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier)
+    {
+        WeatherRequest request { identifier, weatherGrid, {} };
+        m_pendingRequests.append(request);
+        // Serialize the requests, since plugins can handle only one at a time
+        if (m_pendingRequests.size() == 1) { fetchNextWeatherData(); }
+    }
+
     void CWeatherManager::requestWeatherGrid(const CWeatherGrid &weatherGrid,
                                              const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback)
     {
@@ -48,7 +57,7 @@ namespace BlackCore
             return;
         }
 
-        WeatherRequest weatherRequest { weatherGrid, callback };
+        WeatherRequest weatherRequest { CIdentifier::anonymous(), weatherGrid, callback };
         m_pendingRequests.append(weatherRequest);
 
         // Serialize the requests, since plugins can handle only one at a time
@@ -116,7 +125,8 @@ namespace BlackCore
             gridPoint.copyWeatherDataFrom(nearestGridPoint);
         }
 
-        weatherRequest.callback(requestedWeatherGrid);
+        if (weatherRequest.callback) { weatherRequest.callback(requestedWeatherGrid); }
+        if (!weatherRequest.identifier.isAnonymous()) { emit weatherGridReceived(requestedWeatherGrid, weatherRequest.identifier); }
         m_pendingRequests.pop_front();
 
         // In case there are pending requests, start over again

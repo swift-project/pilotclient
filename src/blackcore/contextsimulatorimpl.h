@@ -143,6 +143,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::highlightAircraft
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
 
+        //! \copydoc IContextSimulator::requestWeatherGrid
+        virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
+
     protected:
         //! Constructor
         CContextSimulator(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);

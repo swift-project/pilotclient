@@ -30,6 +30,7 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -37,6 +38,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/weather/weathergrid.h"
 
 #include <QObject>
 #include <QString>
@@ -98,6 +100,9 @@ namespace BlackCore
 
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();
+
+        //! A weather grid, requested with requestWeatherGrid(), is received
+        void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
     public slots:
         //! Simulator info, currently loaded plugin
@@ -185,6 +190,9 @@ namespace BlackCore
 
         //! Highlight aircraft in simulator
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
+
+        //! Request weather grid. Argument identifier is past in the signal to identify the requestor
+        virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;
 
     protected:
         //! Constructor

@@ -48,6 +48,7 @@ namespace BlackCore
         m_plugins(new CPluginManagerSimulator(this))
     {
         this->setObjectName("CContextSimulator");
+        connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
         m_plugins->collectPlugins();
     }
 
@@ -605,6 +606,11 @@ namespace BlackCore
     {
         Q_ASSERT(m_simulatorPlugin.second);
         m_simulatorPlugin.second->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
+    }
+
+    void CContextSimulator::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
+    {
+        m_weatherManager.requestWeatherGrid(weatherGrid, identifier);
     }
 
     void CContextSimulator::ps_simulatorStarted(const CSimulatorPluginInfo &info)

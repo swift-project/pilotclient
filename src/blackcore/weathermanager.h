@@ -14,6 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/pluginmanagerweatherdata.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/weather/weathergridprovider.h"
@@ -45,13 +46,22 @@ namespace BlackCore
         //! Is weather overwritten to clear?
         bool isWeatherClear() const { return m_isWeatherClear; }
 
-        //! Request weather by grid
+        //! Request weather grid
+        void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
+
+        //! \copydoc BlackMisc::Weather::IWeatherGridProvider::requestWeatherGrid
         virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid,
                                         const BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> &callback) override;
+
+
+    signals:
+        //! The weather grid, requested from identified, is available
+        void weatherGridReceived(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier);
 
     private:
         struct WeatherRequest
         {
+            BlackMisc::CIdentifier identifier;
             BlackMisc::Weather::CWeatherGrid weatherGrid;
             BlackMisc::CSlot<void(const BlackMisc::Weather::CWeatherGrid &)> callback;
         };

@@ -208,6 +208,14 @@ namespace BlackCore
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
+        //! \copydoc IContextSimulator::requestWeatherGrid
+        virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override
+        {
+            Q_UNUSED(weatherGrid);
+            Q_UNUSED(identifier);
+            logEmptyContextWarning(Q_FUNC_INFO);
+        }
+
         //! \copydoc ISimulator::enableDebugMessages
         virtual void enableDebugMessages(bool driver, bool interpolator) override
         {
