@@ -36,6 +36,8 @@ namespace BlackMisc
                 return CVariant::fromValue(m_level);
             case IndexTemperature:
                 return CVariant::fromValue(m_temperature);
+            case IndexDewPoint:
+                return CVariant::fromValue(m_dewPoint);
             case IndexRelativeHumidity:
                 return CVariant::fromValue(m_relativeHumidity);
             default:
@@ -54,6 +56,9 @@ namespace BlackMisc
                 break;
             case IndexTemperature:
                 setTemperature(variant.value<CTemperature>());
+                break;
+            case IndexDewPoint:
+                setDewPoint(variant.value<CTemperature>());
                 break;
             case IndexRelativeHumidity:
                 setRelativeHumidity(variant.value<double>());

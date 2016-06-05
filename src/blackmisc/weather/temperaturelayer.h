@@ -40,6 +40,7 @@ namespace BlackMisc
                 IndexTemperatureLayer = BlackMisc::CPropertyIndex::GlobalIndexCTemperatureLayer,
                 IndexLevel,
                 IndexTemperature,
+                IndexDewPoint,
                 IndexRelativeHumidity
             };
 
