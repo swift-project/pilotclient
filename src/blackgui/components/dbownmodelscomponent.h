@@ -103,8 +103,8 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>               m_modelLoader;                //!< read own aircraft models
-            BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection>     m_simulatorSelection {this }; //!< last selection
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>           m_modelLoader;                //!< read own aircraft models
+            BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection> m_simulatorSelection {this }; //!< last selection
 
             //! Init or change model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -126,8 +126,8 @@ namespace BlackGui
                 virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
             private:
-                QList<QAction *>  m_loadActions;   //!< load actions
-                QList<QAction *>  m_reloadActions; //!< reload actions
+                QList<QAction *> m_loadActions;   //!< load actions
+                QList<QAction *> m_reloadActions; //!< reload actions
             };
         };
     } // ns

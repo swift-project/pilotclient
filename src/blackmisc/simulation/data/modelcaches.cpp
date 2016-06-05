@@ -66,7 +66,7 @@ namespace BlackMisc
             {
                 this->m_currentSimulator.synchronize();
                 const CSimulatorInfo sim(this->m_currentSimulator.getCopy());
-                this->syncronizeCache(sim);
+                this->syncronizeCacheImpl(sim);
                 const QString simStr(sim.toQString(true));
                 CLogMessage(this).info("Initialized model caches to %1") << simStr;
             }
@@ -126,6 +126,21 @@ namespace BlackMisc
 
             void CModelCaches::syncronizeCache(const CSimulatorInfo &simulator)
             {
+                this->syncronizeCacheImpl(simulator);
+            }
+
+            CStatusMessage CModelCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
+            {
+                static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
+                const CSimulatorInfo s = this->m_currentSimulator.getCopy();
+                if (s == simulator) { return sameSimMsg; }
+                const BlackMisc::CStatusMessage m = this->m_currentSimulator.set(simulator);
+                this->syncronizeCache(simulator);
+                return m;
+            }
+
+            void CModelCaches::syncronizeCacheImpl(const CSimulatorInfo &simulator)
+            {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
@@ -139,21 +154,11 @@ namespace BlackMisc
                 }
             }
 
-            CStatusMessage CModelCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
-            {
-                static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
-                const CSimulatorInfo s = this->m_currentSimulator.getCopy();
-                if (s == simulator) { return sameSimMsg; }
-                const BlackMisc::CStatusMessage m = this->m_currentSimulator.set(simulator);
-                this->syncronizeCache(simulator);
-                return m;
-            }
-
             CModelSetCaches::CModelSetCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
                 const CSimulatorInfo sim(this->m_currentSimulator.getCopy());
-                this->syncronizeCache(sim);
+                this->syncronizeCacheImpl(sim);
                 const QString simStr(sim.toQString(true));
                 CLogMessage(this).info("Initialized model set caches to %1") << simStr;
             }
@@ -215,16 +220,7 @@ namespace BlackMisc
 
             void CModelSetCaches::syncronizeCache(const CSimulatorInfo &simulator)
             {
-                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                switch (simulator.getSimulator())
-                {
-                case CSimulatorInfo::FS9: this->m_modelCacheFs9.synchronize(); break;
-                case CSimulatorInfo::FSX: this->m_modelCacheFsx.synchronize(); break;
-                case CSimulatorInfo::P3D: this->m_modelCacheP3D.synchronize(); break;
-                case CSimulatorInfo::XPLANE: this->m_modelCacheXP.synchronize(); break;
-                default:
-                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-                }
+                this->syncronizeCacheImpl(simulator);
             }
 
             CStatusMessage CModelSetCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
@@ -235,6 +231,20 @@ namespace BlackMisc
                 const BlackMisc::CStatusMessage m = this->m_currentSimulator.set(simulator);
                 this->syncronizeCache(simulator);
                 return m;
+            }
+
+            void CModelSetCaches::syncronizeCacheImpl(const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: this->m_modelCacheFs9.synchronize(); break;
+                case CSimulatorInfo::FSX: this->m_modelCacheFsx.synchronize(); break;
+                case CSimulatorInfo::P3D: this->m_modelCacheP3D.synchronize(); break;
+                case CSimulatorInfo::XPLANE: this->m_modelCacheXP.synchronize(); break;
+                default:
+                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                }
             }
         } // ns
     } // ns

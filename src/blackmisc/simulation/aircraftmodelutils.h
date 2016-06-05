@@ -27,7 +27,7 @@ namespace BlackMisc
             CAircraftModelUtilities() = delete;
 
             //! Merge with DB data if possible
-            static bool mergeWithDbData(BlackMisc::Simulation::CAircraftModelList &modelToBeModified, const BlackMisc::Simulation::CAircraftModelList &dbModels, bool force = false);
+            static int mergeWithDbData(BlackMisc::Simulation::CAircraftModelList &modelToBeModified, const BlackMisc::Simulation::CAircraftModelList &dbModels, bool force = false);
 
             //! Merge with vPilot data if possible
             static bool mergeWithVPilotData(BlackMisc::Simulation::CAircraftModelList &modelToBeModified, const BlackMisc::Simulation::CAircraftModelList &vPilotModels, bool force = false);

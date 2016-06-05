@@ -136,9 +136,6 @@ namespace BlackMisc
             //! Cache timestamp
             QDateTime getCacheTimestamp() const;
 
-            //! Make sure cache is syncronized
-            bool syncronizeCache();
-
             //! Any cached data?
             bool hasCachedData() const;
 

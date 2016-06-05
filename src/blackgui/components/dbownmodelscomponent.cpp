@@ -48,7 +48,7 @@ namespace BlackGui
 
             // should be single simulator or no simulator (default)
             this->m_simulatorSelection.synchronize();
-            const CSimulatorInfo simulator(this->m_simulatorSelection.get());
+            const CSimulatorInfo simulator(this->m_simulatorSelection.getCopy());
             const bool s = this->initModelLoader(!simulator.isSingleSimulator() ? CSimulatorInfo(CSimulatorInfo::FSX) : simulator);
             if (s)
             {

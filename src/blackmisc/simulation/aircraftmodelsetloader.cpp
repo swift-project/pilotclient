@@ -59,7 +59,8 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             if (this->getSimulator() == simulator) { return; }
-            this->m_caches.syncronizeCache(simulator); // also changes current simulator of caches
+            this->m_caches.setCurrentSimulator(simulator);
+            this->m_caches.syncronizeCurrentCache();
             emit simulatorChanged(simulator);
         }
 

@@ -246,6 +246,9 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this, &CModelCaches::changedP3D }; //!< P3D cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection> m_currentSimulator { this };              //!< current simulator
+
+                //! Non virtaul version (used in ctor)
+                void syncronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };
 
             //! Bundle of caches for model sets of all simulators
@@ -274,6 +277,9 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetLastSelection> m_currentSimulator { this };                       //!< current simulator
+
+                //! Non virtaul version (used in ctor)
+                void syncronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };
         } // ns
     } // ns

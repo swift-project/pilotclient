@@ -10,6 +10,7 @@
 #include "aircraftmodelmenus.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
@@ -139,15 +140,27 @@ namespace BlackGui
 
         void CMergeWithDbDataMenu::ps_mergeData()
         {
-            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+            BLACK_VERIFY_X(sGui, Q_FUNC_INFO, "Missing sGui");
             if (!sGui->hasWebDataServices()) { return; }
 
             const CAircraftModelList dbModels(sGui->getWebDataServices()->getModels());
+            if (dbModels.isEmpty())
+            {
+                CLogMessage().warning("No DB models to merge with");
+                return;
+            }
+
+            this->modelView()->showLoadIndicator();
             CAircraftModelList models(this->getAircraftModels());
-            CAircraftModelUtilities::mergeWithDbData(models, dbModels, true);
-            if (this->modelsTargetSetable())
+            int c = CAircraftModelUtilities::mergeWithDbData(models, dbModels, true);
+            if (c > 0 && this->modelsTargetSetable())
             {
                 this->modelsTargetSetable()->setModels(models);
+                CLogMessage().info("Merged %1/%2 models with DB") << c << models.size();
+            }
+            else
+            {
+                CLogMessage().info("No data merged with DB");
             }
         }
 

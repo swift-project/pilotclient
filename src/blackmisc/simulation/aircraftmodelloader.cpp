@@ -95,11 +95,6 @@ namespace BlackMisc
             return this->m_caches.getCurrentCacheTimestamp();
         }
 
-        bool IAircraftModelLoader::syncronizeCache()
-        {
-            return this->m_caches.syncronizeCurrentCache();
-        }
-
         bool IAircraftModelLoader::hasCachedData() const
         {
             return !this->m_caches.getCurrentCachedModels().isEmpty();
