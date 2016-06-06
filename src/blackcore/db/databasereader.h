@@ -152,6 +152,8 @@ namespace BlackCore
             //! Split into single entity and send dataRead signal
             void emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities);
 
+            // ---------------- cache access ------------------
+
             //! Syncronize caches for given entities
             virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
 

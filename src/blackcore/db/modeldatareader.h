@@ -13,6 +13,7 @@
 #define BLACKCORE_MODELDATAREADER_H
 
 #include "blackcore/blackcoreexport.h"
+#include "blackcore/data/dbcaches.h"
 #include "blackcore/db/databasereader.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
@@ -142,17 +143,21 @@ namespace BlackCore
             //! Read / re-read data file
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel, const QDateTime &newerThan = QDateTime());
 
-        private:
-            BlackMisc::Aviation::CLiveryList          m_liveries;
-            BlackMisc::Simulation::CDistributorList   m_distributors;
-            BlackMisc::Simulation::CAircraftModelList m_models;
-            BlackMisc::Network::CUrl m_urlLiveries;
-            BlackMisc::Network::CUrl m_urlDistributors;
-            BlackMisc::Network::CUrl m_urlModels;
+            void ps_liveryCacheChanged();
+            void ps_modelCacheChanged();
+            void ps_distributorCacheChanged();
+            void ps_baseUrlCacheChanged();
 
-            mutable QReadWriteLock m_lockDistributor;
-            mutable QReadWriteLock m_lockLivery;
-            mutable QReadWriteLock m_lockModels;
+        private:
+            BlackMisc::CData<BlackCore::Data::DbLiveryCache>      m_liveryCache {this, &CModelDataReader::ps_liveryCacheChanged };
+            BlackMisc::CData<BlackCore::Data::DbModelCache>       m_modelCache  {this, &CModelDataReader::ps_modelCacheChanged };
+            BlackMisc::CData<BlackCore::Data::DbDistributorCache> m_distributorCache {this, &CModelDataReader::ps_distributorCacheChanged };
+
+            //! Reader URL (we read from where?) used to detect changes of location
+            BlackMisc::CData<BlackCore::Data::DbModelReaderBaseUrl> m_readerUrlCache {this, &CModelDataReader::ps_baseUrlCacheChanged };
+
+            //! Update reader URL
+            void updateReaderUrl(const BlackMisc::Network::CUrl &url);
 
             //! Base URL
             //! \threadsafe

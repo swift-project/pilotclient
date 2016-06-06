@@ -32,7 +32,7 @@ namespace BlackMisc
             return CDistributor();
         }
 
-        CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern)
+        CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern) const
         {
             if (distributorPattern.hasValidDbKey())
             {

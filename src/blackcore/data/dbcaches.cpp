@@ -49,11 +49,22 @@ namespace BlackCore
             return ll;
         }
 
+        const CDistributorList &DbDistributorCache::defaultValue()
+        {
+            static const CDistributorList dl;
+            return dl;
+        }
+
         const BlackMisc::Network::CUrl &DbIcaoReaderBaseUrl::defaultValue()
         {
             static const CUrl url;
             return url;
         }
 
+        const CUrl &DbModelReaderBaseUrl::defaultValue()
+        {
+            static const CUrl url;
+            return url;
+        }
     } // ns
 } // ns

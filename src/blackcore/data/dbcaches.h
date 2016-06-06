@@ -14,6 +14,7 @@
 
 #include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/liverylist.h"
@@ -38,6 +39,32 @@ namespace BlackCore
 
             //! Key in data cache
             static const char *key() { return "dbmodelcache"; }
+        };
+
+        //! Trait for DB distributor cache
+        struct DbDistributorCache : public BlackMisc::CDataTrait<BlackMisc::Simulation::CDistributorList>
+        {
+            //! Default value
+            static const BlackMisc::Simulation::CDistributorList &defaultValue();
+
+            //! Defer loading (no currently small)
+            static constexpr bool isDeferred() { return false; }
+
+            //! Key in data cache
+            static const char *key() { return "dbdistributorcache"; }
+        };
+
+        //! Trait for DB liveries
+        struct DbLiveryCache : public BlackMisc::CDataTrait<BlackMisc::Aviation::CLiveryList>
+        {
+            //! Default value
+            static const BlackMisc::Aviation::CLiveryList &defaultValue();
+
+            //! Defer loading
+            static constexpr bool isDeferred() { return true; }
+
+            //! Key in data cache
+            static const char *key() { return "dbliverycache"; }
         };
 
         //! Trait for DB airline ICAO codes
@@ -80,19 +107,6 @@ namespace BlackCore
             static const char *key() { return "dbcountrycache"; }
         };
 
-        //! Trait for DB liveries
-        struct DbLiveryCache : public BlackMisc::CDataTrait<BlackMisc::Aviation::CLiveryList>
-        {
-            //! Default value
-            static const BlackMisc::Aviation::CLiveryList &defaultValue();
-
-            //! Defer loading
-            static constexpr bool isDeferred() { return true; }
-
-            //! Key in data cache
-            static const char *key() { return "dbliverycache"; }
-        };
-
         //! Trait for ICAO reader base URL
         struct DbIcaoReaderBaseUrl : public BlackMisc::CDataTrait<BlackMisc::Network::CUrl>
         {
@@ -104,6 +118,19 @@ namespace BlackCore
 
             //! Key in data cache
             static const char *key() { return "dbicaoreaderurl"; }
+        };
+
+        //! Trait for ICAO reader base URL
+        struct DbModelReaderBaseUrl : public BlackMisc::CDataTrait<BlackMisc::Network::CUrl>
+        {
+            //! Default value
+            static const BlackMisc::Network::CUrl &defaultValue();
+
+            //! First load is synchronous
+            static constexpr bool isPinned() { return true; }
+
+            //! Key in data cache
+            static const char *key() { return "dbmodelreaderurl"; }
         };
     } // ns
 } // ns

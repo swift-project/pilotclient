@@ -47,97 +47,89 @@ namespace BlackCore
 
         CLiveryList CModelDataReader::getLiveries() const
         {
-            QReadLocker l(&m_lockLivery);
-            return m_liveries;
+            return this->m_liveryCache.getCopy();
         }
 
         CLivery CModelDataReader::getLiveryForCombinedCode(const QString &combinedCode) const
         {
             if (!CLivery::isValidCombinedCode(combinedCode)) { return CLivery(); }
-            CLiveryList liveries(getLiveries());
+            const CLiveryList liveries(getLiveries());
             return liveries.findByCombinedCode(combinedCode);
         }
 
         CLivery CModelDataReader::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
         {
             if (!icao.hasValidDesignator()) { return CLivery(); }
-            CLiveryList liveries(getLiveries());
+            const CLiveryList liveries(getLiveries());
             return liveries.findStdLiveryByAirlineIcaoDesignator(icao);
         }
 
         CLivery CModelDataReader::getLiveryForDbKey(int id) const
         {
             if (id < 0) { return CLivery(); }
-            CLiveryList liveries(getLiveries());
+            const CLiveryList liveries(getLiveries());
             return liveries.findByKey(id);
         }
 
         CLivery CModelDataReader::smartLiverySelector(const CLivery &liveryPattern) const
         {
-            CLiveryList liveries(getLiveries()); // thread safe copy
+            const CLiveryList liveries(getLiveries()); // thread safe copy
             return liveries.smartLiverySelector(liveryPattern);
         }
 
         CDistributorList CModelDataReader::getDistributors() const
         {
-            QReadLocker l(&m_lockDistributor);
-            return m_distributors;
+            return m_distributorCache.getCopy();
         }
 
         CAircraftModelList CModelDataReader::getModels() const
         {
-            QReadLocker l(&m_lockModels);
-            return m_models;
+            return m_modelCache.getCopy();
         }
 
         CAircraftModel CModelDataReader::getModelForModelString(const QString &modelString) const
         {
             if (modelString.isEmpty()) { return CAircraftModel(); }
-            CAircraftModelList models(getModels());
+            const CAircraftModelList models(getModels());
             return models.findFirstByModelStringOrDefault(modelString);
         }
 
         CAircraftModelList CModelDataReader::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode)
         {
             if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
-            CAircraftModelList models(getModels());
+            const CAircraftModelList models(getModels());
             return models.findByAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator, combinedCode);
         }
 
         int CModelDataReader::getLiveriesCount() const
         {
-            QReadLocker l(&m_lockLivery);
-            return m_liveries.size();
+            return this->getLiveries().size();
         }
 
         int CModelDataReader::getDistributorsCount() const
         {
-            QReadLocker l(&m_lockDistributor);
-            return m_distributors.size();
+            return this->getDistributors().size();
         }
 
         CDistributor CModelDataReader::smartDistributorSelector(const CDistributor &distributorPattern) const
         {
-            CDistributorList distributors(getDistributors()); // thread safe copy
+            const CDistributorList distributors(getDistributors()); // thread safe copy
             return distributors.smartDistributorSelector(distributorPattern);
         }
 
         int CModelDataReader::getModelsCount() const
         {
-            QReadLocker l(&m_lockModels);
-            return m_models.size();
+            return this->getModels().size();
         }
 
         QList<int> CModelDataReader::getModelDbKeys() const
         {
-            QReadLocker l(&m_lockModels);
-            return m_models.toDbKeyList();
+            return this->getModels().toDbKeyList();
         }
 
         QStringList CModelDataReader::getModelStrings() const
         {
-            QReadLocker l(&m_lockModels);
-            return m_models.getModelStrings(false);
+            return this->getModels().getModelStrings(false);
         }
 
         bool CModelDataReader::areAllDataRead() const
@@ -217,6 +209,37 @@ namespace BlackCore
             }
         }
 
+        void CModelDataReader::ps_liveryCacheChanged()
+        {
+            // void
+        }
+
+        void CModelDataReader::ps_modelCacheChanged()
+        {
+            // void
+        }
+
+        void CModelDataReader::ps_distributorCacheChanged()
+        {
+            // void
+        }
+
+        void CModelDataReader::ps_baseUrlCacheChanged()
+        {
+            // void
+        }
+
+        void CModelDataReader::updateReaderUrl(const CUrl &url)
+        {
+            const CUrl current = this->m_readerUrlCache.getCopy();
+            if (current == url) { return; }
+            const CStatusMessage m = this->m_readerUrlCache.set(url);
+            if (m.isFailure())
+            {
+                CLogMessage::preformatted(m);
+            }
+        }
+
         void CModelDataReader::ps_parseLiveryData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
@@ -245,16 +268,18 @@ namespace BlackCore
                 liveries  = CLiveryList::fromDatabaseJson(res);
             }
 
-            // this part needs to be synchronized
             int n = liveries.size();
+            qint64 latestTimestamp = liveries.latestTimestampMsecsSinceEpoch();
+            if (n > 0 && latestTimestamp < 0)
             {
-                QWriteLocker wl(&this->m_lockLivery);
-                this->m_liveries = liveries;
+                CLogMessage(this).error("No timestamp in livery list, setting to last modified value");
+                latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
+            this->m_liveryCache.set(liveries, latestTimestamp);
+            this->updateReaderUrl(this->getBaseUrl());
 
             // never emit when lock is held -> deadlock
-            emit dataRead(CEntityFlags::LiveryEntity,
-                          res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
+            emit dataRead(CEntityFlags::LiveryEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::LiveryEntity) << urlString;
         }
 
@@ -286,14 +311,17 @@ namespace BlackCore
                 distributors = CDistributorList::fromDatabaseJson(res);
             }
 
-            // this part needs to be synchronized
             int n = distributors.size();
+            qint64 latestTimestamp = distributors.latestTimestampMsecsSinceEpoch();
+            if (n > 0 && latestTimestamp < 0)
             {
-                QWriteLocker wl(&this->m_lockDistributor);
-                this->m_distributors = distributors;
+                CLogMessage(this).error("No timestamp in distributor list, setting to last modified value");
+                latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
-            emit dataRead(CEntityFlags::DistributorEntity,
-                          res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
+            this->m_distributorCache.set(distributors, latestTimestamp);
+            this->updateReaderUrl(this->getBaseUrl());
+
+            emit dataRead(CEntityFlags::DistributorEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::DistributorEntity) << urlString;
         }
 
@@ -327,13 +355,16 @@ namespace BlackCore
 
             // syncronized update
             int n = models.size();
+            qint64 latestTimestamp = models.latestTimestampMsecsSinceEpoch();
+            if (n > 0 && latestTimestamp < 0)
             {
-                QWriteLocker wl(&this->m_lockModels);
-                this->m_models = models;
+                CLogMessage(this).error("No timestamp in model list, setting to last modified value");
+                latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
+            this->m_modelCache.set(models, latestTimestamp);
+            this->updateReaderUrl(this->getBaseUrl());
 
-            emit dataRead(CEntityFlags::ModelEntity,
-                          res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
+            emit dataRead(CEntityFlags::ModelEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
         }
 
@@ -351,11 +382,8 @@ namespace BlackCore
                     CLiveryList liveries;
                     liveries.convertFromJson(liveriesJson);
                     int c = liveries.size();
-                    {
-                        QWriteLocker l(&m_lockLivery);
-                        m_liveries = liveries;
-                    }
-                    // never emit when lcok is held -> deadlock
+                    this->m_liveryCache.set(liveries);
+
                     emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
                     reallyRead |= CEntityFlags::LiveryEntity;
                 }
@@ -369,10 +397,8 @@ namespace BlackCore
                     CAircraftModelList models;
                     models.convertFromJson(Json::jsonObjectFromString(modelsJson));
                     int c = models.size();
-                    {
-                        QWriteLocker l(&m_lockModels);
-                        m_models = models;
-                    }
+                    this->m_modelCache.set(models);
+
                     emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
                     reallyRead |= CEntityFlags::ModelEntity;
                 }
@@ -386,12 +412,10 @@ namespace BlackCore
                     CDistributorList distributors;
                     distributors.convertFromJson(Json::jsonObjectFromString(distributorsJson));
                     int c = distributors.size();
-                    {
-                        QWriteLocker l(&m_lockDistributor);
-                        m_distributors = distributors;
-                    }
-                    reallyRead |= CEntityFlags::DistributorEntity;
+                    this->m_distributorCache.set(distributors);
+
                     emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
+                    reallyRead |= CEntityFlags::DistributorEntity;
                 }
             }
 
@@ -438,30 +462,44 @@ namespace BlackCore
 
         void CModelDataReader::syncronizeCaches(CEntityFlags::Entity entities)
         {
-            Q_UNUSED(entities);
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { this->m_liveryCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity))  { this->m_modelCache.synchronize(); }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { this->m_distributorCache.synchronize(); }
         }
 
         void CModelDataReader::invalidateCaches(CEntityFlags::Entity entities)
         {
-            Q_UNUSED(entities);
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { CDataCache::instance()->clearAllValues(this->m_liveryCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::ModelEntity))  { CDataCache::instance()->clearAllValues(this->m_modelCache.getKey()); }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { CDataCache::instance()->clearAllValues(this->m_distributorCache.getKey()); }
         }
 
         QDateTime CModelDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
         {
-            Q_UNUSED(entity);
-            return QDateTime();
+            switch (entity)
+            {
+            case CEntityFlags::LiveryEntity:      return this->m_liveryCache.getAvailableTimestamp();
+            case CEntityFlags::ModelEntity:       return this->m_modelCache.getAvailableTimestamp();
+            case CEntityFlags::DistributorEntity: return this->m_distributorCache.getAvailableTimestamp();
+            default: return QDateTime();
+            }
         }
 
         int CModelDataReader::getCacheCount(CEntityFlags::Entity entity) const
         {
-            Q_UNUSED(entity);
-            return 0;
+            switch (entity)
+            {
+            case CEntityFlags::LiveryEntity:      return this->m_liveryCache.getCopy().size();
+            case CEntityFlags::ModelEntity:       return this->m_modelCache.getCopy().size();
+            case CEntityFlags::DistributorEntity: return this->m_distributorCache.getCopy().size();
+            default: return 0;
+            }
         }
 
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(CUrl(), this->getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.getCopy(), this->getBaseUrl());
         }
 
         const CUrl &CModelDataReader::getBaseUrl()

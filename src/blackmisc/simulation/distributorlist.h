@@ -49,7 +49,7 @@ namespace BlackMisc
             CDistributor findByKeyOrAlias(const QString &keyOrAlias) const;
 
             //! Best match by given pattern
-            CDistributor smartDistributorSelector(const CDistributor &distributorPattern);
+            CDistributor smartDistributorSelector(const CDistributor &distributorPattern) const;
 
             //! At least is matching key or alias
             bool matchesAnyKeyOrAlias(const QString &keyOrAlias) const;
