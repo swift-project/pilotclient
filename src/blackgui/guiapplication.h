@@ -97,7 +97,7 @@ namespace BlackGui
         void processEventsToRefreshGui() const;
 
         //! Init the main application window based on information in this application
-        void initMainApplicationWindow(QWidget *mainWindow) const;
+        void initMainApplicationWindow(QWidget *mainWindow);
 
         //! \name print messages generated during parsing / cmd handling
         //! @{
@@ -156,6 +156,9 @@ namespace BlackGui
         //! Style sheet changed
         void styleSheetsChanged();
 
+        //! Object tree ready (means ui->setupUi() completed)
+        void uiObjectTreeReady();
+
     protected slots:
         //! Startup competed
         virtual void ps_startupCompleted() override;
@@ -178,7 +181,8 @@ namespace BlackGui
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
         CStyleSheetUtility m_styleSheetUtility{{}, this};         //!< style sheet utility
-        QScopedPointer<QSplashScreen>      m_splashScreen;        //!< splash screen
+        QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
+        bool m_uiSetupCompleted = false;                          //!< ui setup completed
 
         //! Qt help message to formatted HTML
         static QString beautifyHelpMessage(const QString &helpText);

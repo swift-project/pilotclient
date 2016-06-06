@@ -160,14 +160,17 @@ namespace BlackGui
         return m;
     }
 
-    void CGuiApplication::initMainApplicationWindow(QWidget *mainWindow) const
+    void CGuiApplication::initMainApplicationWindow(QWidget *mainWindow)
     {
         if (!mainWindow) { return; }
+        if (this->m_uiSetupCompleted) { return; }
+        this->m_uiSetupCompleted = true;
         const QString name(this->getApplicationNameVersionBetaDev());
         mainWindow->setObjectName(QCoreApplication::applicationName());
         mainWindow->setWindowTitle(name);
         mainWindow->setWindowIcon(m_windowIcon);
         mainWindow->setWindowIconText(name);
+        emit this->uiObjectTreeReady();
     }
 
     void CGuiApplication::setWindowIcon(const QPixmap &icon)
