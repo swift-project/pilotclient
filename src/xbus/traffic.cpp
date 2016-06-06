@@ -42,30 +42,9 @@ namespace XBus
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
-    class CTraffic::AircraftProvider : public BlackMisc::Simulation::CRemoteAircraftProviderDummy
-    {
-    public:
-        //! Constructor.
-        AircraftProvider(QObject *parent = nullptr) : CRemoteAircraftProviderDummy(parent) {}
-
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
-        //! \todo return reference not copy, thread safety not needed
-        virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &) const override { return *m_situations; }
-
-        //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
-        virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &) const override { return m_situations->size(); }
-
-        //! Inject the situations to be interpolated (for performance, no lookup by callsign).
-        void setSituations(const BlackMisc::Aviation::CAircraftSituationList *situations) { m_situations = situations; }
-
-    private:
-        const BlackMisc::Aviation::CAircraftSituationList *m_situations = nullptr;
-    };
-
     CTraffic::CTraffic(QObject *parent) :
         QObject(parent),
-        m_provider(new AircraftProvider(this)),
-        m_interpolator(new BlackMisc::CInterpolatorLinear(m_provider, this))
+        m_interpolator(new BlackMisc::CInterpolatorLinear(new BlackMisc::Simulation::CRemoteAircraftProviderDummy(this), this))
     {
     }
 
@@ -328,8 +307,7 @@ namespace XBus
         case xpmpDataType_Position:
             {
                 BlackMisc::IInterpolator::InterpolationStatus status;
-                m_provider->setSituations(&plane->situations);
-                auto situation = m_interpolator->getInterpolatedSituation(plane->callsign, -1, false, status);
+                auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, false, status);
                 if (! status.interpolationSucceeded) { return xpmpData_Unavailable; }
                 if (! status.changedPosition) { return xpmpData_Unchanged; }
 

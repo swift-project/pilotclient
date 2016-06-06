@@ -144,8 +144,6 @@ namespace XBus
             return static_cast<CTraffic *>(self)->getPlaneData(id, dataType, io_data);
         }
 
-        class AircraftProvider;
-        AircraftProvider *m_provider = nullptr;
         BlackMisc::IInterpolator *m_interpolator = nullptr;
     };
 
