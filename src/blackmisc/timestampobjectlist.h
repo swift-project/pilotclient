@@ -50,10 +50,6 @@ namespace BlackMisc
         //! Has invalid timestamp
         bool hasInvalidTimestamps() const;
 
-        //! Partition into two containers, first [0,msSinceEpoch] and second (msSinceEpoch,LLONG_MAX].
-        //! Within each of the two parts, the original relative ordering of the elements is preserved.
-        QList<CONTAINER> splitByTime(qint64 msSinceEpoch, bool sortedLatestFirst = false) const;
-
         //! Latest timestamp
         QDateTime latestTimestamp() const;
 

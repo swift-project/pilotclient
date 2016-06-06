@@ -254,26 +254,6 @@ namespace BlackMiscTest
         ms = situations.front().getMSecsSinceEpoch();
         QVERIFY2(ms == ts, "Latest value not first");
 
-        // split in half
-        for (bool sortLatestFirst : { false, true })
-        {
-            sortLatestFirst ? situations.sortLatestFirst() : situations.sortOldestFirst();
-            qint64 splitTime = ts - ((no / 2) * 10) + 1;
-            QList<CAircraftSituationList> split = situations.splitByTime(splitTime);
-            CAircraftSituationList before = split[0];
-            CAircraftSituationList after = split[1];
-
-            int beforeSize = before.size();
-            int afterSize = after.size();
-            QVERIFY(beforeSize == no / 2);
-            QVERIFY(afterSize == no / 2);
-
-            // check partitioning
-            auto isNewer = [splitTime](const CAircraftSituation &as) { return as.isNewerThan(splitTime); };
-            QVERIFY2(std::none_of(before.cbegin(), before.cend(), isNewer), "before contains a time which is after");
-            QVERIFY2(std::all_of(after.cbegin(), after.cend(), isNewer), "after contains a time which is before");
-        }
-
         // test shifting
         situations.clear();
         const int maxElements = 8;

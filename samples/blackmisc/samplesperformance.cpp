@@ -304,34 +304,6 @@ namespace BlackSample
         Q_UNUSED(b);
 
         timer.start();
-        QList<CAircraftSituationList> split = situations.splitByTime(halfTime);
-        for (int cs = 0; cs < numberOfCallsigns; cs++)
-        {
-            CCallsign callsign("CS" + QString::number(cs));
-            CAircraftSituationList csSituationsBefore = split[0].findByCallsign(callsign);
-            CAircraftSituationList csSituationsAfter = split[1].findByCallsign(callsign);
-            Q_UNUSED(csSituationsBefore);
-            Q_UNUSED(csSituationsAfter);
-        }
-        out << "Single split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
-        b = split[0].size();
-        a = split[1].size();
-        Q_ASSERT(a + b == numberOfTimes * numberOfCallsigns);
-
-        situations.sortLatestFirst(); // eliminate impact of sort
-        timer.start();
-        split = situations.splitByTime(halfTime);
-        for (int cs = 0; cs < numberOfCallsigns; cs++)
-        {
-            CCallsign callsign("CS" + QString::number(cs));
-            CAircraftSituationList csSituationsBefore = split[0].findByCallsign(callsign);
-            CAircraftSituationList csSituationsAfter = split[1].findByCallsign(callsign);
-            Q_UNUSED(csSituationsBefore);
-            Q_UNUSED(csSituationsAfter);
-        }
-        out << "Single, pre-sorted split by time upfront, then callsigns: " << timer.elapsed() << "ms" << endl;
-
-        timer.start();
         QHash<CCallsign, CAircraftSituationList> csSituations = situations.splitPerCallsign();
         out << "Split by " << csSituations.size() << " callsigns, " << timer.elapsed() << "ms" << endl;
 
