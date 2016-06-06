@@ -54,7 +54,7 @@ namespace BlackSimPlugin
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorXPlaneConfigWindow::close);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorXPlaneConfigWindow::close);
 
-            ui->cp_XBusServer->setCurrentText(m_xbusServerSetting.get());
+            ui->cp_XBusServer->setCurrentText(m_xbusServerSetting.getThreadLocal());
 
             if (xBusAvailable())
                 connect(ui->pb_InstallXBus, &QPushButton::clicked, this, &CSimulatorXPlaneConfigWindow::ps_installXBus);
@@ -74,7 +74,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneConfigWindow::ps_storeSettings()
         {
-            if (ui->cp_XBusServer->currentText() != m_xbusServerSetting.get())
+            if (ui->cp_XBusServer->currentText() != m_xbusServerSetting.getThreadLocal())
             {
                 m_xbusServerSetting.set(ui->cp_XBusServer->currentText());
             }

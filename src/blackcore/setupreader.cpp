@@ -62,7 +62,7 @@ namespace BlackCore
         }
 
         m_setup.synchronize(); // make sure it is loaded
-        CGlobalSetup cachedSetup = m_setup.getCopy();
+        CGlobalSetup cachedSetup = m_setup.get();
         const bool cacheAvailable = cachedSetup.wasLoaded();
         msgs.push_back(cacheAvailable ?
                        CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup syncronized and contains data") :
@@ -281,7 +281,7 @@ namespace BlackCore
             }
             else
             {
-                const CGlobalSetup currentSetup = m_setup.getCopy();
+                const CGlobalSetup currentSetup = m_setup.get();
                 CGlobalSetup loadedSetup;
                 loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
                 loadedSetup.markAsLoaded(true);
@@ -410,12 +410,12 @@ namespace BlackCore
 
     CGlobalSetup CSetupReader::getSetup() const
     {
-        return m_setup.getCopy();
+        return m_setup.get();
     }
 
     CUpdateInfo CSetupReader::getUpdateInfo() const
     {
-        return m_updateInfo.getCopy();
+        return m_updateInfo.get();
     }
 
     CStatusMessageList CSetupReader::manageSetupAvailability(bool webRead, bool localRead)
@@ -440,7 +440,7 @@ namespace BlackCore
         }
         else
         {
-            bool cacheAvailable = this->m_setup.get().wasLoaded();
+            bool cacheAvailable = this->m_setup.getThreadLocal().wasLoaded();
             available = cacheAvailable && this->m_bootstrapMode != Explicit;
         }
 

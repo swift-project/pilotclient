@@ -89,7 +89,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
             Q_ASSERT_X(this->m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            const CDistributorListPreferences prefs(this->m_distributorPreferences.getCopy());
+            const CDistributorListPreferences prefs(this->m_distributorPreferences.get());
             const CDistributorList distributors(prefs.getDistributors(this->m_simulator));
             if (!distributors.isEmpty()) { return distributors; }
 
@@ -115,7 +115,7 @@ namespace BlackGui
 
         bool COwnModelSetForm::hasDIstributorPreferences() const
         {
-            const CDistributorListPreferences prefs(this->m_distributorPreferences.getCopy());
+            const CDistributorListPreferences prefs(this->m_distributorPreferences.get());
             return !prefs.getDistributors(this->m_simulator).isEmpty();
         }
     } // ns

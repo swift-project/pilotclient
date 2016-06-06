@@ -576,7 +576,7 @@ namespace BlackCore
     {
         stopSimulatorListeners();
 
-        auto enabledSimulators = m_enabledSimulators.get();
+        auto enabledSimulators = m_enabledSimulators.getThreadLocal();
         auto allSimulators = m_plugins->getAvailableSimulatorPlugins();
         for (const CSimulatorPluginInfo& s: allSimulators)
         {

@@ -58,7 +58,7 @@ namespace BlackGui
 
         void CSettingsNetworkServersComponent::ps_reloadSettings()
         {
-            CServerList serverList(m_trafficNetworkServers.getCopy());
+            CServerList serverList(m_trafficNetworkServers.get());
 
             // add swift test servers in case we have no servers:
             // this is debug/bootstrap feature we can continue to test when something goes wrong
@@ -81,7 +81,7 @@ namespace BlackGui
             CStatusMessageList  msgs = server.validate();
             if (!msgs.isEmpty()) { msgs.addCategories(this); }
 
-            CServerList serverList(m_trafficNetworkServers.get());
+            CServerList serverList(m_trafficNetworkServers.getThreadLocal());
             QObject *sender = QObject::sender();
             CStatusMessage msg;
             bool changed = false;

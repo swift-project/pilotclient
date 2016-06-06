@@ -43,7 +43,7 @@ namespace BlackGui
 
         void CDbDebugDatabaseSetup::ps_debugChanged(bool set)
         {
-            CGlobalSetup gs(m_setup.get());
+            CGlobalSetup gs(m_setup.getThreadLocal());
             gs.setServerDebugFlag(set);
             m_setup.set(gs);
         }

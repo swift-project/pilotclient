@@ -75,7 +75,7 @@ namespace BlackGui
 
         void CAudioSetupComponent::ps_reloadSettings()
         {
-            CSettingsAudio as(m_audioSettings.get());
+            CSettingsAudio as(m_audioSettings.getThreadLocal());
             this->ui->cb_SetupAudioPlayNotificationSounds->setChecked(true);
             this->ui->cb_SetupAudioNotificationTextMessage->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate));
             this->ui->cb_SetupAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined));

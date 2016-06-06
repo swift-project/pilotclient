@@ -54,7 +54,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     this->ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
 
     // default from settings
-    const QString dbus(this->m_dbusServerAddress.get());
+    const QString dbus(this->m_dbusServerAddress.getThreadLocal());
     this->setDefault(dbus);
 }
 
@@ -307,7 +307,7 @@ void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
         return;
     }
 
-    const CUpdateInfo updateInfo(this->m_updateInfo.get());
+    const CUpdateInfo updateInfo(this->m_updateInfo.getThreadLocal());
     const QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
     CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
     bool newVersionAvailable = CVersion::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();

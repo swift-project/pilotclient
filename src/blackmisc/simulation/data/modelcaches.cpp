@@ -65,7 +65,7 @@ namespace BlackMisc
             CModelCaches::CModelCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
-                const CSimulatorInfo sim(this->m_currentSimulator.getCopy());
+                const CSimulatorInfo sim(this->m_currentSimulator.get());
                 this->syncronizeCacheImpl(sim);
                 const QString simStr(sim.toQString(true));
                 CLogMessage(this).info("Initialized model caches to %1") << simStr;
@@ -76,10 +76,10 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.getCopy();
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.getCopy();
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.getCopy();
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.getCopy();
+                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.get();
+                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.get();
+                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.get();
+                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.get();
                 default:
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return CAircraftModelList();
@@ -132,7 +132,7 @@ namespace BlackMisc
             CStatusMessage CModelCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
             {
                 static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
-                const CSimulatorInfo s = this->m_currentSimulator.getCopy();
+                const CSimulatorInfo s = this->m_currentSimulator.get();
                 if (s == simulator) { return sameSimMsg; }
                 const BlackMisc::CStatusMessage m = this->m_currentSimulator.set(simulator);
                 this->syncronizeCache(simulator);
@@ -157,7 +157,7 @@ namespace BlackMisc
             CModelSetCaches::CModelSetCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
-                const CSimulatorInfo sim(this->m_currentSimulator.getCopy());
+                const CSimulatorInfo sim(this->m_currentSimulator.get());
                 this->syncronizeCacheImpl(sim);
                 const QString simStr(sim.toQString(true));
                 CLogMessage(this).info("Initialized model set caches to %1") << simStr;
@@ -168,10 +168,10 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.getCopy();
-                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.getCopy();
-                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.getCopy();
-                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.getCopy();
+                case CSimulatorInfo::FS9: return this->m_modelCacheFs9.get();
+                case CSimulatorInfo::FSX: return this->m_modelCacheFsx.get();
+                case CSimulatorInfo::P3D: return this->m_modelCacheP3D.get();
+                case CSimulatorInfo::XPLANE: return this->m_modelCacheXP.get();
                 default:
                     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
                     return CAircraftModelList();
@@ -226,7 +226,7 @@ namespace BlackMisc
             CStatusMessage CModelSetCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
             {
                 static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
-                const CSimulatorInfo s = this->m_currentSimulator.getCopy();
+                const CSimulatorInfo s = this->m_currentSimulator.get();
                 if (s == simulator) { return sameSimMsg; }
                 const BlackMisc::CStatusMessage m = this->m_currentSimulator.set(simulator);
                 this->syncronizeCache(simulator);

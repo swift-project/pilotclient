@@ -236,7 +236,7 @@ namespace BlackMisc
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.getCopy(); }
+                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
 
@@ -267,7 +267,7 @@ namespace BlackMisc
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
-                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.getCopy(); }
+                virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
 

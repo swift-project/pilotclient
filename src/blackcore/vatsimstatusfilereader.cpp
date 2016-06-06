@@ -53,12 +53,12 @@ namespace BlackCore
 
     CUrlList CVatsimStatusFileReader::getMetarFileUrls() const
     {
-        return this->m_lastGoodSetup.getCopy().getMetarFileUrls();
+        return this->m_lastGoodSetup.get().getMetarFileUrls();
     }
 
     CUrlList CVatsimStatusFileReader::getDataFileUrls() const
     {
-        return this->m_lastGoodSetup.getCopy().getDataFileUrls();
+        return this->m_lastGoodSetup.get().getDataFileUrls();
     }
 
     void CVatsimStatusFileReader::cleanup()
@@ -148,7 +148,7 @@ namespace BlackCore
             // this part needs to be synchronized
             {
                 // cache itself is thread safe
-                CVatsimSetup vs(this->m_lastGoodSetup.getCopy());
+                CVatsimSetup vs(this->m_lastGoodSetup.get());
                 vs.setDataFileUrls(dataFiles);
                 vs.setMetarFileUrls(metarFiles);
                 vs.setServerFileUrls(serverFiles);

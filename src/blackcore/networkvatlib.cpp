@@ -75,7 +75,7 @@ namespace BlackCore
         : INetwork(parent), COwnAircraftAware(ownAircraft),
           m_loginMode(LoginNormal),
           m_status(vatStatusIdle),
-          m_fsdTextCodec(QTextCodec::codecForName(m_fsdTextCodecSetting.get().toLocal8Bit())),
+          m_fsdTextCodec(QTextCodec::codecForName(m_fsdTextCodecSetting.getThreadLocal().toLocal8Bit())),
           m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
     {
         connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);

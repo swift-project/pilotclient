@@ -333,11 +333,11 @@ namespace BlackMisc
         {}
 
         //! Read the current value.
-        const T &get() const { static const T empty {}; return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty); }
+        const T &getThreadLocal() const { static const T empty {}; return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty); }
 
         //! Get a copy of the current value.
         //! \threadsafe
-        T getCopy() const { return isValid() ? getVariantCopy().template value<T>() : T{}; }
+        T get() const { return isValid() ? getVariantCopy().template value<T>() : T{}; }
 
         //! Write a new value. Must be called from the thread in which the owner lives.
         CStatusMessage set(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp); }

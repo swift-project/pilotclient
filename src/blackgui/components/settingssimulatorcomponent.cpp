@@ -150,7 +150,7 @@ namespace BlackGui
                 return;
             }
 
-            auto e = m_enabledSimulators.get();
+            auto e = m_enabledSimulators.getThreadLocal();
             if (enabled && !e.contains(selected->getIdentifier()))
             {
                 e << selected->getIdentifier();
@@ -301,7 +301,7 @@ namespace BlackGui
         void CSettingsSimulatorComponent::ps_reloadPluginConfig()
         {
             // list all available simulators
-            auto enabledSimulators = m_enabledSimulators.get();
+            auto enabledSimulators = m_enabledSimulators.getThreadLocal();
             for (const auto &p : getAvailablePlugins())
             {
                 ui->ps_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));

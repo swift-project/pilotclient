@@ -106,28 +106,28 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::addHotkeytoSettings(const CActionHotkey &actionHotkey)
         {
-            CActionHotkeyList actionHotkeyList(m_actionHotkeys.get());
+            CActionHotkeyList actionHotkeyList(m_actionHotkeys.getThreadLocal());
             actionHotkeyList.push_back(actionHotkey);
             m_actionHotkeys.set(actionHotkeyList);
         }
 
         void CSettingsHotkeyComponent::updateHotkeyInSettings(const CActionHotkey &oldValue, const CActionHotkey &newValue)
         {
-            CActionHotkeyList actionHotkeyList(m_actionHotkeys.get());
+            CActionHotkeyList actionHotkeyList(m_actionHotkeys.getThreadLocal());
             actionHotkeyList.replace(oldValue, newValue);
             m_actionHotkeys.set(actionHotkeyList);
         }
 
         void CSettingsHotkeyComponent::removeHotkeyFromSettings(const CActionHotkey &actionHotkey)
         {
-            CActionHotkeyList actionHotkeyList(m_actionHotkeys.get());
+            CActionHotkeyList actionHotkeyList(m_actionHotkeys.getThreadLocal());
             actionHotkeyList.remove(actionHotkey);
             m_actionHotkeys.set(actionHotkeyList);
         }
 
         bool CSettingsHotkeyComponent::checkAndConfirmConflicts(const CActionHotkey &actionHotkey, const CActionHotkeyList &ignore)
         {
-            auto configuredHotkeys = m_actionHotkeys.get();
+            auto configuredHotkeys = m_actionHotkeys.getThreadLocal();
             CActionHotkeyList conflicts = configuredHotkeys.findSupersetsOf(actionHotkey);
             conflicts.push_back(configuredHotkeys.findSubsetsOf(actionHotkey));
             conflicts.removeIfIn(ignore);

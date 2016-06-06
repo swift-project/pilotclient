@@ -536,7 +536,7 @@ namespace BlackGui
     void CDockWidget::initSettings()
     {
         const QString name(this->getNameForSettings());
-        CSettingsDockWidgets all = this->m_settings.getCopy();
+        CSettingsDockWidgets all = this->m_settings.get();
         if (all.contains(name)) { return; }
         all.getByNameOrInitToDefault(name);
         this->m_settings.set(all);
@@ -551,7 +551,7 @@ namespace BlackGui
 
     CSettingsDockWidget CDockWidget::getSettings() const
     {
-        const CSettingsDockWidgets all = this->m_settings.getCopy();
+        const CSettingsDockWidgets all = this->m_settings.get();
         const QString name(this->getNameForSettings());
         const CSettingsDockWidget s = all.value(name);
         return s;
@@ -561,7 +561,7 @@ namespace BlackGui
     {
         const CSettingsDockWidget current = getSettings();
         if (current == settings) { return; }
-        CSettingsDockWidgets all = this->m_settings.getCopy();
+        CSettingsDockWidgets all = this->m_settings.get();
         const QString name(this->getNameForSettings());
         all.insert(name, settings);
         const CStatusMessage m = this->m_settings.set(all); // saved when shutdown

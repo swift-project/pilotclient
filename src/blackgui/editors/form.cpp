@@ -23,7 +23,7 @@ namespace BlackGui
 
         const BlackMisc::Network::CAuthenticatedUser &CForm::getSwiftDbUser() const
         {
-            return this->m_swiftDbUser.get();
+            return this->m_swiftDbUser.getThreadLocal();
         }
 
         void CForm::ps_userChanged()

@@ -47,7 +47,7 @@ namespace BlackCore
 
         CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodes() const
         {
-            return m_aircraftIcaoCache.getCopy();
+            return m_aircraftIcaoCache.get();
         }
 
         CAircraftIcaoCode CIcaoDataReader::getAircraftIcaoCodeForDesignator(const QString &designator) const
@@ -62,7 +62,7 @@ namespace BlackCore
 
         CAirlineIcaoCodeList CIcaoDataReader::getAirlineIcaoCodes() const
         {
-            return m_airlineIcaoCache.getCopy();
+            return m_airlineIcaoCache.get();
         }
 
         CAircraftIcaoCode CIcaoDataReader::smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const
@@ -73,7 +73,7 @@ namespace BlackCore
 
         CCountryList CIcaoDataReader::getCountries() const
         {
-            return m_countryCache.getCopy();
+            return m_countryCache.get();
         }
 
         CCountry CIcaoDataReader::getCountryForIsoCode(const QString &isoCode) const
@@ -201,7 +201,7 @@ namespace BlackCore
 
         void CIcaoDataReader::updateReaderUrl(const CUrl &url)
         {
-            const CUrl current = this->m_readerUrlCache.getCopy();
+            const CUrl current = this->m_readerUrlCache.get();
             if (current == url) { return; }
             const CStatusMessage m = this->m_readerUrlCache.set(url);
             if (m.isFailure())
@@ -420,9 +420,9 @@ namespace BlackCore
         {
             switch (entity)
             {
-            case CEntityFlags::AircraftIcaoEntity: return this->m_aircraftIcaoCache.getCopy().size();
-            case CEntityFlags::AirlineIcaoEntity:  return this->m_airlineIcaoCache.getCopy().size();
-            case CEntityFlags::CountryEntity:      return this->m_countryCache.getCopy().size();
+            case CEntityFlags::AircraftIcaoEntity: return this->m_aircraftIcaoCache.get().size();
+            case CEntityFlags::AirlineIcaoEntity:  return this->m_airlineIcaoCache.get().size();
+            case CEntityFlags::CountryEntity:      return this->m_countryCache.get().size();
             default: return 0;
             }
         }
@@ -430,7 +430,7 @@ namespace BlackCore
         bool CIcaoDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.getCopy(), this->getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), this->getBaseUrl());
         }
 
         CUrl CIcaoDataReader::getAircraftIcaoUrl(bool shared) const

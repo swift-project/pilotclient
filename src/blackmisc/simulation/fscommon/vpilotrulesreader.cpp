@@ -90,13 +90,13 @@ namespace BlackMisc
 
             int CVPilotRulesReader::getModelsCount() const
             {
-                return this->m_cachedVPilotModels.get().size();
+                return this->m_cachedVPilotModels.getThreadLocal().size();
             }
 
             CAircraftModelList CVPilotRulesReader::getAsModels()
             {
                 // already cached?
-                CAircraftModelList vPilotModels(this->m_cachedVPilotModels.getCopy());
+                CAircraftModelList vPilotModels(this->m_cachedVPilotModels.get());
                 if (!vPilotModels.isEmpty() || m_rules.isEmpty()) { return vPilotModels; }
 
                 // important: that can take a while and should normally
@@ -109,7 +109,7 @@ namespace BlackMisc
 
             CAircraftModelList CVPilotRulesReader::getAsModelsFromCache() const
             {
-                return this->m_cachedVPilotModels.getCopy();
+                return this->m_cachedVPilotModels.get();
             }
 
             int CVPilotRulesReader::countRulesLoaded() const

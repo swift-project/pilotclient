@@ -47,7 +47,7 @@ namespace BlackCore
 
         CLiveryList CModelDataReader::getLiveries() const
         {
-            return this->m_liveryCache.getCopy();
+            return this->m_liveryCache.get();
         }
 
         CLivery CModelDataReader::getLiveryForCombinedCode(const QString &combinedCode) const
@@ -79,12 +79,12 @@ namespace BlackCore
 
         CDistributorList CModelDataReader::getDistributors() const
         {
-            return m_distributorCache.getCopy();
+            return m_distributorCache.get();
         }
 
         CAircraftModelList CModelDataReader::getModels() const
         {
-            return m_modelCache.getCopy();
+            return m_modelCache.get();
         }
 
         CAircraftModel CModelDataReader::getModelForModelString(const QString &modelString) const
@@ -231,7 +231,7 @@ namespace BlackCore
 
         void CModelDataReader::updateReaderUrl(const CUrl &url)
         {
-            const CUrl current = this->m_readerUrlCache.getCopy();
+            const CUrl current = this->m_readerUrlCache.get();
             if (current == url) { return; }
             const CStatusMessage m = this->m_readerUrlCache.set(url);
             if (m.isFailure())
@@ -489,9 +489,9 @@ namespace BlackCore
         {
             switch (entity)
             {
-            case CEntityFlags::LiveryEntity:      return this->m_liveryCache.getCopy().size();
-            case CEntityFlags::ModelEntity:       return this->m_modelCache.getCopy().size();
-            case CEntityFlags::DistributorEntity: return this->m_distributorCache.getCopy().size();
+            case CEntityFlags::LiveryEntity:      return this->m_liveryCache.get().size();
+            case CEntityFlags::ModelEntity:       return this->m_modelCache.get().size();
+            case CEntityFlags::DistributorEntity: return this->m_distributorCache.get().size();
             default: return 0;
             }
         }
@@ -499,7 +499,7 @@ namespace BlackCore
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.getCopy(), this->getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), this->getBaseUrl());
         }
 
         const CUrl &CModelDataReader::getBaseUrl()

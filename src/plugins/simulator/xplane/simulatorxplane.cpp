@@ -656,8 +656,8 @@ namespace BlackSimPlugin
             }
             else
             {
-                CLogMessage(this).debug() << "Starting XBus on" << m_xbusServerSetting.get();
-                m_conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.get());
+                CLogMessage(this).debug() << "Starting XBus on" << m_xbusServerSetting.getThreadLocal();
+                m_conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.getThreadLocal());
                 m_watcher = new QDBusServiceWatcher(xbusServiceName(), m_conn, QDBusServiceWatcher::WatchForRegistration, this);
                 connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlaneListener::ps_serviceRegistered);
             }
@@ -674,7 +674,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlaneListener::isXBusRunning() const
         {
-            QDBusConnection conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.get());
+            QDBusConnection conn = CSimulatorXPlane::connectionFromString(m_xbusServerSetting.getThreadLocal());
             CXBusServiceProxy *service = new CXBusServiceProxy(conn);
             CXBusTrafficProxy *traffic = new CXBusTrafficProxy(conn);
 

@@ -86,12 +86,12 @@ namespace BlackCore
 
     CServerList CVatsimDataFileReader::getVoiceServers() const
     {
-        return this->m_lastGoodSetup.getCopy().getVoiceServers();
+        return this->m_lastGoodSetup.get().getVoiceServers();
     }
 
     CServerList CVatsimDataFileReader::getFsdServers() const
     {
-        return this->m_lastGoodSetup.getCopy().getFsdServers();
+        return this->m_lastGoodSetup.get().getFsdServers();
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns)
@@ -379,7 +379,7 @@ namespace BlackCore
                 this->m_aircraft = aircraft;
                 this->m_atcStations = atcStations;
                 this->m_voiceCapabilities = voiceCapabilities;
-                CVatsimSetup vs(this->m_lastGoodSetup.get());
+                CVatsimSetup vs(this->m_lastGoodSetup.getThreadLocal());
                 vs.setVoiceServers(voiceServers);
                 vs.setFsdServers(fsdServers);
                 vs.setUtcTimestamp(updateTimestampFromFile);

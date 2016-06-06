@@ -278,7 +278,7 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::ps_distributorPreferencesChanged()
         {
-            const CDistributorListPreferences preferences = this->m_distributorPreferences.get();
+            const CDistributorListPreferences preferences = this->m_distributorPreferences.getThreadLocal();
             const CSimulatorInfo simuulator = preferences.getLastUpdatedSimulator();
             if (simuulator.isSingleSimulator())
             {
@@ -316,7 +316,7 @@ namespace BlackGui
         {
             CAircraftModelList modelSet = this->m_modelSetLoader.getAircraftModels(simulator);
             if (modelSet.isEmpty()) { return; }
-            const CDistributorListPreferences preferences = this->m_distributorPreferences.get();
+            const CDistributorListPreferences preferences = this->m_distributorPreferences.getThreadLocal();
             const CDistributorList distributors = preferences.getDistributors(simulator);
             if (distributors.isEmpty()) { return; }
             modelSet.updateDistributorOrder(distributors);

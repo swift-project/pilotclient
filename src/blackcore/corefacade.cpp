@@ -66,7 +66,7 @@ namespace BlackCore
         }
         else
         {
-            dbusAddress = m_dbusServerAddress.get();
+            dbusAddress = m_dbusServerAddress.getThreadLocal();
         }
 
         // DBus

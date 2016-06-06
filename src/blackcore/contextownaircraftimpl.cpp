@@ -110,7 +110,7 @@ namespace BlackCore
                 CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
             );
             this->m_ownAircraft.setSituation(situation);
-            this->m_ownAircraft.setPilot(this->m_currentNetworkServer.get().getUser());
+            this->m_ownAircraft.setPilot(this->m_currentNetworkServer.getThreadLocal().getUser());
 
             // from simulator, if available
             this->m_ownAircraft.setCallsign(CCallsign("SWIFT")); // would come from settings

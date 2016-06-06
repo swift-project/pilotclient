@@ -419,7 +419,7 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << notification; }
 
-        bool play = !considerSettings || m_audioSettings.get().getNotificationFlag(notification);
+        bool play = !considerSettings || m_audioSettings.getThreadLocal().getNotificationFlag(notification);
         if (play)
         {
             CSoundGenerator::playNotificationSound(90, notification);

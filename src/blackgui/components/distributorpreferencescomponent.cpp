@@ -74,7 +74,7 @@ namespace BlackGui
         {
             // changed somewhere else
             const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
-            const CDistributorList distributors = this->m_distributorPreferences.get().getDistributors(sim);
+            const CDistributorList distributors = this->m_distributorPreferences.getThreadLocal().getDistributors(sim);
             this->updateContainerMaybeAsync(distributors);
         }
 
@@ -128,7 +128,7 @@ namespace BlackGui
         {
             const CDistributorList distributors(ui->tvp_Distributors->container());
             const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
-            CDistributorListPreferences preferences = this->m_distributorPreferences.get();
+            CDistributorListPreferences preferences = this->m_distributorPreferences.getThreadLocal();
             preferences.setDistributors(distributors, simulator);
             const CStatusMessage m = this->m_distributorPreferences.setAndSave(preferences);
             CLogMessage::preformatted(m);
@@ -137,7 +137,7 @@ namespace BlackGui
         void CDistributorPreferencesComponent::ps_simulatorChanged(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
-            const CDistributorList distributors(this->m_distributorPreferences.get().getDistributors(simulator));
+            const CDistributorList distributors(this->m_distributorPreferences.getThreadLocal().getDistributors(simulator));
             ui->tvp_Distributors->updateContainerMaybeAsync(distributors);
         }
 
