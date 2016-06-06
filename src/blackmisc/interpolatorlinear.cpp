@@ -36,19 +36,17 @@ using namespace BlackMisc::Aviation;
 
 namespace BlackMisc
 {
-    CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const
+    CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const
     {
         // has to be thread safe
 
         status.reset();
 
         // any data at all?
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
-        if (this->remoteAircraftSituationsCount(callsign) < 1) { return {}; }
+        if (situations.isEmpty()) { return {}; }
 
         // data, split situations by time
         if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
-        const auto situations = remoteAircraftSituations(callsign);
 
         // find the first situation not in the correct order, keep only the situations before that one
         auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto &&a, auto &&b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
@@ -110,7 +108,7 @@ namespace BlackMisc
         {
             if (this->m_withDebugMsg)
             {
-                CLogMessage(this).warning("Extrapolation, fraction > 1: %1 for callsign: %2") << simulationTimeFraction << callsign;
+                CLogMessage(this).warning("Extrapolation, fraction > 1: %1 for callsign: %2") << simulationTimeFraction << oldSituation.getCallsign();
             }
         }
 
@@ -182,7 +180,6 @@ namespace BlackMisc
                                         * simulationTimeFraction
                                         + oldSituation.getGroundSpeed());
         status.changedPosition = true;
-        Q_ASSERT_X(currentSituation.getCallsign() == callsign, Q_FUNC_INFO, "mismatching callsigns");
         return currentSituation;
     }
 

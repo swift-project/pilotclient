@@ -24,7 +24,30 @@ namespace BlackMisc
         this->setObjectName(objectName);
     }
 
-    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackMisc::IInterpolator::PartsStatus &partsStatus)
+    BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
+        bool isVtolAircraft, InterpolationStatus &status) const
+    {
+        // has to be thread safe
+
+        status.reset();
+        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
+
+        auto currentSituation = this->getInterpolatedSituation(this->remoteAircraftSituations(callsign), currentTimeSinceEpoc, isVtolAircraft, status);
+
+        Q_ASSERT_X(currentSituation.getCallsign() == callsign, Q_FUNC_INFO, "mismatching callsigns");
+        return currentSituation;
+    }
+
+    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CAircraftPartsList &parts, qint64 cutoffTime, BlackMisc::IInterpolator::PartsStatus &partsStatus) const
+    {
+        partsStatus.reset();
+        partsStatus.supportsParts = true;
+
+        if (cutoffTime < 0) { return parts; }
+        return parts.findBefore(cutoffTime);
+    }
+
+    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackMisc::IInterpolator::PartsStatus &partsStatus) const
     {
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         partsStatus.reset();

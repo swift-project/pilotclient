@@ -68,14 +68,26 @@ namespace BlackMisc
         //! Current interpolated situation
         //! \threadsafe
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-            const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
+            const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
             bool isVtolAircraft, InterpolationStatus &status) const = 0;
+
+        //! Current interpolated situation
+        //! \threadsafe
+        virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+            const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
+            bool isVtolAircraft, InterpolationStatus &status) const;
+
+        //! Parts before given offset time (aka pending parts)
+        //! \threadsafe
+        virtual BlackMisc::Aviation::CAircraftPartsList getPartsBeforeTime(
+            const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
+            PartsStatus &partsStatus) const;
 
         //! Parts before given offset time (aka pending parts)
         //! \threadsafe
         virtual BlackMisc::Aviation::CAircraftPartsList getPartsBeforeTime(
             const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
-            PartsStatus &partsStatus);
+            PartsStatus &partsStatus) const;
 
         //! Enable debug messages
         void enableDebugMessages(bool enabled);
