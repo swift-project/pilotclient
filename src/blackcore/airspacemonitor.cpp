@@ -70,6 +70,7 @@ namespace BlackCore
     {
         this->setObjectName("CAirspaceMonitor");
         m_interimPositionUpdateTimer.setObjectName(this->objectName().append(":m_interimPositionUpdateTimer"));
+        m_interimPositionUpdateTimer.setInterval(1000);
 
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::ps_atcPositionUpdate);
         this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::ps_atisReceived);
