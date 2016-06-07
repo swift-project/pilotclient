@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1530</width>
-    <height>71</height>
+    <width>1629</width>
+    <height>79</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -565,8 +565,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Weather">
    <property name="minimumSize">
     <size>
-     <width>80</width>
-     <height>50</height>
+     <width>157</width>
+     <height>78</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -613,13 +613,28 @@
         <number>0</number>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
-         <widget class="QFrame" name="comp_Weather">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+         <widget class="BlackGui::Components::CWeatherComponent" name="comp_Weather">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
          </widget>
         </item>
@@ -708,7 +723,7 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Log">
    <property name="minimumSize">
     <size>
-     <width>80</width>
+     <width>91</width>
      <height>70</height>
     </size>
    </property>
@@ -926,6 +941,12 @@
    <class>BlackGui::Components::CMappingComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/mappingcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CWeatherComponent</class>
+   <extends>QTabWidget</extends>
+   <header>blackgui/components/weathercomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

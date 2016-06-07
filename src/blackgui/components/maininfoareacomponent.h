@@ -39,6 +39,7 @@ namespace BlackGui
         class CSimulatorComponent;
         class CTextMessageComponent;
         class CUserComponent;
+        class CWeatherComponent;
 
 
         //! Main info area
