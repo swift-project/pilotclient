@@ -292,12 +292,12 @@ namespace BlackGui
         Qt::WindowFlags flags = widget->windowFlags();
         if (Qt::WindowStaysOnTopHint & flags)
         {
-            flags ^= Qt::WindowStaysOnTopHint;
+            flags &= ~Qt::WindowStaysOnTopHint;
             flags |= Qt::WindowStaysOnBottomHint;
         }
         else
         {
-            flags ^= Qt::WindowStaysOnBottomHint;
+            flags &= ~Qt::WindowStaysOnBottomHint;
             flags |= Qt::WindowStaysOnTopHint;
         }
         widget->setWindowFlags(flags);
