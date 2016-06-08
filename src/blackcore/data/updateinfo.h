@@ -126,13 +126,6 @@ namespace BlackCore
 
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
-
-            //! Default value
-            static const CUpdateInfo &defaultValue()
-            {
-                static const CUpdateInfo defaultValue;
-                return defaultValue;
-            }
         };
 
     } // ns

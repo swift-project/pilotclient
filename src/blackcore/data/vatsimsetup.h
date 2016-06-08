@@ -129,15 +129,7 @@ namespace BlackCore
 
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
-
-            //! Default value
-            static const CVatsimSetup &defaultValue()
-            {
-                static const CVatsimSetup gs;
-                return gs;
-            }
         };
-
     } // ns
 } // ns
 

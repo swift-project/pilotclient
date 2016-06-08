@@ -144,13 +144,6 @@ namespace BlackGui
         {
             //! Key in data cache
             static const char *key() { return "guidockwidget"; }
-
-            //! Default value
-            static const CSettingsDockWidgets &defaultValue()
-            {
-                static const CSettingsDockWidgets defaultValue;
-                return defaultValue;
-            }
         };
     } // ns
 } // ns

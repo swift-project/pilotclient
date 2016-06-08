@@ -30,14 +30,9 @@ namespace BlackCore
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
 
-            //! Default value
-            static const BlackMisc::Network::CAuthenticatedUser &defaultValue()
-            {
-                static const BlackMisc::Network::CAuthenticatedUser user;
-                return user;
-            }
+            //! Cache lifetime
+            static int timeToLive() { return 18 * 60 * 60 * 1000; }
         };
-
     } // ns
 } // ns
 

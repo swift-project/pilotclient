@@ -203,15 +203,7 @@ namespace BlackCore
 
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
-
-            //! Default value
-            static const CGlobalSetup &defaultValue()
-            {
-                static const CGlobalSetup gs;
-                return gs;
-            }
         };
-
     } // ns
 } // ns
 

@@ -32,13 +32,6 @@ namespace BlackMisc
             {
                 //! Defer loading
                 static constexpr bool isDeferred() { return true; }
-
-                //! Default value
-                static const BlackMisc::Simulation::CAircraftModelList &defaultValue()
-                {
-                    static const BlackMisc::Simulation::CAircraftModelList ml;
-                    return ml;
-                }
             };
 
             //! \name Caches for own models on disk, loaded by BlackMisc::Simulation::IAircraftModelLoader

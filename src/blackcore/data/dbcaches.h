@@ -31,9 +31,6 @@ namespace BlackCore
         //! Trait for DB model cache
         struct DbModelCache : public BlackMisc::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
         {
-            //! Default value
-            static const BlackMisc::Simulation::CAircraftModelList &defaultValue();
-
             //! Defer loading
             static constexpr bool isDeferred() { return true; }
 
@@ -44,9 +41,6 @@ namespace BlackCore
         //! Trait for DB distributor cache
         struct DbDistributorCache : public BlackMisc::CDataTrait<BlackMisc::Simulation::CDistributorList>
         {
-            //! Default value
-            static const BlackMisc::Simulation::CDistributorList &defaultValue();
-
             //! Defer loading (no currently small)
             static constexpr bool isDeferred() { return false; }
 
@@ -57,9 +51,6 @@ namespace BlackCore
         //! Trait for DB liveries
         struct DbLiveryCache : public BlackMisc::CDataTrait<BlackMisc::Aviation::CLiveryList>
         {
-            //! Default value
-            static const BlackMisc::Aviation::CLiveryList &defaultValue();
-
             //! Defer loading
             static constexpr bool isDeferred() { return true; }
 
@@ -70,9 +61,6 @@ namespace BlackCore
         //! Trait for DB airline ICAO codes
         struct DbAirlineIcaoCache : public BlackMisc::CDataTrait<BlackMisc::Aviation::CAirlineIcaoCodeList>
         {
-            //! Default value
-            static const BlackMisc::Aviation::CAirlineIcaoCodeList &defaultValue();
-
             //! Defer loading
             static constexpr bool isDeferred() { return true; }
 
@@ -84,9 +72,6 @@ namespace BlackCore
         //! Trait for DB aircraft ICAO codes
         struct DbAircraftIcaoCache : public BlackMisc::CDataTrait<BlackMisc::Aviation::CAircraftIcaoCodeList>
         {
-            //! Default value
-            static const BlackMisc::Aviation::CAircraftIcaoCodeList &defaultValue();
-
             //! Defer loading
             static constexpr bool isDeferred() { return true; }
 
@@ -97,9 +82,6 @@ namespace BlackCore
         //! Trait for DB countries
         struct DbCountryCache : public BlackMisc::CDataTrait<BlackMisc::CCountryList>
         {
-            //! Default value
-            static const BlackMisc::CCountryList &defaultValue();
-
             //! Defer loading (no currently small)
             static constexpr bool isDeferred() { return false; }
 
@@ -110,9 +92,6 @@ namespace BlackCore
         //! Trait for ICAO reader base URL
         struct DbIcaoReaderBaseUrl : public BlackMisc::CDataTrait<BlackMisc::Network::CUrl>
         {
-            //! Default value
-            static const BlackMisc::Network::CUrl &defaultValue();
-
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
 
@@ -123,9 +102,6 @@ namespace BlackCore
         //! Trait for ICAO reader base URL
         struct DbModelReaderBaseUrl : public BlackMisc::CDataTrait<BlackMisc::Network::CUrl>
         {
-            //! Default value
-            static const BlackMisc::Network::CUrl &defaultValue();
-
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
 
