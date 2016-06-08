@@ -256,6 +256,7 @@ namespace BlackMisc
                 case CSimulatorInfo::XPLANE: this->m_modelCacheXP.synchronize(); break;
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    break;
                 }
             }
         } // ns
