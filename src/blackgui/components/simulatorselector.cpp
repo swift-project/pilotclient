@@ -97,6 +97,12 @@ namespace BlackGui
             if (simulator.p3d())    { this->ui->rb_P3D->setChecked(simulator.p3d()); return; }
         }
 
+        void CSimulatorSelector::setToLastSelection()
+        {
+            const CSimulatorInfo sim = this->m_currentSimulator.get();
+            this->setValue(sim);
+        }
+
         void CSimulatorSelector::setAll()
         {
             // checkboxes

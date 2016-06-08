@@ -12,6 +12,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 
 #include <QFrame>
 #include <QObject>
@@ -58,6 +59,9 @@ namespace BlackGui
             //! Set the value
             void setValue(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Set to last selection
+            void setToLastSelection();
+
             //! Set all, only making sense with checkboxes
             void setAll();
 
@@ -85,6 +89,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSimulatorSelector> ui;
             Mode m_mode = CheckBoxes;
             bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
+            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::ModelSetLastSelection> m_currentSimulator { this }; //!< current simulator
         };
     } // ns
 } // ns
