@@ -171,6 +171,10 @@ namespace BlackMisc
         //! \threadsafe
         BlackMisc::CValueCachePacket getAllValuesWithTimestamps(const QString &keyPrefix = {}) const;
 
+        //! Return keys of all values which have been changed but not saved.
+        //! \threadsafe
+        QStringList getAllUnsavedKeys(const QString &keyPrefix = {}) const;
+
         //! Add some values to the cache.
         //! Values already in the cache will remain in the cache unless they are overwritten.
         //! \threadsafe

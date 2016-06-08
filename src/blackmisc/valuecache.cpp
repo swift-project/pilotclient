@@ -201,6 +201,17 @@ namespace BlackMisc
         return map;
     }
 
+    QStringList CValueCache::getAllUnsavedKeys(const QString &keyPrefix) const
+    {
+        QMutexLocker lock(&m_mutex);
+        QStringList keys;
+        for (const auto &element : elementsStartingWith(keyPrefix))
+        {
+            if (element->m_value.isValid() && ! element->m_saved) { keys.push_back(element->m_key); }
+        }
+        return keys;
+    }
+
     void CValueCache::insertValues(const CValueCachePacket &values)
     {
         QMutexLocker lock(&m_mutex);
