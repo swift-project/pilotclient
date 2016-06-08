@@ -65,7 +65,13 @@ namespace BlackMisc
             CModelCaches::CModelCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
-                const CSimulatorInfo sim(this->m_currentSimulator.get());
+                CSimulatorInfo sim(this->m_currentSimulator.get());
+                if (!sim.isSingleSimulator())
+                {
+                    sim = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();
+                    this->m_currentSimulator.set(sim);
+                    CLogMessage(this).warning("Invalid simulator, reseting");
+                }
                 this->syncronizeCacheImpl(sim);
                 const QString simStr(sim.toQString(true));
                 CLogMessage(this).info("Initialized model caches to %1") << simStr;
@@ -157,10 +163,16 @@ namespace BlackMisc
             CModelSetCaches::CModelSetCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
-                const CSimulatorInfo sim(this->m_currentSimulator.get());
+                CSimulatorInfo sim(this->m_currentSimulator.get());
+                if (!sim.isSingleSimulator())
+                {
+                    sim = BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator();
+                    this->m_currentSimulator.set(sim);
+                    CLogMessage(this).warning("Invalid simulator, reseting");
+                }
                 this->syncronizeCacheImpl(sim);
                 const QString simStr(sim.toQString(true));
-                CLogMessage(this).info("Initialized model set caches to %1") << simStr;
+                CLogMessage(this).info("Initialized model caches to %1") << simStr;
             }
 
             CAircraftModelList CModelSetCaches::getCachedModels(const CSimulatorInfo &simulator) const
