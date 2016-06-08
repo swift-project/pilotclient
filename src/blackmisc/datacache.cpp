@@ -424,7 +424,7 @@ namespace BlackMisc
         auto timestamps = m_originalTimestamps;
         for (auto it = i_timestamps.cbegin(); it != i_timestamps.cend(); ++it)
         {
-            timestamps.insert(it.key(), it.value());
+            if (it.value()) { timestamps.insert(it.key(), it.value()); }
         }
 
         QJsonObject json;
