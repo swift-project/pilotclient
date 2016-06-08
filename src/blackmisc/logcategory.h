@@ -110,6 +110,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Settings
+        static const CLogCategory &settings()
+        {
+            static const CLogCategory cat { "swift.settings" };
+            return cat;
+        }
+
         //! Startup of application
         static const CLogCategory &startup()
         {
@@ -146,6 +153,7 @@ namespace BlackMisc
                 matching(),
                 swiftDbWebservice(),
                 services(),
+                settings(),
                 startup(),
                 validation(),
                 vatsimSpecific(),
