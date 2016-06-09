@@ -35,7 +35,6 @@
     {                                                                       \
         using Class = CLASS;                                                \
         BLACK_NO_EXPORT_CONSTEXPR static auto getMemberList()               \
-        BLACK_TRAILING_RETURN(CMetaClass::makeMetaMemberList(__VA_ARGS__))  \
         {                                                                   \
             return CMetaClass::makeMetaMemberList(__VA_ARGS__);             \
         }                                                                   \
