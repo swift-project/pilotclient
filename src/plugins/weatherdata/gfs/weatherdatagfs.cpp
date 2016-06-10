@@ -93,7 +93,6 @@ namespace BlackWxPlugin
 
         void CWeatherDataGfs::ps_parseGfsFile(QNetworkReply *reply)
         {
-            CLogMessage(this).debug() << "finished";
             m_gribData = reply->readAll();
             CWorker *worker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
             {
@@ -217,7 +216,6 @@ namespace BlackWxPlugin
                 g2int numfields = 0;
                 g2_info(readPtr, sec0, sec1, &numfields, &numlocal);
 
-                CLogMessage(this).debug() << "Parsing grib message no:" << messageNo;
                 for (int n = 0; n < numfields; n++)
                 {
                     g2int unpack = 1;
@@ -245,6 +243,7 @@ namespace BlackWxPlugin
                 }
                 messageNo++;
             }
+            CLogMessage(this).debug() << "Parsed" << messageNo << "GRIB messages.";
 
             for (const GfsGridPoint &gfsGridPoint : m_gfsWeatherGrid)
             {
