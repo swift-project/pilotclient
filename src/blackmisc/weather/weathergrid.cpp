@@ -93,7 +93,7 @@ namespace BlackMisc
             static const CCloudLayer cloudLayer(
                 CAltitude(0, CAltitude::MeanSeaLevel, CLengthUnit::m()),
                 CAltitude(5000, CAltitude::MeanSeaLevel, CLengthUnit::m()),
-                5, CCloudLayer::NoPrecipitation, CCloudLayer::NoClouds,
+                0, CCloudLayer::NoPrecipitation, CCloudLayer::NoClouds,
                 CCloudLayer::None);
 
             static const CWindLayer windLayer(

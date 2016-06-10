@@ -30,7 +30,7 @@ namespace BlackMisc
 
         CCloudLayer::CCloudLayer(BlackMisc::Aviation::CAltitude base,
                                  BlackMisc::Aviation::CAltitude top,
-                                 int precipitationRate,
+                                 double precipitationRate,
                                  Precipitation precipitation,
                                  Clouds clouds,
                                  Coverage coverage) :

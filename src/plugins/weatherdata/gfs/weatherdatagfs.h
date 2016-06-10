@@ -71,6 +71,7 @@ namespace BlackWxPlugin
                 RH,
                 UGRD,
                 VGRD,
+                PRATE,
                 PRES,
                 PRMSL,
                 TCDC,
@@ -124,8 +125,9 @@ namespace BlackWxPlugin
                 int fieldPosition = 0;
                 QHash<int, GfsCloudLayer> cloudLayers;
                 QHash<double, GfsIsobaricLayer> isobaricLayers;
-                double surfaceRainRate = 0;
-                double surfaceSnowRate = 0;
+                double surfaceRain = 0;
+                double surfaceSnow = 0;
+                double surfacePrecipitationRate = 0;
                 double surfacePressure = 0;
                 double surfaceTemperature = 0;
             };
@@ -146,6 +148,7 @@ namespace BlackWxPlugin
             void setCloudPressure(const g2float *fld, double level);
             void setSurfaceRain(const g2float *fld);
             void setSurfaceSnow(const g2float *fld);
+            void setPrecipitationRate(const g2float *fld);
 
             BlackMisc::PhysicalQuantities::CTemperature calculateDewPoint(const BlackMisc::PhysicalQuantities::CTemperature &temperature, double relativeHumidity);
 

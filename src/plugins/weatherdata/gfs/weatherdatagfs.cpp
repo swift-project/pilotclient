@@ -33,6 +33,7 @@ namespace BlackWxPlugin
         {
             { { {0, 0} }, { TMP, "Temperature", "K" } },
             { { {1, 1} }, { RH, "Relative Humidity", "%" } },
+            { { {1, 7} }, { PRATE, "Precipitation Rate", "kg m-2 s-1" } },
             { { {1, 192} }, { CRAIN, "Categorical Rain", "-" } },
             { { {1, 195} }, { CSNOW, "Categorical Snow", "-" } },
             { { {2, 2} }, { UGRD, "U-Component of Wind", "m s-1" } },
@@ -133,6 +134,7 @@ namespace BlackWxPlugin
 
             static const QStringList grib2Variables =
             {
+                "PRATE",
                 "PRES",
                 "PRMSL",
                 "RH",
@@ -280,16 +282,9 @@ namespace BlackWxPlugin
                     cloudLayer.setBase(CAltitude(cloudLayerIt.value().bottomLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
                     cloudLayer.setTop(CAltitude(cloudLayerIt.value().topLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
                     cloudLayer.setCoveragePercent(cloudLayerIt.value().totalCoverage);
-                    if (gfsGridPoint.surfaceSnowRate > 0.0)
-                    {
-                        cloudLayer.setPrecipitation(CCloudLayer::Snow);
-                        cloudLayer.setPrecipitationRate(gfsGridPoint.surfaceSnowRate);
-                    }
-                    if (gfsGridPoint.surfaceRainRate > 0.0)
-                    {
-                        cloudLayer.setPrecipitation(CCloudLayer::Rain);
-                        cloudLayer.setPrecipitationRate(gfsGridPoint.surfaceRainRate);
-                    }
+                    if (gfsGridPoint.surfaceSnow > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Snow); }
+                    if (gfsGridPoint.surfaceRain > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Rain); }
+                    cloudLayer.setPrecipitationRate(gfsGridPoint.surfacePrecipitationRate);
                     cloudLayer.setClouds(CCloudLayer::CloudsUnknown);
                     cloudLayers.insert(cloudLayer);
                 }
@@ -576,6 +571,9 @@ namespace BlackWxPlugin
             case PRES:
                 setCloudLevel(gfld->fld, typeFirstFixedSurface, grib2CloudLevelHash.value(typeFirstFixedSurface));
                 break;
+            case PRATE:
+                setPrecipitationRate(gfld->fld);
+                break;
             case CRAIN:
                 setSurfaceRain(gfld->fld);
                 break;
@@ -665,7 +663,7 @@ namespace BlackWxPlugin
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                gridPoint.surfaceRainRate = fld[gridPoint.fieldPosition];
+                gridPoint.surfaceRain = fld[gridPoint.fieldPosition];
             }
         }
 
@@ -673,7 +671,15 @@ namespace BlackWxPlugin
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                gridPoint.surfaceSnowRate = fld[gridPoint.fieldPosition];
+                gridPoint.surfaceSnow = fld[gridPoint.fieldPosition];
+            }
+        }
+
+        void CWeatherDataGfs::setPrecipitationRate(const g2float *fld)
+        {
+            for (auto &gridPoint : m_gfsWeatherGrid)
+            {
+                gridPoint.surfacePrecipitationRate = fld[gridPoint.fieldPosition];
             }
         }
 

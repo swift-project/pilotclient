@@ -85,7 +85,7 @@ namespace BlackMisc
             //! Constructor
             CCloudLayer(BlackMisc::Aviation::CAltitude base,
                         BlackMisc::Aviation::CAltitude top,
-                        int precipitationRate,
+                        double precipitationRate,
                         Precipitation precipitation,
                         Clouds clouds,
                         Coverage coverage);
@@ -103,10 +103,10 @@ namespace BlackMisc
             BlackMisc::Aviation::CAltitude getTop() const { return m_top; }
 
             //! Set precipitation rate
-            void setPrecipitationRate(int rate) { m_precipitationRate = rate; }
+            void setPrecipitationRate(double rate) { m_precipitationRate = rate; }
 
             //! Get precipitation rate
-            int getPrecipitationRate() const { return m_precipitationRate; }
+            double getPrecipitationRate() const { return m_precipitationRate; }
 
             //! Set precipitation
             void setPrecipitation(Precipitation type) { m_precipitation = type; }
@@ -144,7 +144,7 @@ namespace BlackMisc
         private:
             BlackMisc::Aviation::CAltitude m_base;
             BlackMisc::Aviation::CAltitude m_top;
-            int m_precipitationRate = 0;
+            double m_precipitationRate = 0;
             Precipitation m_precipitation = NoPrecipitation;
             Clouds m_clouds = NoClouds;
             int m_coveragePercent;
