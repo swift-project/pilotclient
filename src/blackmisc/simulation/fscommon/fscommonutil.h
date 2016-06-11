@@ -32,45 +32,50 @@ namespace BlackMisc
                 CFsCommonUtil() = delete;
 
                 //! FSX directory obtained from registry
-                static QString fsxDirFromRegistry();
+                static const QString &fsxDirFromRegistry();
 
                 //! FSX directory from different sources
-                static QString fsxDir();
-
-                //! P3D directory from different sources
-                static QString p3dDir();
+                static const QString &fsxDir();
 
                 //! FSX's simObject directory from registry
-                static QString fsxSimObjectsDirFromRegistry();
+                static const QString &fsxSimObjectsDirFromRegistry();
 
-                //! FSX's sim object dir, resolved from multiple sources
-                static QString fsxSimObjectsDir();
+                //! FSX's simobject dir, resolved from multiple sources
+                static const QString &fsxSimObjectsDir();
 
                 //! Exclude directories for simObjects
-                static const QStringList &fsxSimObjectsExcludeDirectories();
+                static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
+
+                //! P3D directory obtained from registry
+                static const QString &p3dDirFromRegistry();
+
+                //! P3D directory from different sources
+                static const QString &p3dDir();
+
+                //! P3D's simObject directory from registry
+                static const QString &p3dSimObjectsDirFromRegistry();
 
                 //! P3D's sim object dir, resolved from multiple sources
-                static QString p3dSimObjectsDir();
+                static const QString &p3dSimObjectsDir();
 
                 //! Exclude directories for simObjects
-                static const QStringList &p3dSimObjectsExcludeDirectories();
+                static const QStringList &p3dSimObjectsExcludeDirectoryPatterns();
 
                 //! FS9 directory obtained from registry
-                static QString fs9DirFromRegistry();
+                static const QString &fs9DirFromRegistry();
 
                 //! FS9 directory obtained from multiple sources
-                static QString fs9Dir();
+                static const QString &fs9Dir();
 
                 //! FS9's aircraft directory from registry
-                static QString fs9AircraftDirFromRegistry();
+                static const QString &fs9AircraftDirFromRegistry();
 
                 //! FS9's aircraft directory
-                static QString fs9AircraftDir();
+                static const QString &fs9AircraftDir();
 
                 //! Exclude directories for aircraft objects
-                static const QStringList &fs9AircraftObjectsExcludeDirectories();
+                static const QStringList &fs9AircraftObjectsExcludeDirectoryPatterns();
             };
-
         } // namespace
     } // namespace
 } // namespace
