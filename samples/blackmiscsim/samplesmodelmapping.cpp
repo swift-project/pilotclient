@@ -15,6 +15,7 @@
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/sampleutils.h"
+#include "blackmisc/simulation/settings/settingssimulator.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
@@ -32,6 +33,7 @@ using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Aviation;
 
 namespace BlackSample
@@ -44,20 +46,21 @@ namespace BlackSample
         streamOut << "loaded: " << BlackMisc::boolToYesNo(s) << " size: " << vpRulesReader.getAsModelsFromCache().size() << endl;
 
         // mapper with rule set, handing over ownership
-        QString fsxDir = CSampleUtils::selectDirectory(
+        QString fsDir = CSampleUtils::selectDirectory(
         {
             QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
             QStringLiteral("P:/Temp/SimObjects"),
             QStringLiteral("C:/Flight Simulator 9/Aircraft")
         }, streamOut, streamIn);
 
-        CAircraftCfgParser cfgParser(CSimulatorInfo(CSimulatorInfo::FSX), fsxDir);
-        if (!cfgParser.changeRootDirectory(fsxDir))
-        {
-            streamOut << "Wrong or empty directoy " << fsxDir << endl;
-            return;
-        }
+        const CSimulatorInfo sim = fsDir.toLower().contains("simobjects") ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
+        CMultiSimulatorSimulatorSettings multiSettings;
+        const CSettingsSimulator originalSettings = multiSettings.getSettings(sim);
+        CSettingsSimulator newSettings(originalSettings);
+        newSettings.setModelDirectory(fsDir);
+        multiSettings.setSettings(newSettings, sim); // set, but do NOT(!) save
 
+        CAircraftCfgParser cfgParser(sim);
         streamOut << "Start reading models" << endl;
         cfgParser.startLoading(CAircraftCfgParser::CacheSkipped | CAircraftCfgParser::LoadDirectly);
         streamOut << "Read models: " << cfgParser.getAircraftCfgEntriesList().size() << endl;
@@ -70,5 +73,8 @@ namespace BlackSample
         CAircraftIcaoCode icao("C172");
         streamOut << "Searching for " << icao << endl;
         streamOut << matcher.getModelSet().findByIcaoDesignators(icao, CAirlineIcaoCode()) << endl;
+
+        // restore settings: DO NOT SAVE !!!
+        multiSettings.setSettings(originalSettings, sim);
     }
 } // namespace

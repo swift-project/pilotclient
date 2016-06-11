@@ -14,6 +14,7 @@
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
+#include "blackmisc/simulation/settings/settingssimulator.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QByteArray>
@@ -27,17 +28,26 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackSample
 {
     void CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
-        const QString fsxDir = CSampleUtils::selectDirectory({"C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
-                                                        "C:/Flight Simulator 9/Aircraft"}, streamOut, streamIn);
+        const QString fsDir = CSampleUtils::selectDirectory(
+        {
+            "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X/SimObjects",
+            "C:/Flight Simulator 9/Aircraft"
+        }, streamOut, streamIn);
 
-        CAircraftCfgParser parser(CSimulatorInfo(CSimulatorInfo::FSX), fsxDir);
-        parser.changeRootDirectory(fsxDir);
+        const CSimulatorInfo sim = fsDir.toLower().contains("simobjects") ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
+        CMultiSimulatorSimulatorSettings multiSettings;
+        const CSettingsSimulator originalSettings = multiSettings.getSettings(sim);
+        CSettingsSimulator newSettings(originalSettings);
+        newSettings.setModelDirectory(fsDir);
+        multiSettings.setSettings(newSettings, sim); // set, but do NOT(!) save
 
+        CAircraftCfgParser parser(sim);
         streamOut << "start reading, press RETURN" << endl;
         QString input = streamIn.readLine();
         Q_UNUSED(input);
@@ -45,7 +55,7 @@ namespace BlackSample
         streamOut << "reading directly" << endl;
         QTime time;
         time.start();
-        streamOut << "reading " << parser.getRootDirectory() << endl;
+        streamOut << "reading " << parser.getModelDirectory() << endl;
         parser.startLoading();
         streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
 
@@ -68,5 +78,8 @@ namespace BlackSample
         streamOut << "read JSON array with size " << jsonArray.size() << endl;
         streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
         tempFile.close();
+
+        // restore settings: DO NOT SAVE !!!
+        multiSettings.setSettings(originalSettings, sim);
     }
 } // namespace
