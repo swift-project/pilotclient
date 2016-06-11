@@ -61,6 +61,9 @@ namespace BlackMisc
         //! Normalize file path to Qt standard, e.g by turning \ to /
         static QString normalizeFilePathToQtStandard(const QString &filePath);
 
+        //! Make directory paths relative to root directory
+        static QStringList makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
         //! Case sensitivity for current OS
         static Qt::CaseSensitivity osFileNameCaseSensitivity();
 
@@ -75,6 +78,9 @@ namespace BlackMisc
 
         //! Directory to be excluded?
         static bool isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
+        //! Find first existing file or directory
+        static QString findFirstExisting(const QStringList &filesOrDirectory);
 
         //! Returns path to first file in dir which matches the optional wildcard and predicate, or empty string.
         static QString findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
