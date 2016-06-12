@@ -35,6 +35,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Network;
 
 namespace BlackMisc
@@ -46,35 +47,13 @@ namespace BlackMisc
             // response for async. loading
             using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, bool>;
 
-            CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &excludeDirs) :
-                IAircraftModelLoader(simInfo, rootDirectory, excludeDirs)
+            CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo) :
+                IAircraftModelLoader(simInfo)
             { }
 
             std::unique_ptr<CAircraftCfgParser> CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo)
             {
-                if (simInfo.fsx())
-                {
-                    return std::make_unique<CAircraftCfgParser>(
-                               CSimulatorInfo(CSimulatorInfo::FSX),
-                               CFsCommonUtil::fsxSimObjectsDir(),
-                               CFsCommonUtil::fsxSimObjectsExcludeDirectories());
-                }
-                else if (simInfo.fs9())
-                {
-                    return std::make_unique<CAircraftCfgParser>(
-                               CSimulatorInfo(CSimulatorInfo::FS9),
-                               CFsCommonUtil::fs9AircraftDir(),
-                               CFsCommonUtil::fs9AircraftObjectsExcludeDirectories());
-                }
-                else if (simInfo.p3d())
-                {
-                    return std::make_unique<CAircraftCfgParser>(
-                               CSimulatorInfo(CSimulatorInfo::P3D),
-                               CFsCommonUtil::p3dSimObjectsDir(),
-                               CFsCommonUtil::p3dSimObjectsExcludeDirectories());
-                }
-                Q_ASSERT_X(false, Q_FUNC_INFO, "Illegal simulator info");
-                return {};
+                return std::make_unique<CAircraftCfgParser>(simInfo);
             }
 
             CAircraftCfgParser::~CAircraftCfgParser()
@@ -85,25 +64,27 @@ namespace BlackMisc
 
             void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
+                const CSimulatorInfo simulator = this->getSimulator();
+                const QString modelDirectory(this->m_settings.getModelDirectoryOrDefault(simulator)); // copy
+                const QStringList excludedDirectories(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator, true)); // copy
+
                 if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
-                    const QString rootDirectory(m_rootDirectory); // copy
-                    const QStringList excludedDirectories(m_excludedDirectories); // copy
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
-                                     [this, rootDirectory, excludedDirectories, dbModels]()
+                                     [this, modelDirectory, excludedDirectories, simulator, dbModels]()
                     {
                         bool ok = false;
-                        const auto aircraftCfgEntriesList = this->performParsing(rootDirectory, excludedDirectories, &ok);
+                        const auto aircraftCfgEntriesList = this->performParsing(modelDirectory, excludedDirectories, &ok);
                         CAircraftModelList models;
                         if (ok)
                         {
-                            models = (aircraftCfgEntriesList.toAircraftModelList(this->getSimulator()));
+                            models = aircraftCfgEntriesList.toAircraftModelList(simulator);
                             CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                         }
                         return std::make_tuple(aircraftCfgEntriesList, models, ok);
                     });
-                    m_parserWorker->thenWithResult<LoaderResponse>(this, [this](const LoaderResponse & tuple)
+                    m_parserWorker->thenWithResult<LoaderResponse>(this, [this, simulator](const LoaderResponse & tuple)
                     {
                         const bool ok = std::get<2>(tuple);
                         if (ok)
@@ -116,19 +97,19 @@ namespace BlackMisc
                                 this->setCachedModels(models); // not thread safe
                             }
                             // currently I treat no data as error
-                            emit this->loadingFinished(hasData, this->getSimulator());
+                            emit this->loadingFinished(hasData, simulator);
                         }
                         else
                         {
-                            emit this->loadingFinished(false, this->getSimulator());
+                            emit this->loadingFinished(false, simulator);
                         }
                     });
                 }
                 else if (mode == LoadDirectly)
                 {
                     bool ok;
-                    this->m_parsedCfgEntriesList = performParsing(m_rootDirectory, m_excludedDirectories, &ok);
-                    CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(this->getSimulator()));
+                    this->m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectories, &ok);
+                    CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(simulator));
                     CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                     const bool hasData = !models.isEmpty();
                     if (hasData)
@@ -136,7 +117,7 @@ namespace BlackMisc
                         this->setCachedModels(models); // not thread safe
                     }
                     // currently I treat no data as error
-                    emit this->loadingFinished(hasData, this->getSimulator());
+                    emit this->loadingFinished(hasData, simulator);
                 }
             }
 
@@ -156,8 +137,9 @@ namespace BlackMisc
             bool CAircraftCfgParser::areModelFilesUpdated() const
             {
                 const QDateTime cacheTs(getCacheTimestamp());
+
                 if (!cacheTs.isValid()) { return true; }
-                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, { fileFilter() }, this->m_excludedDirectories);
+                return CFileUtils::containsFileNewerThan(cacheTs, this->getModelDirectory(), true, { fileFilter() }, this->getModelExcludeDirectories(true));
             }
 
             CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok)

@@ -18,6 +18,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc::Simulation::Data;
+using namespace BlackMisc::Simulation::Settings;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
 
@@ -25,8 +26,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, const QString &rootDirectory, const QStringList &excludeDirs) :
-            m_rootDirectory(rootDirectory), m_excludedDirectories(excludeDirs)
+        IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             this->m_caches.setCurrentSimulator(simulator);
@@ -42,6 +42,7 @@ namespace BlackMisc
         {
             if (directory.isEmpty()) { return false; }
             QDir dir(directory);
+
             //! \todo not available network dir can make this hang here, however there is no obvious solution to that
             return dir.exists();
         }
@@ -76,13 +77,14 @@ namespace BlackMisc
             this->m_loadingInProgress = false;
         }
 
-        bool IAircraftModelLoader::changeRootDirectory(const QString &directory)
+        QString IAircraftModelLoader::getModelDirectory() const
         {
-            if (m_rootDirectory == directory) { return false; }
-            if (directory.isEmpty() || !existsDir(directory)) { return false; }
+            return this->m_settings.getModelDirectoryOrDefault(this->getSimulator());
+        }
 
-            m_rootDirectory = directory;
-            return true;
+        QStringList IAircraftModelLoader::getModelExcludeDirectories(bool relative) const
+        {
+            return this->m_settings.getModelExcludeDirectoryPatternsOrDefault(this->getSimulator(), relative);
         }
 
         CAircraftModelList IAircraftModelLoader::getAircraftModels() const
@@ -165,9 +167,7 @@ namespace BlackMisc
             std::unique_ptr<IAircraftModelLoader> loader;
             if (simulator.xplane())
             {
-                loader = std::make_unique<CAircraftModelLoaderXPlane>(
-                             CSimulatorInfo(CSimulatorInfo::XPLANE),
-                             CXPlaneUtil::xplaneRootDir());
+                loader = std::make_unique<CAircraftModelLoaderXPlane>();
             }
             else
             {

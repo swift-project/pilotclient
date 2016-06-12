@@ -33,7 +33,7 @@ namespace BlackMisc
         namespace XPlane
         {
             /*!
-             * \brief XPlane aircraft model loader
+             * XPlane aircraft model loader
              * \todo Obj8Aircraft and Obj8 parsers are not yet implemented
              */
             class BLACKMISC_EXPORT CAircraftModelLoaderXPlane : public BlackMisc::Simulation::IAircraftModelLoader
@@ -42,7 +42,7 @@ namespace BlackMisc
 
             public:
                 //! Constructor
-                CAircraftModelLoaderXPlane(const BlackMisc::Simulation::CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes = {});
+                CAircraftModelLoaderXPlane();
 
                 //! Virtual destructor
                 virtual ~CAircraftModelLoaderXPlane();

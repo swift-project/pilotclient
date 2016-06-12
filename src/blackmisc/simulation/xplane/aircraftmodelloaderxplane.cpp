@@ -47,9 +47,9 @@ namespace BlackMisc
     {
         namespace XPlane
         {
+            //! Normalizes CSL model "designators" e.g. __XPFW_Jets:A320_a:A320_a_Austrian_Airlines.obj
             static void normalizePath(QString &path)
             {
-                //! \todo KB consider CFileUtil::normalizeFilePathToQtStandard ??
                 for (auto &e : path)
                 {
                     if (e == '/' || e == ':' || e == '\\')
@@ -59,8 +59,7 @@ namespace BlackMisc
                 }
             }
 
-            CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane(const CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &excludeDirs) :
-                IAircraftModelLoader(simInfo, rootDirectory, excludeDirs)
+            CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane() : IAircraftModelLoader(CSimulatorInfo::XPLANE)
             { }
 
             CAircraftModelLoaderXPlane::~CAircraftModelLoaderXPlane()
@@ -71,22 +70,24 @@ namespace BlackMisc
 
             void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
-                if (m_rootDirectory.isEmpty())
+                const CSimulatorInfo simulator = this->getSimulator();
+                const QString modelDirectory(this->m_settings.getModelDirectoryOrDefault(simulator)); // copy
+                const QStringList excludedDirectories(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator, true)); // copy
+
+                if (modelDirectory.isEmpty())
                 {
                     this->clearCache();
-                    emit loadingFinished(false, this->getSimulator());
+                    emit loadingFinished(false, simulator);
                     return;
                 }
 
                 if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
-                    auto rootDirectory = m_rootDirectory;
-                    auto excludedDirectories = m_excludedDirectories;
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
-                                     [this, rootDirectory, excludedDirectories, dbModels]()
+                                     [this, modelDirectory, excludedDirectories, dbModels]()
                     {
-                        auto models = performParsing(rootDirectory, excludedDirectories);
+                        auto models = performParsing(modelDirectory, excludedDirectories);
                         CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                         return models;
                     });
@@ -97,7 +98,7 @@ namespace BlackMisc
                 }
                 else if (mode.testFlag(LoadDirectly))
                 {
-                    CAircraftModelList models(performParsing(m_rootDirectory, m_excludedDirectories));
+                    CAircraftModelList models(performParsing(this->getModelDirectory(), excludedDirectories));
                     CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                     updateInstalledModels(models);
                 }
@@ -112,7 +113,7 @@ namespace BlackMisc
             {
                 const QDateTime cacheTs(getCacheTimestamp());
                 if (!cacheTs.isValid()) { return true; }
-                return CFileUtils::containsFileNewerThan(cacheTs, this->getRootDirectory(), true, {fileFilterCsl(), fileFilterFlyable()},  this->m_excludedDirectories);
+                return CFileUtils::containsFileNewerThan(cacheTs, this->getModelDirectory(), true, {fileFilterCsl(), fileFilterFlyable()},  this->getModelExcludeDirectories(false));
             }
 
 

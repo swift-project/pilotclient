@@ -16,6 +16,7 @@
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
+#include "blackmisc/simulation/settings/settingssimulator.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
 
@@ -71,12 +72,6 @@ namespace BlackMisc
             //! Optional DB models can be passed and used for data consolidation.
             void startLoading(LoadMode mode = InBackgroundWithCache, const CAircraftModelList &dbModels = {});
 
-            //! Change the directory
-            bool changeRootDirectory(const QString &directory);
-
-            //! Current root directory
-            QString getRootDirectory() const { return this->m_rootDirectory; }
-
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
 
@@ -98,6 +93,12 @@ namespace BlackMisc
 
             //! Is the given simulator supported?
             bool supportsSimulator(const BlackMisc::Simulation::CSimulatorInfo &info);
+
+            //! Current root directory
+            QString getModelDirectory() const;
+
+            //! Exclude directories
+            QStringList getModelExcludeDirectories(bool relative) const;
 
             //! Cancel read
             void cancelLoading();
@@ -131,7 +132,7 @@ namespace BlackMisc
 
         protected:
             //! Constructor
-            IAircraftModelLoader(const CSimulatorInfo &simulator, const QString &rootDirectory, const QStringList &excludeDirs = {});
+            IAircraftModelLoader(const CSimulatorInfo &simulator);
 
             //! Cache timestamp
             QDateTime getCacheTimestamp() const;
@@ -148,11 +149,10 @@ namespace BlackMisc
             //! Start the loading process from disk
             virtual void startLoadingFromDisk(LoadMode mode, const BlackMisc::Simulation::CAircraftModelList &dbModels) = 0;
 
-            std::atomic<bool> m_cancelLoading { false };                  //!< flag
-            std::atomic<bool> m_loadingInProgress { false };              //!< Loading in progress
-            QString           m_rootDirectory;                            //!< root directory parsing aircraft.cfg files
-            QStringList       m_excludedDirectories;                      //!< directories not to be parsed
-            BlackMisc::Simulation::Data::CModelCaches m_caches { this };  //!< caches
+            std::atomic<bool> m_cancelLoading { false };                                           //!< flag
+            std::atomic<bool> m_loadingInProgress { false };                                       //!< Loading in progress
+            BlackMisc::Simulation::Data::CModelCaches m_caches { this };                           //!< caches
+            BlackMisc::Simulation::Settings::CMultiSimulatorSimulatorSettings m_settings { this }; //!< settings
 
         protected slots:
             //! Loading finished

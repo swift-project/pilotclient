@@ -42,7 +42,7 @@ namespace BlackMisc
 
             public:
                 //! Constructor
-                CAircraftCfgParser(const BlackMisc::Simulation::CSimulatorInfo &simInfo, const QString &rootDirectory, const QStringList &exludes = {});
+                CAircraftCfgParser(const BlackMisc::Simulation::CSimulatorInfo &simInfo);
 
                 //! Virtual destructor
                 virtual ~CAircraftCfgParser();
@@ -91,11 +91,11 @@ namespace BlackMisc
                 //! Content after "="
                 static QString getFixedIniLineContent(const QString &line);
 
-                CAircraftCfgEntriesList      m_parsedCfgEntriesList; //!< parsed entries
-                QPointer<BlackMisc::CWorker> m_parserWorker;         //!< worker will destroy itself, so weak pointer
-
                 //! Files to be used
                 static const QString &fileFilter();
+
+                CAircraftCfgEntriesList      m_parsedCfgEntriesList; //!< parsed entries
+                QPointer<BlackMisc::CWorker> m_parserWorker;         //!< worker will destroy itself, so weak pointer
             };
         } // namespace
     } // namespace
