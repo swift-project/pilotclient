@@ -39,6 +39,7 @@ namespace BlackMisc
             if (this->m_tableName.contains("livery", Qt::CaseInsensitive))        { return CEntityFlags::LiveryEntity; }
             if (this->m_tableName.contains("aircraftmodel", Qt::CaseInsensitive)) { return CEntityFlags::ModelEntity; }
             if (this->m_tableName.contains("country", Qt::CaseInsensitive))       { return CEntityFlags::CountryEntity; }
+            if (this->m_tableName.contains("distributor", Qt::CaseInsensitive))   { return CEntityFlags::DistributorEntity; }
             return CEntityFlags::NoEntity;
         }
 

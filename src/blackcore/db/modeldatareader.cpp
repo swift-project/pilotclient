@@ -268,7 +268,7 @@ namespace BlackCore
                 liveries  = CLiveryList::fromDatabaseJson(res);
             }
 
-            int n = liveries.size();
+            const int n = liveries.size();
             qint64 latestTimestamp = liveries.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {
@@ -311,7 +311,7 @@ namespace BlackCore
                 distributors = CDistributorList::fromDatabaseJson(res);
             }
 
-            int n = distributors.size();
+            const int n = distributors.size();
             qint64 latestTimestamp = distributors.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {
@@ -354,7 +354,7 @@ namespace BlackCore
             }
 
             // syncronized update
-            int n = models.size();
+            const int n = models.size();
             qint64 latestTimestamp = models.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
             {

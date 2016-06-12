@@ -113,6 +113,7 @@ namespace BlackMisc
             if (entities.testFlag(LiveryEntity))       { entities &= ~LiveryEntity; return LiveryEntity; }
             if (entities.testFlag(CountryEntity))      { entities &= ~CountryEntity; return CountryEntity; }
             if (entities.testFlag(ModelEntity))        { entities &= ~ModelEntity; return ModelEntity; }
+            if (entities.testFlag(DistributorEntity))  { entities &= ~DistributorEntity; return DistributorEntity; }
             return NoEntity;
         }
 

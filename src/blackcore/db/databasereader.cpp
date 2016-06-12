@@ -55,6 +55,7 @@ namespace BlackCore
             while (currentEntity)
             {
                 const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
+                const QString currentEntityName = CEntityFlags::flagToString(currentEntity);
                 if (config.getRetrievalMode().testFlag(CDbFlags::Cached))
                 {
                     if (hasInfoObjects)
@@ -64,28 +65,23 @@ namespace BlackCore
                         const QDateTime latestEntityTs(this->getLatestEntityTimestamp(currentEntity));
                         const qint64 cacheTimestamp = cacheTs.isValid() ? cacheTs.toMSecsSinceEpoch() : -1;
                         const qint64 latestEntityTimestamp = latestEntityTs.isValid() ? latestEntityTs.toMSecsSinceEpoch() : -1;
-                        Q_ASSERT_X(latestEntityTimestamp > 0, Q_FUNC_INFO, "Missing timestamp");
-                        if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp > 0)
+                        Q_ASSERT_X(latestEntityTimestamp >= 0, Q_FUNC_INFO, "Missing timestamp");
+                        if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp >= 0 && latestEntityTimestamp >= 0)
                         {
                             this->syncronizeCaches(currentEntity);
                             entities &= ~currentEntity; // do not load from web
                             cachedEntities |= currentEntity; // read from cache
-                            CLogMessage(this).info("Using cache for %1 (%2, %3)")
-                                    << CEntityFlags::flagToString(currentEntity)
-                                    << cacheTs.toString() << cacheTimestamp;
+                            CLogMessage(this).info("Using cache for %1 (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
                         }
                         else
                         {
                             if (changedUrl)
                             {
-                                CLogMessage(this).info("Data location changed, will override cache for %1")
-                                        << CEntityFlags::flagToString(currentEntity);
+                                CLogMessage(this).info("Data location changed, will override cache for %1") << currentEntityName;
                             }
                             else
                             {
-                                CLogMessage(this).info("Cache for %1 outdated, latest entity (%2, %3)")
-                                        << CEntityFlags::flagToString(currentEntity)
-                                        << latestEntityTs.toString() << latestEntityTimestamp;
+                                CLogMessage(this).info("Cache for %1 outdated, latest entity (%2, %3)") << currentEntityName << latestEntityTs.toString() << latestEntityTimestamp;
                             }
                         }
                     }
@@ -94,8 +90,7 @@ namespace BlackCore
                         // no info objects, server down
                         this->syncronizeCaches(currentEntity);
                         const int c = this->getCacheCount(currentEntity);
-                        CLogMessage(this).info("No info object for %1, using cache with %2 objects")
-                                << CEntityFlags::flagToString(currentEntity) << c;
+                        CLogMessage(this).info("No info object for %1, using cache with %2 objects") << currentEntityName << c;
                         entities &= ~currentEntity; // do not load from web
                         cachedEntities |= currentEntity; // read from cache
                     }
