@@ -150,6 +150,38 @@
     </item>
    </layout>
   </widget>
+  <widget class="QWidget" name="tb_SettingsSimulatorBasics">
+   <attribute name="title">
+    <string>Simulator (Basics)</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_SettingsSimulatorBascis">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CSettingsSimulatorBasicsComponent" name="comp_SettingsSimulatorBasics">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QWidget" name="tb_SettingsGui">
    <attribute name="title">
     <string>GUI</string>
@@ -554,6 +586,12 @@
    <class>BlackGui::Components::CSettingsHotkeyComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingshotkeycomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsSimulatorBasicsComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingssimulatorbasicscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

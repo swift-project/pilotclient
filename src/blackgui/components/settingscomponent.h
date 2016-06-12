@@ -42,6 +42,7 @@ namespace BlackGui
                 SettingTabNetwork,
                 SettingTabAircraftAudio,
                 SettingTabSimulator,
+                SettingTabSimulatorBascis,
                 SettingTabGui,
                 SettingTabHotkeys
             };
