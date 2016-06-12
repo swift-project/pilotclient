@@ -55,11 +55,11 @@ namespace BlackMisc
             {
                 QString result;
                 TCHAR szLocalAppDataPath[MAX_PATH];
-                if(SUCCEEDED(SHGetFolderPath(NULL,
-                                             CSIDL_LOCAL_APPDATA,
-                                             NULL,
-                                             0,
-                                             szLocalAppDataPath)))
+                if (SUCCEEDED(SHGetFolderPath(NULL,
+                                              CSIDL_LOCAL_APPDATA,
+                                              NULL,
+                                              0,
+                                              szLocalAppDataPath)))
                 {
                     result = QString::fromWCharArray(szLocalAppDataPath);
                 }
@@ -86,7 +86,7 @@ namespace BlackMisc
                 QString xplaneInstallFilePath;
                 QString xplaneInstallFile = QStringLiteral("/x-plane_install_10.txt");
 #if defined(Q_OS_WIN)
-               xplaneInstallFilePath = getWindowsLocalAppDataPath() + xplaneInstallFile;
+                xplaneInstallFilePath = getWindowsLocalAppDataPath() + xplaneInstallFile;
 #elif defined (Q_OS_UNIX)
                 xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/.x-plane") + xplaneInstallFile;
 #elif defined (Q_OS_OSX)
@@ -100,6 +100,16 @@ namespace BlackMisc
                 if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
                 else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
                 else { return {}; }
+            }
+
+            QString CXPlaneUtil::xplaneModelDirectory()
+            {
+                return xplaneRootDir();
+            }
+
+            QStringList CXPlaneUtil::xplaneModelExcludeDirectoryPatterns()
+            {
+                return QStringList();
             }
 
             QString CXPlaneUtil::xbusLegacyDir()

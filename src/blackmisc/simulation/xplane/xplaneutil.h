@@ -41,10 +41,16 @@ namespace BlackMisc
                 //! In case more then one XPlane version is found, the path to the highest version is used
                 static QString xplaneRootDir();
 
+                //! Directory with models
+                //! \todo needs review
+                static QString xplaneModelDirectory();
+
+                //! Exclude directories for models
+                static QStringList xplaneModelExcludeDirectoryPatterns();
+
                 //! XBus legacy directory
                 static QString xbusLegacyDir();
             };
-
         } // namespace
     } // namespace
 } // namespace
