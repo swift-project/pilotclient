@@ -64,6 +64,11 @@ void SwiftGuiStd::init()
     this->m_mwaLogComponent = this->ui->comp_MainInfoArea->getLogComponent();
 
     sGui->initMainApplicationWindow(this);
+
+    // log messages
+    m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+
+    // style
     this->initStyleSheet();
 
     // with frameless window, we shift menu and statusbar into central widget
@@ -115,9 +120,6 @@ void SwiftGuiStd::init()
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
     connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
-
-    // log messages
-    m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
 
     // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2500);

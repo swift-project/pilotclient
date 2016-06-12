@@ -301,10 +301,6 @@ void SwiftGuiStd::setContextAvailability()
             sGui->getIContextApplication()->synchronizeLogSubscriptions();
             sGui->getIContextApplication()->synchronizeLocalSettings();
         }
-        else
-        {
-            // core has just become unavailable...
-        }
     }
 }
 
