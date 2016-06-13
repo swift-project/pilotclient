@@ -93,17 +93,25 @@ namespace BlackGui
             return CVariant::fromValue(static_cast<int>(cs));
         }
 
+        bool CDefaultFormatter::supportsRole(int role) const
+        {
+            // generally supported?
+            if (role == Qt::TextAlignmentRole || role == Qt::UserRole) { return true; }
+
+            // specific?
+            return this->m_supportedRoles.contains(role);
+        }
+
         CVariant CDefaultFormatter::data(int role, const CVariant &inputData) const
         {
-            Qt::ItemDataRole roleEnum = static_cast<Qt::ItemDataRole>(role);
+            if (!this->supportsRole(role)) { return CVariant(); }
+            const Qt::ItemDataRole roleEnum = static_cast<Qt::ItemDataRole>(role);
 
             // always supported
             if (roleEnum == Qt::TextAlignmentRole) return { alignmentRole() };
 
             // check
             if (role == Qt::UserRole) { return CDefaultFormatter::displayRole(inputData); } // just as data provider
-            if (this->m_supportedRoles.isEmpty()) { return CVariant(); }
-            if (!this->m_supportedRoles.contains(role)) { return CVariant(); }
             switch (roleEnum)
             {
             case Qt::DisplayRole:

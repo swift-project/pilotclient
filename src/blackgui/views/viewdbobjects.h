@@ -104,8 +104,8 @@ namespace BlackGui
 
         private:
             QList<QAction *> m_menuActions;
-            QLineEdit       *m_leOrder = nullptr;
-            QFrame          *m_frame   = nullptr;
+            QLineEdit       *m_leOrder   = nullptr;
+            QFrame          *m_frame     = nullptr;
             QIntValidator   *m_validator = nullptr;
         };
     } // namespace

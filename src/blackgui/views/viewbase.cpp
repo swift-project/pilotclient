@@ -303,20 +303,17 @@ namespace BlackGui
             {
                 if (sm != MultiSelection)
                 {
-                    QAction *a = menuActions.addAction("Switch to multi selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_toggleSelectionMode });
-                    a->setData(MultiSelection);
+                    menuActions.addAction("Switch to multi selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_setMultiSelection });
                 }
 
                 if (sm != ExtendedSelection)
                 {
-                    QAction *a = menuActions.addAction("Switch to extended selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_toggleSelectionMode });
-                    a->setData(ExtendedSelection);
+                    menuActions.addAction("Switch to extended selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_setExtendedSelection });
                 }
 
                 if (sm != SingleSelection)
                 {
-                    QAction *a = menuActions.addAction("Switch to single selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_toggleSelectionMode });
-                    a->setData(SingleSelection);
+                    menuActions.addAction("Switch to single selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::ps_setSingleSelection });
                 }
             }
 
@@ -628,20 +625,28 @@ namespace BlackGui
             this->m_displayAutomatically = a->isChecked();
         }
 
-        void CViewBaseNonTemplate::ps_toggleSelectionMode()
+
+        void CViewBaseNonTemplate::ps_setSingleSelection()
         {
             if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
             {
-                QAction *action = qobject_cast<QAction *>(sender());
-                if (action && action->data().isValid() && action->data().canConvert<int>())
-                {
-                    SelectionMode sm = static_cast<SelectionMode>(action->data().toInt());
-                    this->setSelectionMode(sm);
-                }
-                else
-                {
-                    this->setSelectionMode(this->m_originalSelectionMode);
-                }
+                this->setSelectionMode(SingleSelection);
+            }
+        }
+
+        void CViewBaseNonTemplate::ps_setExtendedSelection()
+        {
+            if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
+            {
+                this->setSelectionMode(ExtendedSelection);
+            }
+        }
+
+        void CViewBaseNonTemplate::ps_setMultiSelection()
+        {
+            if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
+            {
+                this->setSelectionMode(MultiSelection);
             }
         }
 
@@ -962,7 +967,7 @@ namespace BlackGui
             // see model for implementing logic of drag
             this->viewport()->setAcceptDrops(allowDrop);
             this->setDragEnabled(allowDrag);
-            this->setDropIndicatorShown(allowDrop);
+            this->setDropIndicatorShown(allowDrag || allowDrop);
             this->m_model->allowDrop(allowDrop);
         }
 

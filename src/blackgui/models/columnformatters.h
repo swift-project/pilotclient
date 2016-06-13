@@ -73,6 +73,9 @@ namespace BlackGui
             //! Alignment available?
             virtual bool hasAlignment() const { return m_alignment >= 0; }
 
+            //! Is given role supported by formatter
+            bool supportsRole(int role) const;
+
             //! Receives CVariant of column data, and returns CVariant wrapping string, pixmap, or other values depending on role
             virtual BlackMisc::CVariant data(int role, const BlackMisc::CVariant &inputData) const;
 

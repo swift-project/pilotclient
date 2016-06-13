@@ -225,6 +225,13 @@ namespace BlackGui
             connect(this, &CListModelBaseNonTemplate::dataChanged, this, &CListModelBaseNonTemplate::ps_onDataChanged);
         }
 
+        bool CListModelBaseNonTemplate::isHoveredRow(const QModelIndex &modelIndex) const
+        {
+            if (this->m_hoverRow < 0) { return false; }
+            if (!modelIndex.isValid()) { return false; }
+            return modelIndex.row() == this->m_hoverRow;
+        }
+
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         CListModelBase<ObjectType, ContainerType, UseCompare>::CListModelBase(const QString &translationContext, QObject *parent)
             : CListModelBaseNonTemplate(translationContext, parent)
@@ -282,12 +289,26 @@ namespace BlackGui
         {
             // check / init
             if (!this->isValidIndex(index)) { return QVariant(); }
+
+            // Hover effect
+            if (role == Qt::BackgroundRole)
+            {
+                if (this->isHoveredRow(index))
+                {
+                    return QBrush(Qt::red);
+                }
+                return CListModelBaseNonTemplate::data(index, role);
+            }
+
+            // Formatter
             const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
             Q_ASSERT_X(formatter, Q_FUNC_INFO, "Missing formatter");
-            if (!formatter) { return QVariant(); }
 
-            //! Formatted data
-            ObjectType obj = this->containerOrFilteredContainer()[index.row()];
+            // Upfront checking avoids unnecessary data fetching
+            if (!formatter || !formatter->supportsRole(role)) { return CListModelBaseNonTemplate::data(index, role); }
+
+            // Formatted data
+            const ObjectType obj = this->containerOrFilteredContainer()[index.row()];
             BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
             return formatter->data(role, obj.propertyByIndex(propertyIndex)).getQVariant();
         }
@@ -296,26 +317,14 @@ namespace BlackGui
         bool CListModelBase<ObjectType, ContainerType, UseCompare>::setData(const QModelIndex &index, const QVariant &value, int role)
         {
             Qt::ItemDataRole dataRole = static_cast<Qt::ItemDataRole>(role);
-            if (!(dataRole == Qt::UserRole || dataRole == Qt::EditRole))
-            {
-                return false;
-            }
+            if (!(dataRole == Qt::UserRole || dataRole == Qt::EditRole)) { return false; }
 
             // check / init
-            if (!this->isValidIndex(index))
-            {
-                return false;
-            }
-            if (!this->m_columns.isEditable(index))
-            {
-                return false;
-            }
+            if (!this->isValidIndex(index)) { return false; }
+            if (!this->m_columns.isEditable(index)) { return false; }
             const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
             Q_ASSERT(formatter);
-            if (!formatter)
-            {
-                return false;
-            }
+            if (!formatter) { return false; }
 
             ObjectType obj = this->m_container[index.row()];
             ObjectType currentObject(obj);

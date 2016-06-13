@@ -40,7 +40,7 @@ namespace BlackGui
             if (isHighlightIndex(index)) { return QBrush(m_highlightColor); }
             if (!highlightDbData()) { return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role); }
 
-            ObjectType obj(this->at(index));
+            const ObjectType obj(this->at(index));
             // highlight DB models
             if (obj.hasValidDbKey())
             {

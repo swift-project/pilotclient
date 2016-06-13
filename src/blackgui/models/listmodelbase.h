@@ -161,11 +161,15 @@ namespace BlackGui
             //! Helper method with template free signature
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) = 0;
 
-            CColumns        m_columns;                            //!< columns metadata
-            int             m_sortedColumn;                       //!< current sort column
-            bool            m_modelDestroyed = false;             //!< model is about to be destroyed
-            Qt::SortOrder   m_sortOrder;                          //!< sort order (asc/desc)
-            Qt::DropActions m_dropActions    = Qt::IgnoreAction;  //!< drop actions
+            //! Row to be hovered?
+            bool isHoveredRow(const QModelIndex &modelIndex) const;
+
+            CColumns        m_columns;                         //!< columns metadata
+            int             m_hoverRow = -1;                   //!< hovered row number
+            int             m_sortedColumn;                    //!< currently sorted column
+            bool            m_modelDestroyed = false;          //!< model is about to be destroyed
+            Qt::SortOrder   m_sortOrder;                       //!< sort order (asc/desc)
+            Qt::DropActions m_dropActions = Qt::IgnoreAction;  //!< drop actions
 
         private:
             BlackMisc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::ps_onChangedDigest, 500, 10 };

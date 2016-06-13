@@ -437,8 +437,12 @@ namespace BlackGui
             //! Toggle auto display flag
             void ps_toggleAutoDisplay();
 
-            //! Toogle between single and multi selection
-            void ps_toggleSelectionMode();
+            //! \name Change selection modes
+            //! @{
+            void ps_setMultiSelection();
+            void ps_setExtendedSelection();
+            void ps_setSingleSelection();
+            //! @}
 
             //! Clear the model
             virtual void ps_clear() { this->clear(); }

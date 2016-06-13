@@ -110,19 +110,6 @@ BlackGui--CDropSite {
   margin: 2px;
 }
 
-/*
-QTableView[isShowingLoadIndicator="true"] {
-  background-image: url(:/preloaders/icons/preloaders/FillingRing64.gif);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-QTableView[isShowingLoadIndicator="false"] {
-  background-image: url(:/own/icons/own/transparent1px.png);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-*/
-
 /* Validator bar */
 BlackGui--Editors--CValidationIndicator {
   background: black; /* background is background color here */
