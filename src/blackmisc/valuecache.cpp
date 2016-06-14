@@ -252,6 +252,7 @@ namespace BlackMisc
             return;
         }
         CValueCachePacket ratifiedChanges(values.isSaved());
+        CValueCachePacket ackedChanges(values.isSaved());
         auto out = m_elements.lowerBound(values.cbegin().key());
         auto end = m_elements.upperBound((values.cend() - 1).key());
         for (auto in = values.cbegin(); in != values.cend(); ++in)
@@ -263,6 +264,7 @@ namespace BlackMisc
             {
                 element.m_pendingChanges--;
                 Q_ASSERT(element.m_pendingChanges >= 0);
+                ackedChanges.insert(in.key(), in.value(), in.timestamp());
             }
             else if (element.m_pendingChanges == 0) // ratify a change only if own change is not pending, to ensure consistency
             {
@@ -277,6 +279,7 @@ namespace BlackMisc
             if (ratifiedChanges.isSaved()) { emit valuesSaveRequested(ratifiedChanges); }
             emit valuesChanged(ratifiedChanges, nullptr);
         }
+        if (! ackedChanges.empty() && ackedChanges.isSaved()) { emit valuesSaveRequested(ackedChanges); }
     }
 
     QJsonObject CValueCache::saveToJson(const QString &keyPrefix) const
