@@ -583,7 +583,7 @@ namespace BlackMisc
     {
         QMutexLocker lock(&m_mutex);
 
-        if (m_lockFile.isLocked()) { return m_timestamps.value(key); }
+        if (m_lockFile.isLocked()) { return m_originalTimestamps.value(key); }
 
         if (! m_lockFile.lock())
         {
