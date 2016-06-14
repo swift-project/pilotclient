@@ -525,9 +525,11 @@ namespace BlackMisc
         Q_ASSERT(QThread::currentThread() == thread());
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
-        if (element.m_value.read() == value && element.m_timestamp == timestamp && ! ignoreValue) { return {}; }
+        bool changed = element.m_value.read() != value || element.m_timestamp != timestamp;
+        if (! changed && ! save && ! ignoreValue) { return {}; }
 
         if (ignoreValue) { value = element.m_value.read(); }
+        else { ignoreValue = ! changed; }
 
         auto status = validate(element, value, CStatusMessage::SeverityError);
         if (status.isSuccess())
