@@ -36,7 +36,19 @@ using namespace BlackCore::Data;
 namespace BlackCore
 {
     CSetupReader::CSetupReader(QObject *parent) :
-        QObject(parent)
+        QObject(parent),
+        m_cmdBootstrapUrl
+    {
+        { "url", "bootstrapurl" },
+        QCoreApplication::translate("application", "bootstrap URL, e.g. datastore.swift-project.org"),
+        "bootstrapurl", (sApp->isUnitTest()) ? unitTestBootstrapUrl() : ""
+    },
+    m_cmdBootstrapMode
+    {
+        { "bmode", "bootstrapmode" },
+        QCoreApplication::translate("application", "bootstrap mode: explicit, implicit, cache(-only)"),
+        "bootstrapmode", "explicit"
+    }
     { }
 
     QList<QCommandLineOption> CSetupReader::getCmdLineOptions() const
@@ -132,9 +144,9 @@ namespace BlackCore
 
     bool CSetupReader::parseCmdLineArguments()
     {
-        this->m_bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(
-                                            sApp->getParserValue(this->m_cmdBootstrapUrl)
-                                        );
+        // bootstrap file URL where we can download the bootstrap file
+        const QString parserValueUrl = sApp->getParserValue(this->m_cmdBootstrapUrl);
+        this->m_bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(parserValueUrl);
         QUrl url(this->m_bootstrapUrlFileValue);
         const QString urlString(url.toString());
         this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
@@ -228,6 +240,12 @@ namespace BlackCore
         if (bsm.startsWith("expl")) return Explicit;
         if (bsm.startsWith("cache")) return CacheOnly;
         return Implicit;
+    }
+
+    const QString &CSetupReader::unitTestBootstrapUrl()
+    {
+        static const QString url("https://vatsim-germany.org:50443/mapping/public/shared");
+        return url;
     }
 
     bool CSetupReader::readLocalBootstrapFile(QString &fileName)

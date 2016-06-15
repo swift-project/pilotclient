@@ -89,6 +89,8 @@ namespace BlackCore
             QCoreApplication::setApplicationName(this->m_applicationName);
             QCoreApplication::setApplicationVersion(CVersion::version());
             this->setObjectName(this->m_applicationName);
+            const QString executable = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
+            if (executable.startsWith("test")) { this->m_unitTest = true; }
             this->initParser();
             this->initLogging();
 
@@ -142,6 +144,7 @@ namespace BlackCore
 
     CApplication::SwiftApplication CApplication::getSwiftApplication() const
     {
+        if (this->isUnitTest()) { return UnitTest; }
         if (this->m_application != Unknown) { return this->m_application; }
 
         // if not set, guess
@@ -152,6 +155,11 @@ namespace BlackCore
         if (a.contains("gui"))      { return PilotClientGui; }
         if (a.contains("core"))     { return PilotClientCore; }
         return Unknown;
+    }
+
+    bool CApplication::isUnitTest() const
+    {
+        return this->m_unitTest;
     }
 
     CGlobalSetup CApplication::getGlobalSetup() const
@@ -308,6 +316,7 @@ namespace BlackCore
     bool CApplication::initIsRunningInDeveloperEnvironment() const
     {
         if (!CBuildConfig::canRunInDeveloperEnvironment()) { return false; }
+        if (this->m_unitTest) { return true; }
         if (this->m_parser.isSet(this->m_cmdDevelopment))
         {
             return this->isSetOrTrue(this->m_cmdDevelopment);
@@ -529,9 +538,9 @@ namespace BlackCore
 
         // File logger
         static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                "/org.swift-project/" +
-                CDirectoryUtils::normalizedApplicationDirectory() +
-                "/logs";
+                                       "/org.swift-project/" +
+                                       CDirectoryUtils::normalizedApplicationDirectory() +
+                                       "/logs";
         this->m_fileLogger.reset(new CFileLogger(executable(), logPath));
         this->m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
     }
@@ -543,16 +552,19 @@ namespace BlackCore
         this->m_cmdHelp = this->m_parser.addHelpOption();
         this->m_cmdVersion = this->m_parser.addVersionOption();
 
+        // dev. system
         this->m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
                                  QCoreApplication::translate("application", "Dev.system feature?"),
                                  "development");
         this->addParserOption(this->m_cmdDevelopment);
 
+        // can read a local bootsrap file
         this->m_cmdSharedDir = QCommandLineOption({ "shared", "shareddir" },
                                QCoreApplication::translate("application", "Local shared directory."),
                                "shared");
         this->addParserOption(this->m_cmdSharedDir);
 
+        // reset caches upfront
         this->m_cmdClearCache = QCommandLineOption({ "ccache", "clearcache" },
                                 QCoreApplication::translate("application", "Clear (reset) the caches."),
                                 "clearcache");

@@ -124,21 +124,10 @@ namespace BlackCore
         BootstrapMode m_bootstrapMode = Explicit;              //! How to bootstrap
         BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;  //!< location of setup files
         BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
+        QCommandLineOption m_cmdBootstrapUrl;                  //!< bootstrap URL
+        QCommandLineOption m_cmdBootstrapMode;                 //!< bootstrap mode
         BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
         BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo {this};                             //!< data cache update info
-
-        QCommandLineOption m_cmdBootstrapUrl
-        {
-            { "url", "bootstrapurl" },
-            QCoreApplication::translate("application", "bootstrap URL, e.g. datastore.swift-project.org"),
-            "bootstrapurl"
-        };                                                     //!< bootstrap URL
-        QCommandLineOption m_cmdBootstrapMode
-        {
-            { "bmode", "bootstrapmode" },
-            QCoreApplication::translate("application", "bootstrap mode: explicit, implicit, cache(-only)"),
-            "bootstrapmode", "explicit"
-        };                                                     //!< bootstrap mode
 
         //! Read by local individual file and update cache from that
         bool readLocalBootstrapFile(QString &fileName);
@@ -156,6 +145,9 @@ namespace BlackCore
 
         //! Convert string to mode
         static BootstrapMode stringToEnum(const QString &s);
+
+        //! Bootsrap URL used for unit tests
+        static const QString &unitTestBootstrapUrl();
     };
 } // ns
 

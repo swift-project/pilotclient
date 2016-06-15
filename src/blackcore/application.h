@@ -86,7 +86,8 @@ namespace BlackCore
             Laucher,
             PilotClientCore,
             PilotClientGui,
-            MappingTool
+            MappingTool,
+            UnitTest
         };
 
         //! Similar to \sa QCoreApplication::instance() returns the single instance
@@ -109,6 +110,9 @@ namespace BlackCore
 
         //! swift application running
         SwiftApplication getSwiftApplication() const;
+
+        //! Unit test?
+        bool isUnitTest() const;
 
         //! Global setup
         //! \threadsafe
@@ -397,6 +401,7 @@ namespace BlackCore
         bool                                     m_useWebData = false;     //!< use web data
         bool                                     m_signalStartup = true;   //!< signal startup automatically
         bool                                     m_devEnv = false;         //!< dev. environment
+        bool                                     m_unitTest = false;       //!< is UNIT test
     };
 } // namespace
 
