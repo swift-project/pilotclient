@@ -66,6 +66,17 @@ namespace BlackCore
                 //! \copydoc BlackMisc::CSettingTrait::defaultValue
                 static const QString &defaultValue() { static const QString dv("session"); return dv; }
             };
+
+            //! Interim positions enabled
+            struct InterimPositionsEnabled : public BlackMisc::CSettingTrait<bool>
+            {
+                //! \copydoc BlackMisc::CSettingTrait::key
+                static const char *key() { return "network/interimpositions"; }
+
+                //! \copydoc BlackMisc::CSettingTrait::defaultValue
+                static bool defaultValue() { return true; }
+            };
+
         } // ns
     } // ns
 } // ns
