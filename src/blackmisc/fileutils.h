@@ -62,13 +62,14 @@ namespace BlackMisc
         static QString normalizeFilePathToQtStandard(const QString &filePath);
 
         //! Make directory paths relative to root directory
+        //! \remark unlike QDir::relativePath here reltive paths are only created when a directory is a subdir of rootDirectory
         static QStringList makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Case sensitivity for current OS
         static Qt::CaseSensitivity osFileNameCaseSensitivity();
 
         //! Is directory path matching the exclude path?
-        static bool matchesExcludeDirectory(const QString &directoryPath, const QString &excludeDirectory, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        static bool matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Directory to be excluded?
         static bool isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
@@ -79,7 +80,10 @@ namespace BlackMisc
         //! Directory to be excluded?
         static bool isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
-        //! Find first existing file or directory
+        //! Removes sub directories in list: A/B A/B/C B B/D -> A/B B returned
+        static QStringList removeSubDirectories(const QStringList &directories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+
+        //! Find first existing file or directory (means exists on file system)
         static QString findFirstExisting(const QStringList &filesOrDirectory);
 
         //! Returns path to first file in dir which matches the optional wildcard and predicate, or empty string.

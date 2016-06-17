@@ -123,6 +123,7 @@ namespace BlackMisc
 
     QStringList CFileUtils::makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory, Qt::CaseSensitivity cs)
     {
+        // not using QDir::relativePath because I do not want "../xyz" paths
         if (rootDirectory.isEmpty() || rootDirectory == "/") { return directories; }
         const QString rd(rootDirectory.endsWith('/') ? rootDirectory.left(rootDirectory.length() - 1) : rootDirectory);
         const int p = rd.length();
@@ -146,10 +147,10 @@ namespace BlackMisc
         return CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
     }
 
-    bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludeDirectory, Qt::CaseSensitivity cs)
+    bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern, Qt::CaseSensitivity cs)
     {
-        if (directoryPath.isEmpty() || excludeDirectory.isEmpty()) { return false; }
-        const QString ed(normalizeFilePathToQtStandard(excludeDirectory));
+        if (directoryPath.isEmpty() || excludePattern.isEmpty()) { return false; }
+        const QString ed(normalizeFilePathToQtStandard(excludePattern));
         return directoryPath.contains(ed, cs);
     }
 
@@ -177,6 +178,28 @@ namespace BlackMisc
             }
         }
         return false;
+    }
+
+    QStringList CFileUtils::removeSubDirectories(const QStringList &directories, Qt::CaseSensitivity cs)
+    {
+        if (directories.size() < 2) { return directories; }
+        QStringList dirs(directories);
+        dirs.removeDuplicates();
+        dirs.sort(cs);
+        if (dirs.size() < 2) { return dirs; }
+
+        QString last;
+        QStringList result;
+        for (const QString &path : dirs)
+        {
+            if (path.isEmpty()) { continue; }
+            if (last.isEmpty() || !path.startsWith(last, cs))
+            {
+                result.append(path);
+            }
+            last = path;
+        }
+        return result;
     }
 
     QString CFileUtils::findFirstExisting(const QStringList &filesOrDirectory)
