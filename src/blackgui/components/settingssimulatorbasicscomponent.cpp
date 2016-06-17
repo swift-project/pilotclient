@@ -37,7 +37,6 @@ namespace BlackGui
             connect(ui->pb_Reset, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_reset);
             connect(ui->pb_CopyDefaults, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_copyDefaults);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorChanged);
-            connect(ui->le_ModelDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::ps_modelDirectoryEntered);
             connect(ui->le_SimulatorDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered);
 
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
@@ -67,7 +66,7 @@ namespace BlackGui
 
         void CSettingsSimulatorBasicsComponent::ps_simulatorFileDialog()
         {
-            const QString startDirectory = this->getBestCurrentSimulatorDirectory();
+            const QString startDirectory = this->getFileBrowserSimulatorDirectory();
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Simulator directory"), startDirectory,
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             if (dir.isEmpty()) { return; }
@@ -76,20 +75,22 @@ namespace BlackGui
 
         void CSettingsSimulatorBasicsComponent::ps_modelFileDialog()
         {
-            const QString startDirectory = this->getBestCurrentModelDirectory();
+            const QString startDirectory = this->getFileBrowserModelDirectory();
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Model directory"), startDirectory,
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             if (dir.isEmpty()) { return; }
-            ui->le_ModelDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(dir));
+            const QStringList newDirs = this->addDirectory(dir, this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
+            this->displayModelDirectories(newDirs);
         }
 
         void CSettingsSimulatorBasicsComponent::ps_excludeFileDialog()
         {
-            const QString startDirectory = this->getBestCurrentModelDirectory();
+            const QString startDirectory = this->getFileBrowserModelDirectory();
             const QString dir = QFileDialog::getExistingDirectory(this, tr("Exclude directory"), startDirectory,
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             if (dir.isEmpty()) { return; }
-            this->addExcludeDirectoryPattern(dir);
+            const QStringList newDirs = this->addDirectory(dir, this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText()));
+            this->displayExcludeDirectoryPatterns(newDirs);
         }
 
         void CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered()
@@ -100,24 +101,16 @@ namespace BlackGui
             this->displayDefaultValuesAsPlaceholder(simulator);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_modelDirectoryEntered()
-        {
-            const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
-            const QString md = CFileUtils::normalizeFilePathToQtStandard(ui->le_ModelDirectory->text().trimmed());
-            ui->le_ModelDirectory->setText(md);
-            this->displayDefaultValuesAsPlaceholder(simulator);
-        }
-
         void CSettingsSimulatorBasicsComponent::ps_save()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             CSettingsSimulator s = this->getSettings(simulator);
             const QString sd(ui->le_SimulatorDirectory->text().trimmed());
-            const QString md(ui->le_ModelDirectory->text().trimmed());
-            const QStringList ed(this->parseExcludeDirectories());
-            const QStringList red = CFileUtils::makeDirectoriesRelative(ed, this->getBestCurrentModelDirectory(), this->m_fileCaseSensitivity);
+            const QStringList md(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
+            const QStringList ed(this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText()));
+            const QStringList red = CFileUtils::makeDirectoriesRelative(ed, this->getFileBrowserModelDirectory(), this->m_fileCaseSensitivity);
             s.setSimulatorDirectory(sd);
-            s.setModelDirectory(md);
+            s.setModelDirectories(md);
             s.setModelExcludeDirectories(red);
             const CStatusMessage m = this->m_settings.setAndSaveSettings(s, simulator);
             if (!m.isEmpty())
@@ -134,20 +127,21 @@ namespace BlackGui
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             const QString sd(this->m_settings.getDefaultSimulatorDirectory(simulator));
             ui->le_SimulatorDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(sd));
-            const QString md(this->m_settings.getDefaultModelDirectory(simulator));
-            ui->le_ModelDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(md));
+            const QStringList md(this->m_settings.getDefaultModelDirectories(simulator));
+            this->displayModelDirectories(md);
             const QStringList excludes(this->m_settings.getDefaultModelExcludeDirectoryPatterns(simulator));
-            this->displayExcludeDirectoryPatterns(excludes, md);
+            this->displayExcludeDirectoryPatterns(excludes);
         }
 
         void CSettingsSimulatorBasicsComponent::ps_reset()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
+            this->m_settings.resetToDefaults(simulator);
             ui->le_SimulatorDirectory->clear();
-            ui->le_ModelDirectory->clear();
+            ui->pte_ModelDirectories->clear();
             ui->pte_ExcludeDirectories->clear();
             this->displayDefaultValuesAsPlaceholder(simulator);
-            this->m_settings.resetToDefaults(simulator);
+
             CLogMessage(this).info("Reset values for settings of %1") << simulator.toQString(true);
         }
 
@@ -158,42 +152,46 @@ namespace BlackGui
             this->displaySettings(simulator);
         }
 
-        QStringList CSettingsSimulatorBasicsComponent::parseExcludeDirectories() const
+        QStringList CSettingsSimulatorBasicsComponent::parseDirectories(const QString &rawString) const
         {
-            const QString raw = ui->pte_ExcludeDirectories->toPlainText().trimmed();
+            const QString raw = rawString.trimmed();
             if (raw.isEmpty()) { return QStringList(); }
-            QStringList rawLines = raw.split(QRegExp("\n|\r\n|\r"));
             QStringList dirs;
+            const QStringList rawLines = raw.split(QRegExp("\n|\r\n|\r"));
             for (const QString &l : rawLines)
             {
                 const QString normalized = CFileUtils::normalizeFilePathToQtStandard(l);
                 if (normalized.isEmpty()) { continue; }
                 dirs.push_back(normalized);
             }
-            dirs.removeDuplicates();
-            dirs.sort(this->m_fileCaseSensitivity);
+            dirs = CFileUtils::removeSubDirectories(dirs);
             return dirs;
         }
 
-        void CSettingsSimulatorBasicsComponent::addExcludeDirectoryPattern(const QString &excludeDirectoryPattern)
+        QStringList CSettingsSimulatorBasicsComponent::addDirectory(const QString &directory, const QStringList &existingDirs)
         {
-            const QString d(CFileUtils::normalizeFilePathToQtStandard(excludeDirectoryPattern));
-            if (d.isEmpty()) { return; }
-            QStringList dirs = this->parseExcludeDirectories();
+            const QString d(CFileUtils::normalizeFilePathToQtStandard(directory));
+            QStringList dirs(existingDirs);
+            if (d.isEmpty()) { return existingDirs; }
             if (!dirs.contains(d, this->m_fileCaseSensitivity))
             {
                 dirs.push_back(d);
             }
             dirs.removeDuplicates();
             dirs.sort(this->m_fileCaseSensitivity);
-            this->displayExcludeDirectoryPatterns(dirs, ui->le_ModelDirectory->text().trimmed());
+            return dirs;
         }
 
-        void CSettingsSimulatorBasicsComponent::displayExcludeDirectoryPatterns(const QStringList &dirs, const QString &modelDir)
+        void CSettingsSimulatorBasicsComponent::displayExcludeDirectoryPatterns(const QStringList &dirs)
         {
-            const QStringList relativeDirectories = CFileUtils::makeDirectoriesRelative(dirs, modelDir);
-            const QString d = relativeDirectories.join("\n");
+            const QString d = dirs.join("\n");
             ui->pte_ExcludeDirectories->setPlainText(d);
+        }
+
+        void CSettingsSimulatorBasicsComponent::displayModelDirectories(const QStringList &dirs)
+        {
+            const QString d = dirs.join("\n");
+            ui->pte_ModelDirectories->setPlainText(d);
         }
 
         CSettingsSimulator CSettingsSimulatorBasicsComponent::getSettings(const CSimulatorInfo &simulator) const
@@ -205,9 +203,9 @@ namespace BlackGui
         void CSettingsSimulatorBasicsComponent::displaySettings(const CSimulatorInfo &simulator)
         {
             const CSettingsSimulator s = this->getSettings(simulator);
-            this->displayExcludeDirectoryPatterns(s.getModelExcludeDirectoryPatterns(), s.getModelDirectory());
+            this->displayExcludeDirectoryPatterns(s.getModelExcludeDirectoryPatterns());
+            this->displayModelDirectories(s.getModelDirectories());
             ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());
-            ui->le_ModelDirectory->setText(s.getModelDirectory());
         }
 
         void CSettingsSimulatorBasicsComponent::displayDefaultValuesAsPlaceholder(const CSimulatorInfo &simulator)
@@ -215,8 +213,16 @@ namespace BlackGui
             const QString s = this->m_settings.getDefaultSimulatorDirectory(simulator);
             ui->le_SimulatorDirectory->setPlaceholderText(s.isEmpty() ? "Simulator directory" : s);
 
-            const QString m = this->m_settings.getDefaultModelDirectory(simulator);
-            ui->le_ModelDirectory->setPlaceholderText(m.isEmpty() ? "Model directory" : m);
+            const QStringList m = this->m_settings.getDefaultModelDirectories(simulator);
+            if (m.isEmpty())
+            {
+                ui->pte_ModelDirectories->setPlaceholderText("Model directories");
+            }
+            else
+            {
+                const QString ms(m.join('\n'));
+                ui->pte_ModelDirectories->setPlaceholderText(ms);
+            }
 
             const QStringList e = this->m_settings.getDefaultModelExcludeDirectoryPatterns(simulator);
             if (e.isEmpty())
@@ -230,22 +236,23 @@ namespace BlackGui
             }
         }
 
-        QString CSettingsSimulatorBasicsComponent::getBestCurrentModelDirectory() const
+        QString CSettingsSimulatorBasicsComponent::getFileBrowserModelDirectory() const
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
-            QString md(ui->le_ModelDirectory->text().trimmed());
+            const QStringList modelDirs(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
+            QString md = modelDirs.isEmpty() ? "" : modelDirs.first();
             if (md.isEmpty())
             {
-                md = this->m_settings.getModelDirectoryOrDefault(simulator);
+                md = this->m_settings.getFirstModelDirectoryOrDefault(simulator);
             }
             if (md.isEmpty())
             {
-                md = this->getBestCurrentSimulatorDirectory();
+                md = this->getFileBrowserSimulatorDirectory();
             }
             return CFileUtils::normalizeFilePathToQtStandard(md);
         }
 
-        QString CSettingsSimulatorBasicsComponent::getBestCurrentSimulatorDirectory() const
+        QString CSettingsSimulatorBasicsComponent::getFileBrowserSimulatorDirectory() const
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             QString sd(ui->le_SimulatorDirectory->text().trimmed());

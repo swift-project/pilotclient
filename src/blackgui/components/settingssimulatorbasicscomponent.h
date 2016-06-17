@@ -47,7 +47,6 @@ namespace BlackGui
             void ps_excludeFileDialog();
             void ps_simulatorFileDialog();
             void ps_simulatorDirectoryEntered();
-            void ps_modelDirectoryEntered();
             void ps_save();
             void ps_copyDefaults();
             void ps_reset();
@@ -62,13 +61,16 @@ namespace BlackGui
             void setSmallLayout(bool small);
 
             //! Exclude directories from line edit
-            QStringList parseExcludeDirectories() const;
+            QStringList parseDirectories(const QString &rawString) const;
 
-            //! Add an exclude directory
-            void addExcludeDirectoryPattern(const QString &excludeDirectoryPattern);
+            //! Add a directory
+            QStringList addDirectory(const QString &directory, const QStringList &existingDirs);
 
             //! Display the directories
-            void displayExcludeDirectoryPatterns(const QStringList &dirs, const QString &modelDir);
+            void displayExcludeDirectoryPatterns(const QStringList &dirs);
+
+            //! Display the directories
+            void displayModelDirectories(const QStringList &dirs);
 
             //! Current settings
             BlackMisc::Simulation::Settings::CSettingsSimulator getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
@@ -80,10 +82,10 @@ namespace BlackGui
             void displayDefaultValuesAsPlaceholder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Model directory either from input or settings or default
-            QString getBestCurrentModelDirectory() const;
+            QString getFileBrowserModelDirectory() const;
 
             //! Simulator directory either from input or settings or default
-            QString getBestCurrentSimulatorDirectory() const;
+            QString getFileBrowserSimulatorDirectory() const;
         };
     } // ns
 } // ns
