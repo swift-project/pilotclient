@@ -52,20 +52,20 @@ namespace BlackMisc
                 //! Simulator directory
                 const QString &getSimulatorDirectory() const;
 
-                //! Set model directory
+                //! Set model directories
+                void setModelDirectories(const QStringList &modelDirectories);
+
+                //! Set single model directory
                 void setModelDirectory(const QString &modelDirectory);
 
                 //! Model directory
-                const QString &getModelDirectory() const;
+                const QStringList &getModelDirectories() const;
 
                 //! Set exclude directories
                 void setModelExcludeDirectories(const QStringList &excludeDirectories);
 
                 //! Margins for given dock widget
                 const QStringList &getModelExcludeDirectoryPatterns() const;
-
-                //! Relative exclude directory patterns
-                QStringList getRelativeModelExcludeDirectoryPatterns(const QString &modelDirectory) const;
 
                 //! Reset the paths
                 void resetPaths();
@@ -84,13 +84,13 @@ namespace BlackMisc
 
             private:
                 QString     m_simulatorDirectory;       //! Simulator directory
-                QString     m_modelDirectory;           //!< Model directory
+                QStringList m_modelDirectories;         //!< Model directory
                 QStringList m_excludeDirectoryPatterns; //!< Exclude model directory
 
                 BLACK_METACLASS(
                     CSettingsSimulator,
                     BLACK_METAMEMBER(simulatorDirectory),
-                    BLACK_METAMEMBER(modelDirectory),
+                    BLACK_METAMEMBER(modelDirectories),
                     BLACK_METAMEMBER(excludeDirectoryPatterns)
                 );
             };
@@ -151,13 +151,16 @@ namespace BlackMisc
                 QString getDefaultSimulatorDirectory(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Model directory or default model path per simulator
-                QString getModelDirectoryOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                QStringList getModelDirectoriesOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+
+                //! First model directoy
+                QString getFirstModelDirectoryOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Default model path per simulator
-                QString getDefaultModelDirectory(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                QStringList getDefaultModelDirectories(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Model exclude paths per simulator
-                QStringList getModelExcludeDirectoryPatternsOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator, bool relative) const;
+                QStringList getModelExcludeDirectoryPatternsOrDefault(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Default model exclude paths per simulator
                 QStringList getDefaultModelExcludeDirectoryPatterns(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;

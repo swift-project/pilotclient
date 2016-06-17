@@ -65,17 +65,17 @@ namespace BlackMisc
             void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
                 const CSimulatorInfo simulator = this->getSimulator();
-                const QString modelDirectory(this->m_settings.getModelDirectoryOrDefault(simulator)); // copy
-                const QStringList excludedDirectories(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator, true)); // copy
+                const QString modelDirectory(this->m_settings.getFirstModelDirectoryOrDefault(simulator)); // expect only one directory
+                const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (mode.testFlag(LoadInBackground))
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
-                                     [this, modelDirectory, excludedDirectories, simulator, dbModels]()
+                                     [this, modelDirectory, excludedDirectoryPatterns, simulator, dbModels]()
                     {
                         bool ok = false;
-                        const auto aircraftCfgEntriesList = this->performParsing(modelDirectory, excludedDirectories, &ok);
+                        const auto aircraftCfgEntriesList = this->performParsing(modelDirectory, excludedDirectoryPatterns, &ok);
                         CAircraftModelList models;
                         if (ok)
                         {
@@ -108,7 +108,7 @@ namespace BlackMisc
                 else if (mode == LoadDirectly)
                 {
                     bool ok;
-                    this->m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectories, &ok);
+                    this->m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectoryPatterns, &ok);
                     CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(simulator));
                     CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                     const bool hasData = !models.isEmpty();
@@ -137,9 +137,11 @@ namespace BlackMisc
             bool CAircraftCfgParser::areModelFilesUpdated() const
             {
                 const QDateTime cacheTs(getCacheTimestamp());
-
                 if (!cacheTs.isValid()) { return true; }
-                return CFileUtils::containsFileNewerThan(cacheTs, this->getModelDirectory(), true, { fileFilter() }, this->getModelExcludeDirectories(true));
+                return CFileUtils::containsFileNewerThan(
+                           cacheTs,
+                           this->m_settings.getFirstModelDirectoryOrDefault(this->getSimulator()),
+                           true, { fileFilter() }, this->getModelExcludeDirectoryPatterns());
             }
 
             CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok)

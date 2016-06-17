@@ -77,14 +77,21 @@ namespace BlackMisc
             this->m_loadingInProgress = false;
         }
 
-        QString IAircraftModelLoader::getModelDirectory() const
+        QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
         {
-            return this->m_settings.getModelDirectoryOrDefault(this->getSimulator());
+            const QStringList mdirs = this->m_settings.getModelDirectoriesOrDefault(this->getSimulator());
+            return mdirs;
         }
 
-        QStringList IAircraftModelLoader::getModelExcludeDirectories(bool relative) const
+        QString IAircraftModelLoader::getFirstModelDirectoryOrDefault() const
         {
-            return this->m_settings.getModelExcludeDirectoryPatternsOrDefault(this->getSimulator(), relative);
+            const QString md = this->m_settings.getFirstModelDirectoryOrDefault(this->getSimulator());
+            return md;
+        }
+
+        QStringList IAircraftModelLoader::getModelExcludeDirectoryPatterns() const
+        {
+            return this->m_settings.getModelExcludeDirectoryPatternsOrDefault(this->getSimulator());
         }
 
         CAircraftModelList IAircraftModelLoader::getAircraftModels() const

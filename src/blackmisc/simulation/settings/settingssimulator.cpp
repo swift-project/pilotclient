@@ -36,14 +36,19 @@ namespace BlackMisc
                 return this->m_simulatorDirectory;
             }
 
-            void CSettingsSimulator::setModelDirectory(const QString &modelDirectory)
+            void CSettingsSimulator::setModelDirectories(const QStringList &modelDirectories)
             {
-                this->m_modelDirectory = modelDirectory.trimmed();
+                this->m_modelDirectories = modelDirectories;
             }
 
-            const QString &CSettingsSimulator::getModelDirectory() const
+            void CSettingsSimulator::setModelDirectory(const QString &modelDirectory)
             {
-                return this->m_modelDirectory;
+                this->m_modelDirectories = QStringList({ modelDirectory });
+            }
+
+            const QStringList &CSettingsSimulator::getModelDirectories() const
+            {
+                return this->m_modelDirectories;
             }
 
             void CSettingsSimulator::setModelExcludeDirectories(const QStringList &excludeDirectories)
@@ -56,16 +61,10 @@ namespace BlackMisc
                 return m_excludeDirectoryPatterns;
             }
 
-            QStringList CSettingsSimulator::getRelativeModelExcludeDirectoryPatterns(const QString &modelDirectory) const
-            {
-                const QStringList excludes(this->getModelExcludeDirectoryPatterns());
-                return CFileUtils::makeDirectoriesRelative(excludes, modelDirectory);
-            }
-
             void CSettingsSimulator::resetPaths()
             {
                 this->m_excludeDirectoryPatterns.clear();
-                this->m_modelDirectory.clear();
+                this->m_modelDirectories.clear();
                 this->m_simulatorDirectory.clear();
             }
 
@@ -77,8 +76,8 @@ namespace BlackMisc
             QString CSettingsSimulator::convertToQString(const QString &separator, bool i18n) const
             {
                 Q_UNUSED(i18n);
-                QString s("model directory: ");
-                s.append(this->m_modelDirectory);
+                QString s("model directories: ");
+                s.append(this->m_modelDirectories.join(','));
                 s.append(separator);
                 s.append("exclude directories: ");
                 s.append(this->m_excludeDirectoryPatterns.join(','));
@@ -94,7 +93,7 @@ namespace BlackMisc
                 case IndexSimulatorDirectory:
                     return CVariant::fromValue(this->m_simulatorDirectory);
                 case IndexModelDirectory:
-                    return CVariant::fromValue(this->m_modelDirectory);
+                    return CVariant::fromValue(this->m_modelDirectories);
                 case IndexModelExcludeDirectoryPatterns:
                     return CVariant::fromValue(this->m_excludeDirectoryPatterns);
                 default:
@@ -219,41 +218,47 @@ namespace BlackMisc
                 return "";
             }
 
-            QString CMultiSimulatorSimulatorSettings::getModelDirectoryOrDefault(const CSimulatorInfo &simulator) const
+            QStringList CMultiSimulatorSimulatorSettings::getModelDirectoriesOrDefault(const CSimulatorInfo &simulator) const
             {
                 const CSettingsSimulator s = this->getSettings(simulator);
-                if (s.getModelDirectory().isEmpty())
+                if (s.getModelDirectories().isEmpty())
                 {
-                    return this->getDefaultModelDirectory(simulator);
+                    return this->getDefaultModelDirectories(simulator);
                 }
-                return s.getModelDirectory();
+                return s.getModelDirectories();
             }
 
-            QString CMultiSimulatorSimulatorSettings::getDefaultModelDirectory(const CSimulatorInfo &simulator) const
+            QString CMultiSimulatorSimulatorSettings::getFirstModelDirectoryOrDefault(const CSimulatorInfo &simulator) const
             {
+                const QStringList models(getModelDirectoriesOrDefault(simulator));
+                if (models.isEmpty()) { return ""; }
+                return models.first();
+            }
+
+            QStringList CMultiSimulatorSimulatorSettings::getDefaultModelDirectories(const CSimulatorInfo &simulator) const
+            {
+                static const QStringList e;
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 switch (simulator.getSimulator())
                 {
-                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftDir();
-                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsDir();
-                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsDir();
-                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelDirectory();
+                case CSimulatorInfo::FS9: return CFsCommonUtil::fs9AircraftDir().isEmpty()   ? e : QStringList({ CFsCommonUtil::fs9AircraftDir() });
+                case CSimulatorInfo::FSX: return CFsCommonUtil::fsxSimObjectsDir().isEmpty() ? e : QStringList({ CFsCommonUtil::fsxSimObjectsDir() });
+                case CSimulatorInfo::P3D: return CFsCommonUtil::p3dSimObjectsDir().isEmpty() ? e : QStringList({ CFsCommonUtil::p3dSimObjectsDir()});
+                case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelDirectories();
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;
                 }
-                return "";
+                return QStringList();
             }
 
-            QStringList CMultiSimulatorSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator, bool relative) const
+            QStringList CMultiSimulatorSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator) const
             {
                 const CSettingsSimulator s = this->getSettings(simulator);
-                const QString md = getModelDirectoryOrDefault(simulator);
-                QStringList exclude = relative ? s.getRelativeModelExcludeDirectoryPatterns(md) : s.getModelExcludeDirectoryPatterns();
+                QStringList exclude(s.getModelExcludeDirectoryPatterns());
                 if (!exclude.isEmpty()) { return exclude; }
                 exclude = this->getDefaultModelExcludeDirectoryPatterns(simulator);
-                if (!relative || exclude.isEmpty()) { return exclude; }
-                return CFileUtils::makeDirectoriesRelative(exclude, md);
+                return exclude;
             }
 
             QStringList CMultiSimulatorSimulatorSettings::getDefaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator) const

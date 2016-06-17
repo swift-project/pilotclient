@@ -55,7 +55,7 @@ namespace BlackSample
         streamOut << "reading directly" << endl;
         QTime time;
         time.start();
-        streamOut << "reading " << parser.getModelDirectory() << endl;
+        streamOut << "reading " << parser.getFirstModelDirectoryOrDefault() << endl;
         parser.startLoading();
         streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
 

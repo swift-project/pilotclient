@@ -94,11 +94,14 @@ namespace BlackMisc
             //! Is the given simulator supported?
             bool supportsSimulator(const BlackMisc::Simulation::CSimulatorInfo &info);
 
-            //! Current root directory
-            QString getModelDirectory() const;
+            //! Model directories
+            QStringList getModelDirectoriesOrDefault() const;
+
+            //! First directory, can be used when only 1 directory is expected
+            QString getFirstModelDirectoryOrDefault() const;
 
             //! Exclude directories
-            QStringList getModelExcludeDirectories(bool relative) const;
+            QStringList getModelExcludeDirectoryPatterns() const;
 
             //! Cancel read
             void cancelLoading();

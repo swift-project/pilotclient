@@ -102,9 +102,9 @@ namespace BlackMisc
                 else { return {}; }
             }
 
-            QString CXPlaneUtil::xplaneModelDirectory()
+            QStringList CXPlaneUtil::xplaneModelDirectories()
             {
-                return xplaneRootDir();
+                return QStringList({ xplaneRootDir() });
             }
 
             QStringList CXPlaneUtil::xplaneModelExcludeDirectoryPatterns()

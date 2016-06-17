@@ -70,9 +70,10 @@ namespace BlackMisc
 
             void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
             {
+                //! \todo according to meeting XP needs to support multiple directories
                 const CSimulatorInfo simulator = this->getSimulator();
-                const QString modelDirectory(this->m_settings.getModelDirectoryOrDefault(simulator)); // copy
-                const QStringList excludedDirectories(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator, true)); // copy
+                const QString modelDirectory(this->getFirstModelDirectoryOrDefault()); // directory
+                const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (modelDirectory.isEmpty())
                 {
@@ -85,9 +86,9 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
-                                     [this, modelDirectory, excludedDirectories, dbModels]()
+                                     [this, modelDirectory, excludedDirectoryPatterns, dbModels]()
                     {
-                        auto models = performParsing(modelDirectory, excludedDirectories);
+                        auto models = performParsing(modelDirectory, excludedDirectoryPatterns);
                         CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                         return models;
                     });
@@ -98,7 +99,7 @@ namespace BlackMisc
                 }
                 else if (mode.testFlag(LoadDirectly))
                 {
-                    CAircraftModelList models(performParsing(this->getModelDirectory(), excludedDirectories));
+                    CAircraftModelList models(performParsing(this->getFirstModelDirectoryOrDefault(), excludedDirectoryPatterns));
                     CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                     updateInstalledModels(models);
                 }
@@ -113,9 +114,10 @@ namespace BlackMisc
             {
                 const QDateTime cacheTs(getCacheTimestamp());
                 if (!cacheTs.isValid()) { return true; }
-                return CFileUtils::containsFileNewerThan(cacheTs, this->getModelDirectory(), true, {fileFilterCsl(), fileFilterFlyable()},  this->getModelExcludeDirectories(false));
+                return CFileUtils::containsFileNewerThan(
+                           cacheTs, this->getFirstModelDirectoryOrDefault(),
+                           true, {fileFilterCsl(), fileFilterFlyable()},  this->getModelExcludeDirectoryPatterns());
             }
-
 
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
