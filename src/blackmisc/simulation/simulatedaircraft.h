@@ -397,7 +397,7 @@ namespace BlackMisc
             bool m_enabled = true;              //!< to be displayed in simulator
             bool m_rendered = false;            //!< really shown in simulator
             bool m_partsSynchronized = false;   //!< sync.parts
-            bool m_fastPositionUpdates = false; //!<use fast position updates
+            bool m_fastPositionUpdates = false; //!< use fast position updates
 
             //! Init, which syncronizes some denormalized values
             void init();

@@ -66,7 +66,7 @@ namespace BlackMisc
 
         int CEntityFlags::numberOfEntities(BlackMisc::Network::CEntityFlags::Entity flag)
         {
-            const int c = std::bitset<sizeof(flag)>(flag).count();
+            const int c = static_cast<int>(std::bitset<sizeof(flag)>(flag).count());
             return c;
         }
 
