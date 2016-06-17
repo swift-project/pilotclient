@@ -163,7 +163,6 @@ namespace BlackGui
 
             // drag and drop
             f = f | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
-
             return f;
         }
 
@@ -198,6 +197,19 @@ namespace BlackGui
             return m_modelDestroyed;
         }
 
+        void CListModelBaseNonTemplate::setHoveredRow(int row)
+        {
+            if (this->m_hoverRow == row) { return; }
+            this->m_hoverRow = row;
+            const int columns = columnCount();
+            if (columns < 1) { return; }
+            if (row < 0) { return; }
+
+            const QModelIndex topLeft(createIndex(row, 0));
+            const QModelIndex bottomRight(createIndex(row, columns - 1));
+            emit this->dataChanged(topLeft, bottomRight);
+        }
+
         void CListModelBaseNonTemplate::emitDataChanged(int startRowIndex, int endRowIndex)
         {
             BLACK_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");
@@ -226,6 +238,13 @@ namespace BlackGui
 
             // connect
             connect(this, &CListModelBaseNonTemplate::dataChanged, this, &CListModelBaseNonTemplate::ps_onDataChanged);
+        }
+
+        bool CListModelBaseNonTemplate::isHoveredRow(int row) const
+        {
+            if (this->m_hoverRow < 0) { return false; }
+            if (row < 0) { return false; }
+            return row == this->m_hoverRow;
         }
 
         bool CListModelBaseNonTemplate::isHoveredRow(const QModelIndex &modelIndex) const
@@ -292,11 +311,13 @@ namespace BlackGui
         {
             // check / init
             if (!this->isValidIndex(index)) { return QVariant(); }
+            const int row = index.row();
+            const int col = index.column();
 
             // Hover effect
             if (role == Qt::BackgroundRole)
             {
-                if (this->isHoveredRow(index))
+                if (this->isHoveredRow(row))
                 {
                     return QBrush(Qt::red);
                 }
@@ -311,8 +332,8 @@ namespace BlackGui
             if (!formatter || !formatter->supportsRole(role)) { return CListModelBaseNonTemplate::data(index, role); }
 
             // Formatted data
-            const ObjectType obj = this->containerOrFilteredContainer()[index.row()];
-            BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
+            const ObjectType obj = this->containerOrFilteredContainer()[row];
+            BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
             return formatter->data(role, obj.propertyByIndex(propertyIndex)).getQVariant();
         }
 

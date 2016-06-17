@@ -19,6 +19,8 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/shortcut.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/views/viewbaseproxystyle.h"
+#include "blackgui/views/viewbaseitemdelegate.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -95,6 +97,11 @@ namespace BlackGui
         CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) :
             QTableView(parent)
         {
+            // this->viewport()->setAttribute(Qt::WA_Hover, true);
+            // this->viewport()->setMouseTracking(true);
+            // this->setStyle(new CViewBaseProxyStyle(this, this->style()));
+            // this->setItemDelegate(new CViewBaseItemDelegate(this));
+
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
             connect(this, &QTableView::clicked, this, &CViewBaseNonTemplate::ps_clicked);
@@ -683,6 +690,12 @@ namespace BlackGui
             event->accept();
         }
 
+        void CViewBaseNonTemplate::dropEvent(QDropEvent *event)
+        {
+            if (!event) { return; }
+            QTableView::dropEvent(event);
+        }
+
         template <class ModelClass, class ContainerType, class ObjectType>
         CViewBase<ModelClass, ContainerType, ObjectType>::CViewBase(QWidget *parent, ModelClass *model) : CViewBaseNonTemplate(parent), m_model(model)
         {
@@ -1134,6 +1147,26 @@ namespace BlackGui
                 Qt::SortOrder order = this->derivedModel()->getSortOrder();
                 this->horizontalHeader()->setSortIndicator(index, order);
             }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::mouseOverCallback(const QModelIndex &index, bool mouseOver)
+        {
+            if (mouseOver && index.isValid())
+            {
+                const int row = index.row();
+                this->m_model->setHoveredRow(row);
+            }
+            else
+            {
+                // this->m_model->setHoveredRow(-1);
+            }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::drawDropIndicator(bool indicator)
+        {
+            this->m_dropIndicator = indicator;
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

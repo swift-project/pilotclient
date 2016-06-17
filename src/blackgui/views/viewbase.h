@@ -56,13 +56,12 @@ namespace BlackGui
     class CDockWidgetInfoArea;
     class CLoadIndicator;
 
+    namespace Menus { class IMenuDelegate; }
     namespace Filters
     {
         class CFilterDialog;
         class CFilterWidget;
     }
-
-    namespace Menus { class IMenuDelegate; }
 
     namespace Views
     {
@@ -75,6 +74,9 @@ namespace BlackGui
 
             //! Load indicator property allows using in stylesheet
             Q_PROPERTY(bool isShowingLoadIndicator READ isShowingLoadIndicator NOTIFY loadIndicatorVisibilityChanged)
+
+            friend class CViewBaseItemDelegate;
+            friend class CViewBaseProxyStyle;
 
         public:
             //! Resize mode, when to resize rows / columns
@@ -117,7 +119,7 @@ namespace BlackGui
                 MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightDbData      = 1 << 10,   //!< highlight DB data
+                MenuHighlightDbData      = 1 << 10,  //!< highlight DB data
                 MenuHighlightStashed     = 1 << 11,  //!< highlight stashed models
                 MenuCanStashModels       = 1 << 12,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
@@ -324,6 +326,7 @@ namespace BlackGui
             virtual void dragEnterEvent(QDragEnterEvent *event) override;
             virtual void dragMoveEvent(QDragMoveEvent *event) override;
             virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+            virtual void dropEvent(QDropEvent *event) override;
             //! @}
 
             //! Perform resizing (no presizing) / non slot method for template
@@ -360,6 +363,12 @@ namespace BlackGui
             //! Set the sort indicator to the current sort column
             virtual void updateSortIndicator() = 0;
 
+            //! From delegate indicating we are in mouse over state
+            virtual void mouseOverCallback(const QModelIndex &index, bool mouseOver) = 0;
+
+            //! Draw drop indicator
+            virtual void drawDropIndicator(bool indicator) = 0;
+
             QString        m_saveFileName;                                     //!< save file name (JSON)
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
@@ -375,6 +384,7 @@ namespace BlackGui
             bool m_acceptDoubleClickSelection         = false;                 //!< double clicked
             bool m_displayAutomatically               = true;                  //!< display directly when loaded
             bool m_enableDeleteSelectedRows           = false;                 //!< selected rows can be deleted
+            bool m_dropIndicator                      = false;                 //!< draw indicator
             QWidget *m_filterWidget                   = nullptr;               //!< filter widget or dialog
             Menu     m_menus                          = MenuDefault;           //!< Default menu settings
             BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
@@ -597,6 +607,8 @@ namespace BlackGui
             virtual void performModeBasedResizeToContent() override;
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize) override;
             virtual void updateSortIndicator() override;
+            virtual void mouseOverCallback(const QModelIndex &index, bool mouseOver) override;
+            virtual void drawDropIndicator(bool indicator) override;
             //! @}
 
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
