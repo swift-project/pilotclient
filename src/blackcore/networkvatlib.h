@@ -108,7 +108,7 @@ namespace BlackCore
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual void sendInterimPositions(const BlackMisc::Aviation::CCallsignSet &receiver) override;
+        virtual void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &receivers) override;
         //! @}
 
         //! \name Weather functions
@@ -165,6 +165,7 @@ namespace BlackCore
         void initializeSession();
         void changeConnectionStatus(VatConnectionStatus newStatus);
         bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
+        void reloadSettings();
         static QString convertToUnicodeEscaped(const QString &str);
         static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
         static void networkLogHandler(SeverityLevel severity, const char *message);
@@ -182,6 +183,7 @@ namespace BlackCore
     private slots:
         void process();
         void sendPositionUpdate();
+        void sendInterimPositions();
         void customPacketDispatcher(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
     signals:
@@ -205,14 +207,17 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraftIcaoCode m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
         BlackMisc::Aviation::CAirlineIcaoCode m_ownAirlineIcaoCode;   //!< "buffered icao", as this must not change when connected
         QString m_ownLiveryDescription;                               //!< "buffered livery", as this must not change when connected
+        BlackMisc::Aviation::CCallsignSet m_interimPositionReceivers;
 
         QTimer m_processingTimer;
         QTimer m_positionUpdateTimer;
+        QTimer m_interimPositionUpdateTimer;
         static int const c_processingIntervalMsec = 100;
         static int const c_updateIntervalMsec = 5000;
         static int const c_logoffTimeoutSec = 5;
 
         BlackMisc::CSetting<Settings::Network::WireTextCodec> m_fsdTextCodecSetting { this };
+        BlackMisc::CSetting<Settings::Network::InterimPositionsEnabled> m_interimPositionsEnabled { this, &CNetworkVatlib::reloadSettings };
         QTextCodec *m_fsdTextCodec = nullptr;
 
         BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig;

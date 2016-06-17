@@ -190,12 +190,6 @@ namespace BlackCore
             std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
         ) override;
 
-        //! Is interim position sending enabled?
-        bool isFastPositionSendingEnabled() const;
-
-        //! Enable interim position sending
-        void enableFastPositionSending(bool enable);
-
         //! Analyzer
         CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
 
@@ -254,9 +248,7 @@ namespace BlackCore
         CAirspaceAnalyzer     *m_analyzer                = nullptr; //!< owned analyzer
         bool                   m_serverSupportsNameQuery = false;   //!< not all servers support name query
         bool                   m_connected               = false;   //!< retrieve data
-        bool                   m_sendInterimPositions    = false;   //!< send interim positions to other clients
         bool                   m_logMatchingProcess      = false;   //!< shall we log. information about the matching process
-        QTimer                 m_interimPositionUpdateTimer;
 
         // locks
         mutable QReadWriteLock m_lockSituations; //!< lock for situations
@@ -320,7 +312,7 @@ namespace BlackCore
         void ps_receivedDataFile();
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
         void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-        void ps_sendInterimPositions();
+
     };
 
 } // namespace

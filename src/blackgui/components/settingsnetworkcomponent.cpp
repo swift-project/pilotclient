@@ -26,8 +26,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             connect(this->ui->cb_FastPositionUpdates, &QCheckBox::released, this, &CSettingsNetworkComponent::ps_guiValuesChanged);
-            bool enabled =  sGui->getIContextNetwork()->isFastPositionSendingEnabled();
-            this->ui->cb_FastPositionUpdates->setChecked(enabled);
+            this->ui->cb_FastPositionUpdates->setChecked(m_interimPositionsEnabled.get());
         }
 
         CSettingsNetworkComponent::~CSettingsNetworkComponent() { }
@@ -38,7 +37,7 @@ namespace BlackGui
             if (sender == ui->cb_FastPositionUpdates)
             {
                 bool enabled = this->ui->cb_FastPositionUpdates->isChecked();
-                sGui->getIContextNetwork()->enableFastPositionSending(enabled);
+                m_interimPositionsEnabled.set(enabled);
             }
         }
     } // ns

@@ -173,12 +173,6 @@ namespace BlackCore
         //! \copydoc IContextNetwork::updateFastPositionEnabled
         virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::CIdentifier &originator) override;
 
-        //! \copydoc IContextNetwork::isFastPositionSendingEnabled
-        virtual bool isFastPositionSendingEnabled() const override;
-
-        //! \copydoc IContextNetwork::enableFastPositionSending
-        virtual void enableFastPositionSending(bool enable) override;
-
         //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
         virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;
 

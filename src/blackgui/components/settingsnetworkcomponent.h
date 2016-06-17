@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSNETWORKCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackcore/settings/network.h"
 
 #include <QFrame>
 #include <QObject>
@@ -46,6 +47,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSettingsNetworkComponent> ui;
+            BlackMisc::CSetting<BlackCore::Settings::Network::InterimPositionsEnabled> m_interimPositionsEnabled { this };
         };
 
     } // ns

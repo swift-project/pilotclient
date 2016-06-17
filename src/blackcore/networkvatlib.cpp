@@ -90,8 +90,14 @@ namespace BlackCore
         connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendPositionUpdate);
         m_processingTimer.start(c_processingIntervalMsec);
 
+        m_interimPositionUpdateTimer.setObjectName(this->objectName().append(":m_interimPositionUpdateTimer"));
+        m_interimPositionUpdateTimer.setInterval(1000);
+        this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendInterimPositions);
+
         this->connect(&this->m_scheduledConfigUpdate, &QTimer::timeout, this, &CNetworkVatlib::sendIncrementalAircraftConfig);
         m_scheduledConfigUpdate.setSingleShot(true);
+
+        reloadSettings();
     }
 
     void CNetworkVatlib::initializeSession()
@@ -192,6 +198,31 @@ namespace BlackCore
         }
     }
 
+    void CNetworkVatlib::sendInterimPositions()
+    {
+        if (!m_net) { return; }
+
+        if (isConnected())
+        {
+            CSimulatedAircraft myAircraft(getOwnAircraft());
+            if (this->m_loginMode == LoginNormal)
+            {
+                VatInterimPilotPosition pos;
+                pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
+                pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
+                pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
+                pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
+                pos.latitude     = myAircraft.latitude().value(CAngleUnit::deg());
+                pos.longitude    = myAircraft.longitude().value(CAngleUnit::deg());
+
+                for (const auto &receiver : as_const(m_interimPositionReceivers))
+                {
+                    Vat_SendInterimPilotUpdate(m_net.data(), toFSD(receiver), &pos);
+                }
+            }
+        }
+    }
+
     //! Convert vatlib status code to INetwork::ConnectionStatus
     INetwork::ConnectionStatus convertConnectionStatus(VatConnectionStatus status)
     {
@@ -220,6 +251,12 @@ namespace BlackCore
                 m_positionUpdateTimer.stop();
             }
         }
+    }
+
+    void CNetworkVatlib::reloadSettings()
+    {
+        if (m_interimPositionsEnabled.get()) { m_interimPositionUpdateTimer.start(); }
+        else { m_interimPositionUpdateTimer.stop(); }
     }
 
     QByteArray CNetworkVatlib::toFSD(QString qstr) const
@@ -446,26 +483,9 @@ namespace BlackCore
         Vat_SendClientQuery(m_net.data(), vatClientQueryInfo, toFSD(callsign));
     }
 
-    void CNetworkVatlib::sendInterimPositions(const CCallsignSet &receivers)
+    void CNetworkVatlib::setInterimPositionReceivers(const CCallsignSet &receivers)
     {
-        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
-        if (receivers.isEmpty()) { return;  }
-        CSimulatedAircraft myAircraft(getOwnAircraft());
-        if (this->m_loginMode == LoginNormal)
-        {
-            VatInterimPilotPosition pos;
-            pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
-            pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
-            pos.pitch        = myAircraft.getPitch().value(CAngleUnit::deg());
-            pos.bank         = myAircraft.getBank().value(CAngleUnit::deg());
-            pos.latitude     = myAircraft.latitude().value(CAngleUnit::deg());
-            pos.longitude    = myAircraft.longitude().value(CAngleUnit::deg());
-
-            for (const auto &receiver : receivers)
-            {
-                Vat_SendInterimPilotUpdate(m_net.data(), toFSD(receiver), &pos);
-            }
-        }
+        m_interimPositionReceivers = receivers;
     }
 
     void CNetworkVatlib::sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign)

@@ -69,8 +69,6 @@ namespace BlackCore
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
         this->setObjectName("CAirspaceMonitor");
-        m_interimPositionUpdateTimer.setObjectName(this->objectName().append(":m_interimPositionUpdateTimer"));
-        m_interimPositionUpdateTimer.setInterval(1000);
 
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CAirspaceMonitor::ps_atcPositionUpdate);
         this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CAirspaceMonitor::ps_atisReceived);
@@ -89,7 +87,6 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::customFSinnPacketReceived, this, &CAirspaceMonitor::ps_customFSinnPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::ps_serverReplyReceived);
         this->connect(this->m_network, &INetwork::aircraftConfigPacketReceived, this, &CAirspaceMonitor::ps_aircraftConfigReceived);
-        this->connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CAirspaceMonitor::ps_sendInterimPositions);
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
@@ -225,6 +222,8 @@ namespace BlackCore
         CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositonUpdates));
         QWriteLocker l(&m_lockAircraft);
         int c = m_aircraftInRange.applyIfCallsign(callsign, vm);
+        CSimulatedAircraftList enabledAircrafts = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
+        m_network->setInterimPositionReceivers(enabledAircrafts.getCallsigns());
         return c > 0;
     }
 
@@ -429,29 +428,10 @@ namespace BlackCore
         }
     }
 
-    void CAirspaceMonitor::enableFastPositionSending(bool enable)
-    {
-        if (enable)
-        {
-            m_interimPositionUpdateTimer.start();
-        }
-        else
-        {
-            m_interimPositionUpdateTimer.stop();
-        }
-        m_sendInterimPositions = enable;
-    }
-
     void CAirspaceMonitor::gracefulShutdown()
     {
         if (this->m_analyzer) { this->m_analyzer->gracefulShutdown(); }
         QObject::disconnect(this);
-        this->enableFastPositionSending(false);
-    }
-
-    bool CAirspaceMonitor::isFastPositionSendingEnabled() const
-    {
-        return m_sendInterimPositions;
     }
 
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)
@@ -1091,14 +1071,6 @@ namespace BlackCore
         // here I expect always a changed value
         QWriteLocker l(&m_lockAircraft);
         this->m_aircraftInRange.setAircraftParts(callsign, parts);
-    }
-
-    void CAirspaceMonitor::ps_sendInterimPositions()
-    {
-        Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
-        if (!this->m_connected || !m_sendInterimPositions) { return; }
-        CSimulatedAircraftList aircrafts = m_aircraftInRange.findBy(&CSimulatedAircraft::fastPositionUpdates, true);
-        m_network->sendInterimPositions(aircrafts.getCallsigns());
     }
 
     void CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation)

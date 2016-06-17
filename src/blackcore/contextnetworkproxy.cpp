@@ -199,16 +199,6 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateFastPositionEnabled"), callsign, enableFastPositionSending, originator);
     }
 
-    bool CContextNetworkProxy::isFastPositionSendingEnabled() const
-    {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isFastPositionSendingEnabled"));
-    }
-
-    void CContextNetworkProxy::enableFastPositionSending(bool enable)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("enableFastPositionSending"), enable);
-    }
-
     void CContextNetworkProxy::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setFastPositionEnabledCallsigns"), callsigns);

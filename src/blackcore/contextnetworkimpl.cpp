@@ -587,20 +587,6 @@ namespace BlackCore
         return this->m_airspace->getLatestAirspaceAircraftSnapshot();
     }
 
-    bool CContextNetwork::isFastPositionSendingEnabled() const
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-        Q_ASSERT(this->m_airspace);
-        return m_airspace->isFastPositionSendingEnabled();
-    }
-
-    void CContextNetwork::enableFastPositionSending(bool enable)
-    {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable; }
-        Q_ASSERT(this->m_airspace);
-        m_airspace->enableFastPositionSending(enable);
-    }
-
     void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsigns; }
