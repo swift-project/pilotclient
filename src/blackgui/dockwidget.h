@@ -120,6 +120,9 @@ namespace BlackGui
         //! Remember widget state
         void saveToSettings();
 
+        //! Reset margin settings
+        void resetSettings();
+
         //! Set title and internally keep a backup
         void setWindowTitle(const QString &title);
 
@@ -139,6 +142,9 @@ namespace BlackGui
 
         //! Constructor
         CDockWidget(bool allowStatusBar, QWidget *parent = nullptr);
+
+        //! Set margins from settings
+        void setMargins();
 
         //! Margins when window is floating
         void setMarginsWhenFloating(const QMargins &margins);
@@ -223,7 +229,6 @@ namespace BlackGui
         bool m_allowStatusBar        = true;
         bool m_windowTitleWhenDocked = true;
         bool m_wasAlreadyFloating    = false;
-        bool m_resetedFloating       = false;
         bool m_selected              = false;         //!< selected when tabbed
         bool m_dockWidgetVisible     = false;         //!< logical visible, not to be confused with QDockWidget::isVisible()
         bool m_wasFrameless          = false;         //!< frameless when last floating

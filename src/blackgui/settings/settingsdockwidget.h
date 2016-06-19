@@ -47,6 +47,12 @@ namespace BlackGui
             //! Destructor.
             ~CSettingsDockWidget() {}
 
+            //! Reset margins to default
+            void resetMarginsToDefault();
+
+            //! Reset to defaults
+            void reset();
+
             //! Set margins for given dock widget
             void setMarginsWhenFramelessFloating(const QMargins &margins);
 
@@ -137,6 +143,9 @@ namespace BlackGui
 
             //! Get setting or init by estimated default values
             CSettingsDockWidget getByNameOrInitToDefault(const QString &name);
+
+            //! Reset to defaults
+            void resetToDefaults(const QString &name);
         };
 
         //! Trait for settings for dock widget

@@ -20,6 +20,20 @@ namespace BlackGui
         CSettingsDockWidget::CSettingsDockWidget()
         { }
 
+        void CSettingsDockWidget::resetMarginsToDefault()
+        {
+            // this->setMarginsWhenFloating(QMargins(0, 3, 15, 35)); // found by trial and error on windows
+            this->setMarginsWhenFloating(QMargins(0, 0, 0, 0));
+            this->setMarginsWhenFramelessFloating(QMargins(0, 0, 0, 0));
+            this->setMarginsWhenDocked(QMargins(0, 0, 0, 0));
+        }
+
+        void CSettingsDockWidget::reset()
+        {
+            this->resetMarginsToDefault();
+            this->m_geometry = "";
+        }
+
         void CSettingsDockWidget::setMarginsWhenFramelessFloating(const QMargins &margins)
         {
             this->m_floatingFramelessMargins = marginsToString(margins);
@@ -161,9 +175,17 @@ namespace BlackGui
 
             // default values can be set here, this could be enhanced if needed
             // e.g. by platform dependent defaults
-            s.setMarginsWhenFloating(QMargins(0, 3, 15, 35)); // found by trial and error on windows
+            s.reset();
             this->insert(name, s);
             return s;
+        }
+
+        void CSettingsDockWidgets::resetToDefaults(const QString &name)
+        {
+            if (this->contains(name))
+            {
+                this->remove(name);
+            }
         }
     } // ns
 } // ns

@@ -63,6 +63,18 @@ namespace BlackGui
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::ps_onVisibilityChanged);
     }
 
+    void CDockWidget::setMargins()
+    {
+        if (this->isFloating())
+        {
+            this->setContentsMargins(this->isFrameless() ? this->getMarginsWhenFramelessFloating() : this->getMarginsWhenFloating());
+        }
+        else
+        {
+            this->setContentsMargins(this->getMarginsWhenDocked());
+        }
+    }
+
     CDockWidget::CDockWidget(QWidget *parent): CDockWidget(true, parent)
     { }
 
@@ -175,7 +187,6 @@ namespace BlackGui
     void CDockWidget::resetWasAlreadyFloating()
     {
         this->m_wasAlreadyFloating = false;
-        this->m_resetedFloating = true;
     }
 
     void CDockWidget::setPreferredSizeWhenFloating(const QSize &size)
@@ -204,12 +215,6 @@ namespace BlackGui
             }
         }
 
-        // margins
-        if (this->isFloating())
-        {
-            this->setContentsMargins(frameless ? this->getMarginsWhenFramelessFloating() : this->getMarginsWhenFloating());
-        }
-
         // resize
         if (frameless)
         {
@@ -218,6 +223,7 @@ namespace BlackGui
             this->resize(innerWidget->size());
         }
 
+        this->setMargins();
         this->forceStyleSheetUpdate(); // force style sheet reload
     }
 
@@ -280,6 +286,7 @@ namespace BlackGui
         {
             return this->restoreGeometry(geo);
         }
+        this->setMargins();
         return true;
     }
 
@@ -331,16 +338,14 @@ namespace BlackGui
         {
             contextMenu->addAction(BlackMisc::CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
         }
+
+        // Margin actions
         contextMenu->addAction(BlackMisc::CIcons::load16(), "Restore", this, &CDockWidget::restoreFromSettings);
         contextMenu->addAction(BlackMisc::CIcons::save16(), "Save state", this, &CDockWidget::saveToSettings);
-
-        // Margin action
-        if (this->isFloating())
-        {
-            this->m_input->setMargins(this->contentsMargins());
-            contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Margins", this, &CDockWidget::ps_dummy);
-            contextMenu->addAction(this->m_marginMenuAction);
-        }
+        contextMenu->addAction(BlackMisc::CIcons::save16(), "Reset to defaults", this, &CDockWidget::resetSettings);
+        this->m_input->setMargins(this->contentsMargins());
+        contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Margins", this, &CDockWidget::ps_dummy);
+        contextMenu->addAction(this->m_marginMenuAction);
     }
 
     void CDockWidget::initialFloating()
@@ -377,6 +382,7 @@ namespace BlackGui
 
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
     {
+        this->setMargins();
         if (topLevel)
         {
             if (this->m_windowTitleBackup != QDockWidget::windowTitle())
@@ -392,12 +398,6 @@ namespace BlackGui
             {
                 if (m_wasFrameless) { setFrameless(true); }
             }
-
-            this->setContentsMargins(
-                this->isFrameless() ?
-                this->getMarginsWhenFramelessFloating() :
-                this->getMarginsWhenFloating()
-            );
             this->m_statusBar.show();
             this->m_wasAlreadyFloating = true;
         }
@@ -409,7 +409,6 @@ namespace BlackGui
             if (!this->m_windowTitleWhenDocked) { QDockWidget::setWindowTitle(""); }
             this->m_statusBar.hide();
             this->setEmptyTitleBar();
-            this->setContentsMargins(this->getMarginsWhenDocked());
 
             // sometimes floating sets a new minimum size, here we reset it
             if (this->minimumHeight() > this->m_initialDockedMinimumSize.height())
@@ -509,11 +508,12 @@ namespace BlackGui
             this->setMarginsWhenDocked(margins);
         }
         this->setContentsMargins(margins);
+        this->repaint();
     }
 
     void CDockWidget::ps_settingsChanged()
     {
-        // void
+        // void, normally not used
     }
 
     void CDockWidget::ps_dummy()
@@ -539,14 +539,14 @@ namespace BlackGui
         CSettingsDockWidgets all = this->m_settings.get();
         if (all.contains(name)) { return; }
         all.getByNameOrInitToDefault(name);
-        this->m_settings.set(all);
+        this->m_settings.setAndSave(all);
     }
 
     QString CDockWidget::getNameForSettings() const
     {
-        const QString name(this->m_windowTitleBackup.toLower().remove(' ')); // let`s see how far I get with that
-        Q_ASSERT_X(!name.isEmpty(), Q_FUNC_INFO, "no name");
-        return name;
+        const QString n(this->objectName().toLower().remove(' '));
+        Q_ASSERT_X(!n.isEmpty(), Q_FUNC_INFO, "No settings name");
+        return n;
     }
 
     CSettingsDockWidget CDockWidget::getSettings() const
@@ -578,5 +578,13 @@ namespace BlackGui
         s.setFrameless(this->isFrameless());
         s.setGeometry(this->saveGeometry());
         this->setSettings(s);
+    }
+
+    void CDockWidget::resetSettings()
+    {
+        CSettingsDockWidget s = this->getSettings();
+        s.reset();
+        this->setSettings(s);
+        this->restoreFromSettings();
     }
 } // namespace
