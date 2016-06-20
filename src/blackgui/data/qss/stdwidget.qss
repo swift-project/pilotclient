@@ -81,11 +81,7 @@ BlackGui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame[doc
 }
 
 BlackGui--CDockWidgetInfoArea[framelessDockWidget="false"] > QWidget > QFrame[dockwidget="innerwidget"] {
-
-}
-
-BlackGui--CDockWidgetInfoArea > QMenu > QMenuWidget {
-  border: 0px; /* reserve space for selection border */
+  /* void */
 }
 
 /* required when info area is not floating */
@@ -322,7 +318,7 @@ QMenuBar {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
   padding: 5px 0px 0px 10px;
-  margin: 0px 0px 20px 0px; /* removes overlapping bar in frameless mode, why bottom margin helps here, no idea, bug? */
+  margin: 0px 0px 30px 0px; /* removes overlapping bar in frameless mode, why bottom margin helps here, no idea, bug? */
 }
 
 QMenuBar::item {
@@ -340,15 +336,29 @@ QMenuBar::item:pressed {
   background: black;
 }
 
+BlackGui--CDockWidgetInfoArea > QMenu > QMenuWidget {
+  border: 0px; /* reserve space for selection border */
+}
+
+/* reset menu style */
 QMenu {
-  border: 2px solid darkslategray; /* reserve space for selection border */
-  background: lightgray;
   color: black;
-  padding: 3px;
+  font-style: normal;
+  font-weight: normal;
+  padding: 5px;
 }
 
 QMenu::item {
   padding: 4px 25px 4px 20px;
+}
+
+/* fix margin style */
+QMenu > QFrame {
+  color: black;
+}
+
+BlackGui--Components--CMarginsInput {
+  color: black;
 }
 
 QScrollArea {
