@@ -57,7 +57,7 @@ namespace BlackCoreTest
     void CTestReaders::readIcaoData()
     {
         const CUrl url(sApp->getGlobalSetup().getDbIcaoReaderUrl());
-        if (!this->pingServer(url)) { return; }
+        if (!this->pingServer(url)) { QSKIP("Server not reachable."); }
         m_icaoReader->start();
         m_icaoReader->readInBackgroundThread(CEntityFlags::AllIcaoEntities, QDateTime());
 
@@ -86,7 +86,7 @@ namespace BlackCoreTest
     void CTestReaders::readModelData()
     {
         const CUrl url(sApp->getGlobalSetup().getDbModelReaderUrl());
-        if (!this->pingServer(url)) { return; }
+        if (!this->pingServer(url)) { QSKIP("Server not reachable."); }
         m_modelReader->start();
         m_modelReader->readInBackgroundThread(CEntityFlags::ModelEntity, QDateTime());
 
