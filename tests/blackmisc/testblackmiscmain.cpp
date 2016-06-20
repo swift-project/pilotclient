@@ -27,7 +27,9 @@
 #include "testvaluecache.h"
 #include "testvariantandmap.h"
 #include "testweather.h"
+#include "blackmisc/test.h"
 
+#include <QStringList>
 #include <QTest>
 
 namespace BlackMiscTest
@@ -37,32 +39,56 @@ namespace BlackMiscTest
      */
     int CBlackMiscTestMain::unitMain(int argc, char *argv[])
     {
+        BlackMisc::CTest test(argc, argv);
+
         int status = 0;
         {
-            CTestPhysicalQuantities pqBaseTests ;
+            CTestPhysicalQuantities pqBaseTests;
+            status |= test.exec(&pqBaseTests, "blackmisc_physicalQuantities");
+        }
+        {
             CTestAviation avBaseTests;
+            status |= test.exec(&avBaseTests, "blackmisc_aviation");
+        }
+        {
             CTestGeo geoTests;
+            status |= test.exec(&geoTests, "blackmisc_geo");
+        }
+        {
             CTestContainers containerTests;
+            status |= test.exec(&containerTests, "blackmisc_containers");
+        }
+        {
             CTestVariantAndMap variantAndMap;
+            status |= test.exec(&variantAndMap, "blackmisc_variantandmap");
+        }
+        {
             CTestInput inputTests;
+            status |= test.exec(&inputTests, "blackmisc_input");
+        }
+        {
             CTestIdentifier identifierTests;
+            status |= test.exec(&identifierTests, "blackmisc_identifier");
+        }
+        {
             CTestSlot slotTests;
+            status |= test.exec(&slotTests, "blackmisc_slot");
+        }
+        {
             CTestValueCache valueCacheTests;
+            status |= test.exec(&valueCacheTests, "blackmisc_valuecache");
+        }
+        {
             CTestWeather weatherTests;
+            status |= test.exec(&weatherTests, "blackmisc_weather");
+        }
+        {
             CTestMath mathTests;
+            status |= test.exec(&mathTests, "blackmisc_math");
+        }
+        {
             CTestLibraryPath libraryPathTests;
-            status |= QTest::qExec(&pqBaseTests, argc, argv);
-            status |= QTest::qExec(&avBaseTests, argc, argv);
-            status |= QTest::qExec(&geoTests, argc, argv);
-            status |= QTest::qExec(&identifierTests, argc, argv);
-            status |= QTest::qExec(&containerTests, argc, argv);
-            status |= QTest::qExec(&variantAndMap, argc, argv);
-            status |= QTest::qExec(&inputTests, argc, argv);
-            status |= QTest::qExec(&slotTests, argc, argv);
-            status |= QTest::qExec(&valueCacheTests, argc, argv);
-            status |= QTest::qExec(&weatherTests, argc, argv);
-            status |= QTest::qExec(&mathTests, argc, argv);
-            status |= QTest::qExec(&libraryPathTests, argc, argv);
+            status |= test.exec(&libraryPathTests, "blackmisc_librarypath");
         }
         return status;
     }

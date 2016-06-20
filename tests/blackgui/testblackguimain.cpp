@@ -16,7 +16,9 @@
 
 #include "testblackguimain.h"
 #include "testutils.h"
+#include "blackmisc/test.h"
 
+#include <QStringList>
 #include <QtTest>
 
 namespace BlackGuiTest
@@ -26,10 +28,12 @@ namespace BlackGuiTest
      */
     int CBlackGuiTestMain::unitMain(int argc, char *argv[])
     {
+        BlackMisc::CTest test(argc, argv);
+
         int status = 0;
         {
             CTestGuiUtilities utilityTests;
-            status |= QTest::qExec(&utilityTests, argc, argv);
+            status |= test.exec(&utilityTests, "blackgui_guiutilities");
         }
         return status;
     }

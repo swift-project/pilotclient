@@ -18,25 +18,29 @@
 #include "testinterpolator.h"
 #include "testnetwork.h"
 #include "testreaders.h"
+#include "blackmisc/test.h"
 
+#include <QStringList>
 #include <QtTest>
 
 namespace BlackCoreTest
 {
     int CBlackCoreTestMain::unitMain(int argc, char *argv[])
     {
+        BlackMisc::CTest test(argc, argv);
+
         int status = 0;
         {
             CTestInterpolator interpolatorTests;
-            status |= QTest::qExec(&interpolatorTests, argc, argv);
+            status |= test.exec(&interpolatorTests, "blackcore_interpolator");
         }
         {
             CTestReaders readersTests;
-            status |= QTest::qExec(&readersTests, argc, argv);
+            status |= test.exec(&readersTests, "blackcore_readers");
         }
         {
             CTestNetwork networkTests;
-            status |= QTest::qExec(&networkTests, argc, argv);
+            status |= test.exec(&networkTests, "blackcore_network");
         }
         return status;
     }
