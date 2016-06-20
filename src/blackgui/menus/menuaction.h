@@ -170,6 +170,10 @@ namespace BlackGui
             //! View load/save
             static const QString &pathViewLoadSave()  { static const QString p("View.17.LoadSave"); return p; }
 
+            // ---- nested dock widgets ----
+
+            //! Nested dock widget
+            static const QString &pathDockWidgetNested()  { static const QString p("DockWidget.Nested"); return p; }
             //! @}
 
         private:

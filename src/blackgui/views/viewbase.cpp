@@ -611,6 +611,16 @@ namespace BlackGui
             if (menuActions.isEmpty()) { return; }
             menuActions.toQMenu(menu, true);
 
+            // Nested dock widget menu
+            const CDockWidgetInfoArea *dockWidget = this->getDockWidgetInfoArea();
+            if (dockWidget)
+            {
+                if (!menu.isEmpty()) { menu.addSeparator(); }
+                const QString mm = QString("Dock widget '%1'").arg(dockWidget->windowTitleOrBackup());
+                QMenu *dockWidgetSubMenu = menu.addMenu(CIcons::text16(), mm);
+                dockWidget->addToContextMenu(dockWidgetSubMenu);
+            }
+
             QPoint globalPos = this->mapToGlobal(pos);
             menu.exec(globalPos);
         }

@@ -217,11 +217,11 @@ namespace BlackGui
         void ps_dummy();
 
     private:
-        QWidget *m_titleBarWidgetEmpty    = nullptr;  //!< replacing default title bar
-        QWidget *m_titleBarWidgetOriginal = nullptr;  //!< the original title bar
-        QWidgetAction *m_marginMenuAction = nullptr;  //!< menu action for margins
+        QWidget *m_titleBarWidgetEmpty     = nullptr; //!< replacing default title bar
+        QWidget *m_titleBarWidgetOriginal  = nullptr; //!< the original title bar
+        QWidgetAction *m_marginMenuAction  = nullptr; //!< menu widget(!) action for margin widget
         Components::CMarginsInput *m_input = nullptr; //!< margins widget
-        CManagedStatusBar m_statusBar;                //!< Status bar when floating
+        CManagedStatusBar m_statusBar;                //!< status bar when floating
         QString m_windowTitleBackup;                  //!< original title, even if the widget title is deleted for layout purposes
         QSize m_preferredSizeWhenFloating;            //!< preferred size when floating 1st time
         QSize m_initialDockedMinimumSize;             //!< minimum size before first floating

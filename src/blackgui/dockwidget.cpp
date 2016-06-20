@@ -241,7 +241,7 @@ namespace BlackGui
 
     void CDockWidget::toggleFloating()
     {
-        bool floating = !this->isFloating();
+        const bool floating = !this->isFloating();
         if (!floating) { this->setFrameless(false); }
         this->setFloating(floating);
     }

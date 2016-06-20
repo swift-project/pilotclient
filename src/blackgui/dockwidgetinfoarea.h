@@ -50,10 +50,11 @@ namespace BlackGui
         //! Visible widget
         bool isVisibleWidget() const;
 
-    protected:
         //! Contribute to menu
+        //! \remarks made public so other classes can nest this submenu
         virtual void addToContextMenu(QMenu *contextMenu) const override;
 
+    protected:
         //! \copydoc CDockWidget::initialFloating
         virtual void initialFloating() override;
 

@@ -158,19 +158,19 @@ namespace BlackGui
 
         CMenuAction CMenuActions::addMenu(const QIcon &icon, const QString &title, const QString &path)
         {
-            CMenuAction menuAction(icon, title, path);
             const QList<CMenuAction> exisitingMenu(this->getMenuActions(path));
             if (!exisitingMenu.isEmpty())
             {
-                const CMenuAction existing(exisitingMenu.first());
+                const CMenuAction existingAction(exisitingMenu.first());
                 Q_ASSERT_X(exisitingMenu.size() > 1, Q_FUNC_INFO, "Redundant menu entries");
-                Q_ASSERT_X(existing.getTitle() != title, Q_FUNC_INFO, "Title mismatch");
-                if (icon.isNull() && existing.hasIcon()) { return existing.getQAction(); }
+                Q_ASSERT_X(existingAction.getTitle() != title, Q_FUNC_INFO, "Title mismatch");
+                if (icon.isNull() || existingAction.hasIcon()) { return existingAction.getQAction(); }
 
                 //! \todo replace if we have icon now, but not before
-                //! \todo avoid multiple menu entries
+                return existingAction;
             }
 
+            CMenuAction menuAction(icon, title, path);
             menuAction.setSubMenu(true);
             return this->addAction(menuAction);
         }

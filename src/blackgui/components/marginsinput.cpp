@@ -9,6 +9,7 @@
 
 #include "marginsinput.h"
 #include "ui_marginsinput.h"
+#include "blackgui/stylesheetutility.h"
 #include <QIntValidator>
 
 namespace BlackGui
@@ -63,6 +64,13 @@ namespace BlackGui
             t = ok ? t : 0;
             const QMargins m(l, t, r, b);
             return m;
+        }
+
+        void CMarginsInput::paintEvent(QPaintEvent *event)
+        {
+            bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
+            if (s) { return; }
+            QFrame::paintEvent(event);
         }
 
         void CMarginsInput::ps_Confirmed()

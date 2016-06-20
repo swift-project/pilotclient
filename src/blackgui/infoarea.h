@@ -79,6 +79,11 @@ namespace BlackGui
         //! \param parent which will own the action (deletion)
         QList<QAction *> getInfoAreaToggleFloatingActions(QWidget *parent) const;
 
+        //! Create a list of actions to restore the info areas.
+        //! This could be used in a menu or somewhere else.
+        //! \param parent which will own the action (deletion)
+        QList<QAction *> getInfoAreaRestoreActions(QWidget *parent) const;
+
         //! Docked area indexes
         QList<int> getAreaIndexesDockedOrFloating(bool floating) const;
 
@@ -122,6 +127,12 @@ namespace BlackGui
 
         //! Toggle area floating (sender is QAction)
         void toggleAreaFloatingByAction();
+
+        //! Restore dock widget`s state (from settings)
+        void restoreDockWidgetInfoArea();
+
+        //! Restore dock widget`s state (from settings)
+        void restoreDockWidgetInfoAreaByIndex(int areaIndex);
 
         //! Select next left tab
         void selectLeftTab();

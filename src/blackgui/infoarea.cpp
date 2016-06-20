@@ -99,6 +99,9 @@ namespace BlackGui
             menu->addSeparator();
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
             QMenu *subMenuDisplay = new QMenu("Display", menu);
+            QMenu *subMenuRestore = new QMenu("Restore", menu);
+            subMenuRestore->setIcon(CIcons::load16());
+            subMenuRestore->addActions(this->getInfoAreaRestoreActions(subMenuRestore));
             subMenuDisplay->addActions(this->getInfoAreaSelectActions(subMenuDisplay));
 
             QSignalMapper *signalMapperToggleFloating = new QSignalMapper(menu);
@@ -128,6 +131,7 @@ namespace BlackGui
 
             menu->addMenu(subMenuDisplay);
             menu->addMenu(subMenuToggleFloat);
+            menu->addMenu(subMenuRestore);
 
             // where and how to display tab bar
             menu->addSeparator();
@@ -229,6 +233,25 @@ namespace BlackGui
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaToggleFloatingActions:").append(wt));
             connect(action, &QAction::triggered, this, &CInfoArea::toggleAreaFloatingByAction);
+            actions.append(action);
+            i++;
+        }
+        return actions;
+    }
+
+    QList<QAction *> CInfoArea::getInfoAreaRestoreActions(QWidget *parent) const
+    {
+        Q_ASSERT(parent);
+        int i = 0;
+        QList<QAction *> actions;
+        for (const CDockWidgetInfoArea *dockWidgetInfoArea : m_dockWidgetInfoAreas)
+        {
+            const QPixmap pm = this->indexToPixmap(i);
+            const QString wt(dockWidgetInfoArea->windowTitleBackup());
+            QAction *action = new QAction(QIcon(pm), wt, parent);
+            action->setData(i);
+            action->setObjectName(this->objectName().append(":getInfoAreaRestoreActions:").append(wt));
+            connect(action, &QAction::triggered, this, &CInfoArea::restoreDockWidgetInfoArea);
             actions.append(action);
             i++;
         }
@@ -353,6 +376,25 @@ namespace BlackGui
         Q_ASSERT(action);
         int index = action->data().toInt();
         this->toggleFloatingByIndex(index);
+    }
+
+    void CInfoArea::restoreDockWidgetInfoArea()
+    {
+        const QObject *sender = QObject::sender();
+        Q_ASSERT(sender);
+        const QAction *action = qobject_cast<const QAction *>(sender);
+        Q_ASSERT(action);
+        int index = action->data().toInt();
+        this->restoreDockWidgetInfoAreaByIndex(index);
+    }
+
+    void CInfoArea::restoreDockWidgetInfoAreaByIndex(int areaIndex)
+    {
+        if (!this->isValidAreaIndex(areaIndex)) { return; }
+        CDockWidgetInfoArea *dw = this->m_dockWidgetInfoAreas.at(areaIndex);
+        Q_ASSERT(dw);
+        if (!dw) return;
+        dw->restoreFromSettings();
     }
 
     void CInfoArea::selectLeftTab()

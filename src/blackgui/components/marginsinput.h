@@ -42,6 +42,10 @@ namespace BlackGui
             //! Current values of margins
             QMargins getMargins() const;
 
+        protected:
+            //! \copydoc QFrame::paintEvent
+            virtual void paintEvent(QPaintEvent *event) override;
+
         signals:
             //! Margins changed
             void changedMargins(const QMargins &margins);
