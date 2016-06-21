@@ -16,40 +16,25 @@
   <property name="currentIndex" stdset="0">
    <number>0</number>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="vl_WeatherComponent">
    <property name="leftMargin">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="topMargin">
     <number>7</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>3</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>3</number>
    </property>
    <item>
     <widget class="QGroupBox" name="gb_weatherControl">
      <property name="title">
       <string>Weather Control</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <property name="leftMargin">
-       <number>1</number>
-      </property>
-      <property name="topMargin">
-       <number>7</number>
-      </property>
-      <property name="rightMargin">
-       <number>1</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>1</number>
-      </property>
+     <layout class="QGridLayout" name="gl_WeatherComponent">
       <item row="0" column="0">
        <widget class="QComboBox" name="cb_weatherScenario"/>
       </item>
@@ -61,22 +46,7 @@
      <property name="title">
       <string>Weather Display</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <property name="spacing">
-       <number>6</number>
-      </property>
+     <layout class="QGridLayout" name="gl_weatherDisplay">
       <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="cb_UseOwnAcftPosition">
         <property name="text">
@@ -165,7 +135,17 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="BlackGui::Views::CTemperatureLayerView" name="tvp_TemperatureLayers"/>
+           <widget class="BlackGui::Views::CTemperatureLayerView" name="tvp_TemperatureLayers">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -190,7 +170,17 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="BlackGui::Views::CCloudLayerView" name="tvp_CloudLayers"/>
+           <widget class="BlackGui::Views::CCloudLayerView" name="tvp_CloudLayers">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -215,7 +205,17 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="BlackGui::Views::CWindLayerView" name="tvp_WindLayers"/>
+           <widget class="BlackGui::Views::CWindLayerView" name="tvp_WindLayers">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+           </widget>
           </item>
          </layout>
         </widget>
