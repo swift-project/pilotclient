@@ -123,6 +123,7 @@ void CSwiftData::initMenu()
     sGui->addMenuFile(*this->ui->menu_File);
     sGui->addMenuInternals(*this->ui->menu_Internals);
     sGui->addMenuWindow(*this->ui->menu_Window);
+    sGui->addMenuHelp(*this->ui->menu_Help);
 }
 
 void CSwiftData::performGracefulShutdown()

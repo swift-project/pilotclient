@@ -44,6 +44,8 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
+using namespace BlackCore::Data;
 
 BlackGui::CGuiApplication *sGui = nullptr; // set by constructor
 
@@ -450,6 +452,21 @@ namespace BlackGui
             {
                 CLogMessage(w).info("Window not always on top");
             }
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+    }
+
+    void CGuiApplication::addMenuHelp(QMenu &menu)
+    {
+        QWidget *w = mainApplicationWindow();
+        if (!w) { return; }
+
+        const CGlobalSetup gs = this->getGlobalSetup();
+        const CUrl helpPage = gs.getHelpPageUrl();
+        QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
+        bool c = connect(a, &QAction::triggered, this, [helpPage]()
+        {
+            QDesktopServices::openUrl(helpPage);
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
     }

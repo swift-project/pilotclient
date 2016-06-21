@@ -84,6 +84,9 @@ namespace BlackCore
             //! Home page url
             BlackMisc::Network::CUrl getDbHomePageUrl() const;
 
+            //! Help page URL
+            BlackMisc::Network::CUrl getHelpPageUrl() const;
+
             //! Login service
             BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
 

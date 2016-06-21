@@ -72,5 +72,6 @@ void SwiftGuiStd::initMenus()
     sGui->addMenuFile(*this->ui->menu_File);
     sGui->addMenuInternals(*this->ui->menu_Internals);
     sGui->addMenuWindow(*this->ui->menu_Window);
+    sGui->addMenuHelp(*this->ui->menu_Help);
     this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
 }
