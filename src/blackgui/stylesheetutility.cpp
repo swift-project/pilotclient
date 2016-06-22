@@ -361,6 +361,7 @@ namespace BlackGui
         // 1) QStylePainter: modern version of
         //    usedWidget->style()->drawPrimitive(element, &opt, &p, usedWidget);
         // 2) With viewport based widgets viewport has to be used
+        // see http://stackoverflow.com/questions/37952348/enable-own-widget-for-stylesheet
         QAbstractScrollArea *sa = qobject_cast<QAbstractScrollArea *>(usedWidget);
         QStylePainter p(
             sa ? sa->viewport() :

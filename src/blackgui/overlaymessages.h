@@ -113,9 +113,6 @@ namespace BlackGui
         //! \copydoc QFrame::keyPressEvent
         virtual void keyPressEvent(QKeyEvent *event) override;
 
-        //! \copydoc QFrame::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
-
     private slots:
         //! Stylesheet changed
         void ps_onStyleSheetsChanged();

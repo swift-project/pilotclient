@@ -61,17 +61,14 @@ namespace BlackGui
             //! Style sheet has changed
             void ps_onStyleSheetsChanged();
 
-            //! \copydoc QMainWindow::mouseMoveEvent
+            //! \name Base class events
+            //! @{
             virtual void mouseMoveEvent(QMouseEvent *event) override;
-
-            //! \copydoc QMainWindow::mousePressEvent
             virtual void mousePressEvent(QMouseEvent *event) override;
-
-            //! \copydoc QMainWindow::mousePressEvent
             virtual void changeEvent(QEvent *evt) override;
-
-            //! \copydoc CEnableForFramelessWindow::windowFlagsChanged
             virtual void windowFlagsChanged() override;
+            virtual void paintEvent(QPaintEvent *event) override;
+            //! @}
 
         private slots:
             //! Context menu

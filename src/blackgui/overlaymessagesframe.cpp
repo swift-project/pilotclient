@@ -83,13 +83,6 @@ namespace BlackGui
         this->repaint();
     }
 
-    void COverlayMessagesFrame::paintEvent(QPaintEvent *event)
-    {
-        bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
-        if (s) { return; }
-        QFrame::paintEvent(event);
-    }
-
     void COverlayMessagesFrame::keyPressEvent(QKeyEvent *event)
     {
         if (m_overlayMessages && event->key() == Qt::Key_Escape)

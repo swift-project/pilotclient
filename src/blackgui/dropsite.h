@@ -65,9 +65,6 @@ namespace BlackGui
         //! \copydoc QWidget::dropEvent
         virtual void dropEvent(QDropEvent *event) override;
 
-        //! \copydoc QWidget::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
-
     private slots:
         //! Style has been changed
         void ps_onStyleSheetsChanged();

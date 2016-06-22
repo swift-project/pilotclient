@@ -66,13 +66,6 @@ namespace BlackGui
             return m;
         }
 
-        void CMarginsInput::paintEvent(QPaintEvent *event)
-        {
-            bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
-            if (s) { return; }
-            QFrame::paintEvent(event);
-        }
-
         void CMarginsInput::ps_Confirmed()
         {
             const QMargins m(this->getMargins());

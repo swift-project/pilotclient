@@ -359,12 +359,6 @@ namespace BlackGui
             connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::ps_toggleResizeMode);
         }
 
-        void CViewBaseNonTemplate::paintEvent(QPaintEvent *event)
-        {
-            QTableView::paintEvent(event);
-            // CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
-        }
-
         void CViewBaseNonTemplate::showEvent(QShowEvent *event)
         {
             if (this->isShowingLoadIndicator())

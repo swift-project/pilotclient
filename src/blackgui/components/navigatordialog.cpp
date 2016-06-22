@@ -152,6 +152,13 @@ namespace BlackGui
             this->buildNavigator(this->m_currentColumns);
         }
 
+        void CNavigatorDialog::paintEvent(QPaintEvent *event)
+        {
+            bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
+            if (s) { return; }
+            QDialog::paintEvent(event);
+        }
+
         void CNavigatorDialog::ps_showContextMenu(const QPoint &pos)
         {
             QPoint globalPos = this->mapToGlobal(pos);

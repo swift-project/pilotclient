@@ -321,7 +321,6 @@ namespace BlackGui
 
             //! \name Functions from QTableView
             //! @{
-            virtual void paintEvent(QPaintEvent *event) override;
             virtual void showEvent(QShowEvent *event) override;
             virtual void dragEnterEvent(QDragEnterEvent *event) override;
             virtual void dragMoveEvent(QDragMoveEvent *event) override;

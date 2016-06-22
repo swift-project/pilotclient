@@ -318,12 +318,4 @@ namespace BlackGui
             m_autoCloseTimer.stop();
         }
     }
-
-    void BlackGui::COverlayMessages::paintEvent(QPaintEvent *event)
-    {
-        bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
-        if (s) { return; }
-        QFrame::paintEvent(event);
-    }
-
 } // ns

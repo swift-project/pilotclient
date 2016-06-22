@@ -81,9 +81,6 @@ namespace BlackGui
         void showOverlayImage(const BlackMisc::CPixmap &pixmap, int timeOutMs = -1);
 
     protected:
-        //! \copydoc QFrame::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
-
         //! \copydoc QFrame::keyPressEvent
         virtual void keyPressEvent(QKeyEvent *event) override;
 

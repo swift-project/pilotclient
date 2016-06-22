@@ -89,11 +89,4 @@ namespace BlackGui
     {
         // style sheet changes go here
     }
-
-    void CDropSite::paintEvent(QPaintEvent *event)
-    {
-        Q_UNUSED(event);
-        CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
-    }
-
 } // ns
