@@ -14,10 +14,13 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforframelesswindow.h"
+#include "blackgui/settings/settingsnavigator.h"
 
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
+#include <QWidgetAction>
+#include <QGridLayout>
 
 class QEvent;
 class QMenu;
@@ -31,6 +34,8 @@ namespace BlackGui
 {
     namespace Components
     {
+        class CMarginsInput;
+
         /*!
          * Navigator dialog
          */
@@ -57,6 +62,12 @@ namespace BlackGui
             //! Toggle visibility
             void toggleNavigator();
 
+            //! Restore from settings
+            void restoreFromSettings();
+
+            //! Save to settings
+            void saveToSettings();
+
         protected:
             //! Style sheet has changed
             void ps_onStyleSheetsChanged();
@@ -77,6 +88,15 @@ namespace BlackGui
             //! Change the layout
             void ps_changeLayout();
 
+            //! Margins context menu
+            void ps_menuChangeMargins(const QMargins &margins);
+
+            //! Dummy slot
+            void ps_dummy();
+
+            //! Changed settigs
+            void ps_settingsChanged();
+
         private:
             //! Insert own actions
             void insertOwnActions();
@@ -87,9 +107,18 @@ namespace BlackGui
             //! How many columns for given rows
             int columnsForRows(int rows);
 
+            //! Get my own grid layout
+            QGridLayout *myGridLayout() const;
+
+            //! Adjust navigator size
+            void adjustNavigatorSize(QGridLayout *layout = nullptr);
+
             QScopedPointer<Ui::CNavigatorDialog> ui;
-            bool m_firstBuild = true;
+            bool m_firstBuild  = true;
             int  m_currentColumns = 1;
+            QWidgetAction *m_marginMenuAction  = nullptr; //!< menu widget(!) action for margin widget
+            CMarginsInput *m_input = nullptr; //!< margins widget
+            BlackMisc::CSetting<BlackGui::Settings::SettingsNavigator> m_settings { this, &CNavigatorDialog::ps_settingsChanged };
         };
     } // ns
 } // ns

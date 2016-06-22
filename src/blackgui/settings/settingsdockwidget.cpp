@@ -8,10 +8,12 @@
  */
 
 #include "settingsdockwidget.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/stringutils.h"
 #include <QStringList>
 
 using namespace BlackMisc;
+using namespace BlackGui;
 
 namespace BlackGui
 {
@@ -36,32 +38,32 @@ namespace BlackGui
 
         void CSettingsDockWidget::setMarginsWhenFramelessFloating(const QMargins &margins)
         {
-            this->m_floatingFramelessMargins = marginsToString(margins);
+            this->m_floatingFramelessMargins = CGuiUtility::marginsToString(margins);
         }
 
         QMargins CSettingsDockWidget::getMarginsWhenFramelessFloating() const
         {
-            return stringToMargins(this->m_floatingFramelessMargins);
+            return CGuiUtility::stringToMargins(this->m_floatingFramelessMargins);
         }
 
         void CSettingsDockWidget::setMarginsWhenFloating(const QMargins &margins)
         {
-            this->m_floatingMargins = marginsToString(margins);
+            this->m_floatingMargins = CGuiUtility::marginsToString(margins);
         }
 
         QMargins CSettingsDockWidget::getMarginsWhenFloating() const
         {
-            return stringToMargins(this->m_floatingMargins);
+            return CGuiUtility::stringToMargins(this->m_floatingMargins);
         }
 
         void CSettingsDockWidget::setMarginsWhenDocked(const QMargins &margins)
         {
-            this->m_dockedMargins = marginsToString(margins);
+            this->m_dockedMargins = CGuiUtility::marginsToString(margins);
         }
 
         QMargins CSettingsDockWidget::getMarginsWhenDocked() const
         {
-            return stringToMargins(this->m_dockedMargins);
+            return CGuiUtility::stringToMargins(this->m_dockedMargins);
         }
 
         QByteArray CSettingsDockWidget::getGeometry() const
@@ -91,8 +93,11 @@ namespace BlackGui
             s.append("docked: ");
             s.append(this->m_dockedMargins);
             s.append(separator);
-            s.append("docked: ");
-
+            s.append("frameless: ");
+            s.append(boolToTrueFalse(this->m_frameless));
+            s.append(separator);
+            s.append("floating: ");
+            s.append(boolToTrueFalse(this->m_floating));
             return s;
         }
 
@@ -143,29 +148,6 @@ namespace BlackGui
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
-        }
-
-        QString CSettingsDockWidget::marginsToString(const QMargins &margins)
-        {
-            const QString s("%1:%2:%3:%4");
-            return s.arg(margins.left()).arg(margins.top()).arg(margins.right()).arg(margins.bottom());
-        }
-
-        QMargins CSettingsDockWidget::stringToMargins(const QString &str)
-        {
-            const QStringList parts = str.split(":");
-            Q_ASSERT_X(parts.size() == 4, Q_FUNC_INFO, "malformed");
-            bool ok = false;
-            const int l = parts.at(0).toInt(&ok);
-            Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
-            const int t = parts.at(1).toInt(&ok);
-            Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
-            const int r = parts.at(2).toInt(&ok);
-            Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
-            const int b = parts.at(3).toInt(&ok);
-            Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
-            Q_UNUSED(ok);
-            return QMargins(l, t, r, b);
         }
 
         CSettingsDockWidget CSettingsDockWidgets::getByNameOrInitToDefault(const QString &name)

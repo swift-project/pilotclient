@@ -109,12 +109,6 @@ namespace BlackGui
             bool m_floating = false;                        //!< floating
             bool m_frameless = false;                       //!< frameless
 
-            //! Convert to string
-            static QString marginsToString(const QMargins &margins);
-
-            //! Convert from string
-            static QMargins stringToMargins(const QString &str);
-
             BLACK_METACLASS(
                 CSettingsDockWidget,
                 BLACK_METAMEMBER(floatingMargins),

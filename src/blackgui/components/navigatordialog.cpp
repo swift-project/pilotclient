@@ -8,9 +8,11 @@
  */
 
 #include "blackgui/components/navigatordialog.h"
+#include "blackgui/components/marginsinput.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
 #include "ui_navigatordialog.h"
 
@@ -31,6 +33,7 @@
 #include <QtGlobal>
 
 using namespace BlackGui;
+using namespace BlackGui::Settings;
 using namespace BlackMisc;
 
 namespace BlackGui
@@ -49,8 +52,14 @@ namespace BlackGui
 
             // context menu
             this->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::ps_showContextMenu);
+            this->m_input = new CMarginsInput(this);
+            this->m_input->setMaximumWidth(150);
+            this->m_marginMenuAction = new QWidgetAction(this);
+            this->m_marginMenuAction->setDefaultWidget(this->m_input);
 
+            this->setContextMenuPolicy(Qt::CustomContextMenu);
+            connect(this->m_input, &CMarginsInput::changedMargins, this, &CNavigatorDialog::ps_menuChangeMargins);
+            connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::ps_showContextMenu);
             connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::ps_onStyleSheetsChanged);
             this->ps_onStyleSheetsChanged();
         }
@@ -77,7 +86,6 @@ namespace BlackGui
             gridLayout->setSpacing(0);
             gridLayout->setMargin(0);
             gridLayout->setContentsMargins(0, 0, 0, 0);
-
             this->ui->fr_NavigatorDialogInner->setLayout(gridLayout);
             int r = 0;
             int c = 0;
@@ -94,14 +102,8 @@ namespace BlackGui
                 c = 0;
                 r++;
             }
-
-            int w = 16 * gridLayout->columnCount();
-            int h = 16 * gridLayout->rowCount();
             this->m_currentColumns = gridLayout->columnCount();
-            QSize min(w + 2, h + 2);
-            this->ui->fr_NavigatorDialogInner->setMinimumSize(min);
-            this->setMinimumSize(min);
-            this->adjustSize();
+            this->adjustNavigatorSize(gridLayout);
         }
 
         void CNavigatorDialog::toggleFrameless()
@@ -114,11 +116,33 @@ namespace BlackGui
             this->setVisible(!this->isVisible());
         }
 
+        void CNavigatorDialog::restoreFromSettings()
+        {
+            const CSettingsNavigator s = this->m_settings.get();
+            this->setContentsMargins(s.getMargins());
+            if (this->isFrameless() != s.isFramless()) { this->toggleFrameless(); }
+            this->buildNavigator(s.getColumns());
+            const QByteArray geo(s.getGeometry());
+            this->restoreGeometry(geo);
+        }
+
+        void CNavigatorDialog::saveToSettings()
+        {
+            CSettingsNavigator s = this->m_settings.get();
+            s.setFrameless(this->isFrameless());
+            s.setMargins(this->contentsMargins());
+            s.setGeometry(this->saveGeometry());
+            s.setColumns(this->m_currentColumns);
+            const CStatusMessage m = this->m_settings.setAndSave(s);
+            if (!m.isSuccess()) { CLogMessage::preformatted(m); }
+        }
+
         void CNavigatorDialog::ps_onStyleSheetsChanged()
         {
             const QString fn(CStyleSheetUtility::fileNameNavigator());
             const QString qss(sGui->getStyleSheetUtility().style(fn));
             this->setStyleSheet(qss);
+            this->adjustNavigatorSize();
             this->repaint();
         }
 
@@ -179,6 +203,22 @@ namespace BlackGui
             else if (v == "2r") { buildNavigator(columnsForRows(2));}
         }
 
+        void CNavigatorDialog::ps_menuChangeMargins(const QMargins &margins)
+        {
+            this->setContentsMargins(margins);
+            this->adjustNavigatorSize();
+        }
+
+        void CNavigatorDialog::ps_dummy()
+        {
+            // void
+        }
+
+        void CNavigatorDialog::ps_settingsChanged()
+        {
+            // void
+        }
+
         void CNavigatorDialog::insertOwnActions()
         {
             // add some space for frameless navigators where I can move the navigator
@@ -197,6 +237,11 @@ namespace BlackGui
             a = new QAction(i, "Close", this);
             connect(a, &QAction::triggered, this, &CNavigatorDialog::close);
             this->addAction(a);
+
+            // save
+            a = new QAction(CIcons::save16(), "Save state", this);
+            connect(a, &QAction::triggered, this, &CNavigatorDialog::saveToSettings);
+            this->addAction(a);
         }
 
         int CNavigatorDialog::columnsForRows(int rows)
@@ -205,6 +250,31 @@ namespace BlackGui
             int items = this->actions().size();
             int c = items / rows;
             return (c * rows) < items ? c + 1 : c;
+        }
+
+        QGridLayout *CNavigatorDialog::myGridLayout() const
+        {
+            return qobject_cast<QGridLayout *>(this->layout());
+        }
+
+        void CNavigatorDialog::adjustNavigatorSize(QGridLayout *layout)
+        {
+            QGridLayout *gridLayout = layout ? layout : this->myGridLayout();
+            Q_ASSERT_X(gridLayout, Q_FUNC_INFO, "Missing layout");
+
+            int w = 16 * gridLayout->columnCount();
+            int h = 16 * gridLayout->rowCount();
+
+            // margins
+            QMargins margins = gridLayout->contentsMargins() + this->contentsMargins();
+            h = h + margins.top() + margins.bottom();
+            w = w + margins.left() + margins.right();
+
+            // adjust
+            const QSize min(w + 2, h + 2);
+            this->ui->fr_NavigatorDialogInner->setMinimumSize(min);
+            this->setMinimumSize(min);
+            this->adjustSize();
         }
 
         void CNavigatorDialog::addToContextMenu(QMenu *contextMenu) const
@@ -217,11 +287,13 @@ namespace BlackGui
             a->setData("1c");
             a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, &CNavigatorDialog::ps_changeLayout);
             a->setData("2c");
-
-            contextMenu->addSeparator();
-
             QString frameLessActionText = this->isFrameless() ? "Normal window" : "Frameless";
             contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), frameLessActionText, this, SLOT(toggleFrameless()));
+            contextMenu->addAction("Adjust margins", this, &CNavigatorDialog::ps_dummy);
+            contextMenu->addAction(this->m_marginMenuAction);
+            contextMenu->addSeparator();
+            contextMenu->addAction(CIcons::load16(), "Restore state", this, &CNavigatorDialog::restoreFromSettings);
+            contextMenu->addAction(CIcons::save16(), "Save state", this, &CNavigatorDialog::saveToSettings);
         }
     } // ns
 } // ns

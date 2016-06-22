@@ -94,6 +94,12 @@ namespace BlackGui
         //! From a given widget try to find parent tab widget (where widget is embedded)
         static QTabWidget *parentTabWidget(QWidget *widget, int maxLevels = 5);
 
+        //! Convert to string
+        static QString marginsToString(const QMargins &margins);
+
+        //! Convert from string
+        static QMargins stringToMargins(const QString &str);
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}

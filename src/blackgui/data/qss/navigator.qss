@@ -1,16 +1,11 @@
-#fr_NavigatorDialogInner[navigatorFrameless="true"] {
-  margin: 0px;
-  padding: 3px;
-  border: 2px solid green;
-  border-radius: 10px;
+QDialog {
+  background: lightgrey;
 }
 
-#fr_NavigatorDialogInner[navigatorFrameless="false"] {
-  margin: 0px;
-  padding: 3px;
-  border: 0px;
-  border-radius: 0px;
-}
+/*
+#fr_NavigatorDialogInner[navigatorFrameless="true"] {}
+#fr_NavigatorDialogInner[navigatorFrameless="false"] {}
+*/
 
 #fr_NavigatorDialogInner QToolButton {
   margin: 0px;

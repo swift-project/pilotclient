@@ -304,4 +304,27 @@ namespace BlackGui
         widget->show();
         return Qt::WindowStaysOnTopHint & flags;
     }
+
+    QString CGuiUtility::marginsToString(const QMargins &margins)
+    {
+        const QString s("%1:%2:%3:%4");
+        return s.arg(margins.left()).arg(margins.top()).arg(margins.right()).arg(margins.bottom());
+    }
+
+    QMargins CGuiUtility::stringToMargins(const QString &str)
+    {
+        const QStringList parts = str.split(":");
+        Q_ASSERT_X(parts.size() == 4, Q_FUNC_INFO, "malformed");
+        bool ok = false;
+        const int l = parts.at(0).toInt(&ok);
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
+        const int t = parts.at(1).toInt(&ok);
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
+        const int r = parts.at(2).toInt(&ok);
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
+        const int b = parts.at(3).toInt(&ok);
+        Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
+        Q_UNUSED(ok);
+        return QMargins(l, t, r, b);
+    }
 } // ns
