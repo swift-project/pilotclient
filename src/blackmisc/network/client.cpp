@@ -27,12 +27,17 @@ namespace BlackMisc
         {
             QString s = this->m_user.toQString(i18n);
             s.append(" capabilites: ").append(this->getCapabilitiesAsString());
-            s.append(" model: ").append(this->m_model.toQString(i18n));
-            if (!this->m_server.isEmpty())
-            {
-                s.append(" server:").append(this->m_server);
-            }
+            s.append(" model: ").append(this->m_modelString);
+            if (!this->m_server.isEmpty()) { s.append(" server:").append(this->m_server); }
             return s;
+        }
+
+        CClient::CClient(const Aviation::CCallsign &callsign, const QString &modelString) :
+            m_user(CUser(callsign)), m_modelString(modelString.trimmed()) {}
+
+        bool CClient::isValid() const
+        {
+            return this->m_user.hasValidCallsign();
         }
 
         void CClient::setCapability(bool hasCapability, CClient::Capabilities capability)
@@ -87,8 +92,8 @@ namespace BlackMisc
                 return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
             case IndexUser:
                 return this->getUser().propertyByIndex(index.copyFrontRemoved());
-            case IndexModel:
-                return this->m_model.propertyByIndex(index.copyFrontRemoved());
+            case IndexModelString:
+                return CVariant(this->m_modelString);
             case IndexServer:
                 return CVariant(this->m_server);
             case IndexVoiceCapabilities:
@@ -113,8 +118,8 @@ namespace BlackMisc
             case IndexCapabilities:
                 this->m_capabilities = variant.value<CPropertyIndexVariantMap>();
                 break;
-            case IndexModel:
-                this->m_model.setPropertyByIndex(index.copyFrontRemoved(), variant);;
+            case IndexModelString:
+                this->m_modelString = variant.toQString();
                 break;
             case IndexServer:
                 this->m_server = variant.toQString();

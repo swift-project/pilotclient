@@ -36,10 +36,10 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("client", CClient::IndexIcon));
             this->m_columns.addColumn(CColumn::standardValueObject("callsign", CClient::IndexCallsign));
             this->m_columns.addColumn(CColumn::standardString("realname", { CClient::IndexUser, CUser::IndexRealName }));
-            this->m_columns.addColumn(CColumn("vo.", "voice capabilities", CClient::IndexVoiceCapabilitiesIcon,new CPixmapFormatter()));
+            this->m_columns.addColumn(CColumn("vo.", "voice capabilities", CClient::IndexVoiceCapabilitiesIcon, new CPixmapFormatter()));
             this->m_columns.addColumn(CColumn::standardString("capabilities", CClient::IndexCapabilitiesString));
-            this->m_columns.addColumn(CColumn::standardString("model", {CClient::IndexModel, CAircraftModel::IndexModelString}));
-            this->m_columns.addColumn(CColumn("q.?", "queried", {CClient::IndexModel, CAircraftModel::IndexHasQueriedModelString},
+            this->m_columns.addColumn(CColumn::standardString("model", CClient::IndexModelString));
+            this->m_columns.addColumn(CColumn("q.?", "queried", {CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString},
                                               new CBoolIconFormatter("queried", "not queried")));
             this->m_columns.addColumn(CColumn::standardString("server", CClient::IndexServer));
 
@@ -47,14 +47,14 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewClientList", "callsign");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "realname");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "userid");
-            (void)QT_TRANSLATE_NOOP("ViewClientList", "model");
+            (void)QT_TRANSLATE_NOOP("ViewClientList", "modelstring");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "server");
         }
 
         QVariant CClientListModel::data(const QModelIndex &index, int role) const
         {
-            static const CPropertyIndex ms( {CClient::IndexModel, CAircraftModel::IndexModelString});
-            static const CPropertyIndex qf( {CClient::IndexModel, CAircraftModel::IndexHasQueriedModelString});
+            static const CPropertyIndex ms({CClient::IndexModelString, CAircraftModel::IndexModelString});
+            static const CPropertyIndex qf({CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString});
             if (role != Qt::DisplayRole && role != Qt::DecorationRole) { return CListModelBase::data(index, role); }
             CPropertyIndex pi = modelIndexToPropertyIndex(index);
             if (pi == ms && role == Qt::DisplayRole)

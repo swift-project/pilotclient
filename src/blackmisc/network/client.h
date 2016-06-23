@@ -40,7 +40,7 @@ namespace BlackMisc
             {
                 IndexCapabilities = BlackMisc::CPropertyIndex::GlobalIndexCClient,
                 IndexCapabilitiesString,
-                IndexModel,
+                IndexModelString,
                 IndexServer,
                 IndexUser,
                 IndexCallsign,
@@ -62,8 +62,8 @@ namespace BlackMisc
             //! Default constructor.
             CClient() = default;
 
-            //! Construct by callsign
-            CClient(const BlackMisc::Aviation::CCallsign &callsign) : m_user(CUser(callsign)) {}
+            //! Construct by callsign and optional model string
+            CClient(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelString = {});
 
             //! Constructor.
             CClient(const CUser &user) : m_user(user) {}
@@ -73,6 +73,9 @@ namespace BlackMisc
 
             //! ATC client
             bool isAtc() const { return getCallsign().isAtcAlikeCallsign(); }
+
+            //! Is valid
+            bool isValid() const;
 
             //! Get capabilities
             CPropertyIndexVariantMap getCapabilities() const { return this->m_capabilities; }
@@ -117,13 +120,13 @@ namespace BlackMisc
             void setServer(const QString &server) { this->m_server = server;}
 
             //! Model
-            const BlackMisc::Simulation::CAircraftModel &getAircraftModel() const { return this->m_model; }
+            const QString &getQueriedModelString() const { return this->m_modelString; }
 
             //! \copydoc Simulation::CAircraftModel::hasQueriedModelString
-            bool hasQueriedModelString() const { return this->m_model.hasQueriedModelString(); }
+            bool hasQueriedModelString() const { return !this->m_modelString.isEmpty(); }
 
             //! Set model
-            void setAircraftModel(const BlackMisc::Simulation::CAircraftModel &model) { this->m_model = model; }
+            void setQueriedModelString(const QString &modelString) { this->m_modelString = modelString.trimmed(); }
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             CIcon toIcon() const { return this->m_user.toIcon(); }
@@ -139,15 +142,15 @@ namespace BlackMisc
 
         private:
             BlackMisc::Network::CUser              m_user;
-            BlackMisc::Simulation::CAircraftModel  m_model;
             BlackMisc::CPropertyIndexVariantMap    m_capabilities;
+            QString                                m_modelString;
             QString                                m_server;
             BlackMisc::Network::CVoiceCapabilities m_voiceCapabilities;
 
             BLACK_METACLASS(
                 CClient,
                 BLACK_METAMEMBER(user),
-                BLACK_METAMEMBER(model),
+                BLACK_METAMEMBER(modelString),
                 BLACK_METAMEMBER(capabilities, 0, DisabledForComparison | DisabledForJson),
                 BLACK_METAMEMBER(server),
                 BLACK_METAMEMBER(voiceCapabilities)
