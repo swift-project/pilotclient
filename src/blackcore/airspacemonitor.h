@@ -75,65 +75,25 @@ namespace BlackCore
         //! Constructor
         CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraft, INetwork *network, QObject *parent);
 
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRange
+        //! \name IRemoteAircraftProvider overrides
         //! \ingroup remoteaircraftprovider
+        //! @{
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeForCallsign
-        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeForCallsign
-        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeCount
-        //! \ingroup remoteaircraftprovider
         virtual int getAircraftInRangeCount() const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
-        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituations
-        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituationsCount
-        //! \ingroup remoteaircraftprovider
         virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftParts
-        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore = -1) const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isRemoteAircraftSupportingParts
-        //! \ingroup remoteaircraftprovider
         virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSupportingParts
-        //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftEnabled
-        //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftModel
-        //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateFastPositionEnabled
-        //! \ingroup remoteaircraftprovider
         virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftRendered
-        //! \ingroup remoteaircraftprovider
         virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) override;
-
-        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateMarkAllAsNotRendered
-        //! \ingroup remoteaircraftprovider
         virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
+        //! @}
 
         //! Returns the list of users we know about
         BlackMisc::Network::CUserList getUsers() const;
@@ -231,14 +191,14 @@ namespace BlackCore
         void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
     private:
-        BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline;
-        BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked;
-        BlackMisc::Network::CClientList                m_otherClients;
-        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange; //!< aircraft, thread safe access required
+        BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline;  //!< online ATC stations
+        BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked;  //!< booked ATC stations
+        BlackMisc::Network::CClientList                m_otherClients;       //!< client informatiom
+        BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;    //!< aircraft, thread safe access required
 
         // hashs, because not sorted by key but keeping order
-        CSituationsPerCallsign m_situationsByCallsign; //!< situations, for performance reasons per callsign, thread safe access required
-        CPartsPerCallsign      m_partsByCallsign;      //!< parts, for performance reasons per callsign, thread safe access required
+        CSituationsPerCallsign            m_situationsByCallsign;    //!< situations, for performance reasons per callsign, thread safe access required
+        CPartsPerCallsign                 m_partsByCallsign;         //!< parts, for performance reasons per callsign, thread safe access required
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>       m_flightPlanCache; //!< flight plan information retrieved any cached

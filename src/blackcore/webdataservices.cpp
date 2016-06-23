@@ -397,7 +397,7 @@ namespace BlackCore
         return 0;
     }
 
-    CAirlineIcaoCodeList CWebDataServices::getAirlineIcaoCodeForDesignator(const QString &designator) const
+    CAirlineIcaoCodeList CWebDataServices::getAirlineIcaoCodesForDesignator(const QString &designator) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodesForDesignator(designator); }
         return CAirlineIcaoCodeList();

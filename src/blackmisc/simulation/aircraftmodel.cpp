@@ -105,9 +105,9 @@ namespace BlackMisc
 
         bool CAircraftModel::canInitializeFromFsd() const
         {
-            bool nw = this->getModelType() == CAircraftModel::TypeQueriedFromNetwork ||
-                      this->getModelType() == CAircraftModel::TypeFsdData ||
-                      this->getModelType() == CAircraftModel::TypeUnknown;
+            const bool nw = this->getModelType() == CAircraftModel::TypeQueriedFromNetwork ||
+                            this->getModelType() == CAircraftModel::TypeFsdData ||
+                            this->getModelType() == CAircraftModel::TypeUnknown;
             return nw;
         }
 

@@ -230,9 +230,9 @@ namespace BlackCore
         //! \threadsafe
         int getAirlineIcaoCodesCount() const;
 
-        //! ICAO code for designator
+        //! ICAO codes for designator
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodeForDesignator(const QString &designator) const;
+        BlackMisc::Aviation::CAirlineIcaoCodeList getAirlineIcaoCodesForDesignator(const QString &designator) const;
 
         //! ICAO code for id
         //! \threadsafe

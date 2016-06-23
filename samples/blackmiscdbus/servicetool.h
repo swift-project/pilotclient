@@ -33,11 +33,10 @@ namespace BlackMisc { class CDBusServer; }
 
 namespace BlackSample
 {
-	
     class Testservice; // forward declaration
 
     /*!
-     * \brief Supporting / helper functions for running the tests
+     * Supporting / helper functions for running the tests
      */
     class ServiceTool
     {
@@ -45,92 +44,45 @@ namespace BlackSample
         ServiceTool() {}
 
     public:
-        /*!
-         * \brief Get process id
-         * \return
-         */
+        //! Process id
         static qint64 getPid()
         {
             return QCoreApplication::applicationPid();
         }
 
-        /*!
-         * \brief Client side of data transfer test
-         * \param address
-         */
+        //! Client side of data transfer test
         static void dataTransferTestClient(const QString &address);
 
-        /*!
-         * \brief Server side of data transfer test
-         */
+        //! Server side of data transfer test
         static void dataTransferTestServer(BlackMisc::CDBusServer *dBusServer);
 
-        /*!
-         * \brief Start a new process
-         * \param executable
-         * \param arguments
-         * \param parent
-         * \return
-         */
+        //! Start a new process
         static QProcess *startNewProcess(const QString &executable, const QStringList &arguments = QStringList(), QObject *parent = 0);
 
-        /*!
-         * \brief Loop to send data to test service (slots on server)
-         * \param connection
-         */
+        //! Loop to send data to test service (slots on server)
         static void sendDataToTestservice(const QDBusConnection &connection);
 
-        /*!
-         * \brief Display QDBusArgument
-         * \param arg
-         * \param level
-         */
+        //! Display QDBusArgument
         static void displayQDBusArgument(const QDBusArgument &arg, qint32 level = 0);
 
-        /*!
-         * \brief Register testservice with connection
-         * \param connection
-         * \param parent
-         * \return test service object
-         */
+        //! Register testservice with connection
         static Testservice *registerTestservice(QDBusConnection &connection, QObject *parent = 0);
 
-        /*!
-         * \brief Get a random callsign
-         * \return
-         */
+        //! Get a random callsign
         static BlackMisc::Aviation::CCallsign getRandomAtcCallsign();
 
-        /*!
-         * \brief Get stations
-         * \param number
-         * \return
-         */
+        //! Get stations
         static BlackMisc::Aviation::CAtcStationList getStations(int number);
 
-        /*!
-         * \brief Get aircraft cfg entries
-         * \param number
-         * \return
-         */
+        //! Get aircraft cfg entries
         static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
 
-        /*!
-         * \brief Get airports
-         * \param number
-         * \return
-         */
+        //! Get airports
         static BlackMisc::Aviation::CAirportList getAirports(int number);
 
-        /*!
-         * \brief Get clients
-         * \param number
-         * \return
-         */
+        //! Get clients
         static BlackMisc::Network::CClientList getClients(int number);
-
     };
-
 } // namespace
 
 #endif // guard
