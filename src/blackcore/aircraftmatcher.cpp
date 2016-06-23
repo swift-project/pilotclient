@@ -166,11 +166,17 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::reverseLookup(const CAircraftModel &modelToLookup, const QString &liveryInfo, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverseLookup(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)
     {
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+
+        // already DB model?
+        if (modelToLookup.hasValidDbKey() && modelToLookup.getModelType() == CAircraftModel::TypeDatabaseEntry) { return modelToLookup; }
+
         CAircraftModel model(modelToLookup);
         const CCallsign callsign(model.getCallsign());
-        const QStringList liveryModelStrings = CAircraftModel::splitNetworkLiveryString(liveryInfo);
+        const QStringList liveryModelStrings = CAircraftModel::splitNetworkLiveryString(networkLiveryInfo);
         const QString modelString(modelToLookup.hasModelString() ? modelToLookup.getModelString() : liveryModelStrings[1]);
         QString liveryCode(liveryModelStrings[0]);
 
@@ -261,6 +267,36 @@ namespace BlackCore
         if (model.getModelType() != CAircraftModel::TypeUnknown) { model.setModelType(modelToLookup.getModelType()); }
         model.setCallsign(modelToLookup.getCallsign());
         return model;
+    }
+
+    CAircraftIcaoCode CAircraftMatcher::reverseLookupAircraftIcao(const QString &icaoDesignator, const CCallsign &callsign, CStatusMessageList *log)
+    {
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+
+        const QString designator(icaoDesignator.trimmed().toUpper());
+        const CAircraftIcaoCode icao = sApp->getWebDataServices()->smartAircraftIcaoSelector(designator);
+        if (log)
+        {
+            if (icao.hasValidDbKey()) { logDetails(log, callsign, QString("Reverse lookup ICAO %1, found `%2`").arg(designator).arg(icao.getDesignator())); }
+            else { logDetails(log, callsign, QString("Reverse lookup ICAO %1, nothing found").arg(designator)); }
+        }
+        return icao;
+    }
+
+    CAirlineIcaoCode BlackCore::CAircraftMatcher::reverseLookupAirlineIcao(const QString &icaoDesignator, const CCallsign &callsign, CStatusMessageList *log)
+    {
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+
+        const QString designator(icaoDesignator.trimmed().toUpper());
+        const CAirlineIcaoCode icao = sApp->getWebDataServices()->smartAirlineIcaoSelector(designator);
+        if (log)
+        {
+            if (icao.hasValidDbKey()) { logDetails(log, callsign, QString("Reverse lookup airline %1, found `%2`").arg(designator).arg(icao.getDesignator())); }
+            else { logDetails(log, callsign, QString("Reverse lookup airline %1, nothing found").arg(designator)); }
+        }
+        return icao;
     }
 
     int  CAircraftMatcher::setModelSet(const CAircraftModelList &models)

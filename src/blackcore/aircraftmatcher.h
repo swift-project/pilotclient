@@ -74,7 +74,15 @@ namespace BlackCore
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModel reverseLookup(const BlackMisc::Simulation::CAircraftModel &modelToLookup, const QString &liveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModel reverseLookup(const BlackMisc::Simulation::CAircraftModel &modelToLookup, const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Try to find the DB corresponding ICAO code
+        //! \threadsafe
+        static BlackMisc::Aviation::CAircraftIcaoCode reverseLookupAircraftIcao(const QString &icaoDesignator, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Try to find the DB corresponding ICAO code
+        //! \threadsafe
+        static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(const QString &icaoDesignator, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Get the models
         BlackMisc::Simulation::CAircraftModelList getModelSet() const { return m_modelSet; }
@@ -87,6 +95,16 @@ namespace BlackCore
 
         //! Set default model
         void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
+
+        //! Add to log. if applicable
+        //! \threadsafe
+        static void logDetails(BlackMisc::CStatusMessageList *log, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
+                               const QString &message, BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
+
+        //! Add to log. if applicable
+        //! \threadsafe
+        static void logDetails(BlackMisc::CStatusMessageList *log, const BlackMisc::Aviation::CCallsign &callsign,
+                               const QString &message, BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
 
     private:
         //! Search in models by key (aka model string)
@@ -120,20 +138,6 @@ namespace BlackCore
         //! My military flag
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByMilitaryFlag(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool military, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
-
-        //! Add to log. if applicable
-        //! \treadsafe
-        static void logDetails(BlackMisc::CStatusMessageList *log,
-                               const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
-                               const QString &message,
-                               BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
-
-        //! Add to log. if applicable
-        //! \treadsafe
-        static void logDetails(BlackMisc::CStatusMessageList *log,
-                               const BlackMisc::Aviation::CCallsign &callsign,
-                               const QString &message,
-                               BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
 
         MatchingMode                              m_matchingMode = All;
         BlackMisc::Simulation::CAircraftModel     m_defaultModel;         //!< model to be used as default model

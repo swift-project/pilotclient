@@ -106,10 +106,20 @@ namespace BlackCore
         BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Returns this list of other clients we know about
+        //! \threadsafe
         BlackMisc::Network::CClientList getOtherClients() const;
 
         //! Returns a list of other clients corresponding to the given callsigns
+        //! \threadsafe
         BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const;
+
+        //! Other client for the given callsigns
+        //! \threadsafe
+        BlackMisc::Network::CClient getOtherClientOrDefaultForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+        //! Client info for given callsign?
+        //! \threadsafe
+        bool hasClientInfo(const BlackMisc::Aviation::CCallsign &callsign) const;
 
         //! Returns the current online ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
@@ -193,7 +203,7 @@ namespace BlackCore
     private:
         BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline;  //!< online ATC stations
         BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked;  //!< booked ATC stations
-        BlackMisc::Network::CClientList                m_otherClients;       //!< client informatiom
+        BlackMisc::Network::CClientList                m_otherClients;       //!< client informatiom, thread safe access required
         BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;    //!< aircraft, thread safe access required
 
         // hashs, because not sorted by key but keeping order
@@ -201,19 +211,19 @@ namespace BlackCore
         CPartsPerCallsign                 m_partsByCallsign;         //!< parts, for performance reasons per callsign, thread safe access required
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
 
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>       m_flightPlanCache; //!< flight plan information retrieved any cached
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>  m_modelCache;      //!< any model information recevived from network temporarily stored until it is "completed". Will be removed when aircraft is moved to aircraft in range
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>       m_flightPlanCache;     //!< flight plan information retrieved any cached
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>  m_modelTemporaryCache; //!< any model information recevived from network temporarily stored until it is "completed". Will be removed when aircraft is moved to aircraft in range
 
         INetwork              *m_network                 = nullptr;
         CAirspaceAnalyzer     *m_analyzer                = nullptr; //!< owned analyzer
-        bool                   m_serverSupportsNameQuery = false;   //!< not all servers support name query
         bool                   m_connected               = false;   //!< retrieve data
         bool                   m_logMatchingProcess      = false;   //!< shall we log. information about the matching process
 
         // locks
-        mutable QReadWriteLock m_lockSituations; //!< lock for situations
-        mutable QReadWriteLock m_lockParts;      //!< lock for parts
-        mutable QReadWriteLock m_lockAircraft;   //!< lock aircraft
+        mutable QReadWriteLock m_lockSituations; //!< lock for situations: m_situationsByCallsign
+        mutable QReadWriteLock m_lockParts;      //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
+        mutable QReadWriteLock m_lockAircraft;   //!< lock aircraft: m_aircraftInRange
+        mutable QReadWriteLock m_lockClient;     //!< lock clients: m_otherClients
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();
@@ -257,7 +267,7 @@ namespace BlackCore
 
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void ps_customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &model);
+        void ps_customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
         void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void ps_metarReceived(const QString &metarMessage);
         void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
@@ -272,9 +282,7 @@ namespace BlackCore
         void ps_receivedDataFile();
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
         void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
-
     };
-
 } // namespace
 
 #endif // guard
