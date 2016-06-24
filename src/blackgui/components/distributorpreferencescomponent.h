@@ -72,7 +72,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDistributorPreferencesComponent> ui;
             BlackGui::COverlayMessagesFrame *m_overlayMessageFrame = nullptr;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };
+            BlackMisc::CSetting<BlackCore::Settings::DistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };
 
             //! Update
             void updateContainerMaybeAsync(const BlackMisc::Simulation::CDistributorList &models, bool sortByOrder = true);

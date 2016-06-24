@@ -19,15 +19,12 @@ namespace BlackCore
 {
     namespace Settings
     {
-        namespace Simulation
+        //! DBus server address
+        struct DistributorListPreferences : public BlackMisc::CSettingTrait<BlackMisc::Simulation::CDistributorListPreferences>
         {
-            //! DBus server address
-            struct DistributorListPreferences : public BlackMisc::CSettingTrait<BlackMisc::Simulation::CDistributorListPreferences>
-            {
-                //! \copydoc BlackMisc::CSettingTrait::key
-                static const char *key() { return "mapping/distributorpreferences"; }
-            };
-        } // ns
+            //! \copydoc BlackMisc::CSettingTrait::key
+            static const char *key() { return "mapping/distributorpreferences"; }
+        };
     } // ns
 } // ns
 

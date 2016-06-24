@@ -97,7 +97,7 @@ namespace BlackMisc
         for (const auto &key : keys)
         {
             QString time = contains(key) ? QDateTime::fromMSecsSinceEpoch(value(key).second, Qt::UTC).toString(Qt::ISODate) : "no timestamp";
-            result.push_back(key + "(" + time + ")");
+            result.push_back(key + " (" + time + ")");
         }
         return result.join(",");
     }

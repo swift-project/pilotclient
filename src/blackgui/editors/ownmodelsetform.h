@@ -85,7 +85,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::COwnModelSetForm>  ui;
             BlackMisc::Simulation::CSimulatorInfo m_simulator;
-            BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::ps_preferencesChanged };
+            BlackMisc::CSetting<BlackCore::Settings::DistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::ps_preferencesChanged };
         };
     } // ns
 } // ns

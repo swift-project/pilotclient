@@ -141,7 +141,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbOwnModelSetComponent>    ui;
             QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSetting<BlackCore::Settings::Simulation::DistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged };
+            BlackMisc::CSetting<BlackCore::Settings::DistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged };
 
             // -------------------------- custom menus -----------------------------------
 
