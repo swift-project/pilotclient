@@ -26,14 +26,15 @@ HEADERS += *.h
 HEADERS += $$PWD/data/*.h
 HEADERS += $$PWD/db/*.h
 HEADERS += $$PWD/settings/*.h
+HEADERS += $$PWD/vatsim/*.h
 
 SOURCES += *.cpp
 SOURCES += $$PWD/data/*.cpp
 SOURCES += $$PWD/db/*.cpp
-# SOURCES += $$PWD/settings/*.cpp
+SOURCES += $$PWD/vatsim/*.cpp
+SOURCES += $$PWD/settings/*.cpp
 
 LIBS *= -lvatlib
-
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 

@@ -18,7 +18,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/threadedreader.h"
+#include "blackcore/threadedreader.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/valueobject.h"
 
@@ -38,7 +38,7 @@ namespace BlackCore
     namespace Db
     {
         //! Specialized version of threaded reader for DB data
-        class BLACKCORE_EXPORT CDatabaseReader : public BlackMisc::CThreadedReader
+        class BLACKCORE_EXPORT CDatabaseReader : public BlackCore::CThreadedReader
         {
             Q_OBJECT
 

@@ -88,9 +88,9 @@ namespace BlackCore
             static const char *key() { return "vatsimreaders/bookings"; }
 
             //! \copydoc BlackCore::CSettingTrait::defaultValue
-            static const CSettingsReader &defaultValue()
+            static const BlackCore::Settings::CSettingsReader &defaultValue()
             {
-                static const CSettingsReader reader {};
+                static const BlackCore::Settings::CSettingsReader reader {{30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };
@@ -102,9 +102,9 @@ namespace BlackCore
             static const char *key() { return "vatsimreaders/datafile"; }
 
             //! \copydoc BlackCore::CSettingTrait::defaultValue
-            static const CSettingsReader &defaultValue()
+            static const BlackCore::Settings::CSettingsReader &defaultValue()
             {
-                static const CSettingsReader reader {};
+                static const BlackCore::Settings::CSettingsReader reader {{25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };
@@ -116,13 +116,12 @@ namespace BlackCore
             static const char *key() { return "vatsimreaders/metars"; }
 
             //! \copydoc BlackCore::CSettingTrait::defaultValue
-            static const CSettingsReader &defaultValue()
+            static const BlackCore::Settings::CSettingsReader &defaultValue()
             {
-                static const CSettingsReader reader {};
+                static const BlackCore::Settings::CSettingsReader reader {{35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {90.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };
-
     } // ns
 } // ns
 

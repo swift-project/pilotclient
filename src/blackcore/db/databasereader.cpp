@@ -37,7 +37,7 @@ namespace BlackCore
     namespace Db
     {
         CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) :
-            BlackMisc::CThreadedReader(owner, name), m_config(config)
+            BlackCore::CThreadedReader(owner, name), m_config(config)
         {
             this->m_sharedUrl = sApp->getGlobalSetup().getSwiftSharedUrls().getRandomWorkingUrl();
         }
@@ -267,7 +267,10 @@ namespace BlackCore
 
         const CLogCategoryList &CDatabaseReader::getLogCategories()
         {
-            static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::swiftDbWebservice(), BlackMisc::CLogCategory::mapping() };
+            static const BlackMisc::CLogCategoryList cats
+            (
+                CThreadedReader::getLogCategories().join({ BlackMisc::CLogCategory::swiftDbWebservice(), BlackMisc::CLogCategory::mapping() })
+            );
             return cats;
         }
 

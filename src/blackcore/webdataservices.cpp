@@ -15,10 +15,10 @@
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/modeldatareader.h"
 #include "blackcore/setupreader.h"
-#include "blackcore/vatsimbookingreader.h"
-#include "blackcore/vatsimdatafilereader.h"
-#include "blackcore/vatsimmetarreader.h"
-#include "blackcore/vatsimstatusfilereader.h"
+#include "blackcore/vatsim/vatsimbookingreader.h"
+#include "blackcore/vatsim/vatsimdatafilereader.h"
+#include "blackcore/vatsim/vatsimmetarreader.h"
+#include "blackcore/vatsim/vatsimstatusfilereader.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logcategory.h"
@@ -39,7 +39,7 @@
 using namespace BlackCore;
 using namespace BlackCore::Db;
 using namespace BlackCore::Data;
-using namespace BlackCore::Db;
+using namespace BlackCore::Vatsim;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
@@ -452,7 +452,7 @@ namespace BlackCore
         {
             this->m_vatsimStatusReader = new CVatsimStatusFileReader(this);
             this->m_vatsimStatusReader->start(QThread::LowPriority);
-            this->m_vatsimStatusReader->setInterval(60 * 60 * 1000); // very slow updates required only
+            // no timer updates from timer here
             QTimer::singleShot(100, this->m_vatsimStatusReader, &CVatsimStatusFileReader::readInBackgroundThread);
         }
 
@@ -467,7 +467,7 @@ namespace BlackCore
             c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed bookings");
             this->m_vatsimBookingReader->start(QThread::LowPriority);
-            this->m_vatsimBookingReader->setInterval(3 * 60 * 1000);
+            this->m_vatsimBookingReader->setIntervalFromSettingsAndStart();
         }
 
         // 4. VATSIM data file
@@ -479,7 +479,7 @@ namespace BlackCore
             c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
             this->m_vatsimDataFileReader->start(QThread::LowPriority);
-            this->m_vatsimDataFileReader->setInterval(90 * 1000);
+            this->m_vatsimDataFileReader->setIntervalFromSettingsAndStart();
         }
 
         // 5. VATSIM metar data
@@ -491,7 +491,7 @@ namespace BlackCore
             c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
             this->m_vatsimMetarReader->start(QThread::LowPriority);
-            this->m_vatsimMetarReader->setInterval(90 * 1000);
+            this->m_vatsimMetarReader->setIntervalFromSettingsAndStart();
         }
 
         // 6. ICAO data reader

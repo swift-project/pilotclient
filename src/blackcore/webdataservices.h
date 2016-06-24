@@ -58,10 +58,14 @@ namespace BlackMisc
 namespace BlackCore
 {
     class CApplication;
-    class CVatsimBookingReader;
-    class CVatsimDataFileReader;
-    class CVatsimMetarReader;
-    class CVatsimStatusFileReader;
+
+    namespace Vatsim
+    {
+        class CVatsimBookingReader;
+        class CVatsimDataFileReader;
+        class CVatsimMetarReader;
+        class CVatsimStatusFileReader;
+    }
 
     namespace Db
     {
@@ -93,13 +97,13 @@ namespace BlackCore
         void readAtcBookingsInBackground() const;
 
         //! Booking reader
-        CVatsimBookingReader *getBookingReader() const { return m_vatsimBookingReader; }
+        Vatsim::CVatsimBookingReader *getBookingReader() const { return m_vatsimBookingReader; }
 
         //! Data file reader
-        CVatsimDataFileReader *getDataFileReader() const { return m_vatsimDataFileReader; }
+        Vatsim::CVatsimDataFileReader *getDataFileReader() const { return m_vatsimDataFileReader; }
 
         //! Metar reader
-        CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
+        Vatsim::CVatsimMetarReader *getMetarReader() const { return m_vatsimMetarReader; }
 
         //! Info data reader
         Db::CInfoDataReader *getInfoDataReader() const { return m_infoDataReader; }
@@ -325,13 +329,13 @@ namespace BlackCore
         int                                      m_infoObjectTrials = 0;                            //!< Tried to read info objects
 
         // for reading XML and VATSIM data files
-        CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;
-        CVatsimBookingReader    *m_vatsimBookingReader  = nullptr;
-        CVatsimDataFileReader   *m_vatsimDataFileReader = nullptr;
-        CVatsimMetarReader      *m_vatsimMetarReader    = nullptr;
-        Db::CIcaoDataReader     *m_icaoDataReader       = nullptr;
-        Db::CModelDataReader    *m_modelDataReader      = nullptr;
-        Db::CInfoDataReader     *m_infoDataReader       = nullptr;
+        Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;
+        Vatsim::CVatsimBookingReader    *m_vatsimBookingReader  = nullptr;
+        Vatsim::CVatsimDataFileReader   *m_vatsimDataFileReader = nullptr;
+        Vatsim::CVatsimMetarReader      *m_vatsimMetarReader    = nullptr;
+        Db::CIcaoDataReader             *m_icaoDataReader       = nullptr;
+        Db::CModelDataReader            *m_modelDataReader      = nullptr;
+        Db::CInfoDataReader             *m_infoDataReader       = nullptr;
 
         // writing objects directly into DB
         Db::CDatabaseWriter     *m_databaseWriter       = nullptr;

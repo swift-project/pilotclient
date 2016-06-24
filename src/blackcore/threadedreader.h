@@ -9,10 +9,11 @@
 
 //! \file
 
-#ifndef BLACKMISC_THREADED_READER_H
-#define BLACKMISC_THREADED_READER_H
+#ifndef BLACKCORE_THREADED_READER_H
+#define BLACKCORE_THREADED_READER_H
 
-#include "blackmisc/blackmiscexport.h"
+#include "blackcore/settings/reader.h"
+#include "blackcore/blackcoreexport.h"
 #include "blackmisc/worker.h"
 
 #include <QDateTime>
@@ -24,11 +25,11 @@
 class QNetworkReply;
 class QTimer;
 
-namespace BlackMisc
+namespace BlackCore
 {
     //! Support for threaded based reading and parsing tasks such
     //! as data files via http, or file system and parsing (such as FSX models)
-    class BLACKMISC_EXPORT CThreadedReader : public CContinuousWorker
+    class BLACKCORE_EXPORT CThreadedReader : public BlackMisc::CContinuousWorker
     {
     public:
         //! Destructor
@@ -50,14 +51,12 @@ namespace BlackMisc
         //! \note override as required, default is to call initialize()
         virtual void requestReload();
 
-        //! Set the update time
-        //! \param updatePeriodMs <=0 stops the timer
-        //! \threadsafe
-        void setInterval(int updatePeriodMs);
-
         //! Get the timer interval (ms)
         //! \threadsafe
         int interval() const;
+
+        //! Set inverval from settings and start
+        void setIntervalFromSettingsAndStart();
 
     public slots:
         //! Graceful shutdown
@@ -77,8 +76,27 @@ namespace BlackMisc
         //! Make sure everthing runs correctly in own thread
         void threadAssertCheck() const;
 
+        //! Get settings, default implementation returns BlackCore::Settings::CSettingsReader::neverUpdateSettings
+        virtual BlackCore::Settings::CSettingsReader getSettings() const;
+
+        //! Set initial time
+        void setInitialTime();
+
+        //! Set periodic time
+        void setPeriodicTime();
+
+        //! Set the update time
+        //! \param updatePeriodMs <=0 stops the timer
+        //! \threadsafe
+        void setInterval(int updatePeriodMs);
+
     private:
-        QDateTime m_updateTimestamp; //!< when file/resource was read
+        QDateTime               m_updateTimestamp;  //!< when file/resource was read
+        QMetaObject::Connection m_toggleConnection; //!< connection to switch interval from initial to periodic
+
+    private slots:
+        //! switch from initial to periodic
+        void ps_toggleInterval();
     };
 } // namespace
 

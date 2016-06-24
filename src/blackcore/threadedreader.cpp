@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/threadedreader.h"
+#include "blackcore/threadedreader.h"
 #include "blackmisc/threadutils.h"
 
 #include <QCoreApplication>
@@ -20,14 +20,15 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackCore::Settings;
 
-namespace BlackMisc
+namespace BlackCore
 {
     CThreadedReader::CThreadedReader(QObject *owner, const QString &name) :
         CContinuousWorker(owner, name),
         m_updateTimer(new QTimer(this))
     {
-        // void
+        m_toggleConnection = connect(this->m_updateTimer, &QTimer::timeout, this, &CThreadedReader::ps_toggleInterval);
     }
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
@@ -91,15 +92,45 @@ namespace BlackMisc
         Q_UNUSED(s);
     }
 
+    void CThreadedReader::ps_toggleInterval()
+    {
+        disconnect(this->m_toggleConnection);
+        this->setPeriodicTime();
+    }
+
     int CThreadedReader::interval() const
     {
         QReadLocker rl(&this->m_lock);
         return this->m_updateTimer->interval();
     }
 
+    void CThreadedReader::setIntervalFromSettingsAndStart()
+    {
+        this->setInitialTime();
+    }
+
     void CThreadedReader::threadAssertCheck() const
     {
         Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), Q_FUNC_INFO, "Needs to run in own thread");
         Q_ASSERT_X(QObject::thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong object thread");
+    }
+
+    CSettingsReader CThreadedReader::getSettings() const
+    {
+        return CSettingsReader::neverUpdateSettings();
+    }
+
+    void CThreadedReader::setInitialTime()
+    {
+        const CSettingsReader s = this->getSettings();
+        const int ms = s.getInitialTime().toMs();
+        this->setInterval(s.isNeverUpdate() ? -1 : ms);
+    }
+
+    void CThreadedReader::setPeriodicTime()
+    {
+        const CSettingsReader s = this->getSettings();
+        const int ms = s.getPeriodicTime().toMs();
+        this->setInterval(s.isNeverUpdate() ? -1 : ms);
     }
 } // namespace
