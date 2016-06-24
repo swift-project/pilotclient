@@ -70,6 +70,9 @@ namespace BlackMisc
             //! Formatted as hh:mm:ss
             QString formattedHrsMinSec() const;
 
+            //! Convenience functions when used with timers etc.
+            int toMs() const;
+
             //! Formatted as hh:mm
             QString formattedHrsMin() const;
         };
