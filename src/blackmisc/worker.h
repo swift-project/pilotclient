@@ -13,6 +13,7 @@
 #define BLACKMISC_WORKER_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/invoke.h"
 #include "blackmisc/stacktrace.h"
 #include "blackmisc/variant.h"
@@ -110,6 +111,9 @@ namespace BlackMisc
         Q_OBJECT
 
     public:
+        //! Log categories
+        static const CLogCategoryList &getLogCategories();
+
         //! Connects to a functor or method which will be called when the task is finished.
         //! \threadsafe
         template <typename T, typename F>

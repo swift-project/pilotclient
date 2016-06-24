@@ -101,9 +101,9 @@ namespace BlackMisc
     const QString &CDataCache::persistentStore()
     {
         static const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                "/org.swift-project/" +
-                CDirectoryUtils::normalizedApplicationDirectory() +
-                "/data/cache/core";
+                                   "/org.swift-project/" +
+                                   CDirectoryUtils::normalizedApplicationDirectory() +
+                                   "/data/cache/core";
         return dir;
     }
 
@@ -127,10 +127,12 @@ namespace BlackMisc
         if (future.valid())
         {
             std::future_status s {};
-            do { s = future.wait_for(timeout); } while (s != ready && m_revision.isNewerValueAvailable(key, getTimestampSync(key)));
+            do { s = future.wait_for(timeout); }
+            while (s != ready && m_revision.isNewerValueAvailable(key, getTimestampSync(key)));
             if (s != ready) { s = future.wait_for(zero); }
             if (s != ready) { return false; }
-            try { future.get(); } catch (const std::future_error &) { return false; } // broken promise
+            try { future.get(); }
+            catch (const std::future_error &) { return false; }   // broken promise
             return true;
         }
         return false;
@@ -175,12 +177,12 @@ namespace BlackMisc
         case QLockFile::PermissionError: return "Insufficient permission";
         case QLockFile::UnknownError: return "Unknown filesystem error";
         case QLockFile::LockFailedError:
-        {
-            QString hostname, appname;
-            qint64 pid = 0;
-            lock.getLockInfo(&pid, &hostname, &appname);
-            return QString("Lock open in another process (%1 %2 on %3)").arg(hostname, QString::number(pid), appname);
-        }
+            {
+                QString hostname, appname;
+                qint64 pid = 0;
+                lock.getLockInfo(&pid, &hostname, &appname);
+                return QString("Lock open in another process (%1 %2 on %3)").arg(hostname, QString::number(pid), appname);
+            }
         default: return "Bad error number";
         }
     }
@@ -248,6 +250,12 @@ namespace BlackMisc
         {
             m_page->setValuesFromCache(pair.first, pair.second);
         }
+    }
+
+    const CLogCategoryList &CDataCacheSerializer::getLogCategories()
+    {
+        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::cache() };
+        return cats;
     }
 
     CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) :
@@ -489,7 +497,7 @@ namespace BlackMisc
         // don't try to split the conditional into multiple statements.
         // If a future is still waiting for the next update to begin, we don't want to break its associated promise.
         return (m_updateInProgress || m_pendingWrite || beginUpdate({{ key, timestamp }}, false).keepPromises())
-            && (m_timestamps.contains(key) || m_admittedQueue.contains(key));
+        &&(m_timestamps.contains(key) || m_admittedQueue.contains(key));
     }
 
     std::future<void> CDataCacheRevision::promiseLoadedValue(const QString &key, qint64 currentTimestamp)
@@ -571,7 +579,7 @@ namespace BlackMisc
             timestamps.insert(key, timestamp);
             json.insert("timestamps", timestamps);
 
-            if (! (revisionFile.seek(0) && revisionFile.resize(0) && revisionFile.write(QJsonDocument(json).toJson()) && revisionFile.checkedClose()))
+            if (!(revisionFile.seek(0) && revisionFile.resize(0) && revisionFile.write(QJsonDocument(json).toJson()) && revisionFile.checkedClose()))
             {
                 CLogMessage(this).error("Failed to write to %1: %2") << revisionFile.fileName() << revisionFile.errorString();
             }

@@ -16,6 +16,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/valuecache.h"
 #include "blackmisc/valuecacheprivate.h"
 #include "blackmisc/variant.h"
@@ -186,6 +187,9 @@ namespace BlackMisc
         Q_OBJECT
 
     public:
+        //! Log categories
+        static const CLogCategoryList &getLogCategories();
+
         //! Constructor.
         CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName);
 

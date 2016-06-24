@@ -14,7 +14,6 @@
 
 namespace BlackMisc
 {
-
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
     {
         auto *thread = new CRegularThread(owner);
@@ -44,6 +43,12 @@ namespace BlackMisc
         moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
         QMetaObject::invokeMethod(ownThread, "deleteLater");
         QMetaObject::invokeMethod(this, "deleteLater");
+    }
+
+    const CLogCategoryList &CWorkerBase::getLogCategories()
+    {
+        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::worker() };
+        return cats;
     }
 
     void CWorkerBase::waitForFinished() noexcept

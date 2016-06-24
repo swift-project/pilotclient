@@ -117,6 +117,20 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Cache
+        static const CLogCategory &cache()
+        {
+            static const CLogCategory cat { "swift.cache" };
+            return cat;
+        }
+
+        //! Background task
+        static const CLogCategory &worker()
+        {
+            static const CLogCategory cat { "swift.worker" };
+            return cat;
+        }
+
         //! Startup of application
         static const CLogCategory &startup()
         {
@@ -145,6 +159,7 @@ namespace BlackMisc
             static const QList<CLogCategory> cats
             {
                 uncategorized(),
+                cache(),
                 context(),
                 contextSlot(),
                 download(),
@@ -158,7 +173,8 @@ namespace BlackMisc
                 validation(),
                 vatsimSpecific(),
                 verification(),
-                webservice()
+                webservice(),
+                worker()
             };
             return cats;
         }

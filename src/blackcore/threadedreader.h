@@ -14,6 +14,7 @@
 
 #include "blackcore/settings/reader.h"
 #include "blackcore/blackcoreexport.h"
+#include "blackmisc/logcategorylist.h"
 #include "blackmisc/worker.h"
 
 #include <QDateTime>
@@ -32,6 +33,9 @@ namespace BlackCore
     class BLACKCORE_EXPORT CThreadedReader : public BlackMisc::CContinuousWorker
     {
     public:
+        //! Log categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
+
         //! Destructor
         virtual ~CThreadedReader();
 

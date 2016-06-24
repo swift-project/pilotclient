@@ -24,11 +24,22 @@ using namespace BlackCore::Settings;
 
 namespace BlackCore
 {
+    const CLogCategoryList &CThreadedReader::getLogCategories()
+    {
+        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::worker() };
+        return cats;
+    }
+
     CThreadedReader::CThreadedReader(QObject *owner, const QString &name) :
         CContinuousWorker(owner, name),
         m_updateTimer(new QTimer(this))
     {
         m_toggleConnection = connect(this->m_updateTimer, &QTimer::timeout, this, &CThreadedReader::ps_toggleInterval);
+    }
+
+    CThreadedReader::~CThreadedReader()
+    {
+        gracefulShutdown();
     }
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
@@ -69,11 +80,6 @@ namespace BlackCore
         {
             this->abandonAndWait();
         }
-    }
-
-    CThreadedReader::~CThreadedReader()
-    {
-        gracefulShutdown();
     }
 
     void CThreadedReader::setInterval(int updatePeriodMs)
