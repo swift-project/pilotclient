@@ -10,6 +10,7 @@
 #include "blackcore/registermetadata.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/db/databasereader.h"
+#include "blackcore/settings/reader.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/data/vatsimsetup.h"
@@ -22,8 +23,6 @@
 
 #include <QDBusMetaType>
 #include <QMetaType>
-
-
 
 namespace BlackCore
 {
@@ -43,5 +42,7 @@ namespace BlackCore
         BlackCore::Data::CGlobalSetup::registerMetadata();
         BlackCore::Data::CUpdateInfo::registerMetadata();
         BlackCore::Data::CVatsimSetup::registerMetadata();
+
+        BlackCore::Settings::CSettingsReader::registerMetadata();
     }
 } // namespace
