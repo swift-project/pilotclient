@@ -68,10 +68,11 @@ namespace BlackCore
         void CVatsimBookingReader::ps_read()
         {
             this->threadAssertCheck();
+            this->restartTimer(true); // when timer active, restart so we cause no undesired reads
+
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
             const QUrl url(sApp->getGlobalSetup().getVatsimBookingsUrl());
             if (url.isEmpty()) { return; }
-
             sApp->getFromNetwork(url, { this, &CVatsimBookingReader::ps_parseBookings});
         }
 
@@ -114,10 +115,11 @@ namespace BlackCore
                         if (this->getUpdateTimestamp() == updateTimestamp) return; // nothing to do
 
                         // save parsing and all follow up actions if nothing changed
+                        this->restartTimer(); // do not consider time for reading
                         bool changed = this->didContentChange(xmlData, xmlData.indexOf("</timestamp>"));
                         if (!changed)
                         {
-                            CLogMessage(this).info("Bookings unchanged, skipped");
+                            CLogMessage(this).info("Read bookings unchanged, skipped");
                             return; // stop, terminate straight away, ending thread
                         }
                     }

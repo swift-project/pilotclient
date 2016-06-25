@@ -187,6 +187,7 @@ namespace BlackCore
         void CVatsimDataFileReader::ps_read()
         {
             this->threadAssertCheck();
+            this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 
             // round robin for load balancing
             // remark: Don't use QThread to run network operations in the background
@@ -196,7 +197,6 @@ namespace BlackCore
             const QUrl url(urls.obtainNextWorkingUrl(true));
             if (url.isEmpty()) { return; }
             sApp->getFromNetwork(url, { this, &CVatsimDataFileReader::ps_parseVatsimFile});
-
         }
 
         void CVatsimDataFileReader::ps_parseVatsimFile(QNetworkReply *nwReplyPtr)
@@ -222,8 +222,8 @@ namespace BlackCore
                 nwReply->close(); // close asap
 
                 if (dataFileData.isEmpty()) { return; }
-                // Quick check by hash
-                if (!this->didContentChange(dataFileData))
+                this->restartTimer(); // do not consider time for reading
+                if (!this->didContentChange(dataFileData)) // Quick check by hash
                 {
                     CLogMessage(this).info("VATSIM file has same content, skipped");
                     return;

@@ -82,6 +82,8 @@ namespace BlackCore
         void CVatsimMetarReader::ps_readMetars()
         {
             this->threadAssertCheck();
+            this->restartTimer(true); // when timer active, restart so we cause no undesired reads
+
             CFailoverUrlList urls(sApp->getVatsimMetarUrls());
             const CUrl url(urls.obtainNextWorkingUrl(true));
             if (url.isEmpty()) { return; }
@@ -110,8 +112,8 @@ namespace BlackCore
                 QString metarData = nwReply->readAll();
                 nwReply->close(); // close asap
 
-                // Quick check by hash
-                if (!this->didContentChange(metarData))
+                this->restartTimer(); // do not consider time for reading
+                if (!this->didContentChange(metarData)) // Quick check by hash
                 {
                     CLogMessage(this).info("METAR file has same content, skipped");
                     return;

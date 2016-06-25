@@ -98,6 +98,15 @@ namespace BlackCore
         });
     }
 
+    void CThreadedReader::restartTimer(bool onlyWhenActive)
+    {
+        const int intervalMs(this->interval());
+        if (!onlyWhenActive || this->isTimerActive())
+        {
+            this->setInterval(intervalMs);
+        }
+    }
+
     bool CThreadedReader::didContentChange(const QString &content, int startPosition)
     {
         uint oldHash = 0;
@@ -124,6 +133,12 @@ namespace BlackCore
     {
         QReadLocker rl(&this->m_lock);
         return this->m_updateTimer->interval();
+    }
+
+    bool CThreadedReader::isTimerActive() const
+    {
+        QReadLocker rl(&this->m_lock);
+        return this->m_updateTimer->isActive();
     }
 
     void CThreadedReader::setIntervalFromSettingsAndStart()

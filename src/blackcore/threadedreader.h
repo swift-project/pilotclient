@@ -59,6 +59,10 @@ namespace BlackCore
         //! \threadsafe
         int interval() const;
 
+        //! Is timer running
+        //! \threadsafe
+        bool isTimerActive() const;
+
         //! Set inverval from settings and start
         void setIntervalFromSettingsAndStart();
 
@@ -68,7 +72,7 @@ namespace BlackCore
         void gracefulShutdown();
 
     protected:
-        QTimer *m_updateTimer        = nullptr;  //!< update timer
+        QTimer *m_updateTimer = nullptr;  //!< update timer
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
 
         //! Constructor
@@ -93,6 +97,10 @@ namespace BlackCore
         //! \param updatePeriodMs <=0 stops the timer
         //! \threadsafe
         void setInterval(int updatePeriodMs);
+
+        //! Restart timer
+        //! \threadsafe
+        void restartTimer(bool onlyWhenActive = false);
 
         //! Stores new content hash and returns if content changed (based on hash value
         //! \threadsafe

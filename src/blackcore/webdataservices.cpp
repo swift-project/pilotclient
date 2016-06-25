@@ -61,7 +61,7 @@ namespace BlackCore
         const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // only cached?
         if (!readFromSwiftDb && readers.testFlag(CWebReaderFlags::InfoDataReader))
         {
-            // will remove info reader becaue not needed
+            // will remove info reader because not needed
             readers &= ~CWebReaderFlags::InfoDataReader;
             this->m_readers = readers;
             CLogMessage(this).info("Remove info object reader because not needed");
@@ -72,7 +72,7 @@ namespace BlackCore
         if (entities.testFlag(CEntityFlags::InfoObjectEntity))
         {
             Q_ASSERT_X(readers.testFlag(CWebReaderFlags::InfoDataReader), Q_FUNC_INFO, "info object but no reader");
-            CLogMessage(this).info("Using info objects for swift DB objects");
+            CLogMessage(this).info("Using info objects for swift DB entities");
         }
 
         this->initReaders(readers); // reads info object if required
@@ -80,7 +80,9 @@ namespace BlackCore
 
         // make sure this is called in event queue, so pending tasks cam be performed
         // important so info objects can be read
-        entities &= ~CEntityFlags::InfoObjectEntity;
+        entities &= ~CEntityFlags::InfoObjectEntity;   // triggered in init readers
+        entities &= ~CEntityFlags::VatsimStatusFile;   // triggered in init readers
+        entities &= ~this->m_entitiesPeriodicallyRead; // will be triggered by timers
         this->singleShotReadInBackground(entities, 1000);
     }
 
@@ -440,10 +442,9 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO info object signals");
             c = connect(this->m_infoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed info data");
+            this->m_infoDataReader->start(QThread::LowPriority);
 
             // info data reader has a special role, it will not be triggered in triggerRead()
-            this->m_infoDataReader->start(QThread::LowPriority);
-            // directly call read
             QTimer::singleShot(0, [this]() { this->m_infoDataReader->read(CEntityFlags::InfoObjectEntity, QDateTime()); });
         }
 
@@ -466,6 +467,7 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM booking reader signals");
             c = connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed bookings");
+            this->m_entitiesPeriodicallyRead |= CEntityFlags::BookingEntity;
             this->m_vatsimBookingReader->start(QThread::LowPriority);
             this->m_vatsimBookingReader->setIntervalFromSettingsAndStart();
         }
@@ -478,6 +480,7 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
             c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
+            this->m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
             this->m_vatsimDataFileReader->start(QThread::LowPriority);
             this->m_vatsimDataFileReader->setIntervalFromSettingsAndStart();
         }
@@ -490,6 +493,7 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
             c = connect(this->m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
+            this->m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
             this->m_vatsimMetarReader->start(QThread::LowPriority);
             this->m_vatsimMetarReader->setIntervalFromSettingsAndStart();
         }
