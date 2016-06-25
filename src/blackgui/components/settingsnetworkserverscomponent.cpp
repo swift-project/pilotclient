@@ -38,7 +38,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CSettingsNetworkServersComponent::CSettingsNetworkServersComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CSettingsNetworkServersComponent)

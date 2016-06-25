@@ -34,7 +34,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <spacer name="vs_NetworkSettings">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -47,8 +47,41 @@
      </property>
     </spacer>
    </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="gb_Services">
+     <property name="title">
+      <string>Services</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="BlackGui::Components::CSettingsVatsimReadersComponent" name="comp_ReaderSettings">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsVatsimReadersComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsvatsimreaderscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
