@@ -228,9 +228,9 @@ namespace BlackSample
             user.setCallsign(cs);
             CClient client(user);
             client.setCapability(true, CClient::FsdWithInterimPositions);
-            client.setCapability(true, CClient::FsdWithModelDescription);
-            QString myFooModel = QString("fooModel %1").arg(i);
-            client.setAircraftModel(CAircraftModel(myFooModel, CAircraftModel::TypeQueriedFromNetwork));
+            client.setCapability(true, CClient::FsdWithIcaoCodes);
+            const QString myFooModel = QString("fooModel %1").arg(i);
+            client.setQueriedModelString(myFooModel);
             list.push_back(client);
         }
         return list;

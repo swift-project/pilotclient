@@ -956,7 +956,7 @@ namespace BlackCore
         int flags = 0;
         if (capabilityFlags & vatCapsAtcInfo) { flags |= AcceptsAtisResponses; }
         if (capabilityFlags & vatCapsInterminPos) { flags |= SupportsInterimPosUpdates; }
-        if (capabilityFlags & vatCapsModelDesc) { flags |= SupportsModelDescriptions; }
+        if (capabilityFlags & vatCapsModelDesc) { flags |= SupportsIcaoCodes; }
         if (capabilityFlags & vatCapsAircraftConfig) { flags |= SupportsAircraftConfigs; }
         emit cbvar_cast(cbvar)->capabilitiesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), flags);
     }

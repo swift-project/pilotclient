@@ -50,7 +50,7 @@ namespace BlackMisc
             QStringList sl;
             if (this->hasCapability(FsdAtisCanBeReceived)) sl << "ATIS";
             if (this->hasCapability(FsdWithInterimPositions)) sl << "interim pos.";
-            if (this->hasCapability(FsdWithModelDescription)) sl << "model";
+            if (this->hasCapability(FsdWithIcaoCodes)) sl << "ICAO";
             if (this->hasCapability(FsdWithAircraftConfig)) sl << "aircraft config";
             if (sl.isEmpty()) return "";
             return sl.join(", ");

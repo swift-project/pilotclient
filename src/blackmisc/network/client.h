@@ -54,7 +54,7 @@ namespace BlackMisc
             enum Capabilities
             {
                 FsdWithInterimPositions = BlackMisc::CPropertyIndex::GlobalIndexAbuseMode,
-                FsdWithModelDescription,
+                FsdWithIcaoCodes, //!< basically means it is a pilot client handling ICAO code pacakages
                 FsdAtisCanBeReceived,
                 FsdWithAircraftConfig
             };
