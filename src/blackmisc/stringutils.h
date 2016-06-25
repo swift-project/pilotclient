@@ -69,6 +69,9 @@ namespace BlackMisc
     //! Strip a designator from a combined string
     BLACKMISC_EXPORT QString stripDesignatorFromCompleterString(const QString &candidate);
 
+    //! Strip a designator from a combined string
+    BLACKMISC_EXPORT QStringList textCodecNames(bool simpleNames, bool mibNames);
+
     namespace Mixin
     {
         /*!

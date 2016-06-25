@@ -20,6 +20,7 @@ namespace BlackMisc
             CClient::registerMetadata();
             CClientList::registerMetadata();
             CEntityFlags::registerMetadata();
+            CFsdSetup::registerMetadata();
             CRole::registerMetadata();
             CRoleList::registerMetadata();
             CServer::registerMetadata();
