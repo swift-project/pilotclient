@@ -109,8 +109,15 @@ namespace BlackCore
             {
                 QString metarData = nwReply->readAll();
                 nwReply->close(); // close asap
-                CMetarSet metars;
 
+                // Quick check by hash
+                if (!this->didContentChange(metarData))
+                {
+                    CLogMessage(this).info("METAR file has same content, skipped");
+                    return;
+                }
+
+                CMetarSet metars;
                 QString invalidMetars;
                 int invalidLineCount = 0;
                 QTextStream lineReader(&metarData);

@@ -211,7 +211,7 @@ namespace BlackCore
             if (this->isAbandoned())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
-                CLogMessage(this).info("Terminated VATSIM file parsing process"); // for users
+                CLogMessage(this).info("Terminated VATSIM file parsing process");
                 return; // stop, terminate straight away, ending thread
             }
 
@@ -221,7 +221,13 @@ namespace BlackCore
                 const QString dataFileData = nwReply->readAll();
                 nwReply->close(); // close asap
 
-                if (dataFileData.isEmpty()) return;
+                if (dataFileData.isEmpty()) { return; }
+                // Quick check by hash
+                if (!this->didContentChange(dataFileData))
+                {
+                    CLogMessage(this).info("VATSIM file has same content, skipped");
+                    return;
+                }
                 const QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
                 if (lines.isEmpty()) { return; }
 
@@ -240,7 +246,7 @@ namespace BlackCore
                     if (this->isAbandoned())
                     {
                         CLogMessage(this).debug() << Q_FUNC_INFO;
-                        CLogMessage(this).info("Terminated booking parsing process"); // for users
+                        CLogMessage(this).info("Terminated VATSIM file parsing process"); // for users
                         return; // stop, terminate straight away, ending thread
                     }
 
@@ -347,7 +353,11 @@ namespace BlackCore
                                 updateTimestampFromFile = QDateTime::fromString(dts, "yyyyMMddHHmmss");
                                 updateTimestampFromFile.setOffsetFromUtc(0);
                                 bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
-                                if (alreadyRead) { return; }// still same data, terminate
+                                if (alreadyRead)
+                                {
+                                    CLogMessage(this).info("VATSIM file has same timestamp, skipped");
+                                    return;
+                                }
                             }
                         }
                         break;
@@ -388,10 +398,15 @@ namespace BlackCore
                     this->m_atcStations = atcStations;
                     this->m_voiceCapabilities = voiceCapabilities;
                     CVatsimSetup vs(this->m_lastGoodSetup.getThreadLocal());
-                    vs.setVoiceServers(voiceServers);
-                    vs.setFsdServers(fsdServers);
-                    vs.setUtcTimestamp(updateTimestampFromFile);
-                    this->m_lastGoodSetup.set(vs);
+
+                    // check if we need to save in cache
+                    if (vs.getVoiceServers() != voiceServers || vs.getFsdServers() != fsdServers)
+                    {
+                        vs.setVoiceServers(voiceServers);
+                        vs.setFsdServers(fsdServers);
+                        vs.setUtcTimestamp(updateTimestampFromFile);
+                        this->m_lastGoodSetup.set(vs);
+                    }
                 }
 
                 // warnings, if required

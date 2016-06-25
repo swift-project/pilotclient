@@ -85,17 +85,33 @@ namespace BlackCore
     void CThreadedReader::setInterval(int updatePeriodMs)
     {
         Q_ASSERT(this->m_updateTimer);
-        bool s;
-        if (updatePeriodMs < 1)
+        QTimer::singleShot(0, this, [this, updatePeriodMs]
         {
-            s = QMetaObject::invokeMethod(m_updateTimer, "stop");
-        }
-        else
+            QWriteLocker wl(&this->m_lock);
+            if (updatePeriodMs < 1)
+            {
+                this->m_updateTimer->stop();
+            }
+            else {
+                this->m_updateTimer->start(updatePeriodMs);
+            }
+        });
+    }
+
+    bool CThreadedReader::didContentChange(const QString &content, int startPosition)
+    {
+        uint oldHash = 0;
         {
-            s = QMetaObject::invokeMethod(m_updateTimer, "start", Q_ARG(int, updatePeriodMs));
+            QReadLocker rl(&this->m_lock);
+            oldHash = this->m_contentHash;
         }
-        Q_ASSERT_X(s, Q_FUNC_INFO, "Failed invoke");
-        Q_UNUSED(s);
+        uint newHash = qHash(startPosition < 0 ? content : content.mid(startPosition));
+        if (oldHash == newHash) { return false; }
+        {
+            QWriteLocker wl(&this->m_lock);
+            this->m_contentHash = newHash;
+        }
+        return true;
     }
 
     void CThreadedReader::ps_toggleInterval()

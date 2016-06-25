@@ -83,22 +83,22 @@ namespace BlackCore
 
             this->threadAssertCheck();
 
-            // Worker thread, make sure to write no members here!
+            // Worker thread, make sure to write no members here od do it threadsafe
             if (this->isAbandoned())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
-                CLogMessage(this).info("terminated booking parsing process"); // for users
+                CLogMessage(this).info("Terminated booking parsing process");
                 return; // stop, terminate straight away, ending thread
             }
 
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 static const QString timestampFormat("yyyy-MM-dd HH:mm:ss");
-                QString xmlData = nwReply->readAll();
+                const QString xmlData = nwReply->readAll();
                 nwReply->close(); // close asap
-                QDomDocument doc;
-                QDateTime updateTimestamp = QDateTime::currentDateTimeUtc();
 
+                QDomDocument doc;
+                QDateTime updateTimestamp = QDateTime::currentDateTimeUtc(); // default
                 if (doc.setContent(xmlData))
                 {
                     QDomNode timestamp = doc.elementsByTagName("timestamp").at(0);
@@ -112,6 +112,14 @@ namespace BlackCore
                         updateTimestamp = QDateTime::fromString(ts, timestampFormat);
                         updateTimestamp.setTimeSpec(Qt::UTC);
                         if (this->getUpdateTimestamp() == updateTimestamp) return; // nothing to do
+
+                        // save parsing and all follow up actions if nothing changed
+                        bool changed = this->didContentChange(xmlData, xmlData.indexOf("</timestamp>"));
+                        if (!changed)
+                        {
+                            CLogMessage(this).info("Bookings unchanged, skipped");
+                            return; // stop, terminate straight away, ending thread
+                        }
                     }
 
                     QDomNode atc = doc.elementsByTagName("atcs").at(0);

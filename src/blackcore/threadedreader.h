@@ -94,8 +94,13 @@ namespace BlackCore
         //! \threadsafe
         void setInterval(int updatePeriodMs);
 
+        //! Stores new content hash and returns if content changed (based on hash value
+        //! \threadsafe
+        bool didContentChange(const QString &content, int startPosition = -1);
+
     private:
         QDateTime               m_updateTimestamp;  //!< when file/resource was read
+        uint                    m_contentHash = 0;  //!< has of the content given
         QMetaObject::Connection m_toggleConnection; //!< connection to switch interval from initial to periodic
 
     private slots:
