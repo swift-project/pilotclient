@@ -390,6 +390,10 @@ namespace BlackCore
 
                 } // for each line
 
+
+                // setup for VATSIM
+                fsdServers.setFsdSetup(CFsdSetup::vatsimStandard());
+
                 // this part needs to be synchronized
                 {
                     QWriteLocker wl(&this->m_lock);

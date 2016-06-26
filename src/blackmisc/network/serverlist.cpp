@@ -71,5 +71,13 @@ namespace BlackMisc
                 this->addIfAddressNotExists(s);
             }
         }
+
+        void CServerList::setFsdSetup(const CFsdSetup &setup)
+        {
+            for (CServer &s : *this)
+            {
+                s.setFsdSetup(setup);
+            }
+        }
     } // namespace
 } // namespace

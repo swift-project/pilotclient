@@ -83,6 +83,5 @@ namespace BlackCore
                 break;
             }
         }
-
     } // ns
 } // ns

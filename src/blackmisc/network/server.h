@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valueobject.h"
@@ -39,6 +40,7 @@ namespace BlackMisc
                 IndexAddress,
                 IndexPort,
                 IndexUser,
+                IndexFsdSetup,
                 IndexIsAcceptingConnections
             };
 
@@ -46,8 +48,7 @@ namespace BlackMisc
             CServer() {}
 
             //! Constructor.
-            CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user, bool isAcceptingConnections = true)
-                : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
+            CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user, bool isAcceptingConnections = true);
 
             //! Get address.
             const QString &getAddress() const { return m_address; }
@@ -100,6 +101,12 @@ namespace BlackMisc
             //! Address and port?
             bool hasAddressAndPort() const;
 
+            //! Get setup
+            const CFsdSetup &getFsdSetup() const { return this->m_fsdSetup; }
+
+            //! Set setup
+            void setFsdSetup(const CFsdSetup &setup) { this->m_fsdSetup = setup; }
+
             //! Validate, provide details about issues
             BlackMisc::CStatusMessageList validate() const;
 
@@ -113,12 +120,13 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
         private:
-            QString m_name;
-            QString m_description;
-            QString m_address;
-            int     m_port = -1;
-            CUser   m_user;
-            bool    m_isAcceptingConnections = true; //!< temp. disable server
+            QString   m_name;
+            QString   m_description;
+            QString   m_address;
+            int       m_port = -1;
+            CUser     m_user;
+            CFsdSetup m_fsdSetup;
+            bool      m_isAcceptingConnections = true; //!< temp. disable server
 
             BLACK_METACLASS(
                 CServer,
@@ -127,6 +135,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(address),
                 BLACK_METAMEMBER(port),
                 BLACK_METAMEMBER(user),
+                BLACK_METAMEMBER(fsdSetup),
                 BLACK_METAMEMBER(isAcceptingConnections)
             );
         };

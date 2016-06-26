@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/network/server.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"
@@ -21,6 +22,9 @@ namespace BlackMisc
 {
     namespace Network
     {
+        CServer::CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user, bool isAcceptingConnections)
+            : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
+
         QString CServer::convertToQString(bool i18n) const
         {
             QString s(this->m_name);
@@ -28,7 +32,8 @@ namespace BlackMisc
             s.append(" ").append(this->m_address);
             s.append(" ").append(QString::number(this->m_port));
             s.append(" ").append(this->m_user.toQString(i18n));
-            s.append(" ").append(this->m_isAcceptingConnections ? "true" : "false");
+            s.append(" ").append(boolToYesNo(this->m_isAcceptingConnections));
+            s.append(" ").append(this->m_fsdSetup.toQString(i18n));
             return s;
         }
 
@@ -69,6 +74,7 @@ namespace BlackMisc
             if (this->getDescription().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing description")); }
             if (this->getPort() < 1 || this->getPort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Wrong port")); }
             msgs.push_back(this->getUser().validate());
+            msgs.push_back(this->getFsdSetup().validate());
             msgs.addCategories(cats);
             return msgs;
         }
@@ -89,6 +95,8 @@ namespace BlackMisc
                 return CVariant::fromValue(this->m_port);
             case IndexUser:
                 return this->m_user.propertyByIndex(index.copyFrontRemoved());
+            case IndexFsdSetup:
+                return this->m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
             case IndexIsAcceptingConnections:
                 return CVariant::fromValue(this->m_isAcceptingConnections);
             default:
@@ -117,6 +125,9 @@ namespace BlackMisc
             case IndexUser:
                 this->m_user.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
+            case IndexFsdSetup:
+                this->m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                break;
             case IndexIsAcceptingConnections:
                 this->setIsAcceptingConnections(variant.value<bool>());
                 break;
@@ -125,6 +136,5 @@ namespace BlackMisc
                 break;
             }
         }
-
     } // namespace
 } // namespace

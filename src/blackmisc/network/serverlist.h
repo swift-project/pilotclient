@@ -55,6 +55,9 @@ namespace BlackMisc
 
             //! Add if address not already exists
             void addIfAddressNotExists(const CServerList &servers);
+
+            //! Set FSD setup for all entries
+            void setFsdSetup(const CFsdSetup &setup);
         };
     } //namespace
 } // namespace
