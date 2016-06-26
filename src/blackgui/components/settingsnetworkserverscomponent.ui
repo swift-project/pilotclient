@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>282</width>
-    <height>334</height>
+    <width>322</width>
+    <height>310</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>150</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
@@ -52,11 +58,11 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::Components::CServerForm" name="frp_ServerForm">
+    <widget class="BlackGui::Editors::CServerForm" name="form_Server">
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>120</height>
+       <height>150</height>
       </size>
      </property>
      <property name="frameShape">
@@ -138,12 +144,12 @@
     </widget>
    </item>
    <item>
-    <spacer name="vs_SettingsTnServersWorkaround">
+    <spacer name="vs_Buttons">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
+      <enum>QSizePolicy::Fixed</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -157,15 +163,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CServerForm</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/serverform.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Views::CServerView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/serverview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Editors::CServerForm</class>
+   <extends>QFrame</extends>
+   <header>blackgui/editors/serverform.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

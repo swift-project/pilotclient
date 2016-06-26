@@ -13,10 +13,8 @@
 #define BLACKGUI_EDITORS_FORM_H
 
 #include "blackgui/overlaymessagesframe.h"
-#include "blackgui/blackguiexport.h"
 #include "blackcore/data/authenticateduser.h"
 #include "blackmisc/datacache.h"
-
 #include <QFrame>
 #include <QObject>
 
@@ -31,7 +29,7 @@ namespace BlackGui
         /*!
          * Form base class
          */
-        class BLACKGUI_EXPORT CForm : public COverlayMessagesFrame
+        class CForm : public COverlayMessagesFrame
         {
             Q_OBJECT
 
@@ -47,7 +45,10 @@ namespace BlackGui
 
             //! Read only, but entity can be selected (normally used in mapping).
             //! Use setReadOnly to reset this very state
-            virtual void setSelectOnly() = 0;
+            virtual void setSelectOnly();
+
+            //! Validate, empty list means OK
+            virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects = true) const;
 
             //! Is read only?
             bool isReadOnly() const { return m_readOnly; }
@@ -63,7 +64,6 @@ namespace BlackGui
             //! User has been changed
             virtual void ps_userChanged();
         };
-
     } // ns
 } // ns
 

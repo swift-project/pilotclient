@@ -10,7 +10,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackcore/contextapplication.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackgui/components/serverform.h"
+#include "blackgui/editors/serverform.h"
 #include "blackgui/components/settingsnetworkserverscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/serverview.h"
@@ -71,12 +71,12 @@ namespace BlackGui
         void CSettingsNetworkServersComponent::ps_serverSelected(const QModelIndex &index)
         {
             const CServer clickedServer = this->ui->tvp_Servers->at(index);
-            this->ui->frp_ServerForm->setServer(clickedServer);
+            this->ui->form_Server->setServer(clickedServer);
         }
 
         void CSettingsNetworkServersComponent::ps_alterTrafficServer()
         {
-            CServer server(this->ui->frp_ServerForm->getServer());
+            CServer server(this->ui->form_Server->getServer());
             CStatusMessageList  msgs = server.validate();
             if (!msgs.isEmpty()) { msgs.addCategories(this); }
 

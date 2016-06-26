@@ -9,8 +9,8 @@
 
 #include "blackgui/editors/form.h"
 
-class QWidget;
-namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
+using namespace BlackMisc;
+using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
@@ -21,7 +21,18 @@ namespace BlackGui
 
         CForm::~CForm() { }
 
-        const BlackMisc::Network::CAuthenticatedUser &CForm::getSwiftDbUser() const
+        void CForm::setSelectOnly()
+        {
+            this->setReadOnly(true);
+        }
+
+        CStatusMessageList CForm::validate(bool withNestedObjects) const
+        {
+            Q_UNUSED(withNestedObjects);
+            return CStatusMessageList();
+        }
+
+        const CAuthenticatedUser &CForm::getSwiftDbUser() const
         {
             return this->m_swiftDbUser.getThreadLocal();
         }
