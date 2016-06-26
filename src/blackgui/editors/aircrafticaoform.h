@@ -47,20 +47,18 @@ namespace BlackGui
             //! Get value
             BlackMisc::Aviation::CAircraftIcaoCode getValue() const;
 
-            //! Validate, empty list means OK
-            BlackMisc::CStatusMessageList validate() const;
-
             //! Allow to drop
             void allowDrop(bool allowDrop);
 
             //! Is drop allowed?
             bool isDropAllowed() const;
 
-            //! \copydoc CForm::setReadOnly
-            virtual void setReadOnly(bool readOnly) override;
-
-            //! \copydoc CForm::setSelectOnly
+            //! \name Form class implementations
+            //! @{
+            virtual void setReadOnly(bool readonly) override;
             virtual void setSelectOnly() override;
+            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+            //! @}
 
             //! Clear
             void clear();

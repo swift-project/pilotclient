@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/components/serverform.h"
+#include "blackgui/editors/serverform.h"
 #include "blackmisc/network/user.h"
 #include "ui_serverform.h"
 
@@ -19,10 +19,10 @@ using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
-    namespace Components
+    namespace Editors
     {
         CServerForm::CServerForm(QWidget *parent) :
-            QFrame(parent),
+            CForm(parent),
             ui(new Ui::CNetworkServerForm)
         {
             ui->setupUi(this);
@@ -42,6 +42,7 @@ namespace BlackGui
             this->ui->le_Description->setText(server.getDescription());
             this->ui->le_Address->setText(server.getAddress());
             this->ui->le_Port->setText(QString::number(server.getPort()));
+            this->ui->form_ServerFsd->setValue(server.getFsdSetup());
         }
 
         BlackMisc::Network::CServer CServerForm::getServer() const
@@ -59,6 +60,8 @@ namespace BlackGui
                 this->ui->le_Port->text().trimmed().toInt(),
                 user
             );
+            CFsdSetup setup(this->ui->form_ServerFsd->getValue());
+            server.setFsdSetup(setup);
             return server;
         }
 
@@ -71,6 +74,7 @@ namespace BlackGui
             this->ui->le_Address->setReadOnly(readOnly);
             this->ui->le_Port->setReadOnly(readOnly);
             this->ui->le_Password->setReadOnly(readOnly);
+            this->ui->form_ServerFsd->setReadOnly(readOnly);
         }
 
         void CServerForm::showPasswordField(bool show)
@@ -88,9 +92,10 @@ namespace BlackGui
             this->ui->le_Password->setVisible(show);
         }
 
-        BlackMisc::CStatusMessageList CServerForm::validate() const
+        BlackMisc::CStatusMessageList CServerForm::validate(bool nested) const
         {
-            CServer server = getServer();
+            Q_UNUSED(nested);
+            const CServer server = getServer();
             return server.validate();
         }
     } // ns

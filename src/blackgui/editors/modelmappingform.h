@@ -46,13 +46,13 @@ namespace BlackGui
             BlackMisc::Simulation::CAircraftModel getValue() const;
 
             //! Validate
-            BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
 
-            //! \copydoc CForm::setReadOnly
-            virtual void setReadOnly(bool readOnly) override;
-
-            //! \copydoc CForm::setSelectOnly
+            //! \name Form class implementations
+            //! @{
+            virtual void setReadOnly(bool readonly) override;
             virtual void setSelectOnly() override;
+            virtual BlackMisc::CStatusMessageList validate(bool withNestedObjects) const override;
+            //! @}
 
         public slots:
             //! Set model

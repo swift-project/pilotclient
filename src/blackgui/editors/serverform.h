@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_NETWORKSERVERFORM_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/editors/form.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -27,10 +28,10 @@ namespace Ui { class CNetworkServerForm; }
 
 namespace BlackGui
 {
-    namespace Components
+    namespace Editors
     {
         //! Server form
-        class BLACKGUI_EXPORT CServerForm : public QFrame
+        class BLACKGUI_EXPORT CServerForm : public CForm
         {
             Q_OBJECT
 
@@ -47,14 +48,14 @@ namespace BlackGui
             //! Get server
             BlackMisc::Network::CServer getServer() const;
 
-            //! Set read only
-            void setReadOnly(bool readOnly);
+            //! \name Form class implementations
+            //! @{
+            virtual void setReadOnly(bool readonly) override;
+            virtual BlackMisc::CStatusMessageList validate(bool nested = false) const override;
+            //! @}
 
             //! Show the password field
             void showPasswordField(bool show);
-
-            //! Validate and provide messages (empty means OK)
-            BlackMisc::CStatusMessageList validate() const;
 
         private:
             QScopedPointer<Ui::CNetworkServerForm> ui;

@@ -16,7 +16,7 @@
 #include "blackcore/network.h"
 #include "blackcore/simulator.h"
 #include "blackgui/components/logincomponent.h"
-#include "blackgui/components/serverform.h"
+#include "blackgui/editors/serverform.h"
 #include "blackgui/components/serverlistselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/loginmodebuttons.h"

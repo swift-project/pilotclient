@@ -70,8 +70,9 @@ namespace BlackGui
             return distributor;
         }
 
-        CStatusMessageList CDistributorForm::validate() const
+        CStatusMessageList CDistributorForm::validate(bool nested) const
         {
+            Q_UNUSED(nested);
             CDistributor distributor(getValue());
             CStatusMessageList msgs(distributor.validate());
             if (this->isReadOnly())

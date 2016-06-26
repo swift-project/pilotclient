@@ -87,8 +87,9 @@ namespace BlackGui
             return code;
         }
 
-        CStatusMessageList CAirlineIcaoForm::validate() const
+        CStatusMessageList CAirlineIcaoForm::validate(bool nested) const
         {
+            Q_UNUSED(nested);
             CAirlineIcaoCode code(getValue());
             CStatusMessageList msgs(code.validate());
             if (this->isReadOnly())

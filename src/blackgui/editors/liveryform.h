@@ -33,8 +33,7 @@ namespace BlackGui
         /*!
          * Livery form class
          */
-        class BLACKGUI_EXPORT CLiveryForm :
-            public CForm
+        class BLACKGUI_EXPORT CLiveryForm : public CForm
         {
             Q_OBJECT
 
@@ -51,9 +50,6 @@ namespace BlackGui
             //! Embedded ariline
             BlackMisc::Aviation::CAirlineIcaoCode getValueAirlineIcao() const;
 
-            //! Validate, empty list means OK
-            BlackMisc::CStatusMessageList validate(bool withNestedForms) const;
-
             //! Validate airline ICAO code only
             BlackMisc::CStatusMessageList validateAirlineIcao() const;
 
@@ -63,11 +59,12 @@ namespace BlackGui
             //! Is drop allowed?
             bool isDropAllowed() const;
 
-            //! \copydoc CForm::setReadOnly
-            virtual void setReadOnly(bool readOnly) override;
-
-            //! \copydoc CForm::setSelectOnly
+            //! \name Form class implementations
+            //! @{
+            virtual void setReadOnly(bool readonly) override;
             virtual void setSelectOnly() override;
+            virtual BlackMisc::CStatusMessageList validate(bool withNestedForms) const override;
+            //! @}
 
             //! Clear data
             void clear();

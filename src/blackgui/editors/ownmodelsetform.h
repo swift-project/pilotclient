@@ -68,7 +68,6 @@ namespace BlackGui
             //! \name Form functions, here not used
             //! \@{
             virtual void setReadOnly(bool readOnly) override { Q_UNUSED(readOnly); }
-            virtual void setSelectOnly() override {}
             //! \@}
 
         signals:
