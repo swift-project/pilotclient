@@ -27,13 +27,37 @@ namespace BlackGui
         {
             if (this->m_servers == servers) { return; }
             this->setItemStrings(servers);
+            if (!servers.isEmpty() && !m_pendingPreselect.isEmpty())
+            {
+                this->preSelect(m_pendingPreselect);
+                m_pendingPreselect.clear();
+            }
         }
 
-        BlackMisc::Network::CServer CServerListSelector::currentServer() const
+        CServer CServerListSelector::currentServer() const
         {
-            int i = currentIndex();
+            const int i = currentIndex();
             if (i < 0 || i >= m_servers.size()) { return CServer(); }
             return m_servers[i];
+        }
+
+        bool CServerListSelector::preSelect(const QString &name)
+        {
+            if (name.isEmpty()) { return false; }
+            if (m_servers.isEmpty())
+            {
+                m_pendingPreselect = name; // save for later
+                return false;
+            }
+            for (int i = 0; i < m_servers.size(); i++)
+            {
+                if (m_servers[i].matchesName(name))
+                {
+                    this->setCurrentIndex(i);
+                    return true;
+                }
+            }
+            return false;
         }
 
         void CServerListSelector::setItemStrings(const CServerList &servers)

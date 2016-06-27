@@ -85,8 +85,8 @@ namespace BlackGui
             this->ui->lblp_VatsimPassword->setToolTips("ok", "wrong");
             this->ui->lblp_VatsimRealName->setToolTips("ok", "wrong");
 
-            // Settings loaded
-            this->loadFromSettings();
+            // Stored data
+            this->loadRememberedVatsimData();
 
             // Remark: The validators affect the signals such as returnPressed, editingFinished
             // So I use no ranges in the CUpperCaseValidators, as this disables the signals for invalid values
@@ -137,7 +137,7 @@ namespace BlackGui
                 otherServers.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
                 CLogMessage(this).info("Added servers for testing");
             }
-            this->ui->cbp_OtherServers->setServers(otherServers);
+            this->ui->comp_OtherServers->setServers(otherServers);
         }
 
         CLoginComponent::~CLoginComponent()
@@ -180,12 +180,14 @@ namespace BlackGui
 
         void CLoginComponent::ps_toggleNetworkConnection()
         {
-            bool isConnected = sGui->getIContextNetwork()->isConnected();
+            const bool isConnected = sGui->getIContextNetwork()->isConnected();
+            const bool vatsimLogin = (this->ui->tw_Network->currentWidget() == this->ui->pg_NetworkVatsim);
+            CServer currentServer; // used for login
+            CSimulatedAircraft ownAircraft; // used own aircraft
             CStatusMessage msg;
             if (!isConnected)
             {
 
-                bool vatsimLogin = (this->ui->tw_Network->currentWidget() == this->ui->pg_NetworkVatsim);
                 if (!this->ps_validateAircraftValues())
                 {
                     CLogMessage(this).warning("Invalid aircraft data, login not possible");
@@ -200,7 +202,7 @@ namespace BlackGui
 
                 // sync values with GUI values
                 CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
-                CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+                ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
                 CAircraftIcaoCode aircraftCode(ownAircraft.getAircraftIcaoCode());
                 CAirlineIcaoCode airlineCode(ownAircraft.getAirlineIcaoCode());
 
@@ -244,11 +246,10 @@ namespace BlackGui
                 }
 
                 // Server
-                CServer currentServer;
                 if (vatsimLogin)
                 {
                     currentServer = this->getCurrentVatsimServer();
-                    CUser vatsimUser = this->getUserFromVatsimGuiValues();
+                    const CUser vatsimUser = this->getUserFromVatsimGuiValues();
                     currentServer.setUser(vatsimUser);
                 }
                 else
@@ -274,6 +275,11 @@ namespace BlackGui
             if (msg.isSeverityInfoOrLess())
             {
                 emit loginOrLogoffSuccessful();
+                if (vatsimLogin)
+                {
+                    this->m_currentVatsimServer.set(currentServer);
+                    this->m_currentAircraftModel.setAndSave(ownAircraft.getModel());
+                }
             }
             else
             {
@@ -281,16 +287,17 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::ps_onWebServiceDataRead(int entityI, int stateI, int number)
-        // void CLoginComponent::ps_onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState, int number)
+        void CLoginComponent::ps_onWebServiceDataRead(int entityInt, int stateI, int number)
         {
-            CEntityFlags::EntityFlag entity = static_cast<CEntityFlags::EntityFlag>(entityI);
-            CEntityFlags::ReadState state = static_cast<CEntityFlags::ReadState>(stateI);
+            const CEntityFlags::EntityFlag entity = static_cast<CEntityFlags::EntityFlag>(entityInt);
+            const CEntityFlags::ReadState state = static_cast<CEntityFlags::ReadState>(stateI);
             if (entity != CEntityFlags::VatsimDataFile || state != CEntityFlags::ReadFinished) { return; }
             Q_UNUSED(number);
-            CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
+            const CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
             if (vatsimFsdServers.isEmpty()) { return; }
-            this->ui->cbp_VatsimServer->setServers(vatsimFsdServers);
+            const CServer currentServer = this->m_currentVatsimServer.get();
+            this->ui->comp_VatsimServer->setServers(vatsimFsdServers);
+            this->ui->comp_VatsimServer->preSelect(currentServer.getName());
         }
 
         void CLoginComponent::setGuiValuesFromAircraft(const CSimulatedAircraft &ownAircraft)
@@ -302,14 +309,27 @@ namespace BlackGui
             this->ui->le_AircraftCombinedType->setText(aircraftIcao.getCombinedType());
         }
 
-        void CLoginComponent::loadFromSettings()
+        void CLoginComponent::loadRememberedVatsimData()
         {
-            //! \todo replace with loading from settings when completed
-            this->ui->le_Callsign->setText("SWIFT");
-            this->ui->le_VatsimId->setText("1288459");
-            this->ui->le_VatsimPassword->setText("4769");
-            this->ui->le_VatsimHomeAirport->setText("LOWI");
-            this->ui->le_VatsimRealName->setText("Black Swift");
+            const CServer lastServer = this->m_currentVatsimServer.get();
+            const CUser lastUser = lastServer.getUser();
+            if (lastUser.hasValidCallsign())
+            {
+                this->ui->le_Callsign->setText(lastUser.getCallsign().asString());
+                this->ui->le_VatsimId->setText(lastUser.getId());
+                this->ui->le_VatsimPassword->setText(lastUser.getPassword());
+                this->ui->le_VatsimHomeAirport->setText(lastUser.getHomebase().asString());
+                this->ui->le_VatsimRealName->setText(lastUser.getRealName());
+            }
+            else
+            {
+                this->ui->le_Callsign->setText("SWIFT");
+                this->ui->le_VatsimId->setText("1288459");
+                this->ui->le_VatsimPassword->setText("4769");
+                this->ui->le_VatsimHomeAirport->setText("LOWI");
+                this->ui->le_VatsimRealName->setText("Black Swift");
+            }
+            this->ui->comp_OtherServers->preSelect(lastServer.getName());
         }
 
         CLoginComponent::CGuiAircraftValues CLoginComponent::getAircraftValuesFromGui() const
@@ -337,6 +357,7 @@ namespace BlackGui
         {
             CVatsimValues values = getVatsimValuesFromGui();
             CUser user(values.vatsimId, values.vatsimRealName, "", values.vatsimPassword, getCallsignFromGui());
+            user.setHomebase(values.vatsimHomeAirport);
             return user;
         }
 
@@ -348,12 +369,12 @@ namespace BlackGui
 
         CServer CLoginComponent::getCurrentVatsimServer() const
         {
-            return this->ui->cbp_VatsimServer->currentServer();
+            return this->ui->comp_VatsimServer->currentServer();
         }
 
         CServer CLoginComponent::getCurrentOtherServer() const
         {
-            return this->ui->cbp_OtherServers->currentServer();
+            return this->ui->comp_OtherServers->currentServer();
         }
 
         void CLoginComponent::setOkButtonString(bool connected)
@@ -382,13 +403,9 @@ namespace BlackGui
             Q_ASSERT(sGui->getIContextOwnAircraft());
             Q_ASSERT(sGui->getIContextSimulator());
 
-            static const CAircraftModel defaultModel(
-                "", CAircraftModel::TypeOwnSimulatorModel, "default model",
-                CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
-
             CAircraftModel model;
-            bool simulating = sGui->getIContextSimulator() &&
-                              (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
+            const bool simulating = sGui->getIContextSimulator() &&
+                                    (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
             if (simulating)
             {
                 model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
@@ -396,10 +413,12 @@ namespace BlackGui
             }
             else
             {
-                // Set observer mode without simulator
-                //! \todo Currently not working in OBS mode
-                model = CAircraftModel(defaultModel);
-                this->ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal);
+                static const CAircraftModel defaultModel(
+                    "", CAircraftModel::TypeOwnSimulatorModel, "default model",
+                    CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
+                model = this->m_currentAircraftModel.get();
+                if (!model.hasAircraftDesignator()) { model = defaultModel; }
+                this->ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal); //! \todo Set observer mode without simulator, currently not working in OBS mode
                 this->ui->le_SimulatorModel->setText("No simulator");
             }
 
@@ -471,7 +490,7 @@ namespace BlackGui
         void CLoginComponent::ps_reloadSettings()
         {
             CServerList otherServers(this->m_otherTrafficNetworkServers.getThreadLocal());
-            this->ui->cbp_OtherServers->setServers(otherServers);
+            this->ui->comp_OtherServers->setServers(otherServers);
         }
 
         void CLoginComponent::ps_logoffCountdown()
@@ -504,6 +523,5 @@ namespace BlackGui
                 CLogMessage(this).validationInfo("Reverse lookup for %1 failed, set data manually") << modelStr;
             }
         }
-
     } // namespace
 } // namespace

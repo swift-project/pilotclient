@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>463</width>
-    <height>412</height>
+    <height>443</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -156,7 +156,7 @@
            </widget>
           </item>
           <item row="4" column="1" colspan="4">
-           <widget class="BlackGui::Components::CServerListSelector" name="cbp_VatsimServer"/>
+           <widget class="BlackGui::Components::CServerListSelector" name="comp_VatsimServer"/>
           </item>
           <item row="1" column="2">
            <widget class="BlackGui::CTickLabel" name="lblp_VatsimId">
@@ -212,7 +212,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="BlackGui::Components::CServerListSelector" name="cbp_OtherServers"/>
+           <widget class="BlackGui::Components::CServerListSelector" name="comp_OtherServers"/>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="lbl_OtherServersEdit">
@@ -584,13 +584,13 @@
   <tabstop>le_VatsimPassword</tabstop>
   <tabstop>le_VatsimRealName</tabstop>
   <tabstop>le_VatsimHomeAirport</tabstop>
-  <tabstop>cbp_VatsimServer</tabstop>
+  <tabstop>comp_VatsimServer</tabstop>
   <tabstop>le_SimulatorModel</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>le_AircraftIcaoDesignator</tabstop>
   <tabstop>le_AircraftIcaoAirline</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>
-  <tabstop>cbp_OtherServers</tabstop>
+  <tabstop>comp_OtherServers</tabstop>
   <tabstop>pb_OtherServersGotoSettings</tabstop>
  </tabstops>
  <resources>

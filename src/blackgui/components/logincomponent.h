@@ -13,12 +13,15 @@
 #define BLACKGUI_LOGINCOMPONENT_H
 
 #include "blackcore/settings/network.h"
+#include "blackcore/data/vatsimsetup.h"
 #include "blackgui/blackguiexport.h"
+#include "blackgui/settings/settingsgui.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/datacache.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 #include <QFrame>
@@ -38,7 +41,6 @@ namespace BlackMisc
     }
 }
 namespace Ui { class CLoginComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -119,7 +121,7 @@ namespace BlackGui
             void setGuiValuesFromAircraft(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! Load from settings
-            void loadFromSettings();
+            void loadRememberedVatsimData();
 
             //! Values from GUI
             CGuiAircraftValues getAircraftValuesFromGui() const;
@@ -154,13 +156,14 @@ namespace BlackGui
             //! Set ICAO values
             void setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
 
-            bool m_visible = false; //!< is this component selected?
             QScopedPointer<Ui::CLoginComponent> ui;
+            bool m_visible = false; //!< is this component selected?
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer { nullptr };
-            BlackMisc::CSetting<BlackCore::Settings::Network::TrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
+            BlackMisc::CSettingReadOnly<BlackCore::Settings::Network::TrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
+            BlackMisc::CSetting<BlackGui::Settings::OwnAircraftModel> m_currentAircraftModel { this };
+            BlackMisc::CData<BlackCore::Data::VatsimCurrentServer> m_currentVatsimServer { this };
         };
-
     } // namespace
 } // namespace
 

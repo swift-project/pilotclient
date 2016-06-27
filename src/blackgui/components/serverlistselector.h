@@ -41,12 +41,16 @@ namespace BlackGui
             //! Get the current server
             BlackMisc::Network::CServer currentServer() const;
 
+            //! Preselect
+            bool preSelect(const QString &name);
+
         private:
             //! Build the item string descriptions
             void setItemStrings(const BlackMisc::Network::CServerList &servers);
 
             BlackMisc::Network::CServerList m_servers; //!< corresponding servers
             QStringList m_items;                       //!< items strings
+            QString m_pendingPreselect;                //!< pending preselect value
         };
     } // ns
 } // ns

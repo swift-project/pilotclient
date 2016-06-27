@@ -43,8 +43,7 @@ namespace BlackCore
                 IndexDataFiles,
                 IndexMetarFiles,
                 IndexFsdServers,
-                IndexCVoiceServers,
-                IndexLastLoginUser
+                IndexCVoiceServers
             };
 
             //! Default constructor
@@ -74,9 +73,6 @@ namespace BlackCore
             //! FSD test servers
             const BlackMisc::Network::CServerList &getFsdServers() const { return m_fsdServers; }
 
-            //! User for last login
-            const BlackMisc::Network::CUser &getLastLoginUser() const { return m_lastLoginUser; }
-
             //! Set FSD servers
             void setFsdServers(const BlackMisc::Network::CServerList &servers) { m_fsdServers = servers; }
 
@@ -85,9 +81,6 @@ namespace BlackCore
 
             //! Set voice servers
             void setVoiceServers(const BlackMisc::Network::CServerList &servers) { m_voiceServers = servers; }
-
-            //! User for last login
-            void setLastLoginUser(const BlackMisc::Network::CUser &user) { m_lastLoginUser = user; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -107,7 +100,6 @@ namespace BlackCore
             BlackMisc::Network::CUrlList    m_metarFileUrls;  //!< METAR files
             BlackMisc::Network::CServerList m_fsdServers;     //!< FSD test servers
             BlackMisc::Network::CServerList m_voiceServers;   //!< voice servers
-            BlackMisc::Network::CUser       m_lastLoginUser;  //!< last login user
 
             BLACK_METACLASS(
                 CVatsimSetup,
@@ -116,7 +108,6 @@ namespace BlackCore
                 BLACK_METAMEMBER(metarFileUrls),
                 BLACK_METAMEMBER(fsdServers),
                 BLACK_METAMEMBER(voiceServers),
-                BLACK_METAMEMBER(lastLoginUser),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch)
             );
         };
@@ -125,7 +116,17 @@ namespace BlackCore
         struct VatsimSetup : public BlackMisc::CDataTrait<CVatsimSetup>
         {
             //! Key in data cache
-            static const char *key() { return "vatsim"; }
+            static const char *key() { return "vatsimsetup"; }
+
+            //! First load is synchronous
+            static constexpr bool isPinned() { return true; }
+        };
+
+        //! Trait for currently used VATSIM server and user
+        struct VatsimCurrentServer : public BlackMisc::CDataTrait<BlackMisc::Network::CServer>
+        {
+            //! Key in data cache
+            static const char *key() { return "vatsimserver"; }
 
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
