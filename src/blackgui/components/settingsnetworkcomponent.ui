@@ -20,34 +20,7 @@
    <enum>QFrame::Raised</enum>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <widget class="QCheckBox" name="cb_FastPositionUpdates">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lbl_FastPositionUpdates">
-     <property name="text">
-      <string>Enable fast position updates</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <spacer name="vs_NetworkSettings">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="0" colspan="2">
+   <item row="0" column="0" colspan="2">
     <widget class="QGroupBox" name="gb_Services">
      <property name="title">
       <string>Services</string>
@@ -71,6 +44,19 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="1" column="0">
+    <spacer name="vs_NetworkSettings">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

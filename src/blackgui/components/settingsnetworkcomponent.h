@@ -27,7 +27,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! General settings for network
         class BLACKGUI_EXPORT CSettingsNetworkComponent :
             public QFrame
@@ -42,14 +41,8 @@ namespace BlackGui
             ~CSettingsNetworkComponent();
 
         private:
-            //! GUI values have been changed
-            void ps_guiValuesChanged();
-
-        private:
             QScopedPointer<Ui::CSettingsNetworkComponent> ui;
-            BlackMisc::CSetting<BlackCore::Settings::Network::InterimPositionsEnabled> m_interimPositionsEnabled { this };
         };
-
     } // ns
 } // ns
 

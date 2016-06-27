@@ -22,19 +22,6 @@ namespace BlackCore
     {
         namespace Network
         {
-            //! Name of text codec to use with text in FSD protocol
-            struct WireTextCodec : public BlackMisc::CSettingTrait<QString>
-            {
-                //! \copydoc BlackMisc::CSettingTrait::key
-                static const char *key() { return "network/wiretextcodec"; }
-
-                //! \copydoc BlackMisc::CSettingTrait::defaultValue
-                static const QString &defaultValue() { static const QString dv("latin1"); return dv; }
-
-                //! \copydoc BlackMisc::CSettingTrait::isValid
-                static bool isValid(const QString &value) { return QTextCodec::codecForName(qPrintable(value)); }
-            };
-
             //! Virtual air traffic servers
             struct TrafficServers : public BlackMisc::CSettingTrait<BlackMisc::Network::CServerList>
             {
@@ -66,17 +53,6 @@ namespace BlackCore
                 //! \copydoc BlackMisc::CSettingTrait::defaultValue
                 static const QString &defaultValue() { static const QString dv("session"); return dv; }
             };
-
-            //! Interim positions enabled
-            struct InterimPositionsEnabled : public BlackMisc::CSettingTrait<bool>
-            {
-                //! \copydoc BlackMisc::CSettingTrait::key
-                static const char *key() { return "network/interimpositions"; }
-
-                //! \copydoc BlackMisc::CSettingTrait::defaultValue
-                static bool defaultValue() { return true; }
-            };
-
         } // ns
     } // ns
 } // ns
