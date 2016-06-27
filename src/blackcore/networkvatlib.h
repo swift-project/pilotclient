@@ -38,10 +38,10 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
+#include <QTextCodec>
 #include <functional>
 
 class QCommandLineOption;
-class QTextCodec;
 
 namespace BlackMisc
 {
@@ -155,17 +155,17 @@ namespace BlackCore
         static void onCustomPacketReceived(VatSessionID, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
         //! @}
 
-    private:
         QByteArray toFSD(QString qstr) const;
         QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
         std::function<const char **()> toFSD(QStringList qstrList) const;
         QString fromFSD(const char *cstr) const;
         QStringList fromFSD(const char **cstrArray, int size) const;
-
+        bool isInterimPositionUpdateEnabledForServer() const;
+        void startPositionTimers();
+        void stopPositionTimers();
         void initializeSession();
         void changeConnectionStatus(VatConnectionStatus newStatus);
         bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
-        void reloadSettings();
         static QString convertToUnicodeEscaped(const QString &str);
         static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
         static void networkLogHandler(SeverityLevel severity, const char *message);
@@ -189,7 +189,7 @@ namespace BlackCore
     signals:
         void terminate(); //!< \private
 
-    public:
+    private:
         //! Deletion policy for QScopedPointer
         struct VatlibQScopedPointerDeleter
         {
@@ -197,34 +197,30 @@ namespace BlackCore
             static void cleanup(VatSessionID session) { if (session) Vat_DestroyNetworkSession(session); }
         };
 
-    private:
         QScopedPointer<PCSBClient, VatlibQScopedPointerDeleter> m_net;
         LoginMode                      m_loginMode;
         VatConnectionStatus            m_status;
         BlackMisc::Network::CServer    m_server;
+        QTextCodec                    *m_fsdTextCodec = nullptr;
         BlackMisc::Simulation::CSimulatorPluginInfo m_simulatorInfo;
-        BlackMisc::Aviation::CCallsign m_ownCallsign;                 //!< "buffered callsign", as this must not change when connected
-        BlackMisc::Aviation::CAircraftIcaoCode m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
-        BlackMisc::Aviation::CAirlineIcaoCode m_ownAirlineIcaoCode;   //!< "buffered icao", as this must not change when connected
-        QString m_ownLiveryDescription;                               //!< "buffered livery", as this must not change when connected
-        BlackMisc::Aviation::CCallsignSet m_interimPositionReceivers;
+        BlackMisc::Aviation::CCallsign              m_ownCallsign;               //!< "buffered callsign", as this must not change when connected
+        BlackMisc::Aviation::CAircraftIcaoCode      m_ownAircraftIcaoCode;       //!< "buffered icao", as this must not change when connected
+        BlackMisc::Aviation::CAirlineIcaoCode       m_ownAirlineIcaoCode;        //!< "buffered icao", as this must not change when connected
+        QString                                     m_ownLiveryDescription;      //!< "buffered livery", as this must not change when connected
+        BlackMisc::Aviation::CCallsignSet           m_interimPositionReceivers;
+        BlackMisc::Aviation::CAircraftParts         m_sentAircraftConfig;
+        CTokenBucket                                m_tokenBucket;
 
+        QTimer m_scheduledConfigUpdate;
         QTimer m_processingTimer;
         QTimer m_positionUpdateTimer;
         QTimer m_interimPositionUpdateTimer;
+
         static int const c_processingIntervalMsec = 100;
-        static int const c_updateIntervalMsec = 5000;
+        static int const c_updatePostionIntervalMsec = 5000;
+        static int const c_updateInterimPostionIntervalMsec = 1000;
         static int const c_logoffTimeoutSec = 5;
-
-        BlackMisc::CSetting<Settings::Network::WireTextCodec> m_fsdTextCodecSetting { this };
-        BlackMisc::CSetting<Settings::Network::InterimPositionsEnabled> m_interimPositionsEnabled { this, &CNetworkVatlib::reloadSettings };
-        QTextCodec *m_fsdTextCodec = nullptr;
-
-        BlackMisc::Aviation::CAircraftParts m_sentAircraftConfig;
-        QTimer m_scheduledConfigUpdate;
-        CTokenBucket m_tokenBucket;
     };
-
 } //namespace
 
 #endif // guard
