@@ -41,14 +41,12 @@ namespace BlackCore
         CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
             CThreadedReader(owner, "CVatsimMetarReader")
         {
-            this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimMetarReader::ps_readMetars);
+            this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimMetarReader::readMetars);
         }
 
         void CVatsimMetarReader::readInBackgroundThread()
         {
-            bool s = QMetaObject::invokeMethod(this, "ps_readMetars");
-            Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke");
-            Q_UNUSED(s);
+            QTimer::singleShot(0, this, &CVatsimMetarReader::readMetars);
         }
 
         CMetarList CVatsimMetarReader::getMetars() const
@@ -79,7 +77,7 @@ namespace BlackCore
             return m_settings.get();
         }
 
-        void CVatsimMetarReader::ps_readMetars()
+        void CVatsimMetarReader::readMetars()
         {
             this->threadAssertCheck();
             this->restartTimer(true); // when timer active, restart so we cause no undesired reads
@@ -88,10 +86,10 @@ namespace BlackCore
             const CUrl url(urls.obtainNextWorkingUrl(true));
             if (url.isEmpty()) { return; }
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
-            sApp->getFromNetwork(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::ps_decodeMetars});
+            sApp->getFromNetwork(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars});
         }
 
-        void CVatsimMetarReader::ps_decodeMetars(QNetworkReply *nwReplyPtr)
+        void CVatsimMetarReader::decodeMetars(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread

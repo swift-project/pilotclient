@@ -66,13 +66,13 @@ namespace BlackCore
             virtual BlackCore::Settings::CSettingsReader getSettings() const override;
             //! @}
 
-        private slots:
+        private:
             //! Decode METARs
             //! \threadsafe
-            void ps_decodeMetars(QNetworkReply *nwReply);
+            void decodeMetars(QNetworkReply *nwReply);
 
             //! Do reading
-            void ps_readMetars();
+            void readMetars();
 
         private:
             BlackMisc::Weather::CMetarDecoder m_metarDecoder;
