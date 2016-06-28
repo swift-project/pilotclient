@@ -22,7 +22,7 @@ namespace BlackMisc
             CCloudLayerList::registerMetadata();
             CGridPoint::registerMetadata();
             CMetar::registerMetadata();
-            CMetarSet::registerMetadata();
+            CMetarList::registerMetadata();
             CPresentWeather::registerMetadata();
             CPresentWeatherList::registerMetadata();
             CTemperatureLayer::registerMetadata();

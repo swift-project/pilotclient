@@ -381,10 +381,10 @@ namespace BlackCore
         return CCountry();
     }
 
-    CMetarSet CWebDataServices::getMetars() const
+    CMetarList CWebDataServices::getMetars() const
     {
         if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetars(); }
-        return CMetarSet();
+        return {};
     }
 
     CMetar CWebDataServices::getMetarForAirport(const CAirportIcaoCode &icao) const
@@ -541,7 +541,7 @@ namespace BlackCore
         CLogMessage(this).info("Read %1 ATC bookings from network") << stations.size();
     }
 
-    void CWebDataServices::ps_receivedMetars(const CMetarSet &metars)
+    void CWebDataServices::ps_receivedMetars(const CMetarList &metars)
     {
         CLogMessage(this).info("Read %1 METARs") << metars.size();
     }

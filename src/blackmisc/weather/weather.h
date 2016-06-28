@@ -21,7 +21,7 @@
 #include "blackmisc/weather/cloudlayerlist.h"
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/weather/metar.h"
-#include "blackmisc/weather/metarset.h"
+#include "blackmisc/weather/metarlist.h"
 #include "blackmisc/weather/presentweather.h"
 #include "blackmisc/weather/presentweatherlist.h"
 #include "blackmisc/weather/temperaturelayer.h"

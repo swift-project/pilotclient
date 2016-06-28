@@ -47,7 +47,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/weather/metar.h"
-#include "blackmisc/weather/metarset.h"
+#include "blackmisc/weather/metarlist.h"
 
 class QTimer;
 
@@ -278,7 +278,7 @@ namespace BlackCore
 
     private slots:
         //! Update METAR collection
-        void ps_updateMetars(const BlackMisc::Weather::CMetarSet &metars);
+        void ps_updateMetars(const BlackMisc::Weather::CMetarList &metars);
 
         //! Check if a supervisor message was received
         void ps_checkForSupervisiorTextMessage(const BlackMisc::Network::CTextMessageList &messages);

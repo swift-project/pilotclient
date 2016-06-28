@@ -37,7 +37,7 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/weather/metar.h"
-#include "blackmisc/weather/metarset.h"
+#include "blackmisc/weather/metarlist.h"
 
 #include <QDateTime>
 #include <QList>
@@ -264,7 +264,7 @@ namespace BlackCore
 
         //! Get METARs
         //! \threadsafe
-        BlackMisc::Weather::CMetarSet getMetars() const;
+        BlackMisc::Weather::CMetarList getMetars() const;
 
         //! Get METAR for airport
         //! \threadsafe
@@ -302,7 +302,7 @@ namespace BlackCore
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
         //! Received METAR data
-        void ps_receivedMetars(const BlackMisc::Weather::CMetarSet &metars);
+        void ps_receivedMetars(const BlackMisc::Weather::CMetarList &metars);
 
         //! Data file has been read
         void ps_dataFileRead(int lines);

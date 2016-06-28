@@ -51,7 +51,7 @@ namespace BlackCore
             Q_UNUSED(s);
         }
 
-        CMetarSet CVatsimMetarReader::getMetars() const
+        CMetarList CVatsimMetarReader::getMetars() const
         {
             QReadLocker l(&m_lock);
             return m_metars;
@@ -119,9 +119,9 @@ namespace BlackCore
                     return;
                 }
 
-                CMetarSet metars;
                 QString invalidMetars;
                 int invalidLineCount = 0;
+                CMetarList metars;
                 QTextStream lineReader(&metarData);
                 while (!lineReader.atEnd())
                 {

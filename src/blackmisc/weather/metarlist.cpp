@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/weather/metarset.h"
+#include "blackmisc/weather/metarlist.h"
 
 #include <tuple>
 
@@ -15,11 +15,11 @@ namespace BlackMisc
 {
     namespace Weather
     {
-        CMetarSet::CMetarSet(const CCollection<CMetar> &other) :
-            CCollection<CMetar>(other)
+        CMetarList::CMetarList(const CSequence<CMetar> &other) :
+            CSequence<CMetar>(other)
         { }
 
-        CMetar CMetarSet::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
+        CMetar CMetarList::getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const
         {
             return this->findFirstByOrDefault(&CMetar::getAirportIcaoCode, icao);
         }

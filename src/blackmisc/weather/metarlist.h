@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_WEATHER_METARSET_H
-#define BLACKMISC_WEATHER_METARSET_H
+#ifndef BLACKMISC_WEATHER_METARLIST_H
+#define BLACKMISC_WEATHER_METARLIST_H
 
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/blackmiscexport.h"
@@ -28,19 +28,19 @@ namespace BlackMisc
 {
     namespace Weather
     {
-        //! Collection of Metars
-        class BLACKMISC_EXPORT CMetarSet :
-            public CCollection<CMetar>,
-            public BlackMisc::Mixin::MetaType<CMetarSet>
+        //! Sequence of Metars
+        class BLACKMISC_EXPORT CMetarList :
+            public CSequence<CMetar>,
+            public BlackMisc::Mixin::MetaType<CMetarList>
         {
         public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CMetarSet)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CMetarList)
 
             //! Default constructor.
-            CMetarSet() = default;
+            CMetarList() = default;
 
             //! Construct from a base class object.
-            CMetarSet(const CCollection<CMetar> &other);
+            CMetarList(const CSequence<CMetar> &other);
 
             //! METAR for ICAO code
             CMetar getMetarForAirport(const Aviation::CAirportIcaoCode &icao) const;
@@ -49,7 +49,7 @@ namespace BlackMisc
     } //namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Weather::CMetarSet)
+Q_DECLARE_METATYPE(BlackMisc::Weather::CMetarList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Weather::CMetar>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Weather::CMetar>)
 

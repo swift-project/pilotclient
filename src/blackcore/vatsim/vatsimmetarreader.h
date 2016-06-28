@@ -18,7 +18,7 @@
 #include "blackcore/threadedreader.h"
 #include "blackmisc/weather/metar.h"
 #include "blackmisc/weather/metardecoder.h"
-#include "blackmisc/weather/metarset.h"
+#include "blackmisc/weather/metarlist.h"
 
 #include <QObject>
 
@@ -42,7 +42,7 @@ namespace BlackCore
 
             //! Get METARs
             //! \threadsafe
-            virtual BlackMisc::Weather::CMetarSet getMetars() const;
+            virtual BlackMisc::Weather::CMetarList getMetars() const;
 
             //! Get METAR for airport
             //! \threadsafe
@@ -53,8 +53,8 @@ namespace BlackCore
             virtual int getMetarsCount() const;
 
         signals:
-            //! METARs have been read and converted to BlackMisc::Weather::CMetarSet
-            void metarsRead(const BlackMisc::Weather::CMetarSet &metars);
+            //! METARs have been read and converted to BlackMisc::Weather::CMetarList
+            void metarsRead(const BlackMisc::Weather::CMetarList &metars);
 
             //! Data have been read
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
@@ -76,7 +76,7 @@ namespace BlackCore
 
         private:
             BlackMisc::Weather::CMetarDecoder m_metarDecoder;
-            BlackMisc::Weather::CMetarSet     m_metars;
+            BlackMisc::Weather::CMetarList    m_metars;
             BlackMisc::CSettingReadOnly<BlackCore::Settings::SettingsVatsimMetars> m_settings { this };
         };
     } // ns
