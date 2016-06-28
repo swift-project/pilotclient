@@ -75,6 +75,9 @@ namespace BlackMisc
             //! String list for completion by ICAO designator
             QStringList toIcaoDesignatorCompleterStrings(bool combinedString = true, bool sort = true) const;
 
+            //! String list for completion by ICAO designator plus Name
+            QStringList toIcaoDesignatorNameCountryCompleterStrings(bool sort = true) const;
+
             //! String list for completion by name
             QStringList toNameCompleterStrings(bool sort = true) const;
 

@@ -12,6 +12,7 @@
 #include "blackcore/contextnetwork.h"
 #include "blackcore/contextownaircraft.h"
 #include "blackcore/contextsimulator.h"
+#include "blackcore/webdataservices.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/network.h"
 #include "blackcore/simulator.h"
@@ -43,6 +44,8 @@
 #include <QTabWidget>
 #include <QTimer>
 #include <QToolButton>
+#include <QCompleter>
+#include <QStyledItemDelegate>
 #include <QtGlobal>
 
 using namespace BlackConfig;
@@ -58,6 +61,12 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CLoginComponent::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::guiComponent() };
+            return cats;
+        }
+
         CLoginComponent::CLoginComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CLoginComponent)
@@ -73,6 +82,9 @@ namespace BlackGui
             connect(this->ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CLoginComponent::ps_loginCancelled);
             connect(this->ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CLoginComponent::ps_toggleNetworkConnection);
             connect(this->ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
+
+            this->ui->comp_FsdDetails->showEnableInfo(true);
+            this->ui->comp_FsdDetails->setFsdSetupEnabled(false);
 
             this->ui->lblp_SimulatorModel->setToolTips("available", "unavailable");
             this->ui->lblp_SimulatorModel->setPixmapUnticked(CIcons::empty());
@@ -110,9 +122,9 @@ namespace BlackGui
             this->ui->le_AircraftCombinedType->setValidator(new CUpperCaseValidator(this));
             connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
 
-            this->ui->le_AircraftIcaoAirline->setMaxLength(5);
-            this->ui->le_AircraftIcaoAirline->setValidator(new CUpperCaseValidator(this));
-            connect(ui->le_AircraftIcaoAirline, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
+            this->ui->le_AirlineIcaoDesignator->setMaxLength(5);
+            this->ui->le_AirlineIcaoDesignator->setValidator(new CUpperCaseValidator(this));
+            connect(ui->le_AirlineIcaoDesignator, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
 
             this->ui->le_AircraftIcaoDesignator->setMaxLength(5);
             this->ui->le_AircraftIcaoDesignator->setValidator(new CUpperCaseValidator(this));
@@ -126,9 +138,9 @@ namespace BlackGui
             connect(sGui->getIContextNetwork(), &IContextNetwork::webServiceDataRead, this, &CLoginComponent::ps_onWebServiceDataRead);
 
             // inital setup, if data already available
-            ps_validateAircraftValues();
-            ps_validateVatsimValues();
-            ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
+            this->ps_validateAircraftValues();
+            this->ps_validateVatsimValues();
+            this->ps_onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1);
             CServerList otherServers(this->m_otherTrafficNetworkServers.getThreadLocal());
 
             // add a testserver when no servers can be loaded
@@ -180,6 +192,11 @@ namespace BlackGui
 
         void CLoginComponent::ps_toggleNetworkConnection()
         {
+            if (this->ui->tw_Network->currentWidget() == this->ui->pg_FsdDetails)
+            {
+                CLogMessage(this).validationError("No login possible from this very tab, use VATSIM or other servers");
+                return;
+            }
             const bool isConnected = sGui->getIContextNetwork()->isConnected();
             const bool vatsimLogin = (this->ui->tw_Network->currentWidget() == this->ui->pg_NetworkVatsim);
             CServer currentServer; // used for login
@@ -190,13 +207,13 @@ namespace BlackGui
 
                 if (!this->ps_validateAircraftValues())
                 {
-                    CLogMessage(this).warning("Invalid aircraft data, login not possible");
+                    CLogMessage(this).validationWarning("Invalid aircraft data, login not possible");
                     return;
                 }
 
                 if (vatsimLogin && !this->ps_validateVatsimValues())
                 {
-                    CLogMessage(this).warning("Invalid VATSIM data, login not possible");
+                    CLogMessage(this).validationWarning("Invalid VATSIM data, login not possible");
                     return;
                 }
 
@@ -256,6 +273,14 @@ namespace BlackGui
                 {
                     currentServer = this->getCurrentOtherServer();
                 }
+
+                // FSD setup, then override
+                if (ui->comp_FsdDetails->isFsdSetuoEnabled())
+                {
+                    const CFsdSetup fsd = ui->comp_FsdDetails->getValue();
+                    currentServer.setFsdSetup(fsd);
+                }
+
                 this->ui->frp_CurrentServer->setServer(currentServer);
                 sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
@@ -287,25 +312,33 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::ps_onWebServiceDataRead(int entityInt, int stateI, int number)
+        void CLoginComponent::ps_onWebServiceDataRead(int entityInt, int stateInt, int number)
         {
             const CEntityFlags::EntityFlag entity = static_cast<CEntityFlags::EntityFlag>(entityInt);
-            const CEntityFlags::ReadState state = static_cast<CEntityFlags::ReadState>(stateI);
-            if (entity != CEntityFlags::VatsimDataFile || state != CEntityFlags::ReadFinished) { return; }
+            const CEntityFlags::ReadState state = static_cast<CEntityFlags::ReadState>(stateInt);
+            if (state != CEntityFlags::ReadFinished) { return; }
             Q_UNUSED(number);
-            const CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
-            if (vatsimFsdServers.isEmpty()) { return; }
-            const CServer currentServer = this->m_currentVatsimServer.get();
-            this->ui->comp_VatsimServer->setServers(vatsimFsdServers);
-            this->ui->comp_VatsimServer->preSelect(currentServer.getName());
+
+            if (entity == CEntityFlags::VatsimDataFile)
+            {
+                const CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
+                if (vatsimFsdServers.isEmpty()) { return; }
+                const CServer currentServer = this->m_currentVatsimServer.get();
+                this->ui->comp_VatsimServer->setServers(vatsimFsdServers);
+                this->ui->comp_VatsimServer->preSelect(currentServer.getName());
+            }
+            else
+            {
+                this->initCompleters(entity);
+            }
         }
 
         void CLoginComponent::setGuiValuesFromAircraft(const CSimulatedAircraft &ownAircraft)
         {
-            CAircraftIcaoCode aircraftIcao = ownAircraft.getAircraftIcaoCode();
+            const CAircraftIcaoCode aircraftIcao = ownAircraft.getAircraftIcaoCode();
             this->ui->le_Callsign->setText(ownAircraft.getCallsignAsString());
             this->ui->le_AircraftIcaoDesignator->setText(aircraftIcao.getDesignator());
-            this->ui->le_AircraftIcaoAirline->setText(ownAircraft.getAirlineIcaoCodeDesignator());
+            this->ui->le_AirlineIcaoDesignator->setText(ownAircraft.getAirlineIcaoCodeDesignator());
             this->ui->le_AircraftCombinedType->setText(aircraftIcao.getCombinedType());
         }
 
@@ -336,8 +369,8 @@ namespace BlackGui
         {
             CGuiAircraftValues values;
             values.ownCallsign = this->ui->le_Callsign->text().trimmed().toUpper();
-            values.ownAircraftIcaoTypeDesignator = this->ui->le_AircraftIcaoDesignator->text().trimmed().toUpper();
-            values.ownAircraftIcaoAirline = this->ui->le_AircraftIcaoAirline->text().trimmed().toUpper();
+            values.ownAircraftIcaoTypeDesignator = CAircraftIcaoCode::normalizeDesignator(this->ui->le_AircraftIcaoDesignator->text());
+            values.ownAircraftIcaoAirline = CAirlineIcaoCode::normalizeDesignator(this->ui->le_AirlineIcaoDesignator->text());
             values.ownAircraftCombinedType = this->ui->le_AircraftCombinedType->text().trimmed().toUpper();
             values.ownAircraftSimulatorModel = this->ui->le_SimulatorModel->text().trimmed().toUpper();
             return values;
@@ -434,9 +467,9 @@ namespace BlackGui
             {
                 this->ui->le_AircraftIcaoDesignator->setText(model.getAircraftIcaoCode().getDesignator());
             }
-            if (!onlyIfEmpty || this->ui->le_AircraftIcaoAirline->text().trimmed().isEmpty())
+            if (!onlyIfEmpty || this->ui->le_AirlineIcaoDesignator->text().trimmed().isEmpty())
             {
-                this->ui->le_AircraftIcaoAirline->setText(model.getAirlineIcaoCode().getDesignator());
+                this->ui->le_AirlineIcaoDesignator->setText(model.getAirlineIcaoCode().getDesignator());
             }
             if (!onlyIfEmpty || this->ui->le_AircraftCombinedType->text().trimmed().isEmpty())
             {
@@ -521,6 +554,43 @@ namespace BlackGui
             else
             {
                 CLogMessage(this).validationInfo("Reverse lookup for %1 failed, set data manually") << modelStr;
+            }
+        }
+
+        void CLoginComponent::initCompleters(CEntityFlags::Entity entity)
+        {
+            // completers where possible
+            if (sGui && sGui->getWebDataServices())
+            {
+                //! \todo fill in when airports are ready
+
+                if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && !ui->le_AircraftIcaoDesignator->completer())
+                {
+                    const QStringList aircraftDesignators = sGui->getWebDataServices()->getAircraftIcaoCodes().toCompleterStrings();
+                    if (!aircraftDesignators.isEmpty())
+                    {
+                        QCompleter *completer = new QCompleter(aircraftDesignators, this);
+                        QStyledItemDelegate *itemDelegate = new QStyledItemDelegate(completer);
+                        completer->popup()->setItemDelegate(itemDelegate);
+                        ui->le_AircraftIcaoDesignator->setCompleter(completer);
+                        completer->popup()->setObjectName("AircraftCompleter");
+                        completer->popup()->setMinimumWidth(175);
+                    }
+                }
+
+                if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && !ui->le_AirlineIcaoDesignator->completer())
+                {
+                    const QStringList airlineDesignators = sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorNameCountryCompleterStrings();
+                    if (!airlineDesignators.isEmpty())
+                    {
+                        QCompleter *completer = new QCompleter(airlineDesignators, this);
+                        QStyledItemDelegate *itemDelegate = new QStyledItemDelegate(completer);
+                        completer->popup()->setItemDelegate(itemDelegate);
+                        ui->le_AirlineIcaoDesignator->setCompleter(completer);
+                        completer->popup()->setObjectName("AirlineCompleter");
+                        completer->popup()->setMinimumWidth(175);
+                    }
+                }
             }
         }
     } // namespace

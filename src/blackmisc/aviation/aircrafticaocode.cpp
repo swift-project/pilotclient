@@ -490,9 +490,10 @@ namespace BlackMisc
             return s;
         }
 
-        const QString CAircraftIcaoCode::normalizeDesignator(const QString candidate)
+        QString CAircraftIcaoCode::normalizeDesignator(const QString candidate)
         {
             QString n(candidate.trimmed().toUpper());
+            if (n.contains(' ')) { n = n.left(n.indexOf(' ')); } // cutoff as first space
             if (n.isEmpty()) { return n; }
 
             static QThreadStorage<QRegularExpression> tsRegex;

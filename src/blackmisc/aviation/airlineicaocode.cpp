@@ -263,6 +263,18 @@ namespace BlackMisc
             return (regexp.match(airline).hasMatch());
         }
 
+        QString CAirlineIcaoCode::normalizeDesignator(const QString candidate)
+        {
+            QString n(candidate.trimmed().toUpper());
+            if (n.contains(' ')) { n = n.left(n.indexOf(' ')); } // cutoff as first space
+            if (n.isEmpty()) { return n; }
+
+            static QThreadStorage<QRegularExpression> tsRegex;
+            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-zA-Z\\d\\s]")); }
+            const QRegularExpression &regexp = tsRegex.localData();
+            return n.remove(regexp);
+        }
+
         QString CAirlineIcaoCode::getCombinedStringWithKey() const
         {
             QString s(getVDesignator());

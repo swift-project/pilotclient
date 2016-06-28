@@ -154,6 +154,20 @@ namespace BlackMisc
             return c;
         }
 
+        QStringList CAirlineIcaoCodeList::toIcaoDesignatorNameCountryCompleterStrings(bool sort) const
+        {
+            QStringList c;
+            for (const CAirlineIcaoCode &icao : *this)
+            {
+                if (!icao.hasValidDesignator()) { continue; }
+                const QString cs(icao.getDesignatorNameCountry());
+                if (cs.isEmpty()) { continue; }
+                c.append(cs);
+            }
+            if (sort) { c.sort(); }
+            return c;
+        }
+
         QStringList CAirlineIcaoCodeList::toNameCompleterStrings(bool sort) const
         {
             QStringList c;

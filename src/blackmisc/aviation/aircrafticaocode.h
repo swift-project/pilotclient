@@ -259,7 +259,7 @@ namespace BlackMisc
             static const QStringList &getSpecialDesignators();
 
             //! Normalize designator, remove illegal characters
-            static const QString normalizeDesignator(const QString candidate);
+            static QString normalizeDesignator(const QString candidate);
 
             //! Create relaxed combined codes, e.g "L2J" -> "L3J", ...
             static QStringList alternativeCombinedCodes(const QString &combinedCode);

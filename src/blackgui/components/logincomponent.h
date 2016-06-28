@@ -52,6 +52,9 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CLoginComponent(QWidget *parent = nullptr);
 
@@ -80,7 +83,7 @@ namespace BlackGui
             void ps_toggleNetworkConnection();
 
             //! VATSIM data file was loaded
-            void ps_onWebServiceDataRead(int entity, int state, int number);
+            void ps_onWebServiceDataRead(int entity, int stateInt, int number);
 
             //! Validate aircaft
             bool ps_validateAircraftValues();
@@ -155,6 +158,8 @@ namespace BlackGui
 
             //! Set ICAO values
             void setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
+
+            void initCompleters(BlackMisc::Network::CEntityFlags::Entity entity);
 
             QScopedPointer<Ui::CLoginComponent> ui;
             bool m_visible = false; //!< is this component selected?
