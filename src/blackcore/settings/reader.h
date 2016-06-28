@@ -118,7 +118,7 @@ namespace BlackCore
             //! \copydoc BlackCore::CSettingTrait::defaultValue
             static const BlackCore::Settings::CSettingsReader &defaultValue()
             {
-                static const BlackCore::Settings::CSettingsReader reader {{35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {90.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+                static const BlackCore::Settings::CSettingsReader reader {{35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };
