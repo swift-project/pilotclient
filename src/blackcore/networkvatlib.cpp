@@ -785,6 +785,7 @@ namespace BlackCore
             CAngle(position->bank, CAngleUnit::deg()),
             CSpeed(position->groundSpeed, CSpeedUnit::kts())
         );
+        situation.setCurrentUtcTime();
         situation.setTimeOffsetMs(6000);
 
         QString transponderName("transponder ");
@@ -862,6 +863,7 @@ namespace BlackCore
             // There is no speed information in a interim packet
             CSpeed(0.0, CSpeedUnit::kts())
         );
+        situation.setCurrentUtcTime();
         situation.setTimeOffsetMs(2000);
         situation.setInterimFlag(true);
 
