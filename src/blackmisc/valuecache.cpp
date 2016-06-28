@@ -26,6 +26,7 @@
 #include <QIODevice>
 #include <QJsonDocument>
 #include <QList>
+#include <QMetaMethod>
 #include <QMutexLocker>
 #include <QThread>
 #include <Qt>
@@ -240,6 +241,9 @@ namespace BlackMisc
         }
         if (values.valuesChanged()) { emit valuesChanged(values, sender()); }
         emit valuesChangedByLocal(values);
+
+        Q_ASSERT_X(isSignalConnected(QMetaMethod::fromSignal(&CValueCache::valuesChangedByLocal)), Q_FUNC_INFO,
+            "signal must be connected for cache to function properly");
     }
 
     void CValueCache::changeValuesFromRemote(const CValueCachePacket &values, const CIdentifier &originator)
