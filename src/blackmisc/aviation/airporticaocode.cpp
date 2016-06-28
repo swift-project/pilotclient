@@ -1,7 +1,7 @@
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/compare.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <Qt>
 #include <QtGlobal>
 
@@ -31,8 +31,9 @@ namespace BlackMisc
         {
             QString code = icaoCode.trimmed().toUpper();
             if (code.length() != 4) return "";
-            QRegExp reg("[A-Z]{4}");
-            return (reg.exactMatch(code)) ? code : "";
+            QRegularExpression reg("^[A-Z0-9]{4}$");
+            auto match = reg.match(code);
+            return match.hasMatch() ? code : QString();
         }
 
         bool CAirportIcaoCode::isValidIcaoDesignator(const QString &icaoCode)
