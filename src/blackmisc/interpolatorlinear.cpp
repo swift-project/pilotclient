@@ -60,6 +60,8 @@ namespace BlackMisc
         // interpolation situations
         CAircraftSituation oldSituation;
         CAircraftSituation newSituation;
+        status.interpolationSucceeded = true;
+        status.changedPosition = true; //! \todo efficiently determine whether the position has changed
 
         // latest first, now 00:20 split time
         // time     pos
@@ -93,7 +95,6 @@ namespace BlackMisc
 
         CAircraftSituation currentSituation(oldSituation);
         CCoordinateGeodetic currentPosition;
-        status.interpolationSucceeded = true;
 
         // Time between start and end packet
         double deltaTime = std::abs(oldSituation.getAdjustedMSecsSinceEpoch() - newSituation.getAdjustedMSecsSinceEpoch());
@@ -179,7 +180,6 @@ namespace BlackMisc
         currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
                                         * simulationTimeFraction
                                         + oldSituation.getGroundSpeed());
-        status.changedPosition = true;
         return currentSituation;
     }
 
