@@ -303,7 +303,10 @@ namespace BlackMisc
             {
                 baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMemberName(*derived(), [ & ](auto & member, const QString & name) { json.value(name) >> member; });
+                meta.forEachMemberName(*derived(), [ & ](auto & member, const QString & name)
+                {
+                    if (json.contains(name)) { json.value(name) >> member; }
+                });
             }
 
             //! Assign from JSON object string
