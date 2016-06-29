@@ -119,39 +119,25 @@ namespace BlackCore
                     return;
                 }
 
-                QString invalidMetars;
-                int invalidLineCount = 0;
                 CMetarList metars;
+                int invalidLines = 0;
                 QTextStream lineReader(&metarData);
                 while (!lineReader.atEnd())
                 {
                     if (this->isAbandoned()) { return; }
                     QString line = lineReader.readLine();
                     CMetar metar = m_metarDecoder.decode(line);
-                    if (metar != CMetar())
-                    {
-                        metars.push_back(metar);
-                    }
-                    else
-                    {
-                        invalidMetars += line;
-                        invalidMetars += "\n";
-                        invalidLineCount++;
-                    }
+                    if (metar != CMetar()) { metars.push_back(metar); }
+                    else { invalidLines++; }
                 }
+
+                CLogMessage(this).debug() << "METAR statistic: " << metars.size() << "Metars ( invalid:" << invalidLines << ")";
 
                 {
                     QWriteLocker l(&m_lock);
                     m_metars = metars;
                 }
 
-                // I could use those for logging, etc.
-                Q_UNUSED(invalidMetars);
-                if (invalidLineCount > 0)
-                {
-                    // Regular issue, log it, but do not show to user
-                    CLogMessage(this).debug() << "Reading METARs failed for entries" << invalidLineCount;
-                }
                 emit metarsRead(metars);
                 emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFinished, metars.size());
             }
