@@ -327,4 +327,16 @@ namespace BlackGui
         Q_UNUSED(ok);
         return QMargins(l, t, r, b);
     }
+
+    QList<int> CGuiUtility::indexToUniqueRows(const QModelIndexList &indexes)
+    {
+        QList<int> rows;
+        for (const QModelIndex i : indexes)
+        {
+            const int r = i.row();
+            if (rows.contains(r)) { continue; }
+            rows.append(r);
+        }
+        return rows;
+    }
 } // ns

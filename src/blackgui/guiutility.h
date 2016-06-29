@@ -19,6 +19,7 @@
 #include <QPoint>
 #include <QString>
 #include <QWidgetList>
+#include <QModelIndexList>
 
 class QCheckBox;
 class QComboBox;
@@ -99,6 +100,9 @@ namespace BlackGui
 
         //! Convert from string
         static QMargins stringToMargins(const QString &str);
+
+        //! Only the row part and unique (so no rows is twice in the list)
+        static QList<int> indexToUniqueRows(const QModelIndexList &indexes);
 
     private:
         //! Constructor, use static methods only
