@@ -158,6 +158,10 @@ namespace BlackMisc
         //! \threadsafe
         BlackMisc::CVariantMap getAllValues(const QString &keyPrefix = {}) const;
 
+        //! Return map containing all given values in the cache.
+        //! \threadsafe
+        BlackMisc::CVariantMap getAllValues(const QStringList &keys) const;
+
         //! Return map containing all values in the cache, and timestamps when they were modified.
         //! \threadsafe
         BlackMisc::CValueCachePacket getAllValuesWithTimestamps(const QString &keyPrefix = {}) const;
@@ -185,6 +189,10 @@ namespace BlackMisc
         //! If prefix is provided then only those values whose keys start with that prefix.
         //! \threadsafe
         CStatusMessage saveToFiles(const QString &directory, const QString &keyPrefix = {});
+
+        //! Save values to Json files in a given directory.
+        //! \threadsafe
+        CStatusMessage saveToFiles(const QString &directory, const QStringList &keys);
 
         //! Load all values from Json files in a given directory.
         //! Values already in the cache will remain in the cache unless they are overwritten.
@@ -255,6 +263,10 @@ namespace BlackMisc
         //! Mark all values with keys that start with the given prefix as having been saved.
         //! \threadsafe
         void markAllAsSaved(const QString &keyPrefix);
+
+        //! Mark all values with given keys as having been saved.
+        //! \threadsafe
+        void markAllAsSaved(const QStringList &keys);
 
         //! Mutex protecting operations which are critical on m_elements.
         mutable QMutex m_mutex { QMutex::Recursive };

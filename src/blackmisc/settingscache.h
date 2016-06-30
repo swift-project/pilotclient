@@ -40,6 +40,9 @@ namespace BlackMisc
         //! Save core settings to disk.
         BlackMisc::CStatusMessage saveToStore(const QString &keyPrefix = {});
 
+        //! Save core settings to disk.
+        BlackMisc::CStatusMessage saveToStore(const QStringList &keys);
+
         //! Connects signal CValueCache::valuesSaveRequested to a private slot that saves the values.
         //! In a dbus distributed scenario, only call this method in the core process.
         void enableLocalSave();

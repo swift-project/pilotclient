@@ -38,6 +38,11 @@ namespace BlackMisc
         return saveToFiles(persistentStore(), keyPrefix);
     }
 
+    BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QStringList &keys)
+    {
+        return saveToFiles(persistentStore(), keys);
+    }
+
     void CSettingsCache::enableLocalSave()
     {
         connect(CSettingsCache::instance(), &CSettingsCache::valuesSaveRequested, CSettingsCache::instance(), &CSettingsCache::saveToStoreByPacket);

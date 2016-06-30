@@ -181,6 +181,18 @@ namespace BlackMisc
         return map;
     }
 
+    CVariantMap CValueCache::getAllValues(const QStringList &keys) const
+    {
+        QMutexLocker lock(&m_mutex);
+        CVariantMap map;
+        for (const auto &key : keys)
+        {
+            auto it = m_elements.constFind(key);
+            if (it != m_elements.cend()) { map.insert(key, (*it)->m_value); }
+        }
+        return map;
+    }
+
     CValueCachePacket CValueCache::getAllValuesWithTimestamps(const QString &keyPrefix) const
     {
         QMutexLocker lock(&m_mutex);
@@ -299,6 +311,15 @@ namespace BlackMisc
         return status;
     }
 
+    CStatusMessage CValueCache::saveToFiles(const QString &dir, const QStringList &keys)
+    {
+        QMutexLocker lock(&m_mutex);
+        auto values = getAllValues(keys);
+        auto status = saveToFiles(dir, values);
+        if (status.isSuccess()) { markAllAsSaved(keys); }
+        return status;
+    }
+
     CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values, const QString &keysMessage) const
     {
         QMap<QString, CVariantMap> namespaces;
@@ -395,6 +416,15 @@ namespace BlackMisc
         for (const auto &element : elementsStartingWith(keyPrefix))
         {
             element->m_saved = true;
+        }
+    }
+
+    void CValueCache::markAllAsSaved(const QStringList &keys)
+    {
+        QMutexLocker lock(&m_mutex);
+        for (const auto &key : keys)
+        {
+            getElement(key).m_saved = true;
         }
     }
 
