@@ -64,11 +64,17 @@ namespace BlackCore
         //! \copydoc IContextApplication::getAllSettings
         virtual BlackMisc::CValueCachePacket getAllSettings() const override;
 
+        //! \copydoc IContextApplication::getUnsavedSettingsKeys
+        virtual QStringList getUnsavedSettingsKeys() const override;
+
         //! \copydoc IContextApplication::synchronizeLocalSettings
         virtual void synchronizeLocalSettings() override;
 
         //! \copydoc IContextApplication::saveSettings
         virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
+
+        //! \copydoc IContextApplication::saveSettingsByKey
+        virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
 
         //! \copydoc IContextApplication::loadSettings
         virtual BlackMisc::CStatusMessage loadSettings() override;

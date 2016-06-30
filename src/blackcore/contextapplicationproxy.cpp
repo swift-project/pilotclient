@@ -103,6 +103,11 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::CValueCachePacket>(QLatin1Literal("getAllSettings"));
     }
 
+    QStringList CContextApplicationProxy::getUnsavedSettingsKeys() const
+    {
+        return this->m_dBusInterface->callDBusRet<QStringList>(QLatin1Literal("getUnsavedSettingsKeys"));
+    }
+
     void CContextApplicationProxy::synchronizeLocalSettings()
     {
         // note this proxy method does not call synchronizeLocalSettings in core
@@ -112,6 +117,11 @@ namespace BlackCore
     BlackMisc::CStatusMessage CContextApplicationProxy::saveSettings(const QString &keyPrefix)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("saveSettings"), keyPrefix);
+    }
+
+    BlackMisc::CStatusMessage CContextApplicationProxy::saveSettingsByKey(const QStringList &keys)
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("saveSettingsByKey"), keys);
     }
 
     BlackMisc::CStatusMessage CContextApplicationProxy::loadSettings()

@@ -84,6 +84,12 @@ namespace BlackCore
         return CSettingsCache::instance()->getAllValuesWithTimestamps();
     }
 
+    QStringList CContextApplication::getUnsavedSettingsKeys() const
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        return CSettingsCache::instance()->getAllUnsavedKeys();
+    }
+
     void CContextApplication::synchronizeLocalSettings()
     {
         // no-op: proxy implements this method by calling getAllSettings
@@ -93,6 +99,12 @@ namespace BlackCore
     {
         if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
         return CSettingsCache::instance()->saveToStore(keyPrefix);
+    }
+
+    BlackMisc::CStatusMessage CContextApplication::saveSettingsByKey(const QStringList &keys)
+    {
+        if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", "); }
+        return CSettingsCache::instance()->saveToStore(keys);
     }
 
     BlackMisc::CStatusMessage CContextApplication::loadSettings()

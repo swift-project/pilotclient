@@ -160,11 +160,17 @@ namespace BlackCore
         //! Get all settings currently in core settings cache
         virtual BlackMisc::CValueCachePacket getAllSettings() const = 0;
 
+        //! Get keys of all unsaved settings currently in core settings cache
+        virtual QStringList getUnsavedSettingsKeys() const = 0;
+
         //! Update local settings with settings from core
         virtual void synchronizeLocalSettings() = 0;
 
         //! Save core settings to disk
         virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) = 0;
+
+        //! Save core settings to disk
+        virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) = 0;
 
         //! Load core settings from disk
         virtual BlackMisc::CStatusMessage loadSettings() = 0;

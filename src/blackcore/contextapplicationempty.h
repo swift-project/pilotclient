@@ -82,6 +82,13 @@ namespace BlackCore
             return BlackMisc::CValueCachePacket();
         }
 
+        //! \copydoc IContextApplication::getUnsavedSettingsKeys
+        virtual QStringList getUnsavedSettingsKeys() const override
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return QStringList();
+        }
+
         //! \copydoc IContextApplication::synchronizeLocalSettings
         virtual void synchronizeLocalSettings() override
         {
@@ -92,6 +99,14 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override
         {
             Q_UNUSED(keyPrefix);
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return BlackMisc::CStatusMessage();
+        }
+
+        //! \copydoc IContextApplication::saveSettingsByKey
+        virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override
+        {
+            Q_UNUSED(keys);
             logEmptyContextWarning(Q_FUNC_INFO);
             return BlackMisc::CStatusMessage();
         }
