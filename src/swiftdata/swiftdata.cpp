@@ -58,6 +58,16 @@ void CSwiftData::initStyleSheet()
 CSwiftData::~CSwiftData()
 { }
 
+void CSwiftData::closeEvent(QCloseEvent *event)
+{
+    if (sGui)
+    {
+        // save settings
+        if (sGui->showCloseDialog(this, event) == QDialog::Rejected) { return; }
+    }
+    this->performGracefulShutdown();
+}
+
 void CSwiftData::ps_appendLogMessage(const CStatusMessage &message)
 {
     CLogComponent *logComponent = ui->comp_MainInfoArea->getLogComponent();

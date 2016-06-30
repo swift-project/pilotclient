@@ -21,6 +21,7 @@
 #include "blackmisc/statusmessage.h"
 
 #include <QCommandLineOption>
+#include <QDialog>
 #include <QObject>
 #include <QPixmap>
 #include <QScopedPointer>
@@ -30,9 +31,10 @@
 class QMenu;
 class QSplashScreen;
 class QWidget;
+class QMainWindow;
 
 namespace BlackMisc { class CLogCategoryList; }
-
+namespace BlackGui  { namespace Components { class CApplicationCloseDialog; }}
 namespace BlackGui
 {
     /*!
@@ -138,6 +140,9 @@ namespace BlackGui
         //! Update the fonts
         bool updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
 
+        //! Show close dialog
+        QDialog::DialogCode showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent);
+
         //! Set icon
         //! \note Pixmap requires a valid QApplication, so it cannot be passed as constructor parameter
         static void setWindowIcon(const QPixmap &icon);
@@ -184,8 +189,9 @@ namespace BlackGui
         QCommandLineOption m_cmdWindowStateMinimized { "empty" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "empty" };           //!< window mode (flags: frameless ...)
         CStyleSheetUtility m_styleSheetUtility{{}, this};         //!< style sheet utility
-        QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
+        QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
+        BlackGui::Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
 
         //! Qt help message to formatted HTML
         static QString beautifyHelpMessage(const QString &helpText);

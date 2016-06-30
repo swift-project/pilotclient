@@ -46,6 +46,12 @@ public:
     //! Destructor
     ~CSwiftData();
 
+protected:
+    //! \name QMainWindow events
+    //! @[
+    virtual void closeEvent(QCloseEvent *event) override;
+    //! @}
+
 private slots:
     //! Append log message
     void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);

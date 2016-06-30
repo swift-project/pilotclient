@@ -80,17 +80,14 @@ signals:
     void currentMainInfoAreaChanged(const QWidget *currentWidget);
 
 protected:
-    //! \copydoc QMainWindow::mouseMoveEvent
+
+    //! \name QMainWindow events
+    //! @[
     virtual void mouseMoveEvent(QMouseEvent *event) override;
-
-    //! \copydoc QMainWindow::mousePressEvent
     virtual void mousePressEvent(QMouseEvent *event) override;
-
-    //! \copydoc QMainWindow::closeEvent
     virtual void closeEvent(QCloseEvent *event) override;
-
-    //! \copydoc QMainWindow::changeEvent
     virtual void changeEvent(QEvent *event) override;
+    //! @}
 
     //! Get a minimize action which minimizes the window
     QAction *getWindowMinimizeAction(QObject *parent);

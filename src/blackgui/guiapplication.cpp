@@ -10,6 +10,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
+#include "blackgui/components/applicationclosedialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
@@ -23,6 +24,7 @@
 #include "blackmisc/verify.h"
 
 #include <QAction>
+#include <QCloseEvent>
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCoreApplication>
@@ -40,11 +42,13 @@
 #include <QStyle>
 #include <QUrl>
 #include <QWidget>
+#include <QMainWindow>
 #include <QtGlobal>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackGui::Components;
 using namespace BlackCore::Data;
 
 BlackGui::CGuiApplication *sGui = nullptr; // set by constructor
@@ -486,12 +490,33 @@ namespace BlackGui
         return m_styleSheetUtility.updateFonts(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
     }
 
+    QDialog::DialogCode CGuiApplication::showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent)
+    {
+        bool needsDialog = this->hasUnsavedSettings();
+        if (!needsDialog) { return QDialog::Accepted; }
+        if (!this->m_closeDialog)
+        {
+            this->m_closeDialog = new CApplicationCloseDialog(mainWindow);
+            if (mainWindow && !mainWindow->windowTitle().isEmpty())
+            {
+                this->setSettingsAutoSave(false); // will be handled by dialog
+                this->m_closeDialog->setWindowTitle(mainWindow->windowTitle());
+                this->m_closeDialog->setModal(true);
+            }
+        }
+        const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(this->m_closeDialog->exec());
+        if (c == QDialog::Rejected)
+        {
+            if (closeEvent) { closeEvent->ignore(); }
+        }
+        return c;
+    }
+
     void CGuiApplication::cmdLineHelpMessage()
     {
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
-            QMessageBox::information(nullptr,
-                                     QGuiApplication::applicationDisplayName(),
+            QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(),
                                      "<html><head/><body><pre>" + this->m_parser.helpText() + "</pre></body></html>");
         }
         else
@@ -504,8 +529,7 @@ namespace BlackGui
     {
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
-            QMessageBox::information(nullptr,
-                                     QGuiApplication::applicationDisplayName(),
+            QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(),
                                      QGuiApplication::applicationDisplayName() + ' ' + QCoreApplication::applicationVersion());
         }
         else
@@ -518,5 +542,4 @@ namespace BlackGui
     {
         return true;
     }
-
 } // ns

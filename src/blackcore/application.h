@@ -161,6 +161,18 @@ namespace BlackCore
         //! To string
         QString getInfoString(const QString &separator) const;
 
+        //! Unsaved settings
+        bool hasUnsavedSettings() const;
+
+        //! Automatically and always save settings
+        void setSettingsAutoSave(bool autoSave);
+
+        //! All unsave settings
+        QStringList getAllUnsavedSettings() const;
+
+        //! Save all settings
+        BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys);
+
         //! Run event loop
         static int exec();
 
@@ -226,6 +238,8 @@ namespace BlackCore
         //! @{
 
         //! Supports contexts
+        //! \remark checks the real availability of the contexts, so it can happen that we want to use contexts, and they are not yet initialized (false here)
+        //! \sa m_useContexts we use or we will use contexts
         bool supportsContexts() const;
 
         //! Init the contexts part and start core facade
@@ -402,6 +416,8 @@ namespace BlackCore
         bool                                     m_signalStartup = true;   //!< signal startup automatically
         bool                                     m_devEnv = false;         //!< dev. environment
         bool                                     m_unitTest = false;       //!< is UNIT test
+        bool                                     m_autoSaveSettings = true;//!< automatically saving all settings
+
     };
 } // namespace
 

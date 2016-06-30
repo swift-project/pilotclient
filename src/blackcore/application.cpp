@@ -217,6 +217,8 @@ namespace BlackCore
                 CLogMessage::preformatted(m);
             }
 
+            // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()` means
+            // "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is sent to swiftcore and saved by swiftcore.
             CSettingsCache::instance()->enableLocalSave();
         }
 
@@ -342,6 +344,34 @@ namespace BlackCore
         env = env.append(separator);
         env.append("Windows: ").append(boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()));
         return env;
+    }
+
+    bool CApplication::hasUnsavedSettings() const
+    {
+        return !this->getAllUnsavedSettings().isEmpty();
+    }
+
+    void CApplication::setSettingsAutoSave(bool autoSave)
+    {
+        this->m_autoSaveSettings = autoSave;
+    }
+
+    QStringList CApplication::getAllUnsavedSettings() const
+    {
+        return CSettingsCache::instance()->getAllUnsavedKeys();
+    }
+
+    CStatusMessage CApplication::saveSettingsByKey(const QStringList &keys)
+    {
+        if (keys.isEmpty()) { return CStatusMessage(); }
+        if (this->supportsContexts())
+        {
+            return this->getIContextApplication()->saveSettingsByKey(keys);
+        }
+        else
+        {
+            return CSettingsCache::instance()->saveToStore(keys);
+        }
     }
 
     QString CApplication::getInfoString(const QString &separator) const
@@ -604,7 +634,7 @@ namespace BlackCore
         CStatusMessage m;
         if (this->m_parsed)
         {
-            if (this->supportsContexts())
+            if (this->supportsContexts() && this->m_autoSaveSettings)
             {
                 // this will eventually also call saveToStore
                 m = this->getIContextApplication()->saveSettings();
@@ -698,9 +728,9 @@ namespace BlackCore
         return l;
     }
 
-// ---------------------------------------------------------------------------------
-// Parsing
-// ---------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------
+    // Parsing
+    // ---------------------------------------------------------------------------------
 
     bool CApplication::addParserOption(const QCommandLineOption &option)
     {
@@ -824,9 +854,9 @@ namespace BlackCore
         printf("%s %s\n", qPrintable(QCoreApplication::applicationName()), qPrintable(QCoreApplication::applicationVersion()));
     }
 
-// ---------------------------------------------------------------------------------
-// Contexts
-// ---------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------
+    // Contexts
+    // ---------------------------------------------------------------------------------
 
     bool CApplication::supportsContexts() const
     {
@@ -896,9 +926,9 @@ namespace BlackCore
         return this->m_coreFacade->getIContextSimulator();
     }
 
-// ---------------------------------------------------------------------------------
-// Setup
-// ---------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------
+    // Setup
+    // ---------------------------------------------------------------------------------
 
     CUrlList CApplication::getVatsimMetarUrls() const
     {

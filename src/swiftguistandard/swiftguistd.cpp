@@ -131,9 +131,20 @@ void SwiftGuiStd::performGracefulShutdown()
 
 void SwiftGuiStd::closeEvent(QCloseEvent *event)
 {
-    Q_UNUSED(event);
+    if (sGui)
+    {
+        if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
+        {
+            // we do not just logoff, but give the user a chance to respond
+            event->ignore();
+            QTimer::singleShot(500, this, &SwiftGuiStd::ps_loginRequested);
+            return;
+        }
+
+        // save settings
+        if (sGui->showCloseDialog(this, event) == QDialog::Rejected) { return; }
+    }
     this->performGracefulShutdown();
-    CGuiApplication::exit();
 }
 
 void SwiftGuiStd::changeEvent(QEvent *event)
