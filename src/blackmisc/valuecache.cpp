@@ -136,18 +136,8 @@ namespace BlackMisc
         return cats;
     }
 
-    CValueCache::CValueCache(CValueCache::DistributionMode mode, QObject *parent) :
-        QObject(parent)
-    {
-        if (mode == LocalOnly)
-        {
-            // loopback signal to own slot for local operation
-            connect(this, &CValueCache::valuesChangedByLocal, this, [ = ](const CValueCachePacket & values)
-            {
-                changeValuesFromRemote(values, CIdentifier());
-            });
-        }
-    }
+    CValueCache::CValueCache(QObject *parent) : QObject(parent)
+    {}
 
     struct CValueCache::Element
     {
@@ -242,8 +232,10 @@ namespace BlackMisc
         if (values.valuesChanged()) { emit valuesChanged(values, sender()); }
         emit valuesChangedByLocal(values);
 
-        Q_ASSERT_X(isSignalConnected(QMetaMethod::fromSignal(&CValueCache::valuesChangedByLocal)), Q_FUNC_INFO,
-            "signal must be connected for cache to function properly");
+        if (! isSignalConnected(QMetaMethod::fromSignal(&CValueCache::valuesChangedByLocal)))
+        {
+            changeValuesFromRemote(values, CIdentifier());
+        }
     }
 
     void CValueCache::changeValuesFromRemote(const CValueCachePacket &values, const CIdentifier &originator)

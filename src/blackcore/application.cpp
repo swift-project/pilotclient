@@ -207,15 +207,6 @@ namespace BlackCore
 
         bool s = this->startHookIn();
 
-        // enable local relay of settings changes in case there is no context
-        if (!this->supportsContexts())
-        {
-            connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, CSettingsCache::instance(), [](const CValueCachePacket & values)
-            {
-                CSettingsCache::instance()->changeValuesFromRemote(values, CIdentifier());
-            });
-        }
-
         // trigger loading and saving of settings in appropriate scenarios
         if (this->m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
         {

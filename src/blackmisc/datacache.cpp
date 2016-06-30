@@ -68,8 +68,7 @@ namespace BlackMisc
         CDataCacheRevision *m_rev = nullptr;
     };
 
-    CDataCache::CDataCache() :
-        CValueCache(CValueCache::Distributed)
+    CDataCache::CDataCache()
     {
         if (! QDir::root().mkpath(persistentStore()))
         {

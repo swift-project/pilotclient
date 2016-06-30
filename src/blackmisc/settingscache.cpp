@@ -15,8 +15,7 @@
 
 namespace BlackMisc
 {
-    CSettingsCache::CSettingsCache() :
-        CValueCache(CValueCache::Distributed)
+    CSettingsCache::CSettingsCache()
     {}
 
     CSettingsCache *CSettingsCache::instance()

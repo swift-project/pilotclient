@@ -77,7 +77,7 @@ namespace BlackMiscTest
             { "value4", CVariant::from(4) }
         };
 
-        CValueCache cache(CValueCache::LocalOnly);
+        CValueCache cache;
         QVERIFY(cache.getAllValues() == CVariantMap());
         cache.insertValues({ testData, QDateTime::currentMSecsSinceEpoch() });
         QVERIFY(cache.getAllValues() == testData);
@@ -131,7 +131,7 @@ namespace BlackMiscTest
 
     void CTestValueCache::localOnly()
     {
-        CValueCache cache(CValueCache::LocalOnly);
+        CValueCache cache;
         for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
@@ -140,7 +140,7 @@ namespace BlackMiscTest
 
     void CTestValueCache::localOnlyWithThreads()
     {
-        CValueCache cache(CValueCache::LocalOnly);
+        CValueCache cache;
         for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
@@ -158,8 +158,8 @@ namespace BlackMiscTest
         json.insert("processId", otherProcess.getProcessId() + 1);
         otherProcess.convertFromJson(json);
 
-        CValueCache thisCache(CValueCache::Distributed);
-        CValueCache otherCache(CValueCache::Distributed);
+        CValueCache thisCache;
+        CValueCache otherCache;
         connect(&thisCache, &CValueCache::valuesChangedByLocal, &thisCache, [ & ](const CValueCachePacket &values)
         {
             QMetaObject::invokeMethod(&thisCache, "changeValuesFromRemote", Q_ARG(BlackMisc::CValueCachePacket, values), Q_ARG(BlackMisc::CIdentifier, thisProcess));
@@ -191,7 +191,7 @@ namespace BlackMiscTest
 
     void CTestValueCache::batched()
     {
-        CValueCache cache(CValueCache::LocalOnly);
+        CValueCache cache;
         for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
@@ -225,7 +225,7 @@ namespace BlackMiscTest
             { "value3", CVariant::from(3) }
         };
 
-        CValueCache cache(CValueCache::LocalOnly);
+        CValueCache cache;
         cache.loadFromJson(testJson);
         QVERIFY(cache.getAllValues() == testData);
         QVERIFY(cache.saveToJson() == testJson);
@@ -243,7 +243,7 @@ namespace BlackMiscTest
             { "namespace2/aircraft", CVariant::from(aircraft) },
             { "namespace2/atcstations", CVariant::from(atcStations) }
         };
-        CValueCache cache(CValueCache::LocalOnly);
+        CValueCache cache;
         cache.insertValues({ testData, QDateTime::currentMSecsSinceEpoch() });
 
         QDir dir(QDir::currentPath() + "/testcache");
@@ -257,7 +257,7 @@ namespace BlackMiscTest
         QCOMPARE(files[0].fileName(), QString("namespace1.json"));
         QCOMPARE(files[1].fileName(), QString("namespace2.json"));
 
-        CValueCache cache2(CValueCache::LocalOnly);
+        CValueCache cache2;
         status = cache2.loadFromFiles(dir.absolutePath());
         QVERIFY(status.isSuccess());
         QCOMPARE(cache2.getAllValues(), testData);

@@ -147,20 +147,11 @@ namespace BlackMisc
     public:
         class BatchGuard;
 
-        //! Whether or not the cache can be distributed among multiple processes.
-        enum DistributionMode
-        {
-            LocalOnly,      //!< Not distributed.
-            Distributed     //!< Distributed among multiple processes.
-        };
-
         //! Log categories
         static const CLogCategoryList &getLogCategories();
 
         //! Constructor.
-        //! \param mode Whether or not the cache can be distributed among multiple processes.
-        //! \param parent The parent of the QObject.
-        explicit CValueCache(DistributionMode mode, QObject *parent = nullptr);
+        explicit CValueCache(QObject *parent = nullptr);
 
         //! Return map containing all values in the cache.
         //! If prefix is provided then only those values whose keys start with that prefix.
