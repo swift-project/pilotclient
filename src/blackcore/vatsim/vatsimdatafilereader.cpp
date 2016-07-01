@@ -387,12 +387,12 @@ namespace BlackCore
                         break;
 
                     } // switch section
-
                 } // for each line
 
-
-                // setup for VATSIM
+                // Setup for VATSIM servers and sorting for comparison
                 fsdServers.setFsdSetup(CFsdSetup::vatsimStandard());
+                fsdServers.sortBy(&CServer::getName);
+                voiceServers.sortBy(&CServer::getName);
 
                 // this part needs to be synchronized
                 {
