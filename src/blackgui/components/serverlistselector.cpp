@@ -8,11 +8,18 @@
  */
 
 #include "blackgui/components/serverlistselector.h"
+#include "blackgui/guiapplication.h"
 #include "blackmisc/sequence.h"
+#include "blackcore/webdataservices.h"
+#include "blackcore/db/icaodatareader.h"
 
 #include <QString>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackGui;
+using namespace BlackCore;
+using namespace BlackCore::Db;
 
 namespace BlackGui
 {
@@ -20,13 +27,12 @@ namespace BlackGui
     {
         CServerListSelector::CServerListSelector(QWidget *parent) :
             QComboBox(parent)
-        {
-        }
+        { }
 
-        void CServerListSelector::setServers(const BlackMisc::Network::CServerList &servers)
+        void CServerListSelector::setServers(const BlackMisc::Network::CServerList &servers, bool nameIsCountry)
         {
             if (this->m_servers == servers) { return; }
-            this->setItemStrings(servers);
+            this->setServerItems(servers, nameIsCountry);
             if (!servers.isEmpty() && !m_pendingPreselect.isEmpty())
             {
                 this->preSelect(m_pendingPreselect);
@@ -60,23 +66,41 @@ namespace BlackGui
             return false;
         }
 
-        void CServerListSelector::setItemStrings(const CServerList &servers)
+        void CServerListSelector::setServerItems(const CServerList &servers, bool nameToCountry)
         {
             QString currentlySelected(this->currentText());
             int index = -1;
             this->m_servers = servers;
             this->m_items.clear();
+            this->clear(); // ui
+
+            nameToCountry = nameToCountry && knowsAllCountries();
             for (const CServer &server : servers)
             {
-                QString d(server.getName() + ": " + server.getDescription());
+                const QString d(server.getName() + ": " + server.getDescription());
                 m_items.append(d);
                 if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected)
                 {
                     index = m_items.size() - 1;
                 }
+
+                if (nameToCountry)
+                {
+                    const CCountry country(findCountry(server));
+                    if (country.getName().isEmpty())
+                    {
+                        this->addItem(d);
+                    }
+                    else
+                    {
+                        this->addItem(country.toPixmap(), d);
+                    }
+                }
+                else
+                {
+                    this->addItem(d);
+                }
             }
-            this->clear(); // ui
-            this->addItems(m_items);
 
             // reselect
             if (this->m_items.isEmpty()) { return; }
@@ -88,6 +112,18 @@ namespace BlackGui
             {
                 this->setCurrentIndex(index);
             }
+        }
+
+        bool CServerListSelector::knowsAllCountries()
+        {
+            return (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getCountriesCount() > 0);
+        }
+
+        CCountry CServerListSelector::findCountry(const CServer &server)
+        {
+            if (!knowsAllCountries()) { return CCountry(); }
+            static const CCountryList countries(sGui->getWebDataServices()->getCountries());
+            return countries.findBestMatchByCountryName(server.getName());
         }
     } // ns
 } // ns

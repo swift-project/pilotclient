@@ -28,9 +28,9 @@ namespace BlackGui
 {
     namespace Components
     {
+        // forward declaration to break compile dependency from all components
         class CAircraftComponent;
         class CAtcStationComponent;
-        // forward declaration to break compile dependency from all components
         class CCockpitComponent;
         class CFlightPlanComponent;
         class CLogComponent;
@@ -122,10 +122,8 @@ namespace BlackGui
             void selectSettingsTab(int index);
 
         protected:
-            //! \copydoc CInfoArea::getPreferredSizeWhenFloating
+            // CInfoArea overrides
             virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
-
-            //! \copydoc CInfoArea::indexToPixmap
             virtual const QPixmap &indexToPixmap(int areaIndex) const override;
 
         private:

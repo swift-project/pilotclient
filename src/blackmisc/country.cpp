@@ -26,8 +26,7 @@ namespace BlackMisc
         if (this->m_dbKey.length() == 2)
         {
             // relative to images
-            return CIcon("flags/" + m_dbKey.toLower() + ".png",
-                         this->convertToQString());
+            return CIcon("flags/" + m_dbKey.toLower() + ".png", this->convertToQString());
         }
         else
         {
@@ -73,7 +72,7 @@ namespace BlackMisc
         if (name.isEmpty() || m_name.isEmpty()) { return false; }
         if (name.length() < 5)
         {
-            return m_name.length() == name.length() &&  m_name.startsWith(name, Qt::CaseInsensitive);
+            return m_name.length() == name.length() && (m_name.startsWith(name, Qt::CaseInsensitive) || name.startsWith(m_name, Qt::CaseInsensitive));
         }
         else
         {

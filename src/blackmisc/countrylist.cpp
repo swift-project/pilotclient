@@ -32,17 +32,22 @@ namespace BlackMisc
     CCountry CCountryList::findBestMatchByCountryName(const QString &countryName) const
     {
         if (countryName.isEmpty()) { return CCountry(); }
+
+        static const QRegExp reg("[^a-z]", Qt::CaseInsensitive);
+        QString cn(countryName);
+        cn.remove(reg);
         CCountryList countries = this->findBy([&](const CCountry & country)
         {
-            return country.matchesCountryName(countryName);
+            return country.matchesCountryName(cn);
         });
         if (countries.size() < 2) { return countries.frontOrDefault(); }
 
-        // find best match
+        // find best match by further reducing
         for (const CCountry &c : countries)
         {
-            if (c.getName() == countryName) { return c; }
-            if (c.getName().startsWith(countryName, Qt::CaseInsensitive)) { return c; }
+            if (c.getName() == cn) { return c; }
+            if (c.getName().startsWith(cn, Qt::CaseInsensitive)) { return c; }
+            if (cn.startsWith(c.getName(), Qt::CaseInsensitive)) { return c; }
         }
         return countries.front();
     }

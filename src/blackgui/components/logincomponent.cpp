@@ -321,10 +321,11 @@ namespace BlackGui
 
             if (entity == CEntityFlags::VatsimDataFile)
             {
-                const CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
+                CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
                 if (vatsimFsdServers.isEmpty()) { return; }
+                vatsimFsdServers.sortBy(&CServer::getName);
                 const CServer currentServer = this->m_currentVatsimServer.get();
-                this->ui->comp_VatsimServer->setServers(vatsimFsdServers);
+                this->ui->comp_VatsimServer->setServers(vatsimFsdServers, true);
                 this->ui->comp_VatsimServer->preSelect(currentServer.getName());
             }
             else
