@@ -16,6 +16,7 @@
 #include "iterator.h"
 #include "predicates.h"
 #include "algorithm.h"
+#include "typetraits.h"
 #include <QtGlobal>
 #include <QDebug>
 #include <algorithm>
@@ -110,6 +111,21 @@ namespace BlackMisc
             return containsBy(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
         }
 
+        //! Return true if this container equals another container according to the given element equality predicate.
+        template <class T, class Predicate>
+        bool equalsBy(const T &other, Predicate c) const
+        {
+            if (equalPointers(&derived(), &other)) { return true; }
+            return std::equal(derived().begin(), derived().end(), other.begin(), other.end(), c);
+        }
+
+        //! Return true if this container equals another container, considering only the given element members.
+        template <class T, class Key0, class... Keys>
+        bool equalsByKeys(const T &other, Key0 k0, Keys... keys) const
+        {
+            return equalsBy(other, BlackMisc::Predicates::EqualsByMembers(k0, keys...));
+        }
+
         //! Copy n elements from the container at random.
         Derived randomElements(int n) const
         {
@@ -125,6 +141,15 @@ namespace BlackMisc
             BlackMisc::copySampleElements(derived().begin(), derived().end(), std::inserter(result, result.end()), n);
             return result;
         }
+
+    protected:
+        //! Efficiently compare addresses of two objects. Return false if types are not compatible.
+        //! @{
+        template <typename T, typename U, std::enable_if_t<IsEqualityComparable<const T *, const U *>::value, int> = 0>
+        static bool equalPointers(const T *a, const U *b) { return a == b; }
+        template <typename T, typename U, std::enable_if_t<! IsEqualityComparable<const T *, const U *>::value, int> = 0>
+        static bool equalPointers(const T *, const U *) { return false; }
+        //! @}
 
     private:
         Derived &derived() { return static_cast<Derived &>(*this); }

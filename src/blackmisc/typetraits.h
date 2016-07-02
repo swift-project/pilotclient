@@ -102,6 +102,16 @@ namespace BlackMisc
     struct HasCompare<T, U, void_t<decltype(compare(std::declval<T>(), std::declval<U>()))>> : public std::true_type {};
     //! \endcond
 
+    /*!
+     * Trait which is true if the expression a == b is valid when a and b are instances of T and U.
+     */
+    template <typename T, typename U, typename = void_t<>>
+    struct IsEqualityComparable : public std::false_type {};
+    //! \cond
+    template <typename T, typename U>
+    struct IsEqualityComparable<T, U, void_t<decltype(std::declval<T>() == std::declval<U>())>> : public std::true_type {};
+    //! \endcond
+
 }
 
 #endif

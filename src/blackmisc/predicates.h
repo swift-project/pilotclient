@@ -73,6 +73,26 @@ namespace BlackMisc
             };
 
             //! \private
+            template <class...> struct EqualsByMembers;
+
+            //! \private
+            template <class M> struct EqualsByMembers<M>
+            {
+                M m;
+                EqualsByMembers(M m_) : m(m_) {}
+                template <class T> bool operator()(const T &a, const T &b) const { return (a.*m)() == (b.*m)(); }
+            };
+
+            //! \private
+            template <class M, class... Tail> struct EqualsByMembers<M, Tail...>
+            {
+                EqualsByMembers<M> head;
+                EqualsByMembers<Tail...> tail;
+                EqualsByMembers(M m, Tail... tail_) : head(m), tail(tail_...) {}
+                template <class T> bool operator()(const T &a, const T &b) const { return head(a, b) && tail(a, b); }
+            };
+
+            //! \private
             struct Matches
             {
                 const CPropertyIndexVariantMap &m_map;
@@ -139,6 +159,15 @@ namespace BlackMisc
         auto Equals(T &&value)
         {
             return [value = std::forward<T>(value)](const T &object) { return object == value; };
+        }
+
+        /*!
+         * Returns a predicate that returns true if its arguments compare equal to each other, considering only the captured members.
+         */
+        template <class... Ts>
+        Private::EqualsByMembers<Ts...> EqualsByMembers(Ts... vs)
+        {
+            return { vs... };
         }
 
         /*!
