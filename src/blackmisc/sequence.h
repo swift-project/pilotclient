@@ -14,6 +14,7 @@
 
 #include "iterator.h"
 #include "containerbase.h"
+#include "propertyindex.h"
 #include "icon.h"
 #include <QScopedPointer>
 #include <algorithm>
@@ -387,6 +388,21 @@ namespace BlackMisc
             sort(BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
+        //! In-place sort by some properties specified by a list of property indexes.
+        void sortByProperty(const CSequence<CPropertyIndex> &indexes)
+        {
+            sort([&indexes](const T &a, const T &b)
+            {
+                for (const auto &index : indexes)
+                {
+                    int cmp = index.comparator()(a, b);
+                    if (cmp < 0) { return true; }
+                    if (cmp > 0) { return false; }
+                }
+                return false;
+            });
+        }
+
         //! Return a copy sorted by a given comparator predicate.
         template <class Predicate>
         CSequence sorted(Predicate p) const
@@ -403,6 +419,14 @@ namespace BlackMisc
         CSequence sortedBy(K1 key1, Keys... keys) const
         {
             return sorted(BlackMisc::Predicates::MemberLess(key1, keys...));
+        }
+
+        //! Return a copy sorted by some properties specified by a list of property indexes.
+        CSequence sortedByProperty(const CSequence<CPropertyIndex> &indexes) const
+        {
+            CSequence result = *this;
+            result.sortByProperty(indexes);
+            return result;
         }
 
         //! In-place move the smallest n elements to the beginning and sort them.

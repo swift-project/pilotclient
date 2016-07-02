@@ -19,6 +19,8 @@
 namespace BlackMisc
 {
 
+    class CPropertyIndex;
+
     //! \cond PRIVATE
 #ifdef BLACK_HAS_FIXED_CWG1558
     // Own implementation of C++17 std::void_t, simple variadic alias
@@ -100,6 +102,28 @@ namespace BlackMisc
     //! \cond
     template <typename T, typename U>
     struct HasCompare<T, U, void_t<decltype(compare(std::declval<T>(), std::declval<U>()))>> : public std::true_type {};
+    //! \endcond
+
+    /*!
+     * Trait which is true if the expression a.compareByPropertyIndex(b, i) is valid when a and b are instances of T,
+     * and i is an instance of CPropertyIndex.
+     */
+    template <typename T, typename = void_t<>>
+    struct HasCompareByPropertyIndex : public std::false_type {};
+    //! \cond
+    template <typename T>
+    struct HasCompareByPropertyIndex<T, void_t<decltype(std::declval<T>().compareByPropertyIndex(std::declval<CPropertyIndex>(), std::declval<T>()))>> : public std::true_type {};
+    //! \endcond
+
+    /*!
+     * Trait which is true if the expression a.propertyByIndex(i) is valid with a is an instance of T and i is an
+     * instance of CPropertyIndex.
+     */
+    template <typename T, typename = void_t<>>
+    struct HasPropertyByIndex : public std::false_type {};
+    //! \cond
+    template <typename T>
+    struct HasPropertyByIndex<T, void_t<decltype(std::declval<T>().propertyByIndex(std::declval<CPropertyIndex>()))>> : public std::true_type {};
     //! \endcond
 
     /*!

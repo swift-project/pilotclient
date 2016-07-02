@@ -19,6 +19,7 @@
 #include "blackmisc/json.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/stringutils.h"
+#include "blackmisc/typetraits.h"
 #include "blackmisc/variant.h"
 
 #include <QList>
@@ -29,6 +30,31 @@
 
 namespace BlackMisc
 {
+    class CPropertyIndex;
+
+    namespace Private
+    {
+        //! \private
+        template <class T, class X>
+        int compareByProperty(const T &a, const T &b, const CPropertyIndex &index, std::true_type, X)
+        {
+            return a.comparePropertyByIndex(index, b);
+        }
+        //! \private
+        template <class T>
+        int compareByProperty(const T &a, const T &b, const CPropertyIndex &index, std::false_type, std::true_type)
+        {
+            return compare(a.propertyByIndex(index), b.propertyByIndex(index));
+        }
+        //! \private
+        template <class T>
+        int compareByProperty(const T &, const T &, const CPropertyIndex &, std::false_type, std::false_type)
+        {
+            qFatal("Not implemented");
+            return 0;
+        }
+    }
+
     /*!
      * Property index. The index can be nested, that's why it is a sequence
      * (e.g. PropertyIndexPilot, PropertyIndexRealname).
@@ -173,6 +199,16 @@ namespace BlackMisc
             QList<int> l = indexList();
             if (l.size() != 1) { return false; }
             return static_cast<int>(ev) == l.first();
+        }
+
+        //! Return a predicate function which can compare two objects based on this index
+        auto comparator() const
+        {
+            return [index = *this](const auto &a, const auto &b)
+            {
+                using T = std::decay_t<decltype(a)>;
+                return Private::compareByProperty(a, b, index, HasCompareByPropertyIndex<T>(), HasPropertyByIndex<T>());
+            };
         }
 
         //! \copydoc BlackMisc::Mixin::String::toQString
