@@ -91,7 +91,7 @@ namespace BlackMisc
         } //namespace Private
 
         /*!
-         * \brief Predicate which tests whether some member functions return some values.
+         * Predicate which tests whether some member functions return some values.
          * \param vs Pairs of { pointer to member function of T, value to compare it against }.
          * \return A unary functor whose operator() which will perform the actual test.
          */
@@ -102,7 +102,7 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Predicate which compares the return values of some member functions of two objects.
+         * Predicate which compares the return values of some member functions of two objects.
          * \param vs Pointers to member functions of T.
          * \return A binary functor whose operator() which will perform the actual test.
          */

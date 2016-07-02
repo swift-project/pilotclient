@@ -51,7 +51,7 @@ namespace BlackMisc
     };
 
     /*!
-     * \brief Generic type-erased ordered container with value semantics.
+     * Generic type-erased ordered container with value semantics.
      * \tparam T the type of elements contained.
      *
      * Can take any suitable container class as its implementation at runtime.
@@ -62,7 +62,7 @@ namespace BlackMisc
         public Mixin::Icon<CCollection<T>>
     {
     public:
-        //! \brief STL compatibility
+        //! STL compatibility
         //! @{
         typedef T key_type;
         typedef T value_type;
@@ -76,201 +76,133 @@ namespace BlackMisc
         typedef intptr_t size_type;
         //! @}
 
-        /*!
-         * \brief Default constructor.
-         */
+        //! Default constructor.
         CCollection() : m_pimpl(new Pimpl<QOrderedSet<T>>(QOrderedSet<T>())) {}
 
-        /*!
-         * \brief Initializer list constructor.
-         */
+        //! Initializer list constructor.
         CCollection(std::initializer_list<T> il) : m_pimpl(new Pimpl<QOrderedSet<T>>(QOrderedSet<T>(il))) {}
 
-        /*!
-         * \brief Copy constructor.
-         */
+        //! Copy constructor.
         CCollection(const CCollection &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
-        /*!
-         * \brief Constructor from QList.
-         */
+        //! Constructor from QList.
         CCollection(const QList<T> &list) : m_pimpl(new Pimpl<QOrderedSet<T>>(QOrderedSet<T>(list))) {}
 
-        /*!
-         * \brief Move constructor.
-         */
+        //! Move constructor.
         CCollection(CCollection &&other) noexcept(std::is_nothrow_move_constructible<T>::value) : m_pimpl(other.m_pimpl.take()) {}
 
-        /*!
-         * \brief Copy assignment.
-         */
+        //! Copy assignment.
         CCollection &operator =(const CCollection &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
-        /*!
-         * \brief Move assignment.
-         */
+        //! Move assignment.
         CCollection &operator =(CCollection && other) noexcept(std::is_nothrow_move_assignable<T>::value) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
-        /*!
-         * \brief Create a new collection with a specific implementation type.
-         * \tparam C Becomes the collection's implementation type.
-         * \param c Initial value for the collection; default is empty, but it could contain elements if desired. The value is copied.
-         */
+        //! Create a new collection with a specific implementation type.
+        //! \tparam C Becomes the collection's implementation type.
+        //! \param c Initial value for the collection; default is empty, but it could contain elements if desired. The value is copied.
         template <class C> static CCollection fromImpl(C c = C()) { return CCollection(new Pimpl<C>(std::move(c))); }
 
-        /*!
-         * \brief Change the implementation type but keep all the same elements, by moving them into the new implementation.
-         * \tparam C Becomes the collection's new implementation type.
-         */
+        //! Change the implementation type but keep all the same elements, by moving them into the new implementation.
+        //! \tparam C Becomes the collection's new implementation type.
         template <class C> void changeImpl(C = C()) { auto c = fromImpl(C()); std::move(begin(), end(), std::inserter(c, c.begin())); *this = std::move(c); }
 
-        /*!
-         * \brief Like changeImpl, but uses the implementation type of another collection.
-         * \pre The other collection must be initialized.
-         */
+        //! Like changeImpl, but uses the implementation type of another collection.
+        //! \pre The other collection must be initialized.
         void useImplOf(const CCollection &other) { CCollection c(other.pimpl()->cloneEmpty()); std::move(begin(), end(), std::inserter(c, c.begin())); *this = std::move(c); }
 
-        /*!
-         * \brief Returns iterator at the beginning of the collection.
-         */
+        //! Returns iterator at the beginning of the collection.
         iterator begin() { return pimpl() ? pimpl()->begin() : iterator(); }
 
-        /*!
-         * \brief Returns iterator at the beginning of the collection.
-         */
+        //! Returns iterator at the beginning of the collection.
         const_iterator begin() const { return pimpl() ? pimpl()->begin() : const_iterator(); }
 
-        /*!
-         * \brief Returns iterator at the beginning of the collection.
-         */
+        //! Returns iterator at the beginning of the collection.
         const_iterator cbegin() const { return pimpl() ? pimpl()->cbegin() : const_iterator(); }
 
-        /*!
-         * \brief Returns iterator one past the end of the collection.
-         */
+        //! Returns iterator one past the end of the collection.
         iterator end() { return pimpl() ? pimpl()->end() : iterator(); }
 
-        /*!
-         * \brief Returns const iterator one past the end of the collection.
-         */
+        //! Returns const iterator one past the end of the collection.
         const_iterator end() const { return pimpl() ? pimpl()->end() : const_iterator(); }
 
-        /*!
-         * \brief Returns const iterator one past the end of the collection.
-         */
+        //! Returns const iterator one past the end of the collection.
         const_iterator cend() const { return pimpl() ? pimpl()->cend() : const_iterator(); }
 
-        /*!
-         * \brief Swap this collection with another.
-         */
+        //! Swap this collection with another.
         void swap(CCollection &other) noexcept { m_pimpl.swap(other.m_pimpl); }
 
-        /*!
-         * \brief Returns number of elements in the collection.
-         */
+        //! Returns number of elements in the collection.
         size_type size() const { return pimpl() ? pimpl()->size() : 0; }
 
-        /*!
-         * \brief Returns true if the collection is empty.
-         */
+        //! Returns true if the collection is empty.
         bool empty() const { return pimpl() ? pimpl()->empty() : true; }
 
-        /*!
-         * \brief Synonym for empty.
-         */
+        //! Synonym for empty.
         bool isEmpty() const { return empty(); }
 
-        /*!
-         * \brief Removes all elements in the collection.
-         */
+        //! Removes all elements in the collection.
         void clear() { if (pimpl()) pimpl()->clear(); }
 
-        /*!
-         * \brief For compatibility with std::inserter.
-         * \param hint Ignored.
-         * \param value The value to insert.
-         * \pre The collection must be initialized.
-         */
+        //! For compatibility with std::inserter.
+        //! \param hint Ignored.
+        //! \param value The value to insert.
+        //! \pre The collection must be initialized.
         iterator insert(const_iterator hint, const T &value) { Q_UNUSED(hint); return insert(value); }
 
-        /*!
-         * \brief For compatibility with std::inserter.
-         * \param hint Ignored.
-         * \param value The value to move in.
-         * \pre The collection must be initialized.
-         */
+        //! For compatibility with std::inserter.
+        //! \param hint Ignored.
+        //! \param value The value to move in.
+        //! \pre The collection must be initialized.
         iterator insert(const_iterator hint, T &&value) { Q_UNUSED(hint); return insert(std::move(value)); }
 
-        /*!
-         * \brief Inserts an element into the collection.
-         * \return An iterator to the position where value was inserted.
-         * \pre The collection must be initialized.
-         */
+        //! Inserts an element into the collection.
+        //! \return An iterator to the position where value was inserted.
+        //! \pre The collection must be initialized.
         iterator insert(const T &value) { Q_ASSERT(pimpl()); return pimpl()->insert(value); }
 
-        /*!
-         * \brief Moves an element into the collection.
-         * \return An iterator to the position where value was inserted.
-         * \pre The collection must be initialized.
-         */
+        //! Moves an element into the collection.
+        //! \return An iterator to the position where value was inserted.
+        //! \pre The collection must be initialized.
         iterator insert(T &&value) { Q_ASSERT(pimpl()); return pimpl()->insert(std::move(value)); }
 
-        /*!
-         * \brief Inserts all elements from another collection into this collection.
-         * \pre This collection must be initialized.
-         */
+        //! Inserts all elements from another collection into this collection.
+        //! \pre This collection must be initialized.
         void insert(const CCollection &other) { std::copy(other.begin(), other.end(), std::inserter(*this, begin())); }
 
-        /*!
-         * \brief Inserts all elements from another collection into this collection.
-         * This version moves elements instead of copying.
-         * \pre This collection must be initialized.
-         */
+        //! Inserts all elements from another collection into this collection.
+        //! This version moves elements instead of copying.
+        //! \pre This collection must be initialized.
         void insert(CCollection &&other) { std::move(other.begin(), other.end(), std::inserter(*this, begin())); }
 
-        /*!
-         * \brief Appends all elements from a range at the end of this collection.
-         * \pre This collection must be initialized.
-         */
+        //! Appends all elements from a range at the end of this collection.
+        //! \pre This collection must be initialized.
         template <typename I>
         void insert(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
 
-        /*!
-         * \brief Synonym for insert.
-         * \return An iterator to the position where value was inserted.
-         * \pre The collection must be initialized.
-         */
+        //! Synonym for insert.
+        //! \return An iterator to the position where value was inserted.
+        //! \pre The collection must be initialized.
         iterator push_back(const T &value) { return insert(value); }
 
-        /*!
-         * \brief Synonym for insert.
-         * \return An iterator to the position where value was inserted.
-         * \pre The collection must be initialized.
-         */
+        //! Synonym for insert.
+        //! \return An iterator to the position where value was inserted.
+        //! \pre The collection must be initialized.
         iterator push_back(T &&value) { return insert(std::move(value)); }
 
-        /*!
-         * \brief Synonym for insert.
-         * \pre This collection must be initialized.
-         */
+        //! Synonym for insert.
+        //! \pre This collection must be initialized.
         void push_back(const CCollection &other) { insert(other); }
 
-        /*!
-         * \brief Synonym for insert.
-         * \pre This collection must be initialized.
-         */
+        //! Synonym for insert.
+        //! \pre This collection must be initialized.
         void push_back(CCollection &&other) { insert(std::move(other)); }
 
-        /*!
-         * \brief Synonym for insert.
-         * \pre This collection must be initialized.
-         */
+        //! Synonym for insert.
+        //! \pre This collection must be initialized.
         template <typename I>
         void push_back(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
 
-        /*!
-         * \brief Returns a collection which is the union of this collection and another container.
-         */
+        //! Returns a collection which is the union of this collection and another container.
         template <class C>
         CCollection makeUnion(const C &other) const
         {
@@ -279,9 +211,7 @@ namespace BlackMisc
             return result;
         }
 
-        /*!
-         * \brief Returns a collection which is the intersection of this collection and another.
-         */
+        //! Returns a collection which is the intersection of this collection and another.
         template <class C>
         CCollection intersection(const C &other) const
         {
@@ -290,9 +220,7 @@ namespace BlackMisc
             return result;
         }
 
-        /*!
-         * \brief Returns a collection which contains all the elements from this collection which are not in the other collection.
-         */
+        //! Returns a collection which contains all the elements from this collection which are not in the other collection.
         template <class C>
         CCollection difference(const C &other) const
         {
@@ -301,52 +229,38 @@ namespace BlackMisc
             return result;
         }
 
-        /*!
-         * \brief Remove the element pointed to by the given iterator.
-         * \return An iterator to the position of the next element after the one removed.
-         * \pre The collection must be initialized.
-         */
+        //! Remove the element pointed to by the given iterator.
+        //! \return An iterator to the position of the next element after the one removed.
+        //! \pre The collection must be initialized.
         iterator erase(iterator pos) { Q_ASSERT(pimpl()); return pimpl()->erase(pos); }
 
-        /*!
-         * \brief Remove the range of elements between two iterators.
-         * \return An iterator to the position of the next element after the one removed.
-         * \pre The sequence must be initialized.
-         */
+        //! Remove the range of elements between two iterators.
+        //! \return An iterator to the position of the next element after the one removed.
+        //! \pre The sequence must be initialized.
         iterator erase(iterator it1, iterator it2) { Q_ASSERT(pimpl()); return pimpl()->erase(it1, it2); }
 
-        /*!
-         * \brief Efficient find method using the find of the implementation container. Typically O(log n).
-         * \return An iterator to the position of the found element, or the end iterator if not found.
-         * \pre The sequence must be initialized.
-         * \warning Take care that the returned non-const iterator is not compared with a const iterator.
-         */
+        //! Efficient find method using the find of the implementation container. Typically O(log n).
+        //! \return An iterator to the position of the found element, or the end iterator if not found.
+        //! \pre The sequence must be initialized.
+        //! \warning Take care that the returned non-const iterator is not compared with a const iterator.
         iterator find(const T &value) { Q_ASSERT(pimpl()); return pimpl()->find(value); }
 
-        /*!
-         * \brief Efficient find method using the find of the implementation container. Typically O(log n).
-         * \return An iterator to the position of the found element, or the end iterator if not found.
-         * \pre The sequence must be initialized.
-         */
+        //! Efficient find method using the find of the implementation container. Typically O(log n).
+        //! \return An iterator to the position of the found element, or the end iterator if not found.
+        //! \pre The sequence must be initialized.
         const_iterator find(const T &value) const { Q_ASSERT(pimpl()); return pimpl()->find(value); }
 
-        /*!
-         * \brief Efficient remove using the find and erase of the implementation container. Typically O(log n).
-         * \pre The sequence must be initialized.
-         */
+        //! Efficient remove using the find and erase of the implementation container. Typically O(log n).
+        //! \pre The sequence must be initialized.
         void remove(const T &object) { auto it = find(object); if (it != end()) { erase(it); } }
 
-        /*!
-         * \brief Removes from this collection all of the elements of another collection.
-         * \pre This sequence must be initialized.
-         */
+        //! Removes from this collection all of the elements of another collection.
+        //! \pre This sequence must be initialized.
         void remove(const CCollection &other) { *this = CCollection(*this).difference(other); }
 
-        /*!
-         * \brief Remove elements for which a given predicate returns true.
-         * \pre The collection must be initialized.
-         * \return The number of elements removed.
-         */
+        //! Remove elements for which a given predicate returns true.
+        //! \pre The collection must be initialized.
+        //! \return The number of elements removed.
         template <class Predicate>
         int removeIf(Predicate p)
         {
@@ -367,21 +281,15 @@ namespace BlackMisc
             return CCollection::CContainerBase::removeIf(k0, v0, keysValues...);
         }
 
-        /*!
-         * \brief Test for equality.
-         */
+        //! Test for equality.
         bool operator ==(const CCollection &other) const { return *pimpl() == *other.pimpl(); }
 
-        /*!
-         * \brief Test for inequality.
-         */
+        //! Test for inequality.
         bool operator !=(const CCollection &other) const { return !(*this == other); }
 
-        /*!
-         * \brief Return an opaque pointer to the implementation container.
-         * \details Can be useful in unusual debugging situations.
-         * \warning Not for general use.
-         */
+        //! Return an opaque pointer to the implementation container.
+        //! \details Can be useful in unusual debugging situations.
+        //! \warning Not for general use.
         void *getImpl() { return pimpl() ? pimpl()->impl() : nullptr; }
 
     private:

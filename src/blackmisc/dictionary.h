@@ -83,11 +83,15 @@ namespace BlackMisc
     } // namespace Private
 
 
-    //! Trait to select the appropriate default associative container type depending on what the key type supports
+    /*!
+     * Trait to select the appropriate default associative container type depending on what the key type supports.
+     */
     template <typename K, typename V>
     using DefaultAssociativeType = typename Private::AssociativityTraits<ModelsQHashKey<K>::value, ModelsQMapKey<K>::value>::template DefaultType<K, V>;
 
-    //! Associative container with value semantics, chooses a sensible default implementation container type
+    /*!
+     * Associative container with value semantics, chooses a sensible default implementation container type.
+     */
     template<class Key, class Value, template <class...> class Impl = DefaultAssociativeType>
     class CDictionary :
         public Mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
@@ -131,19 +135,15 @@ namespace BlackMisc
             return result;
         }
 
-        /*!
-         * \brief Return a copy containing only those elements which key matches a particular pair.
-         * \param pairs Pairs of { pointer to member function of Value, return value to compare it against }.
-         */
+        //! Return a copy containing only those elements which key matches a particular pair.
+        //! \param pairs Pairs of { pointer to member function of Value, return value to compare it against }.
         template <class... Pairs >
         CDictionary findKeyBy(Pairs... pairs) const
         {
             return findKeyBy(BlackMisc::Predicates::MemberEqual(pairs...));
         }
 
-        /*!
-         * \brief Return a copy containing only those elements for which a given predicate returns true.
-         */
+        //! Return a copy containing only those elements for which a given predicate returns true.
         template <class Predicate>
         CDictionary findValueBy(Predicate p) const
         {
@@ -156,19 +156,15 @@ namespace BlackMisc
             return result;
         }
 
-        /*!
-         * \brief Return a copy containing only those elements which value matches a particular pair.
-         * \param pairs Pairs of { pointer to member function of Value, return value to compare it against }.
-         */
+        //! Return a copy containing only those elements which value matches a particular pair.
+        //! \param pairs Pairs of { pointer to member function of Value, return value to compare it against }.
         template <class... Pairs >
         CDictionary findValueBy(Pairs... pairs) const
         {
             return findValueBy(BlackMisc::Predicates::MemberEqual(pairs...));
         }
 
-        /*!
-         * \brief Return true if there is an element for which a given predicate returns true.
-         */
+        //! Return true if there is an element for which a given predicate returns true.
         template <class Predicate>
         bool containsByKey(Predicate p) const
         {
@@ -318,25 +314,16 @@ namespace BlackMisc
         //! Returns const iterator at the end of the dictionary
         const_iterator constEnd() const { return m_impl.constEnd(); }
 
-        /*!
-         * \brief Returns an const iterator pointing to the item with the key.
-         * \param key
-         * \return If key is not found, the function returns constEnd()
-         */
+        //! Returns an const iterator pointing to the item with the key.
+        //! \return If key is not found, the function returns constEnd()
         const_iterator constFind (const Key &key) const { return m_impl.constFind(key); }
 
-        /*!
-         * \brief Returns an const iterator pointing to the item with the key.
-         * \param key
-         * \return If key is not found, the function returns end()
-         */
+        //! Returns an const iterator pointing to the item with the key.
+        //! \return If key is not found, the function returns end()
         const_iterator find(const Key & key) const { return m_impl.find(key); }
 
-        /*!
-         * \brief Returns an iterator pointing to the item with the key.
-         * \param key
-         * \return If key is not found, the function returns end()
-         */
+        //! Returns an iterator pointing to the item with the key.
+        //! \return If key is not found, the function returns end()
         iterator find(const Key &key) { return m_impl.find(key); }
 
         //! Returns true if dictionary contains an item with key, otherwise false
@@ -402,20 +389,12 @@ namespace BlackMisc
         //! Return reference to the internal implementation object.
         friend const impl_type &implementationOf(const CDictionary &dict) { return dict.m_impl; }
 
-        /*!
-         * \brief Access an element by its key.
-         * \note
-         * If dictionary does not contain any item with key, a default constructed
-         * value will be inserted
-         */
+        //! Access an element by its key.
+        //! \note If dictionary does not contain any item with key, a default constructed value will be inserted.
         Value &operator [](const Key &key) { return m_impl[key]; }
 
-        /*!
-         * \brief Access an element by its key.
-         * \note
-         * If dictionary does not contain any item with key, a default constructed
-         * value will be inserted
-         */
+        //! Access an element by its key.
+        //! \note If dictionary does not contain any item with key, a default constructed value will be inserted.
         const Value	operator [](const Key &key) const { return m_impl[key]; }
 
         //! Test for equality.
@@ -454,15 +433,21 @@ namespace BlackMisc
         Impl<Key,Value> m_impl;
     };
 
-    //! Identity function for API consistency with CDictionary::implementationOf.
+    /*!
+     * Identity function for API consistency with CDictionary::implementationOf.
+     */
     template <class Key, class Value>
     QMap<Key, Value> &implementationOf(QMap<Key, Value> &dict) { return dict; }
 
-    //! Identity function for API consistency with CDictionary::implementationOf.
+    /*!
+     * Identity function for API consistency with CDictionary::implementationOf.
+     */
     template <class Key, class Value>
     const QMap<Key, Value> &implementationOf(const QMap<Key, Value> &dict) { return dict; }
 
-    //! Call a functor for each {key,value1,value2} triple in the keywise intersection of two maps.
+    /*!
+     * Call a functor for each {key,value1,value2} triple in the keywise intersection of two maps.
+     */
     template <class Map1, class Map2, class F>
     void forEachIntersection(const Map1 &map1, const Map2 &map2, F functor)
     {
@@ -516,7 +501,6 @@ namespace BlackMisc
      * Calculate a single hash value based on a list of individual hash values.
      * \param values
      * \param className Will be hashed and used as an additional value in the list.
-     * \return
      */
     //! @{
     BLACKMISC_EXPORT uint calculateHash(const QList<uint> &values, const char *className);

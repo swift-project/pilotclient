@@ -47,7 +47,7 @@ namespace BlackMisc
     };
 
     /*!
-     * \brief Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
+     * Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
      */
     template <template <class> class C, class T, class CIt>
     class CContainerBase :
@@ -73,11 +73,9 @@ namespace BlackMisc
 
         }
 
-        /*!
-         * \brief Return a new container of a different type, containing the same elements as this one.
-         * \tparam Other the type of the new container.
-         * \param other an optional initial value for the new container; will be copied.
-         */
+        //! Return a new container of a different type, containing the same elements as this one.
+        //! \tparam Other the type of the new container.
+        //! \param other an optional initial value for the new container; will be copied.
         template <template <class> class Other>
         Other<T> to(Other<T> other = Other<T>()) const
         {
@@ -85,13 +83,11 @@ namespace BlackMisc
             return other;
         }
 
-        /*!
-         * \brief Remove elements matching some particular key/value pair(s).
-         * \param k0 A pointer to a member function of T.
-         * \param v0 A value to compare against the value returned by k0.
-         * \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
-         * \return The number of elements removed.
-         */
+        //! Remove elements matching some particular key/value pair(s).
+        //! \param k0 A pointer to a member function of T.
+        //! \param v0 A value to compare against the value returned by k0.
+        //! \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
+        //! \return The number of elements removed.
         template <class K0, class V0, class... KeysValues>
         int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
         {
