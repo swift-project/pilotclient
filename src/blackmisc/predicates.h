@@ -96,9 +96,9 @@ namespace BlackMisc
          * \return A unary functor whose operator() which will perform the actual test.
          */
         template <class... Ts>
-        typename Private::MemberEqual<Ts...> MemberEqual(Ts... vs)
+        Private::MemberEqual<Ts...> MemberEqual(Ts... vs)
         {
-            return typename Private::MemberEqual<Ts...>(vs...);
+            return { vs... };
         }
 
         /*!
@@ -107,9 +107,9 @@ namespace BlackMisc
          * \return A binary functor whose operator() which will perform the actual test.
          */
         template <class... Ts>
-        typename Private::MemberLess<Ts...> MemberLess(Ts... vs)
+        Private::MemberLess<Ts...> MemberLess(Ts... vs)
         {
-            return typename Private::MemberLess<Ts...>(vs...);
+            return { vs... };
         }
 
         /*!
