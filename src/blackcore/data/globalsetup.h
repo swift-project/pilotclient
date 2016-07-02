@@ -105,6 +105,9 @@ namespace BlackCore
             //! Shared URLs
             const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
 
+            //! Airport URLs
+            BlackMisc::Network::CUrlList getSwiftAirportUrls() const;
+
             //! URL to read VATSIM bookings
             const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }
 

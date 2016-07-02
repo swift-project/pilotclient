@@ -103,9 +103,6 @@ namespace BlackCore
             //! \threadsafe
             bool canConnect(QString &message) const;
 
-            //! Obtain a working shared URL
-            BlackMisc::Network::CUrl getWorkingSharedUrl() const;
-
             //! Status message (error message)
             const QString &getStatusMessage() const;
 
@@ -118,13 +115,15 @@ namespace BlackCore
             //! Name of parameter for latest id
             static const QString &parameterLatestId();
 
+            //! sift DB server reachable?
+            static bool canPingSwiftServer();
+
         signals:
             //! Combined read signal
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
         protected:
             CDatabaseReaderConfigList m_config;               //!< DB reder configuration
-            BlackMisc::Network::CUrl  m_sharedUrl;            //!< URL for shared files
             QString                   m_statusMessage;        //!< Returned status message from watchdog
             bool                      m_canConnect = false;   //!< Successful connection?
             mutable QReadWriteLock    m_statusLock;           //!< Lock
@@ -152,7 +151,14 @@ namespace BlackCore
             //! Split into single entity and send dataRead signal
             void emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities);
 
-            // ---------------- cache access ------------------
+            //! DB base URL
+            static const BlackMisc::Network::CUrl &getDbUrl();
+
+            //! Obtain a working shared URL
+            static BlackMisc::Network::CUrl getWorkingSharedUrl();
+
+            //! \name  Cache access
+            //! @{
 
             //! Syncronize caches for given entities
             virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
@@ -171,6 +177,7 @@ namespace BlackCore
 
             //! Has URL been changed? Means we load from a differrent server
             static bool isChangedUrl(const BlackMisc::Network::CUrl &oldUrl, const BlackMisc::Network::CUrl &currentUrl);
+            //! @}
 
         private:
             //! Check if terminated or error, otherwise split into array of objects

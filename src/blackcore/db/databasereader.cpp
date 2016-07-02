@@ -39,7 +39,7 @@ namespace BlackCore
         CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) :
             BlackCore::CThreadedReader(owner, name), m_config(config)
         {
-            this->m_sharedUrl = sApp->getGlobalSetup().getSwiftSharedUrls().getRandomWorkingUrl();
+            getDbUrl(); // init
         }
 
         void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
@@ -230,11 +230,6 @@ namespace BlackCore
             return m_canConnect;
         }
 
-        CUrl CDatabaseReader::getWorkingSharedUrl() const
-        {
-            return this->m_sharedUrl;
-        }
-
         const QString &CDatabaseReader::getStatusMessage() const
         {
             return this->m_statusMessage;
@@ -284,6 +279,22 @@ namespace BlackCore
         {
             static const QString p("latestId");
             return p;
+        }
+
+        const CUrl &CDatabaseReader::getDbUrl()
+        {
+            static const CUrl dbUrl(sApp->getGlobalSetup().getDbRootDirectoryUrl());
+            return dbUrl;
+        }
+
+        CUrl CDatabaseReader::getWorkingSharedUrl()
+        {
+            return sApp->getGlobalSetup().getSwiftSharedUrls().getRandomWorkingUrl();
+        }
+
+        bool CDatabaseReader::canPingSwiftServer()
+        {
+            return CNetworkUtils::canConnect(getDbUrl());
         }
     } // ns
 } // ns

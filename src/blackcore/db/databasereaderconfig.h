@@ -53,6 +53,9 @@ namespace BlackCore
             //! Supported modes
             BlackMisc::Db::CDbFlags::DataRetrievalMode getRetrievalMode() const;
 
+            //! DB is down
+            void markAsDbDown();
+
             //! Timeout
             void setCacheLifetime(const BlackMisc::PhysicalQuantities::CTime &time);
 
@@ -90,6 +93,9 @@ namespace BlackCore
 
             //! FInd first one matching given
             CDatabaseReaderConfig findFirstOrDefaultForEntity(const BlackMisc::Network::CEntityFlags::Entity entities) const;
+
+            //! DB is down
+            void markAsDbDown();
 
             //! Update lifetimes
             void setCacheLifetimes(const BlackMisc::PhysicalQuantities::CTime &time);

@@ -35,15 +35,13 @@ using namespace BlackCore::Data;
 
 namespace BlackCore
 {
-    CSetupReader::CSetupReader(QObject *parent) :
-        QObject(parent),
+    CSetupReader::CSetupReader(QObject *parent) : QObject(parent),
         m_cmdBootstrapUrl
     {
         { "url", "bootstrapurl" },
         QCoreApplication::translate("application", "bootstrap URL, e.g. datastore.swift-project.org"),
         "bootstrapurl", (sApp->isUnitTest()) ? unitTestBootstrapUrl() : ""
-    },
-    m_cmdBootstrapMode
+    },  m_cmdBootstrapMode
     {
         { "bmode", "bootstrapmode" },
         QCoreApplication::translate("application", "bootstrap mode: explicit, implicit, cache(-only)"),

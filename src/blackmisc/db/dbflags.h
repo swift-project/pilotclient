@@ -35,10 +35,10 @@ namespace BlackMisc
                 DbDirect               = 1 << 0,              //!< directly from DB
                 Shared                 = 1 << 1,              //!< shared directory
                 Cached                 = 1 << 2,              //!< from cache
-                DbFailover             = 1 << 3,              //!< read from DB if cache (and only if) cache is empty
-                SharedFailover         = 1 << 4,              //!< read shared if cache (and only if) cache is empty
+                Canceled               = 1 << 3,              //!< cancel DB reading
                 CacheThenDb            = DbDirect | Cached,   //!< Cache when possible, otherwise DB
                 CacheThenShared        = Shared | Cached      //!< Cache when possible, otherwise shared
+
             };
             Q_DECLARE_FLAGS(DataRetrievalMode, DataRetrievalModeFlag)
 
@@ -50,6 +50,9 @@ namespace BlackMisc
 
             //! Convert to string
             static QString flagToString(CDbFlags::DataRetrievalMode mode);
+
+            //! Adjust flag as we alread know DB is down
+            static DataRetrievalMode adjustWhenDbIsDown(DataRetrievalMode mode);
 
             //! Register metadata
             static void registerMetadata();

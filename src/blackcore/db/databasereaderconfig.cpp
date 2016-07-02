@@ -47,6 +47,13 @@ namespace BlackCore
             return static_cast<CDbFlags::DataRetrievalMode>(this->m_retrievalFlags);
         }
 
+        void CDatabaseReaderConfig::markAsDbDown()
+        {
+            CDbFlags::DataRetrievalMode m = this->getRetrievalMode();
+            m = CDbFlags::adjustWhenDbIsDown(m);
+            this->m_retrievalFlags = static_cast<int>(m);
+        }
+
         void CDatabaseReaderConfig::setCacheLifetime(const CTime &time)
         {
             this->m_cacheLifetime = time;
@@ -84,6 +91,14 @@ namespace BlackCore
                 }
             }
             return CDatabaseReaderConfig(); // not found
+        }
+
+        void CDatabaseReaderConfigList::markAsDbDown()
+        {
+            for (CDatabaseReaderConfig &config : *this)
+            {
+                config.markAsDbDown();
+            }
         }
 
         void CDatabaseReaderConfigList::setCacheLifetimes(const CTime &time)

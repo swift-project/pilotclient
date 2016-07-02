@@ -40,10 +40,22 @@ namespace BlackMisc
         {
             QStringList list;
             if (mode.testFlag(Unspecified)) list << "Unspecified";
+            if (mode.testFlag(Canceled)) list << "Unspecified";
+
             if (mode.testFlag(DbDirect)) list << "Direct DB access";
             if (mode.testFlag(Shared)) list << "Shared data";
             if (mode.testFlag(Cached)) list << "Cached data";
             return list.join(',');
+        }
+
+        CDbFlags::DataRetrievalMode CDbFlags::adjustWhenDbIsDown(DataRetrievalMode mode)
+        {
+            switch (mode)
+            {
+            case DbDirect: return Canceled;
+            case CacheThenDb: return Cached;
+            default: return mode;
+            }
         }
 
         void CDbFlags::registerMetadata()

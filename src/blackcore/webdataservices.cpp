@@ -431,21 +431,29 @@ namespace BlackCore
 
         // 1. If any DB data, read the info upfront
         const bool anyDbData = flags.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader) || flags.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader);
-        const CDatabaseReaderConfigList dbReaderConfig(this->m_dbReaderConfig);
-        bool c = false; // signal connect
-        Q_UNUSED(c);
+        const bool databaseUp = CInfoDataReader::canPingSwiftServer();
+        CDatabaseReaderConfigList dbReaderConfig(this->m_dbReaderConfig);
+        if (!databaseUp) { dbReaderConfig.markAsDbDown(); }
 
+        bool c = false; // for signal connect
+        Q_UNUSED(c);
         if (anyDbData && flags.testFlag(CWebReaderFlags::WebReaderFlag::InfoDataReader))
         {
-            this->m_infoDataReader = new CInfoDataReader(this, dbReaderConfig);
-            c = connect(this->m_infoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO info object signals");
-            c = connect(this->m_infoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed info data");
-            this->m_infoDataReader->start(QThread::LowPriority);
-
             // info data reader has a special role, it will not be triggered in triggerRead()
-            QTimer::singleShot(0, [this]() { this->m_infoDataReader->read(CEntityFlags::InfoObjectEntity, QDateTime()); });
+            if (databaseUp)
+            {
+                this->m_infoDataReader = new CInfoDataReader(this, dbReaderConfig);
+                c = connect(this->m_infoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO info object signals");
+                c = connect(this->m_infoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed info data");
+                this->m_infoDataReader->start(QThread::LowPriority);
+                QTimer::singleShot(0, [this]() { this->m_infoDataReader->read(CEntityFlags::InfoObjectEntity, QDateTime()); });
+            }
+            else
+            {
+                CLogMessage(this).warning("DB unrechable, skipping read from info data reader");
+            }
         }
 
         // 2. Status file, updating the VATSIM related caches

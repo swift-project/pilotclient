@@ -52,6 +52,13 @@ namespace BlackCore
             return this->m_sharedUrls;
         }
 
+        CUrlList CGlobalSetup::getSwiftAirportUrls() const
+        {
+            // currently subdir of shared, this might change
+            const CUrlList airportUrls(getSwiftSharedUrls().appendPath("/airports/airports.json"));
+            return airportUrls;
+        }
+
         CUrl CGlobalSetup::getDbHomePageUrl() const
         {
             return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
@@ -156,7 +163,7 @@ namespace BlackCore
             s.append(this->getFormattedUtcTimestampYmdhms());
             s.append(separator);
 
-            s.append("Loaded: ");
+            s.append("Global setup loaded: ");
             s.append(boolToYesNo(this->wasLoaded()));
             s.append(separator);
 
@@ -191,6 +198,10 @@ namespace BlackCore
             s.append(separator);
             s.append("swift DB datafile locations: ");
             s.append(getSwiftDbDataFileLocationUrls().toQString(i18n));
+            s.append(separator);
+
+            s.append("swift airport files: ");
+            s.append(getSwiftAirportUrls().toQString(i18n));
             s.append(separator);
 
             s.append("VATSIM bookings: ");
