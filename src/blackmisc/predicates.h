@@ -73,14 +73,6 @@ namespace BlackMisc
             };
 
             //! \private
-            template <class T> struct Equals
-            {
-                const T m_value;
-                template <class U> Equals(U &&value, int dummy) : m_value(std::forward<U>(value)) { Q_UNUSED(dummy); }
-                template <class U> bool operator ()(const U &other) const { return other == m_value; }
-            };
-
-            //! \private
             struct Matches
             {
                 const CPropertyIndexVariantMap &m_map;
