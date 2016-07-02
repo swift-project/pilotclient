@@ -133,6 +133,35 @@ namespace BlackMisc
         if (mibNames) { return mib; }
         return QStringList();
     }
+
+    // http://www.codegur.online/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
+    QString removeAccents(const QString &candidate)
+    {
+        static const QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
+        static const QStringList noDiacriticLetters({"S", "OE", "Z", "s", "oe", "z", "Y", "Y", "u", "A", "A", "A", "A", "A", "A", "AE", "C", "E", "E", "E", "E", "I", "I", "I", "I", "D", "N", "O", "O", "O", "O", "O", "O", "U", "U", "U", "U", "Y", "s", "a", "a", "a", "a", "a", "a", "ae", "c", "e", "e", "e", "e", "i", "i", "i", "i", "o", "n", "o", "o", "o", "o", "o", "o", "u", "u", "u", "u", "y", "y"});
+
+        QString output = "";
+        for (int i = 0; i < candidate.length(); i++)
+        {
+            const QChar c = candidate[i];
+            int dIndex = diacriticLetters.indexOf(c);
+            if (dIndex < 0)
+            {
+                output.append(c);
+            }
+            else
+            {
+                const QString replacement = noDiacriticLetters[dIndex];
+                output.append(replacement);
+            }
+        }
+        return output;
+    }
+
+    bool caseInsensitiveStringCompare(const QString &c1, const QString &c2)
+    {
+        return c1.length() == c2.length() && c1.startsWith(c2, Qt::CaseInsensitive);
+    }
 }
 
 //! \endcond

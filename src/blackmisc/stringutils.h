@@ -72,6 +72,12 @@ namespace BlackMisc
     //! Strip a designator from a combined string
     BLACKMISC_EXPORT QStringList textCodecNames(bool simpleNames, bool mibNames);
 
+    //! Remove accents / diacritic marks from a string
+    BLACKMISC_EXPORT QString removeAccents(const QString &candidate);
+
+    //! Case insensitive string compare
+    BLACKMISC_EXPORT bool caseInsensitiveStringCompare(const QString &c1, const QString &c2);
+
     namespace Mixin
     {
         /*!

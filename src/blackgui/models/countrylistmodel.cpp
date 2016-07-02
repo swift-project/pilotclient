@@ -28,8 +28,11 @@ namespace BlackGui
             CColumn col("country", CCountry::IndexIcon);
             col.setSortPropertyIndex(CCountry::IndexIsoCode);
             this->m_columns.addColumn(col);
-            this->m_columns.addColumn(CColumn::standardString("ISO", CCountry::IndexIsoCode));
+            this->m_columns.addColumn(CColumn::standardString("ISO2", CCountry::IndexIsoCode));
+            this->m_columns.addColumn(CColumn::standardString("ISO3", CCountry::IndexIso3Code));
             this->m_columns.addColumn(CColumn::standardString("name", CCountry::IndexName));
+            this->m_columns.addColumn(CColumn::standardString("alias 1", CCountry::IndexAlias1));
+            this->m_columns.addColumn(CColumn::standardString("alias 2", CCountry::IndexAlias2));
             this->m_columns.addColumn(CColumn::standardString("changed", CCountry::IndexUtcTimestampFormattedYmdhms));
 
             // default sort order
@@ -39,7 +42,8 @@ namespace BlackGui
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelCountryList", "cty.");
             (void)QT_TRANSLATE_NOOP("ModelCountryList", "country");
-            (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO");
+            (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO2");
+            (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO3");
             (void)QT_TRANSLATE_NOOP("ModelCountryList", "name");
         }
     } // ns

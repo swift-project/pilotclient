@@ -49,6 +49,9 @@ namespace BlackMisc
         //! Find "best match" by country
         CCountry findBestMatchByCountryName(const QString &countryName) const;
 
+        //! Find first by alias
+        CCountry findFirstByAlias(const QString &alias) const;
+
         //! ISO/name string list
         QStringList toIsoNameList() const;
 

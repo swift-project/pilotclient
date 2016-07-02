@@ -33,13 +33,14 @@ namespace BlackMisc
     {
         if (countryName.isEmpty()) { return CCountry(); }
 
-        static const QRegExp reg("[^a-z]", Qt::CaseInsensitive);
-        QString cn(countryName);
-        cn.remove(reg);
+        static const QRegExp reg("^[a-z]+", Qt::CaseInsensitive);
+        int pos = reg.indexIn(countryName);
+        const QString cn(pos >= 0 ? reg.cap(0) : countryName);
         CCountryList countries = this->findBy([&](const CCountry & country)
         {
             return country.matchesCountryName(cn);
         });
+        if (countries.isEmpty()) { return this->findFirstByAlias(cn); }
         if (countries.size() < 2) { return countries.frontOrDefault(); }
 
         // find best match by further reducing
@@ -50,6 +51,17 @@ namespace BlackMisc
             if (cn.startsWith(c.getName(), Qt::CaseInsensitive)) { return c; }
         }
         return countries.front();
+    }
+
+    CCountry CCountryList::findFirstByAlias(const QString &alias) const
+    {
+        if (alias.isEmpty()) { return CCountry(); }
+        const QString a(alias.toUpper().trimmed());
+        for (const CCountry &country : (*this))
+        {
+            if (country.matchesAlias(a)) { return country;}
+        }
+        return CCountry();
     }
 
     QStringList CCountryList::toIsoNameList() const
@@ -88,7 +100,6 @@ namespace BlackMisc
         return sl;
     }
 
-
     CCountryList CCountryList::fromDatabaseJson(const QJsonArray &array)
     {
         CCountryList countries;
@@ -99,5 +110,4 @@ namespace BlackMisc
         }
         return countries;
     }
-
 } // namespace
