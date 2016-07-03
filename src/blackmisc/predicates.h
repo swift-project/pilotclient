@@ -15,6 +15,7 @@
 #define BLACKMISC_PREDICATES_H
 
 #include "integersequence.h"
+#include "algorithm.h"
 
 #include <QObject>
 #include <functional>
@@ -29,69 +30,6 @@ namespace BlackMisc
 
         namespace Private
         {
-
-            //! \private
-            template <class...> struct MemberEqual;
-
-            //! \private
-            template <class M, class V> struct MemberEqual<M, V>
-            {
-                M m;
-                V v;
-                MemberEqual(M m_, V v_) : m(m_), v(v_) {}
-                template <class T> bool operator()(const T &obj) const { return (obj.*m)() == v; }
-            };
-
-            //! \private
-            template <class M, class V, class... Tail> struct MemberEqual<M, V, Tail...>
-            {
-                MemberEqual<M, V> head;
-                MemberEqual<Tail...> tail;
-                MemberEqual(M m, V v, Tail... tail_) : head(m, v), tail(tail_...) {}
-                template <class T> bool operator()(const T &obj) const { return head(obj) && tail(obj); }
-            };
-
-            //! \private
-            template <class...> struct MemberLess;
-
-            //! \private
-            template <class M> struct MemberLess<M>
-            {
-                M m;
-                MemberLess(M m_) : m(m_) {}
-                template <class T> bool operator()(const T &a, const T &b) const { return (a.*m)() < (b.*m)(); }
-                template <class T> bool isStable(const T &a, const T &b) const { return (a.*m)() != (b.*m)(); }
-            };
-
-            //! \private
-            template <class M, class... Tail> struct MemberLess<M, Tail...>
-            {
-                MemberLess<M> head;
-                MemberLess<Tail...> tail;
-                MemberLess(M m, Tail... tail_) : head(m), tail(tail_...) {}
-                template <class T> bool operator()(const T &a, const T &b) const { return head.isStable(a, b) ? head(a, b) : tail(a, b); }
-            };
-
-            //! \private
-            template <class...> struct EqualsByMembers;
-
-            //! \private
-            template <class M> struct EqualsByMembers<M>
-            {
-                M m;
-                EqualsByMembers(M m_) : m(m_) {}
-                template <class T> bool operator()(const T &a, const T &b) const { return (a.*m)() == (b.*m)(); }
-            };
-
-            //! \private
-            template <class M, class... Tail> struct EqualsByMembers<M, Tail...>
-            {
-                EqualsByMembers<M> head;
-                EqualsByMembers<Tail...> tail;
-                EqualsByMembers(M m, Tail... tail_) : head(m), tail(tail_...) {}
-                template <class T> bool operator()(const T &a, const T &b) const { return head(a, b) && tail(a, b); }
-            };
-
             //! \private
             struct Matches
             {
@@ -99,8 +37,7 @@ namespace BlackMisc
                 Matches(const CPropertyIndexVariantMap &map) : m_map(map) {}
                 template <class T> bool operator()(const T &value) const;
             };
-
-        } //namespace Private
+        }
 
         /*!
          * Predicate which tests whether some member functions return some values.
@@ -108,9 +45,14 @@ namespace BlackMisc
          * \return A unary functor whose operator() which will perform the actual test.
          */
         template <class... Ts>
-        Private::MemberEqual<Ts...> MemberEqual(Ts... vs)
+        auto MemberEqual(Ts... vs)
         {
-            return { vs... };
+            return [vs...](const auto &object)
+            {
+                bool equal = true;
+                tupleForEachPair(std::make_tuple(vs...), [ & ](auto member, const auto &value) { equal = equal && (object.*member)() == value; });
+                return equal;
+            };
         }
 
         /*!
@@ -119,9 +61,19 @@ namespace BlackMisc
          * \return A binary functor whose operator() which will perform the actual test.
          */
         template <class... Ts>
-        Private::MemberLess<Ts...> MemberLess(Ts... vs)
+        auto MemberLess(Ts... vs)
         {
-            return { vs... };
+            return [vs...](const auto &a, const auto &b)
+            {
+                bool less = true;
+                bool greater = false;
+                tupleForEach(std::make_tuple(vs...), [ & ](auto member)
+                {
+                    less = less && ! greater && (a.*member)() < (b.*member)();
+                    greater = (b.*member)() < (a.*member)();
+                });
+                return less;
+            };
         }
 
         /*!
@@ -165,9 +117,14 @@ namespace BlackMisc
          * Returns a predicate that returns true if its arguments compare equal to each other, considering only the captured members.
          */
         template <class... Ts>
-        Private::EqualsByMembers<Ts...> EqualsByMembers(Ts... vs)
+        auto EqualsByMembers(Ts... vs)
         {
-            return { vs... };
+            return [vs...](const auto &a, const auto &b)
+            {
+                bool equal = true;
+                tupleForEach(std::make_tuple(vs...), [ & ](auto member) { equal = equal && (a.*member)() == (b.*member)(); });
+                return equal;
+            };
         }
 
         /*!

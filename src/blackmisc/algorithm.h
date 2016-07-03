@@ -12,6 +12,8 @@
 #ifndef BLACKMISC_ALGORITHM_H
 #define BLACKMISC_ALGORITHM_H
 
+#include "integersequence.h"
+
 #include <QThreadStorage>
 #include <QtGlobal>
 #include <algorithm>
@@ -137,6 +139,50 @@ namespace BlackMisc
         Q_ASSERT_X(std::none_of(rit, reverse(container.begin()), [ =, &value ](const value_type &rhs) { return comparator(value, rhs); }),
             "BlackMisc::topologicallySortedInsert", "Cyclic less-than relation detected (not a partial ordering)");
         container.insert(rit.base(), std::forward<T>(value));
+    }
+
+    namespace Private
+    {
+        //! \private
+        template <typename T, typename F, size_t... Is>
+        void tupleForEachImpl(T &&tuple, F &&visitor, index_sequence<Is...>)
+        {
+            // parameter pack swallow idiom
+            static_cast<void>(std::initializer_list<int>
+            {
+                (static_cast<void>(std::forward<F>(visitor)(std::get<Is>(std::forward<T>(tuple)))), 0)...
+            });
+        }
+        //! \private
+        template <typename T, typename F, size_t... Is>
+        void tupleForEachPairImpl(T &&tuple, F &&visitor, index_sequence<Is...>)
+        {
+            // parameter pack swallow idiom
+            static_cast<void>(std::initializer_list<int>
+            {
+                (static_cast<void>(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)), std::get<Is * 2 + 1>(std::forward<T>(tuple)))), 0)...
+            });
+        }
+    }
+
+    /*!
+     * Invoke a visitor function on each element of a tuple in order.
+     */
+    template <typename T, typename F>
+    void tupleForEach(T &&tuple, F &&visitor)
+    {
+        using seq = Private::make_index_sequence<std::tuple_size<std::decay_t<T>>::value>;
+        return Private::tupleForEachImpl(std::forward<T>(tuple), std::forward<F>(visitor), seq());
+    }
+
+    /*!
+     * Invoke a visitor function on each pair of elements of a tuple in order.
+     */
+    template <typename T, typename F>
+    void tupleForEachPair(T &&tuple, F &&visitor)
+    {
+        using seq = Private::make_index_sequence<std::tuple_size<std::decay_t<T>>::value / 2>;
+        return Private::tupleForEachPairImpl(std::forward<T>(tuple), std::forward<F>(visitor), seq());
     }
 }
 
