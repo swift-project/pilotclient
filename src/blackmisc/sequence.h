@@ -463,6 +463,16 @@ namespace BlackMisc
             return partiallySorted(n, BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
+        //! Return true if this container equals another container, considering only the given element members.
+        //! Order of elements is not considered; this is implemented using a transient sort, so don't overuse.
+        template <class U, class Key0, class... Keys>
+        bool unorderedEqualsByKeys(const U &other, Key0 k0, Keys... keys) const
+        {
+            if (equalPointers(this, &other)) { return true; }
+            if (size() != other.size()) { return false; }
+            return sorted(k0, keys...).equalsByKeys(other.sorted(k0, keys...));
+        }
+
         //! Split up the sequence into subsequences for which the given predicate returns the same value.
         template <class Predicate>
         auto separate(Predicate p) const -> QMap<decltype(p(std::declval<T>())), CSequence>
