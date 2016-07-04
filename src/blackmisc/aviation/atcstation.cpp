@@ -74,6 +74,12 @@ namespace BlackMisc
             this->m_controller.setCallsign(callsign);
         }
 
+        void CAtcStation::setController(const CUser &controller)
+        {
+            this->m_controller = controller;
+            this->m_controller.setCallsign(this->m_callsign);
+        }
+
         QString CAtcStation::convertToQString(bool i18n) const
         {
             QString s = i18n ?
@@ -436,6 +442,5 @@ namespace BlackMisc
                 break;
             }
         }
-
     } // namespace
 } // namespace

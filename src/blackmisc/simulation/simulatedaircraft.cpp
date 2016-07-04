@@ -97,7 +97,7 @@ namespace BlackMisc
 
         void CSimulatedAircraft::setPilot(const Network::CUser &user)
         {
-            m_pilot = user;
+            this->m_pilot = user;
             this->m_pilot.setCallsign(this->m_callsign);
         }
 
@@ -427,6 +427,7 @@ namespace BlackMisc
         {
             this->m_callsign = callsign;
             this->m_model.setCallsign(callsign);
+            this->m_pilot.setCallsign(callsign);
         }
 
         bool CSimulatedAircraft::isActiveFrequencyWithin8_33kHzChannel(const CFrequency &comFrequency) const
@@ -463,6 +464,5 @@ namespace BlackMisc
             s += this->m_model.toQString(i18n);
             return s;
         }
-
     } // namespace
 } // namespace
