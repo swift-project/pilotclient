@@ -454,7 +454,7 @@ QHeaderView::up-arrow {
   subcontrol-position: bottom left;
 }
 
-QTableView, QTreeView {
+QTableView, QTreeView, QListView {
   border: 1px solid green;
   border-radius: 5px;
   background-color: transparent;
