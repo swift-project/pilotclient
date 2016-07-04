@@ -439,12 +439,12 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Generic type-erased const bidirectional iterator with value semantics.
+         * \brief Generic type-erased const random access iterator with value semantics.
          * \tparam T the value_type of the container being iterated over.
          *
          * Can take any suitable iterator type as its implementation at runtime.
          */
-        template <class T> class ConstBidirectionalIterator
+        template <class T> class ConstRandomAccessIterator
         {
         public:
             //! \brief STL compatibility
@@ -455,38 +455,38 @@ namespace BlackMisc
             typedef const T &reference;
             typedef const T *const_pointer;
             typedef const T &const_reference;
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef std::random_access_iterator_tag iterator_category;
             //! @}
 
             //! \brief Default constructor.
-            ConstBidirectionalIterator() {}
+            ConstRandomAccessIterator() {}
 
             /*!
              * \brief Copy constructor.
              */
-            ConstBidirectionalIterator(const ConstBidirectionalIterator &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
+            ConstRandomAccessIterator(const ConstRandomAccessIterator &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
             /*!
              * \brief Move constructor.
              */
-            ConstBidirectionalIterator(ConstBidirectionalIterator &&other) noexcept : m_pimpl(other.m_pimpl.take()) {}
+            ConstRandomAccessIterator(ConstRandomAccessIterator &&other) noexcept : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
              */
-            ConstBidirectionalIterator &operator =(const ConstBidirectionalIterator &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
+            ConstRandomAccessIterator &operator =(const ConstRandomAccessIterator &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
             /*!
              * \brief Move assignment.
              */
-            ConstBidirectionalIterator &operator =(ConstBidirectionalIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+            ConstRandomAccessIterator &operator =(ConstRandomAccessIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
             /*!
              * \brief Create a new iterator with a specific implementation type.
              * \tparam I Becomes the iterator's implementation type.
              * \param i Initial value for the iterator. The value is copied.
              */
-            template <class I> static ConstBidirectionalIterator fromImpl(I i) { return ConstBidirectionalIterator(new Pimpl<I>(std::move(i))); }
+            template <class I> static ConstRandomAccessIterator fromImpl(I i) { return ConstRandomAccessIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
@@ -505,85 +505,94 @@ namespace BlackMisc
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator &operator ++() { Q_ASSERT(m_pimpl); ++*pimpl(); return *this; }
+            ConstRandomAccessIterator &operator ++() { Q_ASSERT(m_pimpl); ++*pimpl(); return *this; }
 
             /*!
              * \brief Postfix increment operator advances the iterator.
              * \return Copy of the iterator in the old position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator operator ++(int) { Q_ASSERT(m_pimpl); auto copy = *this; ++*pimpl(); return copy; }
+            ConstRandomAccessIterator operator ++(int) { Q_ASSERT(m_pimpl); auto copy = *this; ++*pimpl(); return copy; }
 
             /*!
              * \brief Prefix decrement operator backtracks the iterator.
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator &operator --() { Q_ASSERT(m_pimpl); --*pimpl(); return *this; }
+            ConstRandomAccessIterator &operator --() { Q_ASSERT(m_pimpl); --*pimpl(); return *this; }
 
             /*!
              * \brief Postfix decrement operator backtracks the iterator.
              * \return Copy of the iterator at the old position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator operator --(int) { Q_ASSERT(m_pimpl); auto copy = *this; --*pimpl(); return copy; }
+            ConstRandomAccessIterator operator --(int) { Q_ASSERT(m_pimpl); auto copy = *this; --*pimpl(); return copy; }
 
             /*!
              * \brief Advance the iterator by a certain amount.
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator operator +=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() += n; return *this; }
+            ConstRandomAccessIterator operator +=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() += n; return *this; }
 
             /*!
              * \brief Advance the iterator by a certain amount.
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator operator +(difference_type n) const { auto copy = *this; return copy += n; }
+            //! @{
+            friend ConstRandomAccessIterator operator +(const ConstRandomAccessIterator &i, difference_type n) { auto copy = i; return copy += n; }
+            friend ConstRandomAccessIterator operator +(difference_type n, const ConstRandomAccessIterator &i) { auto copy = i; return copy += n; }
+            //! @}
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator operator -=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() -= n; return *this; }
+            ConstRandomAccessIterator operator -=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() -= n; return *this; }
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
-            ConstBidirectionalIterator operator -(difference_type n) const { auto copy = *this; return copy -= n; }
+            ConstRandomAccessIterator operator -(difference_type n) const { auto copy = *this; return copy -= n; }
 
             /*!
              * \brief Return the distance between two iterators.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
-            difference_type operator -(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() - *other.pimpl(); }
+            difference_type operator -(const ConstRandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() - *other.pimpl(); }
 
             /*!
              * \brief Test for equality.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
-            bool operator ==(const ConstBidirectionalIterator &other) const { return (pimpl() && other.pimpl()) ? *pimpl() == *other.pimpl() : pimpl() == other.pimpl(); }
+            bool operator ==(const ConstRandomAccessIterator &other) const { return (pimpl() && other.pimpl()) ? *pimpl() == *other.pimpl() : pimpl() == other.pimpl(); }
 
             /*!
              * \brief Test for inequality.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
-            bool operator !=(const ConstBidirectionalIterator &other) const { return !(*this == other); }
+            bool operator !=(const ConstRandomAccessIterator &other) const { return !(*this == other); }
 
             /*!
              * \brief For sorting.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             //! @{
-            bool operator <(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
-            bool operator >(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() > *other.pimpl(); }
-            bool operator <=(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() <= *other.pimpl(); }
-            bool operator >=(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() >= *other.pimpl(); }
+            bool operator <(const ConstRandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
+            bool operator >(const ConstRandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() > *other.pimpl(); }
+            bool operator <=(const ConstRandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() <= *other.pimpl(); }
+            bool operator >=(const ConstRandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() >= *other.pimpl(); }
             //! @}
+
+            /*!
+             * \brief Subscript operator.
+             * \pre `(*this + n)` must be dereferenceable.
+             */
+            reference operator [](difference_type n) const { return *(*this + n); }
 
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
@@ -616,7 +625,9 @@ namespace BlackMisc
             {
             public:
                 static_assert(std::is_same<T, typename std::iterator_traits<I>::value_type>::value,
-                    "ConstBidirectionalIterator must be initialized from an iterator with the same value_type.");
+                    "ConstRandomAccessIterator must be initialized from an iterator with the same value_type.");
+                static_assert(std::is_same<typename std::iterator_traits<I>::iterator_category, std::random_access_iterator_tag>::value,
+                    "ConstRandomAccessIterator must be initialized from a random access iterator.");
                 Pimpl(I &&i) : m_impl(std::move(i)) {}
                 virtual PimplBase *clone() const override { return new Pimpl(*this); }
                 virtual const_reference operator *() const override { return *m_impl; }
@@ -639,7 +650,7 @@ namespace BlackMisc
             using PimplPtr = QScopedPointer<PimplBase>;
             PimplPtr m_pimpl;
 
-            explicit ConstBidirectionalIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
+            explicit ConstRandomAccessIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
 
             // using these methods to access m_pimpl.data() eases the cognitive burden of correctly forwarding const
             PimplBase *pimpl() { return m_pimpl.data(); }
@@ -652,7 +663,7 @@ namespace BlackMisc
          *
          * Can take any suitable iterator type as its implementation at runtime.
          */
-        template <class T> class BidirectionalIterator
+        template <class T> class RandomAccessIterator
         {
         public:
             //! \brief STL compatibility
@@ -663,38 +674,38 @@ namespace BlackMisc
             typedef T &reference;
             typedef const T *const_pointer;
             typedef const T &const_reference;
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef std::random_access_iterator_tag iterator_category;
             //! @}
 
             //! \brief Default constructor.
-            BidirectionalIterator() {}
+            RandomAccessIterator() {}
 
             /*!
              * \brief Copy constructor.
              */
-            BidirectionalIterator(const BidirectionalIterator &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
+            RandomAccessIterator(const RandomAccessIterator &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
             /*!
              * \brief Move constructor.
              */
-            BidirectionalIterator(BidirectionalIterator &&other) noexcept : m_pimpl(other.m_pimpl.take()) {}
+            RandomAccessIterator(RandomAccessIterator &&other) noexcept : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
              */
-            BidirectionalIterator &operator =(const BidirectionalIterator &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
+            RandomAccessIterator &operator =(const RandomAccessIterator &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
             /*!
              * \brief Move assignment.
              */
-            BidirectionalIterator &operator =(BidirectionalIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+            RandomAccessIterator &operator =(RandomAccessIterator &&other) noexcept { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
             /*!
              * \brief Create a new iterator with a specific implementation type.
              * \tparam I Becomes the iterator's implementation type.
              * \param i Initial value for the iterator. The value is copied.
              */
-            template <class I> static BidirectionalIterator fromImpl(I i) { return BidirectionalIterator(new Pimpl<I>(std::move(i))); }
+            template <class I> static RandomAccessIterator fromImpl(I i) { return RandomAccessIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
@@ -725,85 +736,94 @@ namespace BlackMisc
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator &operator ++() { Q_ASSERT(m_pimpl); ++*pimpl(); return *this; }
+            RandomAccessIterator &operator ++() { Q_ASSERT(m_pimpl); ++*pimpl(); return *this; }
 
             /*!
              * \brief Postfix increment operator advances the iterator.
              * \return Copy of the iterator in the old position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator operator ++(int) { Q_ASSERT(m_pimpl); auto copy = *this; ++*pimpl(); return copy; }
+            RandomAccessIterator operator ++(int) { Q_ASSERT(m_pimpl); auto copy = *this; ++*pimpl(); return copy; }
 
             /*!
              * \brief Prefix decrement operator backtracks the iterator.
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator &operator --() { Q_ASSERT(m_pimpl); --*pimpl(); return *this; }
+            RandomAccessIterator &operator --() { Q_ASSERT(m_pimpl); --*pimpl(); return *this; }
 
             /*!
              * \brief Postfix decrement operator backtracks the iterator.
              * \return Copy of the iterator at the old position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator operator --(int) { Q_ASSERT(m_pimpl); auto copy = *this; --*pimpl(); return copy; }
+            RandomAccessIterator operator --(int) { Q_ASSERT(m_pimpl); auto copy = *this; --*pimpl(); return copy; }
 
             /*!
              * \brief Advance the iterator by a certain amount.
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator operator +=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() += n; return *this; }
+            RandomAccessIterator operator +=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() += n; return *this; }
 
             /*!
              * \brief Advance the iterator by a certain amount.
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator operator +(difference_type n) const { auto copy = *this; return copy += n; }
+            //! @{
+            friend RandomAccessIterator operator +(const RandomAccessIterator &i, difference_type n) { auto copy = i; return copy += n; }
+            friend RandomAccessIterator operator +(difference_type n, const RandomAccessIterator &i) { auto copy = i; return copy += n; }
+            //! @}
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator operator -=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() -= n; return *this; }
+            RandomAccessIterator operator -=(difference_type n) { Q_ASSERT(m_pimpl); *pimpl() -= n; return *this; }
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
-            BidirectionalIterator operator -(difference_type n) const { auto copy = *this; return copy -= n; }
+            RandomAccessIterator operator -(difference_type n) const { auto copy = *this; return copy -= n; }
 
             /*!
              * \brief Return the distance between two iterators.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
-            difference_type operator -(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() - *other.pimpl(); }
+            difference_type operator -(const RandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() - *other.pimpl(); }
 
             /*!
              * \brief Test for equality.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
-            bool operator ==(const BidirectionalIterator &other) const { return (pimpl() && other.pimpl()) ? *pimpl() == *other.pimpl() : pimpl() == other.pimpl(); }
+            bool operator ==(const RandomAccessIterator &other) const { return (pimpl() && other.pimpl()) ? *pimpl() == *other.pimpl() : pimpl() == other.pimpl(); }
 
             /*!
              * \brief Test for inequality.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
-            bool operator !=(const BidirectionalIterator &other) const { return !(*this == other); }
+            bool operator !=(const RandomAccessIterator &other) const { return !(*this == other); }
 
             /*!
              * \brief For sorting.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             //! @{
-            bool operator <(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
-            bool operator >(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() > *other.pimpl(); }
-            bool operator <=(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() <= *other.pimpl(); }
-            bool operator >=(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() >= *other.pimpl(); }
+            bool operator <(const RandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
+            bool operator >(const RandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() > *other.pimpl(); }
+            bool operator <=(const RandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() <= *other.pimpl(); }
+            bool operator >=(const RandomAccessIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() >= *other.pimpl(); }
             //! @}
+
+            /*!
+             * \brief Subscript operator.
+             * \pre `(*this + n)` must be dereferenceable.
+             */
+            reference operator [](difference_type n) const { return *(*this + n); }
 
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
@@ -837,7 +857,9 @@ namespace BlackMisc
             {
             public:
                 static_assert(std::is_same<T, typename std::iterator_traits<I>::value_type>::value,
-                    "BidirectionalIterator must be initialized from an iterator with the same value_type.");
+                    "RandomAccessIterator must be initialized from an iterator with the same value_type.");
+                static_assert(std::is_same<typename std::iterator_traits<I>::iterator_category, std::random_access_iterator_tag>::value,
+                    "RandomAccessIterator must be initialized from a random access iterator.");
                 Pimpl(I &&i) : m_impl(std::move(i)) {}
                 virtual PimplBase *clone() const override { return new Pimpl(*this); }
                 virtual const_reference operator *() const override { return *m_impl; }
@@ -861,7 +883,7 @@ namespace BlackMisc
             using PimplPtr = QScopedPointer<PimplBase>;
             PimplPtr m_pimpl;
 
-            explicit BidirectionalIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
+            explicit RandomAccessIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
 
             // using these methods to access m_pimpl.data() eases the cognitive burden of correctly forwarding const
             PimplBase *pimpl() { return m_pimpl.data(); }

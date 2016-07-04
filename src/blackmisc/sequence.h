@@ -34,7 +34,7 @@ namespace BlackMisc
      */
     template <class T>
     class CSequence :
-        public CContainerBase<CSequence, T, Iterators::ConstBidirectionalIterator<T>>,
+        public CContainerBase<CSequence, T, Iterators::ConstRandomAccessIterator<T>>,
         public Mixin::Icon<CSequence<T>>
     {
     public:
@@ -46,8 +46,8 @@ namespace BlackMisc
         typedef const T &const_reference;
         typedef T *pointer;
         typedef const T *const_pointer;
-        typedef typename Iterators::ConstBidirectionalIterator<T> const_iterator;
-        typedef typename Iterators::BidirectionalIterator<T> iterator;
+        typedef typename Iterators::ConstRandomAccessIterator<T> const_iterator;
+        typedef typename Iterators::RandomAccessIterator<T> iterator;
         typedef ptrdiff_t difference_type;
         typedef intptr_t size_type;
         //! @}
