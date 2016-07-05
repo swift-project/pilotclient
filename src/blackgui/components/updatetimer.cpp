@@ -48,6 +48,5 @@ namespace BlackGui
             this->m_timer->start(); // restart other timer
             this->m_timerSingleShot->start(10);
         }
-
     } // namespace
 } // namespace

@@ -547,14 +547,14 @@ namespace BlackGui
             QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
             if (model.getAircraftIcaoCode().hasDesignator())
             {
-                CLogMessage(this).validationInfo("Reverse lookup for %1") << modelStr;
+                CLogMessage(this).validationInfo("Reverse lookup for '%1'") << modelStr;
 
                 // update GUI
                 this->setGuiIcaoValues(model, false);
             }
             else
             {
-                CLogMessage(this).validationInfo("Reverse lookup for %1 failed, set data manually") << modelStr;
+                CLogMessage(this).validationInfo("Reverse lookup for '%1'' failed, set data manually") << modelStr;
             }
         }
 

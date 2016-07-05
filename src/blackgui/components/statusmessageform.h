@@ -23,7 +23,6 @@
 class QWidget;
 
 namespace Ui { class CStatusMessageForm; }
-
 namespace BlackGui
 {
     namespace Components
@@ -51,6 +50,9 @@ namespace BlackGui
 
             //! Toggle visibility
             void toggleVisibility();
+
+            //! Minimize by hiding status ...
+            void setReducedInfo(bool minimized);
 
         private:
             QScopedPointer<Ui::CStatusMessageForm> ui;

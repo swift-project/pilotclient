@@ -27,7 +27,6 @@
 class QWidget;
 
 namespace Ui { class CModelMatcherComponent; }
-
 namespace BlackGui
 {
     namespace Components

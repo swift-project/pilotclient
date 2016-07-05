@@ -82,11 +82,6 @@ namespace BlackGui
         CDbStashComponent::~CDbStashComponent()
         { }
 
-        void CDbStashComponent::gracefulShutdown()
-        {
-            // shutdown
-        }
-
         CStatusMessage CDbStashComponent::validateStashModel(const CAircraftModel &model, bool allowReplace) const
         {
             if (!allowReplace && this->ui->tvp_StashAircraftModels->container().containsModelStringOrDbKey(model))

@@ -57,9 +57,9 @@ namespace BlackGui
 
         void CUserComponent::update()
         {
+            if (!sGui || !sGui->getIContextNetwork()) { return; }
             Q_ASSERT(this->ui->tvp_AllUsers);
             Q_ASSERT(this->ui->tvp_Clients);
-            Q_ASSERT(sGui->getIContextNetwork());
 
             if (sGui->getIContextNetwork()->isConnected())
             {
@@ -99,6 +99,5 @@ namespace BlackGui
                 this->ui->tvp_Clients->clear();
             }
         }
-
     } // namespace
 } // namespace

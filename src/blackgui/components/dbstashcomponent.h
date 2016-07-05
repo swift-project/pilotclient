@@ -70,9 +70,6 @@ namespace BlackGui
             //! Destructor
             ~CDbStashComponent();
 
-            //! Graceful shutdown
-            void gracefulShutdown();
-
             //! Test the given model if it can be stashed
             BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model, bool allowReplace) const;
 

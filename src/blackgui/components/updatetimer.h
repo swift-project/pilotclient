@@ -25,6 +25,7 @@ namespace BlackGui
     namespace Components
     {
         //! Timer used in components for updates
+        //! \deprecated used at the beginning of the project, likely to be removed in the future
         class BLACKGUI_EXPORT CUpdateTimer: public QObject
         {
             Q_OBJECT

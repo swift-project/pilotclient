@@ -121,9 +121,9 @@ namespace BlackGui
 
         void CAtcStationComponent::update()
         {
+            if (!sGui || !sGui->getIContextNetwork()) { return; }
             Q_ASSERT(this->ui->tvp_AtcStationsBooked);
             Q_ASSERT(this->ui->tvp_AtcStationsOnline);
-            Q_ASSERT(sGui->getIContextNetwork());
 
             // check if component is visible, if we have already data then skip udpate
             bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;

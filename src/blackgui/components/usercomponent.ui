@@ -27,9 +27,6 @@
     <string>Users</string>
    </attribute>
    <layout class="QVBoxLayout" name="vl_AllUsers">
-    <property name="spacing">
-     <number>0</number>
-    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -44,6 +41,12 @@
     </property>
     <item>
      <widget class="BlackGui::Views::CUserView" name="tvp_AllUsers">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>
@@ -56,9 +59,6 @@
     <string>Clients</string>
    </attribute>
    <layout class="QVBoxLayout" name="vl_Clients">
-    <property name="spacing">
-     <number>0</number>
-    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -73,9 +73,44 @@
     </property>
     <item>
      <widget class="BlackGui::Views::CClientView" name="tvp_Clients">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_MatchingLog">
+   <attribute name="title">
+    <string>Matching log</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_MatchingLog">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CModelMatcherLogComponent" name="comp_MatchingLog">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
      </widget>
     </item>
    </layout>
@@ -91,6 +126,12 @@
    <class>BlackGui::Views::CClientView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/clientview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CModelMatcherLogComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/modelmatcherlogcomponent.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
