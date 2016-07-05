@@ -391,8 +391,8 @@ namespace BlackCore
 
                 // Setup for VATSIM servers and sorting for comparison
                 fsdServers.setFsdSetup(CFsdSetup::vatsimStandard());
-                fsdServers.sortBy(&CServer::getName);
-                voiceServers.sortBy(&CServer::getName);
+                fsdServers.sortBy(&CServer::getName, &CServer::getDescription);
+                voiceServers.sortBy(&CServer::getName, &CServer::getDescription);
 
                 // this part needs to be synchronized
                 {
@@ -401,17 +401,19 @@ namespace BlackCore
                     this->m_aircraft = aircraft;
                     this->m_atcStations = atcStations;
                     this->m_voiceCapabilities = voiceCapabilities;
-                    CVatsimSetup vs(this->m_lastGoodSetup.getThreadLocal());
 
                     // check if we need to save in cache
-                    if (vs.getVoiceServers() != voiceServers || vs.getFsdServers() != fsdServers)
-                    {
-                        vs.setVoiceServers(voiceServers);
-                        vs.setFsdServers(fsdServers);
-                        vs.setUtcTimestamp(updateTimestampFromFile);
-                        this->m_lastGoodSetup.set(vs);
-                    }
                 }
+
+                // update cache itself is thread safe
+                CVatsimSetup vs(this->m_lastGoodSetup.get());
+                const bool changedSetup = vs.setServers(fsdServers, voiceServers);
+                if (changedSetup)
+                {
+                    vs.setUtcTimestamp(updateTimestampFromFile);
+                    this->m_lastGoodSetup.set(vs);
+                }
+
 
                 // warnings, if required
                 if (!illegalIcaoCodes.isEmpty())

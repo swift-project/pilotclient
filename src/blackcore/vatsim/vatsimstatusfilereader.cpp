@@ -106,9 +106,9 @@ namespace BlackCore
                 const QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
                 if (lines.isEmpty()) { return; }
 
-                CUrlList dataFiles;
-                CUrlList serverFiles;
-                CUrlList metarFiles;
+                CUrlList dataFileUrls;
+                CUrlList serverFileUrls;
+                CUrlList metarFileUrls;
 
                 for (const QString &cl : lines)
                 {
@@ -132,15 +132,15 @@ namespace BlackCore
                     const CUrl url(value);
                     if (key.startsWith("url0"))
                     {
-                        dataFiles.push_back(url);
+                        dataFileUrls.push_back(url);
                     }
                     else if (key.startsWith("url1"))
                     {
-                        serverFiles.push_back(url);
+                        serverFileUrls.push_back(url);
                     }
                     else if (key.startsWith("metar"))
                     {
-                        metarFiles.push_back(url);
+                        metarFileUrls.push_back(url);
                     }
                     else if (key.startsWith("atis"))
                     {
@@ -148,15 +148,14 @@ namespace BlackCore
                     }
                 } // for each line
 
-                // this part needs to be synchronized
+                // cache itself is thread safe, avoid writing with unchanged data
+                CVatsimSetup vs(this->m_lastGoodSetup.get());
+                bool changed = vs.setUrls(dataFileUrls, serverFileUrls, metarFileUrls);
+                if (changed)
                 {
-                    // cache itself is thread safe
-                    CVatsimSetup vs(this->m_lastGoodSetup.get());
-                    vs.setDataFileUrls(dataFiles);
-                    vs.setMetarFileUrls(metarFiles);
-                    vs.setServerFileUrls(serverFiles);
                     vs.setUtcTimestamp(QDateTime::currentDateTime());
-                    this->m_lastGoodSetup.set(vs);
+                    const CStatusMessage cacheMsg = this->m_lastGoodSetup.set(vs);
+                    if (cacheMsg.isFailure()) { CLogMessage::preformatted(cacheMsg); }
                 }
 
                 // warnings, if required

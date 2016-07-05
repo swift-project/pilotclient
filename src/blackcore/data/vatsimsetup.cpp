@@ -23,6 +23,24 @@ namespace BlackCore
             m_dataFileUrls(QStringList( { "http://info.vroute.net/vatsim-data.txt" }))
         { }
 
+        bool CVatsimSetup::setUrls(const CUrlList &dataFileUrls, const CUrlList &serverFileUrls, const CUrlList &metarFileUrls)
+        {
+            const bool changed = (dataFileUrls != getDataFileUrls() || serverFileUrls != getServerFileUrls() || metarFileUrls != getMetarFileUrls());
+            this->setServerFileUrls(serverFileUrls);
+            this->setMetarFileUrls(metarFileUrls);
+            this->setDataFileUrls(dataFileUrls);
+            return changed;
+        }
+
+        bool CVatsimSetup::setServers(const CServerList &fsdServers, const CServerList &voiceServers)
+        {
+            const bool changed = !this->getVoiceServers().equalsByKeys(voiceServers, &CServer::getName, &CServer::getAddress) ||
+                                 !this->getFsdServers().equalsByKeys(fsdServers, &CServer::getName, &CServer::getAddress);
+            this->setFsdServers(fsdServers);
+            this->setVoiceServers(voiceServers);
+            return changed;
+        }
+
         QString CVatsimSetup::convertToQString(bool i18n) const
         {
             return convertToQString(", ", i18n);

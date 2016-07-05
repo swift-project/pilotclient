@@ -70,6 +70,9 @@ namespace BlackCore
             //! METAR file URLs
             void setMetarFileUrls(const BlackMisc::Network::CUrlList &urls) { m_metarFileUrls = urls; }
 
+            //! Set all URLs and indicate if something has changed
+            bool setUrls(const BlackMisc::Network::CUrlList &dataFileUrls, const BlackMisc::Network::CUrlList &serverFileUrls, const BlackMisc::Network::CUrlList &metarFileUrls);
+
             //! FSD test servers
             const BlackMisc::Network::CServerList &getFsdServers() const { return m_fsdServers; }
 
@@ -81,6 +84,9 @@ namespace BlackCore
 
             //! Set voice servers
             void setVoiceServers(const BlackMisc::Network::CServerList &servers) { m_voiceServers = servers; }
+
+            //! Set servers
+            bool setServers(const BlackMisc::Network::CServerList &fsdServers, const BlackMisc::Network::CServerList &voiceServers);
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
