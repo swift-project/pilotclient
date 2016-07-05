@@ -96,16 +96,6 @@ namespace BlackCore
         //! Set default model
         void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
 
-        //! Add to log. if applicable
-        //! \threadsafe
-        static void logDetails(BlackMisc::CStatusMessageList *log, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft,
-                               const QString &message, BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
-
-        //! Add to log. if applicable
-        //! \threadsafe
-        static void logDetails(BlackMisc::CStatusMessageList *log, const BlackMisc::Aviation::CCallsign &callsign,
-                               const QString &message, BlackMisc::CStatusMessage::StatusSeverity s = BlackMisc::CStatusMessage::SeverityInfo);
-
     private:
         //! Search in models by key (aka model string)
         //! \threadsafe
