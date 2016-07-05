@@ -33,6 +33,7 @@ namespace BlackMisc
             { "background task",             exactMatch(CLogCategory::worker()) },
             { "model mapping",               exactMatch(CLogCategory::mapping()) },
             { "model matching",              exactMatch(CLogCategory::matching()) },
+            { "network (flight)",            exactMatch(CLogCategory::network()) },
             { "swift contexts",              exactMatch(CLogCategory::context()) },
             { "swift context slots",         exactMatch(CLogCategory::contextSlot()) },
             { "swift GUI",                   exactMatch(CLogCategory::guiComponent()) },

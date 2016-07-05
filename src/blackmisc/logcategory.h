@@ -152,6 +152,13 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Network specific, but not necessarily one specific flight network
+        static const CLogCategory &network()
+        {
+            static const CLogCategory cat { "swift.network" };
+            return cat;
+        }
+
         //! All predefined special categories
         //! \note Human readable patterns are defined in CLogPattern::allHumanReadablePatterns
         static const QList<CLogCategory> &allSpecialCategories()
@@ -166,6 +173,7 @@ namespace BlackMisc
                 guiComponent(),
                 mapping(),
                 matching(),
+                network(),
                 swiftDbWebservice(),
                 services(),
                 settings(),
