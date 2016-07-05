@@ -163,6 +163,41 @@ namespace BlackMisc
         return newMsg;
     }
 
+    QString CStatusMessageList::toHtml(const CPropertyIndexList &indexes) const
+    {
+        if (indexes.isEmpty() || this->isEmpty()) { return ""; }
+        QString html;
+        for (const CStatusMessage &statusMessage : *this)
+        {
+            QString rowHtml;
+            for (const CPropertyIndex index : indexes)
+            {
+                rowHtml += "<td>" + statusMessage.propertyByIndex(index).toQString(true) + "</td>";
+            }
+
+            rowHtml = "<tr class=\"%1\">" + rowHtml + "</tr>";
+            const QString severityClass = statusMessage.getSeverityAsString();
+            html += rowHtml.arg(severityClass);
+        }
+        return "<table>" + html + "</table>";
+    }
+
+    const QString htmlStyleSheetImpl()
+    {
+        QString style;
+        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityDebug) + " { color: lightgreen; } ";
+        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityInfo) + " { color: lightgreen; } ";
+        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityWarning) + " { color: yellow; } ";
+        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityError) + " { color: red; }";
+        return style; // "<style type=\"text/css\">" + style + "</style>";
+    }
+
+    const QString &CStatusMessageList::htmlStyleSheet()
+    {
+        static const QString style(htmlStyleSheetImpl());
+        return style;
+    }
+
     CStatusMessageList CStatusMessageList::fromDatabaseJson(const QJsonArray &array)
     {
         CStatusMessageList messages;

@@ -100,6 +100,12 @@ namespace BlackMisc
         //! Merge into a single message
         CStatusMessage toSingleMessage() const;
 
+        //! Specialized version to convert to HTML
+        QString toHtml(const CPropertyIndexList &indexes) const;
+
+        //! Default style sheet which can be used with CStatusMessageList::toHtml
+        static const QString &htmlStyleSheet();
+
         //! From our database JSON format
         static CStatusMessageList fromDatabaseJson(const QJsonArray &array);
     };
