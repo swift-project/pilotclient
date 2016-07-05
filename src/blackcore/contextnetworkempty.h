@@ -18,7 +18,6 @@
 
 namespace BlackCore
 {
-
     //! Empty context, used during shutdown/initialization
     class BLACKCORE_EXPORT CContextNetworkEmpty : public IContextNetwork
     {
@@ -63,6 +62,13 @@ namespace BlackCore
             Q_UNUSED(callsign);
             logEmptyContextWarning(Q_FUNC_INFO);
             return BlackMisc::Simulation::CSimulatedAircraft();
+        }
+
+        //! \copydoc IContextNetwork::getAircraftInRangeCallsigns()
+        virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return BlackMisc::Aviation::CCallsignSet();
         }
 
         //! \copydoc IContextNetwork::getAircraftInRangeCount
@@ -288,6 +294,27 @@ namespace BlackCore
             return BlackMisc::Aviation::CCallsignSet();
         }
 
+        //! \copydoc IContextNetwork::getReverseLookupMessages
+        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            Q_UNUSED(callsign);
+            return BlackMisc::CStatusMessageList();
+        }
+
+        //! \copydoc IContextNetwork::isReverseLookupMessagesEnabled
+        virtual bool isReverseLookupMessagesEnabled() const
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return false;
+        }
+
+        //! \copydoc IContextNetwork::enableReverseLookupMessages
+        virtual void enableReverseLookupMessages(bool enabled)
+        {
+            logEmptyContextWarning(Q_FUNC_INFO);
+            Q_UNUSED(enabled);
+        }
     };
 } // namespace
 

@@ -76,9 +76,9 @@ namespace BlackCore
             this->initDBusConnection(dbusAddress);
             if (!this->m_dbusConnection.isConnected())
             {
-                QString notConnected("DBus connection failed:");
-                QString e = this->m_dbusConnection.lastError().message();
-                if (!e.isEmpty()) notConnected.append(" ").append(e);
+                QString notConnected("DBus connection failed: ");
+                const QString e = this->m_dbusConnection.lastError().message();
+                if (!e.isEmpty()) { notConnected.append(e); }
                 Q_ASSERT_X(false, "CRuntime::init", notConnected.toUtf8().constData());
                 CLogMessage(this).error(notConnected);
             }

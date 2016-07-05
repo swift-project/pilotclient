@@ -154,6 +154,10 @@ namespace BlackCore
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeCallsigns
+        //! \ingroup remoteaircraftprovider
+        virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
+
         //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeCount
         //! \ingroup remoteaircraftprovider
         virtual int getAircraftInRangeCount() const override;
@@ -165,6 +169,18 @@ namespace BlackCore
         //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
         //! \ingroup remoteaircraftprovider
         virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getReverseLookupMessages
+        //! \ingroup remoteaircraftprovider
+        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isReverseLookupLoggingEnabled
+        //! \ingroup remoteaircraftprovider
+        virtual bool isReverseLookupMessagesEnabled() const override;
+
+        //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::enableReverseLookupLogging
+        //! \ingroup remoteaircraftprovider
+        virtual void enableReverseLookupMessages(bool enabled) override;
 
         //! \copydoc IContextNetwork::getOnlineStationForCallsign
         virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;

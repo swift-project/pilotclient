@@ -59,6 +59,9 @@ namespace BlackMisc
             //! IRemoteAircraftProvider::getAircraftInRangeCount
             virtual int getAircraftInRangeCount() const override;
 
+            //! IRemoteAircraftProvider::getAircraftInRangeCallsigns
+            virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
+
             //! IRemoteAircraftProvider::getAircraftInRangeForCallsign
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
@@ -106,6 +109,15 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
             virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
+
+            //! \copydoc IRemoteAircraftProvider::getReverseLookupMessages
+            virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+            //! \copydoc IRemoteAircraftProvider::isReverseLookupMessagesEnabled
+            virtual bool isReverseLookupMessagesEnabled() const override;
+
+            //! \copydoc IRemoteAircraftProvider::enableReverseLookupMessages
+            virtual void enableReverseLookupMessages(bool enabled) override;
 
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);

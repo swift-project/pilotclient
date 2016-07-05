@@ -18,20 +18,11 @@
 
 #include <QHash>
 
-namespace BlackMisc {
-namespace Aviation {
-class CAircraftParts;
-class CAircraftSituation;
-}  // namespace Aviation
-}  // namespace BlackMisc
-
 using namespace BlackMisc::Aviation;
-
 namespace BlackMisc
 {
     namespace Simulation
     {
-
         CRemoteAircraftProviderDummy::CRemoteAircraftProviderDummy(QObject *parent) : QObject(parent)
         { }
 
@@ -43,6 +34,11 @@ namespace BlackMisc
         int CRemoteAircraftProviderDummy::getAircraftInRangeCount() const
         {
             return m_aircraft.size();
+        }
+
+        CCallsignSet CRemoteAircraftProviderDummy::getAircraftInRangeCallsigns() const
+        {
+            return m_aircraft.getCallsigns();
         }
 
         CSimulatedAircraft CRemoteAircraftProviderDummy::getAircraftInRangeForCallsign(const CCallsign &callsign) const
@@ -141,6 +137,22 @@ namespace BlackMisc
         {
             Q_UNUSED(originator);
             this->m_aircraft.markAllAsNotRendered();
+        }
+
+        CStatusMessageList CRemoteAircraftProviderDummy::getReverseLookupMessages(const CCallsign &callsign) const
+        {
+            Q_UNUSED(callsign);
+            return CStatusMessageList();
+        }
+
+        bool CRemoteAircraftProviderDummy::isReverseLookupMessagesEnabled() const
+        {
+            return false;
+        }
+
+        void CRemoteAircraftProviderDummy::enableReverseLookupMessages(bool enabled)
+        {
+            Q_UNUSED(enabled);
         }
 
         void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)

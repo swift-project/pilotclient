@@ -95,6 +95,9 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAircraftInRange()
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
 
+        //! \copydoc IContextNetwork::getAircraftInRangeCallsigns()
+        virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
+
         //! \copydoc IContextNetwork::getAircraftInRangeCount
         virtual int getAircraftInRangeCount() const override;
 
@@ -179,12 +182,20 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getFastPositionEnabledCallsigns
         virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() override;
 
+        //! \copydoc IContextNetwork::getReverseLookupMessages
+        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc IContextNetwork::isReverseLookupMessagesEnabled
+        virtual bool isReverseLookupMessagesEnabled() const override;
+
+        //! \copydoc IContextNetwork::enableReverseLookupMessages
+        virtual void enableReverseLookupMessages(bool enabled) override;
+
         //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
         virtual void testCreateDummyOnlineAtcStations(int number) override;
 
         //! \copydoc IContextNetwork::testAddAircraftParts
         virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
-
     };
 }
 

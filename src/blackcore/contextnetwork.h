@@ -173,6 +173,9 @@ namespace BlackCore
         //! Aircraft list
         virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;
 
+        //! Aircraft callsigns
+        virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const = 0;
+
         //! Aircraft for given callsign
         virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
@@ -258,6 +261,15 @@ namespace BlackCore
 
         //! Change fast position updates
         virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::CIdentifier &originator) = 0;
+
+        //! Get reverse lookup meesages
+        virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+        //! Enabled reverse lookup logging?
+        virtual bool isReverseLookupMessagesEnabled() const = 0;
+
+        //! Enable reverse lookup logging
+        virtual void enableReverseLookupMessages(bool enabled) = 0;
 
         //! Create dummy ATC stations for performance tests etc.
         virtual void testCreateDummyOnlineAtcStations(int number) = 0;

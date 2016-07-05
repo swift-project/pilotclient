@@ -64,6 +64,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual int getAircraftInRangeCount() const = 0;
 
+            //! Unique callsigns for aircraft in range
+            //! \threadsafe
+            virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const = 0;
+
             //! Current snapshot
             //! \threadsafe
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const = 0;
@@ -116,6 +120,18 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) = 0;
 
+            //! Get reverse lookup meesages
+            //! \threadsafe
+            virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+            //! Enabled reverse lookup logging?
+            //! \threadsafe
+            virtual bool isReverseLookupMessagesEnabled() const = 0;
+
+            //! Enable reverse lookup logging
+            //! \threadsafe
+            virtual void enableReverseLookupMessages(bool enabled) = 0;
+
             //! Destructor
             virtual ~IRemoteAircraftProvider() {}
 
@@ -129,7 +145,6 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
             ) = 0;
-
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
@@ -141,6 +156,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
             int getAircraftInRangeCount() const;
+
+            //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCallsigns
+            BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const;
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;

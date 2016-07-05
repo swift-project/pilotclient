@@ -482,6 +482,12 @@ namespace BlackCore
         return this->m_airspace->getAircraftInRange();
     }
 
+    CCallsignSet CContextNetwork::getAircraftInRangeCallsigns() const
+    {
+        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        return this->m_airspace->getAircraftInRangeCallsigns();
+    }
+
     int CContextNetwork::getAircraftInRangeCount() const
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -498,6 +504,24 @@ namespace BlackCore
     {
         if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
         return this->m_airspace->getAircraftInRangeModelForCallsign(callsign);
+    }
+
+    CStatusMessageList CContextNetwork::getReverseLookupMessages(const CCallsign &callsign) const
+    {
+        if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        return this->m_airspace->getReverseLookupMessages(callsign);
+    }
+
+    bool CContextNetwork::isReverseLookupMessagesEnabled() const
+    {
+        if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+        return this->m_airspace->isReverseLookupMessagesEnabled();
+    }
+
+    void CContextNetwork::enableReverseLookupMessages(bool enabled)
+    {
+        if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
+        return this->m_airspace->enableReverseLookupMessages(enabled);
     }
 
     CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
@@ -643,5 +667,4 @@ namespace BlackCore
         rooms.push_back(s2.getVoiceRoom());
         return rooms;
     }
-
 } // namespace

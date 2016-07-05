@@ -114,6 +114,11 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraftList>(QLatin1Literal("getAircraftInRange"));
     }
 
+    CCallsignSet CContextNetworkProxy::getAircraftInRangeCallsigns() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1Literal("getAircraftInRangeCallsigns"));
+    }
+
     int CContextNetworkProxy::getAircraftInRangeCount() const
     {
         return this->m_dBusInterface->callDBusRet<int>(QLatin1Literal("getAircraftInRangeCount"));
@@ -207,6 +212,21 @@ namespace BlackCore
     CCallsignSet CContextNetworkProxy::getFastPositionEnabledCallsigns()
     {
         return this->m_dBusInterface->callDBusRet<CCallsignSet>(QLatin1Literal("getFastPositionEnabledCallsigns"));
+    }
+
+    CStatusMessageList CContextNetworkProxy::getReverseLookupMessages(const CCallsign &callsign) const
+    {
+        return this->m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1Literal("getReverseLookupMessages"), callsign);
+    }
+
+    bool CContextNetworkProxy::isReverseLookupMessagesEnabled() const
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isReverseLookupLoggingEnabled"));
+    }
+
+    void CContextNetworkProxy::enableReverseLookupMessages(bool enabled)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("enableReverseLookupLogging"), enabled);
     }
 
     void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
