@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>297</width>
-    <height>89</height>
+    <width>317</width>
+    <height>91</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>0</width>
-    <height>75</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Cockpit COM</string>
@@ -72,12 +66,6 @@
         </property>
         <item row="1" column="0" colspan="2">
          <widget class="BlackGui::Components::CSelcalCodeSelector" name="frp_ComPanelSelcalBottom">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -265,24 +253,6 @@
         </item>
         <item row="1" column="0" colspan="2">
          <widget class="QDoubleSpinBox" name="ds_ComPanelCom1Standby">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
           <property name="decimals">
            <number>3</number>
           </property>
@@ -302,12 +272,6 @@
         </item>
         <item row="0" column="1" alignment="Qt::AlignHCenter">
          <widget class="QPushButton" name="pb_ComPanelCom1Toggle">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="toolTip">
            <string>Toggle COM 1 standby/active</string>
           </property>
@@ -356,12 +320,6 @@
         </item>
         <item row="0" column="1" alignment="Qt::AlignHCenter">
          <widget class="QPushButton" name="pb_ComPanelCom2Toggle">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="toolTip">
            <string>Toggle COM 2 standby/active</string>
           </property>
@@ -445,10 +403,10 @@
         <item row="0" column="1">
          <widget class="BlackGui::Components::CCockpitTransponderModeLedsComponent" name="comp_TransponderLeds">
           <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Plain</enum>
           </property>
          </widget>
         </item>
@@ -502,14 +460,7 @@
             </widget>
            </item>
            <item>
-            <widget class="BlackGui::Components::CTransponderModeSelector" name="cbp_ComPanelTransponderMode">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
+            <widget class="BlackGui::Components::CTransponderModeSelector" name="cbp_ComPanelTransponderMode"/>
            </item>
           </layout>
          </widget>
