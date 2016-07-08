@@ -12,7 +12,7 @@
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacade.h"
-#include "blackcore/networkvatlib.h"
+#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/registermetadata.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
@@ -62,6 +62,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
 using namespace BlackCore::Context;
+using namespace BlackCore::Vatsim;
 using namespace BlackCore::Data;
 using namespace BlackCore::Db;
 

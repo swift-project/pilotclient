@@ -15,7 +15,7 @@
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/corefacade.h"
-#include "blackcore/networkvatlib.h"
+#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"
@@ -48,6 +48,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
+using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {

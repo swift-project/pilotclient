@@ -14,7 +14,7 @@
 //! \file
 //! \ingroup testblackcore
 
-#include "blackcore/networkvatlib.h"
+#include "blackcore/vatsim/networkvatlib.h"
 #include "blackmisc/simulation/ownaircraftproviderdummy.h"
 
 #include <stdbool.h>
@@ -47,7 +47,7 @@ namespace BlackCoreTest
         //! Common part used by all tests.
         void networkTest(BlackCore::INetwork *);
 
-        BlackCore::CNetworkVatlib m_networkVatlib ; //!< vatlib instance
+        BlackCore::Vatsim::CNetworkVatlib m_networkVatlib ; //!< vatlib instance
 
         //! Test if server is available
         static bool pingServer(const BlackMisc::Network::CServer &server);

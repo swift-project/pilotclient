@@ -14,7 +14,7 @@
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/voice.h"
-#include "blackcore/voicevatlib.h"
+#include "blackcore/vatsim/voicevatlib.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/audio/settings/settingsaudio.h"
@@ -41,6 +41,7 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 using namespace BlackMisc::Audio;
 using namespace BlackSound;
+using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {

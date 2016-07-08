@@ -11,7 +11,7 @@
 //! \ingroup samplecliclient
 
 #include "client.h"
-#include "blackcore/networkvatlib.h"
+#include "blackcore/vatsim/networkvatlib.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/airlineicaocode.h"
@@ -42,6 +42,7 @@
 #include <string>
 
 using namespace BlackCore;
+using namespace BlackCore::Vatsim;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
@@ -55,7 +56,7 @@ namespace BlackSample
         : QObject(parent),
           COwnAircraftAware(COwnAircraftProviderDummy::instance()),
           CIdentifiable("samples:cmdClient"),
-          m_net(new BlackCore::CNetworkVatlib(COwnAircraftProviderDummy::instance(), this))
+          m_net(new CNetworkVatlib(COwnAircraftProviderDummy::instance(), this))
     {
         connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
         connect(m_net, &INetwork::atcDisconnected,                  this, &Client::atcDisconnected);
@@ -578,5 +579,4 @@ namespace BlackSample
         }
         std::cout << std::endl;
     }
-
 } // ns
