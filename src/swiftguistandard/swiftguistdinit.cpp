@@ -8,7 +8,7 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackcore/contextnetwork.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackgui/components/aircraftcomponent.h"
 #include "blackgui/components/atcstationcomponent.h"
 #include "blackgui/components/cockpitcomponent.h"
@@ -47,6 +47,7 @@ class QHBoxLayout;
 
 using namespace BlackConfig;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
 using namespace BlackGui;

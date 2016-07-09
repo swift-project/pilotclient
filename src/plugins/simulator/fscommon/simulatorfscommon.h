@@ -57,7 +57,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::getInstalledModels
             virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
 
-            //! \copydoc BlackCore::IContextSimulator::iconForModel
+            //! \copydoc BlackCore::Context::IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
             //! \copydoc BlackCore::ISimulator::changeRemoteAircraftModel

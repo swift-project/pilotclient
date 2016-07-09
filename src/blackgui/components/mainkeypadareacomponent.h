@@ -75,16 +75,16 @@ namespace BlackGui
             //! Button was clicked
             void ps_buttonSelected();
 
-            //! \copydoc BlackCore::IContextNetwork::connectionStatusChanged
+            //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
             void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! Command line entered
             void ps_commandEntered();
 
-            //! \copydoc BlackCore::IContextOwnAircraft::changedAircraftCockpit
+            //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
             void ps_ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-            //! \copydoc BlackCore::IContextAudio::changedMute
+            //! \copydoc BlackCore::Context::IContextAudio::changedMute
             void ps_muteChanged(bool muted);
 
         private:

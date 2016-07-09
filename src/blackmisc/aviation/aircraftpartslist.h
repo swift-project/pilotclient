@@ -12,10 +12,10 @@
 #ifndef BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
 #define BLACKMISC_AVIATION_AIRCRAFTPARTSLIST_H
 
-#include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/timestampobjectlist.h"
 #include "blackmisc/variant.h"
 
@@ -25,8 +25,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        class CAircraftParts;
-
         //! Value object encapsulating a list of aircraft parts.
         class BLACKMISC_EXPORT CAircraftPartsList :
             public CSequence<CAircraftParts>,

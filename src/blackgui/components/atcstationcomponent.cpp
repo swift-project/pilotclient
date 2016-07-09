@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackgui/components/atcstationcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -43,6 +43,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {

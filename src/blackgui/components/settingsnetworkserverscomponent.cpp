@@ -8,7 +8,7 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackcore/contextapplication.h"
+#include "blackcore/context/contextapplication.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/editors/serverform.h"
 #include "blackgui/components/settingsnetworkserverscomponent.h"

@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextnetwork.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/network.h"
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/components/logcomponent.h"

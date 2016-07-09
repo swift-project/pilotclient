@@ -7,11 +7,11 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextownaircraft.h"
-#include "blackcore/contextsimulator.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackgui/components/internalscomponent.h"
 #include "blackgui/components/remoteaircraftselector.h"
 #include "blackgui/guiapplication.h"

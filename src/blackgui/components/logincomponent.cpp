@@ -8,10 +8,10 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextownaircraft.h"
-#include "blackcore/contextsimulator.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/network.h"
@@ -55,6 +55,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Data;
+using namespace BlackCore::Context;
 using namespace BlackGui;
 
 namespace BlackGui

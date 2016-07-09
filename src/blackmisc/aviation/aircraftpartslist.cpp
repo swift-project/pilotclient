@@ -16,7 +16,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAircraftPartsList::CAircraftPartsList() { }
 
         CAircraftPartsList::CAircraftPartsList(const CSequence<CAircraftParts> &other) :

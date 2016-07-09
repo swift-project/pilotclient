@@ -11,9 +11,9 @@
 #include "blackgui/infoarea.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/guiapplication.h"
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextsimulator.h"
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/weather/weathergrid.h"
@@ -24,6 +24,7 @@
 #include <QRegularExpression>
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;

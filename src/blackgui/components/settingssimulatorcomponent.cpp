@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextsimulator.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackgui/components/settingssimulatorcomponent.h"
 #include "blackgui/guiapplication.h"
@@ -44,6 +44,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {

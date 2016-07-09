@@ -28,17 +28,20 @@ namespace BlackCore
 {
     // forward declaration, see review
     // https://dev.vatsim-germany.org/boards/22/topics/1350?r=1359#message-1359
-    class CContextApplication;
-    class CContextAudio;
-    class CContextNetwork;
-    class CContextOwnAircraft;
-    class CContextSimulator;
     class CCoreFacadeConfig;
-    class IContextApplication;
-    class IContextAudio;
-    class IContextNetwork;
-    class IContextOwnAircraft;
-    class IContextSimulator;
+    namespace Context
+    {
+        class CContextApplication;
+        class CContextAudio;
+        class CContextNetwork;
+        class CContextOwnAircraft;
+        class CContextSimulator;
+        class IContextApplication;
+        class IContextAudio;
+        class IContextNetwork;
+        class IContextOwnAircraft;
+        class IContextSimulator;
+    }
 
     /*!
      * The runtime class providing facades (the contexts) for all DBus relevant operations.
@@ -71,76 +74,76 @@ namespace BlackCore
         // ------- Context as interface, normal way to access a context
 
         //! Context for network
-        IContextNetwork *getIContextNetwork();
+        Context::IContextNetwork *getIContextNetwork();
 
         //! Context for network
-        const IContextNetwork *getIContextNetwork() const;
+        const Context::IContextNetwork *getIContextNetwork() const;
 
         //! Context for audio
-        IContextAudio *getIContextAudio();
+        Context::IContextAudio *getIContextAudio();
 
         //! Context for audio
-        const IContextAudio *getIContextAudio() const;
+        const Context::IContextAudio *getIContextAudio() const;
 
         //! Context for application
-        IContextApplication *getIContextApplication();
+        Context::IContextApplication *getIContextApplication();
 
         //! Context for application
-        const IContextApplication *getIContextApplication() const;
+        const Context::IContextApplication *getIContextApplication() const;
 
         //! Context for own aircraft
-        IContextOwnAircraft *getIContextOwnAircraft();
+        Context::IContextOwnAircraft *getIContextOwnAircraft();
 
         //! Context for own aircraft
-        const IContextOwnAircraft *getIContextOwnAircraft() const;
+        const Context::IContextOwnAircraft *getIContextOwnAircraft() const;
 
         //! Context for simulator
-        IContextSimulator *getIContextSimulator();
+        Context::IContextSimulator *getIContextSimulator();
 
         //! Context for simulator
-        const IContextSimulator *getIContextSimulator() const;
+        const Context::IContextSimulator *getIContextSimulator() const;
 
         // ------- Context as implementing (local) class
 
         //! Context for application
         //! \remarks only applicable for local object
-        CContextApplication *getCContextApplication();
+        Context::CContextApplication *getCContextApplication();
 
         //! Context for application
         //! \remarks only applicable for local object
-        const CContextApplication *getCContextApplication() const;
+        const Context::CContextApplication *getCContextApplication() const;
 
         //! Context for audio
         //! \remarks only applicable for local object
-        CContextAudio *getCContextAudio();
+        Context::CContextAudio *getCContextAudio();
 
         //! Context for audio
         //! \remarks only applicable for local object
-        const CContextAudio *getCContextAudio() const;
+        const Context::CContextAudio *getCContextAudio() const;
 
         //! Context for own aircraft
         //! \remarks only applicable for local object
-        CContextOwnAircraft *getCContextOwnAircraft();
+        Context::CContextOwnAircraft *getCContextOwnAircraft();
 
         //! Context for own aircraft
         //! \remarks only applicable for local object
-        const CContextOwnAircraft *getCContextOwnAircraft() const;
+        const Context::CContextOwnAircraft *getCContextOwnAircraft() const;
 
         //! Context for network
         //! \remarks only applicable for local object
-        CContextNetwork *getCContextNetwork();
+        Context::CContextNetwork *getCContextNetwork();
 
         //! Context for network
         //! \remarks only applicable for local object
-        const CContextNetwork *getCContextNetwork() const;
+        const Context::CContextNetwork *getCContextNetwork() const;
 
         //! Context for simulator
         //! \remarks only applicable for local object
-        CContextSimulator *getCContextSimulator();
+        Context::CContextSimulator *getCContextSimulator();
 
         //! Context for simulator
         //! \remarks only applicable for local object
-        const CContextSimulator *getCContextSimulator() const;
+        const Context::CContextSimulator *getCContextSimulator() const;
 
         //! Init
         void init(const CCoreFacadeConfig &config);
@@ -167,11 +170,11 @@ namespace BlackCore
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted
         // we need to use deleteLater to gracefully shut the context
-        IContextApplication *m_contextApplication = nullptr;
-        IContextAudio       *m_contextAudio       = nullptr;
-        IContextNetwork     *m_contextNetwork     = nullptr;
-        IContextOwnAircraft *m_contextOwnAircraft = nullptr;
-        IContextSimulator   *m_contextSimulator   = nullptr;
+        Context::IContextApplication *m_contextApplication = nullptr;
+        Context::IContextAudio       *m_contextAudio       = nullptr;
+        Context::IContextNetwork     *m_contextNetwork     = nullptr;
+        Context::IContextOwnAircraft *m_contextOwnAircraft = nullptr;
+        Context::IContextSimulator   *m_contextSimulator   = nullptr;
 
         //! initialization of DBus connection (where applicable)
         void initDBusConnection(const QString &address);

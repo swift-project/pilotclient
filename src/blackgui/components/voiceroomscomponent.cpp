@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackgui/components/voiceroomscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/userview.h"
@@ -24,6 +24,7 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackMisc::Audio;
 
 namespace BlackGui
@@ -141,7 +142,5 @@ namespace BlackGui
                 this->ui->tvp_CockpitVoiceRoom2->clear();
             }
         }
-
     } // namespace
 } // namespace
-

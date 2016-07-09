@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextnetwork.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/network.h"
 #include "blackgui/components/usercomponent.h"
 #include "blackgui/guiapplication.h"
@@ -22,6 +22,7 @@
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {

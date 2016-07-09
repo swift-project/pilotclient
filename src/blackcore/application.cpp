@@ -9,7 +9,7 @@
 
 #include "blackconfig/buildconfig.h"
 #include "blackcore/application.h"
-#include "blackcore/contextapplication.h"
+#include "blackcore/context/contextapplication.h"
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/networkvatlib.h"
@@ -61,6 +61,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackCore::Data;
 using namespace BlackCore::Db;
 

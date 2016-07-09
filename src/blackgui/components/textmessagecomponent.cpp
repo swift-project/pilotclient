@@ -8,9 +8,9 @@
  */
 
 #include "blackcore/application.h"
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacade.h"
 #include "blackgui/components/textmessagecomponent.h"
 #include "blackgui/dockwidgetinfoarea.h"
@@ -43,6 +43,7 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Views;

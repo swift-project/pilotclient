@@ -12,7 +12,7 @@
 
 #include "blackmisc/propertyindexlist.h"
 #include "blackmisc/htmlutils.h"
-#include "blackcore/contextnetwork.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include <QCompleter>

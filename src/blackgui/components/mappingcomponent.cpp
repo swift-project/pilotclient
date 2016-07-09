@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextsimulator.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/network.h"
 #include "blackgui/components/mappingcomponent.h"
 #include "blackgui/components/updatetimer.h"
@@ -48,6 +48,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;

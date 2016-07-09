@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextownaircraft.h"
-#include "blackcore/contextsimulator.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/simulator.h"
 #include "blackgui/components/simulatorcomponent.h"
 #include "blackgui/guiapplication.h"
@@ -31,6 +31,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {

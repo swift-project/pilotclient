@@ -8,7 +8,7 @@
  */
 
 #include "blackcore/registermetadata.h"
-#include "blackcore/contextapplication.h"
+#include "blackcore/context/contextapplication.h"
 #include "blackcore/db/databasereader.h"
 #include "blackcore/settings/reader.h"
 #include "blackcore/data/globalsetup.h"
@@ -28,8 +28,8 @@ namespace BlackCore
 {
     void registerMetadata()
     {
-        qDBusRegisterMetaType<BlackCore::CLogSubscriptionHash>();
-        qDBusRegisterMetaType<BlackCore::CLogSubscriptionPair>();
+        qDBusRegisterMetaType<BlackCore::Context::CLogSubscriptionHash>();
+        qDBusRegisterMetaType<BlackCore::Context::CLogSubscriptionPair>();
         qDBusRegisterMetaType<BlackCore::INetwork::ConnectionStatus>();
         qDBusRegisterMetaType<BlackCore::INetwork::LoginMode>();
         qDBusRegisterMetaType<BlackCore::IVoiceChannel::ConnectionStatus>();

@@ -8,10 +8,10 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextsimulator.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/simulator.h"
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/guiapplication.h"
@@ -31,6 +31,7 @@
 
 using namespace BlackConfig;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackGui;
 using namespace BlackMisc;
 

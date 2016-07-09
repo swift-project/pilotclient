@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextapplication.h"
+#include "blackcore/context/contextapplication.h"
 #include "blackgui/components/registercomponent.h"
 #include "blackgui/components/updatetimer.h"
 #include "blackgui/guiapplication.h"
@@ -17,6 +17,7 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {

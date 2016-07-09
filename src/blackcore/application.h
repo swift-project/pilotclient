@@ -52,11 +52,14 @@ namespace BlackCore
     class CCoreFacade;
     class CSetupReader;
     class CWebDataServices;
-    class IContextApplication;
-    class IContextAudio;
-    class IContextNetwork;
-    class IContextOwnAircraft;
-    class IContextSimulator;
+    namespace Context
+    {
+        class IContextApplication;
+        class IContextAudio;
+        class IContextNetwork;
+        class IContextOwnAircraft;
+        class IContextSimulator;
+    }
 
     /*!
      * Our runtime. Normally one instance is to be initialized at the beginning of main, and thereafter
@@ -259,16 +262,16 @@ namespace BlackCore
 
         //! \name Direct access to contexts if a CCoreFacade has been initialized
         //! @{
-        const IContextNetwork *getIContextNetwork() const;
-        const IContextAudio *getIContextAudio() const;
-        const IContextApplication *getIContextApplication() const;
-        const IContextOwnAircraft *getIContextOwnAircraft() const;
-        const IContextSimulator *getIContextSimulator() const;
-        IContextNetwork *getIContextNetwork();
-        IContextAudio *getIContextAudio();
-        IContextApplication *getIContextApplication();
-        IContextOwnAircraft *getIContextOwnAircraft();
-        IContextSimulator *getIContextSimulator();
+        const Context::IContextNetwork *getIContextNetwork() const;
+        const Context::IContextAudio *getIContextAudio() const;
+        const Context::IContextApplication *getIContextApplication() const;
+        const Context::IContextOwnAircraft *getIContextOwnAircraft() const;
+        const Context::IContextSimulator *getIContextSimulator() const;
+        Context::IContextNetwork *getIContextNetwork();
+        Context::IContextAudio *getIContextAudio();
+        Context::IContextApplication *getIContextApplication();
+        Context::IContextOwnAircraft *getIContextOwnAircraft();
+        Context::IContextSimulator *getIContextSimulator();
         //! @}
 
         // ----------------------- direct access to some setup data ---------------------------------

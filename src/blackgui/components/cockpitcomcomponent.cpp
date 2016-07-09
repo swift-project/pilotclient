@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackgui/components/cockpitcomcomponent.h"
 #include "blackgui/components/selcalcodeselector.h"
 #include "blackgui/components/transpondercodespinbox.h"
@@ -37,6 +37,7 @@
 
 using namespace BlackGui;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;

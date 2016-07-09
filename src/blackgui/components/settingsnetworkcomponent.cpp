@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextnetwork.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackgui/components/settingsnetworkcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "ui_settingsnetworkcomponent.h"

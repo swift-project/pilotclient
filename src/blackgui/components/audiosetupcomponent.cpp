@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextaudio.h"
+#include "blackcore/context/contextaudio.h"
 #include "blackgui/components/audiosetupcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
@@ -22,6 +22,7 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackMisc::Aviation;

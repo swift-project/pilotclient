@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackgui/components/cockpittranspondermodeledscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/led.h"
@@ -21,6 +21,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {

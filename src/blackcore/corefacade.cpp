@@ -7,16 +7,16 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextapplication.h"
-#include "blackcore/contextapplicationimpl.h"
-#include "blackcore/contextaudio.h"
-#include "blackcore/contextaudioimpl.h"
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextnetworkimpl.h"
-#include "blackcore/contextownaircraft.h"
-#include "blackcore/contextownaircraftimpl.h"
-#include "blackcore/contextsimulator.h"
-#include "blackcore/contextsimulatorimpl.h"
+#include "blackcore/context/contextapplication.h"
+#include "blackcore/context/contextapplicationimpl.h"
+#include "blackcore/context/contextaudio.h"
+#include "blackcore/context/contextaudioimpl.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextnetworkimpl.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/context/contextownaircraftimpl.h"
+#include "blackcore/context/contextsimulator.h"
+#include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/registermetadata.h"
@@ -41,6 +41,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Context;
 
 namespace BlackCore
 {

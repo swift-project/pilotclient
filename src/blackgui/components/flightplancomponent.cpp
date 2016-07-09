@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextnetwork.h"
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackgui/components/flightplancomponent.h"
 #include "blackgui/components/selcalcodeselector.h"
 #include "blackgui/guiapplication.h"

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextapplication.h"
+#include "blackcore/context/contextapplication.h"
 #include "blackgui/components/hotkeydialog.h"
 #include "blackgui/components/settingshotkeycomponent.h"
 #include "blackgui/guiapplication.h"

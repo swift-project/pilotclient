@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextownaircraft.h"
+#include "blackcore/context/contextownaircraft.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/geo/coordinategeodetic.h"

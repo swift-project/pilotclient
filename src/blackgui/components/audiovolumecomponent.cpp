@@ -8,7 +8,7 @@
  */
 
 #include "audiovolumecomponent.h"
-#include "blackcore/contextaudio.h"
+#include "blackcore/context/contextaudio.h"
 #include "blackgui/components/audiovolumecomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/audio/audioutils.h"
@@ -22,6 +22,7 @@
 #include <QtGlobal>
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {

@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/contextnetwork.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackgui/components/remoteaircraftselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
@@ -25,6 +25,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
