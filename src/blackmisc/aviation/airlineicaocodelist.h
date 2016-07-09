@@ -13,7 +13,7 @@
 #define BLACKMISC_AVIATION_AIRLINEICAOCODELIST_H
 
 #include "airlineicaocode.h"
-#include "blackmisc/aviation/airlineicaocode.h"
+#include "callsign.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/db/datastoreobjectlist.h"
@@ -71,6 +71,9 @@ namespace BlackMisc
 
             //! Best selection by given pattern
             CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const;
+
+            //! Use callsign to conclude airline
+            CAirlineIcaoCode findBestMatchByCallsign(const CCallsign &callsign) const;
 
             //! String list for completion by ICAO designator
             QStringList toIcaoDesignatorCompleterStrings(bool combinedString = true, bool sort = true) const;

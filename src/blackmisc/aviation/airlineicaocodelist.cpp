@@ -119,12 +119,23 @@ namespace BlackMisc
             return icaoPattern;
         }
 
+        CAirlineIcaoCode CAirlineIcaoCodeList::findBestMatchByCallsign(const CCallsign &callsign) const
+        {
+            if (this->isEmpty() || callsign.isEmpty()) { return CAirlineIcaoCode(); }
+            const QString airline = callsign.getAirlineSuffix().toUpper();
+            if (airline.isEmpty()) { return CAirlineIcaoCode(); }
+            const CAirlineIcaoCode airlineCode = (airline.length() == 3) ?
+                                                 this->findFirstByOrDefault(&CAirlineIcaoCode::getDesignator, airline) :
+                                                 this->findFirstByOrDefault(&CAirlineIcaoCode::getVDesignator, airline);
+            return airlineCode;
+        }
+
         CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array,  bool ignoreIncomplete)
         {
             CAirlineIcaoCodeList codes;
             for (const QJsonValue &value : array)
             {
-                CAirlineIcaoCode icao(CAirlineIcaoCode::fromDatabaseJson(value.toObject()));
+                const CAirlineIcaoCode icao(CAirlineIcaoCode::fromDatabaseJson(value.toObject()));
                 if (ignoreIncomplete && !icao.hasCompleteData()) { continue; }
                 codes.push_back(icao);
             }

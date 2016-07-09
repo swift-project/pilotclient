@@ -85,7 +85,7 @@ namespace BlackMisc
             if (liveryPattern.hasValidDbKey())
             {
                 int k = liveryPattern.getDbKey();
-                CLivery l(this->findByKey(k));
+                const CLivery l(this->findByKey(k));
                 if (l.hasCompleteData()) { return l; }
             }
 
@@ -93,14 +93,14 @@ namespace BlackMisc
             if (liveryPattern.hasCombinedCode())
             {
                 QString cc(liveryPattern.getCombinedCode());
-                CLivery l(this->findByCombinedCode(cc));
+                const CLivery l(this->findByCombinedCode(cc));
                 if (l.hasCompleteData()) { return l; }
             }
 
             if (liveryPattern.hasValidAirlineDesignator())
             {
-                QString icao(liveryPattern.getAirlineIcaoCodeDesignator());
-                CLivery l(this->findStdLiveryByAirlineIcaoDesignator(icao));
+                const QString icao(liveryPattern.getAirlineIcaoCodeDesignator());
+                const CLivery l(this->findStdLiveryByAirlineIcaoDesignator(icao));
                 if (l.hasCompleteData()) { return l; }
             }
             return CLivery();

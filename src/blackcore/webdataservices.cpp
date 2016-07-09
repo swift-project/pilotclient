@@ -351,6 +351,13 @@ namespace BlackCore
         return CAirlineIcaoCode();
     }
 
+    CAirlineIcaoCode CWebDataServices::findBestMatchByCallsign(const CCallsign &callsign) const
+    {
+        if (callsign.isEmpty()) { return CAirlineIcaoCode(); }
+        const CAirlineIcaoCodeList icaos(this->getAirlineIcaoCodes());
+        return icaos.findBestMatchByCallsign(callsign);
+    }
+
     CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForDbKey(int key) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForDbKey(key); }

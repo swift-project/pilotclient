@@ -60,6 +60,10 @@ namespace BlackMisc
             //! Find by ICAO/IATA code or family
             CAircraftIcaoCodeList findByDesignatorIataOrFamily(const QString &icaoIataOrFamily) const;
 
+            //! Find code ending with string, e.g. "738" finds "B738"
+            //! \remark many users use wrong ICAO designators, one typical mistake is "738" for  "B737"
+            CAircraftIcaoCodeList findEndingWith(const QString &icaoEnding) const;
+
             //! Find by manufacturer
             CAircraftIcaoCodeList findByManufacturer(const QString &manufacturer) const;
 

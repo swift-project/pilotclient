@@ -127,6 +127,10 @@ namespace BlackCore
         //! \threadsafe
         bool hasClientInfo(const BlackMisc::Aviation::CCallsign &callsign) const;
 
+        //! Is aircraft in range?
+        //! \threadsafe
+        bool isInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
+
         //! Returns the current online ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
 
@@ -267,6 +271,9 @@ namespace BlackCore
         //! Reverse lookup messages
         //! \threadsafe
         void addReverseLookupMessage(const BlackMisc::Aviation::CCallsign &callsign, const QString &message, BlackMisc::CStatusMessage::StatusSeverity severity = BlackMisc::CStatusMessage::SeverityInfo);
+
+        //! Turn callsign into airline
+        static BlackMisc::Aviation::CAirlineIcaoCode callsignToAirline(const BlackMisc::Aviation::CCallsign &callsign);
 
     private slots:
         //! Create aircraft in range, this is the only place where a new aircraft should be added

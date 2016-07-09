@@ -24,7 +24,6 @@ namespace BlackCore
     class BLACKCORE_EXPORT CMatchingUtils
     {
     public:
-
         //! Specialized log for matching / reverse lookup
         //! \threadsafe
         static void addLogDetailsToList(

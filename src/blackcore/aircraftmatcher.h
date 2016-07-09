@@ -74,7 +74,7 @@ namespace BlackCore
 
         //! Try to find the corresponding data in DB and get best information for following matching
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModel reverseLookup(const BlackMisc::Simulation::CAircraftModel &modelToLookup, const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
+        static BlackMisc::Simulation::CAircraftModel reverselLookupModel(const BlackMisc::Simulation::CAircraftModel &modelToLookup, const QString &networkLiveryInfo, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
@@ -83,6 +83,10 @@ namespace BlackCore
         //! Try to find the DB corresponding ICAO code
         //! \threadsafe
         static BlackMisc::Aviation::CAirlineIcaoCode reverseLookupAirlineIcao(const QString &icaoDesignator, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign(), BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Lookup of standard livery
+        //! \threadsafe
+        static BlackMisc::Aviation::CLivery reverseLookupStandardLivery(const BlackMisc::Aviation::CAirlineIcaoCode &airline, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Get the models
         BlackMisc::Simulation::CAircraftModelList getModelSet() const { return m_modelSet; }

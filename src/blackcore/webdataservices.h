@@ -246,6 +246,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
 
+        //! ICAO code for callsign (e.g. DLH123 -> DLH)
+        //! \threadsafe
+        BlackMisc::Aviation::CAirlineIcaoCode findBestMatchByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
         //! Countries
         //! \threadsafe
         BlackMisc::CCountryList getCountries() const;

@@ -52,6 +52,26 @@ namespace BlackMisc
             });
         }
 
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findEndingWith(const QString &icaoEnding) const
+        {
+            QString ends = icaoEnding.trimmed().toUpper();
+            if (ends.isEmpty()) { return CAircraftIcaoCodeList(); }
+            CAircraftIcaoCodeList icaosDesignator;
+            CAircraftIcaoCodeList icaosFamily;
+            for (const CAircraftIcaoCode &icao : *this)
+            {
+                if (icao.getDesignator().endsWith(ends))
+                {
+                    icaosDesignator.push_back(icao);
+                }
+                else if (icao.getFamily().endsWith(ends))
+                {
+                    icaosFamily.push_back(icao);
+                }
+            }
+            return icaosDesignator.isEmpty() ? icaosFamily : icaosDesignator;
+        }
+
         CAircraftIcaoCodeList CAircraftIcaoCodeList::findByIataCode(const QString &iata) const
         {
             if (iata.isEmpty()) { return CAircraftIcaoCodeList(); }
@@ -219,6 +239,10 @@ namespace BlackMisc
                         codes = this->findByFamily(d);
 
                         // we have one exact match
+                        if (codes.size() == 1) { return codes.front(); }
+
+                        // now try to find as ending
+                        codes = this->findEndingWith(d);
                         if (codes.size() == 1) { return codes.front(); }
 
                         // still empty, hopeless

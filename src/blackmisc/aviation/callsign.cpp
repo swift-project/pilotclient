@@ -61,6 +61,7 @@ namespace BlackMisc
             if ("CTR" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleCenter); }
             if ("SUP" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleSup); }
             if ("OBS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleObs); }
+            if ("INS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleMnt); }
             if ("FSS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleFss); }
             if ("ATIS" == sfx) { return CIconList::iconByIndex(CIcons::AviationAtis); }
             if ("EXAM" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleMnt); }
@@ -125,6 +126,20 @@ namespace BlackMisc
             return s;
         }
 
+        QString CCallsign::getAirlineSuffix() const
+        {
+            if (this->m_callsign.length() < 3) { return ""; }
+            if (this->isAtcCallsign()) { return ""; }
+
+            static const QRegExp regExp("^[A-Z]{3,}");
+            const int pos = regExp.indexIn(this->m_callsign);
+            if (pos < 0) { return ""; }
+            const QString airline = regExp.cap(0);
+            if (airline.length() == 3) { return airline; } // we allow 3 letters
+            if (airline.length() == 4 && airline.startsWith('V')) { return airline; } // we allow virtual 4 letter codes, e.g. VDLD
+            return ""; // invalid
+        }
+
         bool CCallsign::hasSuffix() const
         {
             return this->getStringAsSet().contains('_');
@@ -187,6 +202,8 @@ namespace BlackMisc
                 return this->m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
             case IndexTelephonyDesignator:
                 return this->m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
+            case IndexSuffix:
+                return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
             default:
                 break;
             }
@@ -247,9 +264,8 @@ namespace BlackMisc
 
         const QStringList &CCallsign::atcAlikeCallsignSuffixes()
         {
-            static const QStringList a({ "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS" });
+            static const QStringList a({ "ATIS", "APP", "GND", "OBS", "TWR", "DEL", "CTR", "SUP", "FSS", "INS" });
             return a;
         }
-
     } // namespace
 } // namespace

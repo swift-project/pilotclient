@@ -167,7 +167,7 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::reverseLookup(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)
+    CAircraftModel CAircraftMatcher::reverselLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
@@ -279,8 +279,8 @@ namespace BlackCore
         const CAircraftIcaoCode icao = sApp->getWebDataServices()->smartAircraftIcaoSelector(designator);
         if (log)
         {
-            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup for ICAO '%1' found '%2'").arg(designator).arg(icao.getDesignator())); }
-            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of ICAO '%1'', nothing found").arg(designator)); }
+            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup for ICAO '%1' found '%2'").arg(designator).arg(icao.getDesignator()), CAircraftMatcher::getLogCategories()); }
+            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of ICAO '%1'', nothing found").arg(designator), CAircraftMatcher::getLogCategories()); }
         }
         return icao;
     }
@@ -291,20 +291,40 @@ namespace BlackCore
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
 
         const QString designator(icaoDesignator.trimmed().toUpper());
-        const CAirlineIcaoCode icao = sApp->getWebDataServices()->smartAirlineIcaoSelector(designator);
+        const CAirlineIcaoCode icao = sApp->getWebDataServices()->smartAirlineIcaoSelector(designator, callsign);
         if (log)
         {
-            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline '%1' found '%2'").arg(designator).arg(icao.getDesignator())); }
-            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline '%1', nothing found").arg(designator)); }
+            if (icao.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline '%1' and callsign '%2' found '%3'").arg(designator).arg(callsign.asString()).arg(icao.getDesignator()), CAircraftMatcher::getLogCategories()); }
+            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of airline '%1' and callsign '%2', nothing found").arg(designator).arg(callsign.asString()), CAircraftMatcher::getLogCategories()); }
         }
         return icao;
+    }
+
+    CLivery CAircraftMatcher::reverseLookupStandardLivery(const CAirlineIcaoCode &airline, const CCallsign &callsign, CStatusMessageList *log)
+    {
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+        Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
+
+        if (!airline.hasValidDesignator())
+        {
+            if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, "Reverse lookup of standard livery skipped, no airline designator", CAircraftMatcher::getLogCategories(), CStatusMessage::SeverityWarning); }
+            return CLivery();
+        }
+
+        const CLivery livery = sApp->getWebDataServices()->getStdLiveryForAirlineCode(airline);
+        if (log)
+        {
+            if (livery.hasValidDbKey()) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of standard livery for '%1' found '%2'").arg(airline.getDesignator()).arg(livery.getCombinedCode()), CAircraftMatcher::getLogCategories()); }
+            else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Not standard livery for airline '%1'").arg(airline.getDesignator()), CAircraftMatcher::getLogCategories()); }
+        }
+        return livery;
     }
 
     int  CAircraftMatcher::setModelSet(const CAircraftModelList &models)
     {
         CAircraftModelList modelsCleaned(models);
-        int r1 = modelsCleaned.removeAllWithoutModelString();
-        int r2 = modelsCleaned.removeIfExcluded();
+        const int r1 = modelsCleaned.removeAllWithoutModelString();
+        const int r2 = modelsCleaned.removeIfExcluded();
         if ((r1 + r2) > 0)
         {
             CLogMessage(this).warning("Removed models for matcher, without string %1, excluded %2") << r1 << r2;
