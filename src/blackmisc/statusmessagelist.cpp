@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \cond PRIVATE
+
 #include "blackmisc/compare.h"
 #include "blackmisc/range.h"
 #include "blackmisc/statusmessagelist.h"
@@ -208,3 +210,5 @@ namespace BlackMisc
         return messages;
     }
 } // ns
+
+//! \endcond

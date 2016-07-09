@@ -107,10 +107,6 @@ namespace BlackCore
             //! \copydoc IContextApplication::existsFile
             virtual bool existsFile(const QString &fileName) const override;
 
-        public:
-            //! \todo Remove with old settings
-            using IContextApplication::changeSettings;
-
         protected:
             //! Constructor
             CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);

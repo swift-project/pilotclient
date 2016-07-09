@@ -48,9 +48,6 @@ namespace BlackCore
             //! Destructor
             virtual ~CContextApplicationProxy() {}
 
-            //! \todo Remove with old settings
-            using IContextApplication::changeSettings;
-
         public slots:
             //! \copydoc IContextApplication::logMessage
             virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) override;
