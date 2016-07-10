@@ -154,13 +154,13 @@ namespace BlackGui
             if (enabled && !e.contains(selected->getIdentifier()))
             {
                 e << selected->getIdentifier();
+                m_enabledSimulators.set(e);
             }
             else if (!enabled)
             {
                 e.removeAll(selected->getIdentifier());
+                m_enabledSimulators.set(e);
             }
-
-            m_enabledSimulators.set(e);
 
             // changing of GUI state will be done via received signal
         }
