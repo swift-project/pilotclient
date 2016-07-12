@@ -24,6 +24,7 @@
 #include <functional>
 
 #include "blackcore/blackcoreexport.h"
+#include "blackcore/network.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -37,6 +38,7 @@
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/pq/angle.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
@@ -91,11 +93,11 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore = -1) const override;
         virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) override;
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
-        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) override;
-        virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) override;
-        virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
+        virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) override;
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) override;
+        virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+        virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
+        virtual void updateMarkAllAsNotRendered() override;
         virtual void enableReverseLookupMessages(bool enabled) override;
         virtual bool isReverseLookupMessagesEnabled() const override;
         virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
@@ -129,7 +131,7 @@ namespace BlackCore
 
         //! Is aircraft in range?
         //! \threadsafe
-        bool isInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
+        bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
 
         //! Returns the current online ATC stations
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
@@ -142,9 +144,6 @@ namespace BlackCore
 
         //! Clear the contents
         void clear();
-
-        //! Connection status
-        void setConnected(bool connected);
 
         //! Request to update other clients' data from the network
         void requestDataUpdates();
@@ -220,11 +219,9 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
 
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>       m_flightPlanCache;     //!< flight plan information retrieved any cached
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CAircraftModel>  m_modelTemporaryCache; //!< any model information recevived from network temporarily stored until it is "completed". Will be removed when aircraft is moved to aircraft in range
 
         INetwork            *m_network                  = nullptr; //!< corresponding network interface
         CAirspaceAnalyzer   *m_analyzer                 = nullptr; //!< owned analyzer
-        bool                 m_connected                = false;   //!< retrieve data
         bool                 m_enableReverseLookupMsgs  = false;   //!< shall we log. information about the matching process
 
         // locks
@@ -238,19 +235,31 @@ namespace BlackCore
         void removeAllOnlineAtcStations();
 
         //! Remove all aircraft in range
+        //! \threadsafe
         void removeAllAircraft();
 
         //! Remove all other clients
+        //! \threadsafe
         void removeAllOtherClients();
 
         //! Remove data from caches and logs
+        //! \threadsafe
         void removeFromAircraftCachesAndLogs(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Schedule a "ready for model matching"
-        void fireDelayedReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1, int delayMs = 2500);
+        //! Network queries for ATC
+        void sendInitialAtcQueries(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! FSD or icao query received. Here we also replace the model with a model from DB if possible (reverse lookup)
-        void icaoOrFsdDataReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery, const QString &modelString, BlackMisc::Simulation::CAircraftModel::ModelType type);
+        //! Network queries for pilots
+        void sendInitialPilotQueries(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Connected with network?
+        bool isConnected() const;
+
+        //! Distance calculation
+        BlackMisc::PhysicalQuantities::CLength calculateDistanceToOwnAircraft(const BlackMisc::Aviation::CAircraftSituation &situation) const;
+
+        //! Angle calculation
+        BlackMisc::PhysicalQuantities::CAngle calculateBearingToOwnAircraft(const BlackMisc::Aviation::CAircraftSituation &situation) const;
 
         //! Store an aircraft situation
         //! \threadsafe
@@ -259,6 +268,37 @@ namespace BlackCore
         //! Store an aircraft part
         //! \threadsafe
         void storeAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+
+        //! Add new aircraft, ignored if aircraft already exists
+        //! \remark position to own aircraft set, VATSIM data file data considered
+        //! \threadsafe
+        bool addNewAircraftinRange(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+        //! Init a new aircraft and add it or update model of existing aircraft
+        //! \threadsafe
+        BlackMisc::Simulation::CSimulatedAircraft addOrUpdateAircraftInRange(
+            const BlackMisc::Aviation::CCallsign &callsign,
+            const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString,
+            BlackMisc::Simulation::CAircraftModel::ModelType,
+            BlackMisc::CStatusMessageList *log = nullptr);
+
+        //! Update aircraft
+        //! \threadsafe
+        int updateAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
+
+        //! Add new client if not yet existing
+        //! \threadsafe
+        bool addNewClient(const BlackMisc::Network::CClient &client);
+
+        //! Update client
+        //! \threadsafe
+        int updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
+
+        //! Update online stations
+        int updateOnlineStations(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
+
+        //! Update booked stations
+        int updateBookedStations(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
         //! Reverse lookup messages
         //! \threadsafe
@@ -270,10 +310,16 @@ namespace BlackCore
 
         //! Reverse lookup messages
         //! \threadsafe
-        void addReverseLookupMessage(const BlackMisc::Aviation::CCallsign &callsign, const QString &message, BlackMisc::CStatusMessage::StatusSeverity severity = BlackMisc::CStatusMessage::SeverityInfo);
+        void addReverseLookupMessage(
+            const BlackMisc::Aviation::CCallsign &callsign, const QString &message,
+            BlackMisc::CStatusMessage::StatusSeverity severity = BlackMisc::CStatusMessage::SeverityInfo);
 
-        //! Turn callsign into airline
-        static BlackMisc::Aviation::CAirlineIcaoCode callsignToAirline(const BlackMisc::Aviation::CCallsign &callsign);
+        //! Init a new aircraft
+        //! \threadsafe
+        static BlackMisc::Simulation::CSimulatedAircraft initNewAircraft(
+            const BlackMisc::Aviation::CCallsign &callsign,
+            const QString &aircraftIcao, const QString &airlineIcao, const QString &livery,
+            const QString &modelString, BlackMisc::Simulation::CAircraftModel::ModelType type, BlackMisc::CStatusMessageList *log = nullptr);
 
     private slots:
         //! Create aircraft in range, this is the only place where a new aircraft should be added
@@ -284,13 +330,15 @@ namespace BlackCore
 
         //! Send the information if aircraft and(!) client are available
         //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
-        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial);
+        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign, int trial = 1);
+
+        //! Receive FSInn packet
+        //! \remark This can happen even without a query before
+        void ps_customFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
 
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void ps_customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
         void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
-        void ps_metarReceived(const QString &metarMessage);
         void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
         void ps_atcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
@@ -303,6 +351,7 @@ namespace BlackCore
         void ps_receivedDataFile();
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
         void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
+        void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
     };
 } // namespace
 
