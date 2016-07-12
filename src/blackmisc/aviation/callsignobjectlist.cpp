@@ -45,9 +45,9 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        int ICallsignObjectList<OBJ, CONTAINER>::applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap)
+        int ICallsignObjectList<OBJ, CONTAINER>::applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap, bool skipEqualValues)
         {
-            return this->container().applyIf(&OBJ::getCallsign, callsign, variantMap);
+            return this->container().applyIf(&OBJ::getCallsign, callsign, variantMap, skipEqualValues);
         }
 
         template <class OBJ, class CONTAINER>
