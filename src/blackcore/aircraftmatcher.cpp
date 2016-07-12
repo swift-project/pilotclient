@@ -167,15 +167,34 @@ namespace BlackCore
         return matchedModel;
     }
 
+    CAircraftModel CAircraftMatcher::reverselLookupModel(const CCallsign &callsign, const QString &networkAircraftIcao, const QString &networkAirlineIcao, const QString &networkLiveryInfo, const QString &networkModelString, CAircraftModel::ModelType type, CStatusMessageList *log)
+    {
+        CLivery livery;
+        livery.setAirlineIcaoCode(networkAirlineIcao);
+        CAircraftModel model(networkModelString, type, "", CAircraftIcaoCode(networkAircraftIcao), livery);
+        model.setCallsign(callsign);
+        model = CAircraftMatcher::reverselLookupModel(model, networkLiveryInfo, log);
+        return model;
+    }
+
     CAircraftModel CAircraftMatcher::reverselLookupModel(const CAircraftModel &modelToLookup, const QString &networkLiveryInfo, CStatusMessageList *log)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "No web services");
 
         // already DB model?
+        CAircraftModel model(modelToLookup);
         if (modelToLookup.hasValidDbKey() && modelToLookup.getModelType() == CAircraftModel::TypeDatabaseEntry) { return modelToLookup; }
 
-        CAircraftModel model(modelToLookup);
+        // --- now I try to fill in as many DB data as possible ---
+        // 1) This will unify data where possible
+        // 2) I have full information of what the other pilot flies where possible
+        // 3) This is not model matching here (!), it is a process of getting the most accurate data from that fuzzy information I get via FSD
+        //
+        // reverse lookup, use DB data wherever possible
+        // 1) If I cannot resolce the ICAO codes here, they are either wrong (most likely in most cases) or
+        // 2) not in the DB yet
+
         const CCallsign callsign(model.getCallsign());
         const QStringList liveryModelStrings = CAircraftModel::splitNetworkLiveryString(networkLiveryInfo);
         const QString modelString(modelToLookup.hasModelString() ? modelToLookup.getModelString() : liveryModelStrings[1]);
@@ -196,13 +215,23 @@ namespace BlackCore
             }
         }
 
-        // only if not yet matched with DB
-        const QString aircraftIcaoDesignator(model.getAircraftIcaoCodeDesignator());
-        const QString airlineIcaoDesignator(model.getAirlineIcaoCodeDesignator());
         if (!model.hasValidDbKey())
         {
+            // only if not yet matched with DB
+            CAircraftIcaoCode aircraftIcaoUsedForLookup(model.getAircraftIcaoCode());
+            CAirlineIcaoCode airlineIcaoUsedForLookup(model.getAirlineIcaoCode());
+            if (!aircraftIcaoUsedForLookup.hasValidDbKey())
+            {
+                aircraftIcaoUsedForLookup = CAircraftMatcher::reverseLookupAircraftIcao(aircraftIcaoUsedForLookup.getDesignator(), callsign, log);
+            }
+
+            if (!airlineIcaoUsedForLookup.hasValidDbKey())
+            {
+                airlineIcaoUsedForLookup = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcaoUsedForLookup.getDesignator(), callsign, log);
+            }
+
             // try to match by livery
-            if (liveryCode.isEmpty() && !airlineIcaoDesignator.isEmpty())
+            if (liveryCode.isEmpty() && airlineIcaoUsedForLookup.hasValidDesignator())
             {
                 // we create a standard livery code, then we try to find based on this
                 liveryCode = CLivery::getStandardCode(model.getAirlineIcaoCode());
@@ -211,7 +240,7 @@ namespace BlackCore
             if (CLivery::isValidCombinedCode(liveryCode))
             {
                 // search DB model by livery
-                const CAircraftModelList models(sApp->getWebDataServices()->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoDesignator, liveryCode));
+                const CAircraftModelList models(sApp->getWebDataServices()->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftIcaoUsedForLookup.getDesignator(), liveryCode));
                 if (models.isEmpty())
                 {
                     // no models for that livery, search for livery only
@@ -220,14 +249,14 @@ namespace BlackCore
                     {
                         // we have found a livery in the DB
                         model.setLivery(databaseLivery);
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup, set livery to '%1'").arg(databaseLivery.getCombinedCodePlusInfo()), getLogCategories()); }
+                        if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of livery '%1'").arg(databaseLivery.getCombinedCodePlusInfo()), getLogCategories()); }
                     }
                 }
                 else
                 {
                     // model by livery data found
                     model = models.front();
-                    if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup, DB model '%1' for '%2'/'%3'', found '%4'").arg(model.getDbKey()).arg(aircraftIcaoDesignator).arg(liveryCode).arg(models.size()), getLogCategories()); }
+                    if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup of DB model '%1' for '%2'/'%3'', found '%4'").arg(model.getDbKey()).arg(aircraftIcaoUsedForLookup.getDesignator()).arg(liveryCode).arg(models.size()), getLogCategories()); }
                 }
             }
 
@@ -235,16 +264,16 @@ namespace BlackCore
             if (!model.hasValidDbKey() && !model.getLivery().hasValidDbKey())
             {
                 // create a pseudo livery, try to find airline first
-                CAirlineIcaoCode airlineIcao(sApp->getWebDataServices()->smartAirlineIcaoSelector(CAirlineIcaoCode(airlineIcaoDesignator)));
-                if (!airlineIcao.hasValidDbKey())
+                CAirlineIcaoCode reverseAirlineIcao(sApp->getWebDataServices()->smartAirlineIcaoSelector(CAirlineIcaoCode(airlineIcaoUsedForLookup.getDesignator())));
+                if (!reverseAirlineIcao.hasValidDbKey())
                 {
                     // no DB data, we update as much as possible
-                    airlineIcao = model.getAirlineIcaoCode();
-                    airlineIcao.updateMissingParts(CAirlineIcaoCode(airlineIcaoDesignator));
+                    reverseAirlineIcao = model.getAirlineIcaoCode();
+                    reverseAirlineIcao.updateMissingParts(CAirlineIcaoCode(airlineIcaoUsedForLookup));
                 }
-                if (!airlineIcaoDesignator.isEmpty())
+                if (airlineIcaoUsedForLookup.hasValidDesignator())
                 {
-                    const CLivery liveryDummy(CLivery::getStandardCode(airlineIcao), airlineIcao, "Generated");
+                    const CLivery liveryDummy(CLivery::getStandardCode(reverseAirlineIcao), reverseAirlineIcao, "Generated");
                     model.setLivery(liveryDummy);
                     if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup, set dummy livery `%1`").arg(liveryDummy.getCombinedCodePlusInfo())); }
                 }
@@ -252,21 +281,32 @@ namespace BlackCore
 
             if (!model.getAircraftIcaoCode().hasValidDbKey())
             {
-                CAircraftIcaoCode aircraftIcao(sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(aircraftIcaoDesignator));
-                if (!aircraftIcao.hasValidDbKey())
+                CAircraftIcaoCode reverseAircraftIcao(sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(aircraftIcaoUsedForLookup.getDesignator()));
+                if (!reverseAircraftIcao.hasValidDbKey())
                 {
                     // no DB data, we update as much as possible
-                    aircraftIcao = model.getAircraftIcaoCode();
-                    aircraftIcao.updateMissingParts(CAircraftIcaoCode(aircraftIcaoDesignator));
-                    if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup, aircraft '%1' not found in DB").arg(aircraftIcaoDesignator)); }
+                    reverseAircraftIcao = model.getAircraftIcaoCode();
+                    reverseAircraftIcao.updateMissingParts(CAircraftIcaoCode(aircraftIcaoUsedForLookup));
+                    if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup, aircraft '%1' not found in DB").arg(reverseAircraftIcao.getDesignator())); }
                 }
-                model.setAircraftIcaoCode(aircraftIcao);
-                if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup, set aircraft to '%1'").arg(aircraftIcao.getCombinedIcaoStringWithKey())); }
+                if (reverseAircraftIcao.hasDesignator())
+                {
+                    model.setAircraftIcaoCode(reverseAircraftIcao);
+                    if (log) { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Reverse lookup, set aircraft ICAO to '%1'").arg(reverseAircraftIcao.getCombinedIcaoStringWithKey())); }
+                }
             }
         } // model from DB
 
-        if (model.getModelType() != CAircraftModel::TypeUnknown) { model.setModelType(modelToLookup.getModelType()); }
-        model.setCallsign(modelToLookup.getCallsign());
+        model.setCallsign(callsign);
+        if (log)
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Uisng model: ICAO '%1', livery '%2', model '%3', type '%4'").
+                                                arg(model.getAircraftIcaoCode().getCombinedIcaoStringWithKey()).
+                                                arg(model.getLivery().getCombinedCodePlusInfo()).
+                                                arg(model.getModelString()).
+                                                arg(model.getModelTypeAsString())
+                                               );
+        }
         return model;
     }
 
@@ -318,6 +358,22 @@ namespace BlackCore
             else { CMatchingUtils::addLogDetailsToList(log, callsign, QString("Not standard livery for airline '%1'").arg(airline.getDesignator()), CAircraftMatcher::getLogCategories()); }
         }
         return livery;
+    }
+
+    CAirlineIcaoCode CAircraftMatcher::callsignToAirline(const CCallsign &callsign, CStatusMessageList *log)
+    {
+        if (callsign.isEmpty() || !sApp || !sApp->getWebDataServices()) { return CAirlineIcaoCode(); }
+        const CAirlineIcaoCode icao = sApp->getWebDataServices()->findBestMatchByCallsign(callsign);
+
+        if (icao.hasValidDesignator())
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Turned callsign %1 into airline %2").arg(callsign.asString()).arg(icao.getDesignator()), getLogCategories());
+        }
+        else
+        {
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Cannot turn callsign %1 into airline").arg(callsign.asString()), getLogCategories());
+        }
+        return icao;
     }
 
     int  CAircraftMatcher::setModelSet(const CAircraftModelList &models)
