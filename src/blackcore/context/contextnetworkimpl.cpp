@@ -440,7 +440,7 @@ namespace BlackCore
             m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance, maxRenderedBoundary);
         }
 
-        void CContextNetwork::ps_updateMetars(const BlackMisc::Weather::CMetarSet &metars)
+        void CContextNetwork::ps_updateMetars(const BlackMisc::Weather::CMetarList &metars)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             CLogMessage(this).info("%1 METARs updated") << metars.size();
