@@ -61,11 +61,8 @@ namespace BlackMisc
             //! Set the voice channel
             void setChannel(const QString &channel) { m_channel = channel; }
 
-            /*!
-             * Server URL
-             * \param noProtocol either with (pseudo) protocol prefix or without
-             * \return
-             */
+            //! Server URL
+            //! \param noProtocol either with (pseudo) protocol prefix or without
             QString getVoiceRoomUrl(bool noProtocol = true) const;
 
             //! Set voice room URL
@@ -98,10 +95,8 @@ namespace BlackMisc
             //! Protocol prefix "vvl"
             static const QString &protocol() { static QString p("vvl"); return p; }
 
-            /*!
-             * Protocol
-             * \return with protocol prefix or without
-             */
+            //! Protocol
+            //! \return with protocol prefix or without
             static const QString &protocolComplete() { static QString p("vvl://"); return p; }
 
             //! \copydoc BlackMisc::Mixin::String::toQString
