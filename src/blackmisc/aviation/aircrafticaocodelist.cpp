@@ -216,7 +216,9 @@ namespace BlackMisc
 
             // get an initial set of data we can choose from
             CAircraftIcaoCodeList codes;
-            if (icaoPattern.hasKnownDesignator())
+
+            // try all designators, even unvalid ones
+            if (!icaoPattern.getDesignator().isEmpty())
             {
                 const QString d(icaoPattern.getDesignator());
                 codes = this->findByDesignator(d);
