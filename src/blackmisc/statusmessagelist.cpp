@@ -169,10 +169,19 @@ namespace BlackMisc
     {
         if (indexes.isEmpty() || this->isEmpty()) { return ""; }
         QString html;
+        int line = 1;
+        const bool withLineNumbers = indexes.contains(CPropertyIndex::GlobalIndexLineNumber);
+        CPropertyIndexList usedIndexes(indexes);
+        if (withLineNumbers) { usedIndexes.remove(CPropertyIndex::GlobalIndexLineNumber); }
         for (const CStatusMessage &statusMessage : *this)
         {
             QString rowHtml;
-            for (const CPropertyIndex index : indexes)
+            if (withLineNumbers)
+            {
+                rowHtml += "<td>" + QString::number(line++) + "</td>";
+            }
+
+            for (const CPropertyIndex index : usedIndexes)
             {
                 rowHtml += "<td>" + statusMessage.propertyByIndex(index).toQString(true) + "</td>";
             }
