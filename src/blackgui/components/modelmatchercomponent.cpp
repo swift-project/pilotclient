@@ -169,10 +169,10 @@ namespace BlackGui
             const CLivery l(liveryCombinedCode.isEmpty() ? CLivery::getStandardCode(al) : liveryCombinedCode,
                             al,
                             "Standard");
-            CAircraftModel m(modelString, CAircraftModel::TypeFsdData);
+            CAircraftModel m(modelString, CAircraftModel::TypeFSInnData);
             m.setLivery(l);
             m.setCallsign(cs);
-            m.setModelType(CAircraftModel::TypeFsdData);
+            m.setModelType(CAircraftModel::TypeFSInnData);
             CSimulatedAircraft sa(m);
             sa.setPilot(pilot);
             sa.setAircraftIcaoCode(icao);

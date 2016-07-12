@@ -61,7 +61,7 @@ namespace BlackMisc
             {
                 TypeUnknown,
                 TypeQueriedFromNetwork,        //!< model was queried by network protocol
-                TypeFsdData,                   //!< model based on FSD ICAO data
+                TypeFSInnData,                   //!< model based on FSD ICAO data
                 TypeModelMatching,             //!< model is result of model matching
                 TypeModelMatchingDefaultModel, //!< a default model assigned by model matching
                 TypeDatabaseEntry,             //!< used along with mapping definition

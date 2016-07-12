@@ -909,7 +909,7 @@ namespace BlackCore
                 {
                     // It doesn't matter whether it was a query or response. The information
                     // is the same for both.
-                    emit customFSinnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+                    emit customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
                 }
             }
             else if (packetId.compare("FSIPIR", Qt::CaseInsensitive) == 0)
@@ -923,7 +923,7 @@ namespace BlackCore
                     sendCustomFsinnReponse(callsign);
                     // It doesn't matter whether it was a query or response. The information
                     // is the same for both.
-                    emit customFSinnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+                    emit customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
                 }
             }
         }

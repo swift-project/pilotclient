@@ -106,7 +106,7 @@ namespace BlackMisc
         bool CAircraftModel::canInitializeFromFsd() const
         {
             const bool nw = this->getModelType() == CAircraftModel::TypeQueriedFromNetwork ||
-                            this->getModelType() == CAircraftModel::TypeFsdData ||
+                            this->getModelType() == CAircraftModel::TypeFSInnData ||
                             this->getModelType() == CAircraftModel::TypeUnknown;
             return nw;
         }
@@ -493,7 +493,7 @@ namespace BlackMisc
             case TypeModelMatchingDefaultModel: return "map. default";
             case TypeOwnSimulatorModel: return "own simulator";
             case TypeManuallySet: return "set";
-            case TypeFsdData: return "FSD";
+            case TypeFSInnData: return "FSInn";
             case TypeUnknown:
             default: return "unknown";
             }

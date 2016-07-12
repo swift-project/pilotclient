@@ -514,7 +514,7 @@ namespace BlackCore
         /*!
          * We received an FSInn custom packet.
          */
-        void customFSinnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+        void customFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
                                        const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
 
         //! We received a aircraft config packet
