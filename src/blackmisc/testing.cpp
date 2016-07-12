@@ -35,7 +35,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAtcStationList CTesting::createAtcStations(int number, bool byPropertyIndex)
         {
             CAtcStationList atcs;
@@ -71,14 +70,14 @@ namespace BlackMisc
                 station.setPropertyByIndex(CAtcStation::IndexIsOnline, CVariant::from(false));
                 station.setPropertyByIndex(CAtcStation::IndexBookedFrom, CVariant::from(dtFrom));
                 station.setPropertyByIndex(CAtcStation::IndexBookedUntil, CVariant::from(dtUntil));
-                station.setPropertyByIndex(CAtcStation::IndexDistanceToOwnAircraft, CVariant::from(CLength(index + 1, CLengthUnit::NM())));
+                station.setPropertyByIndex(CAtcStation::IndexRelativeDistance, CVariant::from(CLength(index + 1, CLengthUnit::NM())));
             }
             else
             {
                 station = CAtcStation(CCallsign(cs), user,
                                       CFrequency(f, CFrequencyUnit::MHz()),
                                       geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
-                station.setDistanceToOwnAircraft(CLength(index + 1, CLengthUnit::NM()));
+                station.setRelativeDistance(CLength(index + 1, CLengthUnit::NM()));
             }
 
             station.setVoiceRoomUrl("vvl://foo.bar.baz/room" + QString::number(index));
@@ -102,7 +101,7 @@ namespace BlackMisc
                 r.append(station.propertyByIndex({ CAtcStation::IndexController, CUser::IndexRealName}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toQString());
-                r.append(station.propertyByIndex({ CAtcStation::IndexDistanceToOwnAircraft, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
+                r.append(station.propertyByIndex({ CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexBookedFrom}).toDateTime().toString("YYYY-mm-dd hh:mm"));
                 r.append(station.propertyByIndex({ CAtcStation::IndexBookedUntil}).toDateTime().toString("YYYY-mm-dd hh:mm"));
             }
@@ -112,7 +111,7 @@ namespace BlackMisc
                 r.append(station.getController().getRealName());
                 r.append(station.getPosition().latitudeAsString());
                 r.append(station.getPosition().longitudeAsString());
-                r.append(station.getDistanceToOwnAircraft().toQString(true));
+                r.append(station.getRelativeDistance().toQString(true));
                 r.append(station.getBookedFromUtc().toString("YYYY-mm-dd hh:mm"));
                 r.append(station.getBookedUntilUtc().toString("YYYY-mm-dd hh:mm"));
             }
@@ -138,7 +137,7 @@ namespace BlackMisc
             for (int i = 0; i < n; i++)
             {
                 int p = i % s;
-                atc.calculcateDistanceToOwnAircraft(pos.at(p));
+                atc.calculcateAndUpdateRelativeDistance(pos.at(p));
             }
         }
 
@@ -172,6 +171,5 @@ namespace BlackMisc
                 c = CCoordinateGeodetic::fromWgs84(wgsLatLng.at(idx), wgsLatLng.at(idx + 1), h);
             }
         }
-
     } // namespace
 } // namespace

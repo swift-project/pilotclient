@@ -107,8 +107,10 @@ namespace BlackMisc
             GlobalIndexCVisibilityLayer                 =  4600,
             GlobalIndexCWeatherScenario                 =  4700,
             GlobalIndexICoordinateGeodetic              =  5000,
-            GlobalIndexCCoordinateGeodetic              =  5100,
+            GlobalIndexICoordinateWithRelativePosition  =  5100,
+            GlobalIndexCCoordinateGeodetic              =  5200,
             GlobalIndexCClient                          =  6000,
+            GlobalIndexClientCapabilities               =  6050, //!< used with map key
             GlobalIndexCUser                            =  6100,
             GlobalIndexCAuthenticatedUser               =  6200,
             GlobalIndexCRole                            =  6300,

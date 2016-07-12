@@ -75,7 +75,7 @@ namespace BlackMiscTest
         QVERIFY2(station1 == station1, "Station should be equal");
 
         QVERIFY(station1.getController() == station2.getController());
-        QVERIFY(station1.getDistanceToOwnAircraft() == station2.getDistanceToOwnAircraft());
+        QVERIFY(station1.getRelativeDistance() == station2.getRelativeDistance());
 
         QVERIFY2(station1 == station2, "Station should be equal");
         QVERIFY2(station1 != station3, "Station should not be equal");

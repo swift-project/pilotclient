@@ -50,7 +50,6 @@ namespace BlackMisc
             //! Find 0..n objects within range of given coordinate
             //! \param coordinate    other position
             //! \param range         within range of other position
-            //! \return
             CONTAINER findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
             //! Find 0..n objects closest to the given coordinate.
@@ -95,7 +94,7 @@ namespace BlackMisc
             void removeIfOutsideRange(const BlackMisc::Geo::ICoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &maxDistance, bool updateValues);
 
             //! Calculate distances
-            void calculcateDistanceAndBearingToPosition(const BlackMisc::Geo::ICoordinateGeodetic &position);
+            void calculcateAndUpdateRelativeDistanceAndBearing(const BlackMisc::Geo::ICoordinateGeodetic &position);
 
         protected:
             //! Constructor

@@ -16,10 +16,12 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/comparefunctions.h"
 
 #include <QCoreApplication>
 #include <QtGlobal>
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
@@ -133,12 +135,12 @@ namespace BlackMisc
             s.append(this->m_range.toQString(i18n));
 
             // distance to plane
-            if (this->m_distanceToOwnAircraft.isPositiveWithEpsilonConsidered())
+            if (this->m_relativeDistance.isPositiveWithEpsilonConsidered())
             {
                 s.append(' ');
                 i18n ? s.append(QCoreApplication::translate("Aviation", "distance")) : s.append("distance");
                 s.append(' ');
-                s.append(this->m_distanceToOwnAircraft.toQString(i18n));
+                s.append(this->m_relativeDistance.toQString(i18n));
             }
 
             // from / to
@@ -260,22 +262,22 @@ namespace BlackMisc
 
             // both ways
             this->syncronizeControllerData(bookedStation);
-            if (this->hasValidDistance())
+            if (this->hasValidRelativeDistance())
             {
-                bookedStation.setDistanceToOwnAircraft(this->getDistanceToOwnAircraft());
-                bookedStation.setBearingToOwnAircraft(this->getBearingToOwnAircraft());
+                bookedStation.setRelativeDistance(this->getRelativeDistance());
+                bookedStation.setRelativeBearing(this->getRelativeBearing());
             }
-            else if (bookedStation.hasValidDistance())
+            else if (bookedStation.hasValidRelativeDistance())
             {
-                this->setDistanceToOwnAircraft(bookedStation.getDistanceToOwnAircraft());
-                this->setBearingToOwnAircraft(bookedStation.getBearingToOwnAircraft());
+                this->setRelativeDistance(bookedStation.getRelativeDistance());
+                this->setRelativeBearing(bookedStation.getRelativeBearing());
             }
         }
 
         bool CAtcStation::isInRange() const
         {
-            if (m_range.isNull() || !hasValidDistance()) { return false; }
-            return (this->getDistanceToOwnAircraft() <= m_range);
+            if (m_range.isNull() || !hasValidRelativeDistance()) { return false; }
+            return (this->getRelativeDistance() <= m_range);
         }
 
         bool CAtcStation::hasValidBookingTimes() const
@@ -373,8 +375,6 @@ namespace BlackMisc
                 return CVariant::from(this->m_isOnline);
             case IndexLatitude:
                 return this->latitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexDistanceToOwnAircraft:
-                return this->m_distanceToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude:
                 return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexPosition:
@@ -390,8 +390,9 @@ namespace BlackMisc
             case IndexVoiceRoom:
                 return this->m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
             default:
-                if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
-                return CValueObject::propertyByIndex(index);
+                return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
+                       ICoordinateWithRelativePosition::propertyByIndex(index) :
+                       CValueObject::propertyByIndex(index);
             }
         }
 
@@ -425,9 +426,6 @@ namespace BlackMisc
             case IndexRange:
                 this->m_range.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
-            case IndexDistanceToOwnAircraft:
-                this->m_distanceToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
             case IndexAtis:
                 this->m_atis.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
@@ -438,9 +436,61 @@ namespace BlackMisc
                 this->m_voiceRoom.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             default:
-                CValueObject::setPropertyByIndex(index, variant);
+                if (ICoordinateWithRelativePosition::canHandleIndex(index))
+                {
+                    ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
+                }
+                else
+                {
+                    CValueObject::setPropertyByIndex(index, variant);
+                }
                 break;
             }
+        }
+
+        int CAtcStation::comparePropertyByIndex(const CPropertyIndex &index, const CAtcStation &compareValue) const
+        {
+            if (index.isMyself()) { return this->getCallsign().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign()); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexBookedFrom:
+                return Compare::compare(this->getBookedFromUtc(), compareValue.getBookedFromUtc());
+            case IndexBookedUntil:
+                return Compare::compare(this->getBookedUntilUtc(), compareValue.getBookedUntilUtc());
+            case IndexCallsign:
+                return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+            case IndexController:
+                return this->m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
+            case IndexFrequency:
+                return this->m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
+            case IndexIsOnline:
+                return Compare::compare(this->isOnline(), compareValue.isOnline());
+            case IndexLatitude:
+                return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+            case IndexLongitude:
+                return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
+            case IndexPosition:
+                return this->m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
+            case IndexRange:
+                return this->m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
+            case IndexIsInRange:
+                return Compare::compare(this->isInRange(), compareValue.isInRange());
+            case IndexAtis:
+                return this->m_atis.getMessage().compare(compareValue.getAtis().getMessage());
+            case IndexMetar:
+                return this->m_metar.getMessage().compare(compareValue.getMetar().getMessage());
+            case IndexVoiceRoom:
+                return this->getVoiceRoom().getVoiceRoomUrl().compare(compareValue.getVoiceRoom().getVoiceRoomUrl());
+            default:
+                if (ICoordinateWithRelativePosition::canHandleIndex(index))
+                {
+                    return ICoordinateWithRelativePosition::comparePropertyByIndex(index, compareValue);
+                }
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
+            return 0;
         }
     } // namespace
 } // namespace

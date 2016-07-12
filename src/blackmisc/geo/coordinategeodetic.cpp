@@ -24,7 +24,6 @@ namespace BlackMisc
 {
     namespace Geo
     {
-
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
             QString s = "Geodetic: {%1, %2, %3}";
@@ -74,7 +73,7 @@ namespace BlackMisc
             return Geo::calculateGreatCircleDistance((*this), otherCoordinate);
         }
 
-        CAngle ICoordinateGeodetic::bearing(const ICoordinateGeodetic &otherCoordinate) const
+        CAngle ICoordinateGeodetic::calculateBearing(const ICoordinateGeodetic &otherCoordinate) const
         {
             return Geo::calculateBearing((*this), otherCoordinate);
         }
@@ -112,8 +111,37 @@ namespace BlackMisc
             }
 
             const QString m = QString("no property, index ").append(index.toQString());
-            Q_ASSERT_X(false, "ICoordinateGeodetic", m.toLocal8Bit().constData());
+            Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
             return CVariant::fromValue(m);
+        }
+
+        int ICoordinateGeodetic::comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateGeodetic &compareValue) const
+        {
+            if (!index.isMyself())
+            {
+                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                switch (i)
+                {
+                case IndexLatitude:
+                    return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+                case IndexLongitude:
+                    return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
+                case IndexLatitudeAsString:
+                    return this->latitudeAsString().compare(compareValue.latitudeAsString());
+                case IndexLongitudeAsString:
+                    return this->longitudeAsString().compare(compareValue.longitudeAsString());
+                case IndexGeodeticHeight:
+                    return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
+                case IndexGeodeticHeightAsString:
+                    return this->geodeticHeightAsString().compare(compareValue.geodeticHeightAsString());
+                default:
+                    break;
+                }
+            }
+
+            const QString m = QString("no property, index ").append(index.toQString());
+            Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+            return 0;
         }
 
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -217,23 +245,89 @@ namespace BlackMisc
             return *this;
         }
 
-        CLength ICoordinateWithRelativePosition::calculcateDistanceToOwnAircraft(const ICoordinateGeodetic &position, bool updateValues)
+        CLength ICoordinateWithRelativePosition::calculcateAndUpdateRelativeDistance(const ICoordinateGeodetic &position)
         {
-            if (!updateValues) { return Geo::calculateGreatCircleDistance(*this, position); }
-            this->m_distanceToOwnAircraft = Geo::calculateGreatCircleDistance(*this, position);
-            return this->m_distanceToOwnAircraft;
+            this->m_relativeDistance = Geo::calculateGreatCircleDistance(*this, position);
+            return this->m_relativeDistance;
         }
 
-        CLength ICoordinateWithRelativePosition::calculcateDistanceAndBearingToOwnAircraft(const ICoordinateGeodetic &position, bool updateValues)
+        CLength ICoordinateWithRelativePosition::calculcateAndUpdateRelativeDistanceAndBearing(const ICoordinateGeodetic &position)
         {
-            if (!updateValues) { return Geo::calculateGreatCircleDistance(*this, position); }
-            this->m_distanceToOwnAircraft = Geo::calculateGreatCircleDistance(*this, position);
-            this->m_bearingToOwnAircraft = Geo::calculateBearing(*this, position);
-            return this->m_distanceToOwnAircraft;
+            this->m_relativeDistance = Geo::calculateGreatCircleDistance(*this, position);
+            this->m_relativeBearing = Geo::calculateBearing(*this, position);
+            return this->m_relativeDistance;
+        }
+
+        CVariant ICoordinateWithRelativePosition::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
+            if (!index.isMyself())
+            {
+                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                switch (i)
+                {
+                case IndexRelativeBearing:
+                    return this->getRelativeBearing().propertyByIndex(index.copyFrontRemoved());
+                case IndexRelativeDistance:
+                    return this->getRelativeDistance().propertyByIndex(index.copyFrontRemoved());
+                default:
+                    break;
+                }
+            }
+            const QString m = QString("no property, index ").append(index.toQString());
+            Q_ASSERT_X(false, "ICoordinateWithRelativePosition", m.toLocal8Bit().constData());
+            return CVariant::fromValue(m);
+        }
+
+        void ICoordinateWithRelativePosition::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        {
+            if (!index.isMyself())
+            {
+                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                switch (i)
+                {
+                case IndexRelativeBearing:
+                    this->m_relativeBearing.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                    break;
+                case IndexRelativeDistance:
+                    this->m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                    break;
+                default:
+                    const QString m = QString("no property, index ").append(index.toQString());
+                    Q_ASSERT_X(false, "ICoordinateWithRelativePosition", m.toLocal8Bit().constData());
+                    break;
+                }
+            }
+        }
+
+        int ICoordinateWithRelativePosition::comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateWithRelativePosition &compareValue) const
+        {
+            if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue); }
+            if (!index.isMyself())
+            {
+                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                switch (i)
+                {
+                case IndexRelativeBearing:
+                    return this->m_relativeBearing.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeBearing());
+                case IndexRelativeDistance:
+                    return this->m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
+                default:
+                    const QString m = QString("no property, index ").append(index.toQString());
+                    Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+                    break;
+                }
+            }
+            return 0;
         }
 
         ICoordinateWithRelativePosition::ICoordinateWithRelativePosition()
         { }
 
+        bool ICoordinateWithRelativePosition::canHandleIndex(const CPropertyIndex &index)
+        {
+            int i = index.frontCasted<int>();
+            return (i >= static_cast<int>(IndexRelativeDistance)) && (i <= static_cast<int>(IndexRelativeBearing));
+        }
     } // namespace
 } // namespace

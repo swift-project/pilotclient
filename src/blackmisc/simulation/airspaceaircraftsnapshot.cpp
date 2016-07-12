@@ -72,7 +72,7 @@ namespace BlackMisc
                 CCallsign cs(currentAircraft.getCallsign());
                 if (currentAircraft.isEnabled())
                 {
-                    CLength distance(currentAircraft.getDistanceToOwnAircraft());
+                    CLength distance(currentAircraft.getRelativeDistance());
                     if (count >= maxAircraft ||
                             (!maxRenderedDistance.isNull() && distance >= maxRenderedBoundary) ||
                             (!maxRenderedBoundary.isNull() && distance >= maxRenderedBoundary))

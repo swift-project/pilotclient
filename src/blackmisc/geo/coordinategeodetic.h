@@ -32,7 +32,6 @@ namespace BlackMisc
 {
     namespace Geo
     {
-
         //! Geodetic coordinate
         //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
         //! \sa http://http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf (page 5)
@@ -76,9 +75,6 @@ namespace BlackMisc
             //! Normal vector with double precision
             virtual std::array<double, 3> normalVectorDouble() const = 0;
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
-
             //! Latitude as string
             QString latitudeAsString() const { return this->latitude().toQString(true); }
 
@@ -92,7 +88,13 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! Initial bearing
-            BlackMisc::PhysicalQuantities::CAngle bearing(const ICoordinateGeodetic &otherCoordinate) const;
+            BlackMisc::PhysicalQuantities::CAngle calculateBearing(const ICoordinateGeodetic &otherCoordinate) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateGeodetic &compareValue) const;
 
         protected:
             //! Can given index be handled?
@@ -111,48 +113,64 @@ namespace BlackMisc
         //! Euclidean distance squared between normal vectors, use for more efficient sorting by distance
         BLACKMISC_EXPORT double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
-        //! Interface (actually more an abstract class) of coordinate and
-        //! relative position to own aircraft
+        //! Interface (actually more an abstract class) of coordinates and relative position to something (normally own aircraft)
         class BLACKMISC_EXPORT ICoordinateWithRelativePosition : public ICoordinateGeodetic
         {
         public:
-            //! Get the distance to own plane
-            const BlackMisc::PhysicalQuantities::CLength &getDistanceToOwnAircraft() const { return m_distanceToOwnAircraft; }
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexRelativeDistance = BlackMisc::CPropertyIndex::GlobalIndexICoordinateWithRelativePosition,
+                IndexRelativeBearing
+            };
 
-            //! Set distance to own plane
-            void setDistanceToOwnAircraft(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToOwnAircraft = distance; }
+            //! Get the distance
+            const BlackMisc::PhysicalQuantities::CLength &getRelativeDistance() const { return m_relativeDistance; }
 
-            //! Get the bearing to own plane
-            const BlackMisc::PhysicalQuantities::CAngle &getBearingToOwnAircraft() const { return m_bearingToOwnAircraft; }
+            //! Set relative distance
+            void setRelativeDistance(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_relativeDistance = distance; }
+
+            //! Get the relative bearing
+            const BlackMisc::PhysicalQuantities::CAngle &getRelativeBearing() const { return m_relativeBearing; }
 
             //! Set bearing to own plane
-            void setBearingToOwnAircraft(const BlackMisc::PhysicalQuantities::CAngle &angle) { this->m_bearingToOwnAircraft = angle; }
+            void setRelativeBearing(const BlackMisc::PhysicalQuantities::CAngle &angle) { this->m_relativeBearing = angle; }
 
             //! Valid distance?
-            bool hasValidDistance() const { return !this->m_distanceToOwnAircraft.isNull();}
+            bool hasValidRelativeDistance() const { return !this->m_relativeDistance.isNull();}
 
             //! Valid bearing?
-            bool hasValidBearing() const { return !this->m_bearingToOwnAircraft.isNull();}
+            bool hasValidRelativeBearing() const { return !this->m_relativeBearing.isNull();}
 
             //! Calculcate distance, set it, and return distance
-            BlackMisc::PhysicalQuantities::CLength calculcateDistanceToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position, bool updateValues = true);
+            BlackMisc::PhysicalQuantities::CLength calculcateAndUpdateRelativeDistance(const BlackMisc::Geo::ICoordinateGeodetic &position);
 
             //! Calculcate distance and bearing to plane, set it, and return distance
-            BlackMisc::PhysicalQuantities::CLength calculcateDistanceAndBearingToOwnAircraft(const BlackMisc::Geo::ICoordinateGeodetic &position, bool updateValues = true);
+            BlackMisc::PhysicalQuantities::CLength calculcateAndUpdateRelativeDistanceAndBearing(const BlackMisc::Geo::ICoordinateGeodetic &position);
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateWithRelativePosition &compareValue) const;
 
         protected:
             //! Constructor
             ICoordinateWithRelativePosition();
 
-            BlackMisc::PhysicalQuantities::CAngle  m_bearingToOwnAircraft  {0.0, BlackMisc::PhysicalQuantities::CAngleUnit::nullUnit()};  //!< temporary stored value
-            BlackMisc::PhysicalQuantities::CLength m_distanceToOwnAircraft {0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< temporary stored value
-        };
+            //! Can given index be handled?
+            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
+            BlackMisc::PhysicalQuantities::CAngle  m_relativeBearing  {0.0, BlackMisc::PhysicalQuantities::CAngleUnit::nullUnit()};  //!< temporary stored value
+            BlackMisc::PhysicalQuantities::CLength m_relativeDistance {0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< temporary stored value
+        };
 
         //! Geodetic coordinate
         class BLACKMISC_EXPORT CCoordinateGeodetic : public CValueObject<CCoordinateGeodetic>, public ICoordinateGeodetic
         {
-
         public:
             //! Default constructor
             CCoordinateGeodetic() :
@@ -166,7 +184,7 @@ namespace BlackMisc
 
             //! Constructor by values
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
-                CCoordinateGeodetic({ latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m() }) {}
+                CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m() }) {}
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual CLatitude latitude() const override;
@@ -230,7 +248,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(geodeticHeight)
             );
         };
-
     } // namespace
 } // namespace
 

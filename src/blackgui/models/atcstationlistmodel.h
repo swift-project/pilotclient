@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Models
     {
         //! ATC list model
-        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>
+        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>
         {
         public:
             //! What kind of stations
@@ -60,5 +60,5 @@ namespace BlackGui
             AtcStationMode m_stationMode = NotSet;
         };
     }
-}
+} // ns
 #endif // guard

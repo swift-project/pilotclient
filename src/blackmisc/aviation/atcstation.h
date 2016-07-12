@@ -54,7 +54,6 @@ namespace BlackMisc
                 IndexPosition,
                 IndexRange,
                 IndexIsInRange,
-                IndexDistanceToOwnAircraft,
                 IndexIsOnline,
                 IndexBookedFrom,
                 IndexBookedUntil,
@@ -147,7 +146,6 @@ namespace BlackMisc
             //! Syncronize controller data
             //! Updates two stations (normally a booked and online ATC station) with complementary data
             void syncronizeControllerData(CAtcStation &otherStation);
-
 
             //! Syncronize station data
             //! Updates the two stations (a booked and online ATC station) with complementary data
@@ -253,6 +251,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant);
 
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const CAtcStation &compareValue) const;
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -282,8 +283,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(bookedUntilUtc),
                 BLACK_METAMEMBER(metar),
                 BLACK_METAMEMBER(voiceRoom),
-                BLACK_METAMEMBER(distanceToOwnAircraft),
-                BLACK_METAMEMBER(bearingToOwnAircraft)
+                BLACK_METAMEMBER(relativeDistance),
+                BLACK_METAMEMBER(relativeBearing)
             );
         };
     } // namespace

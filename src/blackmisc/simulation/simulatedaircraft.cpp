@@ -288,8 +288,8 @@ namespace BlackMisc
                 return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexPilot:
                 return this->m_pilot.propertyByIndex(index.copyFrontRemoved());
-            case IndexDistanceToOwnAircraft:
-                return this->m_distanceToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
+            case IndexRelativeDistance:
+                return this->m_relativeDistance.propertyByIndex(index.copyFrontRemoved());
             case IndexCom1System:
                 return this->m_com1system.propertyByIndex(index.copyFrontRemoved());
             case IndexCom2System:
@@ -309,8 +309,8 @@ namespace BlackMisc
             case IndexCombinedIcaoLiveryString:
                 return CVariant::fromValue(this->getCombinedIcaoLiveryString());
             default:
-                return (ICoordinateGeodetic::canHandleIndex(index)) ?
-                       ICoordinateGeodetic::propertyByIndex(index) :
+                return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
+                       ICoordinateWithRelativePosition::propertyByIndex(index) :
                        CValueObject::propertyByIndex(index);
             }
         }
@@ -327,8 +327,8 @@ namespace BlackMisc
             case IndexPilot:
                 this->m_pilot.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
-            case IndexDistanceToOwnAircraft:
-                this->m_distanceToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
+            case IndexRelativeDistance:
+                this->m_relativeDistance.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexCom1System:
                 this->m_com1system.setPropertyByIndex(index.copyFrontRemoved(), variant);
@@ -365,7 +365,14 @@ namespace BlackMisc
                 Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported");
                 break;
             default:
-                CValueObject::setPropertyByIndex(index, variant);
+                if (ICoordinateWithRelativePosition::canHandleIndex(index))
+                {
+                    ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
+                }
+                else
+                {
+                    CValueObject::setPropertyByIndex(index, variant);
+                }
                 break;
             }
         }
@@ -381,8 +388,8 @@ namespace BlackMisc
             case IndexPilot:
                 return this->m_pilot.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPilot());
             case IndexSituation:
-            case IndexDistanceToOwnAircraft:
-                return this->m_distanceToOwnAircraft.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistanceToOwnAircraft());
+            case IndexRelativeDistance:
+                return this->m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
             case IndexCom1System:
                 return m_com1system.getFrequencyActive().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System().getFrequencyActive());
             case IndexCom2System:
@@ -404,6 +411,10 @@ namespace BlackMisc
             case IndexFastPositionUpdates:
                 return Compare::compare(this->m_fastPositionUpdates, compareValue.fastPositionUpdates());
             default:
+                if (ICoordinateWithRelativePosition::canHandleIndex(index))
+                {
+                    return ICoordinateWithRelativePosition::comparePropertyByIndex(index, compareValue);
+                }
                 break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Comapre failed");

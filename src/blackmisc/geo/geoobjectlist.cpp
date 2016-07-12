@@ -63,11 +63,11 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
-        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::calculcateDistanceAndBearingToPosition(const ICoordinateGeodetic &position)
+        void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::calculcateAndUpdateRelativeDistanceAndBearing(const ICoordinateGeodetic &position)
         {
             for (OBJ &geoObj : this->container())
             {
-                geoObj.calculcateDistanceAndBearingToOwnAircraft(position);
+                geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position);
             }
         }
 
@@ -76,7 +76,9 @@ namespace BlackMisc
         {
             this->container().removeIf([ & ](OBJ & geoObj)
             {
-                return geoObj.calculcateDistanceAndBearingToOwnAircraft(position, updateValues) > maxDistance;
+                return updateValues ?
+                       geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position) > maxDistance :
+                       geoObj.calculateGreatCircleDistance(position) > maxDistance;
             });
         }
 
@@ -85,21 +87,21 @@ namespace BlackMisc
         {
             if (updateValues)
             {
-                this->calculcateDistanceAndBearingToPosition(position);
+                this->calculcateAndUpdateRelativeDistanceAndBearing(position);
             }
-            this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
+            this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         template <class OBJ, class CONTAINER>
         void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::sortByDistanceToOwnAircraft()
         {
-            this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
+            this->container().sort([ & ](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         template <class OBJ, class CONTAINER>
         void IGeoObjectWithRelativePositionList<OBJ, CONTAINER>::partiallySortByDistanceToOwnAircraft(int number)
         {
-            this->container().partiallySort(number, [ & ](const OBJ & a, const OBJ & b) { return a.getDistanceToOwnAircraft() < b.getDistanceToOwnAircraft(); });
+            this->container().partiallySort(number, [ & ](const OBJ & a, const OBJ & b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         template <class OBJ, class CONTAINER>
@@ -126,4 +128,3 @@ namespace BlackMisc
 
     } // namespace
 } // namespace
-

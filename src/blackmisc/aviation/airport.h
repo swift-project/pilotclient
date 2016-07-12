@@ -42,9 +42,7 @@ namespace BlackMisc
                 IndexIcao = BlackMisc::CPropertyIndex::GlobalIndexCAirport,
                 IndexDescriptiveName,
                 IndexPosition,
-                IndexElevation,
-                IndexDistanceToOwnAircraft,
-                IndexBearing
+                IndexElevation
             };
 
             //! Default constructor.
@@ -119,7 +117,7 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
-            //! Compare for index
+            //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const CAirport &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
@@ -135,8 +133,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(icao),
                 BLACK_METAMEMBER(descriptiveName),
                 BLACK_METAMEMBER(position),
-                BLACK_METAMEMBER(distanceToOwnAircraft),
-                BLACK_METAMEMBER(bearingToOwnAircraft)
+                BLACK_METAMEMBER(relativeDistance),
+                BLACK_METAMEMBER(relativeBearing)
             );
         };
     } // namespace

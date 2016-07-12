@@ -66,13 +66,9 @@ namespace BlackMisc
                 return this->m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexElevation:
                 return this->getElevation().propertyByIndex(index.copyFrontRemoved());
-            case IndexBearing:
-                return this->m_bearingToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
-            case IndexDistanceToOwnAircraft:
-                return this->m_distanceToOwnAircraft.propertyByIndex(index.copyFrontRemoved());
             default:
-                return (ICoordinateGeodetic::canHandleIndex(index)) ?
-                       ICoordinateGeodetic::propertyByIndex(index) :
+                return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
+                       ICoordinateWithRelativePosition::propertyByIndex(index) :
                        CValueObject::propertyByIndex(index);
             }
         }
@@ -92,14 +88,15 @@ namespace BlackMisc
             case IndexPosition:
                 this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
-            case IndexBearing:
-                this->m_bearingToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexDistanceToOwnAircraft:
-                this->m_distanceToOwnAircraft.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
             default:
-                CValueObject::setPropertyByIndex(index, variant);
+                if (ICoordinateWithRelativePosition::canHandleIndex(index))
+                {
+                    ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
+                }
+                else
+                {
+                    CValueObject::setPropertyByIndex(index, variant);
+                }
                 break;
             }
         }
@@ -114,17 +111,15 @@ namespace BlackMisc
                 return this->m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
             case IndexDescriptiveName:
                 return this->m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
-            case IndexBearing:
-                return this->m_bearingToOwnAircraft.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBearingToOwnAircraft());
-            case IndexPosition:
-            case IndexDistanceToOwnAircraft:
-                return this->m_distanceToOwnAircraft.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getDistanceToOwnAircraft());
             default:
+                if (ICoordinateWithRelativePosition::canHandleIndex(index))
+                {
+                    return ICoordinateWithRelativePosition::comparePropertyByIndex(index, compareValue);
+                }
                 break;
             }
             Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
             return 0;
         }
-
     } // namespace
 } // namespace

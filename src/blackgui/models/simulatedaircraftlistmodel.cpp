@@ -61,7 +61,7 @@ namespace BlackGui
             case InfoMode:
                 this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString));
                 this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
-                this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
+                this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                 this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
                 this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("icao", "icao and livery info",{ CSimulatedAircraft::IndexCombinedIcaoLiveryString}));
@@ -71,7 +71,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn("longitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexLongitude }, new CLatLonFormatter()));
 
                 // default sort order
-                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexDistanceToOwnAircraft);
+                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexRelativeDistance);
                 this->m_sortOrder = Qt::AscendingOrder;
                 break;
 
@@ -79,7 +79,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn("e.", "enabled", CSimulatedAircraft::IndexEnabled, new CBoolIconFormatter("enabled", "disabled"), true));
                 this->m_columns.addColumn(CColumn("r.", "rendered", CSimulatedAircraft::IndexRendered, new CBoolIconFormatter("rendered", "skipped"), true));
                 this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", { CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
-                this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
+                this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                 this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
                 this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
                 this->m_columns.addColumn(CColumn("p.", "parts", CSimulatedAircraft::IndexPartsSynchronized, new CBoolIconFormatter("parts", "no parts"), true));
@@ -91,7 +91,7 @@ namespace BlackGui
                 this->m_columns.addColumn(CColumn::standardString("type", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelTypeAsString}));
 
                 // default sort order
-                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexDistanceToOwnAircraft);
+                this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexRelativeDistance);
                 this->m_sortOrder = Qt::AscendingOrder;
                 break;
 

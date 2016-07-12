@@ -13,7 +13,7 @@
 #define BLACKMISC_COMPAREFUNCTIONS_H
 
 #include "blackmisc/blackmiscexport.h"
-
+#include <QDateTime>
 #include <QtGlobal>
 
 namespace BlackMisc
@@ -29,8 +29,11 @@ namespace BlackMisc
         //! Compare qint64
         BLACKMISC_EXPORT int compare(qint64 a, qint64 b);
 
-        //! Compare qint64
+        //! Compare double
         BLACKMISC_EXPORT int compare(double a, double b);
+
+        //! Compare double
+        BLACKMISC_EXPORT int compare(const QDateTime &a, const QDateTime &b);
     } // ns
 } // ns
 

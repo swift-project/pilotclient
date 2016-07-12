@@ -29,15 +29,15 @@ namespace BlackGui
             CListModelBase("AirportListModel", parent)
         {
             this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
-            this->m_columns.addColumn(CColumn("distance", CAirport::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
-            this->m_columns.addColumn(CColumn("bearing", CAirport::IndexBearing, new CAngleDegreeFormatter()));
+            this->m_columns.addColumn(CColumn("distance", CAirport::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
+            this->m_columns.addColumn(CColumn("bearing", CAirport::IndexRelativeBearing, new CAngleDegreeFormatter()));
             this->m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
             this->m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 0)));
             this->m_columns.addColumn(CColumn("latitude", CAirport::IndexLatitude, new CLatLonFormatter()));
             this->m_columns.addColumn(CColumn("longitude", CAirport::IndexLatitude, new CLatLonFormatter()));
 
             // default sort order
-            this->setSortColumnByPropertyIndex(CAirport::IndexDistanceToOwnAircraft);
+            this->setSortColumnByPropertyIndex(CAirport::IndexRelativeDistance);
             this->m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files

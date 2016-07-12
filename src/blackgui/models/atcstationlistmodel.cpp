@@ -70,7 +70,7 @@ namespace BlackGui
                     CColumn col = CColumn("type", CAtcStation::IndexIcon);
                     col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
                     this->m_columns.addColumn(col);
-                    this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistanceToOwnAircraft, new CAirspaceDistanceFormatter()));
+                    this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                     this->m_columns.addColumn(CColumn("r.", "in range", CAtcStation::IndexIsInRange, new CBoolIconFormatter("in range", "outside range")));
                     this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency, new CComFrequencyFormatter()));
                     this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
@@ -79,7 +79,7 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn::standardString("voiceroomurl", { CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }));
 
                     // default sort order
-                    this->setSortColumnByPropertyIndex(CAtcStation::IndexDistanceToOwnAircraft);
+                    this->setSortColumnByPropertyIndex(CAtcStation::IndexRelativeDistance);
                     this->m_sortOrder = Qt::AscendingOrder;
                 }
                 break;
@@ -132,7 +132,7 @@ namespace BlackGui
                             new QStandardItem(station.getCallsign().toQString()),
                             new QStandardItem(station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 2, true)),
                             new QStandardItem(station.getControllerRealName()),
-                            new QStandardItem(station.getDistanceToOwnAircraft().valueRoundedWithUnit(CLengthUnit::NM(), 1, true))
+                            new QStandardItem(station.getRelativeDistance().valueRoundedWithUnit(CLengthUnit::NM(), 1, true))
                         };
                         break;
                     case StationsBooked:

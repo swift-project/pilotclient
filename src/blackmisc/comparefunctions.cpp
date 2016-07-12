@@ -38,5 +38,9 @@ namespace BlackMisc
             return a < b ? -10 : 10;
         }
 
+        int compare(const QDateTime &a, const QDateTime &b)
+        {
+            return Compare::compare(a.toMSecsSinceEpoch(), b.toMSecsSinceEpoch());
+        }
     } // ns
 } // ns
