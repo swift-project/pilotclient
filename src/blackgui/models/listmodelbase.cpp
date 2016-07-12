@@ -331,9 +331,15 @@ namespace BlackGui
             // Upfront checking avoids unnecessary data fetching
             if (!formatter || !formatter->supportsRole(role)) { return CListModelBaseNonTemplate::data(index, role); }
 
+            // index, updront checking
+            const BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
+            if (static_cast<int>(CPropertyIndex::GlobalIndexLineNumber) == propertyIndex.frontCasted<int>())
+            {
+                return QVariant::fromValue(row + 1);
+            }
+
             // Formatted data
             const ObjectType obj = this->containerOrFilteredContainer()[row];
-            BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
             return formatter->data(role, obj.propertyByIndex(propertyIndex)).getQVariant();
         }
 
@@ -357,8 +363,8 @@ namespace BlackGui
 
             if (obj != currentObject)
             {
-                QModelIndex topLeft = index.sibling(index.row(), 0);
-                QModelIndex bottomRight = index.sibling(index.row(), this->columnCount() - 1);
+                const QModelIndex topLeft = index.sibling(index.row(), 0);
+                const QModelIndex bottomRight = index.sibling(index.row(), this->columnCount() - 1);
                 this->m_container[index.row()] = obj;
                 const CVariant co = CVariant::from(obj);
                 emit objectChanged(co, propertyIndex);
@@ -781,7 +787,7 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>;
         template class CListModelBase<BlackMisc::CNameVariantPair, BlackMisc::CNameVariantPairList, false>;
         template class CListModelBase<BlackMisc::CCountry, BlackMisc::CCountryList, true>;
-        template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, false>;
+        template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, true>;
@@ -792,11 +798,9 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, true>;
         template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>;
         template class CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, true>;
-
         template class CListModelBase<BlackMisc::Weather::CCloudLayer, BlackMisc::Weather::CCloudLayerList, false>;
         template class CListModelBase<BlackMisc::Weather::CTemperatureLayer, BlackMisc::Weather::CTemperatureLayerList, false>;
         template class CListModelBase<BlackMisc::Weather::CWindLayer, BlackMisc::Weather::CWindLayerList, false>;
-
 
     } // namespace
 } // namespace
