@@ -186,7 +186,7 @@ namespace BlackSimPlugin
                         if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in SIM
                         CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
                         CAirport airport(CAirportIcaoCode(icao), pos);
-                        CLength d = airport.calculcateDistanceAndBearingToOwnAircraft(posAircraft);
+                        CLength d = airport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
                         if (d > maxDistance) { continue; }
                         simulatorFsx->m_airportsInRange.replaceOrAddByIcao(airport);
                     }

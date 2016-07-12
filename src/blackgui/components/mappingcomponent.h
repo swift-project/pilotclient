@@ -105,13 +105,13 @@ namespace BlackGui
             void ps_onModelsUpdateRequested();
 
             //! Rendered aircraft changed in backend
-            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Aircraft enabled, disabled in backend
-            void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Fast position updates on/off in backend
-            void ps_onFastPositionUpdatesEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void ps_onFastPositionUpdatesEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Connection status has been changed
             void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);

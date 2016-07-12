@@ -57,7 +57,6 @@ namespace BlackCore
     class CCoreFacade;
     namespace Context
     {
-
         //! Network context proxy
         //! \ingroup dbus
         class BLACKCORE_EXPORT CContextNetworkProxy : public IContextNetwork
@@ -156,13 +155,13 @@ namespace BlackCore
             virtual void requestAtisUpdates() override;
 
             //! \copydoc IContextNetwork::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) override;
 
             //! \copydoc IContextNetwork::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) override;
 
             //! \copydoc IContextNetwork::updateFastPositionEnabled
-            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) override;
 
             //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;

@@ -64,7 +64,7 @@ namespace BlackSimPlugin
             else
                 dHigh = dHigh - dLow;
 
-            position.setLongitude(CLongitude(dHigh * 360.0 / ( 65536.0 * 65536.0), CAngleUnit::deg()));
+            position.setLongitude(CLongitude(dHigh * 360.0 / (65536.0 * 65536.0), CAngleUnit::deg()));
 
             dHigh = positionVelocity.alt_i;
             dLow = positionVelocity.alt_f;
@@ -167,8 +167,8 @@ namespace BlackSimPlugin
             // matched models
             CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraftCopy);
             Q_ASSERT(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel, identifier());
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, identifier());
+            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel);
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), true);
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
             aircraftAfterModelApplied.setRendered(true);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
@@ -179,7 +179,7 @@ namespace BlackSimPlugin
 
             client->start();
             m_hashFs9Clients.insert(callsign, client);
-            updateAircraftRendered(callsign, true, this->identifier());
+            updateAircraftRendered(callsign, true);
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }
@@ -191,7 +191,7 @@ namespace BlackSimPlugin
             auto fs9Client = m_hashFs9Clients.value(callsign);
             fs9Client->quit();
             m_hashFs9Clients.remove(callsign);
-            updateAircraftRendered(callsign, false, this->identifier());
+            updateAircraftRendered(callsign, false);
             CLogMessage(this).info("FS9: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -334,7 +334,7 @@ namespace BlackSimPlugin
 
                     const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
                     if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
+                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
                     {
                         m_lastWeatherPosition = currentPosition;
                         const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
@@ -389,8 +389,8 @@ namespace BlackSimPlugin
         }
 
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
-                                                     const QSharedPointer<CFs9Host> &fs9Host,
-                                                     const QSharedPointer<CLobbyClient> &lobbyClient) :
+                const QSharedPointer<CFs9Host> &fs9Host,
+                const QSharedPointer<CLobbyClient> &lobbyClient) :
             BlackCore::ISimulatorListener(info),
             m_timer(new QTimer(this)),
             m_fs9Host(fs9Host),

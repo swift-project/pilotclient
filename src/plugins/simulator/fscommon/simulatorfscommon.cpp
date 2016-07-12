@@ -106,18 +106,15 @@ namespace BlackSimPlugin
             return pm;
         }
 
-        bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
-            if (originator == this->identifier()) { return false; }
-
             // remove upfront, and then enable / disable again
             this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
-            return this->changeRemoteAircraftEnabled(aircraft, originator);
+            return this->changeRemoteAircraftEnabled(aircraft);
         }
 
-        bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        bool CSimulatorFsCommon::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
-            if (originator == this->identifier()) { return false; }
             if (aircraft.isEnabled())
             {
                 this->physicallyAddRemoteAircraft(aircraft);

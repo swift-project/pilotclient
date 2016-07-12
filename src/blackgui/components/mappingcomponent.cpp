@@ -177,7 +177,7 @@ namespace BlackGui
                 bool enabled = sa.propertyByIndex(index).toBool();
                 if (saFromBackend.isEnabled() == enabled) { return; }
                 CLogMessage(this).info("Request to %1 aircraft %2") << (enabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
-                sGui->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), enabled, mappingIdentifier());
+                sGui->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), enabled);
             }
             else
             {
@@ -275,12 +275,12 @@ namespace BlackGui
                 CAircraftModel model(models.front());
                 model.setModelType(CAircraftModel::TypeManuallySet);
                 CLogMessage(this).info("Requesting changes for %1") << callsign.asString();
-                sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, mappingIdentifier());
+                sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model);
                 changed = true;
             }
             if (aircraftFromBackend.isEnabled() != enabled)
             {
-                sGui->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), enabled, mappingIdentifier());
+                sGui->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), enabled);
                 changed = true;
             }
 
@@ -326,24 +326,21 @@ namespace BlackGui
             this->ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
-        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft)
         {
             this->updateSimulatedAircraftView();
-            Q_UNUSED(originator);
             Q_UNUSED(aircraft);
         }
 
-        void CMappingComponent::ps_onChangedAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        void CMappingComponent::ps_onChangedAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
             this->updateSimulatedAircraftView();
-            Q_UNUSED(originator);
             Q_UNUSED(aircraft);
         }
 
-        void CMappingComponent::ps_onFastPositionUpdatesEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        void CMappingComponent::ps_onFastPositionUpdatesEnabled(const CSimulatedAircraft &aircraft)
         {
             this->updateSimulatedAircraftView();
-            Q_UNUSED(originator);
             Q_UNUSED(aircraft);
         }
 
@@ -365,7 +362,7 @@ namespace BlackGui
         {
             if (sGui->getIContextNetwork())
             {
-                sGui->getIContextNetwork()->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates(), mappingIdentifier());
+                sGui->getIContextNetwork()->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates());
             }
         }
 
@@ -381,7 +378,7 @@ namespace BlackGui
         {
             if (sGui->getIContextNetwork())
             {
-                sGui->getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled(), mappingIdentifier());
+                sGui->getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled());
             }
         }
 
@@ -432,6 +429,5 @@ namespace BlackGui
                 this->updateSimulatedAircraftView(true);
             }
         }
-
     } // namespace
 } // namespace

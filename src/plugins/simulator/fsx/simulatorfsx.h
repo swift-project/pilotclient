@@ -233,7 +233,6 @@ namespace BlackSimPlugin
             QTimer *m_timer { nullptr };
         };
     }
-
 } // namespace
 
 #endif // guard

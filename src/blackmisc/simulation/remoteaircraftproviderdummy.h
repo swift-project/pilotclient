@@ -40,7 +40,6 @@ namespace BlackMisc
 
     namespace Simulation
     {
-
         //! Dummy implementation for testing purpose, not thread safe
         class BLACKMISC_EXPORT CRemoteAircraftProviderDummy :
             public QObject,
@@ -96,19 +95,19 @@ namespace BlackMisc
             ) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) override;
 
             //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
-            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
-            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) override;
+            virtual void updateMarkAllAsNotRendered() override;
 
             //! \copydoc IRemoteAircraftProvider::getReverseLookupMessages
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;

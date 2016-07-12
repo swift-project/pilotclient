@@ -126,15 +126,15 @@ namespace BlackCore
             //! Aircraft model was changed
             //! \details All remote aircraft are stored in the network context. The model can be updated here
             //!          via \sa updateAircraftModel and then this signal is fired
-            void changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Aircraft enabled / disabled
             //! \details All remote aircraft are stored in the network context. The aircraft can be enabled (for rendering) here
             //!          via \sa updateAircraftEnabled and then this signal is fired
-            void changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Aircraft enabled / disabled
-            void changedFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+            void changedFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Connection status changed for online station
             void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
@@ -254,13 +254,13 @@ namespace BlackCore
             virtual void requestAtisUpdates() = 0;
 
             //! Enable/disable rendering
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator) = 0;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) = 0;
 
             //! Change model string
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) = 0;
 
             //! Change fast position updates
-            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending, const BlackMisc::CIdentifier &originator) = 0;
+            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) = 0;
 
             //! Get reverse lookup meesages
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;

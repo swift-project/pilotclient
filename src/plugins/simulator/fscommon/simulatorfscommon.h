@@ -61,10 +61,10 @@ namespace BlackSimPlugin
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
             //! \copydoc BlackCore::ISimulator::changeRemoteAircraftModel
-            virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
+            virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
 
             //! \copydoc BlackCore::ISimulator::changeRemoteAircraftEnabled
-            virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
+            virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
 
             //! \copydoc BlackCore::ISimulator::enableDebugMessages
             virtual void enableDebugMessages(bool driver, bool interpolator) override;

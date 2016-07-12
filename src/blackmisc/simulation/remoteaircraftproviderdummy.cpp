@@ -101,41 +101,36 @@ namespace BlackMisc
             return c;
         }
 
-        bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering, const CIdentifier &originator)
+        bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
-            Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRendering));
             int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
-        bool CRemoteAircraftProviderDummy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
+        bool CRemoteAircraftProviderDummy::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model)
         {
-            Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
             int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
-        bool CRemoteAircraftProviderDummy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionUpdates, const CIdentifier &originator)
+        bool CRemoteAircraftProviderDummy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionUpdates)
         {
-            Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositionUpdates));
             int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
-        bool CRemoteAircraftProviderDummy::updateAircraftRendered(const CCallsign &callsign, bool rendered, const CIdentifier &originator)
+        bool CRemoteAircraftProviderDummy::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
-            Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexRendered, CVariant::fromValue(rendered));
             int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
-        void CRemoteAircraftProviderDummy::updateMarkAllAsNotRendered(const CIdentifier &originator)
+        void CRemoteAircraftProviderDummy::updateMarkAllAsNotRendered()
         {
-            Q_UNUSED(originator);
             this->m_aircraft.markAllAsNotRendered();
         }
 

@@ -150,7 +150,7 @@ namespace BlackSimPlugin
             CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraft);
             Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
 
-            this->updateAircraftModel(callsign, aircraftModel, identifier());
+            this->updateAircraftModel(callsign, aircraftModel);
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
 
             // create AI
@@ -174,7 +174,7 @@ namespace BlackSimPlugin
             }
 
             aircraftAfterModelApplied.setRendered(rendered);
-            this->updateAircraftRendered(callsign, rendered, identifier());
+            this->updateAircraftRendered(callsign, rendered);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             return rendered;
@@ -430,7 +430,7 @@ namespace BlackSimPlugin
 
             const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
             if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20 )
+                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
             {
                 m_lastWeatherPosition = currentPosition;
                 const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
@@ -549,7 +549,7 @@ namespace BlackSimPlugin
             CCallsign callsign(simObject.getCallsign());
             m_simConnectObjects.remove(callsign);
             SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObject.getRequestId()));
-            updateAircraftRendered(callsign, false, identifier());
+            updateAircraftRendered(callsign, false);
             CLogMessage(this).info("FSX: Removed aircraft %1") << simObject.getCallsign().toQString();
             return true;
         }

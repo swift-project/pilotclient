@@ -167,7 +167,7 @@ namespace BlackSimPlugin
 
                 const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude(), {0} };
                 if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                        calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
                 {
                     m_lastWeatherPosition = currentPosition;
                     const auto weatherGrid = CWeatherGrid { { "", currentPosition } };
@@ -467,7 +467,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
 
             CCallsign callsign(newRemoteAircraft.getCallsign());
-            this->updateAircraftModel(callsign, aircraftModel, identifier());
+            this->updateAircraftModel(callsign, aircraftModel);
             CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
 
             QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
@@ -475,12 +475,12 @@ namespace BlackSimPlugin
                                 newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
                                 newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
                                 livery);
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), true, identifier());
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), true);
             CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
 
             bool rendered = true;
             aircraftAfterModelApplied.setRendered(rendered);
-            this->updateAircraftRendered(callsign, rendered, identifier());
+            this->updateAircraftRendered(callsign, rendered);
             emit modelMatchingCompleted(aircraftAfterModelApplied);
 
             return rendered;
@@ -518,7 +518,7 @@ namespace BlackSimPlugin
         {
             Q_ASSERT(isConnected());
             m_traffic->removePlane(callsign.asString());
-            updateAircraftRendered(callsign, false, identifier());
+            updateAircraftRendered(callsign, false);
             CLogMessage(this).info("XP: Removed aircraft %1") << callsign.toQString();
             return true;
         }
@@ -528,7 +528,7 @@ namespace BlackSimPlugin
             //! \todo XP driver obtain number of removed aircraft
             int r = getAircraftInRangeCount();
             m_traffic->removeAllPlanes();
-            updateMarkAllAsNotRendered(identifier());
+            updateMarkAllAsNotRendered();
             CLogMessage(this).info("XP: Removed all aircraft");
             return r;
         }
@@ -539,18 +539,15 @@ namespace BlackSimPlugin
             return getAircraftInRange().findByRendered(true).getCallsigns(); // just a poor workaround
         }
 
-        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
-            if (originator == this->identifier()) { return false; }
-
             // remove upfront, and then enable / disable again
             this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
-            return this->changeRemoteAircraftEnabled(aircraft, originator);
+            return this->changeRemoteAircraftEnabled(aircraft);
         }
 
-        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        bool CSimulatorXPlane::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
-            if (originator == this->identifier()) { return false; }
             if (aircraft.isEnabled())
             {
                 this->physicallyAddRemoteAircraft(aircraft);
@@ -716,6 +713,5 @@ namespace BlackSimPlugin
                 start();
             }
         }
-
     } // namespace
 } // namespace

@@ -102,23 +102,23 @@ namespace BlackMisc
 
             //! Enable/disable rendering
             //! \threadsafe
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering, const BlackMisc::CIdentifier &originator) = 0;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) = 0;
 
             //! Rendered?
             //! \threadsafe
-            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator) = 0;
+            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) = 0;
 
             //! Mark all as not rendered
             //! \threadsafe
-            virtual void updateMarkAllAsNotRendered(const BlackMisc::CIdentifier &originator) = 0;
+            virtual void updateMarkAllAsNotRendered() = 0;
 
             //! Change model string
             //! \threadsafe
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) = 0;
 
             //! Change fast position updates
             //! \threadsafe
-            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates, const BlackMisc::CIdentifier &originator) = 0;
+            virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) = 0;
 
             //! Get reverse lookup meesages
             //! \threadsafe
@@ -185,16 +185,16 @@ namespace BlackMisc
             virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering, const BlackMisc::CIdentifier &originator);
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
-            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, const BlackMisc::CIdentifier &originator);
+            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            virtual void updateMarkAllAsNotRendered(const CIdentifier &originator);
+            virtual void updateMarkAllAsNotRendered();
 
             //! Destructor
             virtual ~CRemoteAircraftAware() {}
@@ -204,7 +204,6 @@ namespace BlackMisc
             CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
             IRemoteAircraftProvider *m_remoteAircraftProvider = nullptr; //!< access to object
         };
-
     } // namespace
 } // namespace
 

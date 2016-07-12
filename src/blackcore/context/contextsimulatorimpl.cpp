@@ -543,16 +543,16 @@ namespace BlackCore
             getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
         }
 
-        void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             Q_ASSERT(m_simulatorPlugin.second);
-            m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft, originator);
+            m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft);
         }
 
-        void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+        void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
             Q_ASSERT(m_simulatorPlugin.second);
-            m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft, originator);
+            m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
         void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
