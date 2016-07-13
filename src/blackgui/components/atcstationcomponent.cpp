@@ -67,7 +67,6 @@ namespace BlackGui
             // set station mode
             this->ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
             this->ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
-            this->ui->tvp_AtcStationsBooked->setResizeMode(CAtcStationView::ResizingOnce);
 
             // header
             this->ui->tvp_AtcStationsOnlineTree->setHeaderHidden(true);
@@ -146,11 +145,12 @@ namespace BlackGui
                 // update
                 if (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations)
                 {
-                    this->ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(
+                    const CAtcStationList onlineStations =
                         // test: filter by frequency, see if this is better
                         // sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom()
-                        sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency()
-                    );
+                        sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency();
+
+                    this->ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(onlineStations);
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     this->m_timestampOnlineStationsChanged = this->m_timestampLastReadOnlineStations;
                     this->updateTreeView();
@@ -165,6 +165,7 @@ namespace BlackGui
 
         void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
         {
+            // trick here is, we want to display a station ASAP
             this->ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
         }
 
@@ -281,8 +282,8 @@ namespace BlackGui
 
         void CAtcStationComponent::updateTreeView()
         {
-            // EXPERIMENTAL CODE
-            //! \todo change model so we can directly use hierarchies
+            //
+            //! \todo EXPERIMENTAL CODE: change model so we can directly use hierarchies
             QAbstractItemModel *old = (this->ui->tvp_AtcStationsOnlineTree->model());
             this->ui->tvp_AtcStationsOnlineTree->setModel(
                 this->ui->tvp_AtcStationsOnline->derivedModel()->toAtcGroupModel()

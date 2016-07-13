@@ -70,6 +70,11 @@ namespace BlackGui
             if (attention) { emit requestAttention(); }
         }
 
+        void CLogComponent::showDetails(bool details)
+        {
+            ui->form_StatusMessage->setVisible(details);
+        }
+
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) return;

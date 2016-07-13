@@ -339,4 +339,9 @@ namespace BlackGui
         }
         return rows;
     }
+
+    bool CGuiUtility::isTopLevelWidget(QWidget *widget)
+    {
+        return QApplication::topLevelWidgets().contains(widget);
+    }
 } // ns

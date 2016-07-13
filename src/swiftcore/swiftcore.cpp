@@ -134,6 +134,7 @@ void CSwiftCore::initSlots()
 
 void CSwiftCore::initLogDisplay()
 {
+    this->m_mwaLogComponent->showDetails(false);
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
     auto logHandler = CLogHandler::instance()->handlerForPattern(

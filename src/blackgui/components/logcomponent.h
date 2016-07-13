@@ -68,6 +68,9 @@ namespace BlackGui
             //! Display console
             void displayConsole(bool attention = false);
 
+            //! Show log details
+            void showDetails(bool details);
+
         signals:
             //! Make me visible
             void requestAttention();

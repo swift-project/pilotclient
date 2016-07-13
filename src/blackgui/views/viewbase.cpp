@@ -806,16 +806,32 @@ namespace BlackGui
         void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ObjectType &value, bool resize)
         {
             Q_ASSERT(this->m_model);
-            this->m_model->insert(value);
-            if (resize) { this->performModeBasedResizeToContent(); }
+            if (this->rowCount() < 1)
+            {
+                // this allows presizing
+                this->updateContainerMaybeAsync(ContainerType({value}), true, resize);
+            }
+            else
+            {
+                this->m_model->insert(value);
+                if (resize) { this->performModeBasedResizeToContent(); }
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::insert(const ContainerType &container, bool resize)
         {
             Q_ASSERT(this->m_model);
-            this->m_model->insert(container);
-            if (resize) { this->performModeBasedResizeToContent(); }
+            if (this->rowCount() < 1)
+            {
+                // this allows presizing
+                this->updateContainerMaybeAsync(container, true, resize);
+            }
+            else
+            {
+                this->m_model->insert(container);
+                if (resize) { this->performModeBasedResizeToContent(); }
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

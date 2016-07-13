@@ -44,7 +44,12 @@ namespace BlackGui
         void CAtcStationView::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
         {
             this->m_model->changedAtcStationConnectionStatus(station, added);
-            this->resizeToContents();
+
+            // resize the first, rest will be resized with normal updates
+            if (this->rowCount() == 1)
+            {
+                this->fullResizeToContents();
+            }
         }
 
         void CAtcStationView::customMenu(CMenuActions &menuActions)
@@ -87,6 +92,5 @@ namespace BlackGui
             if (s.getCallsign().isEmpty()) { return; }
             emit this->requestTextMessageWidget(s.getCallsign());
         }
-
     } // namespace
 } // namespace

@@ -104,6 +104,9 @@ namespace BlackGui
         //! Only the row part and unique (so no rows is twice in the list)
         static QList<int> indexToUniqueRows(const QModelIndexList &indexes);
 
+        //! Is top level widget?
+        static bool isTopLevelWidget(QWidget *widget);
+
     private:
         //! Constructor, use static methods only
         CGuiUtility() {}

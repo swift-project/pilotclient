@@ -8,9 +8,11 @@
  */
 
 #include "blackgui/enableforframelesswindow.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/worker.h"
+
 
 #include <QEvent>
 #include <QFlags>
@@ -110,7 +112,12 @@ namespace BlackGui
         bool frameless = (mode == WindowFrameless);
         // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
         this->m_widget->setAttribute(Qt::WA_NoSystemBackground, frameless);
-        this->m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless);
+
+        // https://bugreports.qt.io/browse/QTBUG-52206
+        if (CGuiUtility::isTopLevelWidget(this->m_widget))
+        {
+            this->m_widget->setAttribute(Qt::WA_TranslucentBackground, frameless);
+        }
 
         // Qt::WA_PaintOnScreen leads to a warning
         // setMask(QRegion(10, 10, 10, 10) would work, but requires "complex" calcs for rounded corners
