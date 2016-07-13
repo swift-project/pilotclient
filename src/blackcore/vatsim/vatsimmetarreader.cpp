@@ -79,6 +79,7 @@ namespace BlackCore
 
         void CVatsimMetarReader::readMetars()
         {
+            if (this->isAbandoned()) { return; }
             this->threadAssertCheck();
             this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 

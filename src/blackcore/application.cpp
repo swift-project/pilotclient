@@ -669,6 +669,7 @@ namespace BlackCore
         if (this->m_setupReader)
         {
             this->m_setupReader->gracefulShutdown();
+            this->m_setupReader.reset();
         }
 
         this->m_fileLogger->close();
@@ -934,6 +935,7 @@ namespace BlackCore
 
     CUrlList CApplication::getVatsimMetarUrls() const
     {
+        if (this->m_shutdown) { return CUrlList(); }
         if (this->m_webDataServices)
         {
             const CUrlList urls(this->m_webDataServices->getVatsimMetarUrls());
@@ -948,6 +950,7 @@ namespace BlackCore
 
     CUrlList CApplication::getVatsimDataFileUrls() const
     {
+        if (this->m_shutdown) { return CUrlList(); }
         if (this->m_webDataServices)
         {
             const CUrlList urls(this->m_webDataServices->getVatsimDataFileUrls());
