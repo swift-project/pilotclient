@@ -53,7 +53,7 @@ namespace BlackMisc
 
     CLogCategoryList CLogCategoryList::fromQString(const QString &string)
     {
-        return fromQStringList(string.split("|"));
+        return fromQStringList(string.split("|", QString::SkipEmptyParts));
     }
 
     bool CLogCategoryList::anyStartWith(const QString &prefix) const
