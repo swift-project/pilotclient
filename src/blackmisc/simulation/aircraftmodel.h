@@ -147,6 +147,9 @@ namespace BlackMisc
             //! Model key, either queried or loaded from simulator model
             const QString &getModelString() const { return this->m_modelString; }
 
+            //! Model string and DB key (if available)
+            QString getModelStringAndDbKey() const;
+
             //! Model string
             void setModelString(const QString &modelString) { this->m_modelString = modelString.trimmed().toUpper(); }
 

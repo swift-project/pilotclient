@@ -111,6 +111,25 @@ namespace BlackMisc
             return nw;
         }
 
+        QString CAircraftModel::getModelStringAndDbKey() const
+        {
+            if (this->hasValidDbKey())
+            {
+                if (this->hasModelString())
+                {
+                    return QString(this->getModelString()).append(" ").append(this->getDbKeyAsStringInParentheses());
+                }
+                else
+                {
+                    return this->getDbKeyAsString();
+                }
+            }
+            else
+            {
+                return this->getModelString();
+            }
+        }
+
         CVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
