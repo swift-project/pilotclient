@@ -220,7 +220,11 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTreeView" name="tvp_AtcStationsOnlineTree"/>
+     <widget class="QTreeView" name="tvp_AtcStationsOnlineTree">
+      <attribute name="headerVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
     </item>
    </layout>
   </widget>
