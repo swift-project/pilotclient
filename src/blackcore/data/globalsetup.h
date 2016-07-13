@@ -48,6 +48,7 @@ namespace BlackCore
                 IndexVatsimMetars,
                 IndexVatsimData,
                 IndexSwiftDbFiles,
+                IndexSwiftAirportUrls,
                 IndexBootstrap,
                 IndexUpdateInfo,
                 IndexWasLoaded,

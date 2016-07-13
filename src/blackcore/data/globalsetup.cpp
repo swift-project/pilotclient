@@ -55,7 +55,7 @@ namespace BlackCore
         CUrlList CGlobalSetup::getSwiftAirportUrls() const
         {
             // currently subdir of shared, this might change
-            const CUrlList airportUrls(getSwiftSharedUrls().appendPath("/airports/airports.json"));
+            const CUrlList airportUrls(getSwiftSharedUrls().appendPath(versionString() + "/airports/airports.json"));
             return airportUrls;
         }
 
@@ -249,6 +249,8 @@ namespace BlackCore
                 return CVariant::fromValue(this->getBootstrapFileUrls());
             case IndexSwiftDbFiles:
                 return CVariant::fromValue(this->getSwiftDbDataFileLocationUrls());
+            case IndexSwiftAirportUrls:
+                return CVariant::fromValue(this->getSwiftAirportUrls());
             case IndexShared:
                 return CVariant::fromValue(this->m_sharedUrls);
             case IndexWasLoaded:
@@ -304,9 +306,9 @@ namespace BlackCore
 
         const QString &CGlobalSetup::versionString()
         {
+            // This not the current swift version, but the schema version
             static const QString v("0.7.0");
             return v;
         }
-
     } // ns
 } // ns
