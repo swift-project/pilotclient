@@ -244,7 +244,7 @@ namespace BlackCore
 
         //! Smart airline selector
         //! \threadsafe
-        BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;
+        BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &code, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign()) const;
 
         //! ICAO code for callsign (e.g. DLH123 -> DLH)
         //! \threadsafe

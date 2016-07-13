@@ -30,6 +30,8 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        class CCallsign;
+
         //! Value object for ICAO classification
         class BLACKMISC_EXPORT CAirlineIcaoCode :
             public CValueObject<CAirlineIcaoCode>,
@@ -155,6 +157,9 @@ namespace BlackMisc
 
             //! Comined string with key
             QString getCombinedStringWithKey() const;
+
+            //! What is better, the callsign airline code or this code
+            CAirlineIcaoCode thisOrCallsignCode(const CCallsign &callsign) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
             CIcon toIcon() const;

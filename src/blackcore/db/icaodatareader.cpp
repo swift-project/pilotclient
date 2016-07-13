@@ -96,10 +96,10 @@ namespace BlackCore
             return this->getAirlineIcaoCodes().findByKey(key);
         }
 
-        CAirlineIcaoCode CIcaoDataReader::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const
+        CAirlineIcaoCode CIcaoDataReader::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
         {
             CAirlineIcaoCodeList codes(this->getAirlineIcaoCodes()); // thread safe copy
-            return codes.smartAirlineIcaoSelector(icaoPattern);
+            return codes.smartAirlineIcaoSelector(icaoPattern, callsign);
         }
 
         int CIcaoDataReader::getAircraftIcaoCodesCount() const

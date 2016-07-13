@@ -88,35 +88,36 @@ namespace BlackMisc
             });
         }
 
-        CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const
+        CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
         {
-            if (icaoPattern.hasValidDbKey())
+            const CAirlineIcaoCode patternUsed = icaoPattern.thisOrCallsignCode(callsign);
+            if (patternUsed.hasValidDbKey())
             {
                 return this->findByKey(icaoPattern.getDbKey(), icaoPattern);
             }
 
             // search by parts
             CAirlineIcaoCodeList codes;
-            if (icaoPattern.hasValidDesignator())
+            if (patternUsed.hasValidDesignator())
             {
-                codes = this->findByVDesignator(icaoPattern.getVDesignator());
+                codes = this->findByVDesignator(patternUsed.getVDesignator());
             }
             else
             {
-                codes = this->findByIataCode(icaoPattern.getIataCode());
+                codes = this->findByIataCode(patternUsed.getIataCode());
             }
 
             if (codes.size() == 1) { return codes.front(); }
 
             // further reduce
-            if (icaoPattern.hasValidCountry())
+            if (patternUsed.hasValidCountry())
             {
-                CAirlineIcaoCodeList countryCodes = codes.findByCountryIsoCode(icaoPattern.getCountry().getIsoCode());
+                CAirlineIcaoCodeList countryCodes = codes.findByCountryIsoCode(patternUsed.getCountry().getIsoCode());
                 if (!countryCodes.isEmpty()) { return countryCodes.front(); }
             }
 
             if (!codes.isEmpty()) { return codes.front(); }
-            return icaoPattern;
+            return patternUsed;
         }
 
         CAirlineIcaoCode CAirlineIcaoCodeList::findBestMatchByCallsign(const CCallsign &callsign) const

@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/aviation/airlineicaocode.h"
+#include "airlineicaocode.h"
+#include "callsign.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/icons.h"
@@ -33,11 +34,21 @@ namespace BlackMisc
     {
         CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator)
             : m_designator(airlineDesignator.trimmed().toUpper())
-        {}
+        {
+            if (this->m_designator.length() == 4)
+            {
+                this->setDesignator(this->m_designator);
+            }
+        }
 
         CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const BlackMisc::CCountry &country, const QString &telephony, bool virtualAirline, bool operating)
             : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_country(country), m_telephonyDesignator(telephony), m_isVa(virtualAirline), m_isOperating(operating)
-        {}
+        {
+            if (this->m_designator.length() == 4)
+            {
+                this->setDesignator(this->m_designator);
+            }
+        }
 
         const QString CAirlineIcaoCode::getVDesignator() const
         {
@@ -279,6 +290,30 @@ namespace BlackMisc
             QString s(getVDesignator());
             if (hasName()) { s = s.append(" ").append(getName()); }
             return s.append(" ").append(getDbKeyAsStringInParentheses());
+        }
+
+        CAirlineIcaoCode CAirlineIcaoCode::thisOrCallsignCode(const CCallsign &callsign) const
+        {
+            if (this->hasValidDbKey()) { return *this; }
+            if (callsign.isEmpty()) { return *this; }
+            const QString callsignAirline = callsign.getAirlineSuffix();
+            if (callsignAirline.isEmpty()) { return *this; }
+            if (callsignAirline == this->m_designator) { return *this; }
+
+            const CAirlineIcaoCode callsignIcao(callsignAirline);
+            if (this->m_designator.isEmpty()) { return callsignIcao; }
+
+            // here we have 2 possible codes
+            if (callsignIcao.isVirtualAirline())
+            {
+
+                if (callsignIcao.getDesignator().endsWith(this->m_designator))
+                {
+                    // callsign ICAO is virtual airline of myself, this is more accurate
+                    return callsignIcao;
+                }
+            }
+            return *this;
         }
 
         QString CAirlineIcaoCode::getNameWithKey() const

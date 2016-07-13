@@ -345,9 +345,9 @@ namespace BlackCore
         return 0;
     }
 
-    CAirlineIcaoCode CWebDataServices::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const
+    CAirlineIcaoCode CWebDataServices::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
     {
-        if (m_icaoDataReader) { return m_icaoDataReader->smartAirlineIcaoSelector(icaoPattern); }
+        if (m_icaoDataReader) { return m_icaoDataReader->smartAirlineIcaoSelector(icaoPattern, callsign); }
         return CAirlineIcaoCode();
     }
 
@@ -415,11 +415,10 @@ namespace BlackCore
     void CWebDataServices::gracefulShutdown()
     {
         this->disconnect(); // all signals
-        if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->gracefulShutdown(); }
+        if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->gracefulShutdown(); }
         if (this->m_vatsimBookingReader)  { this->m_vatsimBookingReader->gracefulShutdown(); }
         if (this->m_vatsimDataFileReader) { this->m_vatsimDataFileReader->gracefulShutdown(); }
         if (this->m_vatsimStatusReader)   { this->m_vatsimStatusReader->gracefulShutdown(); }
-        if (this->m_vatsimMetarReader)    { this->m_vatsimMetarReader->gracefulShutdown(); }
         if (this->m_modelDataReader)      { this->m_modelDataReader->gracefulShutdown(); }
         if (this->m_icaoDataReader)       { this->m_icaoDataReader->gracefulShutdown(); }
         if (this->m_infoDataReader)       { this->m_infoDataReader->gracefulShutdown(); }

@@ -70,7 +70,7 @@ namespace BlackMisc
             CAirlineIcaoCodeList findByMilitary(bool military) const;
 
             //! Best selection by given pattern
-            CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern) const;
+            CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const;
 
             //! Use callsign to conclude airline
             CAirlineIcaoCode findBestMatchByCallsign(const CCallsign &callsign) const;

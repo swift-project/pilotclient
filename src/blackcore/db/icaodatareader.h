@@ -91,7 +91,7 @@ namespace BlackCore
 
             //! Get best match for incomplete airline ICAO code
             //! \threadsafe
-            BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern) const;
+            BlackMisc::Aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const BlackMisc::Aviation::CAirlineIcaoCode &icaoPattern, const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign()) const;
 
             //! Get aircraft ICAO information count
             //! \threadsafe
