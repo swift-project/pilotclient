@@ -65,6 +65,7 @@ namespace BlackGui
             const CUpperCaseValidator *validator = new CUpperCaseValidator(this);
             ui->le_ModelString->setValidator(validator);
             ui->le_Manufacturer->setValidator(validator);
+            ui->le_Callsign->setValidator(validator);
 
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::ps_simulatorChanged);
             connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::ps_testModelMatching);
@@ -158,21 +159,18 @@ namespace BlackGui
             const QString combined(ui->comp_CombinedCode->getCombinedType());
             const QString manufacturer(ui->le_Manufacturer->text().trimmed().toUpper());
             const QString liveryCombinedCode(ui->comp_LiverySelector->getRawCombinedCode());
-
-            static const CCallsign cs("SWIFT");
+            const CCallsign cs(ui->le_Callsign->text());
             static const CUser pilot("123456", "swift Test", cs);
 
             CAircraftIcaoCode icao(aircraft, combined);
             icao.setManufacturer(manufacturer);
 
-            const CAirlineIcaoCode al(airline);
-            const CLivery l(liveryCombinedCode.isEmpty() ? CLivery::getStandardCode(al) : liveryCombinedCode,
-                            al,
-                            "Standard");
+            const CAirlineIcaoCode airlineIcao(airline);
+            const CLivery livery(liveryCombinedCode, airlineIcao, "");
             CAircraftModel m(modelString, CAircraftModel::TypeFSInnData);
-            m.setLivery(l);
+            m.setLivery(livery);
             m.setCallsign(cs);
-            m.setModelType(CAircraftModel::TypeFSInnData);
+            m.setModelType(modelString.isEmpty() ? CAircraftModel::TypeQueriedFromNetwork : CAircraftModel::TypeFSInnData);
             CSimulatedAircraft sa(m);
             sa.setPilot(pilot);
             sa.setAircraftIcaoCode(icao);
