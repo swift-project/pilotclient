@@ -11,6 +11,7 @@
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
 
 #include <QChar>
@@ -82,7 +83,7 @@ namespace BlackMisc
 
         void CUser::setRealName(const QString &realname)
         {
-            QString rn(realname.trimmed().simplified());
+            QString rn(removeAccents(realname.trimmed().simplified()));
             if (rn.isEmpty())
             {
                 this->m_realname = "";
