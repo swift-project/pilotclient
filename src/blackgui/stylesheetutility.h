@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/restricted.h"
+#include "blackmisc/digestsignal.h"
 
 #include <QFileSystemWatcher>
 #include <QMap>
@@ -144,8 +145,8 @@ namespace BlackGui
         void ps_qssDirectoryChanged(const QString &file);
 
     private:
-        QMap<QString, QString>    m_styleSheets;         //!< filename, stylesheet
-        QFileSystemWatcher        m_fileWatcher {this};  //!< Monitor my qss files
+        QMap<QString, QString>   m_styleSheets;         //!< filename, stylesheet
+        QFileSystemWatcher       m_fileWatcher {this};  //!< Monitor my qss files
     };
 }
 #endif // guard

@@ -36,8 +36,8 @@ namespace BlackGui
     CStyleSheetUtility::CStyleSheetUtility(BlackMisc::Restricted<CGuiApplication>, QObject *parent) : QObject(parent)
     {
         this->read();
-        this->m_fileWatcher.addPath(CBuildConfig::getStylesheetsDir());
         connect(&this->m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &CStyleSheetUtility::ps_qssDirectoryChanged);
+        connect(&this->m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &CStyleSheetUtility::ps_qssDirectoryChanged);
     }
 
     const QString &CStyleSheetUtility::fontStyleAsString(const QFont &font)
@@ -113,26 +113,36 @@ namespace BlackGui
         if (!directory.exists()) { return false; }
 
         // qss/css files
+        const bool needsWatcher = this->m_fileWatcher.files().isEmpty();
+        if (needsWatcher) { this->m_fileWatcher.addPath(CBuildConfig::getStylesheetsDir()); } // directory to deleted file watching
         directory.setNameFilters({"*.qss", "*.css"});
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
-        this->m_styleSheets.clear();
+        QMap<QString, QString> newStyleSheets;
         const QFileInfoList fileInfoList = directory.entryInfoList();
         for (const QFileInfo &fileInfo : fileInfoList)
         {
-            QFile file(fileInfo.absoluteFilePath());
+            const QString absolutePath = fileInfo.absoluteFilePath();
+            QFile file(absolutePath);
             if (file.open(QFile::QIODevice::ReadOnly | QIODevice::Text))
             {
+                if (needsWatcher) { this->m_fileWatcher.addPath(absolutePath); }
                 QTextStream in(&file);
                 const QString c = in.readAll();
                 const QString f = fileInfo.fileName().toLower();
 
                 // keep even empty files as placeholders
-                this->m_styleSheets.insert(f, c);
+                newStyleSheets.insert(f, c);
             }
             file.close();
         }
-        emit this->styleSheetsChanged();
+
+        // ignore redundant re-reads
+        if (newStyleSheets != this->m_styleSheets)
+        {
+            this->m_styleSheets = newStyleSheets;
+            emit this->styleSheetsChanged();
+        }
         return true;
     }
 
