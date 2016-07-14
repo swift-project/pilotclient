@@ -52,6 +52,7 @@ namespace BlackCore
             this->setObjectName("CContextSimulator");
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
             m_plugins->collectPlugins();
+            restoreSimulatorPlugins();
         }
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
