@@ -368,24 +368,14 @@ namespace BlackCore
             Q_ASSERT(c);
             Q_UNUSED(c);
 
-            // use network to initally add aircraft
-            IContextNetwork *networkContext = this->getIContextNetwork();
-            Q_ASSERT(networkContext);
-            Q_ASSERT(networkContext->isLocalObject());
-
-            // initially add aircraft
-            for (const CSimulatedAircraft &simulatedAircraft : networkContext->getAircraftInRange())
-            {
-                Q_ASSERT(!simulatedAircraft.getCallsign().isEmpty());
-                simulator->logicallyAddRemoteAircraft(simulatedAircraft);
-            }
-
+            // Once the simulator signaled it is ready to simulate, add all known aircrafts.
+            m_initallyAddAircrafts = true;
+            // try to connect to simulator
+            simulator->connectTo();
             // when everything is set up connected, update the current plugin info
             m_simulatorPlugin.first = simulatorInfo;
             m_simulatorPlugin.second = simulator;
 
-            // try to connect to simulator
-            simulator->connectTo();
             emit simulatorPluginChanged(simulatorInfo);
             CLogMessage(this).info("Simulator plugin loaded: %1") << simulatorInfo.toQString(true);
 
@@ -481,14 +471,7 @@ namespace BlackCore
 
         void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
-            //! \todo This was previously an assert and it should be one again in the future. This slot should not even be called when no simulator is available.
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                // Do something if no simulator is running
-                return;
-            }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!isSimulatorSimulating()) { return; }
             Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
 
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(remoteAircraft);
@@ -496,21 +479,29 @@ namespace BlackCore
 
         void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
         {
-            // \fixme: This was previously an assert and it should be one again in the future.
-            // This slot should not even be called when no simulator is available.
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                // Do something if no simulator is running
-                return;
-            }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
         }
 
         void CContextSimulator::ps_onSimulatorStatusChanged(int status)
         {
             ISimulator::SimulatorStatus statusEnum = ISimulator::statusToEnum(status);
+            if (m_initallyAddAircrafts && statusEnum.testFlag(ISimulator::Simulating))
+            {
+                // use network to initally add aircraft
+                IContextNetwork *networkContext = this->getIContextNetwork();
+                Q_ASSERT(networkContext);
+                Q_ASSERT(networkContext->isLocalObject());
+
+                // initially add aircraft
+                const CSimulatedAircraftList aircrafts = networkContext->getAircraftInRange();
+                for (const CSimulatedAircraft &simulatedAircraft : aircrafts)
+                {
+                    Q_ASSERT(!simulatedAircraft.getCallsign().isEmpty());
+                    m_simulatorPlugin.second->logicallyAddRemoteAircraft(simulatedAircraft);
+                }
+                m_initallyAddAircrafts = false;
+            }
             if (!statusEnum.testFlag(ISimulator::Connected))
             {
                 // we got disconnected, plugin no longer needed
@@ -521,16 +512,7 @@ namespace BlackCore
 
         void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
         {
-            // todo:
-            // This was previously an assert and it should be one again in the future.
-            // This slot should not even be called when no simulator is available.
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                // Do something if no simulator is running
-                return;
-            }
-
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!isSimulatorSimulating()) { return; }
             for (const auto &tm : textMessages)
             {
                 m_simulatorPlugin.second->displayTextMessage(tm);
@@ -545,29 +527,19 @@ namespace BlackCore
 
         void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft);
         }
 
         void CContextSimulator::ps_changedRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
         {
-            Q_ASSERT(m_simulatorPlugin.second);
+            if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
         void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
-            // todo:
-            // This was previously an assert and it should be one again in the future.
-            // This slot should not even be called when no simulator is available.
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                // Do something if no simulator is running
-                return;
-            }
-
-            Q_ASSERT(m_simulatorPlugin.second);
-
+            if (!isSimulatorSimulating()) { return; }
             // avoid loops
             if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
 

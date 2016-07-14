@@ -206,6 +206,7 @@ namespace BlackCore
             BlackMisc::CRegularThread m_listenersThread;
             BlackCore::CWeatherManager m_weatherManager { this };
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
+            bool m_initallyAddAircrafts = false;
         };
     } // namespace
 } // namespace

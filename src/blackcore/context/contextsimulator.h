@@ -183,6 +183,9 @@ namespace BlackCore
             //! Simulator avialable (driver available)?
             bool isSimulatorAvailable() const { return BlackConfig::CBuildConfig::isCompiledWithFlightSimulatorSupport() && !getSimulatorPluginInfo().isUnspecified(); }
 
+            //! Is available simulator simulating? Returns false if no simulator is available
+            bool isSimulatorSimulating() const;
+
             //! Icon representing the model
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
 
