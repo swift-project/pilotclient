@@ -95,8 +95,6 @@ namespace BlackSimPlugin
             initEvents();
             initDataDefinitionsWhenConnected();
             m_simconnectTimerId = startTimer(10);
-            m_simConnected = true;
-            emitSimulatorCombinedStatus();
             return true;
         }
 
@@ -294,6 +292,12 @@ namespace BlackSimPlugin
         CCallsignSet CSimulatorFsx::physicallyRenderedAircraft() const
         {
             return CCollection<CCallsign>(this->m_simConnectObjects.keys());
+        }
+
+        void CSimulatorFsx::setSimConnected()
+        {
+            m_simConnected = true;
+            emitSimulatorCombinedStatus();
         }
 
         void CSimulatorFsx::onSimRunning()

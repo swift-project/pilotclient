@@ -146,6 +146,9 @@ namespace BlackSimPlugin
             void ps_reloadSettings();
 
         private:
+            //! Call this method to declare the simulator connected
+            void setSimConnected();
+
             //! Called when sim has started
             void onSimRunning();
 
