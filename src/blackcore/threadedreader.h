@@ -39,7 +39,7 @@ namespace BlackCore
         //! Destructor
         virtual ~CThreadedReader();
 
-        //! Thread safe, set update timestamp
+        //! Thread safe, get update timestamp
         //! \threadsafe
         QDateTime getUpdateTimestamp() const;
 

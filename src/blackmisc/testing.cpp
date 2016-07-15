@@ -102,8 +102,8 @@ namespace BlackMisc
                 r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
-                r.append(station.propertyByIndex({ CAtcStation::IndexBookedFrom}).toDateTime().toString("YYYY-mm-dd hh:mm"));
-                r.append(station.propertyByIndex({ CAtcStation::IndexBookedUntil}).toDateTime().toString("YYYY-mm-dd hh:mm"));
+                r.append(station.propertyByIndex({ CAtcStation::IndexBookedFrom}).toDateTime().toString("yyyy-MM-dd hh:mm"));
+                r.append(station.propertyByIndex({ CAtcStation::IndexBookedUntil}).toDateTime().toString("yyyy-MM-dd hh:mm"));
             }
             else
             {
@@ -112,8 +112,8 @@ namespace BlackMisc
                 r.append(station.getPosition().latitudeAsString());
                 r.append(station.getPosition().longitudeAsString());
                 r.append(station.getRelativeDistance().toQString(true));
-                r.append(station.getBookedFromUtc().toString("YYYY-mm-dd hh:mm"));
-                r.append(station.getBookedUntilUtc().toString("YYYY-mm-dd hh:mm"));
+                r.append(station.getBookedFromUtc().toString("yyyy-MM-dd hh:mm"));
+                r.append(station.getBookedUntilUtc().toString("yyyy-MM-dd hh:mm"));
             }
             return r;
         }
