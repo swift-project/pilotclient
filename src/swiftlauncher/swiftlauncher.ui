@@ -78,7 +78,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -116,8 +116,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>199</width>
-               <height>63</height>
+               <width>355</width>
+               <height>301</height>
               </rect>
              </property>
              <attribute name="label">
@@ -181,8 +181,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>277</width>
-               <height>222</height>
+               <width>341</width>
+               <height>309</height>
               </rect>
              </property>
              <attribute name="label">
@@ -406,104 +406,140 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>283</width>
-               <height>198</height>
+               <width>355</width>
+               <height>301</height>
               </rect>
              </property>
              <attribute name="label">
               <string>Check for updates</string>
              </attribute>
-             <layout class="QGridLayout" name="gl_Updates">
-              <item row="5" column="1">
-               <widget class="QWidget" name="wi_NoNewVersion" native="true">
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <item>
-                  <widget class="QLabel" name="blb_NoNewVersion">
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
+               <widget class="QFrame" name="fr_SoftwareUpdates">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_2">
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="le_CurrentVersion">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lbl_CurrentVersion">
                    <property name="text">
-                    <string>You are running the latest version!</string>
+                    <string>This version:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="lbl_LatestVersion">
+                   <property name="text">
+                    <string>Latest version:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1" colspan="3">
+                  <widget class="QWidget" name="wi_NoNewVersion" native="true">
+                   <layout class="QVBoxLayout" name="vl_NoNewVersion">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="lbl_NoNewVersion">
+                      <property name="text">
+                       <string>You are running the latest version!</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QLineEdit" name="le_LatestVersion">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1" colspan="3">
+                  <widget class="QWidget" name="wi_NewVersionAvailable" native="true">
+                   <layout class="QVBoxLayout" name="vl_NewVersionAvailable">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="lbl_NewVersion">
+                      <property name="text">
+                       <string>New version available</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="lbl_NewVersionUrl">
+                      <property name="text">
+                       <string>URL goes here</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="1" colspan="2">
+                  <widget class="QPushButton" name="pb_CheckForUpdates">
+                   <property name="text">
+                    <string>check for updates</string>
                    </property>
                   </widget>
                  </item>
                 </layout>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QWidget" name="wi_NewVersionAvailable" native="true">
-                <layout class="QVBoxLayout" name="verticalLayout_2">
-                 <item>
-                  <widget class="QLabel" name="lbl_NewVersionText">
-                   <property name="text">
-                    <string>A new version is available here:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="lbl_NewVersionUrl">
-                   <property name="text">
-                    <string>http://www.foobar.com</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="le_CurrentVersion">
-                <property name="readOnly">
-                 <bool>true</bool>
+              <item>
+               <widget class="QFrame" name="fr_DataUpdates">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
                 </property>
                </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="lbl_LatestVersion">
-                <property name="text">
-                 <string>Latest version:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="lbl_CurrentVersion">
-                <property name="text">
-                 <string>This version:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QPushButton" name="pb_CheckForUpdates">
-                <property name="text">
-                 <string>check for updates</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="le_LatestVersion">
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="1">
-               <spacer name="vs_Updates">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
+             <zorder>fr_SoftwareUpdates</zorder>
+             <zorder>lbl_NoNewVersion</zorder>
+             <zorder>fr_DataUpdates</zorder>
             </widget>
             <widget class="QWidget" name="pg_CreditsLicense">
              <property name="geometry">
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
-               <height>88</height>
+               <width>355</width>
+               <height>301</height>
               </rect>
              </property>
              <attribute name="label">
@@ -738,8 +774,8 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="swiftlauncher.qrc"/>
   <include location="../blackmisc/blackmisc.qrc"/>
+  <include location="swiftlauncher.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

@@ -40,6 +40,11 @@ namespace BlackCore
             return CBuildConfig::isBetaTest() ? getLatestVersionBeta() : getLatestVersionStable();
         }
 
+        QString CUpdateInfo::getChannel() const
+        {
+            return CBuildConfig::isBetaTest() ? "beta" : "stable";
+        }
+
         bool CUpdateInfo::hasSameType(const CUpdateInfo &otherDownload) const
         {
             return this->isDevelopment() == otherDownload.isDevelopment();
@@ -136,6 +141,5 @@ namespace BlackCore
                 break;
             }
         }
-
     } // ns
 } // ns

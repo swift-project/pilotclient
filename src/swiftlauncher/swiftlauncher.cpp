@@ -48,6 +48,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
 
     // use version signal as trigger for completion
+    this->ps_loadedUpdateInfo(true); // defaults from settings, overridden by signal/slot when changed
     connect(sGui, &CApplication::updateInfoAvailable, this, &CSwiftLauncher::ps_loadedUpdateInfo);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
@@ -307,7 +308,7 @@ void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
         return;
     }
 
-    const CUpdateInfo updateInfo(this->m_updateInfo.getThreadLocal());
+    const CUpdateInfo updateInfo(this->m_updateInfo.get());
     const QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
     CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
     bool newVersionAvailable = CVersion::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();

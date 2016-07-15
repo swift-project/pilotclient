@@ -69,6 +69,9 @@ namespace BlackCore
             //! Latest version
             QString getLatestVersion() const;
 
+            //! Version channel (Beta, Stable)
+            QString getChannel() const;
+
             //! Last supported version stable
             const QString &getLastSupportedVersionStable() const { return m_lastSupportedVersionStable; }
 
