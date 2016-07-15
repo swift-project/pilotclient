@@ -103,6 +103,23 @@ namespace BlackCore
             //! \threadsafe
             bool canConnect(QString &message) const;
 
+            //! Get cache timestamp
+            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const = 0;
+
+            //! Cache`s number of entities
+            virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
+
+            //! Info objects available?
+            bool hasInfoObjects() const;
+
+            //! Obtain latest object timestamp from info objects
+            //! \sa BlackCore::Db::CInfoDataReader
+            QDateTime getLatestEntityTimestampFromInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Count from info objects
+            //! \sa BlackCore::Db::CInfoDataReader
+            int getCountFromInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
             //! Status message (error message)
             const QString &getStatusMessage() const;
 
@@ -138,13 +155,6 @@ namespace BlackCore
             //! \sa BlackCore::Db::CInfoDataReader
             BlackMisc::Db::CDbInfoList infoList() const;
 
-            //! Info objects available?
-            bool hasInfoObjects() const;
-
-            //! Obtain latest object timestamp
-            //! \sa BlackCore::Db::CInfoDataReader
-            QDateTime getLatestEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
-
             //! Config for given entity
             CDatabaseReaderConfig getConfigForEntity(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
@@ -159,15 +169,8 @@ namespace BlackCore
 
             //! \name  Cache access
             //! @{
-
             //! Syncronize caches for given entities
             virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
-
-            //! Cache`s timestamp for given entity
-            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const = 0;
-
-            //! Cache`s number of entities
-            virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
 
             //! Invalidate the caches for given entities
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;

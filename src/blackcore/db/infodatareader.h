@@ -48,19 +48,19 @@ namespace BlackCore
             //! URL info objects web service
             BlackMisc::Network::CUrl getInfoObjectsUrl() const;
 
+            // cache handling for base class
+            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+
         public slots:
             //! Allow to call CInfoDataReader::ps_read directly, special for info objects
             void read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::InfoObjectEntity, const QDateTime &newerThan = QDateTime());
 
         protected:
-            //! \name cache handling for base class
-            //! @{
+            // cache handling for base class
             virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-            virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-            //! @}
 
         private slots:
             //! Info objects have been read

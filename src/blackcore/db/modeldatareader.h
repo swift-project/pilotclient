@@ -120,15 +120,15 @@ namespace BlackCore
             //! Write to JSON file
             bool writeToJsonFiles(const QString &dir) const;
 
-        protected:
-            //! \name cache handling for base class
-            //! @{
-            virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-            virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+            // cache handling for base class
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+
+        protected:
+            // cache handling for base class
+            virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-            //! @}
 
         private slots:
             //! Liveries have been read

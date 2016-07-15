@@ -62,7 +62,7 @@ namespace BlackCore
                     {
                         const bool changedUrl = this->hasChangedUrl(currentEntity);
                         const QDateTime cacheTs(this->getCacheTimestamp(currentEntity));
-                        const QDateTime latestEntityTs(this->getLatestEntityTimestamp(currentEntity));
+                        const QDateTime latestEntityTs(this->getLatestEntityTimestampFromInfoObjects(currentEntity));
                         const qint64 cacheTimestamp = cacheTs.isValid() ? cacheTs.toMSecsSinceEpoch() : -1;
                         const qint64 latestEntityTimestamp = latestEntityTs.isValid() ? latestEntityTs.toMSecsSinceEpoch() : -1;
                         Q_ASSERT_X(latestEntityTimestamp >= 0, Q_FUNC_INFO, "Missing timestamp");
@@ -180,7 +180,7 @@ namespace BlackCore
             return infoList().size() > 0;
         }
 
-        QDateTime CDatabaseReader::getLatestEntityTimestamp(CEntityFlags::Entity entity) const
+        QDateTime CDatabaseReader::getLatestEntityTimestampFromInfoObjects(CEntityFlags::Entity entity) const
         {
             static const QDateTime e;
             const CDbInfoList il(infoList());
@@ -188,6 +188,16 @@ namespace BlackCore
             CDbInfo info = il.findFirstByEntityOrDefault(entity);
             if (!info.isValid()) { return e; }
             return info.getUtcTimestamp();
+        }
+
+        int CDatabaseReader::getCountFromInfoObjects(CEntityFlags::Entity entity) const
+        {
+            static const QDateTime e;
+            const CDbInfoList il(infoList());
+            if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return -1; }
+            CDbInfo info = il.findFirstByEntityOrDefault(entity);
+            if (!info.isValid()) { return -1; }
+            return info.getEntries();
         }
 
         CDatabaseReaderConfig CDatabaseReader::getConfigForEntity(CEntityFlags::Entity entity) const

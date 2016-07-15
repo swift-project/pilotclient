@@ -213,6 +213,69 @@ namespace BlackCore
         return triggeredRead;
     }
 
+    QDateTime CWebDataServices::getCacheTimestamp(CEntityFlags::Entity entity) const
+    {
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+        if (CEntityFlags::anySwiftDbEntity(entity))
+        {
+            CDatabaseReader *dr = this->getDbReader(entity);
+            if (!dr) { return QDateTime(); }
+            return dr->getCacheTimestamp(entity);
+        }
+        else
+        {
+            // non DB entities would go here
+            return QDateTime();
+        }
+    }
+
+    QDateTime CWebDataServices::getDbLatestEntityTimestamp(CEntityFlags::Entity entity) const
+    {
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+        if (CEntityFlags::anySwiftDbEntity(entity))
+        {
+            CInfoDataReader *ir = this->getInfoDataReader();
+            if (!ir) { return QDateTime(); }
+            return ir->getLatestEntityTimestampFromInfoObjects(entity);
+        }
+        else
+        {
+            return QDateTime();
+        }
+    }
+
+    int CWebDataServices::getCacheCount(CEntityFlags::Entity entity) const
+    {
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+        if (CEntityFlags::anySwiftDbEntity(entity))
+        {
+            CDatabaseReader *dr = this->getDbReader(entity);
+            if (!dr) { return -1; }
+            return dr->getCacheCount(entity);
+        }
+        else
+        {
+            // non DB entities would go here
+            return -1;
+        }
+    }
+
+    int CWebDataServices::getDbInfoCount(CEntityFlags::Entity entity) const
+    {
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+        if (CEntityFlags::anySwiftDbEntity(entity))
+        {
+            CDatabaseReader *dr = this->getDbReader(entity);
+            if (!dr) { return -1; }
+            return dr->getCountFromInfoObjects(entity);
+        }
+        else
+        {
+            // non DB entities would go here
+            return -1;
+        }
+    }
+
     CDistributorList CWebDataServices::getDistributors() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getDistributors(); }
@@ -535,6 +598,20 @@ namespace BlackCore
         }
     }
 
+    CDatabaseReader *CWebDataServices::getDbReader(CEntityFlags::Entity entity) const
+    {
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+        Q_ASSERT_X(CEntityFlags::anySwiftDbEntity(entity), Q_FUNC_INFO, "No swift DB entity");
+
+        CWebReaderFlags::WebReader wr = CWebReaderFlags::entityToReader(entity);
+        switch (wr)
+        {
+        case CWebReaderFlags::IcaoDataReader: return this->m_icaoDataReader;
+        case CWebReaderFlags::ModelReader: return this->m_modelDataReader;
+        }
+        return nullptr;
+    }
+
     void CWebDataServices::initWriters()
     {
         this->m_databaseWriter = new CDatabaseWriter(
@@ -630,6 +707,7 @@ namespace BlackCore
             }
         }
 
+        // read entities
         if (delayMs > 100)
         {
             this->singleShotReadInBackground(entities, 0);

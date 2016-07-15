@@ -70,6 +70,7 @@ namespace BlackCore
     namespace Db
     {
         class CDatabaseWriter;
+        class CDatabaseReader;
         class CIcaoDataReader;
         class CModelDataReader;
         class CInfoDataReader;
@@ -284,6 +285,22 @@ namespace BlackCore
         //! Trigger read of new data
         BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &dateTime = QDateTime());
 
+        //! Corresponding cache timestamp if applicable
+        //! \threadsafe
+        QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+        //! Corresponding DB timestamp if applicable
+        //! \threadsafe
+        QDateTime getDbLatestEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+        //! Cache count for entity
+        //! \threadsafe
+        int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+        //! Count for entity from entity objects
+        //! \threadsafe
+        int getDbInfoCount(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
         //! Can connect to swift DB?
         bool canConnectSwiftDb() const;
 
@@ -320,6 +337,9 @@ namespace BlackCore
     private:
         //! Init the readers
         void initReaders(CWebReaderFlags::WebReader flags);
+
+        //! DB reader for given entity
+        Db::CDatabaseReader *getDbReader(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
         //! Init the writers
         void initWriters();
