@@ -166,9 +166,9 @@ namespace BlackConfig
         static const bool appBundle = isAppBundle();
         if (CBuildConfig::isRunningOnMacOSXPlatform() && appBundle)
         {
-            success = dir.cd("../../../../data");
+            success = dir.cd("../../../../share");
         }
-        else { success = dir.cd("../data"); }
+        else { success = dir.cd("../share"); }
 
         if (success)
         {

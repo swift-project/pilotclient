@@ -67,13 +67,13 @@ This installs the binaries to run all swift applications.</detailedDescription>
             </distributionFileList>
         </folder>
         <folder>
-            <description>data</description>
+            <description>share</description>
             <destination>${installdir}/</destination>
-            <name>data</name>
+            <name>share</name>
             <platforms>all</platforms>
             <distributionFileList>
                 <distributionDirectory>
-                    <origin>../../dist/data</origin>
+                    <origin>../../dist/share</origin>
                 </distributionDirectory>
             </distributionFileList>
         </folder>
