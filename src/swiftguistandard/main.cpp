@@ -21,14 +21,14 @@ using namespace BlackCore;
 
 int main(int argc, char *argv[])
 {
-    //! [CSwiftGuiStdApplication]
+    //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CSwiftGuiStdApplication a;
     a.signalStartupAutomatically(); // application will signal startup on its own
     a.splashScreen(":/own/icons/own/swift/swiftCirclePilotClient1024.png");
     if (!a.start()) { return EXIT_FAILURE; }
-    //! [CSwiftGuiStdApplication]
+    //! [SwiftApplicationDemo]
 
     // show window
     CEnableForFramelessWindow::WindowMode windowMode = a.getWindowMode();

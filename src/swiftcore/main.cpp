@@ -24,7 +24,7 @@ using namespace BlackGui;
 
 int main(int argc, char *argv[])
 {
-    //! [CSwiftGuiStdApplication]
+    //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("swift core", CGuiApplication::PilotClientCore, CIcons::swiftNova24());
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
                   CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress) :
                   CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(dBusAdress));
     a.start();
-    //! [CSwiftGuiStdApplication]
+    //! [SwiftApplicationDemo]
 
     if (!QSystemTrayIcon::isSystemTrayAvailable())
     {

@@ -49,13 +49,13 @@ namespace BlackGui
      *  - splash screen support
      *
      *  Simple example
-     *  \snippet swiftlauncher/main.cpp CSwiftGuiStdApplication
+     *  \snippet swiftlauncher/main.cpp SwiftApplicationDemo
      *
      *  Derived class example, hence very short (logic in CSwiftGuiStdApplication)
-     *  \snippet swiftguistandard/main.cpp CSwiftGuiStdApplication
+     *  \snippet swiftguistandard/main.cpp SwiftApplicationDemo
      *
      *  Longer example
-     *  \snippet swiftcore/main.cpp CSwiftGuiStdApplication
+     *  \snippet swiftcore/main.cpp SwiftApplicationDemo
      */
     class BLACKGUI_EXPORT CGuiApplication :
         public BlackCore::CApplication,
