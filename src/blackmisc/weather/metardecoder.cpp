@@ -50,7 +50,7 @@ namespace BlackMisc
         {
         protected:
             virtual bool isRepeatable() const { return false; }
-            virtual QString getRegExp() const = 0;
+            virtual const QRegularExpression &getRegExp() const = 0;
             virtual bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const = 0;
             virtual bool isMandatory() const = 0;
             virtual QString getDecoderType() const = 0;
@@ -59,7 +59,7 @@ namespace BlackMisc
             bool parse(QString &metarString, CMetar &metar)
             {
                 bool isValid = false;
-                QRegularExpression re(getRegExp());
+                const QRegularExpression re(getRegExp());
                 Q_ASSERT(re.isValid());
                 // Loop stop condition:
                 // - Invalid data
@@ -92,7 +92,11 @@ namespace BlackMisc
         class CMetarDecoderReportType : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override { return QStringLiteral("^(?<reporttype>METAR|SPECI)? "); }
+            const QRegularExpression &getRegExp() const override
+            {
+                static const QRegularExpression re(QStringLiteral("^(?<reporttype>METAR|SPECI)? "));
+                return re;
+            }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
             {
@@ -121,7 +125,11 @@ namespace BlackMisc
         class CMetarDecoderAirport : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override { return QStringLiteral("^(?<airport>\\w{4}) "); }
+            const QRegularExpression &getRegExp() const override
+            {
+                static const QRegularExpression re(QStringLiteral("^(?<airport>\\w{4}) "));
+                return re;
+            }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
             {
@@ -138,7 +146,11 @@ namespace BlackMisc
         class CMetarDecoderDayTime : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override { return QStringLiteral("^(?<day>\\d{2})(?<hour>\\d{2})(?<minute>\\d{2})Z "); }
+            const QRegularExpression &getRegExp() const override
+            {
+                static const QRegularExpression re (QStringLiteral("^(?<day>\\d{2})(?<hour>\\d{2})(?<minute>\\d{2})Z "));
+                return re;
+            }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
             {
@@ -168,7 +180,11 @@ namespace BlackMisc
             // * (AUTO) - Automatic Station Indicator
             // * (NIL) - NO METAR
             // * (BBB) - Correction Indicator
-            QString getRegExp() const override { return QStringLiteral("^([A-Z]+) "); }
+            const QRegularExpression &getRegExp() const override
+            {
+                static const QRegularExpression re(QStringLiteral("^([A-Z]+) "));
+                return re;
+            }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
             {
@@ -185,7 +201,6 @@ namespace BlackMisc
         class CMetarDecoderWind : public IMetarDecoderPart
         {
         protected:
-
             const QHash<QString, CSpeedUnit> &getWindUnitHash() const
             {
                 static const QHash<QString, CSpeedUnit> hash =
@@ -198,19 +213,10 @@ namespace BlackMisc
                 return hash;
             }
 
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // Wind direction in three digits, 'VRB' or /// if no info available
-                static const QString direction = QStringLiteral("(?<direction>\\d{3}|VRB|/{3})");
-                // Wind speed in two digits (or three digits if required)
-                static const QString speed = QStringLiteral("(?<speed>\\d{2,3}|/{2})");
-                // Optional: Gust in two digits (or three digits if required)
-                static const QString gustSpeed = QStringLiteral("(G(?<gustSpeed>\\d{2,3}))?");
-                // Unit
-                static const QString unit = QStringLiteral("(?<unit>") + QStringList(getWindUnitHash().keys()).join('|') + ")";
-                // Regexp
-                static const QString regexp = "^" + direction + speed + gustSpeed + unit + " ?";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -253,20 +259,31 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "Wind"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // Wind direction in three digits, 'VRB' or /// if no info available
+                const QString direction = QStringLiteral("(?<direction>\\d{3}|VRB|/{3})");
+                // Wind speed in two digits (or three digits if required)
+                const QString speed = QStringLiteral("(?<speed>\\d{2,3}|/{2})");
+                // Optional: Gust in two digits (or three digits if required)
+                const QString gustSpeed = QStringLiteral("(G(?<gustSpeed>\\d{2,3}))?");
+                // Unit
+                const QString unit = QStringLiteral("(?<unit>") + QStringList(getWindUnitHash().keys()).join('|') + ")";
+                // Regexp
+                const QString regexp = "^" + direction + speed + gustSpeed + unit + " ?";
+                return regexp;
+            }
         };
 
         class CMetarDecoderVariationsWindDirection : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // <from>V in degrees
-                static const QString directionFrom("(?<direction_from>\\d{3})V");
-                // <to> in degrees
-                static const QString directionTo("(?<direction_to>\\d{3})");
-                // Add space at the end
-                static const QString regexp = "^" + directionFrom + directionTo + " ";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -290,6 +307,18 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "WindDirection"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // <from>V in degrees
+                const QString directionFrom("(?<direction_from>\\d{3})V");
+                // <to> in degrees
+                const QString directionTo("(?<direction_to>\\d{3})");
+                // Add space at the end
+                const QString regexp = "^" + directionFrom + directionTo + " ";
+                return regexp;
+            }
         };
 
         class CMetarDecoderVisibility : public IMetarDecoderPart
@@ -312,27 +341,11 @@ namespace BlackMisc
                 return hash;
             }
 
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
 
-                // CAVOK
-                static const QString cavok = QStringLiteral("(?<cavok>CAVOK)");
-                // European version:
-                // Visibility of 4 digits in meter
-                // Cardinal directions N, NE etc.
-                // "////" in case no info is available
-                // NDV = No Directional Variation
-                static const QString visibility_eu = QStringLiteral("(?<visibility>\\d{4}|/{4})(NDV)?") + "(" + QStringList(getCardinalDirections().keys()).join('|') + ")?";
-                // US/Canada version:
-                // Surface visibility reported in statute miles.
-                // A space divides whole miles and fractions.
-                // Group ends with SM to indicate statute miles. For example,
-                // 1 1/2SM.
-                // Auto only: M prefixed to value < 1/4 mile, e.g., M1/4S
-                static const QString visibility_us = QStringLiteral("(?<distance>\\d{0,2}) ?M?((?<numerator>\\d)/(?<denominator>\\d))?(?<unit>SM|KM)");
-
-                static const QString regexp = "^(" + cavok + "|" + visibility_eu + "|" +  visibility_us + ") ";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -382,32 +395,38 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "Visibility"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // CAVOK
+                const QString cavok = QStringLiteral("(?<cavok>CAVOK)");
+                // European version:
+                // Visibility of 4 digits in meter
+                // Cardinal directions N, NE etc.
+                // "////" in case no info is available
+                // NDV = No Directional Variation
+                const QString visibility_eu = QStringLiteral("(?<visibility>\\d{4}|/{4})(NDV)?") + "(" + QStringList(getCardinalDirections().keys()).join('|') + ")?";
+                // US/Canada version:
+                // Surface visibility reported in statute miles.
+                // A space divides whole miles and fractions.
+                // Group ends with SM to indicate statute miles. For example,
+                // 1 1/2SM.
+                // Auto only: M prefixed to value < 1/4 mile, e.g., M1/4S
+                const QString visibility_us = QStringLiteral("(?<distance>\\d{0,2}) ?M?((?<numerator>\\d)/(?<denominator>\\d))?(?<unit>SM|KM)");
+                const QString regexp = "^(" + cavok + "|" + visibility_eu + "|" +  visibility_us + ") ";
+                return regexp;
+            }
         };
 
         class CMetarDecoderRunwayVisualRange : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // 10 Minute RVR value: Reported in hundreds of feet if visibility is ≤ one statute mile
-                // or RVR is ≤ 6000 feet. Group ends with FT to indicate feet. For example, R06L/2000FT.
-                // The RVR value is prefixed with either M or P to indicate the value is lower or higher
-                // than the RVR reportable values, e.g., R06L/P6000FT. If the RVR is variable during the 10
-                // minute evaluation period, the variability is reported, e.g., R06L/2000V4000FT
 
-                // Runway
-                static const QString runway = QStringLiteral("R(?<runway>\\d{2}[LCR]*)");
-                // Visibility
-                static const QString visibility = QStringLiteral("/[PM]?(?<rwy_visibility>\\d{4})");
-                // Variability
-                static const QString variability = QStringLiteral("V?(?<variability>\\d{4})?");
-                // Unit
-                static const QString unit = QStringLiteral("(?<unit>FT)?");
-                // Trend
-                static const QString trend = QStringLiteral("/?(?<trend>[DNU])?");
-
-                static const QString regexp = "^" + runway + visibility + variability + unit + trend + " ";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -430,6 +449,29 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "RunwayVisualRange"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // 10 Minute RVR value: Reported in hundreds of feet if visibility is ≤ one statute mile
+                // or RVR is ≤ 6000 feet. Group ends with FT to indicate feet. For example, R06L/2000FT.
+                // The RVR value is prefixed with either M or P to indicate the value is lower or higher
+                // than the RVR reportable values, e.g., R06L/P6000FT. If the RVR is variable during the 10
+                // minute evaluation period, the variability is reported, e.g., R06L/2000V4000FT
+
+                // Runway
+                const QString runway = QStringLiteral("R(?<runway>\\d{2}[LCR]*)");
+                // Visibility
+                const QString visibility = QStringLiteral("/[PM]?(?<rwy_visibility>\\d{4})");
+                // Variability
+                static const QString variability = QStringLiteral("V?(?<variability>\\d{4})?");
+                // Unit
+                const QString unit = QStringLiteral("(?<unit>FT)?");
+                // Trend
+                const QString trend = QStringLiteral("/?(?<trend>[DNU])?");
+                const QString regexp = "^" + runway + visibility + variability + unit + trend + " ";
+                return regexp;
+            }
         };
 
         class CMetarDecoderPresentWeather : public IMetarDecoderPart
@@ -495,23 +537,10 @@ namespace BlackMisc
 
             virtual bool isRepeatable() const override { return true; }
 
-            // w'w' represents present weather, coded in accordance with WMO Code Table 4678.
-            // As many groups as necessary are included, with each group containing from 2 to 9 characters.
-            // * Weather phenomena are preceded by one or two qualifiers
-            // * No w'w' group has more than one descriptor.
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // Qualifier intensity. (-) light (no sign) moderate (+) heavy or VC
-                static const QString qualifier_intensity("(?<intensity>[-+]|VC)?");
-                // Descriptor, if any
-                static const QString qualifier_descriptor = "(?<descriptor>" + QStringList(getDescriptorHash().keys()).join('|') + ")?";
-                static const QString weatherPhenomenaJoined = QStringList(getWeatherPhenomenaHash().keys()).join('|');
-                static const QString weather_phenomina1 = "(?<wp1>" + weatherPhenomenaJoined + ")?";
-                static const QString weather_phenomina2 = "(?<wp2>" + weatherPhenomenaJoined + ")?";
-                static const QString weather_phenomina3 = "(?<wp3>" + weatherPhenomenaJoined + ")?";
-                static const QString weather_phenomina4 = "(?<wp4>" + weatherPhenomenaJoined + ")?";
-                static const QString regexp = "^(" + qualifier_intensity + qualifier_descriptor + weather_phenomina1 + weather_phenomina2 + weather_phenomina3 + weather_phenomina4 + ") ";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -538,6 +567,27 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "PresentWeather"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // w'w' represents present weather, coded in accordance with WMO Code Table 4678.
+                // As many groups as necessary are included, with each group containing from 2 to 9 characters.
+                // * Weather phenomena are preceded by one or two qualifiers
+                // * No w'w' group has more than one descriptor.
+
+                // Qualifier intensity. (-) light (no sign) moderate (+) heavy or VC
+                const QString qualifier_intensity("(?<intensity>[-+]|VC)?");
+                // Descriptor, if any
+                const QString qualifier_descriptor = "(?<descriptor>" + QStringList(getDescriptorHash().keys()).join('|') + ")?";
+                const QString weatherPhenomenaJoined = QStringList(getWeatherPhenomenaHash().keys()).join('|');
+                const QString weather_phenomina1 = "(?<wp1>" + weatherPhenomenaJoined + ")?";
+                const QString weather_phenomina2 = "(?<wp2>" + weatherPhenomenaJoined + ")?";
+                const QString weather_phenomina3 = "(?<wp3>" + weatherPhenomenaJoined + ")?";
+                const QString weather_phenomina4 = "(?<wp4>" + weatherPhenomenaJoined + ")?";
+                const QString regexp = "^(" + qualifier_intensity + qualifier_descriptor + weather_phenomina1 + weather_phenomina2 + weather_phenomina3 + weather_phenomina4 + ") ";
+                return regexp;
+            }
         };
 
         class CMetarDecoderCloud : public IMetarDecoderPart
@@ -570,19 +620,10 @@ namespace BlackMisc
 
             virtual bool isRepeatable() const override { return true; }
 
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // Clear sky
-                static const QString clearSky = QString("(?<clear_sky>") + getClearSkyTokens().join('|') + QString(")");
-                // Cloud coverage.
-                static const QString coverage = QString("(?<coverage>") + QStringList(getCoverage().keys()).join('|') + QString(")");
-                // Cloud base
-                static const QString base = QStringLiteral("(?<base>\\d{3}|///)");
-                // CB (Cumulonimbus) or TCU (Towering Cumulus) are appended to the cloud group without a space
-                static const QString extra = QStringLiteral("(?<cb_tcu>CB|TCU|///)?");
-                // Add space at the end
-                static const QString regexp = QString("^(") + clearSky + '|' + coverage + base + extra + QString(") ");
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -615,18 +656,31 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "Cloud"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // Clear sky
+                const QString clearSky = QString("(?<clear_sky>") + getClearSkyTokens().join('|') + QString(")");
+                // Cloud coverage.
+                const QString coverage = QString("(?<coverage>") + QStringList(getCoverage().keys()).join('|') + QString(")");
+                // Cloud base
+                const QString base = QStringLiteral("(?<base>\\d{3}|///)");
+                // CB (Cumulonimbus) or TCU (Towering Cumulus) are appended to the cloud group without a space
+                const QString extra = QStringLiteral("(?<cb_tcu>CB|TCU|///)?");
+                // Add space at the end
+                const QString regexp = QString("^(") + clearSky + '|' + coverage + base + extra + QString(") ");
+                return regexp;
+            }
         };
 
         class CMetarDecoderVerticalVisibility : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // Vertical visibility
-                static const QString verticalVisibility = QStringLiteral("VV(?<vertical_visibility>\\d{3}|///)");
-
-                static const QString regexp = "^" + verticalVisibility + " ";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &/* match */, CMetar &/* metar */) const override
@@ -637,22 +691,24 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "VerticalVisibility"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // Vertical visibility
+                const QString verticalVisibility = QStringLiteral("VV(?<vertical_visibility>\\d{3}|///)");
+                const QString regexp = "^" + verticalVisibility + " ";
+                return regexp;
+            }
         };
 
         class CMetarDecoderTemperature : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // Tmperature
-                static const QString temperature = QStringLiteral("(?<temperature>M?\\d{2}|//)");
-                // Separator
-                static const QString separator = "/";
-                // Dew point
-                static const QString dewPoint = QStringLiteral("(?<dew_point>M?\\d{2}|//)");
-                // Add space at the end
-                static const QString regexp = "^" + temperature + separator + dewPoint + " ?";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -691,6 +747,20 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "Temperature"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // Tmperature
+                const QString temperature = QStringLiteral("(?<temperature>M?\\d{2}|//)");
+                // Separator
+                const QString separator = "/";
+                // Dew point
+                const QString dewPoint = QStringLiteral("(?<dew_point>M?\\d{2}|//)");
+                // Add space at the end
+                const QString regexp = "^" + temperature + separator + dewPoint + " ?";
+                return regexp;
+            }
         };
 
         class CMetarDecoderPressure : public IMetarDecoderPart
@@ -707,18 +777,10 @@ namespace BlackMisc
                 return hash;
             }
 
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // Q => QNH comes in hPa
-                // A => QNH comes in inches of Mercury
-                static const QString unit = QStringLiteral("((?<unit>Q|A)");
-                // Pressure
-                static const QString pressure = QStringLiteral("(?<pressure>\\d{4}|////) ?)");
-                // QFE
-                static const QString qfe = QStringLiteral("(QFE (?<qfe>\\d+).\\d");
-
-                static const QString regexp = "^" + unit + pressure + "|" + qfe + " ?)";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -753,24 +815,29 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "Pressure"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // Q => QNH comes in hPa
+                // A => QNH comes in inches of Mercury
+                const QString unit = QStringLiteral("((?<unit>Q|A)");
+                // Pressure
+                const QString pressure = QStringLiteral("(?<pressure>\\d{4}|////) ?)");
+                // QFE
+                const QString qfe = QStringLiteral("(QFE (?<qfe>\\d+).\\d");
+                const QString regexp = "^" + unit + pressure + "|" + qfe + " ?)";
+                return regexp;
+            }
         };
 
         class CMetarDecoderRecentWeather : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-                // Qualifier intensity. (-) light (no sign) moderate (+) heavy or VC
-                static const QString qualifier_intensity("(?<intensity>[-+]|VC)?");
-                // Descriptor, if any
-                static const QString qualifier_descriptor = "(?<descriptor>" + m_descriptor.join('|') + ")?";
-                static const QString weather_phenomina1 = "(?<wp1>" + m_phenomina.join('|') + ")?";
-                static const QString weather_phenomina2 = "(?<wp2>" + m_phenomina.join('|') + ")?";
-                static const QString weather_phenomina3 = "(?<wp3>" + m_phenomina.join('|') + ")?";
-                static const QString weather_phenomina4 = "(?<wp4>" + m_phenomina.join('|') + ")?";
-
-                static const QString regexp = "^RE" + qualifier_intensity + qualifier_descriptor + weather_phenomina1 + weather_phenomina2 + weather_phenomina3 + weather_phenomina4 + " ";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &/** match **/, CMetar &/** metar **/) const override
@@ -783,6 +850,20 @@ namespace BlackMisc
             virtual QString getDecoderType() const override { return "RecentWeather"; }
 
         private:
+            QString getRegExpImpl() const
+            {
+                // Qualifier intensity. (-) light (no sign) moderate (+) heavy or VC
+                const QString qualifier_intensity("(?<intensity>[-+]|VC)?");
+                // Descriptor, if any
+                const QString qualifier_descriptor = "(?<descriptor>" + m_descriptor.join('|') + ")?";
+                const QString weather_phenomina1 = "(?<wp1>" + m_phenomina.join('|') + ")?";
+                const QString weather_phenomina2 = "(?<wp2>" + m_phenomina.join('|') + ")?";
+                const QString weather_phenomina3 = "(?<wp3>" + m_phenomina.join('|') + ")?";
+                const QString weather_phenomina4 = "(?<wp4>" + m_phenomina.join('|') + ")?";
+                const QString regexp = "^RE" + qualifier_intensity + qualifier_descriptor + weather_phenomina1 + weather_phenomina2 + weather_phenomina3 + weather_phenomina4 + " ";
+                return regexp;
+            }
+
             const QStringList m_descriptor = QStringList { "MI", "BC", "PR", "DR", "BL", "SH", "TS", "FZ" };
             const QStringList m_phenomina = QStringList { "DZ", "RA", "SN", "SG", "IC", "PE", "GR", "GS",
                                                                 "BR", "FG", "FU", "VA", "IC", "DU", "SA", "HZ",
@@ -793,16 +874,10 @@ namespace BlackMisc
         class CMetarDecoderWindShear : public IMetarDecoderPart
         {
         protected:
-            QString getRegExp() const override
+            const QRegularExpression &getRegExp() const override
             {
-
-                // Wind shear on all runways
-                static const QString wsAllRwy = QStringLiteral("WS ALL RWY");
-                // RWY designator
-                static const QString runway = QStringLiteral("RW?Y?(?<runway>\\d{2}[LCR]*)");
-
-                static const QString regexp = "^WS (" + wsAllRwy + "|" + runway + ") ";
-                return regexp;
+                static const QRegularExpression re(getRegExpImpl());
+                return re;
             }
 
             bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
@@ -820,6 +895,17 @@ namespace BlackMisc
 
             virtual bool isMandatory() const override { return false; }
             virtual QString getDecoderType() const override { return "WindShear"; }
+
+        private:
+            QString getRegExpImpl() const
+            {
+                // Wind shear on all runways
+                const QString wsAllRwy = QStringLiteral("WS ALL RWY");
+                // RWY designator
+                const QString runway = QStringLiteral("RW?Y?(?<runway>\\d{2}[LCR]*)");
+                const QString regexp = "^WS (" + wsAllRwy + "|" + runway + ") ";
+                return regexp;
+            }
         };
 
         CMetarDecoder::CMetarDecoder()
