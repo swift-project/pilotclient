@@ -13,6 +13,7 @@
 #define BLACKGUI_INFOBARWEBREADERSSTATUSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/led.h"
 #include "blackmisc/network/entityflags.h"
 
 #include <QFrame>
@@ -24,39 +25,31 @@
 class QWidget;
 
 namespace Ui { class CInfoBarWebReadersStatusComponent; }
-
 namespace BlackGui
 {
     class CLedWidget;
-
     namespace Components
     {
         //! Info bar displaying status of web readers(swift DB, ...)
-        class BLACKGUI_EXPORT CInfoBarWebReadersStatusComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CInfoBarWebReadersStatusBase : public QFrame
         {
             Q_OBJECT
 
         public:
-            //! Constructor
-            explicit CInfoBarWebReadersStatusComponent(QWidget *parent = nullptr);
-
             //!Destructor
-            ~CInfoBarWebReadersStatusComponent();
+            ~CInfoBarWebReadersStatusBase();
 
             //! Init the LEDs
             void initLeds();
 
-        private slots:
-            //! Data have been read
-            void ps_dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+        protected:
+            QTimer m_timer { this }; //!< check timer
 
-            //! Check server status
-            void ps_checkServerAndData();
+            //! Constructor
+            explicit CInfoBarWebReadersStatusBase(QWidget *parent = nullptr);
 
-        private:
-            QScopedPointer<Ui::CInfoBarWebReadersStatusComponent> ui;
-            QTimer m_timer { this };
+            //! Init
+            void init();
 
             //! Set LED states
             void setLedReadStates(const QList<CLedWidget *> &leds, BlackMisc::Network::CEntityFlags::ReadState readState);
@@ -69,7 +62,45 @@ namespace BlackGui
 
             //! All data read
             bool hasAllData() const;
+
+            //! Initial setup of leds
+            void setLeds(BlackGui::CLedWidget *ledDb, BlackGui::CLedWidget *dataReady,
+                         BlackGui::CLedWidget *led_IcaoAircraft, BlackGui::CLedWidget *led_IcaoAirline, BlackGui::CLedWidget *led_Countries,
+                         BlackGui::CLedWidget *led_Distributors, BlackGui::CLedWidget *led_Liveries, BlackGui::CLedWidget *led_Models);
+
+        private slots:
+            //! Data have been read
+            void ps_dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
+
+            //! Check server status
+            void ps_checkServerAndData();
+
+        private:
+            BlackGui::CLedWidget *led_SwiftDb = nullptr;
+            BlackGui::CLedWidget *led_DataReady = nullptr;
+            BlackGui::CLedWidget *led_IcaoAircraft = nullptr;
+            BlackGui::CLedWidget *led_IcaoAirline = nullptr;
+            BlackGui::CLedWidget *led_Countries = nullptr;
+            BlackGui::CLedWidget *led_Distributors = nullptr;
+            BlackGui::CLedWidget *led_Liveries = nullptr;
+            BlackGui::CLedWidget *led_Models = nullptr;
         };
-    }
-}
+
+        //! Info bar displaying status of web readers(swift DB, ...)
+        class BLACKGUI_EXPORT CInfoBarWebReadersStatusComponent : public CInfoBarWebReadersStatusBase
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            explicit CInfoBarWebReadersStatusComponent(QWidget *parent = nullptr);
+
+            //!Destructor
+            ~CInfoBarWebReadersStatusComponent();
+
+        private:
+            QScopedPointer<Ui::CInfoBarWebReadersStatusComponent> ui;
+        };
+    } // ns
+} // ns
 #endif // guard
