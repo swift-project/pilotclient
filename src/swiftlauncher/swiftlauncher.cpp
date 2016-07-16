@@ -315,6 +315,7 @@ void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
     this->ui->wi_NewVersionAvailable->setVisible(newVersionAvailable);
     this->ui->wi_NoNewVersion->setVisible(!newVersionAvailable);
     this->ui->le_LatestVersion->setText(latestVersion);
+    this->ui->le_Channel->setText(updateInfo.getChannel());
 
     if (!downloadUrls.isEmpty())
     {

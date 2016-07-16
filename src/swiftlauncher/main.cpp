@@ -10,6 +10,7 @@
 #include "swiftlauncher.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/registermetadata.h"
+#include "blackcore/db/databasereaderconfig.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
 
@@ -23,16 +24,19 @@
 using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackCore;
+using namespace BlackCore::Db;
 
 int main(int argc, char *argv[])
 {
-    //! [CSwiftGuiStdApplication]
+    //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("swift launcher", CGuiApplication::Laucher, CIcons::swift1024());
+    a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup."), "installer"});
     a.parse();
-    //! [CSwiftGuiStdApplication]
+    if (!a.start()) { return EXIT_FAILURE; }
+    //! [SwiftApplicationDemo]
 
     // Dialog to decide external or internal core
     CSwiftLauncher launcher;

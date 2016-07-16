@@ -78,7 +78,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>3</number>
+             <number>0</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -423,17 +423,24 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_2">
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="le_CurrentVersion">
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="lbl_Channel">
+                   <property name="text">
+                    <string>Channel:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="le_Channel">
                    <property name="readOnly">
                     <bool>true</bool>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="lbl_CurrentVersion">
-                   <property name="text">
-                    <string>This version:</string>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="le_CurrentVersion">
+                   <property name="readOnly">
+                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -444,7 +451,21 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="1" colspan="3">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lbl_CurrentVersion">
+                   <property name="text">
+                    <string>This version:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QLineEdit" name="le_LatestVersion">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1" colspan="3">
                   <widget class="QWidget" name="wi_NoNewVersion" native="true">
                    <layout class="QVBoxLayout" name="vl_NoNewVersion">
                     <property name="leftMargin">
@@ -469,14 +490,7 @@
                    </layout>
                   </widget>
                  </item>
-                 <item row="0" column="3">
-                  <widget class="QLineEdit" name="le_LatestVersion">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1" colspan="3">
+                 <item row="2" column="1" colspan="3">
                   <widget class="QWidget" name="wi_NewVersionAvailable" native="true">
                    <layout class="QVBoxLayout" name="vl_NewVersionAvailable">
                     <property name="leftMargin">
@@ -508,10 +522,10 @@
                    </layout>
                   </widget>
                  </item>
-                 <item row="1" column="1" colspan="2">
+                 <item row="1" column="2">
                   <widget class="QPushButton" name="pb_CheckForUpdates">
                    <property name="text">
-                    <string>check for updates</string>
+                    <string>check again</string>
                    </property>
                   </widget>
                  </item>
@@ -519,7 +533,17 @@
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="fr_DataUpdates">
+               <widget class="BlackGui::Components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="fr_DataUpdates">
                 <property name="frameShape">
                  <enum>QFrame::StyledPanel</enum>
                 </property>
@@ -529,9 +553,6 @@
                </widget>
               </item>
              </layout>
-             <zorder>fr_SoftwareUpdates</zorder>
-             <zorder>lbl_NoNewVersion</zorder>
-             <zorder>fr_DataUpdates</zorder>
             </widget>
             <widget class="QWidget" name="pg_CreditsLicense">
              <property name="geometry">
@@ -770,6 +791,18 @@ p, li { white-space: pre-wrap; }
    <class>BlackGui::Components::CLogComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/logcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbLoadOverviewComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbloadoverviewcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInfoBarWebReadersStatusSmallComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/infobarwebreadersstatussmallcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
