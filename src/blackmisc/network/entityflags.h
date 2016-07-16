@@ -91,6 +91,9 @@ namespace BlackMisc
             //! Representing at least one DB entity
             static bool anySwiftDbEntity(Entity entities);
 
+            //! Get by name
+            static CEntityFlags::Entity singleEntityByName(const QString &name);
+
             //! Register metadata
             static void registerMetadata();
         };
