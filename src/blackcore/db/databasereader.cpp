@@ -101,6 +101,12 @@ namespace BlackCore
             // signals for the cached entities
             this->emitReadSignalPerSingleCachedEntity(cachedEntities);
 
+            // Real read from DB
+            this->startReadFromDbInBackgroundThread(entities, newerThan);
+        }
+
+        void CDatabaseReader::startReadFromDbInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
+        {
             // ps_read is implemented in the derived classes
             if (entities == CEntityFlags::NoEntity) { return; }
             const bool s = QMetaObject::invokeMethod(this, "ps_read",
@@ -138,13 +144,13 @@ namespace BlackCore
                 if (jsonResponse.isArray())
                 {
                     // directly an array, no further info
-                    datastoreResponse.m_jsonArray = jsonResponse.array();
+                    datastoreResponse.setJsonArray(jsonResponse.array());
                     datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
                 }
                 else
                 {
                     QJsonObject responseObject(jsonResponse.object());
-                    datastoreResponse.m_jsonArray = responseObject["data"].toArray();
+                    datastoreResponse.setJsonArray(responseObject["data"].toArray());
                     QString ts(responseObject["latest"].toString());
                     datastoreResponse.m_updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
                     datastoreResponse.m_restricted = responseObject["restricted"].toBool();
@@ -305,6 +311,12 @@ namespace BlackCore
         bool CDatabaseReader::canPingSwiftServer()
         {
             return CNetworkUtils::canConnect(getDbUrl());
+        }
+
+        void CDatabaseReader::JsonDatastoreResponse::setJsonArray(const QJsonArray &value)
+        {
+            m_jsonArray = value;
+            m_arraySize = value.size();
         }
     } // ns
 } // ns

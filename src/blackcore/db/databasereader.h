@@ -48,7 +48,8 @@ namespace BlackCore
             {
                 QJsonArray m_jsonArray;              //!< JSON array data
                 QDateTime  m_updated;                //!< when was the latest updated?
-                bool       m_restricted = false;     //!< restricted reponse, only data changed
+                int        m_arraySize = -1;         //!< size of array, if applicable (copied to member for debugging purposes)
+                bool       m_restricted = false;     //!< restricted reponse, only changed data
                 BlackMisc::CStatusMessage m_message; //!< last error or warning
 
                 //! Any data?
@@ -85,7 +86,7 @@ namespace BlackCore
                 QJsonArray getJsonArray() const { return m_jsonArray; }
 
                 //! Set the JSON array
-                void setJsonArray(const QJsonArray &value) { m_jsonArray = value; }
+                void setJsonArray(const QJsonArray &value);
 
                 //! Implicit conversion
                 operator QJsonArray() const { return m_jsonArray; }
@@ -93,6 +94,9 @@ namespace BlackCore
 
             //! Start reading in own thread
             void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
+
+            //! Start reading in own thread (without config/caching)
+            void startReadFromDbInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
             //! Can connect to DB
             //! \threadsafe

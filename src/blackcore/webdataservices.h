@@ -283,7 +283,10 @@ namespace BlackCore
         BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
 
         //! Trigger read of new data
-        BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &dateTime = QDateTime());
+        BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
+
+        //! Trigger reload from DB
+        BlackMisc::Network::CEntityFlags::Entity triggerReloadFromDb(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
         //! Corresponding cache timestamp if applicable
         //! \threadsafe
@@ -303,6 +306,9 @@ namespace BlackCore
 
         //! Can connect to swift DB?
         bool canConnectSwiftDb() const;
+
+        //! Syncronize all DB caches
+        void syncronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Write data to disk (mainly for testing scenarios)
         bool writeDbDataToDisk(const QString &dir) const;

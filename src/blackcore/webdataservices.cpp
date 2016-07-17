@@ -159,6 +159,12 @@ namespace BlackCore
         return false;
     }
 
+    void CWebDataServices::syncronizeDbCaches(CEntityFlags::Entity entities)
+    {
+        if (this->m_modelDataReader) { this->m_modelDataReader->syncronizeCaches(entities); }
+        if (this->m_icaoDataReader) { this->m_icaoDataReader->syncronizeCaches(entities); }
+    }
+
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
     {
         m_initialRead = true; // read started
@@ -207,6 +213,31 @@ namespace BlackCore
             {
                 CEntityFlags::Entity modelEntities = whatToRead & CEntityFlags::DistributorLiveryModel;
                 m_modelDataReader->readInBackgroundThread(modelEntities, newerThan);
+                triggeredRead |= modelEntities;
+            }
+        }
+        return triggeredRead;
+    }
+
+    CEntityFlags::Entity CWebDataServices::triggerReloadFromDb(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
+    {
+        CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
+        if (m_icaoDataReader)
+        {
+            if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
+            {
+                CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoAndCountries;
+                m_icaoDataReader->startReadFromDbInBackgroundThread(icaoEntities, newerThan);
+                triggeredRead |= icaoEntities;
+            }
+        }
+
+        if (m_modelDataReader)
+        {
+            if (whatToRead.testFlag(CEntityFlags::LiveryEntity) || whatToRead.testFlag(CEntityFlags::DistributorEntity) || whatToRead.testFlag(CEntityFlags::ModelEntity))
+            {
+                CEntityFlags::Entity modelEntities = whatToRead & CEntityFlags::DistributorLiveryModel;
+                m_modelDataReader->startReadFromDbInBackgroundThread(modelEntities, newerThan);
                 triggeredRead |= modelEntities;
             }
         }
@@ -710,7 +741,7 @@ namespace BlackCore
         // read entities
         if (delayMs > 100)
         {
-            this->singleShotReadInBackground(entities, 0);
+            this->singleShotReadInBackground(entities, delayMs);
         }
         else
         {
