@@ -14,6 +14,7 @@
 #include "blackgui/guiapplication.h"
 
 using namespace BlackGui;
+using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
@@ -25,6 +26,9 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CDbLoadOverviewComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
+            Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "no data services");
+
             ui->setupUi(this);
 
             ui->lbl_DatabaseUrl->setTextFormat(Qt::RichText);
@@ -37,6 +41,7 @@ namespace BlackGui
             connect(ui->pb_ReloadLiveries, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
             connect(ui->pb_ReloadModels, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
             connect(ui->pb_ReloadDistributors, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
 
             QTimer::singleShot(2000, this, &CDbLoadOverviewComponent::ps_setValues);
         }
@@ -48,6 +53,7 @@ namespace BlackGui
         {
             if (!sGui) { return; }
             if (!sGui->getWebDataServices()) { return; }
+            CDbLoadOverviewComponent::syncronizeCaches();
 
             ui->le_AircraftIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlineIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -83,6 +89,17 @@ namespace BlackGui
             ui->lbl_DatabaseUrl->setToolTip(url);
         }
 
+        void CDbLoadOverviewComponent::showLoading()
+        {
+            if (!this->m_loadIndicator)
+            {
+                this->m_loadIndicator = new CLoadIndicator(64, 64, this);
+            }
+            const QPoint middle = this->rect().center();
+            this->m_loadIndicator->centerLoadIndicator(middle);
+            this->m_loadIndicator->startAnimation(true);
+        }
+
         QString CDbLoadOverviewComponent::formattedTimestamp(const QDateTime &dateTime)
         {
             if (!dateTime.isValid()) { return "-"; }
@@ -113,11 +130,32 @@ namespace BlackGui
             return c < 0 ? "-" : QString::number(c);
         }
 
+        void CDbLoadOverviewComponent::syncronizeCaches()
+        {
+            sGui->getWebDataServices()->syncronizeDbCaches(CEntityFlags::AllDbEntities);
+        }
+
         void CDbLoadOverviewComponent::ps_reloadPressed()
         {
+            if (this->m_reloading) { return; }
             QObject *sender = QObject::sender();
             CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
-            sGui->getWebDataServices()->triggerRead(entity);
+            CEntityFlags::Entity triggeredEntity = sGui->getWebDataServices()->triggerReloadFromDb(entity);
+            if (triggeredEntity == CEntityFlags::NoEntity) { return; }
+            this->m_reloading = true;
+            this->showLoading();
+        }
+
+        void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        {
+            Q_UNUSED(number);
+            if (!CEntityFlags::anySwiftDbEntity(entity)) { return; }
+            if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
+            {
+                if (this->m_loadIndicator) { this->m_loadIndicator->stopAnimation(); }
+                this->m_reloading = false;
+                this->ps_setValues();
+            }
         }
     } // ns
 } // ns

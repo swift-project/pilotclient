@@ -531,22 +531,14 @@ namespace BlackGui
                 this->m_loadIndicator = new CLoadIndicator(64, 64, this);
             }
             this->centerLoadIndicator();
-            this->m_loadIndicator->startAnimation();
-            if (processEvents)
-            {
-                sGui->processEventsToRefreshGui();
-            }
+            this->m_loadIndicator->startAnimation(processEvents);
         }
 
         void CViewBaseNonTemplate::centerLoadIndicator()
         {
             if (!m_loadIndicator) { return; }
-            QPoint middle = this->viewport()->geometry().center();
-            int w = m_loadIndicator->width();
-            int h = m_loadIndicator->height();
-            int x = middle.x() - w / 2;
-            int y = middle.y() - h / 2;
-            this->m_loadIndicator->setGeometry(x, y, w, h);
+            const QPoint middle = this->viewport()->geometry().center();
+            this->m_loadIndicator->centerLoadIndicator(middle);
         }
 
         void CViewBaseNonTemplate::hideLoadIndicator()

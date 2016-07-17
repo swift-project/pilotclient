@@ -9,7 +9,8 @@
  * Class based on qLed: Copyright (C) 2010 by P. Sereno, http://www.sereno-online.com
  */
 
-#include "blackgui/loadindicator.h"
+#include "loadindicator.h"
+#include "guiapplication.h"
 
 #include <QColor>
 #include <QPainter>
@@ -23,21 +24,21 @@ namespace BlackGui
         : QWidget(parent)
     {
         this->resize(width, height);
-        setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        setFocusPolicy(Qt::NoFocus);
-        setAutoFillBackground(true);
+        this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        this->setFocusPolicy(Qt::NoFocus);
+        this->setAutoFillBackground(true);
         this->setStyleSheet("background-color: transparent;");
     }
 
     bool CLoadIndicator::isAnimated() const
     {
-        return (m_timerId != -1);
+        return (this->m_timerId != -1);
     }
 
     void CLoadIndicator::setDisplayedWhenStopped(bool state)
     {
-        m_displayedWhenStopped = state;
-        update();
+        this->m_displayedWhenStopped = state;
+        this->update();
     }
 
     bool CLoadIndicator::isDisplayedWhenStopped() const
@@ -45,34 +46,37 @@ namespace BlackGui
         return m_displayedWhenStopped;
     }
 
-    void CLoadIndicator::startAnimation()
+    void CLoadIndicator::startAnimation(bool processEvents)
     {
-        m_angle = 0;
+        this->m_angle = 0;
         this->show();
         this->setEnabled(true);
-        if (m_timerId == -1) { m_timerId = startTimer(m_delayMs); }
+        if (this->m_timerId == -1) { this->m_timerId = startTimer(m_delayMs); }
+        if (processEvents && sGui)
+        {
+            sGui->processEventsToRefreshGui();
+        }
     }
 
     void CLoadIndicator::stopAnimation()
     {
-        if (m_timerId != -1) { killTimer(m_timerId); }
-        m_timerId = -1;
+        if (this->m_timerId != -1) { killTimer(this->m_timerId); }
+        this->m_timerId = -1;
         this->hide();
         this->setEnabled(false);
-        update();
+        this->update();
     }
 
     void CLoadIndicator::setAnimationDelay(int delay)
     {
-        if (m_timerId != -1) { killTimer(m_timerId); }
-
-        m_delayMs = delay;
-        if (m_timerId != -1) { m_timerId = startTimer(m_delayMs); }
+        if (this->m_timerId != -1) { killTimer(this->m_timerId); }
+        this->m_delayMs = delay;
+        if (this->m_timerId != -1) { this->m_timerId = startTimer(this->m_delayMs); }
     }
 
     void CLoadIndicator::setColor(const QColor &color)
     {
-        m_color = color;
+        this->m_color = color;
         update();
     }
 
@@ -140,4 +144,12 @@ namespace BlackGui
         }
     }
 
+    void CLoadIndicator::centerLoadIndicator(const QPoint &middle)
+    {
+        const int w = this->width();
+        const int h = this->height();
+        const int x = middle.x() - w / 2;
+        const int y = middle.y() - h / 2;
+        this->setGeometry(x, y, w, h);
+    }
 } // ns

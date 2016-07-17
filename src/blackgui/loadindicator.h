@@ -69,6 +69,9 @@ namespace BlackGui
         //! Paint to another painter
         void paint(QPainter &painter) const;
 
+        //! Center this load indicator
+        void centerLoadIndicator(const QPoint &middle);
+
     signals:
         //! Animation has been updated
         void updatedAnimation();
@@ -76,7 +79,7 @@ namespace BlackGui
     public slots:
         //! Starts the spin animation.
         //! \sa stopAnimation isAnimated
-        void startAnimation();
+        void startAnimation(bool processEvents = false);
 
         //! Stops the spin animation.
         //! \sa startAnimation isAnimated

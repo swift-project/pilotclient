@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBLOADOVERVIEWCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/loadindicator.h"
 #include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -38,9 +39,11 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
+            BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if needed
+            bool m_reloading = false;
 
-            //! Init the value panel
-            void ps_setValues();
+            //! Show loading
+            void showLoading();
 
             //! Timestamp
             static QString formattedTimestamp(const QDateTime &dateTime);
@@ -57,9 +60,18 @@ namespace BlackGui
             //! Formatted count for entity
             static QString dbCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 
+            //! Syncronize caches
+            static void syncronizeCaches();
+
         private slots:
             //! Reload
             void ps_reloadPressed();
+
+            //! Init the value panel
+            void ps_setValues();
+
+            //! Data have been loaded
+            void ps_dataLoaded(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
         };
     } // ns
 } // ns
