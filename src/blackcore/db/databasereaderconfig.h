@@ -109,6 +109,9 @@ namespace BlackCore
             //! Init for pilot client
             static CDatabaseReaderConfigList forPilotClient();
 
+            //! Init for launcher
+            static CDatabaseReaderConfigList forLauncher();
+
             //! Init all with direct DB access
             static CDatabaseReaderConfigList allDirectDbAccess();
         };

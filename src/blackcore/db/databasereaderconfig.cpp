@@ -146,6 +146,11 @@ namespace BlackCore
             return l;
         }
 
+        CDatabaseReaderConfigList CDatabaseReaderConfigList::forLauncher()
+        {
+            return forPilotClient();
+        }
+
         CDatabaseReaderConfigList CDatabaseReaderConfigList::allDirectDbAccess()
         {
             const CTime timeout(0.0, CTimeUnit::min());
