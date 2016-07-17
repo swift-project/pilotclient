@@ -261,6 +261,7 @@ namespace BlackMisc
         QString CAircraftIcaoCode::getCombinedIcaoStringWithKey() const
         {
             QString s(getDesignator());
+            if (s.isEmpty()) s = "????";
             if (hasManufacturer()) { s = s.append(" ").append(getManufacturer()); }
             if (hasModelDescription()) { s = s.append(" ").append(getModelDescription()); }
             return s.append(" ").append(getDbKeyAsStringInParentheses());

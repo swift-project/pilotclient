@@ -223,7 +223,7 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isAbandoned()) { return; }
 
-            QString urlString(nwReply->url().toString());
+            const QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -231,7 +231,9 @@ namespace BlackCore
                 emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
-            const CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(res);
+
+            // normally read from special view which already filter incomplete
+            const CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(res, false);
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
@@ -259,7 +261,7 @@ namespace BlackCore
                 emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
-            const CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(res);
+            const CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(res, false);
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)

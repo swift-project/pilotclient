@@ -288,6 +288,7 @@ namespace BlackMisc
         QString CAirlineIcaoCode::getCombinedStringWithKey() const
         {
             QString s(getVDesignator());
+            if (s.isEmpty()) s = "????";
             if (hasName()) { s = s.append(" ").append(getName()); }
             return s.append(" ").append(getDbKeyAsStringInParentheses());
         }

@@ -137,7 +137,10 @@ namespace BlackMisc
             for (const QJsonValue &value : array)
             {
                 const CAirlineIcaoCode icao(CAirlineIcaoCode::fromDatabaseJson(value.toObject()));
-                if (ignoreIncomplete && !icao.hasCompleteData()) { continue; }
+                if (ignoreIncomplete && !icao.hasCompleteData())
+                {
+                    continue;
+                }
                 codes.push_back(icao);
             }
             return codes;
@@ -158,7 +161,7 @@ namespace BlackMisc
                 else
                 {
                     const QString d(icao.getDesignator());
-                    if (c.contains(d)) { continue; }
+                    if (c.contains(d) || d.isEmpty()) { continue; }
                     c.append(d);
                 }
             }
