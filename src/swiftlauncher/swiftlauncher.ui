@@ -413,7 +413,26 @@
              <attribute name="label">
               <string>Check for updates</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
+             <layout class="QVBoxLayout" name="vl_Updates">
+              <property name="leftMargin">
+               <number>9</number>
+              </property>
+              <property name="topMargin">
+               <number>9</number>
+              </property>
+              <item>
+               <widget class="BlackGui::Components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <zorder>fr_SoftwareUpdates</zorder>
+                <zorder>fr_SoftwareUpdates</zorder>
+                <zorder>fr_SoftwareUpdates</zorder>
+               </widget>
+              </item>
               <item>
                <widget class="QFrame" name="fr_SoftwareUpdates">
                 <property name="frameShape">
@@ -422,7 +441,19 @@
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <layout class="QGridLayout" name="gridLayout_2">
+                <layout class="QGridLayout" name="gl_Version">
+                 <property name="leftMargin">
+                  <number>2</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>2</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>2</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>2</number>
+                 </property>
                  <item row="1" column="0">
                   <widget class="QLabel" name="lbl_Channel">
                    <property name="text">
@@ -533,17 +564,7 @@
                </widget>
               </item>
               <item>
-               <widget class="BlackGui::Components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="fr_DataUpdates">
+               <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="comp_DataUpdates">
                 <property name="frameShape">
                  <enum>QFrame::StyledPanel</enum>
                 </property>
@@ -749,7 +770,19 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
      <widget class="QWidget" name="pg_SwiftLauncherLog">
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="vl_SwiftLauncerLog">
+       <property name="leftMargin">
+        <number>3</number>
+       </property>
+       <property name="topMargin">
+        <number>3</number>
+       </property>
+       <property name="rightMargin">
+        <number>3</number>
+       </property>
+       <property name="bottomMargin">
+        <number>3</number>
+       </property>
        <item>
         <widget class="BlackGui::Components::CLogComponent" name="fr_SwiftLauncherLog">
          <property name="frameShape">

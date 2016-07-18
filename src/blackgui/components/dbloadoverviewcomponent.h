@@ -37,6 +37,9 @@ namespace BlackGui
             //! Destructor
             virtual ~CDbLoadOverviewComponent();
 
+            //! Initialize
+            void display();
+
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if needed
@@ -44,6 +47,9 @@ namespace BlackGui
 
             //! Show loading
             void showLoading();
+
+            //! Values at least set once
+            bool isInitialized() const;
 
             //! Timestamp
             static QString formattedTimestamp(const QDateTime &dateTime);

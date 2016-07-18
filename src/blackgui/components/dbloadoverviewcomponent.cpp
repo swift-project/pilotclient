@@ -43,11 +43,24 @@ namespace BlackGui
             connect(ui->pb_ReloadDistributors, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
 
-            QTimer::singleShot(2000, this, &CDbLoadOverviewComponent::ps_setValues);
+            // QTimer::singleShot(2000, this, &CDbLoadOverviewComponent::ps_setValues);
         }
 
         CDbLoadOverviewComponent::~CDbLoadOverviewComponent()
         { }
+
+        void CDbLoadOverviewComponent::display()
+        {
+            if (this->isInitialized())
+            {
+                this->ps_setValues();
+            }
+            else
+            {
+                this->showLoading();
+                QTimer::singleShot(1000, this, &CDbLoadOverviewComponent::ps_setValues);
+            }
+        }
 
         void CDbLoadOverviewComponent::ps_setValues()
         {
@@ -87,6 +100,7 @@ namespace BlackGui
             const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
             ui->lbl_DatabaseUrl->setText(urlHtml.arg(url));
             ui->lbl_DatabaseUrl->setToolTip(url);
+            if (this->m_loadIndicator) { this->m_loadIndicator->stopAnimation(); }
         }
 
         void CDbLoadOverviewComponent::showLoading()
@@ -98,6 +112,11 @@ namespace BlackGui
             const QPoint middle = this->rect().center();
             this->m_loadIndicator->centerLoadIndicator(middle);
             this->m_loadIndicator->startAnimation(true);
+        }
+
+        bool CDbLoadOverviewComponent::isInitialized() const
+        {
+            return !ui->le_AircraftIcaoCacheCount->text().isEmpty();
         }
 
         QString CDbLoadOverviewComponent::formattedTimestamp(const QDateTime &dateTime)
@@ -152,7 +171,6 @@ namespace BlackGui
             if (!CEntityFlags::anySwiftDbEntity(entity)) { return; }
             if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
             {
-                if (this->m_loadIndicator) { this->m_loadIndicator->stopAnimation(); }
                 this->m_reloading = false;
                 this->ps_setValues();
             }

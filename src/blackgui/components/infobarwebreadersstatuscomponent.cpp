@@ -49,7 +49,8 @@ namespace BlackGui
 
         void CInfoBarWebReadersStatusBase::initLeds()
         {
-            CLedWidget::LedShape shape = CLedWidget::Circle;
+            CLedWidget::LedShape shape = CLedWidget::Rounded;
+            this->led_SwiftDb->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DB online", "DB offline", 14);
             this->led_DataReady->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "all data ready", "data missing", 14);
 
             this->led_IcaoAircraft->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);

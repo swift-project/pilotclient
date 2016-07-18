@@ -40,6 +40,16 @@ class CSwiftLauncher :
     Q_INTERFACES(BlackGui::IMainWindowAccess)
 
 public:
+
+    //! Pages
+    enum Pages
+    {
+        PageNews = 0,
+        PageWindowType,
+        PageCoreMode,
+        PageUpdates
+    };
+
     //! Constructor
     explicit CSwiftLauncher(QWidget *parent = nullptr);
 
@@ -150,6 +160,9 @@ private slots:
 
     //! Show set main page
     void ps_showMainPage();
+
+    //! Tab changed
+    void ps_tabChanged(int current);
 
     //! Show the log page
     void ps_showLogPage();

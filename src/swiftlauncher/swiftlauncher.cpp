@@ -46,6 +46,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
+    connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::ps_tabChanged);
 
     // use version signal as trigger for completion
     this->ps_loadedUpdateInfo(true); // defaults from settings, overridden by signal/slot when changed
@@ -403,6 +404,14 @@ void CSwiftLauncher::ps_appendLogMessages(const CStatusMessageList &messages)
 void CSwiftLauncher::ps_showMainPage()
 {
     this->ui->sw_SwiftLauncher->setCurrentWidget(this->ui->pg_SwiftLauncherMain);
+}
+
+void CSwiftLauncher::ps_tabChanged(int current)
+{
+    if (current == static_cast<int>(PageUpdates))
+    {
+        ui->comp_DataUpdates->display();
+    }
 }
 
 void CSwiftLauncher::ps_showLogPage()

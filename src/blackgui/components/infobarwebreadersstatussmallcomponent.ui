@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>381</width>
+    <width>340</width>
     <height>20</height>
    </rect>
   </property>
@@ -41,19 +41,6 @@
    </item>
    <item>
     <widget class="BlackGui::CLedWidget" name="led_SwiftDb" native="true"/>
-   </item>
-   <item>
-    <widget class="QLabel" name="lbl_DataReady">
-     <property name="toolTip">
-      <string>Mappings ready</string>
-     </property>
-     <property name="text">
-      <string>| data</string>
-     </property>
-     <property name="indent">
-      <number>6</number>
-     </property>
-    </widget>
    </item>
    <item>
     <widget class="BlackGui::CLedWidget" name="led_DataReady" native="true"/>
