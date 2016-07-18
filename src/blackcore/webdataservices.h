@@ -321,8 +321,11 @@ namespace BlackCore
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     public slots:
+        //! Call CWebDataServices::readInBackground by single shot
+        void readDeferredInBackground(BlackMisc::Network::CEntityFlags::Entity entities, int delayMs);
+
         //! First read (allows to immediately read in background)
-        void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities, int delayMs = 0);
+        void readInBackground(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::AllEntities);
 
     private slots:
         //! ATC bookings received
@@ -349,9 +352,6 @@ namespace BlackCore
 
         //! Init the writers
         void initWriters();
-
-        //! Call CWebDataServices::readInBackground by single shot
-        void singleShotReadInBackground(BlackMisc::Network::CEntityFlags::Entity entities, int delayMs);
 
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None;  //!< which readers are available
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                  //!< how to read DB data

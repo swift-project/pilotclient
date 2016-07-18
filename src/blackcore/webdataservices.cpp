@@ -83,7 +83,7 @@ namespace BlackCore
         entities &= ~CEntityFlags::InfoObjectEntity;   // triggered in init readers
         entities &= ~CEntityFlags::VatsimStatusFile;   // triggered in init readers
         entities &= ~this->m_entitiesPeriodicallyRead; // will be triggered by timers
-        this->singleShotReadInBackground(entities, 1000);
+        this->readDeferredInBackground(entities, 1000);
     }
 
     CServerList CWebDataServices::getVatsimFsdServers() const
@@ -691,15 +691,15 @@ namespace BlackCore
         // void
     }
 
-    void CWebDataServices::singleShotReadInBackground(CEntityFlags::Entity entities, int delayMs)
+    void CWebDataServices::readDeferredInBackground(CEntityFlags::Entity entities, int delayMs)
     {
         QTimer::singleShot(delayMs, [ = ]()
         {
-            this->readInBackground(entities, delayMs);
+            this->readInBackground(entities);
         });
     }
 
-    void CWebDataServices::readInBackground(CEntityFlags::Entity entities, int delayMs)
+    void CWebDataServices::readInBackground(CEntityFlags::Entity entities)
     {
         m_initialRead = true; // read started
 
@@ -713,40 +713,41 @@ namespace BlackCore
             // try to read
             if (this->m_infoObjectTrials > maxWaitCycles)
             {
-                CLogMessage(this).error("Cannot read info objects from %1") << this->m_infoDataReader->getInfoObjectsUrl().toQString();
+                CLogMessage(this).error("Cannot read info objects for %1 from %2")
+                        << CEntityFlags::flagToString(entities)
+                        << this->m_infoDataReader->getInfoObjectsUrl().toQString();
+                // continue here and read data
             }
             else if (this->m_infoDataReader->canConnect())
             {
-                // read, but no idea if succesful/failure
-                if (this->m_infoDataReader->getDbInfoObjectCount() > 0)
+                if (this->m_infoDataReader->areAllDataRead())
                 {
-                    CLogMessage(this).info("Info objects loaded from %1") << this->m_infoDataReader->getInfoObjectsUrl().toQString();
+                    CLogMessage(this).info("Info objects for %1 loaded from %2")
+                            << CEntityFlags::flagToString(entities)
+                            << this->m_infoDataReader->getInfoObjectsUrl().toQString();
+                    // continue here and read data
                 }
                 else
                 {
-                    CLogMessage(this).error("Info objects loading failed from %1, '%2'")
+                    CLogMessage(this).error("Info objects loading for %1 failed from %2, '%3'")
+                            << CEntityFlags::flagToString(entities)
                             << this->m_infoDataReader->getInfoObjectsUrl().toQString()
                             << this->m_infoDataReader->getStatusMessage();
+                    this->readDeferredInBackground(entities, waitForInfoObjects);
+                    return;
                 }
             }
             else
             {
-                // postpone by some time
+                // can not connect right now, postpone and try again
                 this->m_infoObjectTrials++;
-                this->singleShotReadInBackground(entities, waitForInfoObjects);
+                this->readDeferredInBackground(entities, waitForInfoObjects);
                 return;
             }
         }
 
         // read entities
-        if (delayMs > 100)
-        {
-            this->singleShotReadInBackground(entities, delayMs);
-        }
-        else
-        {
-            this->triggerRead(entities);
-        }
+        this->triggerRead(entities);
     }
 
     bool CWebDataServices::writeDbDataToDisk(const QString &dir) const
