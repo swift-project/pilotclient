@@ -67,7 +67,7 @@ namespace BlackGui
             case StationsOnline:
                 {
                     this->m_columns.addColumn(CColumn::standardString("cs.", "callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
-                    CColumn col = CColumn("type", CAtcStation::IndexIcon);
+                    CColumn col("type", CAtcStation::IndexIcon);
                     col.setSortPropertyIndex({ CAtcStation::IndexCallsign, CCallsign::IndexSuffix });
                     this->m_columns.addColumn(col);
                     this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
