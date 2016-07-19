@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>400</height>
+    <width>600</width>
+    <height>500</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>TabWidget</string>
@@ -69,9 +63,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-77</y>
-         <width>373</width>
-         <height>447</height>
+         <y>0</y>
+         <width>592</width>
+         <height>469</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -113,198 +107,17 @@
           <property name="horizontalSpacing">
            <number>6</number>
           </property>
-          <item row="2" column="2">
-           <widget class="QLabel" name="lbl_TakeOffTimePlanned">
-            <property name="text">
-             <string>6. Departure time</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="2">
-           <widget class="QPushButton" name="pb_Load">
-            <property name="text">
-             <string>Load plan</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="lbl_CruiseTrueAirspeed">
-            <property name="text">
-             <string>4. True airspeed</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="1">
-           <widget class="QPushButton" name="pb_Reset">
-            <property name="text">
-             <string>Reset plan</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QLabel" name="lbl_EstimatedTimeEnroute">
-            <property name="text">
-             <string>10. Estimated time enroute</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <layout class="QGridLayout" name="gl_Remarks">
-            <item row="0" column="0">
-             <widget class="QLabel" name="lbl_Remarks">
-              <property name="text">
-               <string>11. Remarks</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QPushButton" name="pb_RemarksGenerator">
-              <property name="styleSheet">
-               <string notr="true">QPushButton {
-	background-color: transparent;
-	border: none;
-	text-align: left;
-	text-decoration: underline;
-}</string>
-              </property>
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <property name="text">
-               <string>Generator</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="9" column="1" colspan="2">
-           <widget class="QLineEdit" name="le_PilotsName">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="3">
-           <widget class="QLabel" name="lbl_AlternateAirport">
-            <property name="text">
-             <string>13. Alternate airport</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="3">
-           <widget class="QPushButton" name="pb_Send">
-            <property name="text">
-             <string>Send plan</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QLineEdit" name="le_CrusingAltitude">
-            <property name="maxLength">
-             <number>40</number>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="3">
-           <widget class="QLineEdit" name="le_AlternateAirport">
-            <property name="inputMask">
-             <string>&gt;AAAA</string>
+          <item row="13" column="3">
+           <widget class="QPushButton" name="pb_SaveDisk">
+            <property name="toolTip">
+             <string>Save to disk</string>
             </property>
             <property name="text">
-             <string>ICAO</string>
+             <string>Save</string>
             </property>
-           </widget>
-          </item>
-          <item row="9" column="3">
-           <widget class="QLineEdit" name="le_PilotsHomebase"/>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="le_Callsign">
-            <property name="inputMask">
-             <string/>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="maxLength">
-             <number>40</number>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="lbl_Type">
-            <property name="text">
-             <string>1. Type</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLineEdit" name="le_TakeOffTimePlanned">
-            <property name="inputMask">
-             <string>99:99</string>
-            </property>
-            <property name="text">
-             <string>00:00</string>
-            </property>
-            <property name="maxLength">
-             <number>5</number>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="4">
-           <widget class="QPlainTextEdit" name="pte_Route">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>75</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="4">
-           <widget class="QLabel" name="lbl_Route">
-            <property name="text">
-             <string>8. Route</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLineEdit" name="le_AircraftType"/>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="le_OriginAirport">
-            <property name="inputMask">
-             <string>&gt;AAAA</string>
-            </property>
-            <property name="text">
-             <string>ICAO</string>
-            </property>
-            <property name="maxLength">
-             <number>4</number>
+            <property name="icon">
+             <iconset resource="../../blackmisc/blackmisc.qrc">
+              <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
             </property>
            </widget>
           </item>
@@ -315,13 +128,16 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="le_CruiseTrueAirspeed">
-            <property name="text">
-             <string>0 kts</string>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="le_OriginAirport">
+            <property name="inputMask">
+             <string>&gt;AAAA</string>
             </property>
             <property name="maxLength">
-             <number>40</number>
+             <number>4</number>
+            </property>
+            <property name="placeholderText">
+             <string>ICAO, e.g. EDDF</string>
             </property>
            </widget>
           </item>
@@ -329,6 +145,29 @@
            <widget class="QLabel" name="lbl_FuelOnBorad">
             <property name="text">
              <string>12. Fuel on board</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="le_CruiseTrueAirspeed">
+            <property name="maxLength">
+             <number>40</number>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. 100 kts</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lbl_Callsign">
+            <property name="text">
+             <string>2. Callsign</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -392,16 +231,6 @@
             </layout>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="lbl_OriginAirport">
-            <property name="text">
-             <string>5. Departure airport</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="10" column="0">
            <widget class="QLabel" name="lbl_LastSent">
             <property name="text">
@@ -409,13 +238,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="lbl_Callsign">
+          <item row="2" column="1">
+           <widget class="QLabel" name="lbl_OriginAirport">
             <property name="text">
-             <string>2. Callsign</string>
-            </property>
-            <property name="scaledContents">
-             <bool>false</bool>
+             <string>5. Departure airport</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -432,16 +258,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="3">
-           <widget class="QLabel" name="lbl_CrusingAltitude">
-            <property name="text">
-             <string>7. Cruising altitude</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="7" column="1">
            <widget class="QLineEdit" name="le_EstimatedTimeEnroute">
             <property name="inputMask">
@@ -449,6 +265,9 @@
             </property>
             <property name="text">
              <string>00:00</string>
+            </property>
+            <property name="placeholderText">
+             <string>hh:mm e.g. 02:30</string>
             </property>
            </widget>
           </item>
@@ -459,20 +278,10 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QLineEdit" name="le_DestinationAirport">
-            <property name="inputMask">
-             <string>&gt;AAAA</string>
-            </property>
+          <item row="2" column="3">
+           <widget class="QLabel" name="lbl_CrusingAltitude">
             <property name="text">
-             <string>ICAO</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="lbl_DestinationAirport">
-            <property name="text">
-             <string>9.Destination airport</string>
+             <string>7. Cruising altitude</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -498,16 +307,33 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="2">
-           <widget class="QLineEdit" name="le_FuelOnBoard">
-            <property name="inputMask">
-             <string>99:99</string>
-            </property>
+          <item row="6" column="0">
+           <widget class="QLabel" name="lbl_DestinationAirport">
             <property name="text">
-             <string>00:00</string>
+             <string>9.Destination airport</string>
             </property>
-            <property name="maxLength">
-             <number>5</number>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="lbl_TakeOffTimePlanned">
+            <property name="text">
+             <string>6. Departure time</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLabel" name="lbl_EstimatedTimeEnroute">
+            <property name="text">
+             <string>10. Estimated time enroute</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -526,6 +352,226 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="7" column="2">
+           <widget class="QLineEdit" name="le_FuelOnBoard">
+            <property name="inputMask">
+             <string>99:99</string>
+            </property>
+            <property name="text">
+             <string>00:00</string>
+            </property>
+            <property name="maxLength">
+             <number>5</number>
+            </property>
+            <property name="placeholderText">
+             <string>hh:mm e.g. 02:30</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QLineEdit" name="le_DestinationAirport">
+            <property name="inputMask">
+             <string>&gt;AAAA</string>
+            </property>
+            <property name="placeholderText">
+             <string>ICAO, e.g. EDDF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QPushButton" name="pb_Reset">
+            <property name="text">
+             <string>Reset</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="2">
+           <widget class="QPushButton" name="pb_Load">
+            <property name="toolTip">
+             <string>Load flight plan from network</string>
+            </property>
+            <property name="text">
+             <string>Load</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../blackmisc/blackmisc.qrc">
+              <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="lbl_CruiseTrueAirspeed">
+            <property name="text">
+             <string>4. True airspeed</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <layout class="QGridLayout" name="gl_Remarks">
+            <item row="0" column="0">
+             <widget class="QLabel" name="lbl_Remarks">
+              <property name="text">
+               <string>11. Remarks</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QPushButton" name="pb_RemarksGenerator">
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+	background-color: transparent;
+	border: none;
+	text-align: left;
+	text-decoration: underline;
+}</string>
+              </property>
+              <property name="inputMethodHints">
+               <set>Qt::ImhNone</set>
+              </property>
+              <property name="text">
+               <string>Generator</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="9" column="1" colspan="2">
+           <widget class="QLineEdit" name="le_PilotsName">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="3">
+           <widget class="QLineEdit" name="le_PilotsHomebase"/>
+          </item>
+          <item row="6" column="3">
+           <widget class="QLabel" name="lbl_AlternateAirport">
+            <property name="text">
+             <string>13. Alternate airport</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLineEdit" name="le_CrusingAltitude">
+            <property name="maxLength">
+             <number>40</number>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. FL70</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="3">
+           <widget class="QLineEdit" name="le_AlternateAirport">
+            <property name="inputMask">
+             <string>&gt;AAAA</string>
+            </property>
+            <property name="placeholderText">
+             <string>ICAO, e.g. EDDF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_Type">
+            <property name="text">
+             <string>1. Type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_Callsign">
+            <property name="maxLength">
+             <number>40</number>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>e.g. DLH1331</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="3">
+           <widget class="QPushButton" name="pb_Send">
+            <property name="toolTip">
+             <string>Send flight plan to network</string>
+            </property>
+            <property name="text">
+             <string>Send</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../blackmisc/blackmisc.qrc">
+              <normaloff>:/diagona/icons/diagona/icons/network-cloud.png</normaloff>:/diagona/icons/diagona/icons/network-cloud.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="4">
+           <widget class="QLabel" name="lbl_Route">
+            <property name="text">
+             <string>8. Route</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLineEdit" name="le_TakeOffTimePlanned">
+            <property name="inputMask">
+             <string>99:99</string>
+            </property>
+            <property name="text">
+             <string>00:00</string>
+            </property>
+            <property name="maxLength">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="4">
+           <widget class="QPlainTextEdit" name="pte_Route">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>75</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="le_AircraftType">
+            <property name="placeholderText">
+             <string>ICAO, e.g. A321</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="2">
+           <widget class="QPushButton" name="pb_LoadDisk">
+            <property name="toolTip">
+             <string>Load from disk</string>
+            </property>
+            <property name="text">
+             <string>Load</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../blackmisc/blackmisc.qrc">
+              <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -571,8 +617,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>302</width>
-         <height>468</height>
+         <width>578</width>
+         <height>472</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="vl_RemarksGeneratorScroll">
@@ -985,6 +1031,8 @@
   <tabstop>cb_NavigationEquipment</tabstop>
   <tabstop>cb_NoSidsStarts</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

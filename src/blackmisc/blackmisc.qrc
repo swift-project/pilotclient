@@ -372,6 +372,19 @@
         <file>icons/diagona/icons/table-insert.png</file>
         <file>icons/diagona/icons/table-insert-column.png</file>
         <file>icons/diagona/icons/table-insert-row.png</file>
+        <file>icons/diagona/icons/network.png</file>
+        <file>icons/diagona/icons/network-wireless.png</file>
+        <file>icons/diagona/icons/network-status.png</file>
+        <file>icons/diagona/icons/network-status-offline.png</file>
+        <file>icons/diagona/icons/network-status-busy.png</file>
+        <file>icons/diagona/icons/network-status-away.png</file>
+        <file>icons/diagona/icons/network-ip.png</file>
+        <file>icons/diagona/icons/network-ip-local.png</file>
+        <file>icons/diagona/icons/network-hub.png</file>
+        <file>icons/diagona/icons/network-firewall.png</file>
+        <file>icons/diagona/icons/network-ethernet.png</file>
+        <file>icons/diagona/icons/network-clouds.png</file>
+        <file>icons/diagona/icons/network-cloud.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>

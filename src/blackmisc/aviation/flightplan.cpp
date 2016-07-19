@@ -15,7 +15,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         QString CFlightPlan::convertToQString(bool i18n) const
         {
             QString s;
@@ -45,6 +44,5 @@ namespace BlackMisc
         {
             return BlackMisc::CIconList::iconByIndex(CIcons::StandardIconAppFlightPlan16);
         }
-
     } // namespace
 } // namespace

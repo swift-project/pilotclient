@@ -22,6 +22,7 @@
 #include <QString>
 #include <QTabWidget>
 #include <QtGlobal>
+#include <QFileDialog>
 
 class QWidget;
 
@@ -32,10 +33,8 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Flight plan widget
-        class BLACKGUI_EXPORT CFlightPlanComponent :
-            public QTabWidget
+        class BLACKGUI_EXPORT CFlightPlanComponent : public QTabWidget
         {
             Q_OBJECT
 
@@ -80,6 +79,11 @@ namespace BlackGui
             //! Identifier
             BlackMisc::CIdentifier flightPlanIdentifier();
 
+            //! Set completers
+            void initCompleters();
+
+            QString getDefaultFilename(bool load);
+
         private slots:
             //! Call \sa ps_buildRemarksString from combo box signal
             void ps_currentTextChangedToBuildRemarks(const QString &text) { this->ps_buildRemarksString(); Q_UNUSED(text); }
@@ -89,6 +93,12 @@ namespace BlackGui
 
             //! Reset Flightplan
             void ps_resetFlightPlan();
+
+            //! Load from disk
+            void ps_loadFromDisk();
+
+            //! Save to disk
+            void ps_saveToDisk();
 
             //! Set SELCAL in own aircrafr
             void ps_setSelcalInOwnAircraft();
@@ -108,7 +118,9 @@ namespace BlackGui
             //! Show generator tab page
             void ps_currentTabGenerator();
 
+            //! GUI init complete
+            void ps_swiftDataRead();
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

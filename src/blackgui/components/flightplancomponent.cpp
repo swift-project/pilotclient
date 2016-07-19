@@ -9,6 +9,8 @@
 
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
+#include "blackcore/webdataservices.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackgui/components/flightplancomponent.h"
 #include "blackgui/components/selcalcodeselector.h"
 #include "blackgui/guiapplication.h"
@@ -18,6 +20,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logmessage.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/pqstring.h"
 #include "blackmisc/pq/speed.h"
@@ -36,6 +39,7 @@
 #include <QRadioButton>
 #include <QRegExp>
 #include <QTabBar>
+#include <QCompleter>
 #include <Qt>
 
 using namespace BlackMisc;
@@ -43,6 +47,8 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackGui;
+using namespace BlackCore;
+using namespace BlackConfig;
 
 namespace BlackGui
 {
@@ -52,10 +58,18 @@ namespace BlackGui
             QTabWidget(parent),
             ui(new Ui::CFlightPlanComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
+
+            // UI
             ui->setupUi(this);
 
             // fix style
             this->tabBar()->setExpanding(false);
+
+            // validators
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+            ui->le_Callsign->setValidator(ucv);
+            ui->le_AircraftType->setValidator(ucv);
 
             // connect
             connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::ps_sendFlightPlan);
@@ -69,12 +83,15 @@ namespace BlackGui
             connect(this->ui->cb_PilotRating, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
             connect(this->ui->cb_RequiredNavigationPerformance, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
 
+            connect(this->ui->pb_LoadDisk, &QPushButton::clicked, this, &CFlightPlanComponent::ps_loadFromDisk);
+            connect(this->ui->pb_SaveDisk, &QPushButton::clicked, this, &CFlightPlanComponent::ps_saveToDisk);
+
             bool c = connect(this->ui->le_AircraftRegistration, SIGNAL(textChanged(QString)), this, SLOT(ps_buildRemarksString()));
-            Q_ASSERT(c);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
             c = connect(this->ui->cb_NoSidsStarts, SIGNAL(toggled(bool)), this, SLOT(ps_buildRemarksString()));
-            Q_ASSERT(c);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
             c = connect(this->ui->le_AirlineOperator, SIGNAL(textChanged(QString)), this, SLOT(ps_buildRemarksString()));
-            Q_ASSERT(c);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
             Q_UNUSED(c);
 
             connect(this->ui->pte_AdditionalRemarks, &QPlainTextEdit::textChanged, this, &CFlightPlanComponent::ps_buildRemarksString);
@@ -83,6 +100,10 @@ namespace BlackGui
             connect(this->ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::ps_copyRemarks);
             connect(this->ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::ps_currentTabGenerator);
 
+            // web services
+            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CFlightPlanComponent::ps_swiftDataRead);
+
+            // init GUI
             this->ps_resetFlightPlan();
             this->ps_buildRemarksString();
         }
@@ -117,8 +138,8 @@ namespace BlackGui
         void CFlightPlanComponent::fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan)
         {
             this->ui->le_AlternateAirport->setText(flightPlan.getAlternateAirportIcao().asString());
-            this->ui->le_DestinationAirport->setText(flightPlan.getAlternateAirportIcao().asString());
-            this->ui->le_OriginAirport->setText(flightPlan.getAlternateAirportIcao().asString());
+            this->ui->le_DestinationAirport->setText(flightPlan.getDestinationAirportIcao().asString());
+            this->ui->le_OriginAirport->setText(flightPlan.getOriginAirportIcao().asString());
             this->ui->pte_Route->setPlainText(flightPlan.getRoute());
             this->ui->pte_Remarks->setPlainText(flightPlan.getRemarks());
             this->ui->le_TakeOffTimePlanned->setText(flightPlan.getTakeoffTimePlannedHourMin());
@@ -126,7 +147,7 @@ namespace BlackGui
             this->ui->le_EstimatedTimeEnroute->setText(flightPlan.getEnrouteTimeHourMin());
             this->ui->le_CruiseTrueAirspeed->setText(flightPlan.getCruiseTrueAirspeed().valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0));
 
-            CAltitude cruiseAlt = flightPlan.getCruiseAltitude();
+            const CAltitude cruiseAlt = flightPlan.getCruiseAltitude();
             if (cruiseAlt.isFlightLevel())
             {
                 this->ui->le_CrusingAltitude->setText(cruiseAlt.toQString());
@@ -244,7 +265,7 @@ namespace BlackGui
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
                 messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_AlternateAirport->text());
-                flightPlan.setAlternateAirportIcao(defaultIcao());
+                flightPlan.setAlternateAirportIcao(QString(""));
             }
             else
             {
@@ -255,7 +276,7 @@ namespace BlackGui
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
                 messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_DestinationAirport->text());
-                flightPlan.setDestinationAirportIcao(defaultIcao());
+                flightPlan.setDestinationAirportIcao(QString(""));
             }
             else
             {
@@ -333,12 +354,77 @@ namespace BlackGui
             this->ui->le_CruiseTrueAirspeed->setText("100 kts");
             this->ui->pte_Remarks->clear();
             this->ui->pte_Route->clear();
-            this->ui->le_AlternateAirport->setText(defaultIcao());
-            this->ui->le_DestinationAirport->setText(defaultIcao());
-            this->ui->le_OriginAirport->setText(defaultIcao());
+            this->ui->le_AlternateAirport->clear();
+            this->ui->le_DestinationAirport->clear();
+            this->ui->le_OriginAirport->clear();
             this->ui->le_FuelOnBoard->setText(defaultTime());
             this->ui->le_EstimatedTimeEnroute->setText(defaultTime());
             this->ui->le_TakeOffTimePlanned->setText(QDateTime::currentDateTimeUtc().addSecs(30 * 60).toString("hh:mm"));
+        }
+
+        void CFlightPlanComponent::ps_loadFromDisk()
+        {
+            CStatusMessage m;
+            const QString fileName = QFileDialog::getOpenFileName(nullptr,
+                                     tr("Load flight plan"), getDefaultFilename(true),
+                                     tr("swift (*.json *.txt)"));
+            do
+            {
+                if (fileName.isEmpty())
+                {
+                    m = CStatusMessage(this, CStatusMessage::SeverityDebug, "Load canceled", true);
+                    break;
+                }
+
+                const QString json(CFileUtils::readFileToString(fileName));
+                if (json.isEmpty())
+                {
+                    m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data", true);
+                    break;
+                }
+
+                CFlightPlan fp;
+                fp.convertFromJson(json);
+                this->fillWithFlightPlanData(fp);
+            }
+            while (false);
+            if (m.isFailure())
+            {
+                CLogMessage::preformatted(m);
+            }
+        }
+
+        void CFlightPlanComponent::ps_saveToDisk()
+        {
+            CStatusMessage m;
+            const QString fileName = QFileDialog::getSaveFileName(nullptr,
+                                     tr("Save flight plan"), getDefaultFilename(false),
+                                     tr("swift (*.json *.txt)"));
+            do
+            {
+                if (fileName.isEmpty())
+                {
+                    m = CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true);
+                    break;
+                }
+                CFlightPlan fp;
+                this->validateAndInitializeFlightPlan(fp);
+                const QString json(fp.toJsonString());
+                bool ok = CFileUtils::writeStringToFile(json, fileName);
+                if (ok)
+                {
+                    m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Written " + fileName, true);
+                }
+                else
+                {
+                    m = CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
+                }
+            }
+            while (false);
+            if (m.isFailure())
+            {
+                CLogMessage::preformatted(m);
+            }
         }
 
         void CFlightPlanComponent::ps_setSelcalInOwnAircraft()
@@ -438,11 +524,46 @@ namespace BlackGui
             this->setCurrentWidget(this->ui->tb_RemarksGenerator);
         }
 
+        void CFlightPlanComponent::ps_swiftDataRead()
+        {
+            this->initCompleters();
+        }
+
         CIdentifier CFlightPlanComponent::flightPlanIdentifier()
         {
             if (m_identifier.getName().isEmpty()) { m_identifier = CIdentifier(QStringLiteral("FLIGHTPLANCOMPONENT")); }
             return m_identifier;
         }
 
+        void CFlightPlanComponent::initCompleters()
+        {
+            if (!sGui || !sGui->getWebDataServices()) { return; }
+            QStringList aircraft = sGui->getWebDataServices()->getAircraftIcaoCodes().allIcaoCodes();
+            ui->le_AircraftType->setCompleter(new QCompleter(aircraft, this));
+        }
+
+        QString CFlightPlanComponent::getDefaultFilename(bool load)
+        {
+            // some logic to find a useful default name
+            QString dir = CBuildConfig::getDocumentationDirectory();
+
+            if (load)
+            {
+                return CFileUtils::appendFilePaths(dir, CFileUtils::jsonWildcardAppendix());
+            }
+
+            // Save file path
+            QString name("Flight plan");
+            if (!ui->le_DestinationAirport->text().isEmpty() && !ui->le_OriginAirport->text().isEmpty())
+            {
+                name.append(" ").append(ui->le_OriginAirport->text()).append("-").append(ui->le_DestinationAirport->text());
+            }
+
+            if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))
+            {
+                name += CFileUtils::jsonAppendix();
+            }
+            return CFileUtils::appendFilePaths(dir, name);
+        }
     } // namespace
 } // namespace
