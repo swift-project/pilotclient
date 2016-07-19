@@ -205,7 +205,6 @@ namespace BlackGui
             CStatusMessage msg;
             if (!isConnected)
             {
-
                 if (!this->ps_validateAircraftValues())
                 {
                     CLogMessage(this).validationWarning("Invalid aircraft data, login not possible");
@@ -287,6 +286,12 @@ namespace BlackGui
 
                 // Login
                 msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, mode);
+                if (msg.isSuccess() && vatsimLogin)
+                {
+                    Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
+                    this->m_currentVatsimServer.set(currentServer);
+                    this->m_currentAircraftModel.setAndSave(ownAircraft.getModel());
+                }
             }
             else
             {
@@ -298,14 +303,9 @@ namespace BlackGui
             // log message and trigger events
             msg.addCategories(this);
             CLogMessage::preformatted(msg);
-            if (msg.isSeverityInfoOrLess())
+            if (msg.isSuccess())
             {
                 emit loginOrLogoffSuccessful();
-                if (vatsimLogin)
-                {
-                    this->m_currentVatsimServer.set(currentServer);
-                    this->m_currentAircraftModel.setAndSave(ownAircraft.getModel());
-                }
             }
             else
             {
@@ -484,19 +484,19 @@ namespace BlackGui
         {
             CGuiAircraftValues values = getAircraftValuesFromGui();
 
-            bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
+            const bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
             this->ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
 
-            bool validAirlineDesignator = values.ownAircraftIcaoAirline.isEmpty() || CAircraftIcaoCode::isValidDesignator(values.ownAircraftIcaoAirline);
+            const bool validAirlineDesignator = values.ownAircraftIcaoAirline.isEmpty() || CAircraftIcaoCode::isValidDesignator(values.ownAircraftIcaoAirline);
             this->ui->lblp_AircraftIcaoAirline->setTicked(validAirlineDesignator);
 
-            bool validIcaoDesignator = CAircraftIcaoCode::isValidDesignator(values.ownAircraftIcaoTypeDesignator);
+            const bool validIcaoDesignator = CAircraftIcaoCode::isValidDesignator(values.ownAircraftIcaoTypeDesignator);
             this->ui->lblp_AircraftIcaoDesignator->setTicked(validIcaoDesignator);
 
-            bool validCallsign = CCallsign::isValidAircraftCallsign(values.ownCallsign);
+            const bool validCallsign = CCallsign::isValidAircraftCallsign(values.ownCallsign);
             this->ui->lblp_Callsign->setTicked(validCallsign);
 
-            bool validSimulatorModel = !values.ownAircraftSimulatorModel.isEmpty();
+            const bool validSimulatorModel = !values.ownAircraftSimulatorModel.isEmpty();
             this->ui->lblp_SimulatorModel->setTicked(validSimulatorModel);
 
             // model intentionally ignored
@@ -507,16 +507,16 @@ namespace BlackGui
         {
             CVatsimValues values = getVatsimValuesFromGui();
 
-            bool validVatsimId = CUser::isValidVatsimId(values.vatsimId);
+            const bool validVatsimId = CUser::isValidVatsimId(values.vatsimId);
             this->ui->lblp_VatsimId->setTicked(validVatsimId);
 
-            bool validHomeAirport = values.vatsimHomeAirport.isEmpty() || CAirportIcaoCode::isValidIcaoDesignator(values.vatsimHomeAirport);
+            const bool validHomeAirport = values.vatsimHomeAirport.isEmpty() || CAirportIcaoCode::isValidIcaoDesignator(values.vatsimHomeAirport);
             this->ui->lblp_VatsimHomeAirport->setTicked(validHomeAirport);
 
-            bool validVatsimPassword = !values.vatsimPassword.isEmpty();
+            const bool validVatsimPassword = !values.vatsimPassword.isEmpty();
             this->ui->lblp_VatsimPassword->setTicked(validVatsimPassword);
 
-            bool validRealUserName = !values.vatsimRealName.isEmpty();
+            const bool validRealUserName = !values.vatsimRealName.isEmpty();
             this->ui->lblp_VatsimRealName->setTicked(validRealUserName);
 
             return validVatsimId && validHomeAirport && validVatsimPassword && validRealUserName;
