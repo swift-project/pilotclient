@@ -322,13 +322,14 @@ namespace BlackCore
         void updateInfoAvailable(bool success);
 
         //! Startup has been completed
+        //! \remark needs to be triggered by application when it think it is done
         void startUpCompleted(bool success);
 
         //! Facade started
         void coreFacadeStarted();
 
         //! Web data services started
-        void webDataServicesStarted();
+        void webDataServicesStarted(bool success);
 
     protected slots:
         //! Setup read/syncronized

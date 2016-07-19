@@ -561,6 +561,8 @@ namespace BlackCore
                 new CWebDataServices(this->m_webReadersUsed, this->m_dbReaderConfig, {}, this)
             );
         }
+
+        emit webDataServicesStarted(true);
         return true;
     }
 

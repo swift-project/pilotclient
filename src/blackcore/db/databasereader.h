@@ -48,7 +48,7 @@ namespace BlackCore
             {
                 QJsonArray m_jsonArray;              //!< JSON array data
                 QDateTime  m_updated;                //!< when was the latest updated?
-                int        m_arraySize = -1;         //!< size of array, if applicable (copied to member for debugging purposes)
+                int        m_arraySize  = -1;        //!< size of array, if applicable (copied to member for debugging purposes)
                 bool       m_restricted = false;     //!< restricted reponse, only changed data
                 BlackMisc::CStatusMessage m_message; //!< last error or warning
 

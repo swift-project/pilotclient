@@ -45,10 +45,11 @@ namespace BlackMisc
                 VatsimDataFile         = 1 << 9,           //!< the VATSIM data file (multiple data entities)
                 VatsimStatusFile       = 1 << 10,          //!< the VATSIM status file (URLs for data files etc.)
                 AllEntities            = ((1 << 11) - 1),  //!< everything
-                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                        //!< all ICAO codes
-                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity      | CountryEntity,   //!< all ICAO codes and countries
-                DistributorLiveryModel = DistributorEntity  | LiveryEntity           | ModelEntity,     //!< Combinded
-                AllDbEntities          = AllIcaoEntities    | DistributorLiveryModel | InfoObjectEntity //!< All DB stuff
+                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                         //!< all ICAO codes
+                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity      | CountryEntity,    //!< all ICAO codes and countries
+                DistributorLiveryModel = DistributorEntity  | LiveryEntity           | ModelEntity,      //!< Combinded
+                AllDbEntities              = AllIcaoAndCountries | DistributorLiveryModel | InfoObjectEntity, //!< All DB stuff
+                AllDbEntitiesNoInfoObjects = AllIcaoAndCountries | DistributorLiveryModel                     //!< All DB entities, no info objects
             };
             Q_DECLARE_FLAGS(Entity, EntityFlag)
 

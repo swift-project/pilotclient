@@ -320,6 +320,9 @@ namespace BlackCore
         //! Combined read signal
         void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
+        //! All swift DB data have been read
+        void allSwiftDbDataRead();
+
     public slots:
         //! Call CWebDataServices::readInBackground by single shot
         void readDeferredInBackground(BlackMisc::Network::CEntityFlags::Entity entities, int delayMs);
@@ -356,6 +359,7 @@ namespace BlackCore
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None;  //!< which readers are available
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                  //!< how to read DB data
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< those entities which are permanently updated by timers
+        BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesReaad = BlackMisc::Network::CEntityFlags::NoEntity;     //!< entities read
         bool                                     m_initialRead = false;                             //!< Initial read started
         int                                      m_infoObjectTrials = 0;                            //!< Tried to read info objects
 
