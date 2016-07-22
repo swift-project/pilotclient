@@ -31,7 +31,6 @@ namespace BlackGui
         Q_OBJECT
 
     public:
-
         //! Constructor
         explicit CManagedStatusBar(QObject *parent = nullptr);
 

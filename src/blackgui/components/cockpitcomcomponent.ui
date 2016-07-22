@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>CCockpitMainComponent</class>
  <widget class="QFrame" name="CCockpitMainComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>292</width>
+    <height>96</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Cockpit COM</string>
   </property>
@@ -512,6 +520,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Components::CSelcalCodeSelector</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/selcalcodeselector.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::CLedWidget</class>
    <extends>QWidget</extends>
    <header>blackgui/led.h</header>
@@ -528,18 +542,23 @@
    <header>blackgui/components/transpondercodespinbox.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CSelcalCodeSelector</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/selcalcodeselector.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CCockpitTransponderModeLedsComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/cockpittranspondermodeledscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>ds_ComPanelCom1Active</tabstop>
+  <tabstop>ds_ComPanelCom2Active</tabstop>
+  <tabstop>sbp_ComPanelTransponder</tabstop>
+  <tabstop>cbp_ComPanelTransponderMode</tabstop>
+  <tabstop>ds_ComPanelCom1Standby</tabstop>
+  <tabstop>ds_ComPanelCom2Standby</tabstop>
+  <tabstop>pb_ComPanelCom1Toggle</tabstop>
+  <tabstop>pb_ComPanelCom2Toggle</tabstop>
+  <tabstop>pb_ComPanelSelcalTest</tabstop>
+ </tabstops>
  <resources>
   <include location="../../blackmisc/blackmisc.qrc"/>
  </resources>

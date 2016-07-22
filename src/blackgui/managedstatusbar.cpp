@@ -24,7 +24,6 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-
     CManagedStatusBar::CManagedStatusBar(QObject *parent) : QObject(parent)
     {
         this->setObjectName("qo_ManagedStatusBar");
@@ -74,6 +73,7 @@ namespace BlackGui
             sizePolicy.setVerticalStretch(0);
             sizePolicy.setHeightForWidth(this->m_statusBar->sizePolicy().hasHeightForWidth());
 
+            this->m_statusBar->setMinimumHeight(24); // with no minimum height the layout always adjustes when displaying a status message
             this->m_statusBar->setSizePolicy(sizePolicy);
             this->m_statusBar->setSizeGripEnabled(false);
         }
