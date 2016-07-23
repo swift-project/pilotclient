@@ -27,6 +27,7 @@
 #include "blackgui/managedstatusbar.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/logpattern.h"
@@ -49,6 +50,7 @@ using namespace BlackConfig;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Input;
 using namespace BlackGui;
 using namespace BlackGui::Components;
@@ -148,6 +150,11 @@ void SwiftGuiStd::init()
 
     sGui->startUpCompleted(true);
     this->m_init = true;
+
+    if (!CNetworkUtils::hasConnectedInterface())
+    {
+        CLogMessage(this).error("No network interface, software will not work properly");
+    }
 }
 
 void SwiftGuiStd::initStyleSheet()

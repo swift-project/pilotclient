@@ -27,7 +27,11 @@ int main(int argc, char *argv[])
     CSwiftGuiStdApplication a;
     a.signalStartupAutomatically(); // application will signal startup on its own
     a.splashScreen(":/own/icons/own/swift/swiftCirclePilotClient1024.png");
-    if (!a.start()) { return EXIT_FAILURE; }
+    if (!a.start())
+    {
+        a.gracefulShutdown();
+        return EXIT_FAILURE;
+    }
     //! [SwiftApplicationDemo]
 
     // show window
