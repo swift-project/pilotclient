@@ -367,7 +367,9 @@ QScrollArea {
 }
 
 /* have to set background on widget in scroll area, cannot set directly on scroll area */
-QScrollArea QWidget {
+/* The inner widget I want to modify is on 2nd level. QScrollArea > QWidget selects too many */
+/* http://doc.qt.io/qt-4.8/stylesheet-syntax.html */
+QScrollArea > * > QWidget {
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
