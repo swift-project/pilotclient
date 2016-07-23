@@ -109,6 +109,12 @@ namespace BlackCore
         {
             // ps_read is implemented in the derived classes
             if (entities == CEntityFlags::NoEntity) { return; }
+            if (!this->isNetworkAvailable())
+            {
+                CLogMessage(this).warning("No network, will not read %1") << CEntityFlags::flagToString(entities);
+                return;
+            }
+
             const bool s = QMetaObject::invokeMethod(this, "ps_read",
                            Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities),
                            Q_ARG(QDateTime, newerThan));
@@ -169,7 +175,7 @@ namespace BlackCore
 
         CDatabaseReader::JsonDatastoreResponse CDatabaseReader::setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply)
         {
-            this->setConnectionStatus(nwReply);
+            this->setReplyStatus(nwReply);
             return this->transformReplyIntoDatastoreResponse(nwReply);
         }
 
@@ -233,17 +239,23 @@ namespace BlackCore
             return oldS != currentS;
         }
 
-        bool CDatabaseReader::canConnect() const
+        bool CDatabaseReader::hasReceivedOkReply() const
         {
             QReadLocker rl(&this->m_statusLock);
-            return m_canConnect;
+            return m_1stReplyReceived && m_1stReplyStatus == QNetworkReply::NoError;
         }
 
-        bool CDatabaseReader::canConnect(QString &message) const
+        bool CDatabaseReader::hasReceivedOkReply(QString &message) const
         {
             QReadLocker rl(&this->m_statusLock);
             message = m_statusMessage;
-            return m_canConnect;
+            return m_1stReplyReceived && m_1stReplyStatus == QNetworkReply::NoError;
+        }
+
+        bool CDatabaseReader::hasReceivedFirstReply() const
+        {
+            QReadLocker rl(&this->m_statusLock);
+            return m_1stReplyReceived;
         }
 
         const QString &CDatabaseReader::getStatusMessage() const
@@ -251,28 +263,20 @@ namespace BlackCore
             return this->m_statusMessage;
         }
 
-        void CDatabaseReader::setConnectionStatus(bool ok, const QString &message)
+        void CDatabaseReader::setReplyStatus(QNetworkReply::NetworkError status, const QString &message)
         {
-            {
-                QWriteLocker wl(&this->m_statusLock);
-                this->m_statusMessage = message;
-                this->m_canConnect = ok;
-            }
+            QWriteLocker wl(&this->m_statusLock);
+            this->m_statusMessage = message;
+            this->m_1stReplyStatus = status;
+            this->m_1stReplyReceived = true;
         }
 
-        void CDatabaseReader::setConnectionStatus(QNetworkReply *nwReply)
+        void CDatabaseReader::setReplyStatus(QNetworkReply *nwReply)
         {
             Q_ASSERT_X(nwReply, Q_FUNC_INFO, "Missing network reply");
-            if (nwReply->isFinished())
+            if (nwReply && nwReply->isFinished())
             {
-                if (nwReply->error() == QNetworkReply::NoError)
-                {
-                    setConnectionStatus(true);
-                }
-                else
-                {
-                    setConnectionStatus(false, nwReply->errorString());
-                }
+                this->setReplyStatus(nwReply->error(), nwReply->errorString());
             }
         }
 

@@ -80,6 +80,12 @@ namespace BlackCore
         void CVatsimMetarReader::readMetars()
         {
             if (this->isAbandoned()) { return; }
+            if (!this->isNetworkAvailable())
+            {
+                CLogMessage(this).warning("No network, cancel METAR reader");
+                this->m_updateTimer->stop();
+                return;
+            }
             this->threadAssertCheck();
             this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 

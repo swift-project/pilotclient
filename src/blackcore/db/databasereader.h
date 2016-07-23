@@ -29,6 +29,7 @@
 #include <QString>
 #include <QTimer>
 #include <QtGlobal>
+#include <QNetworkReply>
 
 class QNetworkReply;
 namespace BlackMisc { class CLogCategoryList; }
@@ -98,14 +99,18 @@ namespace BlackCore
             //! Start reading in own thread (without config/caching)
             void startReadFromDbInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
-            //! Can connect to DB
+            //! Has received Ok response from server at least once?
             //! \threadsafe
-            bool canConnect() const;
+            bool hasReceivedOkReply() const;
 
-            //! Can connect to server?
-            //! \return message why connect failed
+            //! Has received Ok response from server at least once?
+            //! A message why connect failed can be obtained.
             //! \threadsafe
-            bool canConnect(QString &message) const;
+            bool hasReceivedOkReply(QString &message) const;
+
+            //! Has received 1st reply?
+            //! \threadsafe
+            bool hasReceivedFirstReply() const;
 
             //! Get cache timestamp
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const = 0;
@@ -144,10 +149,11 @@ namespace BlackCore
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
         protected:
-            CDatabaseReaderConfigList m_config;               //!< DB reder configuration
-            QString                   m_statusMessage;        //!< Returned status message from watchdog
-            bool                      m_canConnect = false;   //!< Successful connection?
-            mutable QReadWriteLock    m_statusLock;           //!< Lock
+            CDatabaseReaderConfigList   m_config;                      //!< DB reder configuration
+            QString                     m_statusMessage;               //!< Returned status message from watchdog
+            bool                        m_1stReplyReceived = false; //!< Successful connection?
+            QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
+            mutable QReadWriteLock      m_statusLock;                  //!< Lock
 
             //! Constructor
             CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name);
@@ -192,11 +198,11 @@ namespace BlackCore
 
             //! Feedback about connection status
             //! \threadsafe
-            void setConnectionStatus(bool ok, const QString &message = "");
+            void setReplyStatus(QNetworkReply::NetworkError status, const QString &message = "");
 
             //! Feedback about connection status
             //! \threadsafe
-            void setConnectionStatus(QNetworkReply *nwReply);
+            void setReplyStatus(QNetworkReply *nwReply);
         };
     } // ns
 } // ns

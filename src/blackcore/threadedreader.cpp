@@ -73,6 +73,12 @@ namespace BlackCore
         this->initialize();
     }
 
+    bool CThreadedReader::isNetworkAvailable() const
+    {
+        static const bool nw = CNetworkUtils::hasConnectedInterface();
+        return nw;
+    }
+
     void CThreadedReader::gracefulShutdown()
     {
         // if not in main thread stop, otherwise it makes no sense to abandon

@@ -55,6 +55,9 @@ namespace BlackCore
         //! \note override as required, default is to call initialize()
         virtual void requestReload();
 
+        //! Network available
+        bool isNetworkAvailable() const;
+
         //! Get the timer interval (ms)
         //! \threadsafe
         int interval() const;

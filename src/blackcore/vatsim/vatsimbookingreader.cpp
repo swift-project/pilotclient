@@ -67,6 +67,13 @@ namespace BlackCore
 
         void CVatsimBookingReader::ps_read()
         {
+            if (!this->isNetworkAvailable())
+            {
+                CLogMessage(this).warning("No network, cancel bookings reader");
+                this->m_updateTimer->stop();
+                return;
+            }
+
             this->threadAssertCheck();
             this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 

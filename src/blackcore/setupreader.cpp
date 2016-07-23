@@ -197,6 +197,15 @@ namespace BlackCore
     CStatusMessageList CSetupReader::triggerReadSetup()
     {
         if (m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
+        if (!CNetworkUtils::hasConnectedInterface())
+        {
+            const CStatusMessage m(this, CStatusMessage::SeverityError,
+                                   "No network, cancelled reading of setup");
+            CStatusMessageList msgs(m);
+            msgs.push_back(this->manageSetupAvailability(false, false));
+            return msgs;
+        }
+
         const CUrl url(this->m_bootstrapUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
@@ -456,7 +465,7 @@ namespace BlackCore
         }
         else
         {
-            bool cacheAvailable = this->m_setup.getThreadLocal().wasLoaded();
+            bool cacheAvailable = this->m_setup.get().wasLoaded();
             available = cacheAvailable && this->m_bootstrapMode != Explicit;
         }
 

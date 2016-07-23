@@ -186,6 +186,13 @@ namespace BlackCore
 
         void CVatsimDataFileReader::ps_read()
         {
+            if (!this->isNetworkAvailable())
+            {
+                CLogMessage(this).warning("No network, cancel data file reader");
+                this->m_updateTimer->stop();
+                return;
+            }
+
             this->threadAssertCheck();
             this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 

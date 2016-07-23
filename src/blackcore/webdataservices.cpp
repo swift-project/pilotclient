@@ -83,7 +83,17 @@ namespace BlackCore
         entities &= ~CEntityFlags::InfoObjectEntity;   // triggered in init readers
         entities &= ~CEntityFlags::VatsimStatusFile;   // triggered in init readers
         entities &= ~this->m_entitiesPeriodicallyRead; // will be triggered by timers
-        this->readDeferredInBackground(entities, 1000);
+
+        // trigger reading
+        // but do not start all at the same time
+        const CEntityFlags::Entity icaoPart = entities & CEntityFlags::AllIcaoAndCountries;
+        const CEntityFlags::Entity modelPart = entities & CEntityFlags::DistributorLiveryModel;
+        this->readDeferredInBackground(icaoPart, 1000);
+        this->readDeferredInBackground(modelPart, 2000);
+
+        CEntityFlags::Entity restEntities = entities & ~icaoPart;
+        restEntities &= ~modelPart;
+        this->readDeferredInBackground(modelPart, 3000);
     }
 
     CServerList CWebDataServices::getVatsimFsdServers() const
@@ -146,15 +156,15 @@ namespace BlackCore
         // use the first one to test
         if (m_infoDataReader)
         {
-            return m_infoDataReader->canConnect();
+            return m_infoDataReader->hasReceivedOkReply();
         }
         else if (m_icaoDataReader)
         {
-            return m_icaoDataReader->canConnect();
+            return m_icaoDataReader->hasReceivedOkReply();
         }
         else if (m_modelDataReader)
         {
-            return m_modelDataReader->canConnect();
+            return m_modelDataReader->hasReceivedOkReply();
         }
         return false;
     }
@@ -701,6 +711,7 @@ namespace BlackCore
 
     void CWebDataServices::readDeferredInBackground(CEntityFlags::Entity entities, int delayMs)
     {
+        if (entities == CEntityFlags::NoEntity) { return; }
         QTimer::singleShot(delayMs, [ = ]()
         {
             this->readInBackground(entities);
@@ -712,7 +723,7 @@ namespace BlackCore
         m_initialRead = true; // read started
 
         const int waitForInfoObjects = 1000; // ms
-        const int maxWaitCycles = 6;
+        const int maxWaitCycles = 10;
 
         // with info objects wait until info objects are loaded
         Q_ASSERT_X(!entities.testFlag(CEntityFlags::InfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront");
@@ -724,14 +735,15 @@ namespace BlackCore
                 CLogMessage(this).error("Cannot read info objects for %1 from %2")
                         << CEntityFlags::flagToString(entities)
                         << this->m_infoDataReader->getInfoObjectsUrl().toQString();
-                // continue here and read data
+                // continue here and read data without info objects
             }
-            else if (this->m_infoDataReader->canConnect())
+            else if (this->m_infoDataReader->hasReceivedFirstReply())
             {
                 if (this->m_infoDataReader->areAllDataRead())
                 {
-                    CLogMessage(this).info("Info objects for %1 loaded from %2")
+                    CLogMessage(this).info("Info objects for %1 loaded (trial %2) from %3")
                             << CEntityFlags::flagToString(entities)
+                            << this->m_infoObjectTrials
                             << this->m_infoDataReader->getInfoObjectsUrl().toQString();
                     // continue here and read data
                 }
@@ -747,7 +759,7 @@ namespace BlackCore
             }
             else
             {
-                // can not connect right now, postpone and try again
+                // wait for 1st reply
                 this->m_infoObjectTrials++;
                 this->readDeferredInBackground(entities, waitForInfoObjects);
                 return;
