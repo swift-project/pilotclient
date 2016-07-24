@@ -192,7 +192,7 @@ namespace BlackInput
             }
         }
 
-        if (oldCombination == m_keyCombination)
+        if (oldCombination != m_keyCombination)
         {
             emit keyCombinationChanged(m_keyCombination);
         }
