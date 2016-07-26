@@ -11,6 +11,7 @@
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/logmessage.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
@@ -42,9 +43,10 @@ namespace BlackCore
         PluginExtended &plugin = m_plugins[pluginId];
         if (!plugin.listener)
         {
-            ISimulatorFactory *factory = getPluginById<ISimulatorFactory>(pluginId);
+            ISimulatorFactory *factory = getFactory(pluginId);
             if (!factory)
             {
+                CLogMessage(this).warning("Could not load plugin %1.") << pluginId;
                 m_plugins.remove(pluginId);
                 return nullptr;
             }

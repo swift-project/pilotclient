@@ -419,7 +419,7 @@ namespace BlackCore
             }
 
             ISimulatorListener *listener = m_plugins->createListener(simulatorInfo.getIdentifier());
-            Q_ASSERT_X(listener, Q_FUNC_INFO, "No listener");
+            if (!listener) { return; }
 
             if (listener->thread() != &m_listenersThread)
             {

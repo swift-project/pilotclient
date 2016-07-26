@@ -46,6 +46,7 @@ namespace BlackCore
 
         //! Create simulator listener from the plugin
         //! In case one is existing already, it is returned instead.
+        //! Returns nullptr if no listener could be created.
         ISimulatorListener *createListener(const QString &pluginId);
 
         //! Get previously created simulator listener from the plugin
