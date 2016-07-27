@@ -41,6 +41,12 @@ LIBS *= -lvatlib
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
+win32-msvc* {
+    CONFIG(debug, debug|release): LIBS *= -lcrashpad_clientd -lcrashpad_utild -lbased -lRpcrt4
+    CONFIG(release, debug|release): LIBS *= -lcrashpad_client -lcrashpad_util -lbase -lRpcrt4
+}
+macx: LIBS *= -lcrashpad_client -lcrashpad_util -lbase -lbsm -framework Security
+
 OTHER_FILES += readme.txt *.xml
 
 win32 {

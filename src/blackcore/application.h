@@ -37,6 +37,10 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 
+#if defined(Q_CC_MSVC) || defined(Q_OS_OSX) // Crashpad only supported on MSVC and MacOS/X
+#define BLACK_USE_CRASHPAD
+#endif
+
 class QHttpMultiPart;
 class QNetworkReply;
 class QNetworkRequest;
@@ -45,6 +49,12 @@ namespace BlackMisc
 {
     class CFileLogger;
     class CLogCategoryList;
+}
+
+namespace crashpad
+{
+    class CrashpadClient;
+    class CrashReportDatabase;
 }
 
 namespace BlackCore
@@ -402,6 +412,8 @@ namespace BlackCore
         //! Async. start when setup is loaded
         bool asyncWebAndContextStart();
 
+        void initCrashHandler();
+
         QScopedPointer<CCoreFacade>              m_coreFacade;             //!< core facade if any
         QScopedPointer<CSetupReader>             m_setupReader;            //!< setup reader
         QScopedPointer<CWebDataServices>         m_webDataServices;        //!< web data services
@@ -422,6 +434,8 @@ namespace BlackCore
         bool                                     m_unitTest = false;       //!< is UNIT test
         bool                                     m_autoSaveSettings = true;//!< automatically saving all settings
 
+        std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
+        std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
     };
 } // namespace
 

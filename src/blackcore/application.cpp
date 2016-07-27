@@ -32,7 +32,6 @@
 #include "blackmisc/stringutils.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
-#include "qcompilerdetection.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -54,6 +53,12 @@
 #include <QtGlobal>
 #include <cstdlib>
 
+#ifdef BLACK_USE_CRASHPAD
+#include "crashpad/client/crashpad_client.h"
+#include "crashpad/client/crash_report_database.h"
+#include "crashpad/client/settings.h"
+#endif
+
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -65,6 +70,7 @@ using namespace BlackCore::Context;
 using namespace BlackCore::Vatsim;
 using namespace BlackCore::Data;
 using namespace BlackCore::Db;
+using namespace crashpad;
 
 BlackCore::CApplication *sApp = nullptr; // set by constructor
 
@@ -222,6 +228,9 @@ namespace BlackCore
             // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()` means
             // "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is sent to swiftcore and saved by swiftcore.
             CSettingsCache::instance()->enableLocalSave();
+
+            // From this moment on, we have settings, so enable crash handler.
+            initCrashHandler();
         }
 
         if (waitForStart)
@@ -964,4 +973,54 @@ namespace BlackCore
         }
         return CUrlList();
     }
+
+    #ifdef BLACK_USE_CRASHPAD
+    base::FilePath qstringToFilePath(const QString &str)
+    {
+        #ifdef Q_OS_WIN
+        return base::FilePath(str.toStdWString());
+        #else
+        return base::FilePath(str.toStdString());
+        #endif
+    }
+    #endif
+
+    void CApplication::initCrashHandler()
+    {
+        #ifdef BLACK_USE_CRASHPAD
+        // No crash handling for unit tests
+        if (isUnitTest()) { return; }
+
+        static const QString extension = CBuildConfig::isRunningOnWindowsNtPlatform() ? ".exe" : QString();
+        static const QString handler = CDirectoryUtils::applicationDirectoryPath() + "/" + "swift_crashpad_handler" + extension;
+        static const QString database = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                                       "/org.swift-project/" +
+                                       CDirectoryUtils::normalizedApplicationDirectory() +
+                                       "/crashpad";
+
+        if (!QFileInfo::exists(handler))
+        {
+            CLogMessage(this).warning("%1 not found. Cannot init crash handler!") << handler;
+            return;
+        }
+
+        CUrl serverUrl;
+        if (CBuildConfig::isReleaseBuild()) { serverUrl = getGlobalSetup().getCrashreportServerUrl(); }
+
+        std::map<std::string, std::string> annotations;
+
+        // Caliper (mini-breakpad-server) annotations
+        annotations["prod"] = executable().toStdString();
+        annotations["ver"] = CVersion::version().toStdString();
+
+        m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
+        auto settings = m_crashReportDatabase->GetSettings();
+        settings->SetUploadsEnabled(true);
+        m_crashpadClient = std::make_unique<CrashpadClient>();
+        m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database),
+                                       serverUrl.getFullUrl().toStdString(), annotations, {}, false);
+        m_crashpadClient->UseHandler();
+        #endif
+    }
+
 } // ns

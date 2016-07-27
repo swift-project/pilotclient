@@ -123,6 +123,8 @@ isEmpty(EXTERNALSROOT) {
 
 INCLUDEPATH *= $$EXTERNALSROOT/common/include
 INCLUDEPATH *= $$EXTERNALSROOT/$$basename(QMAKESPEC)/include
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
+INCLUDEPATH *= $$EXTERNALSROOT/common/include/mini_chromium
 
 equals(WORD_SIZE,64): EXTERNALSDIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/lib64
 equals(WORD_SIZE,32): EXTERNALSDIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/lib32

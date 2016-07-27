@@ -1,4 +1,7 @@
 {
+	"crashreportServerUrl": {
+        "url": "http://crashreports.swift-project.org:8090/crash_upload"
+    },
     "dbHttpPort": 5080,
     "dbHttpsPort": 50443,
     "dbRootDirectoryUrl": {

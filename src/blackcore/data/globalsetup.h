@@ -82,6 +82,9 @@ namespace BlackCore
             //! Same type?
             bool hasSameType(const CGlobalSetup &otherSetup) const;
 
+            //! Crash report server url
+            BlackMisc::Network::CUrl getCrashreportServerUrl() const { return m_crashreportServerUrl; }
+
             //! Home page url
             BlackMisc::Network::CUrl getDbHomePageUrl() const;
 
@@ -171,6 +174,7 @@ namespace BlackCore
             int                             m_dbHttpPort = 80;      //!< port
             int                             m_dbHttpsPort = 443;    //!< SSL port
             bool                            m_development = false;  //!< dev. version?
+            BlackMisc::Network::CUrl        m_crashreportServerUrl; //!< crash report server
             BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;   //!< Root directory of DB
             BlackMisc::Network::CUrl        m_vatsimBookingsUrl;    //!< ATC bookings
             BlackMisc::Network::CUrlList    m_vatsimMetarsUrls;     //!< METAR data
@@ -187,6 +191,7 @@ namespace BlackCore
                 CGlobalSetup,
                 BLACK_METAMEMBER(wasLoaded),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
+                BLACK_METAMEMBER(crashreportServerUrl),
                 BLACK_METAMEMBER(dbRootDirectoryUrl),
                 BLACK_METAMEMBER(dbHttpPort),
                 BLACK_METAMEMBER(dbHttpsPort),
