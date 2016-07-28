@@ -15,6 +15,7 @@
 #define BLACKMISC_ITERATOR_H
 
 #include "optional.h"
+#include "typetraits.h"
 #include <QScopedPointer>
 #include <algorithm>
 #include <type_traits>
@@ -26,6 +27,72 @@ namespace BlackMisc
 {
     namespace Iterators
     {
+        /*!
+         * Configurable output iterator using a provided functor to do the insertion.
+         */
+        template <class F> class OutputIterator : public std::iterator<std::output_iterator_tag, void, void, void, void>
+        {
+        public:
+            //! Constructor
+            //! @{
+            explicit OutputIterator(const F &func) : m_func(func) {}
+            explicit OutputIterator(F &&func) : m_func(std::move(func)) {}
+            //! @}
+
+            //! Advance the iterator (no-op)
+            //! @{
+            OutputIterator &operator ++() { return *this; }
+            OutputIterator operator ++(int) { return *this; }
+            //! @}
+
+            //! Dereference (no-op)
+            OutputIterator &operator *() { return *this; }
+
+            //! Assignment operator performs the output
+            template <typename T, std::enable_if_t<! std::is_convertible<T, OutputIterator>::value, int> = 0>
+            OutputIterator &operator =(T &&value) { m_func(std::forward<T>(value)); return *this; }
+
+            //! Copy assignment operator
+            OutputIterator &operator =(const OutputIterator &other)
+            {
+                // Work around lambda's deleted copy assignment operator
+                this->~OutputIterator();
+                return *new (this) OutputIterator(other);
+            }
+
+        private:
+            F m_func;
+        };
+
+        /*!
+         * Return an output iterator of type deduced from the argument.
+         */
+        template <class F> auto makeOutputIterator(F &&func)
+        {
+            return OutputIterator<std::decay_t<F>>(std::forward<F>(func));
+        }
+
+        namespace Private
+        {
+            //! \private
+            template <class T> auto makeInsertIterator(T &container, std::true_type)
+            {
+                return makeOutputIterator([&container](auto &&v) { container.push_back(std::forward<decltype(v)>(v)); });
+            }
+            //! \private
+            template <class T> auto makeInsertIterator(T &container, std::false_type)
+            {
+                return makeOutputIterator([&container](auto &&v) { container.insert(std::forward<decltype(v)>(v)); });
+            }
+        }
+
+        /*!
+         * Return an insert iterator appropriate to the container type (uses push_back or insert).
+         */
+        template <class T> auto makeInsertIterator(T &container)
+        {
+            return Private::makeInsertIterator(container, HasPushBack<T>());
+        }
 
         /*!
          * Iterator wrapper for Qt's STL-style associative container iterators, when dereferenced return the key instead of the value.

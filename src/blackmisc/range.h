@@ -206,7 +206,7 @@ namespace BlackMisc
         T to() const
         {
             T container;
-            std::copy(begin(), end(), std::back_inserter(container));
+            std::copy(begin(), end(), Iterators::makeInsertIterator(container));
             return container;
         }
 

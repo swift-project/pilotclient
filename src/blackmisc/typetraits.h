@@ -51,6 +51,32 @@ namespace BlackMisc
 #ifdef Q_CC_MSVC // work around what seems to be an expression SFINAE bug in MSVC
     namespace Private
     {
+        struct HasPushBackHelper
+        {
+            struct Base { int push_back; };
+            template <typename T> struct Derived : public T, public Base {};
+            template <typename T, T> struct TypeCheck {};
+            template <typename T> static std::false_type test(TypeCheck<decltype(&Base::push_back), &Derived<T>::push_back> *);
+            template <typename T> static std::true_type test(...);
+        };
+    }
+    template <typename T>
+    using HasPushBack = decltype(Private::HasPushBackHelper::test<T>(nullptr));
+#else
+    /*!
+     * Trait which is true if the expression a.push_back(v) is valid when a and v are instances of T and T::value_type.
+     */
+    template <typename T, typename = void_t<>>
+    struct HasPushBack : public std::false_type {};
+    //! \cond
+    template <typename T>
+    struct HasPushBack<T, void_t<decltype(std::declval<T>().push_back(std::declval<typename T::value_type>()))>> : public std::true_type {};
+    //! \endcond
+#endif
+
+#ifdef Q_CC_MSVC
+    namespace Private
+    {
         struct HasGetLogCategoriesHelper
         {
             struct Base { int getLogCategories; };
