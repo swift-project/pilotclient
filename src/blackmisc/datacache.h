@@ -104,7 +104,7 @@ namespace BlackMisc
         LockGuard beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid = true, bool pinsOnly = false);
 
         //! During update, writes a new revision file with new timestamps.
-        void writeNewRevision(const QMap<QString, qint64> &timestamps);
+        void writeNewRevision(const QMap<QString, qint64> &timestamps, const QSet<QString> &excludeKeys = {});
 
         //! Release the revision file lock and mark everything up-to-date (called by LockGuard destructor).
         //! \param keepPromises Don't break pending promises.

@@ -293,6 +293,9 @@ namespace BlackMisc
             auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues, m_cache->m_revision.timestampsAsString());
             newValues.setTimestamps(m_cache->m_revision.newerTimestamps());
 
+            auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps().subtract(newValues.keys());
+            if (! missingKeys.isEmpty()) { m_cache->m_revision.writeNewRevision({}, missingKeys); }
+
             msg.setCategories(this);
             CLogMessage::preformatted(msg);
             m_deferredChanges.insert(newValues);
@@ -412,7 +415,7 @@ namespace BlackMisc
         return guard;
     }
 
-    void CDataCacheRevision::writeNewRevision(const QMap<QString, qint64> &i_timestamps)
+    void CDataCacheRevision::writeNewRevision(const QMap<QString, qint64> &i_timestamps, const QSet<QString> &excludeKeys)
     {
         QMutexLocker lock(&m_mutex);
 
@@ -433,6 +436,7 @@ namespace BlackMisc
         {
             if (it.value()) { timestamps.insert(it.key(), it.value()); }
         }
+        for (const auto &key : excludeKeys) { timestamps.remove(key); }
 
         QJsonObject json;
         json.insert("uuid", m_uuid.toString());
