@@ -26,10 +26,7 @@ namespace BlackMisc
 
     const QString &CSettingsCache::persistentStore()
     {
-        static const QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                "/org.swift-project/" +
-                CDirectoryUtils::normalizedApplicationDirectory() +
-                "/settings/core";
+        static const QString dir = getCacheRootDirectory() + "/settings/core";
         return dir;
     }
 

@@ -49,6 +49,13 @@ namespace BlackMisc
     class CLogCategoryList;
 
     /*!
+     * Overwrite the default root directory for cache and settings, for testing purposes.
+     *
+     * May not be called after any cache or settings objects have been constructed.
+     */
+    BLACKMISC_EXPORT void setMockCacheRootDirectory(const QString &path);
+
+    /*!
      * Value class used for signalling changed values in the cache.
      */
     class BLACKMISC_EXPORT CValueCachePacket :
@@ -279,6 +286,9 @@ namespace BlackMisc
         //! Synchronously return a current timestamp.
         //! \threadsafe
         qint64 getTimestampSync(const QString &key) { return std::get<1>(getValue(key)); }
+
+        //! \private
+        static const QString &getCacheRootDirectory();
 
     private:
         friend class Private::CValuePage;

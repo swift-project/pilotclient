@@ -11,6 +11,7 @@
 
 #include "blackmisc/valuecache.h"
 #include "blackmisc/atomicfile.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/lockfree.h"
 #include "blackmisc/logcategory.h"
@@ -28,6 +29,7 @@
 #include <QList>
 #include <QMetaMethod>
 #include <QMutexLocker>
+#include <QStandardPaths>
 #include <QThread>
 #include <Qt>
 #include <algorithm>
@@ -44,6 +46,28 @@ namespace BlackMisc
     //! Used in asserts to protect against signed integer overflow.
     template <typename T>
     bool isSafeToIncrement(const T &value) { return value < std::numeric_limits<T>::max(); }
+
+
+    //! \private
+    std::pair<QString &, std::atomic<bool> &> getCacheRootDirectoryMutable()
+    {
+        static QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+            "/org.swift-project/" + CDirectoryUtils::normalizedApplicationDirectory();
+        static std::atomic<bool> frozen { false };
+        return { dir, frozen };
+    }
+
+    void setMockCacheRootDirectory(const QString &dir)
+    {
+        Q_ASSERT_X(! getCacheRootDirectoryMutable().second, Q_FUNC_INFO, "Too late to call this function");
+        getCacheRootDirectoryMutable().first = dir;
+    }
+
+    const QString &CValueCache::getCacheRootDirectory()
+    {
+        getCacheRootDirectoryMutable().second = true;
+        return getCacheRootDirectoryMutable().first;
+    }
 
 
     ////////////////////////////////
