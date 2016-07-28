@@ -59,42 +59,45 @@ namespace BlackMisc
         using std::get;
         using std::make_tuple;
 #else // Own implementation of tuple, because the one in GCC 4.9 is not constexpr.
-        template <size_t I, typename Head, typename... Tail>
-        struct conslist;
-
-        template <size_t I, typename Head>
-        struct conslist<I, Head>
+        template <size_t I, typename T>
+        struct tuple_part
         {
-            constexpr conslist() {}
-            constexpr conslist(const Head &v) : m_obj(v) {}
-            constexpr const Head &get(std::integral_constant<size_t, I>) const { return m_obj; }
-            Head m_obj;
-        };
-
-        template <size_t I, typename Head, typename... Tail>
-        struct conslist : public conslist<I + 1, Tail...>
-        {
-            constexpr conslist() {}
-            constexpr conslist(const Head &v, const Tail &... vs) : conslist<I + 1, Tail...>(vs...), m_obj(v) {}
-            constexpr const Head &get(std::integral_constant<size_t, I>) const { return m_obj; }
-            using conslist<I + 1, Tail...>::get;
-            Head m_obj;
+            constexpr tuple_part() {}
+            constexpr tuple_part(const T &element) : m_element(element) {}
+            T m_element;
         };
 
         template <typename... Ts>
-        struct tuple
+        struct tuple_impl;
+        template <typename... Ts, size_t... Is>
+        struct tuple_impl<index_sequence<Is...>, Ts...> : public tuple_part<Is, Ts>...
+        {
+            constexpr tuple_impl() {}
+            constexpr tuple_impl(const Ts &... vs) : tuple_part<Is, Ts>(vs)... {}
+        };
+
+        template <typename... Ts>
+        struct tuple : public tuple_impl<make_index_sequence<sizeof...(Ts)>, Ts...>
         {
             constexpr tuple() {}
-            constexpr tuple(const Ts &... vs) : m_conslist(vs...) {}
-            conslist<0, Ts...> m_conslist;
+            constexpr tuple(const Ts &... vs) : tuple_impl<make_index_sequence<sizeof...(Ts)>, Ts...>(vs...) {}
             constexpr static size_t c_size = sizeof...(Ts);
         };
 
-        template <typename T>
-        struct tuple_size : public std::integral_constant<size_t, T::c_size> {};
+        template <size_t I, typename T>
+        constexpr decltype(auto) get_impl(tuple_part<I, T> &part) { return (part.m_element); }
+        template <size_t I, typename T>
+        constexpr decltype(auto) get_impl(tuple_part<I, T> &&part) { return std::move(part.m_element); }
+        template <size_t I, typename T>
+        constexpr decltype(auto) get_impl(const tuple_part<I, T> &part) { return (part.m_element); }
+        template <size_t I, typename T>
+        constexpr decltype(auto) get_impl(const tuple_part<I, T> &&part) { return std::move(part.m_element); }
 
         template <size_t I, typename T>
-        constexpr decltype(auto) get(T &&tuple) { return std::forward<T>(tuple).m_conslist.get(std::integral_constant<size_t, I>()); }
+        constexpr decltype(auto) get(T &&tuple) { return get_impl<I>(std::forward<T>(tuple)); }
+
+        template <typename T>
+        struct tuple_size : public std::integral_constant<size_t, T::c_size> {};
 
         template <typename... Ts>
         constexpr auto make_tuple(Ts &&... vs) { return tuple<std::decay_t<Ts>...>(std::forward<Ts>(vs)...); }
