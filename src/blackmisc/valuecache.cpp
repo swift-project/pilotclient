@@ -473,6 +473,25 @@ namespace BlackMisc
         changeValues({ values, 0 });
     }
 
+    QString CValueCache::getHumanReadableName(const QString &key) const
+    {
+        QMutexLocker lock(&m_mutex);
+        return m_humanReadable.value(key, key);
+    }
+
+    QString CValueCache::getHumanReadableWithKey(const QString &key) const
+    {
+        QMutexLocker lock(&m_mutex);
+        QString hr = m_humanReadable.value(key);
+        return hr.isEmpty() ? key : QString("%1 (%2)").arg(hr, key);
+    }
+
+    void CValueCache::setHumanReadableName(const QString &key, const QString &name)
+    {
+        QMutexLocker lock(&m_mutex);
+        if (! m_humanReadable.contains(key)) { m_humanReadable.insert(key, name); }
+    }
+
     CValueCache::BatchGuard CValueCache::batchChanges(QObject *owner)
     {
         Q_ASSERT(QThread::currentThread() == owner->thread());

@@ -220,6 +220,15 @@ namespace BlackMisc
         //! \threadsafe
         void clearAllValues(const QString &keyPrefix = {});
 
+        //! Return the human readable name of the given key, or the raw key string if there is none.
+        QString getHumanReadableName(const QString &key) const;
+
+        //! Return the human readable name of the given key, with the raw key string appended.
+        QString getHumanReadableWithKey(const QString &key) const;
+
+        //! \private
+        void setHumanReadableName(const QString &key, const QString &name);
+
         //! Begins a batch of changes to be made through CCached instances owned by owner.
         //! \details All changes made through those CCached instances will be deferred until the returned RAII object is
         //! destroyed. If the destruction happens during stack unwinding due to an exception being thrown, the changes are
@@ -297,6 +306,7 @@ namespace BlackMisc
         using ElementPtr = QSharedPointer<Element>; // QMap doesn't support move-only types
 
         QMap<QString, ElementPtr> m_elements;
+        QMap<QString, QString> m_humanReadable;
 
         Element &getElement(const QString &key);
         Element &getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos);
@@ -329,25 +339,29 @@ namespace BlackMisc
         //! Constructor.
         //! \param cache The CValueCache object which manages the value.
         //! \param key The key string which identifies the value.
+        //! \param name Human readable name corresponding to the key.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
         //! \param slot A member function of owner which will be called when the value is changed by another source.
         template <typename U>
-        CCached(CValueCache *cache, const QString &key, U *owner, NotifySlot<U> slot = nullptr) :
-            CCached(cache, key, nullptr, T{}, owner, slot)
+        CCached(CValueCache *cache, const QString &key, const QString &name, U *owner, NotifySlot<U> slot = nullptr) :
+            CCached(cache, key, name, nullptr, T{}, owner, slot)
         {}
 
         //! Constructor.
         //! \param cache The CValueCache object which manages the value.
         //! \param key The key string which identifies the value.
+        //! \param name Human readable name corresponding to the key.
         //! \param validator A functor which tests the validity of a value and returns true if it is valid.
         //! \param defaultValue A value which will be used as default if the value is invalid.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
         //! \param slot A member function of owner which will be called when the value is changed by another source.
         template <typename U, typename F>
-        CCached(CValueCache *cache, const QString &key, F validator, const T &defaultValue, U *owner, NotifySlot<U> slot = nullptr) :
+        CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner, NotifySlot<U> slot = nullptr) :
             m_page(Private::CValuePage::getPageFor(owner, cache)),
             m_element(m_page.createElement(key, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue), slot_cast(slot)))
-        {}
+        {
+            cache->setHumanReadableName(key, name);
+        }
 
         //! Read the current value.
         const T &getThreadLocal() const { static const T empty {}; return *(isValid() ? static_cast<const T *>(getVariant().data()) : &empty); }

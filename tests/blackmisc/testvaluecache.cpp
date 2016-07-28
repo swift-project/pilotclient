@@ -270,8 +270,8 @@ namespace BlackMiscTest
     }
 
     CValueCacheUser::CValueCacheUser(CValueCache *cache) :
-        m_value1(cache, "value1", validator, 0, this, &CValueCacheUser::ps_valueChanged),
-        m_value2(cache, "value2", validator, 0, this, &CValueCacheUser::ps_valueChanged)
+        m_value1(cache, "value1", "", validator, 0, this, &CValueCacheUser::ps_valueChanged),
+        m_value2(cache, "value2", "", validator, 0, this, &CValueCacheUser::ps_valueChanged)
     {}
 
     void CValueCacheUser::ps_valueChanged()

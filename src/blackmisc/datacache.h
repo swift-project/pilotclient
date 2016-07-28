@@ -296,7 +296,7 @@ namespace BlackMisc
         //!             Must be a void, non-const member function of the owner.
         template <typename T>
         CData(T *owner, NotifySlot<T> slot = nullptr) :
-            CData::CCached(CDataCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot)
+            CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner, slot)
         {
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(Trait::key(), Trait::timeToLive()); }
             if (Trait::isPinned()) { CDataCache::instance()->pinValue(Trait::key()); }
@@ -392,6 +392,9 @@ namespace BlackMisc
 
         //! Key string of the value. Reimplemented in derived class.
         static const char *key() { qFatal("Not implemented"); return ""; }
+
+        //! Optional human readable name.
+        static const QString &humanReadable() { static const QString name; return name; }
 
         //! Validator function. Return true if the argument is valid, false otherwise. Default
         //! implementation just returns true. Reimplemented in derived class to support validation of the value.

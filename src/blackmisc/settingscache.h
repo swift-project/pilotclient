@@ -79,7 +79,7 @@ namespace BlackMisc
         //!             Must be a void, non-const member function of the owner.
         template <typename T>
         CSetting(T *owner, NotifySlot<T> slot = nullptr) :
-            CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::isValid, Trait::defaultValue(), owner, slot)
+            CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner, slot)
         {}
 
         //! Reset the setting to its default value.
@@ -122,6 +122,9 @@ namespace BlackMisc
 
         //! Key string of the value. Reimplemented in derived class.
         static const char *key() { qFatal("Not implemented"); return ""; }
+
+        //! Optional human readable name.
+        static const QString &humanReadable() { static const QString name; return name; }
 
         //! Validator function. Return true if the argument is valid, false otherwise. Default
         //! implementation just returns true. Reimplemented in derived class to support validation of the value.
