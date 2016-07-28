@@ -43,7 +43,8 @@ namespace BlackMisc
             { "startup phase",               exactMatch(CLogCategory::startup()) },
             { "swift DB webservice related", exactMatch(CLogCategory::swiftDbWebservice()) },
             { "Qt library",                  startsWith("qt.") },
-            { "uncategorized (other)",       empty() }
+            { "uncategorized (default)",     exactMatch("default") },
+            { "uncategorized (none)",        empty() }
         };
         return patterns;
     }
