@@ -8,7 +8,7 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackcore/application.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 #include <QDir>
@@ -20,7 +20,6 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
-using namespace BlackCore;
 
 //
 // all FSX/P3D keys: http://www.fsdeveloper.com/forum/threads/registry-keys-fsx-fsx-se-p3dv1-p3dv2.432633/
