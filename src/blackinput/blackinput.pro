@@ -27,6 +27,8 @@ win32 {
     HEADERS += $$PWD/win/*.h
     SOURCES += $$PWD/win/*.cpp
 
+    DEFINES += DIRECTINPUT_VERSION=0x0800
+
     LIBS *= -ldxguid -lole32 -ldinput8 -lUser32
 }
 
