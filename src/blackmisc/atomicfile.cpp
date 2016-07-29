@@ -61,7 +61,11 @@ namespace BlackMisc
 
     void CAtomicFile::abandon()
     {
+        if (! isOpen()) { return; }
+
         QFile::close();
+        remove();
+        setFileName(m_originalFilename);
     }
 
     CAtomicFile::FileError CAtomicFile::error() const
