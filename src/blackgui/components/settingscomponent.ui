@@ -687,12 +687,35 @@
     </item>
    </layout>
   </widget>
+  <widget class="QWidget" name="tb_SettingsAdvanced">
+   <attribute name="title">
+    <string>Advanced</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="BlackGui::Components::CSettingsAdvancedComponent" name="comp_SettingsAdvancedComponent">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
    <class>BlackGui::Components::CAudioSetupComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/audiosetupcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsAdvancedComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsadvancedcomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

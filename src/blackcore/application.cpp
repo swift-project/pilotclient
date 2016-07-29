@@ -1005,8 +1005,7 @@ namespace BlackCore
         }
 
         CUrl serverUrl;
-        if (CBuildConfig::isReleaseBuild()) { serverUrl = getGlobalSetup().getCrashreportServerUrl(); }
-
+        serverUrl = getGlobalSetup().getCrashreportServerUrl();
         std::map<std::string, std::string> annotations;
 
         // Caliper (mini-breakpad-server) annotations
@@ -1015,11 +1014,20 @@ namespace BlackCore
 
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
         auto settings = m_crashReportDatabase->GetSettings();
-        settings->SetUploadsEnabled(true);
+        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal());
         m_crashpadClient = std::make_unique<CrashpadClient>();
         m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database),
                                        serverUrl.getFullUrl().toStdString(), annotations, {}, false);
         m_crashpadClient->UseHandler();
+        #endif
+    }
+
+    void CApplication::crashDumpUploadEnabledChanged()
+    {
+        #ifdef BLACK_USE_CRASHPAD
+        if (!m_crashReportDatabase) { return; }
+        auto settings = m_crashReportDatabase->GetSettings();
+        settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal());
         #endif
     }
 

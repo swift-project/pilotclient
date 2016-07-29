@@ -30,6 +30,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/db/databasereaderconfig.h"
+#include "blackcore/application/applicationsettings.h"
 #include "blackcore/webreaderflags.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/urllist.h"
@@ -414,6 +415,8 @@ namespace BlackCore
 
         void initCrashHandler();
 
+        void crashDumpUploadEnabledChanged();
+
         QScopedPointer<CCoreFacade>              m_coreFacade;             //!< core facade if any
         QScopedPointer<CSetupReader>             m_setupReader;            //!< setup reader
         QScopedPointer<CWebDataServices>         m_webDataServices;        //!< web data services
@@ -434,8 +437,11 @@ namespace BlackCore
         bool                                     m_unitTest = false;       //!< is UNIT test
         bool                                     m_autoSaveSettings = true;//!< automatically saving all settings
 
+        #ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
+        BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::crashDumpUploadEnabledChanged };
+        #endif
     };
 } // namespace
 
