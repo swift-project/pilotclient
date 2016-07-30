@@ -8,12 +8,13 @@
  */
 
 #include "settingssimulator.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/stringutils.h"
 
-
 using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Simulation::XPlane;
 
@@ -282,6 +283,159 @@ namespace BlackMisc
                 CSettingsSimulator s = this->getSettings(simulator);
                 s.resetPaths();
                 this->setAndSaveSettings(s, simulator);
+            }
+
+            CSettingsSimulatorMessages::CSettingsSimulatorMessages()
+            {
+                // void
+            }
+
+            void CSettingsSimulatorMessages::setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity)
+            {
+                this->m_technicalLogLevel = static_cast<int>(severity);
+            }
+
+            void CSettingsSimulatorMessages::disableTechnicalMessages()
+            {
+                this->m_technicalLogLevel = -1;
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedErrorsMessages() const
+            {
+                if (this->m_technicalLogLevel < 0) { return false; }
+                return (this->m_technicalLogLevel <= CStatusMessage::SeverityError);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedWarningMessages() const
+            {
+                if (this->m_technicalLogLevel < 0) { return false; }
+                return (this->m_technicalLogLevel <= CStatusMessage::SeverityWarning);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedInfoMessages() const
+            {
+                if (this->m_technicalLogLevel < 0) { return false; }
+                return (this->m_technicalLogLevel <= CStatusMessage::SeverityInfo);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedTechnicalMessages() const
+            {
+                return (this->m_technicalLogLevel >= 0);
+            }
+
+            void CSettingsSimulatorMessages::setRelayedTextMessages(CSettingsSimulatorMessages::TextMessageType messageType)
+            {
+                this->m_messageType = static_cast<int>(messageType);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedSupervisorTextMessages() const
+            {
+                return this->getRelayedTextMessageTypes().testFlag(TextMessageSupervisor);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedPrivateTextMessages() const
+            {
+                return this->getRelayedTextMessageTypes().testFlag(TextMessagePrivate);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedUnicomTextMessages() const
+            {
+                return this->getRelayedTextMessageTypes().testFlag(TextMessagesUnicom);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedCom1TextMessages() const
+            {
+                return this->getRelayedTextMessageTypes().testFlag(TextMessagesCom1);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedCom2TextMessages() const
+            {
+                return this->getRelayedTextMessageTypes().testFlag(TextMessagesCom2);
+            }
+
+            bool CSettingsSimulatorMessages::isRelayedTextMessage(const Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const
+            {
+                if (msg.isEmpty()) { return false; }
+                if (!this->isGloballyEnabled()) { return false; }
+                if (this->m_messageType == NoTextMessages) { return false; }
+
+                const TextMessageType mt = static_cast<TextMessageType>(this->m_messageType);
+                if (msg.isPrivateMessage() && mt.testFlag(TextMessagePrivate)) { return true; }
+                if (msg.isSupervisorMessage() && (mt.testFlag(TextMessagePrivate) || mt.testFlag(TextMessageSupervisor))) { return true; }
+                if (msg.isSendToUnicom() && mt.testFlag(TextMessagesUnicom)) { return true; }
+
+                if (msg.isRadioMessage())
+                {
+                    const CFrequency f(msg.getFrequency());
+                    if (mt.testFlag(TextMessagesCom1))
+                    {
+                        if (aircraft.getCom1System().isActiveFrequencyWithin8_33kHzChannel(f)) { return true; }
+                    }
+                    if (mt.testFlag(TextMessagesCom2))
+                    {
+                        if (aircraft.getCom2System().isActiveFrequencyWithin8_33kHzChannel(f)) { return true; }
+                    }
+                }
+                return false;
+            }
+
+            CSettingsSimulatorMessages::TextMessageType CSettingsSimulatorMessages::getRelayedTextMessageTypes() const
+            {
+                return static_cast<CSettingsSimulatorMessages::TextMessageType>(this->m_messageType);
+            }
+
+            QString CSettingsSimulatorMessages::convertToQString(bool i18n) const
+            {
+                Q_UNUSED(i18n);
+                QString s("Enabled %1, text messages: %2, severity: %3");
+                QString severity;
+                if (this->isRelayedTechnicalMessages())
+                {
+                    severity = "No tech. msgs";
+                }
+                else
+                {
+                    severity = CStatusMessage::severityToString(static_cast<CStatusMessage::StatusSeverity>(this->m_technicalLogLevel));
+                }
+                return s.arg(boolToOnOff(this->m_globallyEnabled)).arg(this->m_messageType).arg(severity);
+            }
+
+            CVariant CSettingsSimulatorMessages::propertyByIndex(const CPropertyIndex &index) const
+            {
+                if (index.isMyself()) { return CVariant::from(*this); }
+                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                switch (i)
+                {
+                case IndexTechnicalLogSeverity:
+                    return CVariant::fromValue(this->m_technicalLogLevel);
+                case IndexTextMessageRelay:
+                    return CVariant::from(this->m_messageType);
+                case IndexGloballyEnabled:
+                    return CVariant::from(this->m_globallyEnabled);
+                default:
+                    return CValueObject::propertyByIndex(index);
+                }
+            }
+
+            void CSettingsSimulatorMessages::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+            {
+                if (index.isMyself()) { (*this) = variant.to<CSettingsSimulatorMessages>(); return; }
+                ColumnIndex i = index.frontCasted<ColumnIndex>();
+                switch (i)
+                {
+                case IndexTechnicalLogSeverity:
+                    this->setTechnicalLogSeverity(static_cast<CStatusMessage::StatusSeverity>(variant.toInt()));
+                    break;
+                case IndexTextMessageRelay:
+                    this->setRelayedTextMessages(static_cast<CSettingsSimulatorMessages::TextMessageType>(variant.toInt()));
+                    break;
+                case IndexGloballyEnabled:
+                    this->setGloballyEnabled(variant.toBool());
+                    break;
+                default:
+                    CValueObject::setPropertyByIndex(index, variant);
+                    break;
+                }
             }
         } // ns
     } // ns

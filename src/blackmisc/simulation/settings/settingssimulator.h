@@ -12,9 +12,11 @@
 #ifndef BLACKMISC_SIMULATION_SETTINGS_SETTINGSSIMULATOR_H
 #define BLACKMISC_SIMULATION_SETTINGS_SETTINGSSIMULATOR_H
 
-#include "blackmisc/settingscache.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/network/textmessage.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 
 #include <QStringList>
@@ -24,6 +26,8 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        class CSimulatedAircraft;
+
         namespace Settings
         {
             //! Settings for simulator
@@ -174,6 +178,115 @@ namespace BlackMisc
                 BlackMisc::CSetting<BlackMisc::Simulation::Settings::SettingsSimulatorP3D> m_simSettingsP3D {this}; //!< P3D cache
                 BlackMisc::CSetting<BlackMisc::Simulation::Settings::SettingsSimulatorXP>  m_simSettingsXP  {this}; //!< XP cache
             };
+
+            //! Settings regarding message handling.
+            //! Driver independent part, related to network
+            class BLACKMISC_EXPORT CSettingsSimulatorMessages :
+                public BlackMisc::CValueObject<CSettingsSimulatorMessages>
+            {
+            public:
+                //! Properties by index
+                enum ColumnIndex
+                {
+                    IndexTechnicalLogSeverity = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorMessageSettings,
+                    IndexTextMessageRelay,
+                    IndexGloballyEnabled
+                };
+
+                //! Enabled matching mode flags
+                enum TextMessageTypeFlag
+                {
+                    NoTextMessages        = 0,
+                    TextMessagesUnicom    = 1 << 0,
+                    TextMessagesCom1      = 1 << 1,
+                    TextMessagesCom2      = 1 << 2,
+                    TextMessagePrivate    = 1 << 3,
+                    TextMessageSupervisor = 1 << 4,
+                    TextMessagesAll  = TextMessagesUnicom | TextMessagesCom1 | TextMessagesCom2 | TextMessagePrivate
+                };
+                Q_DECLARE_FLAGS(TextMessageType, TextMessageTypeFlag)
+
+                //! Default constructor
+                CSettingsSimulatorMessages();
+
+                //! Destructor.
+                ~CSettingsSimulatorMessages() {}
+
+                //! Log severity
+                void setTechnicalLogSeverity(BlackMisc::CStatusMessage::StatusSeverity severity);
+
+                //! Globally enable / disable
+                void setGloballyEnabled(bool enabled) { this->m_globallyEnabled = enabled; }
+
+                //! Globally enabled?
+                bool isGloballyEnabled() const { return this->m_globallyEnabled; }
+
+                //! No technical messages
+                void disableTechnicalMessages();
+
+                //! Relay (technical) error messages
+                bool isRelayedErrorsMessages() const;
+
+                //! Relay (technical) warning messages
+                bool isRelayedWarningMessages() const;
+
+                //! Relay (technical) info messages
+                bool isRelayedInfoMessages() const;
+
+                //! Relay any message
+                bool isRelayedTechnicalMessages() const;
+
+                //! Relay the following message types
+                void setRelayedTextMessages(BlackMisc::Simulation::Settings::CSettingsSimulatorMessages::TextMessageType messageType);
+
+                //! Relay supervisor messages
+                bool isRelayedSupervisorTextMessages() const;
+
+                //! Relay private messages
+                bool isRelayedPrivateTextMessages() const;
+
+                //! Relay UNICOM messages
+                bool isRelayedUnicomTextMessages() const;
+
+                //! Relay given text message
+                bool isRelayedTextMessage(const BlackMisc::Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
+
+                //! Relay COM1 text message
+                bool isRelayedCom1TextMessages() const;
+
+                //! Relay COM2 text message
+                bool isRelayedCom2TextMessages() const;
+
+                //! Relayed text messages
+                CSettingsSimulatorMessages::TextMessageType getRelayedTextMessageTypes() const;
+
+                //! \copydoc BlackMisc::Mixin::String::toQString
+                QString convertToQString(bool i18n = false) const;
+
+                //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+                BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+                //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+                void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+
+            private:
+                int m_technicalLogLevel = BlackMisc::CStatusMessage::SeverityError; //!< Simulator directory
+                int m_messageType = static_cast<int>(TextMessagePrivate | TextMessageSupervisor);
+                bool m_globallyEnabled = true; //!< messsage relay enabled to simulator
+
+                BLACK_METACLASS(
+                    CSettingsSimulatorMessages,
+                    BLACK_METAMEMBER(technicalLogLevel),
+                    BLACK_METAMEMBER(messageType)
+                );
+            };
+
+            //! Trait for simulator message settings
+            struct SettingsSimulatorMessages : public BlackMisc::CSettingTrait<CSettingsSimulatorMessages>
+            {
+                //! Key in data cache
+                static const char *key() { return "settingssimulatormessages"; }
+            };
         } // ns
     } // ns
 } // ns
@@ -181,5 +294,11 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSettingsSimulator)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::Settings::CSettingsSimulator>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::Settings::CSettingsSimulator>)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSettingsSimulatorMessages)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::Settings::CSettingsSimulatorMessages>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::Settings::CSettingsSimulatorMessages>)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSettingsSimulatorMessages::TextMessageTypeFlag)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::Settings::CSettingsSimulatorMessages::TextMessageType)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::Settings::CSettingsSimulatorMessages::TextMessageType)
 
 #endif // guard

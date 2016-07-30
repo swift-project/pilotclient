@@ -43,6 +43,7 @@ namespace BlackMisc
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
             CSettingsSimulator::registerMetadata();
+            CSettingsSimulatorMessages::registerMetadata();
         }
     } // ns
 } // ns
