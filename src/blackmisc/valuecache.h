@@ -358,7 +358,7 @@ namespace BlackMisc
         template <typename U, typename F>
         CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner, NotifySlot<U> slot = nullptr) :
             m_page(Private::CValuePage::getPageFor(owner, cache)),
-            m_element(m_page.createElement(key, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue), slot_cast(slot)))
+            m_element(m_page.createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue), slot_cast(slot)))
         {
             cache->setHumanReadableName(key, name);
         }

@@ -538,10 +538,12 @@ namespace BlackMisc
 
     struct CValuePage::Element
     {
-        Element(const QString &key, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot) :
-            m_key(key), m_metaType(metaType), m_validator(validator), m_default(defaultValue), m_notifySlot(slot)
+        Element(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot) :
+            m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue), m_notifySlot(slot)
         {}
         const QString m_key;
+        const QString m_name;
+        const QString m_nameWithKey = m_name.isEmpty() ? m_key : QString("%1 (%2)").arg(m_name, m_key);
         LockFree<CVariant> m_value;
         std::atomic<qint64> m_timestamp { 0 };
         const int m_metaType = QMetaType::UnknownType;
@@ -552,13 +554,13 @@ namespace BlackMisc
         bool m_saved = false;
     };
 
-    CValuePage::Element &CValuePage::createElement(const QString &key, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot)
+    CValuePage::Element &CValuePage::createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot)
     {
         Q_ASSERT_X(! m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
         Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
         Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue) : true, "CValuePage", "Validator rejects default value");
 
-        auto &element = *(m_elements[key] = ElementPtr(new Element(key, metaType, validator, defaultValue, slot)));
+        auto &element = *(m_elements[key] = ElementPtr(new Element(key, name, metaType, validator, defaultValue, slot)));
         std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp, element.m_saved) = m_cache->getValue(key);
 
         auto status = validate(element, element.m_value.read(), CStatusMessage::SeverityDebug);
@@ -622,7 +624,7 @@ namespace BlackMisc
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
             // All good info
-            status = CStatusMessage(this).info("Set values in %1") << element.m_key;
+            status = CStatusMessage(this).info("Set value %1") << element.m_nameWithKey;
         }
         return status;
     }
@@ -727,15 +729,15 @@ namespace BlackMisc
     {
         if (! value.isValid())
         {
-            return CStatusMessage(this, invalidSeverity, QString("Empty cache value %1").arg(element.m_key), true);
+            return CStatusMessage(this, invalidSeverity, QString("Empty cache value %1").arg(element.m_nameWithKey), true);
         }
         else if (value.userType() != element.m_metaType)
         {
-            return CStatusMessage(this).error("Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_key;
+            return CStatusMessage(this).error("Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
         }
         else if (element.m_validator && ! element.m_validator(value))
         {
-            return CStatusMessage(this).error("%1 is not valid for %2") << value.toQString() << element.m_key;
+            return CStatusMessage(this).error("%1 is not valid for %2") << value.toQString() << element.m_nameWithKey;
         }
         else
         {

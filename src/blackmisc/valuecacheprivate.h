@@ -66,11 +66,12 @@ namespace BlackMisc
 
             //! Returns a new instance of the opaque Element type for use by CCached<T> to interact with CValuePage.
             //! \param key The key string of the value in the cache.
+            //! \param name Human-readable name corresponding to the key.
             //! \param metaType The Qt metatype ID of the value object's expected type.
             //! \param validator Optional functor which returns true if the value is valid.
             //! \param defaultValue Optional value which is used in case the value is invalid.
             //! \param slot Optional member function of parent, will be called when value changes.
-            Element &createElement(const QString &key, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot);
+            Element &createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot);
 
             //! True if the currently paged value is a valid instance of the given type.
             //! \threadsafe
