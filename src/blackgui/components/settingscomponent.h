@@ -22,7 +22,6 @@
 class QWidget;
 
 namespace Ui { class CSettingsComponent; }
-
 namespace BlackGui
 {
     namespace Components

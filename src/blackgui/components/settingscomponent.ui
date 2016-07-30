@@ -52,6 +52,22 @@
       </property>
      </widget>
     </item>
+    <item>
+     <spacer name="vs_SettingsTrafficNetworkServers">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>25</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
    </layout>
   </widget>
   <widget class="QWidget" name="tb_SettingsTrafficNetwork">
@@ -179,6 +195,70 @@
        <enum>QFrame::Raised</enum>
       </property>
      </widget>
+    </item>
+    <item>
+     <spacer name="vs_SettingsSimulatorBasics">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>25</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_SettingsSimulatorMessages">
+   <attribute name="title">
+    <string>Simulator (messages)</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_SettingsSimulatorMessages">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CSettingsSimulatorMessagesComponent" name="comp_SettingsSimulatorMessages">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="vs_SettingsSimulatorMessages">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>25</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
@@ -643,6 +723,12 @@
    <class>BlackGui::Components::CSettingsSimulatorBasicsComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingssimulatorbasicscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsSimulatorMessagesComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingssimulatormessagescomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

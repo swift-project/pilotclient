@@ -77,7 +77,7 @@ namespace BlackGui
         void CSettingsNetworkServersComponent::ps_alterTrafficServer()
         {
             CServer server(this->ui->form_Server->getServer());
-            CStatusMessageList  msgs = server.validate();
+            CStatusMessageList msgs = server.validate();
             if (!msgs.isEmpty()) { msgs.addCategories(this); }
 
             CServerList serverList(m_trafficNetworkServers.getThreadLocal());
