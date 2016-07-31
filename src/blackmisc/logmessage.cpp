@@ -93,7 +93,7 @@ namespace BlackMisc
         return category + "/" + flag;
     }
     QString CLogMessageHelper::addDebugFlag(const QString &category) { return addFlag(category, "debug"); }
-    QString CLogMessageHelper::stripFlags(const QString &category) { return category.section("/", 0, 1); }
+    QString CLogMessageHelper::stripFlags(const QString &category) { return category.section("/", 0, 0); }
     bool CLogMessageHelper::hasDebugFlag(const QString &category)
     {
         return hasFlag(category, "debug") || category.isEmpty()
