@@ -72,7 +72,7 @@ bool CSwiftGuiStdApplication::parsingHookIn()
     return CGuiApplication::parsingHookIn();
 }
 
-CSwiftGuiStdApplication *instance()
+CSwiftGuiStdApplication *CSwiftGuiStdApplication::instance()
 {
     return qobject_cast<CSwiftGuiStdApplication *>(CApplication::instance());
 }
