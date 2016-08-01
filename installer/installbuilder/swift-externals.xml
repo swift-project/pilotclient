@@ -35,6 +35,20 @@
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*opus*.dll</origin>
                 </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/bin/swift_crashpad_handler.exe</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>bin</description>
+            <destination>${installdir}/bin</destination>
+            <name>bin_osx</name>
+            <platforms>osx</platforms>
+            <distributionFileList>
+                <distributionFile>
+                    <origin>../../dist/bin/swift_crashpad_handler</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>

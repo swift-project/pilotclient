@@ -16,7 +16,7 @@ equals (TEMPLATE, app) {
 
     # Add rpath to externals to run tests without installing.
     # DYLD_LIBRARY_PATH isn't working anymore since OS X 10.11.
-    unix: QMAKE_LFLAGS *= '-Wl,-rpath,\'$$EXTERNALSDIR\''
+    unix: QMAKE_LFLAGS *= '-Wl,-rpath,\'$$EXTERNALS_LIB_DIR\''
 
     macx {
         contains(CONFIG, app_bundle): QMAKE_LFLAGS *= -Wl,-rpath,@executable_path/../../../../lib/
