@@ -300,7 +300,7 @@ namespace BlackCore
         model.setCallsign(callsign);
         if (log)
         {
-            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Uisng model: ICAO '%1', livery '%2', model '%3', type '%4'").
+            CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using model: ICAO '%1', livery '%2', model '%3', type '%4'").
                                                 arg(model.getAircraftIcaoCode().getCombinedIcaoStringWithKey()).
                                                 arg(model.getLivery().getCombinedCodePlusInfo()).
                                                 arg(model.getModelString()).
