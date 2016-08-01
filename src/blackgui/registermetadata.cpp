@@ -8,17 +8,17 @@
  */
 
 #include "blackgui/registermetadata.h"
-#include "blackgui/settings/settingsdockwidget.h"
-#include "blackgui/settings/settingsnavigator.h"
+#include "blackgui/settings/dockwidgetsettings.h"
+#include "blackgui/settings/navigatorsettings.h"
 #include "blackgui/components/registermetadatacomponents.h"
 
 namespace BlackGui
 {
     void registerMetadata()
     {
-        BlackGui::Settings::CSettingsDockWidget::registerMetadata();
-        BlackGui::Settings::CSettingsDockWidgets::registerMetadata();
-        BlackGui::Settings::CSettingsNavigator::registerMetadata();
+        BlackGui::Settings::CDockWidgetSettings::registerMetadata();
+        BlackGui::Settings::CDockWidgetsSettings::registerMetadata();
+        BlackGui::Settings::CNavigatorSettings::registerMetadata();
         BlackGui::Components::registerMetadata();
     }
 }

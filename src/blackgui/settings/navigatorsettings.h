@@ -26,23 +26,23 @@ namespace BlackGui
     namespace Settings
     {
         //! Settings for dockwidget
-        class BLACKGUI_EXPORT CSettingsNavigator :
-            public BlackMisc::CValueObject<CSettingsNavigator>
+        class BLACKGUI_EXPORT CNavigatorSettings :
+            public BlackMisc::CValueObject<CNavigatorSettings>
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexMargins = BlackMisc::CPropertyIndex::GlobalIndexCSettingsNavigator,
+                IndexMargins = BlackMisc::CPropertyIndex::GlobalIndexCNavigatorSettings,
                 IndexFrameless,
                 IndexColumns
             };
 
             //! Default constructor
-            CSettingsNavigator();
+            CNavigatorSettings();
 
             //! Destructor.
-            ~CSettingsNavigator() {}
+            ~CNavigatorSettings() {}
 
             //! Reset to defaults
             void reset();
@@ -90,7 +90,7 @@ namespace BlackGui
             int     m_columns = 1;         //!< number of columns
 
             BLACK_METACLASS(
-                CSettingsNavigator,
+                CNavigatorSettings,
                 BLACK_METAMEMBER(margins),
                 BLACK_METAMEMBER(frameless),
                 BLACK_METAMEMBER(columns),
@@ -99,7 +99,7 @@ namespace BlackGui
         };
 
         //! Trait for settings for navigator
-        struct SettingsNavigator : public BlackMisc::CSettingTrait<CSettingsNavigator>
+        struct TNavigator : public BlackMisc::CSettingTrait<CNavigatorSettings>
         {
             //! Key in data cache
             static const char *key() { return "guinavigator"; }
@@ -107,8 +107,8 @@ namespace BlackGui
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackGui::Settings::CSettingsNavigator)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CSettingsNavigator>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CSettingsNavigator>)
+Q_DECLARE_METATYPE(BlackGui::Settings::CNavigatorSettings)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CNavigatorSettings>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CNavigatorSettings>)
 
 #endif // guard

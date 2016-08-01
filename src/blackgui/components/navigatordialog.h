@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/enableforframelesswindow.h"
-#include "blackgui/settings/settingsnavigator.h"
+#include "blackgui/settings/navigatorsettings.h"
 
 #include <QDialog>
 #include <QObject>
@@ -118,7 +118,7 @@ namespace BlackGui
             int  m_currentColumns = 1;
             QWidgetAction *m_marginMenuAction  = nullptr; //!< menu widget(!) action for margin widget
             CMarginsInput *m_input = nullptr; //!< margins widget
-            BlackMisc::CSetting<BlackGui::Settings::SettingsNavigator> m_settings { this, &CNavigatorDialog::ps_settingsChanged };
+            BlackMisc::CSetting<BlackGui::Settings::TNavigator> m_settings { this, &CNavigatorDialog::ps_settingsChanged };
         };
     } // ns
 } // ns

@@ -136,8 +136,8 @@ namespace BlackMisc
             GlobalIndexCVatsimSetup                     = 12200,
             GlobalIndexCGuiStateDbOwnModelsComponent    = 14000,
             GlobalIndexCGuiStateDbOwnModelSetComponent  = 14100,
-            GlobalIndexCSettingsDockWidget              = 14200,
-            GlobalIndexCSettingsNavigator               = 14300,
+            GlobalIndexCDockWidgetSettings              = 14200,
+            GlobalIndexCNavigatorSettings               = 14300,
             GlobalIndexCSettingsReaders                 = 14400,
             GlobalIndexLineNumber                       = 20000, //!< pseudo index for line numbers
         };

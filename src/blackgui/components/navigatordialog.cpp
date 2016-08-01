@@ -118,7 +118,7 @@ namespace BlackGui
 
         void CNavigatorDialog::restoreFromSettings()
         {
-            const CSettingsNavigator s = this->m_settings.get();
+            const CNavigatorSettings s = this->m_settings.get();
             this->setContentsMargins(s.getMargins());
             if (this->isFrameless() != s.isFramless()) { this->toggleFrameless(); }
             this->buildNavigator(s.getColumns());
@@ -128,7 +128,7 @@ namespace BlackGui
 
         void CNavigatorDialog::saveToSettings()
         {
-            CSettingsNavigator s = this->m_settings.get();
+            CNavigatorSettings s = this->m_settings.get();
             s.setFrameless(this->isFrameless());
             s.setMargins(this->contentsMargins());
             s.setGeometry(this->saveGeometry());

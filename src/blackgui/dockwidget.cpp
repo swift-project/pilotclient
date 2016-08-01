@@ -99,7 +99,7 @@ namespace BlackGui
 
     void CDockWidget::setMarginsWhenFloating(const QMargins &margins)
     {
-        CSettingsDockWidget s = this->getSettings();
+        CDockWidgetSettings s = this->getSettings();
         s.setMarginsWhenFloating(margins);
         this->setSettings(s);
     }
@@ -116,7 +116,7 @@ namespace BlackGui
 
     void CDockWidget::setMarginsWhenFramelessFloating(const QMargins &margins)
     {
-        CSettingsDockWidget s = this->getSettings();
+        CDockWidgetSettings s = this->getSettings();
         s.setMarginsWhenFramelessFloating(margins);
         this->setSettings(s);
     }
@@ -133,7 +133,7 @@ namespace BlackGui
 
     void CDockWidget::setMarginsWhenDocked(const QMargins &margins)
     {
-        CSettingsDockWidget s = this->getSettings();
+        CDockWidgetSettings s = this->getSettings();
         s.setMarginsWhenDocked(margins);
         this->setSettings(s);
     }
@@ -272,7 +272,7 @@ namespace BlackGui
 
     bool CDockWidget::restoreFromSettings()
     {
-        const CSettingsDockWidget s = this->getSettings();
+        const CDockWidgetSettings s = this->getSettings();
         if (s.isFloating() != this->isFloating())
         {
             this->toggleFloating();
@@ -536,7 +536,7 @@ namespace BlackGui
     void CDockWidget::initSettings()
     {
         const QString name(this->getNameForSettings());
-        CSettingsDockWidgets all = this->m_settings.get();
+        CDockWidgetsSettings all = this->m_settings.get();
         if (all.contains(name)) { return; }
         all.getByNameOrInitToDefault(name);
         this->m_settings.setAndSave(all);
@@ -549,19 +549,19 @@ namespace BlackGui
         return n;
     }
 
-    CSettingsDockWidget CDockWidget::getSettings() const
+    CDockWidgetSettings CDockWidget::getSettings() const
     {
-        const CSettingsDockWidgets all = this->m_settings.get();
+        const CDockWidgetsSettings all = this->m_settings.get();
         const QString name(this->getNameForSettings());
-        const CSettingsDockWidget s = all.value(name);
+        const CDockWidgetSettings s = all.value(name);
         return s;
     }
 
-    void CDockWidget::setSettings(const CSettingsDockWidget &settings)
+    void CDockWidget::setSettings(const CDockWidgetSettings &settings)
     {
-        const CSettingsDockWidget current = getSettings();
+        const CDockWidgetSettings current = getSettings();
         if (current == settings) { return; }
-        CSettingsDockWidgets all = this->m_settings.get();
+        CDockWidgetsSettings all = this->m_settings.get();
         const QString name(this->getNameForSettings());
         all.insert(name, settings);
         const CStatusMessage m = this->m_settings.set(all); // saved when shutdown
@@ -573,7 +573,7 @@ namespace BlackGui
 
     void CDockWidget::saveToSettings()
     {
-        CSettingsDockWidget s = this->getSettings();
+        CDockWidgetSettings s = this->getSettings();
         s.setFloating(this->isFloating());
         s.setFrameless(this->isFrameless());
         s.setGeometry(this->saveGeometry());
@@ -582,7 +582,7 @@ namespace BlackGui
 
     void CDockWidget::resetSettings()
     {
-        CSettingsDockWidget s = this->getSettings();
+        CDockWidgetSettings s = this->getSettings();
         s.reset();
         this->setSettings(s);
         this->restoreFromSettings();

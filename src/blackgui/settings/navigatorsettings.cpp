@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "settingsnavigator.h"
+#include "navigatorsettings.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/stringutils.h"
 #include <QStringList>
@@ -19,38 +19,38 @@ namespace BlackGui
 {
     namespace Settings
     {
-        CSettingsNavigator::CSettingsNavigator()
+        CNavigatorSettings::CNavigatorSettings()
         { }
 
-        void CSettingsNavigator::reset()
+        void CNavigatorSettings::reset()
         { }
 
-        void CSettingsNavigator::setMargins(const QMargins &margins)
+        void CNavigatorSettings::setMargins(const QMargins &margins)
         {
             this->m_margins = CGuiUtility::marginsToString(margins);
         }
 
-        QMargins CSettingsNavigator::getMargins() const
+        QMargins CNavigatorSettings::getMargins() const
         {
             return CGuiUtility::stringToMargins(this->m_margins);
         }
 
-        QByteArray CSettingsNavigator::getGeometry() const
+        QByteArray CNavigatorSettings::getGeometry() const
         {
             return byteArrayFromHexString(this->m_geometry);
         }
 
-        void CSettingsNavigator::setGeometry(const QByteArray &ba)
+        void CNavigatorSettings::setGeometry(const QByteArray &ba)
         {
             this->m_geometry = bytesToHexString(ba);
         }
 
-        QString CSettingsNavigator::convertToQString(bool i18n) const
+        QString CNavigatorSettings::convertToQString(bool i18n) const
         {
             return convertToQString(", ", i18n);
         }
 
-        QString CSettingsNavigator::convertToQString(const QString &separator, bool i18n) const
+        QString CNavigatorSettings::convertToQString(const QString &separator, bool i18n) const
         {
             Q_UNUSED(i18n);
             QString s("margins: ");
@@ -64,7 +64,7 @@ namespace BlackGui
             return s;
         }
 
-        CVariant CSettingsNavigator::propertyByIndex(const CPropertyIndex &index) const
+        CVariant CNavigatorSettings::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -81,9 +81,9 @@ namespace BlackGui
             }
         }
 
-        void CSettingsNavigator::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CNavigatorSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSettingsNavigator>(); return; }
+            if (index.isMyself()) { (*this) = variant.to<CNavigatorSettings>(); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)

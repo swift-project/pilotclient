@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "settingsdockwidget.h"
+#include "dockwidgetsettings.h"
 #include "blackgui/guiutility.h"
 #include "blackmisc/stringutils.h"
 #include <QStringList>
@@ -19,10 +19,10 @@ namespace BlackGui
 {
     namespace Settings
     {
-        CSettingsDockWidget::CSettingsDockWidget()
+        CDockWidgetSettings::CDockWidgetSettings()
         { }
 
-        void CSettingsDockWidget::resetMarginsToDefault()
+        void CDockWidgetSettings::resetMarginsToDefault()
         {
             // this->setMarginsWhenFloating(QMargins(0, 3, 15, 35)); // found by trial and error on windows
             this->setMarginsWhenFloating(QMargins(0, 0, 0, 0));
@@ -30,58 +30,58 @@ namespace BlackGui
             this->setMarginsWhenDocked(QMargins(0, 0, 0, 0));
         }
 
-        void CSettingsDockWidget::reset()
+        void CDockWidgetSettings::reset()
         {
             this->resetMarginsToDefault();
             this->m_geometry = "";
         }
 
-        void CSettingsDockWidget::setMarginsWhenFramelessFloating(const QMargins &margins)
+        void CDockWidgetSettings::setMarginsWhenFramelessFloating(const QMargins &margins)
         {
             this->m_floatingFramelessMargins = CGuiUtility::marginsToString(margins);
         }
 
-        QMargins CSettingsDockWidget::getMarginsWhenFramelessFloating() const
+        QMargins CDockWidgetSettings::getMarginsWhenFramelessFloating() const
         {
             return CGuiUtility::stringToMargins(this->m_floatingFramelessMargins);
         }
 
-        void CSettingsDockWidget::setMarginsWhenFloating(const QMargins &margins)
+        void CDockWidgetSettings::setMarginsWhenFloating(const QMargins &margins)
         {
             this->m_floatingMargins = CGuiUtility::marginsToString(margins);
         }
 
-        QMargins CSettingsDockWidget::getMarginsWhenFloating() const
+        QMargins CDockWidgetSettings::getMarginsWhenFloating() const
         {
             return CGuiUtility::stringToMargins(this->m_floatingMargins);
         }
 
-        void CSettingsDockWidget::setMarginsWhenDocked(const QMargins &margins)
+        void CDockWidgetSettings::setMarginsWhenDocked(const QMargins &margins)
         {
             this->m_dockedMargins = CGuiUtility::marginsToString(margins);
         }
 
-        QMargins CSettingsDockWidget::getMarginsWhenDocked() const
+        QMargins CDockWidgetSettings::getMarginsWhenDocked() const
         {
             return CGuiUtility::stringToMargins(this->m_dockedMargins);
         }
 
-        QByteArray CSettingsDockWidget::getGeometry() const
+        QByteArray CDockWidgetSettings::getGeometry() const
         {
             return byteArrayFromHexString(this->m_geometry);
         }
 
-        void CSettingsDockWidget::setGeometry(const QByteArray &ba)
+        void CDockWidgetSettings::setGeometry(const QByteArray &ba)
         {
             this->m_geometry = bytesToHexString(ba);
         }
 
-        QString CSettingsDockWidget::convertToQString(bool i18n) const
+        QString CDockWidgetSettings::convertToQString(bool i18n) const
         {
             return convertToQString(", ", i18n);
         }
 
-        QString CSettingsDockWidget::convertToQString(const QString &separator, bool i18n) const
+        QString CDockWidgetSettings::convertToQString(const QString &separator, bool i18n) const
         {
             Q_UNUSED(i18n);
             QString s("floating: ");
@@ -101,7 +101,7 @@ namespace BlackGui
             return s;
         }
 
-        CVariant CSettingsDockWidget::propertyByIndex(const CPropertyIndex &index) const
+        CVariant CDockWidgetSettings::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -122,9 +122,9 @@ namespace BlackGui
             }
         }
 
-        void CSettingsDockWidget::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CDockWidgetSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSettingsDockWidget>(); return; }
+            if (index.isMyself()) { (*this) = variant.to<CDockWidgetSettings>(); return; }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -150,10 +150,10 @@ namespace BlackGui
             }
         }
 
-        CSettingsDockWidget CSettingsDockWidgets::getByNameOrInitToDefault(const QString &name)
+        CDockWidgetSettings CDockWidgetsSettings::getByNameOrInitToDefault(const QString &name)
         {
             if (this->contains(name)) { return this->value(name); }
-            CSettingsDockWidget s;
+            CDockWidgetSettings s;
 
             // default values can be set here, this could be enhanced if needed
             // e.g. by platform dependent defaults
@@ -162,7 +162,7 @@ namespace BlackGui
             return s;
         }
 
-        void CSettingsDockWidgets::resetToDefaults(const QString &name)
+        void CDockWidgetsSettings::resetToDefaults(const QString &name)
         {
             if (this->contains(name))
             {

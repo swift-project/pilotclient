@@ -15,7 +15,7 @@
 #include "blackcore/settings/network.h"
 #include "blackcore/data/vatsimsetup.h"
 #include "blackgui/blackguiexport.h"
-#include "blackgui/settings/settingsgui.h"
+#include "blackgui/settings/guisettings.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
@@ -166,7 +166,7 @@ namespace BlackGui
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer { nullptr };
             BlackMisc::CSettingReadOnly<BlackCore::Settings::Network::TrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
-            BlackMisc::CSetting<BlackGui::Settings::OwnAircraftModel> m_currentAircraftModel { this };
+            BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this };
             BlackMisc::CData<BlackCore::Data::VatsimCurrentServer> m_currentVatsimServer { this };
         };
     } // namespace

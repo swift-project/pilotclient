@@ -27,14 +27,14 @@ namespace BlackGui
     namespace Settings
     {
         //! Settings for dockwidget
-        class BLACKGUI_EXPORT CSettingsDockWidget :
-            public BlackMisc::CValueObject<CSettingsDockWidget>
+        class BLACKGUI_EXPORT CDockWidgetSettings :
+            public BlackMisc::CValueObject<CDockWidgetSettings>
         {
         public:
             //! Properties by index
             enum ColumnIndex
             {
-                IndexFloatingMargins = BlackMisc::CPropertyIndex::GlobalIndexCSettingsDockWidget,
+                IndexFloatingMargins = BlackMisc::CPropertyIndex::GlobalIndexCDockWidgetSettings,
                 IndexFloatingFramelessMargins,
                 IndexDockedMargins,
                 IndexFrameless,
@@ -42,10 +42,10 @@ namespace BlackGui
             };
 
             //! Default constructor
-            CSettingsDockWidget();
+            CDockWidgetSettings();
 
             //! Destructor.
-            ~CSettingsDockWidget() {}
+            ~CDockWidgetSettings() {}
 
             //! Reset margins to default
             void resetMarginsToDefault();
@@ -110,7 +110,7 @@ namespace BlackGui
             bool m_frameless = false;                       //!< frameless
 
             BLACK_METACLASS(
-                CSettingsDockWidget,
+                CDockWidgetSettings,
                 BLACK_METAMEMBER(floatingMargins),
                 BLACK_METAMEMBER(floatingFramelessMargins),
                 BLACK_METAMEMBER(dockedMargins),
@@ -121,29 +121,29 @@ namespace BlackGui
         };
 
         //! Needed to compile properly with Q_DECLARE_METATYPE
-        using CDockWidgetSettingsDictionary = BlackMisc::CDictionary<QString, CSettingsDockWidget, QMap>;
+        using CDockWidgetSettingsDictionary = BlackMisc::CDictionary<QString, CDockWidgetSettings, QMap>;
 
         //! Settings for all dock widgets
-        class BLACKGUI_EXPORT CSettingsDockWidgets :
+        class BLACKGUI_EXPORT CDockWidgetsSettings :
             public CDockWidgetSettingsDictionary,
-            public BlackMisc::Mixin::MetaType<CSettingsDockWidgets>,
-            public BlackMisc::Mixin::JsonOperators<CSettingsDockWidgets>
+            public BlackMisc::Mixin::MetaType<CDockWidgetsSettings>,
+            public BlackMisc::Mixin::JsonOperators<CDockWidgetsSettings>
         {
         public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CSettingsDockWidgets)
+            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDockWidgetsSettings)
 
             //! Default constructor.
-            CSettingsDockWidgets() {}
+            CDockWidgetsSettings() {}
 
             //! Get setting or init by estimated default values
-            CSettingsDockWidget getByNameOrInitToDefault(const QString &name);
+            CDockWidgetSettings getByNameOrInitToDefault(const QString &name);
 
             //! Reset to defaults
             void resetToDefaults(const QString &name);
         };
 
         //! Trait for settings for dock widget
-        struct SettingsDockWidgets : public BlackMisc::CSettingTrait<CSettingsDockWidgets>
+        struct TDockWidgets : public BlackMisc::CSettingTrait<CDockWidgetsSettings>
         {
             //! Key in data cache
             static const char *key() { return "guidockwidget"; }
@@ -151,10 +151,10 @@ namespace BlackGui
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackGui::Settings::CSettingsDockWidget)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CSettingsDockWidget>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CSettingsDockWidget>)
+Q_DECLARE_METATYPE(BlackGui::Settings::CDockWidgetSettings)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CDockWidgetSettings>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CDockWidgetSettings>)
 Q_DECLARE_METATYPE(BlackGui::Settings::CDockWidgetSettingsDictionary)
-Q_DECLARE_METATYPE(BlackGui::Settings::CSettingsDockWidgets)
+Q_DECLARE_METATYPE(BlackGui::Settings::CDockWidgetsSettings)
 
 #endif // guard
