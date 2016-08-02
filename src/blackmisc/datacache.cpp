@@ -546,13 +546,16 @@ namespace BlackMisc
 
     void CDataCacheRevision::setTimeToLive(const QString &key, int ttl)
     {
-        Q_ASSERT(! m_updateInProgress);
+        QMutexLocker lock(&m_mutex);
 
+        Q_ASSERT(! m_updateInProgress);
         m_timesToLive.insert(key, ttl);
     }
 
     void CDataCacheRevision::overrideTimestamp(const QString &key, qint64 timestamp)
     {
+        QMutexLocker lock(&m_mutex);
+
         Q_ASSERT(! m_updateInProgress);
         Q_ASSERT(! m_lockFile.isLocked());
 
@@ -619,15 +622,17 @@ namespace BlackMisc
 
     void CDataCacheRevision::pinValue(const QString &key)
     {
-        Q_ASSERT(! m_updateInProgress);
+        QMutexLocker lock(&m_mutex);
 
+        Q_ASSERT(! m_updateInProgress);
         m_pinnedValues.insert(key);
     }
 
     void CDataCacheRevision::deferValue(const QString &key)
     {
-        Q_ASSERT(! m_updateInProgress);
+        QMutexLocker lock(&m_mutex);
 
+        Q_ASSERT(! m_updateInProgress);
         m_deferredValues.insert(key);
     }
 
