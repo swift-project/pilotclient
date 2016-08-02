@@ -61,7 +61,7 @@ namespace BlackCore
         void ps_airportCacheChanged();
 
     private:
-        BlackMisc::CData<BlackCore::Data::DbAirportCache> m_airportCache {this, &CAirportDataReader::ps_airportCacheChanged};
+        BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::ps_airportCacheChanged};
         mutable QReadWriteLock m_lock;
         quint64 m_lastModified = 0; //!< When was data file updated, obtained from HTTP Last-Modified header, in ms from epoch
 

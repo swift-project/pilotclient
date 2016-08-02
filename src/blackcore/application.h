@@ -23,6 +23,7 @@
 #include <QString>
 #include <QStringList>
 #include <atomic>
+#include <functional>
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/cookiemanager.h"
@@ -321,6 +322,7 @@ namespace BlackCore
                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
 
         //! Post to network
+        //! \note This method takes ownership over \c multiPart.
         //! \threadsafe
         QNetworkReply *postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart,
                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
@@ -426,6 +428,11 @@ namespace BlackCore
         void initCrashHandler();
 
         void crashDumpUploadEnabledChanged();
+
+        //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
+        QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
+                                       const BlackMisc::CSlot<void(QNetworkReply *)> &callback,
+                                       std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> method);
 
         QScopedPointer<CCoreFacade>              m_coreFacade;             //!< core facade if any
         QScopedPointer<CSetupReader>             m_setupReader;            //!< setup reader

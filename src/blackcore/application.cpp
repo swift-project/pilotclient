@@ -398,106 +398,44 @@ namespace BlackCore
 
     QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CSlot<void(QNetworkReply *)> &callback)
     {
-        if (this->m_shutdown) { return nullptr; }
-        return getFromNetwork(url.toNetworkRequest(), callback);
+        return httpRequestImpl(url.toNetworkRequest(), callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.get(request); });
     }
 
     QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const CSlot<void(QNetworkReply *)> &callback)
     {
-        if (this->m_shutdown) { return nullptr; }
-        QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
-        if (QThread::currentThread() != this->m_accessManager.thread())
-        {
-            QTimer::singleShot(0, this, [this, request, callback]() { this->getFromNetwork(request, callback); });
-            return nullptr; // not yet started
-        }
-
-        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
-        QNetworkRequest r(request); // no QObject
-        CNetworkUtils::ignoreSslVerification(r);
-        CNetworkUtils::setSwiftUserAgent(r);
-        QNetworkReply *reply = this->m_accessManager.get(r);
-        if (callback)
-        {
-            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);
-        }
-        return reply;
+        return httpRequestImpl(request, callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.get(request); });
     }
 
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
     {
-        if (this->m_shutdown) { return nullptr; }
-        QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
-        if (QThread::currentThread() != this->m_accessManager.thread())
-        {
-            QTimer::singleShot(0, this, [this, request, data, callback]() { this->postToNetwork(request, data, callback); });
-            return nullptr; // not yet started
-        }
-
-        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
-        QNetworkRequest r(request);
-        CNetworkUtils::ignoreSslVerification(r);
-        CNetworkUtils::setSwiftUserAgent(r);
-        QNetworkReply *reply = this->m_accessManager.post(r, data);
-        if (callback)
-        {
-            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);
-        }
-        return reply;
+        return httpRequestImpl(request, callback, [ data ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.post(request, data); });
     }
 
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
-        if (this->m_shutdown) { return nullptr; }
-        QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (QThread::currentThread() != this->m_accessManager.thread())
         {
-            QTimer::singleShot(0, this, [this, request, multiPart, callback]() { this->postToNetwork(request, multiPart, callback); });
-            return nullptr; // not yet started
+            multiPart->moveToThread(this->m_accessManager.thread());
         }
 
-        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
-        QNetworkRequest r(request);
-        CNetworkUtils::ignoreSslVerification(r);
-        CNetworkUtils::setSwiftUserAgent(r);
-        QNetworkReply *reply = this->m_accessManager.post(r, multiPart);
-        if (callback)
-        {
-            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); });
-        }
-        return reply;
+        return httpRequestImpl(request, callback, [ this, multiPart ] (QNetworkAccessManager &nam, const QNetworkRequest &request)
+            {
+                QNetworkReply *reply = nam.post(request, multiPart);
+                Q_ASSERT(reply);
+                multiPart->setParent(reply);
+                return reply;
+            }
+        );
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
     {
-        if (this->m_shutdown) { return nullptr; }
-        return headerFromNetwork(url.toNetworkRequest(), callback);
+        return httpRequestImpl(url.toNetworkRequest(), callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.head(request); });
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
     {
-        if (this->m_shutdown) { return nullptr; }
-        QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
-        if (QThread::currentThread() != this->m_accessManager.thread())
-        {
-            QTimer::singleShot(0, this, [this, request, callback]() { this->headerFromNetwork(request, callback); });
-            return nullptr; // not yet started
-        }
-
-        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
-        QNetworkRequest r(request); // no QObject
-        CNetworkUtils::ignoreSslVerification(r);
-        CNetworkUtils::setSwiftUserAgent(r);
-        QNetworkReply *reply = this->m_accessManager.head(r);
-        if (callback)
-        {
-            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);
-        }
-        return reply;
+        return httpRequestImpl(request, callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.head(request); });
     }
 
     void CApplication::deleteAllCookies()
@@ -1060,4 +998,27 @@ namespace BlackCore
         #endif
     }
 
+    QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> method)
+    {
+        if (this->m_shutdown) { return nullptr; }
+        QWriteLocker locker(&m_accessManagerLock);
+        Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        if (QThread::currentThread() != this->m_accessManager.thread())
+        {
+//            QTimer::singleShot(0, this, [this, request, callback, method]() { this->httpRequestImpl(request, callback, method); });
+            QTimer::singleShot(0, this, std::bind(&CApplication::httpRequestImpl, this, request, callback, method));
+            return nullptr; // not yet started
+        }
+
+        Q_ASSERT_X(QThread::currentThread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager thread mismatch");
+        QNetworkRequest r(request); // no QObject
+        CNetworkUtils::ignoreSslVerification(r);
+        CNetworkUtils::setSwiftUserAgent(r);
+        QNetworkReply *reply = method(this->m_accessManager, r);
+        if (callback)
+        {
+            connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);
+        }
+        return reply;
+    }
 } // ns

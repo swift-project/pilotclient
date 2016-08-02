@@ -52,13 +52,16 @@ namespace BlackMisc
             (void)QT_TRANSLATE_NOOP("Aviation", "Airport");
         }
 
-        void CAirport::fromDatabaseJson(const QJsonObject &json)
+        void CAirport::convertFromDatabaseJson(const QJsonObject &json)
         {
             Q_ASSERT(json.value("icao").isString());
             setIcao(json.value("icao").toString());
 
-            Q_ASSERT(json.value("country").isString());
-            setCountry(json.value("country").toString());
+            if (json.value("alpha3").isString() && json.value("country").isString())
+            {
+                CCountry country(json.value("alpha3").toString(), json.value("country").toString());
+                setCountry(country);
+            }
 
             Q_ASSERT(json.value("name").isString());
             setDescriptiveName(json.value("name").toString());

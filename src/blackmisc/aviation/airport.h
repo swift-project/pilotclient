@@ -19,6 +19,7 @@
 #include "blackmisc/geo/longitude.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/country.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
@@ -80,10 +81,10 @@ namespace BlackMisc
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
             //! Get the country
-            QString getCountry() const { return m_country; }
+            const CCountry& getCountry() const { return m_country; }
 
             //! Set the country
-            void setCountry(const QString &country) { this->m_country = country; }
+            void setCountry(const CCountry &country) { this->m_country = country; }
 
             //! Elevation
             //! \sa geodeticHeight
@@ -131,13 +132,13 @@ namespace BlackMisc
             QString convertToQString(bool i18n = false) const;
 
             //! \copydoc BlackMisc::CValueObject::convertFromJson
-            void fromDatabaseJson(const QJsonObject &json);
+            void convertFromDatabaseJson(const QJsonObject &json);
 
         private:
             CAirportIcaoCode                    m_icao;
             QString                             m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
-            QString                             m_country;
+            CCountry                            m_country;
 
             BLACK_METACLASS(
                 CAirport,

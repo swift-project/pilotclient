@@ -61,7 +61,8 @@ namespace BlackCore
             return;
         }
 
-        CAirportList airports = CAirportList::fromDatabaseJson(array);
+        CAirportList airports;
+        airports.convertFromDatabaseJson(array);
         quint64 timestamp = lastModifiedMsSinceEpoch(nwReply);
 
         {

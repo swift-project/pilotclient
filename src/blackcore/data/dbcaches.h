@@ -111,7 +111,7 @@ namespace BlackCore
         };
 
         //! Trait for airport list
-        struct DbAirportCache : public BlackMisc::CDataTrait<BlackMisc::Aviation::CAirportList>
+        struct TDbAirportCache : public BlackMisc::TDataTrait<BlackMisc::Aviation::CAirportList>
         {
             //! Defer loading
             static constexpr bool isDeferred() { return true; }

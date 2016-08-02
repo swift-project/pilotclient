@@ -44,18 +44,17 @@ namespace BlackMisc
             return this->findFirstByOrDefault(&CAirport::getIcao, icao, ifNotFound);
         }
 
-        CAirportList CAirportList::fromDatabaseJson(const QJsonArray &json)
+        void CAirportList::convertFromDatabaseJson(const QJsonArray &json)
         {
-            CAirportList airports;
+            clear();
+
             for (const QJsonValue& value: json)
             {
                 QJsonObject object = value.toObject();
                 CAirport airport;
-                airport.fromDatabaseJson(object);
-                airports.push_back(airport);
+                airport.convertFromDatabaseJson(object);
+                push_back(airport);
             }
-
-            return airports;
         }
 
     } // namespace

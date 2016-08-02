@@ -66,7 +66,6 @@ namespace BlackCore
             }
 
             m_pendingReply = sApp->postToNetwork(request, multiPart, { this, &CDatabaseWriter::ps_postResponse});
-            multiPart->setParent(m_pendingReply);
             return msgs;
         }
 
