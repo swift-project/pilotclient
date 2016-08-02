@@ -417,7 +417,6 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(m_updateInProgress);
-        Q_ASSERT(m_pendingWrite);
         Q_ASSERT(m_lockFile.isLocked());
 
         CAtomicFile revisionFile(m_basename + "/.rev");
