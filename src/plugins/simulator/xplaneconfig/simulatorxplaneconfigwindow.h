@@ -51,7 +51,7 @@ namespace BlackSimPlugin
 
         private:
             QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-            BlackMisc::CSetting<XBusServer> m_xbusServerSetting { this };
+            BlackMisc::CSetting<TXBusServer> m_xbusServerSetting { this };
         };
     }
 }

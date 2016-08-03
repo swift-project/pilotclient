@@ -29,12 +29,12 @@ namespace BlackSimPlugin
         /*!
          * Setting for XBus.
          */
-        struct XBusServer : public BlackMisc::CSettingTrait<QString>
+        struct TXBusServer : public BlackMisc::TSettingTrait<QString>
         {
-            //! \copydoc BlackMisc::CSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "xbus/server"; }
 
-            //! \copydoc BlackMisc::CSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static QString defaultValue() { return QStringLiteral("session"); }
         };
 
