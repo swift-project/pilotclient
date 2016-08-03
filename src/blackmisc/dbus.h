@@ -63,7 +63,7 @@ namespace BlackMisc
             //! Marshall without begin/endStructure, for when composed within another object
             void marshallToDbus(QDBusArgument &arg) const
             {
-                baseMarshall(static_cast<const BaseOfT<Derived> *>(derived()), arg);
+                baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember(*derived(), [ & ](const auto &member) { arg << member; });
             }
@@ -71,7 +71,7 @@ namespace BlackMisc
             //! Unmarshall without begin/endStructure, for when composed within another object
             void unmarshallFromDbus(const QDBusArgument &arg)
             {
-                baseUnmarshall(static_cast<BaseOfT<Derived> *>(derived()), arg);
+                baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
                 meta.forEachMember(*derived(), [ & ](auto &member) { arg >> member; });
             }

@@ -176,8 +176,8 @@ namespace BlackMisc
             }
             virtual const void *upCastTo(const void *object, int metaTypeId) const override
             {
-                const auto base = static_cast<const void *>(static_cast<const MetaBaseOfT<T> *>(&cast(object)));
-                return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<MetaBaseOfT<T>> {} .upCastTo(base, metaTypeId);
+                const auto base = static_cast<const void *>(static_cast<const TMetaBaseOfT<T> *>(&cast(object)));
+                return metaTypeId == getMetaTypeId() ? object : CValueObjectMetaInfo<TMetaBaseOfT<T>> {} .upCastTo(base, metaTypeId);
             }
             virtual int compareImpl(const void *lhs, const void *rhs) const override
             {

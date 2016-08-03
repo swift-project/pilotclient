@@ -31,7 +31,7 @@ namespace BlackMisc
          * \private Identity type trait.
          */
         template <typename T>
-        struct Identity
+        struct TIdentity
         {
             using type = T;
         };
@@ -40,7 +40,7 @@ namespace BlackMisc
          * \private Trick to force a non-deduced context during template argument type deduction.
          */
         template <typename T>
-        using NonDeduced = typename Identity<T>::type;
+        using TNonDeduced = typename TIdentity<T>::type;
 
         /*!
          * \private QObject subclass used by CCached<T> class template for signal/slot communication with CValueCache.

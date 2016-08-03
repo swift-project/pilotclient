@@ -243,7 +243,7 @@ namespace BlackMisc
             }
             else
             {
-                baseSetPropertyByIndex(static_cast<IndexBaseOfT<Derived> *>(derived()), variant, index);
+                baseSetPropertyByIndex(static_cast<TIndexBaseOfT<Derived> *>(derived()), variant, index);
             }
         }
         template <class Derived>
@@ -263,7 +263,7 @@ namespace BlackMisc
             case IndexString:
                 return CVariant(derived()->toQString());
             default:
-                return basePropertyByIndex(static_cast<const IndexBaseOfT<Derived> *>(derived()), index);
+                return basePropertyByIndex(static_cast<const TIndexBaseOfT<Derived> *>(derived()), index);
             }
         }
         template <class Derived>

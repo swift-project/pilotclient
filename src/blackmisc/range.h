@@ -145,9 +145,9 @@ namespace BlackMisc
     protected:
         //! Efficiently compare addresses of two objects. Return false if types are not compatible.
         //! @{
-        template <typename T, typename U, std::enable_if_t<IsEqualityComparable<const T *, const U *>::value, int> = 0>
+        template <typename T, typename U, std::enable_if_t<TIsEqualityComparable<const T *, const U *>::value, int> = 0>
         static bool equalPointers(const T *a, const U *b) { return a == b; }
-        template <typename T, typename U, std::enable_if_t<! IsEqualityComparable<const T *, const U *>::value, int> = 0>
+        template <typename T, typename U, std::enable_if_t<! TIsEqualityComparable<const T *, const U *>::value, int> = 0>
         static bool equalPointers(const T *, const U *) { return false; }
         //! @}
 

@@ -111,7 +111,7 @@ namespace BlackMisc
             static QThreadStorage<CLogCategoryList> list;
             if (! list.hasLocalData())
             {
-                list.localData().appendCategoriesFromMemberFunction(tag<T>(), HasGetLogCategories<T>());
+                list.localData().appendCategoriesFromMemberFunction(tag<T>(), THasGetLogCategories<T>());
                 list.localData().appendCategoriesFromMetaType(tag<T>(), std::integral_constant<bool, QMetaTypeId<T>::Defined>());
                 list.localData().appendCategoriesFromMetaObject(tag<T>(), std::is_base_of<QObject, T>());
                 if (list.localData().isEmpty()) { list.localData().push_back(CLogCategory::uncategorized()); }

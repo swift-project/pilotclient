@@ -91,7 +91,7 @@ namespace BlackMisc
          */
         template <class T> auto makeInsertIterator(T &container)
         {
-            return Private::makeInsertIterator(container, HasPushBack<T>());
+            return Private::makeInsertIterator(container, THasPushBack<T>());
         }
 
         /*!

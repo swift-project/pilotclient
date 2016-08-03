@@ -53,19 +53,19 @@ namespace BlackMisc
     {
         //! \cond PRIVATE
         template <bool KeySupportsQHash /* = true */, bool KeySupportsQMap>
-        struct AssociativityTraits
+        struct TAssociativityTraits
         {
             template <class Key, class Value>
             using DefaultType = QHash<Key, Value>;
         };
         template <>
-        struct AssociativityTraits<false, true>
+        struct TAssociativityTraits<false, true>
         {
             template <class Key, class Value>
             using DefaultType = QMap<Key, Value>;
         };
         template <>
-        struct AssociativityTraits<false, false>
+        struct TAssociativityTraits<false, false>
         {
             template <class Key, class>
             struct DefaultType { static_assert(std::is_void<Key>::value, "Key does not support either QHash or QMap"); };
@@ -87,12 +87,12 @@ namespace BlackMisc
      * Trait to select the appropriate default associative container type depending on what the key type supports.
      */
     template <typename K, typename V>
-    using DefaultAssociativeType = typename Private::AssociativityTraits<ModelsQHashKey<K>::value, ModelsQMapKey<K>::value>::template DefaultType<K, V>;
+    using TDefaultAssociativeType = typename Private::TAssociativityTraits<TModelsQHashKey<K>::value, TModelsQMapKey<K>::value>::template DefaultType<K, V>;
 
     /*!
      * Associative container with value semantics, chooses a sensible default implementation container type.
      */
-    template<class Key, class Value, template <class...> class Impl = DefaultAssociativeType>
+    template<class Key, class Value, template <class...> class Impl = TDefaultAssociativeType>
     class CDictionary :
         public Mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
         public Mixin::JsonOperators<CDictionary<Key, Value, Impl>>,
@@ -485,7 +485,7 @@ namespace BlackMisc
         private:
             static uint hashImpl(const Derived &value)
             {
-                uint hash = baseHash(static_cast<const BaseOfT<Derived> *>(&value));
+                uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
                 meta.forEachMember(value, Private::Hasher { hash });
                 return hash;

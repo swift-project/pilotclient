@@ -56,7 +56,7 @@ namespace BlackMisc
             static bool equals(const Derived &a, const Derived &b)
             {
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
-                bool result = baseEquals(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
+                bool result = baseEquals(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
                 meta.forEachMemberPair(a, b, [ & ](auto &&... args) { result = result && EqualsByMetaClass::membersEqual(std::forward<decltype(args)>(args)...); });
                 return result;
             }
@@ -120,8 +120,8 @@ namespace BlackMisc
             static bool less(const Derived &a, const Derived &b)
             {
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
-                bool result = baseLess(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
-                bool gt = baseLess(static_cast<const BaseOfT<Derived> *>(&b), static_cast<const BaseOfT<Derived> *>(&a));
+                bool result = baseLess(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
+                bool gt = baseLess(static_cast<const TBaseOfT<Derived> *>(&b), static_cast<const TBaseOfT<Derived> *>(&a));
                 meta.forEachMemberPair(a, b, [ & ](auto &&... args) { result = result || LessThanByMetaClass::membersLess(gt, std::forward<decltype(args)>(args)...); });
                 return result;
             }
@@ -157,7 +157,7 @@ namespace BlackMisc
             static int compareImpl(const Derived &a, const Derived &b)
             {
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForComparison>());
-                int result = baseCompare(static_cast<const BaseOfT<Derived> *>(&a), static_cast<const BaseOfT<Derived> *>(&b));
+                int result = baseCompare(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
                 meta.forEachMemberPair(a, b, [ & ](auto &&... args) { result = result ? result : CompareByMetaClass::membersCompare(std::forward<decltype(args)>(args)...); });
                 return result;
             }
@@ -169,7 +169,7 @@ namespace BlackMisc
             static int membersCompare(const T &a, const T &b, Flags)
             {
                 using CaseInsensitive = std::integral_constant<bool, static_cast<bool>(Flags::value & CaseInsensitiveComparison)>;
-                return membersCompare(a, b, CaseInsensitive(), HasCompare<T, T>());
+                return membersCompare(a, b, CaseInsensitive(), THasCompare<T, T>());
             }
             template <typename T, typename U>
             static int membersCompare(const T &a, const T &b, std::true_type, U) { return a.compare(b, Qt::CaseInsensitive); }

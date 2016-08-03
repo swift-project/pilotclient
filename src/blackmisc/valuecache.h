@@ -334,7 +334,7 @@ namespace BlackMisc
         //! Type of pointer to non-const member function of U taking no arguments and returning void,
         //! for slot parameter of CCached constructor.
         template <typename U>
-        using NotifySlot = Private::NonDeduced<void (U::*)()>;
+        using NotifySlot = Private::TNonDeduced<void (U::*)()>;
 
         //! Constructor.
         //! \param cache The CValueCache object which manages the value.

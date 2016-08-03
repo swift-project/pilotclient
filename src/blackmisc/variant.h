@@ -73,7 +73,7 @@ namespace BlackMisc
             {
                 if (metaTypeId == QMetaType::UnknownType) { return false; }
                 if (metaTypeId == getMetaTypeId()) { return true; }
-                return baseIsA(static_cast<const MetaBaseOfT<Derived> *>(derived()), metaTypeId);
+                return baseIsA(static_cast<const TMetaBaseOfT<Derived> *>(derived()), metaTypeId);
             }
 
         private:

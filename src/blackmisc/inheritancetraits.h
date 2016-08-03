@@ -24,13 +24,13 @@ namespace BlackMisc
      * If T has a member typedef base_type, this trait will obtain it, otherwise void.
      */
     template <typename T, typename = void_t<>>
-    struct BaseOf
+    struct TBaseOf
     {
         using type = void; //!< void
     };
     //! \cond
     template <typename T>
-    struct BaseOf<T, void_t<typename T::base_type>>
+    struct TBaseOf<T, void_t<typename T::base_type>>
     {
         using type = typename T::base_type; //!< T::base_type
     };
@@ -40,45 +40,45 @@ namespace BlackMisc
      * It T has a member typedef base_type which is a registered metatype, this trait will obtain it, otherwise void.
      */
     template <class T>
-    struct MetaBaseOf
+    struct TMetaBaseOf
     {
         //! Type of T::base_type, or void if not declared.
-        using type = std::conditional_t<QMetaTypeId<typename BaseOf<T>::type>::Defined, typename BaseOf<T>::type, void>;
+        using type = std::conditional_t<QMetaTypeId<typename TBaseOf<T>::type>::Defined, typename TBaseOf<T>::type, void>;
     };
 
     /*!
      * If T has a member typedef base_type which has a member propertyByIndex, this trait will obtain it, otherwise void.
      */
     template <typename T, typename = void_t<>>
-    struct IndexBaseOf
+    struct TIndexBaseOf
     {
         using type = void; //!< void
     };
     //! \cond
     template <typename T>
-    struct IndexBaseOf<T, void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(std::declval<CPropertyIndex>()))>>
+    struct TIndexBaseOf<T, void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(std::declval<CPropertyIndex>()))>>
     {
         using type = typename T::base_type; //!< T::base_type
     };
     //! \endcond
 
     /*!
-     * Alias for typename BaseOf<T>::type.
+     * Alias for typename TBaseOf<T>::type.
      */
     template <class T>
-    using BaseOfT = typename BaseOf<T>::type;
+    using TBaseOfT = typename TBaseOf<T>::type;
 
     /*!
-     * Alias for typename MetaBaseOf<T>::type.
+     * Alias for typename TMetaBaseOf<T>::type.
      */
     template <class T>
-    using MetaBaseOfT = typename MetaBaseOf<T>::type;
+    using TMetaBaseOfT = typename TMetaBaseOf<T>::type;
 
     /*!
-     * Alias for typename IndexBaseOf<T>::type.
+     * Alias for typename TIndexBaseOf<T>::type.
      */
     template <class T>
-    using IndexBaseOfT = typename IndexBaseOf<T>::type;
+    using TIndexBaseOfT = typename TIndexBaseOf<T>::type;
 }
 
 #endif

@@ -288,7 +288,7 @@ namespace BlackMisc
                 {
                     json << std::pair<QString, const std::decay_t<decltype(member)> &>(name, member); // std::make_pair causes an ambiguous operator<<
                 });
-                return Json::appendJsonObject(json, baseToJson(static_cast<const BaseOfT<Derived> *>(derived())));
+                return Json::appendJsonObject(json, baseToJson(static_cast<const TBaseOfT<Derived> *>(derived())));
             }
 
             //! Convenience function JSON as string
@@ -301,7 +301,7 @@ namespace BlackMisc
             //! Assign from JSON object
             void convertFromJson(const QJsonObject &json)
             {
-                baseConvertFromJson(static_cast<BaseOfT<Derived> *>(derived()), json);
+                baseConvertFromJson(static_cast<TBaseOfT<Derived> *>(derived()), json);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
                 meta.forEachMemberName(*derived(), [ & ](auto & member, const QString & name)
                 {
