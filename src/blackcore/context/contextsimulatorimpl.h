@@ -15,7 +15,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/settings/application.h"
+#include "blackcore/application/applicationsettings.h"
 #include "blackcore/weathermanager.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/identifier.h"
@@ -205,7 +205,7 @@ namespace BlackCore
             CPluginManagerSimulator *m_plugins = nullptr;
             BlackMisc::CRegularThread m_listenersThread;
             BlackCore::CWeatherManager m_weatherManager { this };
-            BlackMisc::CSetting<BlackCore::Settings::Application::EnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
+            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
         };
     } // namespace
 } // namespace

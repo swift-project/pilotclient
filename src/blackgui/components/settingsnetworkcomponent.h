@@ -13,7 +13,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSNETWORKCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackcore/settings/network.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 
 #include <QFrame>
 #include <QObject>

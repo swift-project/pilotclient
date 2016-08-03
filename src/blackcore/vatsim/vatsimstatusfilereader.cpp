@@ -35,7 +35,6 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore::Data;
-using namespace BlackCore::Settings;
 
 namespace BlackCore
 {

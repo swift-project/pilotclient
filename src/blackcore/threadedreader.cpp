@@ -20,7 +20,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
-using namespace BlackCore::Settings;
+using namespace BlackCore::Vatsim;
 
 namespace BlackCore
 {
@@ -158,21 +158,21 @@ namespace BlackCore
         Q_ASSERT_X(QObject::thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong object thread");
     }
 
-    CSettingsReader CThreadedReader::getSettings() const
+    CReaderSettings CThreadedReader::getSettings() const
     {
-        return CSettingsReader::neverUpdateSettings();
+        return CReaderSettings::neverUpdateSettings();
     }
 
     void CThreadedReader::setInitialTime()
     {
-        const CSettingsReader s = this->getSettings();
+        const CReaderSettings s = this->getSettings();
         const int ms = s.getInitialTime().toMs();
         this->setInterval(s.isNeverUpdate() ? -1 : ms);
     }
 
     void CThreadedReader::setPeriodicTime()
     {
-        const CSettingsReader s = this->getSettings();
+        const CReaderSettings s = this->getSettings();
         const int ms = s.getPeriodicTime().toMs();
         this->setInterval(s.isNeverUpdate() ? -1 : ms);
     }

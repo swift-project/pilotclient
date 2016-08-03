@@ -72,7 +72,7 @@ namespace BlackCore
             // void
         }
 
-        Settings::CSettingsReader CVatsimMetarReader::getSettings() const
+        CReaderSettings CVatsimMetarReader::getSettings() const
         {
             return m_settings.get();
         }

@@ -15,7 +15,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/components/updatetimer.h"
-#include "blackcore/settings/simulator.h"
+#include "blackcore/simulator/simulatorsettings.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/weather/weatherscenario.h"
@@ -77,7 +77,7 @@ namespace BlackGui
             QVector<BlackMisc::Weather::CWeatherScenario> m_weatherScenarios;
             QTimer m_weatherUpdateTimer { this };
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
-            BlackMisc::CSetting<BlackCore::Settings::Simulator::SelectedWeatherScenario> m_weatherScenarioSetting { this };
+            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
         };
     } // namespace
 } // namespace

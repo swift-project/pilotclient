@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_AUDIOSETUPCOMPONENT_H
 #define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
-#include "blackcore/settings/audio.h"
+#include "blackcore/audio/audiosettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/settingscache.h"
@@ -72,7 +72,7 @@ namespace BlackGui
             void initAudioDeviceLists();
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
-            BlackMisc::CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };
 
         };
     } // namespace

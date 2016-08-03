@@ -14,7 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/network.h"
-#include "blackcore/settings/network.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/tokenbucket.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftparts.h"

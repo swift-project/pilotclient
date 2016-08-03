@@ -60,7 +60,7 @@ namespace BlackCore
             // void
         }
 
-        Settings::CSettingsReader CVatsimBookingReader::getSettings() const
+        CReaderSettings CVatsimBookingReader::getSettings() const
         {
             return this->m_settings.get();
         }

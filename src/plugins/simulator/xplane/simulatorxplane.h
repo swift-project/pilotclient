@@ -14,7 +14,7 @@
 
 #include "blackcore/simulator.h"
 #include "blackcore/simulatorcommon.h"
-#include "blackcore/settings/simulator.h"
+#include "blackcore/simulator/simulatorsettings.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -152,7 +152,7 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CAircraftModelList m_installedModels; //!< \todo Do we still need this, as we now focus on model set
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackCore::Settings::Simulator::SelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::ps_reloadSettings };
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks

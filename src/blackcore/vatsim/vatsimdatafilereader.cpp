@@ -52,7 +52,6 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore::Data;
-using namespace BlackCore::Settings;
 
 namespace BlackCore
 {
@@ -179,7 +178,7 @@ namespace BlackCore
             // void
         }
 
-        CSettingsReader CVatsimDataFileReader::getSettings() const
+        CReaderSettings CVatsimDataFileReader::getSettings() const
         {
             return this->m_settings.get();
         }

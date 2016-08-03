@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSNETWORKSERVERSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSNETWORKSERVERSCOMPONENT_H
 
-#include "blackcore/settings/network.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/settingscache.h"
 
@@ -54,7 +54,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-            BlackMisc::CSetting<BlackCore::Settings::Network::TrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Vatsim::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::ps_reloadSettings };
         };
     } // ns
 } // ns

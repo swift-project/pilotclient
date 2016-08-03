@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_LOGINCOMPONENT_H
 #define BLACKGUI_LOGINCOMPONENT_H
 
-#include "blackcore/settings/network.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/data/vatsimsetup.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/settings/guisettings.h"
@@ -165,7 +165,7 @@ namespace BlackGui
             bool m_visible = false; //!< is this component selected?
             const int LogoffIntervalSeconds = 10;
             QTimer *m_logoffCountdownTimer { nullptr };
-            BlackMisc::CSettingReadOnly<BlackCore::Settings::Network::TrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
             BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this };
             BlackMisc::CData<BlackCore::Data::VatsimCurrentServer> m_currentVatsimServer { this };
         };

@@ -9,22 +9,49 @@
 
 //! \file
 
-#ifndef BLACKCORE_SETTINGS_READER_H
-#define BLACKCORE_SETTINGS_READER_H
+#ifndef BLACKCORE_VATSIM_SETTINGS_H
+#define BLACKCORE_VATSIM_SETTINGS_H
 
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/pq/time.h"
+#include "blackmisc/network/serverlist.h"
 
 namespace BlackCore
 {
-    namespace Settings
+    namespace Vatsim
     {
+        /*!
+         * Virtual air traffic servers
+         */
+        struct TTrafficServers : public BlackMisc::TSettingTrait<BlackMisc::Network::CServerList>
+        {
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "network/trafficservers"; }
+        };
+
+        /*!
+         * Currently selected virtual air traffic server
+         */
+        struct TCurrentTrafficServer : public BlackMisc::TSettingTrait<BlackMisc::Network::CServer>
+        {
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "network/currenttrafficserver"; }
+
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
+            static const BlackMisc::Network::CServer &defaultValue()
+            {
+                using namespace BlackMisc::Network;
+                static const CServer dv("Testserver", "Client project testserver", "vatsim-germany.org", 6809, CUser("guest", "Guest Client project", "", "guest"));
+                return dv;
+            }
+        };
+
         /*!
          * Settings used with readers
          */
-        class BLACKCORE_EXPORT CSettingsReader : public BlackMisc::CValueObject<BlackCore::Settings::CSettingsReader>
+        class BLACKCORE_EXPORT CReaderSettings : public BlackMisc::CValueObject<BlackCore::Vatsim::CReaderSettings>
         {
         public:
             //! Properties by index
@@ -36,10 +63,10 @@ namespace BlackCore
             };
 
             //! Default constructor.
-            CSettingsReader();
+            CReaderSettings();
 
             //! Simplified constructor
-            CSettingsReader(const BlackMisc::PhysicalQuantities::CTime &initialTime, const BlackMisc::PhysicalQuantities::CTime &periodicTime, bool neverUpdate = false);
+            CReaderSettings(const BlackMisc::PhysicalQuantities::CTime &initialTime, const BlackMisc::PhysicalQuantities::CTime &periodicTime, bool neverUpdate = false);
 
             //! Get time
             const BlackMisc::PhysicalQuantities::CTime &getInitialTime() const { return m_initialTime; }
@@ -66,7 +93,7 @@ namespace BlackCore
             QString convertToQString(bool i18n = false) const;
 
             //! Settings used when a reader is manually triggered and never updates
-            static const CSettingsReader &neverUpdateSettings();
+            static const CReaderSettings &neverUpdateSettings();
 
         private:
             BlackMisc::PhysicalQuantities::CTime m_initialTime { 30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
@@ -74,7 +101,7 @@ namespace BlackCore
             bool m_neverUpdate = false;
 
             BLACK_METACLASS(
-                CSettingsReader,
+                CReaderSettings,
                 BLACK_METAMEMBER(initialTime),
                 BLACK_METAMEMBER(periodicTime),
                 BLACK_METAMEMBER(neverUpdate)
@@ -82,51 +109,51 @@ namespace BlackCore
         };
 
         //! Reader settings
-        struct SettingsVatsimBookings : public BlackMisc::CSettingTrait<CSettingsReader>
+        struct TVatsimBookings : public BlackMisc::TSettingTrait<CReaderSettings>
         {
-            //! \copydoc BlackCore::CSettingTrait::key
+            //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "vatsimreaders/bookings"; }
 
-            //! \copydoc BlackCore::CSettingTrait::defaultValue
-            static const BlackCore::Settings::CSettingsReader &defaultValue()
+            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
-                static const BlackCore::Settings::CSettingsReader reader {{30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+                static const BlackCore::Vatsim::CReaderSettings reader {{30.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };
 
         //! Reader settings
-        struct SettingsVatsimDataFile : public BlackMisc::CSettingTrait<CSettingsReader>
+        struct TVatsimDataFile : public BlackMisc::TSettingTrait<CReaderSettings>
         {
-            //! \copydoc BlackCore::CSettingTrait::key
+            //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "vatsimreaders/datafile"; }
 
-            //! \copydoc BlackCore::CSettingTrait::defaultValue
-            static const BlackCore::Settings::CSettingsReader &defaultValue()
+            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
-                static const BlackCore::Settings::CSettingsReader reader {{25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+                static const BlackCore::Vatsim::CReaderSettings reader {{25.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {120.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };
 
         //! Reader settings
-        struct SettingsVatsimMetars : public BlackMisc::CSettingTrait<CSettingsReader>
+        struct TVatsimMetars : public BlackMisc::TSettingTrait<CReaderSettings>
         {
-            //! \copydoc BlackCore::CSettingTrait::key
+            //! \copydoc BlackCore::TSettingTrait::key
             static const char *key() { return "vatsimreaders/metars"; }
 
-            //! \copydoc BlackCore::CSettingTrait::defaultValue
-            static const BlackCore::Settings::CSettingsReader &defaultValue()
+            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            static const BlackCore::Vatsim::CReaderSettings &defaultValue()
             {
-                static const BlackCore::Settings::CSettingsReader reader {{35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
+                static const BlackCore::Vatsim::CReaderSettings reader {{35.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}, {300.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()}};
                 return reader;
             }
         };
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackCore::Settings::CSettingsReader)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackCore::Settings::CSettingsReader>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackCore::Settings::CSettingsReader>)
+Q_DECLARE_METATYPE(BlackCore::Vatsim::CReaderSettings)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackCore::Vatsim::CReaderSettings>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackCore::Vatsim::CReaderSettings>)
 
 #endif

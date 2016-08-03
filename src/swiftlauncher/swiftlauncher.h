@@ -18,7 +18,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/coremodeenums.h"
-#include "blackcore/settings/network.h"
+#include "blackcore/application/applicationsettings.h"
 #include <QDialog>
 #include <QScopedPointer>
 #include <QNetworkReply>
@@ -78,7 +78,7 @@ private slots:
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
     BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
-    BlackMisc::CSetting<BlackCore::Settings::Network::DBusServerAddress> m_dbusServerAddress { this };      //!< DBus address
+    BlackMisc::CSetting<BlackCore::Application::TDBusServerAddress> m_dbusServerAddress { this };      //!< DBus address
     QString         m_executable;
     QStringList     m_executableArgs;
 

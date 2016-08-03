@@ -13,7 +13,7 @@
 #define BLACKCORE_INPUTMANAGER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/settings/application.h"
+#include "blackcore/application/applicationsettings.h"
 #include "blackinput/joystick.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
@@ -141,7 +141,7 @@ namespace BlackCore
         BlackMisc::Input::CHotkeyCombination m_lastCombination;
         BlackMisc::Input::CHotkeyCombination m_capturedCombination;
 
-        BlackMisc::CSetting<BlackCore::Settings::Application::ActionHotkeys> m_actionHotkeys { this, &CInputManager::ps_changeHotkeySettings };
+        BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::ps_changeHotkeySettings };
     };
 }
 

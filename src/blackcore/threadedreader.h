@@ -12,7 +12,7 @@
 #ifndef BLACKCORE_THREADED_READER_H
 #define BLACKCORE_THREADED_READER_H
 
-#include "blackcore/settings/reader.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/worker.h"
@@ -87,8 +87,8 @@ namespace BlackCore
         //! Make sure everthing runs correctly in own thread
         void threadAssertCheck() const;
 
-        //! Get settings, default implementation returns BlackCore::Settings::CSettingsReader::neverUpdateSettings
-        virtual BlackCore::Settings::CSettingsReader getSettings() const;
+        //! Get settings, default implementation returns BlackCore::Settings::CReaderSettings::neverUpdateSettings
+        virtual BlackCore::Vatsim::CReaderSettings getSettings() const;
 
         //! Set initial time
         void setInitialTime();

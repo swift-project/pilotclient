@@ -16,7 +16,7 @@
 #include "fs9client.h"
 #include "lobbyclient.h"
 #include "../fscommon/simulatorfscommon.h"
-#include "blackcore/settings/simulator.h"
+#include "blackcore/simulator/simulatorsettings.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/interpolator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
@@ -120,7 +120,7 @@ namespace BlackSimPlugin
             QSharedPointer<CLobbyClient> m_lobbyClient;
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackCore::Settings::Simulator::SelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFs9::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFs9::ps_reloadSettings };
         };
 
         //! Listener for FS9

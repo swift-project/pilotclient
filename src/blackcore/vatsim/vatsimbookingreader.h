@@ -48,7 +48,7 @@ namespace BlackCore
             //! \name BlackCore::CThreadedReader overrides
             //! @{
             virtual void cleanup() override;
-            virtual BlackCore::Settings::CSettingsReader getSettings() const override;
+            virtual BlackCore::Vatsim::CReaderSettings getSettings() const override;
             //! @}
 
         private slots:
@@ -60,7 +60,7 @@ namespace BlackCore
             void ps_read();
 
         private:
-            BlackMisc::CSettingReadOnly<BlackCore::Settings::SettingsVatsimBookings> m_settings { this };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimBookings> m_settings { this };
         };
     } // ns
 } // ns

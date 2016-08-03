@@ -13,7 +13,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 
 #include "blackcore/actionbind.h"
-#include "blackcore/settings/application.h"
+#include "blackcore/application/applicationsettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/actionhotkeylistmodel.h"
 #include "blackmisc/input/actionhotkey.h"
@@ -58,7 +58,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             BlackGui::Models::CActionHotkeyListModel m_model;
-            BlackMisc::CSetting<BlackCore::Settings::Application::ActionHotkeys> m_actionHotkeys { this };
+            BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this };
             BlackCore::CActionBind m_action { "/Test/Message", this, &CSettingsHotkeyComponent::ps_hotkeySlot };
 
             void ps_hotkeySlot(bool keyDown);

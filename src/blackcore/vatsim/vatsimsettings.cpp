@@ -7,23 +7,23 @@
  * contained in the LICENSE file.
  */
 
-#include "reader.h"
+#include "vatsimsettings.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
-    namespace Settings
+    namespace Vatsim
     {
-        CSettingsReader::CSettingsReader()
+        CReaderSettings::CReaderSettings()
         { }
 
-        CSettingsReader::CSettingsReader(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate) :
+        CReaderSettings::CReaderSettings(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate) :
             m_initialTime(initialTime), m_periodicTime(periodicTime), m_neverUpdate(neverUpdate)
         { }
 
-        QString CSettingsReader::convertToQString(bool i18n) const
+        QString CReaderSettings::convertToQString(bool i18n) const
         {
             QString s("CReaderSettings");
             s.append(" ").append(this->m_initialTime.convertToQString(i18n));
@@ -31,13 +31,13 @@ namespace BlackCore
             return s;
         }
 
-        const CSettingsReader &CSettingsReader::neverUpdateSettings()
+        const CReaderSettings &CReaderSettings::neverUpdateSettings()
         {
-            static const CSettingsReader s(CTime{ 1.0, CTimeUnit::d()}, CTime{ 1.0, CTimeUnit::d()}, true);
+            static const CReaderSettings s(CTime{ 1.0, CTimeUnit::d()}, CTime{ 1.0, CTimeUnit::d()}, true);
             return s;
         }
 
-        CVariant CSettingsReader::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CReaderSettings::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -54,9 +54,9 @@ namespace BlackCore
             }
         }
 
-        void CSettingsReader::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CReaderSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSettingsReader>(); return; }
+            if (index.isMyself()) { (*this) = variant.to<CReaderSettings>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

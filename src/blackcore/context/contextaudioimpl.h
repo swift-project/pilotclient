@@ -16,7 +16,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/settings/audio.h"
+#include "blackcore/audio/audiosettings.h"
 #include "blackcore/voicechannel.h"
 #include "blackmisc/audio/audiodeviceinfolist.h"
 #include "blackmisc/audio/notificationsounds.h"
@@ -183,7 +183,7 @@ namespace BlackCore
             QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
 
             // settings
-            BlackMisc::CSetting<BlackCore::Settings::Audio::AudioSettings> m_audioSettings { this };
+            BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this };
         };
     } // namespace
 } // namespace

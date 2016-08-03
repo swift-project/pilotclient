@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSVATSIMREADERSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSVATSIMREADERSCOMPONENT_H
 
-#include "blackcore/settings/reader.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -45,9 +45,9 @@ namespace BlackGui
             void initValues();
 
             QScopedPointer<Ui::CSettingsVatsimReadersComponent> ui;
-            BlackMisc::CSetting<BlackCore::Settings::SettingsVatsimBookings> m_settingsBookings { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
-            BlackMisc::CSetting<BlackCore::Settings::SettingsVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
-            BlackMisc::CSetting<BlackCore::Settings::SettingsVatsimMetars>   m_settingsMetars   { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
+            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimBookings> m_settingsBookings { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
+            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
+            BlackMisc::CSetting<BlackCore::Vatsim::TVatsimMetars>   m_settingsMetars   { this, &CSettingsVatsimReadersComponent::ps_settingsChanged };
         };
     } // ns
 } // ns

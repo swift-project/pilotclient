@@ -15,7 +15,7 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextownaircraft.h"
 #include "blackcore/corefacadeconfig.h"
-#include "blackcore/settings/network.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/atcstation.h"
@@ -170,7 +170,7 @@ namespace BlackCore
             QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
             mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
 
-            BlackMisc::CSetting<Settings::Network::CurrentTrafficServer> m_currentNetworkServer { this };
+            BlackMisc::CSetting<Vatsim::TCurrentTrafficServer> m_currentNetworkServer { this };
 
             //! Init my very own aircraft with some defaults, before overridden by simulator
             void initOwnAircraft();

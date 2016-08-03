@@ -13,7 +13,8 @@
 #define BLACKCORE_COREFACADE_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/settings/network.h"
+#include "blackcore/application/applicationsettings.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/settingscache.h"
 
@@ -160,7 +161,7 @@ namespace BlackCore
 
     private:
         bool m_init = false; //!< flag
-        BlackMisc::CSetting<Settings::Network::DBusServerAddress> m_dbusServerAddress { this };
+        BlackMisc::CSetting<Application::TDBusServerAddress> m_dbusServerAddress { this };
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;

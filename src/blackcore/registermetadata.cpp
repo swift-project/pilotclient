@@ -10,7 +10,7 @@
 #include "blackcore/registermetadata.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/db/databasereader.h"
-#include "blackcore/settings/reader.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/data/vatsimsetup.h"
@@ -43,6 +43,6 @@ namespace BlackCore
         BlackCore::Data::CUpdateInfo::registerMetadata();
         BlackCore::Data::CVatsimSetup::registerMetadata();
 
-        BlackCore::Settings::CSettingsReader::registerMetadata();
+        BlackCore::Vatsim::CReaderSettings::registerMetadata();
     }
 } // namespace
