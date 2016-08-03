@@ -75,7 +75,7 @@ private:
 
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this };  //!< download / version data
+    BlackMisc::CData<BlackCore::Data::TUpdateInfo> m_updateInfo { this };  //!< download / version data
 };
 
 #endif // guard

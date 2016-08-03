@@ -122,7 +122,7 @@ namespace BlackCore
         };
 
         //! Trait for global setup data
-        struct UpdateInfo : public BlackMisc::CDataTrait<CUpdateInfo>
+        struct TUpdateInfo : public BlackMisc::TDataTrait<CUpdateInfo>
         {
             //! Key in data cache
             static const char *key() { return "version"; }

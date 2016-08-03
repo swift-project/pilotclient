@@ -167,7 +167,7 @@ namespace BlackGui
             QTimer *m_logoffCountdownTimer { nullptr };
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
             BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this };
-            BlackMisc::CData<BlackCore::Data::VatsimCurrentServer> m_currentVatsimServer { this };
+            BlackMisc::CData<BlackCore::Data::TVatsimCurrentServer> m_currentVatsimServer { this };
         };
     } // namespace
 } // namespace

@@ -41,8 +41,8 @@ namespace BlackCore
     //! \note This class is no(!) BlackCore::CThreadedReader as it will be loaded once during startup
     //!       and reading setup data is fast.
     //!
-    //! \sa BlackCore::Data::GlobalSetup
-    //! \sa BlackCore::Data::UpdateInfo
+    //! \sa BlackCore::Data::TGlobalSetup
+    //! \sa BlackCore::Data::TUpdateInfo
     class BLACKCORE_EXPORT CSetupReader : public QObject
     {
         Q_OBJECT
@@ -126,8 +126,8 @@ namespace BlackCore
         BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
         QCommandLineOption m_cmdBootstrapUrl;                  //!< bootstrap URL
         QCommandLineOption m_cmdBootstrapMode;                 //!< bootstrap mode
-        BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
-        BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo {this};                             //!< data cache update info
+        BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
+        BlackMisc::CData<BlackCore::Data::TUpdateInfo>  m_updateInfo {this};                             //!< data cache update info
 
         //! Read by local individual file and update cache from that
         bool readLocalBootstrapFile(QString &fileName);

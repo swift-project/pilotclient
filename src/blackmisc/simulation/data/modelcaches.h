@@ -28,7 +28,7 @@ namespace BlackMisc
         namespace Data
         {
             //! Trait for model cache
-            struct ModelCache : public BlackMisc::CDataTrait<BlackMisc::Simulation::CAircraftModelList>
+            struct TModelCache : public BlackMisc::TDataTrait<BlackMisc::Simulation::CAircraftModelList>
             {
                 //! Defer loading
                 static constexpr bool isDeferred() { return true; }
@@ -38,35 +38,35 @@ namespace BlackMisc
             //! @{
 
             //! XPlane
-            struct ModelCacheXP : public ModelCache
+            struct TModelCacheXP : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelcachexp"; }
             };
 
             //! FSX
-            struct ModelCacheFsx : public ModelCache
+            struct TModelCacheFsx : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelcachefsx"; }
             };
 
             //! FS9
-            struct ModelCacheFs9 : public ModelCache
+            struct TModelCacheFs9 : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelcachefs9"; }
             };
 
             //! P3D
-            struct ModelCacheP3D : public ModelCache
+            struct TModelCacheP3D : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelcachep3d"; }
             };
 
             //! Last selection
-            struct ModelCacheLastSelection : public BlackMisc::CDataTrait<BlackMisc::Simulation::CSimulatorInfo>
+            struct TModelCacheLastSelection : public BlackMisc::TDataTrait<BlackMisc::Simulation::CSimulatorInfo>
             {
                 //! Default value
                 static const BlackMisc::Simulation::CSimulatorInfo &defaultValue()
@@ -87,35 +87,35 @@ namespace BlackMisc
             //! @{
 
             //! XPlane
-            struct ModelSetCacheXP : public ModelCache
+            struct TModelSetCacheXP : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelsetxp"; }
             };
 
             //! FSX
-            struct ModelSetCacheFsx : public ModelCache
+            struct TModelSetCacheFsx : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelsetfsx"; }
             };
 
             //! FS9
-            struct ModelSetCacheFs9 : public ModelCache
+            struct TModelSetCacheFs9 : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelsetfs9"; }
             };
 
             //! P3D
-            struct ModelSetCacheP3D : public ModelCache
+            struct TModelSetCacheP3D : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "modelsetp3d"; }
             };
 
             //! Last selection
-            struct ModelSetLastSelection : public BlackMisc::CDataTrait<BlackMisc::Simulation::CSimulatorInfo>
+            struct TModelSetLastSelection : public BlackMisc::TDataTrait<BlackMisc::Simulation::CSimulatorInfo>
             {
                 //! Default value
                 static const BlackMisc::Simulation::CSimulatorInfo &defaultValue()
@@ -133,7 +133,7 @@ namespace BlackMisc
             //! @}
 
             //! Trait for vPilot derived models
-            struct VPilotAircraftModels : public ModelCache
+            struct TVPilotAircraftModels : public TModelCache
             {
                 //! Key in data cache
                 static const char *key() { return "vpilot/models"; }
@@ -234,11 +234,11 @@ namespace BlackMisc
                 //! @}
 
             private:
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFsx> m_modelCacheFsx {this, &CModelCaches::changedFsx }; //!< FSX cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheFs9> m_modelCacheFs9 {this, &CModelCaches::changedFs9 }; //!< FS9 cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheP3D> m_modelCacheP3D {this, &CModelCaches::changedP3D }; //!< P3D cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection> m_currentSimulator { this };              //!< current simulator
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheFsx> m_modelCacheFsx {this, &CModelCaches::changedFsx }; //!< FSX cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheFs9> m_modelCacheFs9 {this, &CModelCaches::changedFs9 }; //!< FS9 cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheP3D> m_modelCacheP3D {this, &CModelCaches::changedP3D }; //!< P3D cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_currentSimulator { this };              //!< current simulator
 
                 //! Non virtaul version (used in ctor)
                 void syncronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -265,11 +265,11 @@ namespace BlackMisc
                 //! @}
 
             private:
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFsx> m_modelCacheFsx {this, &CModelSetCaches::changedFsx };  //!< FSX cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::changedFs9};   //!< FS9 cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
-                BlackMisc::CData<BlackMisc::Simulation::Data::ModelSetLastSelection> m_currentSimulator { this };                       //!< current simulator
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheFsx> m_modelCacheFsx {this, &CModelSetCaches::changedFsx };  //!< FSX cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheFs9> m_modelCacheFs9 {this, &CModelSetCaches::changedFs9};   //!< FS9 cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheP3D> m_modelCacheP3D {this, &CModelSetCaches::changedP3D };  //!< P3D cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
+                BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_currentSimulator { this };                       //!< current simulator
 
                 //! Non virtaul version (used in ctor)
                 void syncronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);

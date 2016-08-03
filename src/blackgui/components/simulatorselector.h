@@ -89,7 +89,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSimulatorSelector> ui;
             Mode m_mode = CheckBoxes;
             bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
-            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::ModelSetLastSelection> m_currentSimulator { this }; //!< current simulator
+            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelSetLastSelection> m_currentSimulator { this }; //!< current simulator
         };
     } // ns
 } // ns

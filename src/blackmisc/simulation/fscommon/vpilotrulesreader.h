@@ -118,7 +118,7 @@ namespace BlackMisc
                 CVPilotModelRuleSet m_rules;         //!< rules list
                 bool m_asyncLoadInProgress = false;  //!< Asynchronous load in progress
                 bool m_shutdown            = false;  //!< Shutdown
-                BlackMisc::CData<BlackMisc::Simulation::Data::VPilotAircraftModels> m_cachedVPilotModels { this, &CVPilotRulesReader::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
+                BlackMisc::CData<BlackMisc::Simulation::Data::TVPilotAircraftModels> m_cachedVPilotModels { this, &CVPilotRulesReader::ps_onVPilotCacheChanged }; //!< cache for latest vPilot rules
                 mutable QReadWriteLock m_lockData;
 
                 //! Read single file and do parsing

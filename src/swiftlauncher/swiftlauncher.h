@@ -77,7 +77,7 @@ private slots:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
-    BlackMisc::CData<BlackCore::Data::UpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
+    BlackMisc::CData<BlackCore::Data::TUpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
     BlackMisc::CSetting<BlackCore::Application::TDBusServerAddress> m_dbusServerAddress { this };      //!< DBus address
     QString         m_executable;
     QStringList     m_executableArgs;

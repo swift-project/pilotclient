@@ -280,7 +280,7 @@ namespace BlackMisc
 
     /*!
      * Class template for accessing a specific value in the CDataCache.
-     * \tparam Trait A subclass of BlackMisc::CDataTrait that identifies the value's key and other metadata.
+     * \tparam Trait A subclass of BlackMisc::TDataTrait that identifies the value's key and other metadata.
      */
     template <typename Trait>
     class CData : public BlackMisc::CCached<typename Trait::type>
@@ -363,7 +363,7 @@ namespace BlackMisc
 
     /*!
      * Class template for read-only access to a specific value in the CDataCache.
-     * \tparam Trait A subclass of BlackMisc::CDataTrait that identifies the value's key and other metadata.
+     * \tparam Trait A subclass of BlackMisc::TDataTrait that identifies the value's key and other metadata.
      */
     template <typename Trait>
     class CDataReadOnly : public BlackMisc::CData<Trait>
@@ -385,7 +385,7 @@ namespace BlackMisc
      * Base class for traits to be used as template argument to BlackMisc::CData.
      */
     template <typename T>
-    struct CDataTrait
+    struct TDataTrait
     {
         //! Data type of the value.
         using type = T;
@@ -417,13 +417,13 @@ namespace BlackMisc
         static constexpr bool isDeferred() { return false; }
 
         //! Deleted default constructor.
-        CDataTrait() = delete;
+        TDataTrait() = delete;
 
         //! Deleted copy constructor.
-        CDataTrait(const CDataTrait &) = delete;
+        TDataTrait(const TDataTrait &) = delete;
 
         //! Deleted copy assignment operator.
-        CDataTrait &operator =(const CDataTrait &) = delete;
+        TDataTrait &operator =(const TDataTrait &) = delete;
     };
 }
 

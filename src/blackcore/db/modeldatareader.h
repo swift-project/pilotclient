@@ -149,12 +149,12 @@ namespace BlackCore
             void ps_baseUrlCacheChanged();
 
         private:
-            BlackMisc::CData<BlackCore::Data::DbLiveryCache>      m_liveryCache {this, &CModelDataReader::ps_liveryCacheChanged };
-            BlackMisc::CData<BlackCore::Data::DbModelCache>       m_modelCache  {this, &CModelDataReader::ps_modelCacheChanged };
-            BlackMisc::CData<BlackCore::Data::DbDistributorCache> m_distributorCache {this, &CModelDataReader::ps_distributorCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbLiveryCache>      m_liveryCache {this, &CModelDataReader::ps_liveryCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbModelCache>       m_modelCache  {this, &CModelDataReader::ps_modelCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbDistributorCache> m_distributorCache {this, &CModelDataReader::ps_distributorCacheChanged };
 
             //! Reader URL (we read from where?) used to detect changes of location
-            BlackMisc::CData<BlackCore::Data::DbModelReaderBaseUrl> m_readerUrlCache {this, &CModelDataReader::ps_baseUrlCacheChanged };
+            BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CModelDataReader::ps_baseUrlCacheChanged };
 
             //! Update reader URL
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);

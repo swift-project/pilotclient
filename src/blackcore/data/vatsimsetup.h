@@ -119,7 +119,7 @@ namespace BlackCore
         };
 
         //! Trait for global setup data
-        struct VatsimSetup : public BlackMisc::CDataTrait<CVatsimSetup>
+        struct TVatsimSetup : public BlackMisc::TDataTrait<CVatsimSetup>
         {
             //! Key in data cache
             static const char *key() { return "vatsimsetup"; }
@@ -129,7 +129,7 @@ namespace BlackCore
         };
 
         //! Trait for currently used VATSIM server and user
-        struct VatsimCurrentServer : public BlackMisc::CDataTrait<BlackMisc::Network::CServer>
+        struct TVatsimCurrentServer : public BlackMisc::TDataTrait<BlackMisc::Network::CServer>
         {
             //! Key in data cache
             static const char *key() { return "vatsimserver"; }

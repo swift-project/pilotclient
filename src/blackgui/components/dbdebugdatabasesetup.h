@@ -49,7 +49,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbDebugDatabaseSetup> ui;
-            BlackMisc::CData<BlackCore::Data::GlobalSetup> m_setup {this};   //!< data cache
+            BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this};   //!< data cache
         };
     } // ns
 } // ns

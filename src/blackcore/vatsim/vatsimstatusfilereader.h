@@ -70,7 +70,7 @@ namespace BlackCore
             void ps_read();
 
         private:
-            BlackMisc::CData<BlackCore::Data::VatsimSetup> m_lastGoodSetup { this };
+            BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
         };
     } // ns
 } // ns

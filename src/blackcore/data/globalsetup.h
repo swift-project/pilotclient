@@ -203,7 +203,7 @@ namespace BlackCore
         };
 
         //! Trait for global setup data
-        struct GlobalSetup : public BlackMisc::CDataTrait<CGlobalSetup>
+        struct TGlobalSetup : public BlackMisc::TDataTrait<CGlobalSetup>
         {
             //! Key in data cache
             static const char *key() { return "bootstrap"; }

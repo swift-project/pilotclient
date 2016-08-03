@@ -141,7 +141,7 @@ namespace BlackCore
         private:
             BlackMisc::Aviation::CAtcStationList           m_atcStations;
             BlackMisc::Simulation::CSimulatedAircraftList  m_aircraft;
-            BlackMisc::CData<BlackCore::Data::VatsimSetup> m_lastGoodSetup { this };
+            BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile>     m_settings { this };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
 
