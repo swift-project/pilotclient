@@ -727,12 +727,13 @@ namespace BlackCore
 
         // with info objects wait until info objects are loaded
         Q_ASSERT_X(!entities.testFlag(CEntityFlags::InfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront");
-        if (this->m_infoDataReader && CEntityFlags::anySwiftDbEntity(entities))
+        const bool readFromInfoReader = this->m_infoDataReader && !this->m_infoDataReader->areAllDataRead() && !this->m_infoDataReader->isMarkedAsFailed();
+        if (readFromInfoReader && CEntityFlags::anySwiftDbEntity(entities))
         {
             // try to read
             if (this->m_infoObjectTrials > maxWaitCycles)
             {
-                CLogMessage(this).error("Cannot read info objects for %1 from %2")
+                CLogMessage(this).warning("Cannot read info objects for %1 from %2")
                         << CEntityFlags::flagToString(entities)
                         << this->m_infoDataReader->getInfoObjectsUrl().toQString();
                 // continue here and read data without info objects
@@ -741,6 +742,7 @@ namespace BlackCore
             {
                 if (this->m_infoDataReader->areAllDataRead())
                 {
+                    // we have all data and carry on
                     CLogMessage(this).info("Info objects for %1 loaded (trial %2) from %3")
                             << CEntityFlags::flagToString(entities)
                             << this->m_infoObjectTrials
@@ -749,12 +751,26 @@ namespace BlackCore
                 }
                 else
                 {
-                    CLogMessage(this).error("Info objects loading for %1 failed from %2, '%3'")
-                            << CEntityFlags::flagToString(entities)
-                            << this->m_infoDataReader->getInfoObjectsUrl().toQString()
-                            << this->m_infoDataReader->getStatusMessage();
-                    this->readDeferredInBackground(entities, waitForInfoObjects);
-                    return;
+                    // we have received a response, but not all data yet
+                    if (this->m_infoDataReader->hasReceivedOkReply())
+                    {
+                        // ok, this means we are parsing
+                        this->m_infoObjectTrials++;
+                        this->readDeferredInBackground(entities, waitForInfoObjects);
+                        return;
+                    }
+                    else
+                    {
+                        // we have a response, but a failure
+                        // means server is alive, but responded with error
+                        // such an error (access, ...) normally will not go away
+                        CLogMessage(this).error("Info objects loading for %1 failed from %2, '%3'")
+                                << CEntityFlags::flagToString(entities)
+                                << this->m_infoDataReader->getInfoObjectsUrl().toQString()
+                                << this->m_infoDataReader->getStatusMessage();
+                        this->m_infoDataReader->setMarkedAsFailed(true);
+                        // continue here and read data
+                    }
                 }
             }
             else

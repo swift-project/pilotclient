@@ -48,7 +48,7 @@ namespace BlackCore
 
         bool CInfoDataReader::areAllDataRead() const
         {
-            return getDbInfoObjectCount() > 0;
+            return getDbInfoObjectCount() > 4;
         }
 
         void CInfoDataReader::syncronizeCaches(CEntityFlags::Entity entities)

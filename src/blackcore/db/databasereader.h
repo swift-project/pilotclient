@@ -103,7 +103,7 @@ namespace BlackCore
             //! \threadsafe
             bool hasReceivedOkReply() const;
 
-            //! Has received Ok response from server at least once?
+            //! Has received Ok response from server?
             //! A message why connect failed can be obtained.
             //! \threadsafe
             bool hasReceivedOkReply(QString &message) const;
@@ -151,7 +151,7 @@ namespace BlackCore
         protected:
             CDatabaseReaderConfigList   m_config;                      //!< DB reder configuration
             QString                     m_statusMessage;               //!< Returned status message from watchdog
-            bool                        m_1stReplyReceived = false; //!< Successful connection?
+            bool                        m_1stReplyReceived = false;    //!< Successful connection? Does not mean data / authorizations are correct
             QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
             mutable QReadWriteLock      m_statusLock;                  //!< Lock
 

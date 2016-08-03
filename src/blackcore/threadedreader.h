@@ -22,6 +22,7 @@
 #include <QReadWriteLock>
 #include <QString>
 #include <QtGlobal>
+#include <atomic>
 
 class QNetworkReply;
 class QTimer;
@@ -65,6 +66,14 @@ namespace BlackCore
         //! Is timer running
         //! \threadsafe
         bool isTimerActive() const;
+
+        //! Is marked as read failed
+        //! \threadsafe
+        bool isMarkedAsFailed() const;
+
+        //! Set marker for read failed
+        //! \threadsafe
+        void setMarkedAsFailed(bool failed);
 
         //! Set inverval from settings and start
         void setIntervalFromSettingsAndStart();
@@ -110,9 +119,10 @@ namespace BlackCore
         bool didContentChange(const QString &content, int startPosition = -1);
 
     private:
-        QDateTime               m_updateTimestamp;  //!< when file/resource was read
-        uint                    m_contentHash = 0;  //!< has of the content given
-        QMetaObject::Connection m_toggleConnection; //!< connection to switch interval from initial to periodic
+        QDateTime               m_updateTimestamp;          //!< when file/resource was read
+        uint                    m_contentHash = 0;          //!< has of the content given
+        std::atomic<bool>       m_markedAsFailed { false }; //!< marker if reading failed
+        QMetaObject::Connection m_toggleConnection;         //!< connection to switch interval from initial to periodic
 
     private slots:
         //! switch from initial to periodic

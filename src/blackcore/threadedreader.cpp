@@ -147,6 +147,16 @@ namespace BlackCore
         return this->m_updateTimer->isActive();
     }
 
+    bool CThreadedReader::isMarkedAsFailed() const
+    {
+        return this->m_markedAsFailed;
+    }
+
+    void CThreadedReader::setMarkedAsFailed(bool failed)
+    {
+        this->m_markedAsFailed = failed;
+    }
+
     void CThreadedReader::setIntervalFromSettingsAndStart()
     {
         this->setInitialTime();
