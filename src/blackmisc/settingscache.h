@@ -63,7 +63,7 @@ namespace BlackMisc
 
     /*!
      * Class template for accessing a specific value in the CSettingsCache.
-     * \tparam Trait A subclass of BlackMisc::CSettingTrait that identifies the value's key and other metadata.
+     * \tparam Trait A subclass of BlackMisc::TSettingTrait that identifies the value's key and other metadata.
      */
     template <typename Trait>
     class CSetting : public BlackMisc::CCached<typename Trait::type>
@@ -91,7 +91,7 @@ namespace BlackMisc
 
     /*!
      * Class template for accessing a specific value in the CSettingsCache.
-     * \tparam Trait A subclass of BlackMisc::CSettingTrait that identifies the value's key and other metadata.
+     * \tparam Trait A subclass of BlackMisc::TSettingTrait that identifies the value's key and other metadata.
      */
     template <typename Trait>
     class CSettingReadOnly : public BlackMisc::CSetting<Trait>
@@ -115,7 +115,7 @@ namespace BlackMisc
      * Base class for traits to be used as template argument to BlackMisc::CSetting.
      */
     template <typename T>
-    struct CSettingTrait
+    struct TSettingTrait
     {
         //! Data type of the value.
         using type = T;
@@ -135,13 +135,13 @@ namespace BlackMisc
         static const T &defaultValue() { static const T def {}; return def; }
 
         //! Deleted default constructor.
-        CSettingTrait() = delete;
+        TSettingTrait() = delete;
 
         //! Deleted copy constructor.
-        CSettingTrait(const CSettingTrait &) = delete;
+        TSettingTrait(const TSettingTrait &) = delete;
 
         //! Deleted copy assignment operator.
-        CSettingTrait &operator =(const CSettingTrait &) = delete;
+        TSettingTrait &operator =(const TSettingTrait &) = delete;
     };
 }
 

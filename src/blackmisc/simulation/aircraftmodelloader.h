@@ -16,7 +16,7 @@
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/settings/settingssimulator.h"
+#include "blackmisc/simulation/simulationsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
 
@@ -155,7 +155,7 @@ namespace BlackMisc
             std::atomic<bool> m_cancelLoading { false };                                           //!< flag
             std::atomic<bool> m_loadingInProgress { false };                                       //!< Loading in progress
             BlackMisc::Simulation::Data::CModelCaches m_caches { this };                           //!< caches
-            BlackMisc::Simulation::Settings::CMultiSimulatorSimulatorSettings m_settings { this }; //!< settings
+            BlackMisc::Simulation::CMultiSimulatorSettings m_settings { this }; //!< settings
 
         protected slots:
             //! Loading finished

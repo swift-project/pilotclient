@@ -28,7 +28,6 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
 
 HEADERS +=  *.h \
             $$PWD/audio/*.h \
-            $$PWD/audio/settings/*.h \
             $$PWD/aviation/*.h \
             $$PWD/db/*.h \
             $$PWD/geo/*.h \
@@ -38,7 +37,6 @@ HEADERS +=  *.h \
             $$PWD/pq/*.h \
             $$PWD/simulation/*.h \
             $$PWD/simulation/data/*.h \
-            $$PWD/simulation/settings/*.h \
             $$PWD/simulation/fscommon/*.h \
             $$PWD/simulation/fsx/*.h \
             $$PWD/simulation/xplane/*.h \
@@ -46,7 +44,6 @@ HEADERS +=  *.h \
 
 SOURCES +=  *.cpp \
             $$PWD/audio/*.cpp \
-            $$PWD/audio/settings/*.cpp \
             $$PWD/aviation/*.cpp \
             $$PWD/db/*.cpp \
             $$PWD/geo/*.cpp \
@@ -55,7 +52,6 @@ SOURCES +=  *.cpp \
             $$PWD/network/*.cpp \
             $$PWD/pq/*.cpp \
             $$PWD/simulation/*.cpp \
-            $$PWD/simulation/settings/*.cpp \
             $$PWD/simulation/data/*.cpp \
             $$PWD/simulation/fscommon/*.cpp \
             $$PWD/simulation/fsx/*.cpp \

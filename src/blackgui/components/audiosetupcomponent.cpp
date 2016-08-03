@@ -12,7 +12,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/settings/settingsaudio.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/sequence.h"
 #include "ui_audiosetupcomponent.h"
 
@@ -27,7 +27,6 @@ using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
-using namespace BlackMisc::Audio::Settings;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
@@ -76,7 +75,7 @@ namespace BlackGui
 
         void CAudioSetupComponent::ps_reloadSettings()
         {
-            CSettingsAudio as(m_audioSettings.getThreadLocal());
+            CSettings as(m_audioSettings.getThreadLocal());
             this->ui->cb_SetupAudioPlayNotificationSounds->setChecked(true);
             this->ui->cb_SetupAudioNotificationTextMessage->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate));
             this->ui->cb_SetupAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(CNotificationSounds::NotificationVoiceRoomJoined));

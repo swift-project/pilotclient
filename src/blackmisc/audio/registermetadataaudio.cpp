@@ -23,7 +23,7 @@ namespace BlackMisc
             CAudioDeviceInfoList::registerMetadata();
             CVoiceRoom::registerMetadata();
             CVoiceRoomList::registerMetadata();
-            Settings::CSettingsAudio::registerMetadata();
+            CSettings::registerMetadata();
             qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::PlayMode>();
             qDBusRegisterMetaType<BlackMisc::Audio::CNotificationSounds::Notification>();
         }

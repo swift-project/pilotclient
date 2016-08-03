@@ -15,7 +15,6 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::Settings;
 using namespace BlackConfig;
 
 namespace BlackGui
@@ -104,7 +103,7 @@ namespace BlackGui
         void CSettingsSimulatorBasicsComponent::ps_save()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
-            CSettingsSimulator s = this->getSettings(simulator);
+            CSettings s = this->getSettings(simulator);
             const QString sd(ui->le_SimulatorDirectory->text().trimmed());
             const QStringList md(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
             const QStringList ed(this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText()));
@@ -194,15 +193,15 @@ namespace BlackGui
             ui->pte_ModelDirectories->setPlainText(d);
         }
 
-        CSettingsSimulator CSettingsSimulatorBasicsComponent::getSettings(const CSimulatorInfo &simulator) const
+        CSettings CSettingsSimulatorBasicsComponent::getSettings(const CSimulatorInfo &simulator) const
         {
-            const CSettingsSimulator s = this->m_settings.getSettings(simulator);
+            const CSettings s = this->m_settings.getSettings(simulator);
             return s;
         }
 
         void CSettingsSimulatorBasicsComponent::displaySettings(const CSimulatorInfo &simulator)
         {
-            const CSettingsSimulator s = this->getSettings(simulator);
+            const CSettings s = this->getSettings(simulator);
             this->displayExcludeDirectoryPatterns(s.getModelExcludeDirectoryPatterns());
             this->displayModelDirectories(s.getModelDirectories());
             ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());

@@ -104,7 +104,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>           m_modelLoader;                //!< read own aircraft models
-            BlackMisc::CData<BlackMisc::Simulation::Data::ModelCacheLastSelection> m_simulatorSelection {this }; //!< last selection
+            BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection {this }; //!< last selection
 
             //! Init or change model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);

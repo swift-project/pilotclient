@@ -143,7 +143,7 @@ namespace BlackGui
         };
 
         //! Trait for settings for dock widget
-        struct TDockWidgets : public BlackMisc::CSettingTrait<CDockWidgetsSettings>
+        struct TDockWidgets : public BlackMisc::TSettingTrait<CDockWidgetsSettings>
         {
             //! Key in data cache
             static const char *key() { return "guidockwidget"; }

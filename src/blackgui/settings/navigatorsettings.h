@@ -99,7 +99,7 @@ namespace BlackGui
         };
 
         //! Trait for settings for navigator
-        struct TNavigator : public BlackMisc::CSettingTrait<CNavigatorSettings>
+        struct TNavigator : public BlackMisc::TSettingTrait<CNavigatorSettings>
         {
             //! Key in data cache
             static const char *key() { return "guinavigator"; }

@@ -9,10 +9,10 @@
 
 #include "settingssimulatormessagescomponent.h"
 #include "ui_settingssimulatormessagescomponent.h"
-#include "blackmisc/simulation/settings/settingssimulator.h"
+#include "blackmisc/simulation/simulationsettings.h"
 
 using namespace BlackMisc;
-using namespace BlackMisc::Simulation::Settings;
+using namespace BlackMisc::Simulation;
 
 namespace BlackGui
 {

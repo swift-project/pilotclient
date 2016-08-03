@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSSIMULATORMESSAGESCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORMESSAGESCOMPONENT_H
 
-#include "blackmisc/simulation/settings/settingssimulator.h"
+#include "blackmisc/simulation/simulationsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -44,7 +44,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CSettingsSimulatorMessagesComponent> ui;
-            BlackMisc::CSetting<BlackMisc::Simulation::Settings::SettingsSimulatorMessages> m_settings { this }; //!< settings for messages
+            BlackMisc::CSetting<BlackMisc::Simulation::TSimulatorMessages> m_settings { this }; //!< settings for messages
         };
     } // ns
 } // ns

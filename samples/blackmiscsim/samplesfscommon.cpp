@@ -14,7 +14,7 @@
 #include "blackmisc/sampleutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
-#include "blackmisc/simulation/settings/settingssimulator.h"
+#include "blackmisc/simulation/simulationsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QByteArray>
@@ -28,7 +28,6 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Simulation::Settings;
 
 namespace BlackSample
 {
@@ -41,9 +40,9 @@ namespace BlackSample
         }, streamOut, streamIn);
 
         const CSimulatorInfo sim = fsDir.toLower().contains("simobjects") ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
-        CMultiSimulatorSimulatorSettings multiSettings;
-        const CSettingsSimulator originalSettings = multiSettings.getSettings(sim);
-        CSettingsSimulator newSettings(originalSettings);
+        CMultiSimulatorSettings multiSettings;
+        const CSettings originalSettings = multiSettings.getSettings(sim);
+        CSettings newSettings(originalSettings);
         newSettings.setModelDirectory(fsDir);
         multiSettings.setSettings(newSettings, sim); // set, but do NOT(!) save
 

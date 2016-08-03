@@ -17,7 +17,7 @@
 #include "blackcore/vatsim/voicevatlib.h"
 #include "blackmisc/audio/audiodeviceinfo.h"
 #include "blackmisc/audio/notificationsounds.h"
-#include "blackmisc/audio/settings/settingsaudio.h"
+#include "blackmisc/audio/audiosettings.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"

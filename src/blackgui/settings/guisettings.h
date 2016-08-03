@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Settings
     {
         //! Settings for last manual entries of own aircraft mode
-        struct TOwnAircraftModel : public BlackMisc::CSettingTrait<BlackMisc::Simulation::CAircraftModel>
+        struct TOwnAircraftModel : public BlackMisc::TSettingTrait<BlackMisc::Simulation::CAircraftModel>
         {
             //! Key in data cache
             static const char *key() { return "guinownaircraftmodel"; }
