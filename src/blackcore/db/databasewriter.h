@@ -44,11 +44,11 @@ namespace BlackCore
 
         signals:
             //! Published models, the response to \sa asyncPublishModels
-            void published(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, const BlackMisc::Simulation::CAircraftModelList &modelsSkipped, const BlackMisc::CStatusMessageList &messages);
+            void publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, const BlackMisc::Simulation::CAircraftModelList &modelsSkipped, const BlackMisc::CStatusMessageList &messages);
 
         private slots:
             //! Post response
-            void ps_postResponse(QNetworkReply *nwReplyPtr);
+            void ps_postModelsResponse(QNetworkReply *nwReplyPtr);
 
         private:
             BlackMisc::Network::CUrl                       m_modelPublishUrl;

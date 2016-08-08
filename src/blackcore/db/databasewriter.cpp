@@ -65,7 +65,7 @@ namespace BlackCore
                 multiPart->append(CNetworkUtils::getMultipartWithDebugFlag());
             }
 
-            m_pendingReply = sApp->postToNetwork(request, multiPart, { this, &CDatabaseWriter::ps_postResponse});
+            m_pendingReply = sApp->postToNetwork(request, multiPart, { this, &CDatabaseWriter::ps_postModelsResponse});
             return msgs;
         }
 
@@ -79,7 +79,7 @@ namespace BlackCore
             }
         }
 
-        void CDatabaseWriter::ps_postResponse(QNetworkReply *nwReplyPtr)
+        void CDatabaseWriter::ps_postModelsResponse(QNetworkReply *nwReplyPtr)
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
@@ -100,7 +100,7 @@ namespace BlackCore
                 if (dataFileData.isEmpty())
                 {
                     const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, "No response data from " + urlString)});
-                    emit published(CAircraftModelList(), CAircraftModelList(), msgs);
+                    emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs);
                     return;
                 }
 
@@ -108,7 +108,7 @@ namespace BlackCore
                 CAircraftModelList modelsSkipped;
                 CStatusMessageList msgs;
                 bool success = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs);
-                emit published(modelsPublished, modelsSkipped, msgs);
+                emit publishedModels(modelsPublished, modelsSkipped, msgs);
                 Q_UNUSED(success);
             }
             else
@@ -116,7 +116,7 @@ namespace BlackCore
                 QString error = nwReply->errorString();
                 nwReply->close(); // close asap
                 const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, "HTTP error: " + error)});
-                emit published(CAircraftModelList(), CAircraftModelList(), msgs);
+                emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs);
             }
         }
 
