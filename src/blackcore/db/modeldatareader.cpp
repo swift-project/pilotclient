@@ -57,11 +57,11 @@ namespace BlackCore
             return liveries.findByCombinedCode(combinedCode);
         }
 
-        CLivery CModelDataReader::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
+        CLivery CModelDataReader::getStdLiveryForAirlineVDesignator(const CAirlineIcaoCode &icao) const
         {
             if (!icao.hasValidDesignator()) { return CLivery(); }
             const CLiveryList liveries(getLiveries());
-            return liveries.findStdLiveryByAirlineIcaoDesignator(icao);
+            return liveries.findStdLiveryByAirlineIcaoVDesignator(icao);
         }
 
         CLivery CModelDataReader::getLiveryForDbKey(int id) const
@@ -117,6 +117,12 @@ namespace BlackCore
             return distributors.smartDistributorSelector(distributorPattern);
         }
 
+        CDistributor CModelDataReader::smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const
+        {
+            const CDistributorList distributors(getDistributors()); // thread safe copy
+            return distributors.smartDistributorSelector(distributorPattern, model);
+        }
+
         int CModelDataReader::getModelsCount() const
         {
             return this->getModels().size();
@@ -127,9 +133,9 @@ namespace BlackCore
             return this->getModels().toDbKeyList();
         }
 
-        QStringList CModelDataReader::getModelStrings() const
+        QStringList CModelDataReader::getModelStringList() const
         {
-            return this->getModels().getModelStrings(false);
+            return this->getModels().getModelStringList(false);
         }
 
         bool CModelDataReader::areAllDataRead() const
@@ -298,7 +304,7 @@ namespace BlackCore
                 return;
             }
 
-            // get all or incremental set of distributor
+            // get all or incremental set of distributors
             CDistributorList distributors;
             if (res.isRestricted())
             {

@@ -133,7 +133,7 @@ namespace BlackCore
                 return;
             }
 
-            // get all or incremental set of distributor
+            // get all or incremental set
             CDbInfoList infoObjects = CDbInfoList::fromDatabaseJson(res.getJsonArray());
 
             // this part needs to be synchronized

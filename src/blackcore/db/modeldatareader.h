@@ -57,7 +57,7 @@ namespace BlackCore
 
             //! Get aircraft livery for ICAO code
             //! \threadsafe
-            BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
+            BlackMisc::Aviation::CLivery getStdLiveryForAirlineVDesignator(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;
 
             //! Get aircraft livery for id
             //! \threadsafe
@@ -95,6 +95,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributorPattern) const;
 
+            //! Best match specified by distributor
+            //! \threadsafe
+            BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributorPattern, const BlackMisc::Simulation::CAircraftModel &model) const;
+
             //! Get models count
             //! \threadsafe
             int getModelsCount() const;
@@ -105,7 +109,7 @@ namespace BlackCore
 
             //! Get model keys
             //! \threadsafe
-            QStringList getModelStrings() const;
+            QStringList getModelStringList() const;
 
             //! All data read?
             //! \threadsafe

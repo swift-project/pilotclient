@@ -425,10 +425,6 @@ namespace BlackCore
         //! Async. start when setup is loaded
         bool asyncWebAndContextStart();
 
-        void initCrashHandler();
-
-        void crashDumpUploadEnabledChanged();
-
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
                                        const BlackMisc::CSlot<void(QNetworkReply *)> &callback,
@@ -454,6 +450,10 @@ namespace BlackCore
         bool                                     m_unitTest = false;       //!< is UNIT test
         bool                                     m_autoSaveSettings = true;//!< automatically saving all settings
 
+        // -------------- crashpad -----------------
+        void initCrashHandler();
+        void crashDumpUploadEnabledChanged();
+		
         #ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;

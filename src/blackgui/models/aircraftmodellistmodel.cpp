@@ -171,14 +171,14 @@ namespace BlackGui
         QStringList CAircraftModelListModel::getModelStrings(bool sort) const
         {
             if (this->isEmpty()) { return QStringList(); }
-            return this->container().getModelStrings(sort);
+            return this->container().getModelStringList(sort);
         }
 
         void CAircraftModelListModel::replaceOrAddByModelString(const CAircraftModelList &models)
         {
             if (models.isEmpty()) { return; }
             CAircraftModelList currentModels(container());
-            currentModels.removeModelsWithString(models.getModelStrings(true), Qt::CaseInsensitive);
+            currentModels.removeModelsWithString(models.getModelStringList(true), Qt::CaseInsensitive);
             currentModels.push_back(models);
             this->updateContainerMaybeAsync(currentModels);
         }

@@ -474,7 +474,6 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_loadJsonAction()
         {
-            if (this->isEmpty()) { return; }
             if (!this->m_menus.testFlag(MenuLoad)) { return; }
             this->ps_loadJson();
         }

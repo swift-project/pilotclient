@@ -346,6 +346,12 @@ namespace BlackCore
         return CDistributor();
     }
 
+    CDistributor CWebDataServices::smartDistributorSelector(const CDistributor &distributor, const CAircraftModel &model) const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->smartDistributorSelector(distributor, model); }
+        return CDistributor();
+    }
+
     CLiveryList CWebDataServices::getLiveries() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getLiveries(); }
@@ -366,7 +372,7 @@ namespace BlackCore
 
     CLivery CWebDataServices::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
     {
-        if (m_modelDataReader) { return m_modelDataReader->getStdLiveryForAirlineCode(icao); }
+        if (m_modelDataReader) { return m_modelDataReader->getStdLiveryForAirlineVDesignator(icao); }
         return CLivery();
     }
 
@@ -402,7 +408,7 @@ namespace BlackCore
 
     QStringList CWebDataServices::getModelStrings() const
     {
-        if (m_modelDataReader) { return m_modelDataReader->getModelStrings(); }
+        if (m_modelDataReader) { return m_modelDataReader->getModelStringList(); }
         return QStringList();
     }
 

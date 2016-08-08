@@ -161,6 +161,14 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor) const;
 
+        //! Use distributor object to select the best complete distributor from DB
+        //! \threadsafe
+        BlackMisc::Simulation::CDistributor smartDistributorSelector() const;
+
+        //! Best match specified by distributor / model
+        //! \threadsafe
+        BlackMisc::Simulation::CDistributor smartDistributorSelector(const BlackMisc::Simulation::CDistributor &distributor, const BlackMisc::Simulation::CAircraftModel &model) const;
+
         //! Liveries
         //! \threadsafe
         BlackMisc::Aviation::CLiveryList getLiveries() const;

@@ -39,7 +39,7 @@ namespace BlackCore
         CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) :
             BlackCore::CThreadedReader(owner, name), m_config(config)
         {
-            getDbUrl(); // init
+            getDbUrl(); // init the cache
         }
 
         void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
@@ -314,7 +314,8 @@ namespace BlackCore
 
         bool CDatabaseReader::canPingSwiftServer()
         {
-            return CNetworkUtils::canConnect(getDbUrl());
+            const CUrl url(getDbUrl());
+            return CNetworkUtils::canConnect(url);
         }
 
         void CDatabaseReader::JsonDatastoreResponse::setJsonArray(const QJsonArray &value)
