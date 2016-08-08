@@ -358,7 +358,7 @@ namespace BlackSimPlugin
         void CSimulatorFs9::ps_reloadSettings()
         {
             auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
             {
                 m_lastWeatherPosition = {};
                 injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
