@@ -14,25 +14,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        int CAircraftModelUtilities::mergeWithDbData(CAircraftModelList &modelToBeModified, const CAircraftModelList &dbModels, bool force)
-        {
-            if (dbModels.isEmpty() || modelToBeModified.isEmpty()) { return 0; }
-            int c = 0;
-            for (CAircraftModel &simModel : modelToBeModified)
-            {
-                if (!force && simModel.hasValidDbKey()) { continue; } // already done
-                CAircraftModel dbModel(dbModels.findFirstByModelStringOrDefault(simModel.getModelString()));
-                if (!dbModel.hasValidDbKey())
-                {
-                    continue; // not found
-                }
-                dbModel.updateMissingParts(simModel, false);
-                simModel = dbModel;
-                c++;
-            }
-            return c;
-        }
-
         bool CAircraftModelUtilities::mergeWithVPilotData(CAircraftModelList &modelToBeModified, const CAircraftModelList &vPilotModels, bool force)
         {
             if (vPilotModels.isEmpty() || modelToBeModified.isEmpty()) { return false; }
