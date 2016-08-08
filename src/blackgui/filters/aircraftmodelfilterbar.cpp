@@ -15,6 +15,7 @@
 #include "blackgui/uppercasevalidator.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/db/datastore.h"
 #include "ui_aircraftmodelfilterbar.h"
 
 #include <QCheckBox>
@@ -22,6 +23,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Db;
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Components;
@@ -46,8 +48,8 @@ namespace BlackGui
             connect(ui->le_ModelDescription, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_ModelKey, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
-            connect(ui->cb_Include, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-            connect(ui->cb_Exclude, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
+            connect(ui->cbt_Db, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
+            connect(ui->cbt_IncludeExclude, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
 
             connect(ui->frp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::ps_simulatorSelectionChanged);
             connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::ps_distributorChanged);
@@ -66,15 +68,39 @@ namespace BlackGui
         CAircraftModelFilterBar::~CAircraftModelFilterBar()
         { }
 
+        void CAircraftModelFilterBar::displayCount(bool show)
+        {
+            ui->filter_Buttons->displayCount(show);
+        }
+
         std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Simulation::CAircraftModelList> > CAircraftModelFilterBar::createModelFilter() const
         {
-            CAircraftModel::ModelModeFilter mf = this->ui->cb_Include->isChecked() ? CAircraftModel::Include : CAircraftModel::Undefined;
-            if (this->ui->cb_Exclude->isChecked()) { mf |= CAircraftModel::Exclude; }
+            CAircraftModel::ModelModeFilter mf = CAircraftModel::All;
+            if (ui->cbt_IncludeExclude->checkState() == Qt::Checked)
+            {
+                mf = CAircraftModel::Include;
+            }
+            else if (ui->cbt_IncludeExclude->checkState() == Qt::Unchecked)
+            {
+                mf = CAircraftModel::Exclude;
+            }
+
+            BlackMisc::Db::DbKeyStateFilter dbf = BlackMisc::Db::All;
+            if (ui->cbt_Db->checkState() == Qt::Checked)
+            {
+                dbf = BlackMisc::Db::Valid;
+            }
+            else if (ui->cbt_Db->checkState() == Qt::Unchecked)
+            {
+                dbf = BlackMisc::Db::Invalid;
+            }
+
             return std::unique_ptr<CAircraftModelFilter>(
                        new CAircraftModelFilter(
                            this->ui->le_ModelKey->text(),
                            this->ui->le_ModelDescription->text(),
                            mf,
+                           dbf,
                            this->ui->le_AircraftIcao->text(),
                            this->ui->le_AircraftManufacturer->text(),
                            this->ui->le_AirlineIcao->text(),
@@ -101,8 +127,8 @@ namespace BlackGui
             this->ui->le_LiveryCode->clear();
             this->ui->frp_SimulatorSelector->setAll();
             this->ui->comp_DistributorSelector->clear();
-            this->ui->cb_Exclude->setChecked(true);
-            this->ui->cb_Include->setChecked(true);
+            this->ui->cbt_IncludeExclude->setCheckState(Qt::PartiallyChecked);
+            this->ui->cbt_Db->setCheckState(Qt::PartiallyChecked);
         }
 
         void CAircraftModelFilterBar::ps_simulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info)

@@ -19,13 +19,15 @@ namespace BlackGui
 {
     namespace Models
     {
-        CAircraftModelFilter::CAircraftModelFilter(const QString &modelKey, const QString &description, CAircraftModel::ModelModeFilter modelMode,
+        CAircraftModelFilter::CAircraftModelFilter(const QString &modelKey, const QString &description,
+                CAircraftModel::ModelModeFilter modelMode, BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
                 const QString &aircraftIcao, const QString &aircraftManufacturer,
                 const QString &airlineIcao, const QString &airlineName,
                 const QString &liveryCode,
                 const CSimulatorInfo &simInfo,
                 const CDistributor &distributor) :
-            m_modelKey(modelKey.trimmed().toUpper()), m_description(description.trimmed()), m_modelMode(modelMode),
+            m_modelKey(modelKey.trimmed().toUpper()), m_description(description.trimmed()),
+            m_modelMode(modelMode), m_dbKeyFilter(dbKeyFilter),
             m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftManufacturer(aircraftManufacturer.trimmed().toUpper()),
             m_airlineIcao(airlineIcao.trimmed().toUpper()), m_airlineName(airlineName.trimmed().toUpper()),
             m_liveryCode(liveryCode.trimmed().toUpper()),
@@ -56,9 +58,14 @@ namespace BlackGui
                     if (!this->stringMatchesFilterExpression(model.getDescription(), this->m_description)) { continue; }
                 }
 
-                if (this->m_modelMode != CAircraftModel::Undefined)
+                if (this->m_modelMode != CAircraftModel::All && this->m_modelMode != CAircraftModel::Undefined)
                 {
                     if (!model.matchesMode(this->m_modelMode)) { continue; }
+                }
+
+                if (this->m_dbKeyFilter != BlackMisc::Db::All && this->m_dbKeyFilter != BlackMisc::Db::Undefined)
+                {
+                    if (!model.matchesDbKeyState(this->m_dbKeyFilter)) { continue; }
                 }
 
                 if (!this->m_aircraftIcao.isEmpty())
@@ -96,8 +103,6 @@ namespace BlackGui
             return outContainer;
         }
 
-
-
         bool CAircraftModelFilter::valid() const
         {
             const bool allEmpty = this->m_modelKey.isEmpty() && this->m_description.isEmpty() &&
@@ -106,10 +111,10 @@ namespace BlackGui
                                   this->m_liveryCode.isEmpty();
             if (!allEmpty) { return true; }
             const bool noSim = this->m_simulatorInfo.isNoSimulator() || this->m_simulatorInfo.isAllSimulators();
-            const bool noMode = this->m_modelMode == CAircraftModel::Undefined || this->m_modelMode == CAircraftModel::All;
+            const bool noModelMode = this->m_modelMode == CAircraftModel::Undefined || this->m_modelMode == CAircraftModel::All;
+            const bool noDbState = this->m_dbKeyFilter == BlackMisc::Db::Undefined || this->m_dbKeyFilter == BlackMisc::Db::All;
             const bool noKey = !this->m_distributor.hasValidDbKey();
-            return !(noSim && noMode && noKey);
+            return !(noSim && noModelMode && noDbState && noKey);
         }
-
     } // namespace
 } // namespace

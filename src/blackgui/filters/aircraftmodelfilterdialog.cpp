@@ -28,6 +28,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setWindowTitle("Filter models");
             this->resize(640, 100);
+            ui->filter_Models->displayCount(false);
             connect(ui->filter_Models, &CAircraftModelFilterBar::rejectDialog, this, &CAircraftModelFilterDialog::reject);
         }
 

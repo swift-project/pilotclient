@@ -31,6 +31,11 @@ namespace BlackGui
         CFilterBarButtons::~CFilterBarButtons()
         { }
 
+        void CFilterBarButtons::displayCount(bool show)
+        {
+            ui->le_Count->setVisible(show);
+        }
+
         void CFilterBarButtons::ps_buttonClicked()
         {
             QObject *sender = QObject::sender();

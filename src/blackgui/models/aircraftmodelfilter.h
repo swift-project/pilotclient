@@ -18,6 +18,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/db/datastore.h"
 
 #include <QString>
 
@@ -30,7 +31,9 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CAircraftModelFilter(const QString &modelKey, const QString &description, BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
+            CAircraftModelFilter(const QString &modelKey, const QString &description,
+                                 BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
+                                 BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
                                  const QString &aircraftIcao, const QString &aircraftManufacturer,
                                  const QString &airlineIcao, const QString &airlineName,
                                  const QString &liveryCode,
@@ -45,6 +48,7 @@ namespace BlackGui
             QString m_modelKey;
             QString m_description;
             BlackMisc::Simulation::CAircraftModel::ModelModeFilter m_modelMode;
+            BlackMisc::Db::DbKeyStateFilter m_dbKeyFilter;
             QString m_aircraftIcao;
             QString m_aircraftManufacturer;
             QString m_airlineIcao;

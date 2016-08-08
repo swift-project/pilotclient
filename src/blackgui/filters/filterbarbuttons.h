@@ -49,6 +49,9 @@ namespace BlackGui
             //! Destructor
             ~CFilterBarButtons();
 
+            //! Show the counter
+            void displayCount(bool show);
+
         signals:
             //! Filter button clicked
             void buttonClicked(FilterButton filterButton);
@@ -67,7 +70,6 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CFilterBarButtons> ui;
         };
-
     } // ns
 } // ns
 

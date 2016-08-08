@@ -39,7 +39,7 @@
     <number>2</number>
    </property>
    <item row="0" column="5">
-    <widget class="QWidget" name="wi_IncludeExclude" native="true">
+    <widget class="QWidget" name="wi_States" native="true">
      <layout class="QHBoxLayout" name="hl_IncludeExclude">
       <property name="leftMargin">
        <number>0</number>
@@ -54,27 +54,27 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QCheckBox" name="cb_Include">
+       <widget class="QCheckBox" name="cbt_IncludeExclude">
         <property name="toolTip">
-         <string>Included models</string>
+         <string>Included/excluded models?</string>
         </property>
         <property name="text">
-         <string>In.</string>
+         <string>Incl.</string>
         </property>
-        <property name="checked">
+        <property name="tristate">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_Exclude">
+       <widget class="QCheckBox" name="cbt_Db">
         <property name="toolTip">
-         <string>Excluded models</string>
+         <string>DB data?</string>
         </property>
         <property name="text">
-         <string>Ex.</string>
+         <string>DB</string>
         </property>
-        <property name="checked">
+        <property name="tristate">
          <bool>true</bool>
         </property>
        </widget>
@@ -177,6 +177,9 @@
    </item>
    <item row="1" column="6">
     <widget class="QLabel" name="lbl_Livery">
+     <property name="toolTip">
+      <string/>
+     </property>
      <property name="text">
       <string>Livery:</string>
      </property>
@@ -229,6 +232,8 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>cbt_IncludeExclude</tabstop>
+  <tabstop>cbt_Db</tabstop>
   <tabstop>le_ModelKey</tabstop>
   <tabstop>le_ModelDescription</tabstop>
   <tabstop>le_AircraftIcao</tabstop>
