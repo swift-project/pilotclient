@@ -92,6 +92,9 @@ namespace BlackMisc
             //! Get name, e.g. "Lufthansa"
             const QString &getName() const { return this->m_name; }
 
+            //! \copydoc BlackMisc::simplifyNameForSearch
+            QString getSimplifiedName() const;
+
             //! Name plus key, e.g. "Lufthansa (3421)"
             QString getNameWithKey() const;
 
@@ -146,6 +149,9 @@ namespace BlackMisc
             //! Matches IATA code or v-designator?
             bool matchesVDesignatorOrIataCode(const QString &candidate) const;
 
+            //! Does simplified name contain the candidate
+            bool isContainedInSimplifiedName(const QString &candidate) const;
+
             //! Telephony designator?
             bool hasTelephonyDesignator() const { return !this->m_telephonyDesignator.isEmpty(); }
 
@@ -158,7 +164,7 @@ namespace BlackMisc
             //! Comined string with key
             QString getCombinedStringWithKey() const;
 
-            //! What is better, the callsign airline code or this code
+            //! What is better, the callsign airline code or this code. Return the better one.
             CAirlineIcaoCode thisOrCallsignCode(const CCallsign &callsign) const;
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon

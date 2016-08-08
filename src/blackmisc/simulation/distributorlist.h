@@ -18,7 +18,6 @@
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/variant.h"
 
 #include <QMetaType>
@@ -29,6 +28,8 @@ namespace BlackMisc
 {
     namespace Simulation
     {
+        class CSimulatorModel;
+
         //! Value object encapsulating a list of distributors.
         class BLACKMISC_EXPORT CDistributorList :
             public BlackMisc::CSequence<CDistributor>,
@@ -48,8 +49,15 @@ namespace BlackMisc
             //! Find by id or alias
             CDistributor findByKeyOrAlias(const QString &keyOrAlias) const;
 
+            //! Find by model string
+            //! \remark model strings may have a pattern which makes it impossible to find the distributor
+            CDistributor findByModelData(const CAircraftModel &model) const;
+
             //! Best match by given pattern
             CDistributor smartDistributorSelector(const CDistributor &distributorPattern) const;
+
+            //! Best match by given pattern
+            CDistributor smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const;
 
             //! At least is matching key or alias
             bool matchesAnyKeyOrAlias(const QString &keyOrAlias) const;
@@ -58,7 +66,7 @@ namespace BlackMisc
             QStringList getDbKeysAndAliases(bool sort) const;
 
             //! Find for given simulator
-            CDistributorList matchesSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            CDistributorList matchesSimulator(const CSimulatorInfo &simulator) const;
         };
     } //namespace
 } // namespace

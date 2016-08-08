@@ -25,9 +25,20 @@
 namespace BlackMisc
 {
     class CIcon;
-
     namespace Db
     {
+        //! State of key (in DB, ...?)
+        enum DbKeyState
+        {
+            Undefined = 0,
+            Valid   = 1 << 0,
+            Invalid = 1 << 1,
+            All      = Valid | Invalid
+        };
+
+        //! Supposed to be used only in filter operations
+        Q_DECLARE_FLAGS(DbKeyStateFilter, DbKeyState)
+
         /*!
          * Class from which a derived class can inherit datastore-related functions.
          */
@@ -61,6 +72,13 @@ namespace BlackMisc
 
             //! Has valid DB key
             bool hasValidDbKey() const { return m_dbKey >= 0; }
+
+            //! Loaded from DB
+            //! \remarks here not really needed, but added to have similar signature as IDatastoreObjectWithStringKey
+            bool isLoadedFromDb() const;
+
+            //! Matches filter?
+            bool matchesDbKeyState(Db::DbKeyStateFilter filter) const;
 
             //! Database icon if this has valid key, otherwise empty
             const CIcon &toDatabaseIcon() const;
@@ -109,6 +127,7 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexDbStringKey = CPropertyIndex::GlobalIndexIDatastoreString,
+                IndexIsLoadedFromDb,
                 IndexDatabaseIcon
             };
 
@@ -123,6 +142,15 @@ namespace BlackMisc
 
             //! Has valid DB key
             bool hasValidDbKey() const { return !m_dbKey.isEmpty(); }
+
+            //! Loaded from DB
+            bool isLoadedFromDb() const { return m_loadedFromDb; }
+
+            //! Mark as loaded from DB
+            void setLoadedFromDb(bool loaded) { m_loadedFromDb = loaded; }
+
+            //! Matches filter?
+            bool matchesDbKeyState(Db::DbKeyStateFilter filter) const;
 
             //! Database icon if this has valid key, otherwise empty
             const CIcon &toDatabaseIcon() const;
@@ -155,11 +183,15 @@ namespace BlackMisc
             //! Can given index be handled
             static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
-            QString m_dbKey; //!< key
+            QString m_dbKey;                //!< key
+            bool    m_loadedFromDb = false; //!< as we have no artificial key, it can happen key is set, but not loaded from DB
         };
     } // ns
 } // ns
 
+Q_DECLARE_METATYPE(BlackMisc::Db::DbKeyState)
+Q_DECLARE_METATYPE(BlackMisc::Db::DbKeyStateFilter)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Db::DbKeyStateFilter)
 Q_DECLARE_INTERFACE(BlackMisc::Db::IDatastoreObjectWithIntegerKey, "org.swift-project.blackmisc.db.idatastoreobjectwithintegerkey")
 Q_DECLARE_INTERFACE(BlackMisc::Db::IDatastoreObjectWithStringKey, "org.swift-project.blackmisc.db.idatastoreobjectwithstringkey")
 

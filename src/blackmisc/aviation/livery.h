@@ -80,6 +80,12 @@ namespace BlackMisc
             //! Get description.
             const QString &getDescription() const { return m_description; }
 
+            //! Get corresponding airline name
+            const QString &getAirlineName() const { return this->getAirlineIcaoCode().getName(); }
+
+            //! Does simplified airline name contain the candidate
+            bool isContainedInSimplifiedAirlineName(const QString &candidate) const;
+
             //! Get fuselage color.
             const BlackMisc::CRgbColor &getColorFuselage() const { return m_colorFuselage; }
 

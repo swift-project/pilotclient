@@ -74,6 +74,11 @@ namespace BlackMisc
             return s;
         }
 
+        bool CLivery::isContainedInSimplifiedAirlineName(const QString &candidate) const
+        {
+            return this->getAirlineIcaoCode().isContainedInSimplifiedName(candidate);
+        }
+
         bool CLivery::setAirlineIcaoCode(const CAirlineIcaoCode &airlineIcao)
         {
             if (m_airline == airlineIcao) { return false; }

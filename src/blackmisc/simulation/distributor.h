@@ -130,6 +130,7 @@ namespace BlackMisc
             BLACK_METACLASS(
                 CDistributor,
                 BLACK_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
+                BLACK_METAMEMBER(loadedFromDb),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(order),
                 BLACK_METAMEMBER(description),

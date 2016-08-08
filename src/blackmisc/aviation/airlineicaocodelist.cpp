@@ -80,6 +80,15 @@ namespace BlackMisc
             });
         }
 
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findBySimplifiedNameContaining(const QString &containedString) const
+        {
+            if (containedString.isEmpty()) { return CAirlineIcaoCodeList(); }
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.isContainedInSimplifiedName(containedString);
+            });
+        }
+
         CAirlineIcaoCodeList CAirlineIcaoCodeList::findByMilitary(bool military) const
         {
             return this->findBy([&](const CAirlineIcaoCode & code)

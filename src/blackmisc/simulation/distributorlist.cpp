@@ -7,7 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/simulation/distributorlist.h"
+#include "distributorlist.h"
+#include "simulatorinfo.h"
+#include "aircraftmodel.h"
 #include "blackmisc/metaclassprivate.h"
 
 #include <tuple>
@@ -32,18 +34,38 @@ namespace BlackMisc
             return CDistributor();
         }
 
-        CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern) const
+        CDistributor CDistributorList::findByModelData(const CAircraftModel &model) const
         {
-            if (distributorPattern.hasValidDbKey())
+            // some stuipd hardcoded resolutions
+            if (model.getDistributor().hasValidDbKey()) { return model.getDistributor(); }
+            if (model.getModelString().startsWith("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
+            if (model.getDescription().contains("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
+            if (model.getDescription().contains("IVAO", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("IVAO"); }
+            return CDistributor();
+        }
+
+        CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributor) const
+        {
+            // key is not necessarily a DB key, so use complete data, happens when key is set from raw data
+            if (distributor.isLoadedFromDb()) { return distributor; }
+            if (distributor.hasValidDbKey())
             {
-                QString k(distributorPattern.getDbKey());
-                CDistributor d(this->findByKey(k));
+                const QString key(distributor.getDbKey());
+                CDistributor d(this->findByKey(key));
                 if (d.hasCompleteData()) { return d; }
 
                 // more lenient search
-                return this->findByKeyOrAlias(k);
+                return this->findByKeyOrAlias(key);
             }
             return CDistributor();
+        }
+
+        CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const
+        {
+            const CDistributor d = this->smartDistributorSelector(distributorPattern);
+            // key is not necessarily a DB key, so use complete data, happens when key is set from raw data
+            if (d.hasCompleteData()) { return d; }
+            return this->findByModelData(model);
         }
 
         bool CDistributorList::matchesAnyKeyOrAlias(const QString &keyOrAlias) const

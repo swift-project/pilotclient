@@ -12,6 +12,7 @@
 #include "stringutils.h"
 #include <QChar>
 #include <QTextCodec>
+#include <QRegularExpression>
 
 namespace BlackMisc
 {
@@ -161,6 +162,13 @@ namespace BlackMisc
     bool caseInsensitiveStringCompare(const QString &c1, const QString &c2)
     {
         return c1.length() == c2.length() && c1.startsWith(c2, Qt::CaseInsensitive);
+    }
+
+    QString simplifyNameForSearch(const QString &name)
+    {
+        static const QRegularExpression reg("[^A-Z]");
+        const QString r = name.toUpper().remove(reg);
+        return r;
     }
 }
 

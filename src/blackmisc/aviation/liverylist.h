@@ -47,10 +47,13 @@ namespace BlackMisc
             CLiveryList findByAirlineIcaoDesignator(const QString &icao) const;
 
             //! Find livery by airline
-            CLivery findStdLiveryByAirlineIcaoDesignator(const QString &icao) const;
+            CLivery findStdLiveryByAirlineIcaoVDesignator(const QString &icao) const;
 
             //! Find livery by airline
-            CLivery findStdLiveryByAirlineIcaoDesignator(const CAirlineIcaoCode &icao) const;
+            CLivery findStdLiveryByAirlineIcaoVDesignator(const CAirlineIcaoCode &icao) const;
+
+            //! By simplified name
+            CLiveryList findStdLiveriesBySimplifiedAirlineName(const QString &containedString) const;
 
             //! Find livery by combined code
             CLivery findByCombinedCode(const QString &combinedCode) const;
@@ -63,7 +66,6 @@ namespace BlackMisc
 
             //! Find
             CLivery smartLiverySelector(const CLivery &liveryPattern) const;
-
         };
     } //namespace
 } // namespace

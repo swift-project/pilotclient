@@ -41,6 +41,18 @@ namespace BlackMisc
             this->m_dbKey = k;
         }
 
+        bool IDatastoreObjectWithIntegerKey::isLoadedFromDb() const
+        {
+            return this->hasValidDbKey();
+        }
+
+        bool IDatastoreObjectWithIntegerKey::matchesDbKeyState(Db::DbKeyStateFilter filter) const
+        {
+            if (filter == All) { return true; }
+            const bool validKey = this->hasValidDbKey();
+            return (validKey && filter.testFlag(Valid)) || (!validKey && filter.testFlag(Invalid));
+        }
+
         const CIcon &IDatastoreObjectWithIntegerKey::toDatabaseIcon() const
         {
             static const CIcon empty;
@@ -131,6 +143,12 @@ namespace BlackMisc
             return null;
         }
 
+        bool IDatastoreObjectWithStringKey::matchesDbKeyState(Db::DbKeyStateFilter filter) const
+        {
+            if (filter == All) { return true; }
+            return this->hasValidDbKey() && filter.testFlag(Valid);
+        }
+
         const CIcon &IDatastoreObjectWithStringKey::toDatabaseIcon() const
         {
             static const CIcon empty;
@@ -159,6 +177,7 @@ namespace BlackMisc
             {
             case IndexDbStringKey: return CVariant::from(this->m_dbKey);
             case IndexDatabaseIcon: return CVariant::from(this->toDatabaseIcon());
+            case IndexIsLoadedFromDb: return CVariant::from(this->m_loadedFromDb);
             default:
                 break;
             }
@@ -173,6 +192,9 @@ namespace BlackMisc
             {
             case IndexDbStringKey:
                 this->m_dbKey = variant.value<QString>();
+                break;
+            case IndexIsLoadedFromDb:
+                this->m_loadedFromDb = variant.toBool();
                 break;
             default:
                 break;

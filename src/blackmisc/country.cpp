@@ -218,6 +218,7 @@ namespace BlackMisc
         const QString iso3(json.value(prefix + "iso3").toString());
         const QString historic(json.value(prefix + "historic").toString());
         CCountry country(iso, name);
+        country.setLoadedFromDb(true);
         country.setAlias1(alias1);
         country.setAlias2(alias2);
         country.setIso3Code(iso3);

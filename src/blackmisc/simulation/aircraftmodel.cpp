@@ -372,6 +372,7 @@ namespace BlackMisc
 
         bool CAircraftModel::matchesMode(ModelModeFilter mode) const
         {
+            if (mode == All) { return true; }
             return (mode & this->m_modelMode) > 0;
         }
 

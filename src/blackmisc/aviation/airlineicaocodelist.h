@@ -66,6 +66,9 @@ namespace BlackMisc
             //! Find by country code
             CAirlineIcaoCodeList findByCountryIsoCode(const QString &isoCode) const;
 
+            //! Find if simplified name contains search string
+            CAirlineIcaoCodeList findBySimplifiedNameContaining(const QString &containedString) const;
+
             //! Find by military flag
             CAirlineIcaoCodeList findByMilitary(bool military) const;
 
@@ -87,7 +90,6 @@ namespace BlackMisc
             //! From our DB JSON
             static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);
         };
-
     } //namespace
 } // namespace
 

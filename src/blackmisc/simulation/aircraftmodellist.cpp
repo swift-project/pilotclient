@@ -365,7 +365,7 @@ namespace BlackMisc
                 return addOrReplaceList.size();
             }
             CAircraftModelList newModels(*this);
-            const QStringList keys(addOrReplaceList.getModelStrings(false));
+            const QStringList keys(addOrReplaceList.getModelStringList(false));
             newModels.removeModelsWithString(keys, sensitivity);
             int removed = newModels.size();  // size after removing
             newModels.push_back(addOrReplaceList);
@@ -398,7 +398,7 @@ namespace BlackMisc
             });
         }
 
-        QStringList CAircraftModelList::getModelStrings(bool sort) const
+        QStringList CAircraftModelList::getModelStringList(bool sort) const
         {
             QStringList ms;
             for (const CAircraftModel &model : (*this))
@@ -407,6 +407,17 @@ namespace BlackMisc
                 ms.append(model.getModelString());
             }
             if (sort) { ms.sort(Qt::CaseInsensitive); }
+            return ms;
+        }
+
+        QSet<QString> CAircraftModelList::getModelStringSet() const
+        {
+            QSet<QString> ms;
+            for (const CAircraftModel &model : (*this))
+            {
+                if (!model.hasModelString()) { continue; }
+                ms.insert(model.getModelString());
+            }
             return ms;
         }
 

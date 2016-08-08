@@ -149,7 +149,8 @@ namespace BlackMisc
 
         BLACK_METACLASS(
             CCountry,
-            BLACK_METAMEMBER(dbKey),
+            BLACK_METAMEMBER(dbKey, 0, CaseInsensitiveComparison),
+            BLACK_METAMEMBER(loadedFromDb),
             BLACK_METAMEMBER(timestampMSecsSinceEpoch),
             BLACK_METAMEMBER(iso3),
             BLACK_METAMEMBER(name),

@@ -166,7 +166,10 @@ namespace BlackMisc
             int replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity);
 
             //! Model strings
-            QStringList getModelStrings(bool sort = true) const;
+            QStringList getModelStringList(bool sort = true) const;
+
+            //! Model strings as set
+            QSet<QString> getModelStringSet() const;
 
             //! Simulator counts
             CCountPerSimulator countPerSimulator() const;
@@ -204,9 +207,8 @@ namespace BlackMisc
             //! To database JSON
             QString toDatabaseJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Compact) const;
         };
-
-    } //namespace
-} // namespace
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::CAircraftModelList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CAircraftModel>)

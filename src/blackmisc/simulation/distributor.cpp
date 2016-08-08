@@ -178,6 +178,7 @@ namespace BlackMisc
             Q_ASSERT_X(!description.isEmpty(), Q_FUNC_INFO, "Missing description");
             CDistributor distributor("", description, alias1, alias2, simulator);
             distributor.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            distributor.setLoadedFromDb(true);
             return distributor;
         }
     } // namespace
