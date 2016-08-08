@@ -8,6 +8,8 @@
  */
 
 #include "blackgui/menus/menuaction.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/slot.h"
 #include "blackmisc/verify.h"
@@ -20,6 +22,7 @@
 #include <algorithm>
 
 using namespace BlackMisc;
+using namespace BlackGui;
 
 namespace BlackGui
 {
@@ -73,6 +76,12 @@ namespace BlackGui
         {
             if (this->m_icon.isNull()) { return QPixmap(); }
             return this->m_icon.pixmap(this->m_icon.actualSize(QSize(16, 16)));
+        }
+
+        void CMenuAction::setEnabled(bool enabled)
+        {
+            Q_ASSERT_X(this->m_action, Q_FUNC_INFO, "No action");
+            this->m_action->setEnabled(enabled);
         }
 
         QString CMenuAction::getLastPathPart() const
@@ -377,7 +386,9 @@ namespace BlackGui
         CMenuAction CMenuActions::addMenuStash()
         {
             if (this->containsMenu(CMenuAction::pathStash())) { return CMenuAction(); }
-            return this->addMenu(CIcons::appDbStash16(), "Stash tools", CMenuAction::pathStash());
+            const bool canConnectDb = sGui->getWebDataServices()->canConnectSwiftDb();
+            const QString txt(canConnectDb ? "Stash tools" : "Stash tools (Warning: no DB!)");
+            return this->addMenu(CIcons::appDbStash16(), txt, CMenuAction::pathStash());
         }
 
         CMenuAction CMenuActions::addMenuStashEditor()
@@ -445,6 +456,5 @@ namespace BlackGui
             const int i = currentPath.lastIndexOf('/');
             return currentPath.left(i);
         }
-
     } // ns
 } // ns

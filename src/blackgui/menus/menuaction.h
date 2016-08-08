@@ -99,6 +99,9 @@ namespace BlackGui
             //! Has icon?
             bool hasIcon() const { return !m_icon.isNull(); }
 
+            //! Set enabled / disabled (allows to gray out)
+            void setEnabled(bool enabled);
+
             //! Conversion
             operator QAction *() const { return this->m_action; }
 
