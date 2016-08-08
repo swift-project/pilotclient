@@ -68,7 +68,7 @@ namespace BlackMisc
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
             }
 
-            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
+            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation)
             {
                 //! \todo according to meeting XP needs to support multiple directories
                 const CSimulatorInfo simulator = this->getSimulator();
@@ -86,10 +86,10 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
-                                     [this, modelDirectory, excludedDirectoryPatterns, dbModels]()
+                                     [this, modelDirectory, excludedDirectoryPatterns, modelConsolidation]()
                     {
                         auto models = performParsing(modelDirectory, excludedDirectoryPatterns);
-                        CAircraftModelUtilities::mergeWithDbData(models, dbModels);
+                        if (modelConsolidation) { modelConsolidation(models, true); }
                         return models;
                     });
                     m_parserWorker->thenWithResult<CAircraftModelList>(this, [this](const auto & models)
@@ -100,7 +100,6 @@ namespace BlackMisc
                 else if (mode.testFlag(LoadDirectly))
                 {
                     CAircraftModelList models(performParsing(this->getFirstModelDirectoryOrDefault(), excludedDirectoryPatterns));
-                    CAircraftModelUtilities::mergeWithDbData(models, dbModels);
                     updateInstalledModels(models);
                 }
             }

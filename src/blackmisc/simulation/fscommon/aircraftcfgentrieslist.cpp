@@ -11,6 +11,7 @@
 #include "blackmisc/range.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "blackmisc/statusmessagelist.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -26,7 +27,7 @@ namespace BlackMisc
             {
                 if (title.isEmpty()) { return false; }
                 return this->containsBy(
-                           [ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; }
+                [ = ](const CAircraftCfgEntries & entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; }
                        );
             }
 
@@ -57,25 +58,35 @@ namespace BlackMisc
                 return titles;
             }
 
-            CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList() const
+            CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
             {
                 CAircraftModelList ml;
+                QSet<QString> keys;
                 for (const CAircraftCfgEntries &entries : (*this))
                 {
+                    if (ignoreDuplicatesAndEmptyModelStrings)
+                    {
+                        const QString key = entries.getTitle().toUpper();
+                        if (key.isEmpty()) { continue; }
+                        if (keys.contains(key))
+                        {
+                            CStatusMessage msg(this);
+                            msg.warning("Duplicate model string %1 in %2 %3")
+                                    << entries.getTitle() << entries.getFileDirectory() << entries.getFileName();
+                            msgs.push_back(msg);
+                            continue;
+                        }
+                        keys.insert(key);
+                    }
                     ml.push_back(entries.toAircraftModel());
                 }
                 return ml;
             }
 
-            CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo) const
+            CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
             {
-                CAircraftModelList ml;
-                for (const CAircraftCfgEntries &entries : (*this))
-                {
-                    CAircraftModel m(entries.toAircraftModel());
-                    m.setSimulator(simInfo);
-                    ml.push_back(m);
-                }
+                CAircraftModelList ml = this->toAircraftModelList(ignoreDuplicatesAndEmptyModelStrings, msgs);
+                ml.setSimulatorInfo(simInfo);
                 return ml;
             }
 

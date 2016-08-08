@@ -53,10 +53,10 @@ namespace BlackMisc
                 QStringList getTitles(bool sorted = false) const;
 
                 //! As aircraft models
-                BlackMisc::Simulation::CAircraftModelList toAircraftModelList() const;
+                BlackMisc::Simulation::CAircraftModelList toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
 
                 //! As aircraft models for simulator
-                BlackMisc::Simulation::CAircraftModelList toAircraftModelList(const BlackMisc::Simulation::CSimulatorInfo &simInfo) const;
+                BlackMisc::Simulation::CAircraftModelList toAircraftModelList(const BlackMisc::Simulation::CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
 
                 //! Ambiguous titles
                 QStringList detectAmbiguousTitles() const;

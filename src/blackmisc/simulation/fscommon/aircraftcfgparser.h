@@ -30,7 +30,6 @@ class QSettings;
 namespace BlackMisc
 {
     class CWorker;
-
     namespace Simulation
     {
         namespace FsCommon
@@ -62,7 +61,7 @@ namespace BlackMisc
             protected:
                 //! \name Interface functions
                 //! @{
-                virtual void startLoadingFromDisk(LoadMode mode, const BlackMisc::Simulation::CAircraftModelList &dbModels) override;
+                virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation) override;
                 //! @}
 
             private slots:
@@ -80,7 +79,9 @@ namespace BlackMisc
 
                 //! Perform the parsing
                 //! \threadsafe
-                CAircraftCfgEntriesList performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok);
+                CAircraftCfgEntriesList performParsing(
+                    const QString &directory, const QStringList &excludeDirectories,
+                    BlackMisc::CStatusMessageList &messages, bool *ok);
 
                 //! Fix the content read
                 static QString fixedStringContent(const QVariant &qv);
@@ -94,11 +95,11 @@ namespace BlackMisc
                 //! Files to be used
                 static const QString &fileFilter();
 
-                CAircraftCfgEntriesList      m_parsedCfgEntriesList; //!< parsed entries
-                QPointer<BlackMisc::CWorker> m_parserWorker;         //!< worker will destroy itself, so weak pointer
+                CAircraftCfgEntriesList       m_parsedCfgEntriesList; //!< parsed entries
+                QPointer<BlackMisc::CWorker>  m_parserWorker;         //!< worker will destroy itself, so weak pointer
             };
-        } // namespace
-    } // namespace
-} // namespace
+        } // ns
+    } // ns
+} // ns
 
 #endif // guard

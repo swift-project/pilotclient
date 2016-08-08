@@ -28,6 +28,7 @@
 #include <QStringList>
 #include <atomic>
 #include <memory>
+#include <functional>
 
 namespace BlackMisc
 {
@@ -55,7 +56,7 @@ namespace BlackMisc
             {
                 NotSet                = 0,
                 LoadDirectly          = 1 << 0,   //!< load syncronously (blocking), normally for testing
-                LoadInBackground      = 1 << 1,   //!< load in background, asnycronously
+                LoadInBackground      = 1 << 1,   //!< load in background, asyncronously
                 CacheUntilNewer       = 1 << 2,   //!< use cache until newer data re available
                 CacheFirst            = 1 << 3,   //!< always use cache (if it has data)
                 CacheSkipped          = 1 << 4,   //!< ignore cache
@@ -68,9 +69,13 @@ namespace BlackMisc
             //! Destructor
             virtual ~IAircraftModelLoader();
 
+            //! Callback to consolidate data, normally with DB data
+            //! \remark this has to be a abstarct, as DB handling is subject of BlackCore
+            using ModelConsolidation = std::function<int (BlackMisc::Simulation::CAircraftModelList &, bool)>;
+
             //! Start the loading process from disk.
             //! Optional DB models can be passed and used for data consolidation.
-            void startLoading(LoadMode mode = InBackgroundWithCache, const CAircraftModelList &dbModels = {});
+            void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidation &modelConsolidation = {});
 
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
@@ -123,10 +128,12 @@ namespace BlackMisc
         public slots:
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
+            //! Normally used to consoidate data with DB data and write them back
             BlackMisc::CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
             //! Set cache from outside, this should only be used in special cases.
             //! But it allows to modify data elsewhere and update the cache with manipulated data.
+            //! Normally used to consoidate data with DB data and write them back
             BlackMisc::CStatusMessage replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
         signals:
@@ -150,20 +157,20 @@ namespace BlackMisc
             bool existsDir(const QString &directory) const;
 
             //! Start the loading process from disk
-            virtual void startLoadingFromDisk(LoadMode mode, const BlackMisc::Simulation::CAircraftModelList &dbModels) = 0;
+            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation) = 0;
 
-            std::atomic<bool> m_cancelLoading { false };                                           //!< flag
-            std::atomic<bool> m_loadingInProgress { false };                                       //!< Loading in progress
-            BlackMisc::Simulation::Data::CModelCaches m_caches { this };                           //!< caches
+            std::atomic<bool> m_cancelLoading { false };                        //!< flag
+            std::atomic<bool> m_loadingInProgress { false };                    //!< Loading in progress
+            BlackMisc::Simulation::Data::CModelCaches m_caches { this };        //!< caches
             BlackMisc::Simulation::CMultiSimulatorSettings m_settings { this }; //!< settings
+            BlackMisc::CStatusMessageList m_loadingMessages;                    //!< loading messages
 
         protected slots:
-            //! Loading finished
+            //! Loading finished, also logs messages
             void ps_loadFinished(bool success);
         };
-
-    } // namespace
-} // namespace
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::IAircraftModelLoader::LoadMode)
 Q_DECLARE_METATYPE(BlackMisc::Simulation::IAircraftModelLoader::LoadModeFlag)

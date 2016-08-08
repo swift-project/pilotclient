@@ -7,13 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/fileutils.h"
-#include "blackmisc/logmessage.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentries.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/fileutils.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/worker.h"
 
 #include <QDateTime>
@@ -36,6 +37,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackMisc::Network;
+using namespace BlackCore::Db;
 
 namespace BlackMisc
 {
@@ -44,7 +46,7 @@ namespace BlackMisc
         namespace FsCommon
         {
             // response for async. loading
-            using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, bool>;
+            using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, BlackMisc::CStatusMessageList, bool>;
 
             CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo) :
                 IAircraftModelLoader(simInfo)
@@ -61,7 +63,7 @@ namespace BlackMisc
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
             }
 
-            void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const CAircraftModelList &dbModels)
+            void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation)
             {
                 const CSimulatorInfo simulator = this->getSimulator();
                 const QString modelDirectory(this->m_settings.getFirstModelDirectoryOrDefault(simulator)); // expect only one directory
@@ -71,21 +73,23 @@ namespace BlackMisc
                 {
                     if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
                     m_parserWorker = BlackMisc::CWorker::fromTask(this, "CAircraftCfgParser::changeDirectory",
-                                     [this, modelDirectory, excludedDirectoryPatterns, simulator, dbModels]()
+                                     [this, modelDirectory, excludedDirectoryPatterns, simulator, modelConsolidation]()
                     {
                         bool ok = false;
-                        const auto aircraftCfgEntriesList = this->performParsing(modelDirectory, excludedDirectoryPatterns, &ok);
+                        CStatusMessageList msgs;
+                        const auto aircraftCfgEntriesList = this->performParsing(modelDirectory, excludedDirectoryPatterns, msgs, &ok);
                         CAircraftModelList models;
                         if (ok)
                         {
-                            models = aircraftCfgEntriesList.toAircraftModelList(simulator);
-                            CAircraftModelUtilities::mergeWithDbData(models, dbModels);
+                            models = aircraftCfgEntriesList.toAircraftModelList(simulator, true, msgs);
+                            if (modelConsolidation) { modelConsolidation(models, true); }
                         }
-                        return std::make_tuple(aircraftCfgEntriesList, models, ok);
+                        return std::make_tuple(aircraftCfgEntriesList, models, msgs, ok);
                     });
                     m_parserWorker->thenWithResult<LoaderResponse>(this, [this, simulator](const LoaderResponse & tuple)
                     {
-                        const bool ok = std::get<2>(tuple);
+                        const bool ok = std::get<3>(tuple);
+                        this->m_loadingMessages = std::get<2>(tuple);
                         if (ok)
                         {
                             this->m_parsedCfgEntriesList = std::get<0>(tuple);
@@ -93,7 +97,7 @@ namespace BlackMisc
                             const bool hasData = !models.isEmpty();
                             if (hasData)
                             {
-                                this->setCachedModels(models); // not thread safe
+                                this->setCachedModels(models, simulator); // not thread safe
                             }
                             // currently I treat no data as error
                             emit this->loadingFinished(hasData, simulator);
@@ -107,9 +111,10 @@ namespace BlackMisc
                 else if (mode == LoadDirectly)
                 {
                     bool ok;
-                    this->m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectoryPatterns, &ok);
-                    CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(simulator));
-                    CAircraftModelUtilities::mergeWithDbData(models, dbModels);
+                    CStatusMessageList msgs;
+                    this->m_parsedCfgEntriesList = performParsing(modelDirectory, excludedDirectoryPatterns, msgs, &ok);
+                    CAircraftModelList models(this->m_parsedCfgEntriesList.toAircraftModelList(simulator, true, msgs));
+                    this->m_loadingMessages = msgs;
                     const bool hasData = !models.isEmpty();
                     if (hasData)
                     {
@@ -143,7 +148,7 @@ namespace BlackMisc
                            true, { fileFilter() }, this->getModelExcludeDirectoryPatterns());
             }
 
-            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, bool *ok)
+            CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, CStatusMessageList &messages, bool *ok)
             {
                 //
                 // function has to be thread safe
@@ -183,7 +188,7 @@ namespace BlackMisc
                         if (dir == currentDir) { continue; } // do not recursively call same directory
 
                         bool dirOk;
-                        const CAircraftCfgEntriesList subList(performParsing(nextDir, excludeDirectories, &dirOk));
+                        const CAircraftCfgEntriesList subList(performParsing(nextDir, excludeDirectories, messages, &dirOk));
                         if (dirOk)
                         {
                             result.push_back(subList);
@@ -378,9 +383,8 @@ namespace BlackMisc
                 static const QString f("aircraft.cfg");
                 return f;
             }
-
-        } // namespace
-    } // namespace
-} // namespace
+        } // ns
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Simulation::FsCommon::LoaderResponse)

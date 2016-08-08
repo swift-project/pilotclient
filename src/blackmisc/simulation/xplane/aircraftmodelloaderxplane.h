@@ -60,7 +60,7 @@ namespace BlackMisc
             protected:
                 //! \name Interface functions
                 //! @{
-                virtual void startLoadingFromDisk(LoadMode mode, const BlackMisc::Simulation::CAircraftModelList &dbModels) override;
+                virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation) override;
                 //! @}
 
             private:

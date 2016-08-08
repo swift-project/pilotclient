@@ -7,11 +7,12 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/compare.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/logmessage.h"
 
 #include <QDir>
 #include <Qt>
@@ -72,8 +73,15 @@ namespace BlackMisc
 
         void IAircraftModelLoader::ps_loadFinished(bool success)
         {
-            Q_UNUSED(success);
             this->m_loadingInProgress = false;
+            if (this->m_loadingMessages.hasWarningOrErrorMessages())
+            {
+                CLogMessage::preformatted(this->m_loadingMessages);
+            }
+            else
+            {
+                CLogMessage(this).info("Loading finished, success %1") << boolToYesNo(success);
+            }
         }
 
         QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
@@ -113,7 +121,7 @@ namespace BlackMisc
             return this->setCachedModels(CAircraftModelList());
         }
 
-        void IAircraftModelLoader::startLoading(LoadMode mode, const CAircraftModelList &dbModels)
+        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidation &modelConsolidation)
         {
             if (this->m_loadingInProgress) { return; }
             this->m_loadingInProgress = true;
@@ -138,7 +146,7 @@ namespace BlackMisc
                 emit loadingFinished(false, this->getSimulator());
                 return;
             }
-            this->startLoadingFromDisk(mode, dbModels);
+            this->startLoadingFromDisk(mode, modelConsolidation);
         }
 
         const CSimulatorInfo IAircraftModelLoader::getSimulator() const
