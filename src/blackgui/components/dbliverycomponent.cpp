@@ -61,7 +61,7 @@ namespace BlackGui
         void CDbLiveryComponent::ps_reload()
         {
             if (!sGui) { return; }
-            sGui->getWebDataServices()->triggerRead(CEntityFlags::LiveryEntity);
+            sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::LiveryEntity);
         }
 
     } // ns
