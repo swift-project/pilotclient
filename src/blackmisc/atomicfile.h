@@ -35,7 +35,7 @@ namespace BlackMisc
         CAtomicFile(const QString &filename) : QFile(filename) {}
 
         //! \copydoc QFile::~QFile
-        ~CAtomicFile() { if (! std::uncaught_exception()) { close(); } }
+        ~CAtomicFile() { if (std::uncaught_exception()) { QFile::close(); } }
 
         //! \copydoc QFile::open
         //! Just before opening the file, the filename is changed so we actually write to a temporary file.
