@@ -441,6 +441,11 @@ namespace BlackMisc
         json.insert("pins", toJson(m_pinnedValues));
         json.insert("deferrals", toJson(m_deferredValues));
         revisionFile.write(QJsonDocument(json).toJson());
+
+        if (! revisionFile.checkedClose())
+        {
+            CLogMessage(this).error("Failed to write to %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+        }
     }
 
     void CDataCacheRevision::finishUpdate(bool keepPromises)
