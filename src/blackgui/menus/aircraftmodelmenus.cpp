@@ -10,6 +10,7 @@
 #include "aircraftmodelmenus.h"
 #include "blackgui/guiapplication.h"
 #include "blackcore/webdataservices.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
@@ -23,6 +24,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
+using namespace BlackCore::Db;
 
 namespace BlackGui
 {
@@ -40,6 +42,13 @@ namespace BlackGui
             const CAircraftModelView *mv = modelView();
             Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
             return mv->container();
+        }
+
+        const CAircraftModelList &IAircraftModelViewMenu::getAllOrAllFilteredAircraftModels() const
+        {
+            const CAircraftModelView *mv = modelView();
+            Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
+            return mv->containerOrFilteredContainer();
         }
 
         CAircraftModelList IAircraftModelViewMenu::getSelectedAircraftModels() const
@@ -110,9 +119,10 @@ namespace BlackGui
             }
         }
 
-        CMergeWithDbDataMenu::CMergeWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget, bool separator) :
+        CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget, bool separator) :
             IAircraftModelViewMenu(modelView, separator), m_modelsTarget(modelsTarget)
         {
+            // it can be the target is not yet known
             if (modelsTarget)
             {
                 bool ok = modelsTargetSetable() || modelsTargetUpdatable();
@@ -121,24 +131,24 @@ namespace BlackGui
             }
         }
 
-        void CMergeWithDbDataMenu::customMenu(CMenuActions &menuActions)
+        void CConsolidateWithDbDataMenu::customMenu(CMenuActions &menuActions)
         {
             const CAircraftModelView *mv = modelView();
             if (mv->isEmpty()) { this->nestedCustomMenu(menuActions); return; }
             if (!sGui->hasWebDataServices()) { this->nestedCustomMenu(menuActions); return; }
 
             menuActions.addMenuDatabase();
-            menuActions.addMenu(CIcons::databaseEdit16(), "Merge with DB data", CMenuAction::pathViewDatabaseMerge());
+            menuActions.addMenu(CIcons::databaseEdit16(), "Consolidate with DB data", CMenuAction::pathViewDatabaseMerge());
 
-            this->m_mergeAll = menuActions.addAction(this->m_mergeAll, "All", CMenuAction::pathViewDatabaseMerge(), { this, &CMergeWithDbDataMenu::ps_mergeData });
+            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, "All", CMenuAction::pathViewDatabaseMerge(), { this, &CConsolidateWithDbDataMenu::ps_consolidateData });
             if (mv->hasSelection())
             {
-                this->m_mergeSelected = menuActions.addAction(this->m_mergeSelected, "Selected only", CMenuAction::pathViewDatabaseMerge(), { this, &CMergeWithDbDataMenu::ps_mergeSelectedData });
+                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, "Selected only", CMenuAction::pathViewDatabaseMerge(), { this, &CConsolidateWithDbDataMenu::ps_consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
 
-        void CMergeWithDbDataMenu::ps_mergeData()
+        void CConsolidateWithDbDataMenu::ps_consolidateData()
         {
             BLACK_VERIFY_X(sGui, Q_FUNC_INFO, "Missing sGui");
             if (!sGui->hasWebDataServices()) { return; }
@@ -146,46 +156,67 @@ namespace BlackGui
             const CAircraftModelList dbModels(sGui->getWebDataServices()->getModels());
             if (dbModels.isEmpty())
             {
-                CLogMessage().warning("No DB models to merge with");
+                CLogMessage().warning("No DB models to consolidate with");
+                return;
+            }
+            if (!this->modelsTargetSetable())
+            {
+                CLogMessage().warning("No setable target");
                 return;
             }
 
             this->modelView()->showLoadIndicator();
-            CAircraftModelList models(this->getAircraftModels());
-            int c = CAircraftModelUtilities::mergeWithDbData(models, dbModels, true);
-            if (c > 0 && this->modelsTargetSetable())
+            CAircraftModelList models(this->getAllOrAllFilteredAircraftModels());
+            const int unfilteredSize = this->modelView()->rowCount();
+            const int modelSize = models.size();
+            const bool filtered = unfilteredSize > modelSize;
+
+            int c = CDatabaseUtils::consolidateModelsWithDbData(models, true);
+            if (c > 0 && this->modelsTargetSetable() && this->modelsTargetUpdatable())
             {
-                this->modelsTargetSetable()->setModels(models);
-                CLogMessage().info("Merged %1/%2 models with DB") << c << models.size();
+                if (filtered)
+                {
+                    this->modelsTargetUpdatable()->updateModels(models);
+                    CLogMessage().info("Consolidated filtered %1/%2 models with DB") << c << models.size();
+                }
+                else
+                {
+                    this->modelsTargetSetable()->setModels(models);
+                    CLogMessage().info("Consolidated %1/%2 models with DB") << c << models.size();
+                }
             }
             else
             {
-                CLogMessage().info("No data merged with DB");
+                CLogMessage().info("No data consolidated with DB");
+                this->modelView()->hideLoadIndicator();
             }
         }
 
-        void CMergeWithDbDataMenu::ps_mergeSelectedData()
+        void CConsolidateWithDbDataMenu::ps_consolidateSelectedData()
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             if (!sGui->hasWebDataServices()) { return; }
 
             CAircraftModelList models(this->getSelectedAircraftModels());
             if (models.isEmpty()) { return; }
-            const CAircraftModelList dbModels(sGui->getWebDataServices()->getModels());
-
-            CAircraftModelUtilities::mergeWithDbData(models, dbModels, true);
-            if (this->modelsTargetUpdatable())
+            if (!this->modelsTargetUpdatable())
+            {
+                CLogMessage().warning("No updatable target");
+                return;
+            }
+            int c = CDatabaseUtils::consolidateModelsWithDbData(models, true);
+            if (c > 0 && this->modelsTargetUpdatable())
             {
                 this->modelsTargetUpdatable()->updateModels(models);
             }
         }
 
-        IModelsSetable *CMergeWithDbDataMenu::modelsTargetSetable() const
+        IModelsSetable *CConsolidateWithDbDataMenu::modelsTargetSetable() const
         {
             return qobject_cast<IModelsSetable *>(this->m_modelsTarget);
         }
 
-        IModelsUpdatable *CMergeWithDbDataMenu::modelsTargetUpdatable() const
+        IModelsUpdatable *CConsolidateWithDbDataMenu::modelsTargetUpdatable() const
         {
             return qobject_cast<IModelsUpdatable *>(this->m_modelsTarget);
         }

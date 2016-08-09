@@ -48,6 +48,9 @@ namespace BlackGui
             //! Get aircraft models
             const BlackMisc::Simulation::CAircraftModelList &getAircraftModels() const;
 
+            //! Get aircraft models (all, or all filtered)
+            const BlackMisc::Simulation::CAircraftModelList &getAllOrAllFilteredAircraftModels() const;
+
             //! Selected aircraft models
             BlackMisc::Simulation::CAircraftModelList getSelectedAircraftModels() const;
         };
@@ -75,7 +78,7 @@ namespace BlackGui
         };
 
         //! Merge with DB data
-        class CMergeWithDbDataMenu : public IAircraftModelViewMenu
+        class CConsolidateWithDbDataMenu : public IAircraftModelViewMenu
         {
             Q_OBJECT
 
@@ -84,21 +87,24 @@ namespace BlackGui
             using IAircraftModelViewMenu::IAircraftModelViewMenu;
 
             //! Constructor
-            CMergeWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget, bool separator = true);
+            CConsolidateWithDbDataMenu(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget, bool separator = true);
 
             //! \copydoc IMenuDelegate::customMenu
             virtual void customMenu(CMenuActions &menuActions) override;
 
+            //! Change target
+            void setModelsTarget(QObject *target) { this->m_modelsTarget = target; }
+
         private slots:
-            void ps_mergeData();
-            void ps_mergeSelectedData();
+            void ps_consolidateData();
+            void ps_consolidateSelectedData();
 
         private:
             BlackMisc::Simulation::IModelsSetable   *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
-            QObject *m_modelsTarget  = nullptr;   //!< optional target for setting/updating the models
-            QAction *m_mergeAll      = nullptr;
-            QAction *m_mergeSelected = nullptr;
+            QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
+            QAction *m_consolidateAll      = nullptr; //!< consolidate data with DB (all)
+            QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)
         };
     } // ns
 } // ns
