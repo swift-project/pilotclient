@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/webdataservices.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackgui/components/dbownmodelscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
@@ -25,6 +26,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Db;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
@@ -41,7 +43,6 @@ namespace BlackGui
             ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
-            ui->tvp_OwnAircraftModels->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnAircraftModels, this->modelLoader(), false));
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
@@ -58,6 +59,9 @@ namespace BlackGui
             {
                 CLogMessage(this).error("Init of model loader failed in component");
             }
+
+            // menu
+            ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this, false));
         }
 
         CDbOwnModelsComponent::~CDbOwnModelsComponent()
@@ -132,8 +136,21 @@ namespace BlackGui
             if (this->m_modelLoader) { this->m_modelLoader->gracefulShutdown(); }
         }
 
+        void CDbOwnModelsComponent::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        {
+            this->modelLoader()->setCachedModels(models, simulator);
+            ui->tvp_OwnAircraftModels->replaceOrAddModelsWithString(models);
+        }
+
+        void CDbOwnModelsComponent::updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+        {
+            this->modelLoader()->replaceOrAddCachedModels(models, simulator);
+            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
+        }
+
         bool CDbOwnModelsComponent::initModelLoader(const CSimulatorInfo &simulator)
         {
+            // called when simulator is changed / init
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
 
             // already loaded
@@ -176,7 +193,8 @@ namespace BlackGui
 
         void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
         {
-            const CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
+            // for the moment I use all sims, I could restrict to CSimulatorInfo::getLocallyInstalledSimulators();
+            const CSimulatorInfo sims =  CSimulatorInfo::allSimulators();
             const bool noSims = sims.isNoSimulator() || sims.isUnspecified();
             if (!noSims)
             {
@@ -332,7 +350,7 @@ namespace BlackGui
             CLogMessage(this).info("Starting loading for %1") << simulator.toQString();
             this->ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
-            this->m_modelLoader->startLoading(mode, sGui->getWebDataServices()->getModels());
+            this->m_modelLoader->startLoading(mode, &CDatabaseUtils::consolidateModelsWithDbData);
         }
 
         void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(bool success, const CSimulatorInfo &simulator)

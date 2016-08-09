@@ -17,6 +17,7 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelloader.h"
+#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
@@ -32,7 +33,6 @@ class QAction;
 class QWidget;
 
 namespace Ui { class CDbOwnModelsComponent; }
-
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
@@ -44,9 +44,18 @@ namespace BlackGui
         /*!
          * Handling of own models on disk (the models installed for the simulator)
          */
-        class CDbOwnModelsComponent : public QFrame
+        class CDbOwnModelsComponent :
+            public QFrame,
+            public BlackMisc::Simulation::IModelsSetable,
+            public BlackMisc::Simulation::IModelsUpdatable,
+            public BlackMisc::Simulation::IModelsPerSimulatorSetable,
+            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
         {
             Q_OBJECT
+            Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorSetable)
+            Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
 
         public:
             //! Constructor
@@ -88,6 +97,14 @@ namespace BlackGui
             //! Graceful shutdown
             void gracefulShutdown();
 
+            //! \name Implementations of the models interfaces
+            //! @{
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->setModels(models, this->getOwnModelsSimulator()); }
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->updateModels(models, this->getOwnModelsSimulator()); }
+            virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+            virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+            //! @}
+
         private slots:
             //! Request own models
             void ps_requestOwnModelsUpdate();
@@ -103,7 +120,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>           m_modelLoader;                //!< read own aircraft models
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>            m_modelLoader;                //!< read own aircraft models
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection {this }; //!< last selection
 
             //! Init or change model loader
