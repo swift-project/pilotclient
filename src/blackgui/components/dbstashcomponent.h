@@ -146,9 +146,9 @@ namespace BlackGui
             void ps_onPublishPressed();
 
             //! Publish response received
-            void ps_publishResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
-                                    const BlackMisc::Simulation::CAircraftModelList &skippedModels,
-                                    const BlackMisc::CStatusMessageList &msgs);
+            void ps_publishedModelsResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
+                                            const BlackMisc::Simulation::CAircraftModelList &skippedModels,
+                                            const BlackMisc::CStatusMessageList &msgs);
 
             //! Copy over values
             void ps_copyOverPartsToSelected();
@@ -186,7 +186,7 @@ namespace BlackGui
             //! Consolidate with any DB data (if available).
             BlackMisc::Simulation::CAircraftModel consolidateWithDbData(const BlackMisc::Simulation::CAircraftModel &model) const;
 
-            //! Consolidate with own models (if available).
+            //! Consolidate with own models (if available). This updates mostly with model description, path etc.
             BlackMisc::Simulation::CAircraftModel consolidateWithOwnModels(const BlackMisc::Simulation::CAircraftModel &model) const;
         };
     } // ns

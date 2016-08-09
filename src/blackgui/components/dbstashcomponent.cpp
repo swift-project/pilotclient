@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/db/databasewriter.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/dbmappingcomponent.h"
@@ -76,7 +77,7 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->setHighlightModelStringsColor(Qt::red);
             this->enableButtonRow();
 
-            connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::published, this, &CDbStashComponent::ps_publishResponse);
+            connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbStashComponent::ps_publishedModelsResponse);
         }
 
         CDbStashComponent::~CDbStashComponent()
@@ -263,7 +264,7 @@ namespace BlackGui
             }
         }
 
-        void CDbStashComponent::ps_publishResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs)
+        void CDbStashComponent::ps_publishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs)
         {
             this->ui->tvp_StashAircraftModels->hideLoadIndicator();
             if (!publishedModels.isEmpty())
@@ -282,7 +283,7 @@ namespace BlackGui
                     QString confirm("Remove %1 published models?");
                     auto lambda = [this, publishedModels]()
                     {
-                        this->unstashModels(publishedModels.getModelStrings(false));
+                        this->unstashModels(publishedModels.getModelStringList(false));
                     };
                     this->showMessagesWithConfirmation(msgs, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
                 }
@@ -321,7 +322,7 @@ namespace BlackGui
             if (msgs.hasWarningOrErrorMessages())
             {
                 this->showMessages(msgs);
-                this->ui->tvp_StashAircraftModels->setHighlightModelStrings(invalidModels.getModelStrings(false));
+                this->ui->tvp_StashAircraftModels->setHighlightModelStrings(invalidModels.getModelStringList(false));
                 return false;
             }
             else
@@ -364,51 +365,8 @@ namespace BlackGui
 
         CAircraftModel CDbStashComponent::consolidateWithDbData(const CAircraftModel &model) const
         {
-            if (!model.hasModelString()) { return model; }
-            CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
-
-            // we try to best update by DB data here
-            if (!dbModel.hasValidDbKey())
-            {
-                // we have no(!) DB model, so we update each of it subobjects
-                CAircraftModel consolidatedModel(model); // copy over
-                if (!consolidatedModel.getLivery().hasValidDbKey())
-                {
-                    const CLivery dbLivery(sApp->getWebDataServices()->smartLiverySelector(consolidatedModel.getLivery()));
-                    if (dbLivery.hasValidDbKey())
-                    {
-                        consolidatedModel.setLivery(dbLivery);
-                    }
-                }
-                if (!consolidatedModel.getAircraftIcaoCode().hasValidDbKey() && consolidatedModel.hasAircraftDesignator())
-                {
-                    // try to find DB aircraft ICAO here
-                    const CAircraftIcaoCode dbIcao(sGui->getWebDataServices()->smartAircraftIcaoSelector(consolidatedModel.getAircraftIcaoCode()));
-                    if (dbIcao.hasValidDbKey())
-                    {
-                        consolidatedModel.setAircraftIcaoCode(dbIcao);
-                    }
-                }
-
-                // key alone here can be misleading, as the key can be valid but no DB key
-                // mostly happens when key is an alias
-                QString keyOrAlias(consolidatedModel.getDistributor().getDbKey());
-                CDistributor dbDistributor(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
-
-                // if no distributor is found, it is now empty because it was invalid
-                // otherwise replaced with the current DB data
-                consolidatedModel.setDistributor(dbDistributor);
-
-                // copy over
-                dbModel = consolidatedModel;
-            }
-
-            bool someDbData = dbModel.hasValidDbKey() || dbModel.getLivery().hasValidDbKey() || dbModel.getAircraftIcaoCode().hasValidDbKey();
-            if (!someDbData) { return model; }
-
-            // use DB model as base, update everything else
-            dbModel.updateMissingParts(model);
-            return dbModel;
+            const CAircraftModel consolidatedModel = CDatabaseUtils::consolidateModelWithDbData(model, true);
+            return consolidatedModel;
         }
 
         CAircraftModel CDbStashComponent::consolidateWithOwnModels(const CAircraftModel &model) const
