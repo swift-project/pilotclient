@@ -23,7 +23,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAirport::CAirport()
         { }
 

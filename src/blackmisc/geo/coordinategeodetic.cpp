@@ -281,6 +281,7 @@ namespace BlackMisc
 
         void ICoordinateWithRelativePosition::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
+            if (ICoordinateGeodetic::canHandleIndex(index)) { return; }
             if (!index.isMyself())
             {
                 ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -326,6 +327,7 @@ namespace BlackMisc
 
         bool ICoordinateWithRelativePosition::canHandleIndex(const CPropertyIndex &index)
         {
+            if (ICoordinateGeodetic::canHandleIndex(index)) { return true; }
             int i = index.frontCasted<int>();
             return (i >= static_cast<int>(IndexRelativeDistance)) && (i <= static_cast<int>(IndexRelativeBearing));
         }
