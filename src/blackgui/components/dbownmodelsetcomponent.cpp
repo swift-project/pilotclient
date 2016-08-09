@@ -58,7 +58,7 @@ namespace BlackGui
             ui->tvp_OwnModelSet->addFilterDialog();
             ui->tvp_OwnModelSet->setJsonLoad(CAircraftModelView::AllowOnlySingleSimulator | CAircraftModelView::ReduceToOneSimulator);
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));
-            ui->tvp_OwnModelSet->setCustomMenu(new CMergeWithDbDataMenu(ui->tvp_OwnModelSet, this, true));
+            ui->tvp_OwnModelSet->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnModelSet, this, true));
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuOrderable);
             ui->tvp_OwnModelSet->setSorting(CAircraftModel::IndexOrderString);
             ui->tvp_OwnModelSet->initAsOrderable();
@@ -332,7 +332,8 @@ namespace BlackGui
 
         void CDbOwnModelSetComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
         {
-            const CSimulatorInfo sims = CSimulatorInfo::getLocallyInstalledSimulators();
+            // for the moment I use all sims, I could restrict to CSimulatorInfo::getLocallyInstalledSimulators();
+            const CSimulatorInfo sims =  CSimulatorInfo::allSimulators();
             const bool noSims = sims.isNoSimulator() || sims.isUnspecified();
             if (!noSims)
             {

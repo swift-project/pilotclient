@@ -155,7 +155,7 @@ namespace BlackGui
 
         int CAircraftModelView::removeModelsWithModelString(const CAircraftModelList &models, Qt::CaseSensitivity sensitivity)
         {
-            return this->removeModelsWithModelString(models.getModelStrings(), sensitivity);
+            return this->removeModelsWithModelString(models.getModelStringList(), sensitivity);
         }
 
         int CAircraftModelView::replaceOrAddModelsWithString(const CAircraftModelList &models, Qt::CaseSensitivity sensitivity)
@@ -294,12 +294,19 @@ namespace BlackGui
                 if (!this->m_menuFlagActions.contains(MenuCanStashModels))
                 {
                     CMenuActions ma;
-                    ma.addAction(CIcons::appDbStash16(), "Stash selectied", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_requestStash });
+                    ma.addAction(CIcons::appDbStash16(), "Stash selected", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_requestStash });
                     QAction *added = ma.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", CMenuAction::pathStash(), { this, &CAircraftModelView::ps_stashingClearsSelection });
                     added->setCheckable(true);
                     this->m_menuFlagActions.insert(MenuCanStashModels, ma);
                 }
-                QAction *a = menuActions.addActions(initMenuActions(MenuCanStashModels)).last();
+
+                // modify menu items
+                const int selected = this->selectedRowCount();
+                const bool tooMany = selected > 500;
+                const bool canStash = selected > 0 && !tooMany;
+                QAction *a = menuActions.addActions(initMenuActions(MenuCanStashModels)).first();
+                a->setEnabled(canStash);
+                a = menuActions.addActions(initMenuActions(MenuCanStashModels)).last();
                 a->setChecked(m_stashingClearsSelection);
                 used = true;
             }
@@ -409,7 +416,7 @@ namespace BlackGui
             {
                 this->clearSelection();
             }
-            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Stashed " + models.getModelStrings(true).join(" ")));
+            sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, "Stashed " + models.getModelStringList(true).join(" ")));
         }
     } // namespace
 } // namespace

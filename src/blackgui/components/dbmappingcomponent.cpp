@@ -853,9 +853,6 @@ namespace BlackGui
         {
             CDbMappingComponent *mapComp = mappingComponent();
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
-            const bool canConnectDb = sGui->getWebDataServices()->canConnectSwiftDb();
-            if (!canConnectDb) { this->nestedCustomMenu(menuActions); return; }
-
             if (!mapComp->currentModelView()->isEmpty() && mapComp->currentModelView()->getMenu().testFlag(CViewBaseNonTemplate::MenuCanStashModels))
             {
                 menuActions.addMenuStash();
