@@ -125,6 +125,13 @@ namespace BlackMisc
             return this->matchesVDesignator(candidate) || this->matchesIataCode(candidate);
         }
 
+        bool CAirlineIcaoCode::matchesNamesOrTelephonyDesignator(const QString &candidate) const
+        {
+            const QString cand(candidate.toUpper().trimmed());
+            if (this->getName().contains(cand, Qt::CaseInsensitive) || this->getTelephonyDesignator().contains(cand, Qt::CaseInsensitive)) { return true; }
+            return this->isContainedInSimplifiedName(candidate);
+        }
+
         bool CAirlineIcaoCode::isContainedInSimplifiedName(const QString &candidate) const
         {
             if (candidate.isEmpty() || !this->hasName()) { return false; }

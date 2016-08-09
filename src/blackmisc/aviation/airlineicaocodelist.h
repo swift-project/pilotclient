@@ -69,6 +69,9 @@ namespace BlackMisc
             //! Find if simplified name contains search string
             CAirlineIcaoCodeList findBySimplifiedNameContaining(const QString &containedString) const;
 
+            //! Find by names or telephony designator (aka callsign, not to be confused with CCallsign)
+            CAirlineIcaoCodeList findByNamesOrTelephonyDesignator(const QString &candidate) const;
+
             //! Find by military flag
             CAirlineIcaoCodeList findByMilitary(bool military) const;
 

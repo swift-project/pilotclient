@@ -89,6 +89,15 @@ namespace BlackMisc
             });
         }
 
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByNamesOrTelephonyDesignator(const QString &candidate) const
+        {
+            if (candidate.isEmpty()) { return CAirlineIcaoCodeList(); }
+            return this->findBy([&](const CAirlineIcaoCode & code)
+            {
+                return code.matchesNamesOrTelephonyDesignator(candidate);
+            });
+        }
+
         CAirlineIcaoCodeList CAirlineIcaoCodeList::findByMilitary(bool military) const
         {
             return this->findBy([&](const CAirlineIcaoCode & code)
@@ -99,33 +108,44 @@ namespace BlackMisc
 
         CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
         {
+            if (icaoPattern.hasValidDbKey()) { return icaoPattern; }
             const CAirlineIcaoCode patternUsed = icaoPattern.thisOrCallsignCode(callsign);
-            if (patternUsed.hasValidDbKey())
-            {
-                return this->findByKey(icaoPattern.getDbKey(), icaoPattern);
-            }
 
             // search by parts
-            CAirlineIcaoCodeList codes;
+            CAirlineIcaoCodeList codesFound;
             if (patternUsed.hasValidDesignator())
             {
-                codes = this->findByVDesignator(patternUsed.getVDesignator());
+                codesFound = this->findByVDesignator(patternUsed.getVDesignator());
             }
             else
             {
-                codes = this->findByIataCode(patternUsed.getIataCode());
+                codesFound = this->findByIataCode(patternUsed.getIataCode());
             }
 
-            if (codes.size() == 1) { return codes.front(); }
+            if (codesFound.size() == 1) { return codesFound.front(); }
+            if (codesFound.isEmpty())
+            {
+                codesFound = this->findByNamesOrTelephonyDesignator(patternUsed.getName());
+            }
+            else
+            {
+                // further reduce
+                if (patternUsed.hasName())
+                {
+                    CAirlineIcaoCodeList backup(codesFound);
+                    codesFound = this->findByNamesOrTelephonyDesignator(patternUsed.getName());
+                    if (codesFound.isEmpty()) { codesFound = backup; }
+                }
+            }
 
             // further reduce
             if (patternUsed.hasValidCountry())
             {
-                CAirlineIcaoCodeList countryCodes = codes.findByCountryIsoCode(patternUsed.getCountry().getIsoCode());
+                CAirlineIcaoCodeList countryCodes = codesFound.findByCountryIsoCode(patternUsed.getCountry().getIsoCode());
                 if (!countryCodes.isEmpty()) { return countryCodes.front(); }
             }
 
-            if (!codes.isEmpty()) { return codes.front(); }
+            if (!codesFound.isEmpty()) { return codesFound.front(); }
             return patternUsed;
         }
 
@@ -205,5 +225,5 @@ namespace BlackMisc
             if (sort) { c.sort(); }
             return c;
         }
-    } // namespace
-} // namespace
+    } // ns
+} // ns

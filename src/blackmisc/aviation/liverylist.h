@@ -55,6 +55,9 @@ namespace BlackMisc
             //! By simplified name
             CLiveryList findStdLiveriesBySimplifiedAirlineName(const QString &containedString) const;
 
+            //! By names or telephony designator(aka callsign)
+            CLiveryList findStdLiveriesByNamesOrTelephonyDesignator(const QString &candidate) const;
+
             //! Find livery by combined code
             CLivery findByCombinedCode(const QString &combinedCode) const;
 
@@ -64,7 +67,7 @@ namespace BlackMisc
             //! All combined codes plus more info
             QStringList getCombinedCodesPlusInfo(bool sort = false) const;
 
-            //! Find
+            //! Find by multiple criteria
             CLivery smartLiverySelector(const CLivery &liveryPattern) const;
         };
     } //namespace

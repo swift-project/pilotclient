@@ -59,6 +59,17 @@ namespace BlackMisc
             });
         }
 
+        CLiveryList CLiveryList::findStdLiveriesByNamesOrTelephonyDesignator(const QString &candidate) const
+        {
+            if (candidate.isEmpty()) { return CLiveryList(); }
+            return this->findBy([&](const CLivery & livery)
+            {
+                // keep isAirlineStandardLivery first (faster)
+                return livery.isAirlineStandardLivery() &&
+                       livery.getAirlineIcaoCode().matchesNamesOrTelephonyDesignator(candidate);
+            });
+        }
+
         CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const CAirlineIcaoCode &icao) const
         {
             return this->findStdLiveryByAirlineIcaoVDesignator(icao.getVDesignator());
@@ -92,15 +103,10 @@ namespace BlackMisc
         CLivery CLiveryList::smartLiverySelector(const CLivery &liveryPattern) const
         {
             // multiple searches are slow, maybe we can performance optimize this
-            // in the futuew
+            // in the future
 
             // first try on id, that would be perfect
-            if (liveryPattern.hasValidDbKey())
-            {
-                int k = liveryPattern.getDbKey();
-                const CLivery l(this->findByKey(k));
-                if (l.hasCompleteData()) { return l; }
-            }
+            if (liveryPattern.hasValidDbKey()) { return liveryPattern; }
 
             // by combined code
             if (liveryPattern.hasCombinedCode())
@@ -122,7 +128,7 @@ namespace BlackMisc
             if (liveryPattern.getAirlineIcaoCode().hasName())
             {
                 const QString search(liveryPattern.getAirlineIcaoCode().getSimplifiedName());
-                const CLiveryList liveries(this->findStdLiveriesBySimplifiedAirlineName(search));
+                const CLiveryList liveries(this->findStdLiveriesByNamesOrTelephonyDesignator(search));
                 if (!liveries.isEmpty())
                 {
                     return liveries.front();

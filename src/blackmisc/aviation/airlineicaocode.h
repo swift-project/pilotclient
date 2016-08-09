@@ -149,6 +149,9 @@ namespace BlackMisc
             //! Matches IATA code or v-designator?
             bool matchesVDesignatorOrIataCode(const QString &candidate) const;
 
+            //! Relaxed check by name or telephony designator (aka callsign, not to be confused with CCallsign)
+            bool matchesNamesOrTelephonyDesignator(const QString &candidate) const;
+
             //! Does simplified name contain the candidate
             bool isContainedInSimplifiedName(const QString &candidate) const;
 
