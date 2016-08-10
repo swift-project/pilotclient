@@ -82,6 +82,7 @@ namespace BlackGui
             //! Set completers
             void initCompleters();
 
+            //! File name for load/save
             QString getDefaultFilename(bool load);
 
         private slots:

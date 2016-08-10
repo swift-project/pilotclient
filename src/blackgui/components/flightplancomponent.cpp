@@ -70,6 +70,9 @@ namespace BlackGui
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
             ui->le_Callsign->setValidator(ucv);
             ui->le_AircraftType->setValidator(ucv);
+            ui->le_DestinationAirport->setValidator(ucv);
+            ui->le_AlternateAirport->setValidator(ucv);
+            ui->le_OriginAirport->setValidator(ucv);
 
             // connect
             connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::ps_sendFlightPlan);
@@ -261,17 +264,6 @@ namespace BlackGui
                 flightPlan.setCruiseAltitude(cruisingAltitude);
             }
 
-            v = this->ui->le_AlternateAirport->text();
-            if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
-            {
-                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_AlternateAirport->text());
-                flightPlan.setAlternateAirportIcao(QString(""));
-            }
-            else
-            {
-                flightPlan.setAlternateAirportIcao(v);
-            }
-
             v = this->ui->le_DestinationAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
@@ -307,6 +299,26 @@ namespace BlackGui
                 flightPlan.setOriginAirportIcao(v);
             }
 
+            // Optional fields
+            v = this->ui->le_AlternateAirport->text();
+            if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
+            {
+                if (!messages.hasWarningOrErrorMessages())
+                {
+                    messages.push_back(CLogMessage().validationInfo("Missing %1") << this->ui->lbl_AlternateAirport->text());
+                }
+                flightPlan.setAlternateAirportIcao(QString(""));
+            }
+            else
+            {
+                flightPlan.setAlternateAirportIcao(v);
+            }
+
+            // OK
+            if (!messages.hasWarningOrErrorMessages())
+            {
+                messages.push_back(CLogMessage().validationInfo("Flight plan validation passed"));
+            }
             return messages;
         }
 

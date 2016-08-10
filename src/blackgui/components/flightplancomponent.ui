@@ -130,9 +130,6 @@
           </item>
           <item row="3" column="1">
            <widget class="QLineEdit" name="le_OriginAirport">
-            <property name="inputMask">
-             <string>&gt;AAAA</string>
-            </property>
             <property name="maxLength">
              <number>4</number>
             </property>
@@ -371,8 +368,8 @@
           </item>
           <item row="7" column="0">
            <widget class="QLineEdit" name="le_DestinationAirport">
-            <property name="inputMask">
-             <string>&gt;AAAA</string>
+            <property name="maxLength">
+             <number>4</number>
             </property>
             <property name="placeholderText">
              <string>ICAO, e.g. EDDF</string>
@@ -474,8 +471,8 @@
           </item>
           <item row="7" column="3">
            <widget class="QLineEdit" name="le_AlternateAirport">
-            <property name="inputMask">
-             <string>&gt;AAAA</string>
+            <property name="maxLength">
+             <number>4</number>
             </property>
             <property name="placeholderText">
              <string>ICAO, e.g. EDDF</string>
@@ -572,6 +569,22 @@
               <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
             </property>
            </widget>
+          </item>
+          <item row="13" column="1">
+           <spacer name="vs_2ndButoonRow">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>24</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
