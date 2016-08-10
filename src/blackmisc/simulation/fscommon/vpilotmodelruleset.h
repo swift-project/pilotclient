@@ -74,7 +74,6 @@ namespace BlackMisc
                 //! Convert values to upper case
                 static QStringList toUpper(const QStringList &stringList);
             };
-
         } // namespace
     } //namespace
 } // namespace

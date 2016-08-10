@@ -84,6 +84,18 @@ namespace BlackGui
             this->m_action->setEnabled(enabled);
         }
 
+        const CMenuAction &CMenuAction::subMenuDatabase()
+        {
+            static const CMenuAction subdir(CIcons::appDatabase16(), "Database", CMenuAction::pathViewDatabase());
+            return subdir;
+        }
+
+        const CMenuAction &CMenuAction::subMenuSimulator()
+        {
+            static const CMenuAction subdir(CIcons::appSimulator16(), "Simulator", CMenuAction::pathSimulator());
+            return subdir;
+        }
+
         QString CMenuAction::getLastPathPart() const
         {
             if (this->m_path.contains('/'))
@@ -158,6 +170,11 @@ namespace BlackGui
         {
             if (!this->m_actions.contains(path)) { return false; }
             return getMenuActions(path).size() > 0;
+        }
+
+        CMenuAction CMenuActions::addMenu(const CMenuAction &subdirAction)
+        {
+            return this->addMenu(subdirAction.getIcon(), subdirAction.getTitle(), subdirAction.getPath());
         }
 
         CMenuAction CMenuActions::addMenu(const QString &title, const QString &path)
@@ -293,22 +310,19 @@ namespace BlackGui
         void CMenuActions::toQMenu(QMenu &menu, bool separateGroups) const
         {
             if (this->m_actions.isEmpty()) { return; }
-            const QStringList keys(this->m_actions.uniqueKeys()); // Sorted ascending
-            QMap<QString, QMenu *> subMenus; // all sub menus
+            const QStringList keys = this->m_actions.uniqueKeys(); // Sorted ascending
 
+            QMap<QString, QMenu *> subMenus; // all sub menus
             for (const QString &key : keys)
             {
                 bool addedSeparator = false;
-                const int pathDepth = CMenuActions::pathDepth(key);
+                const int pathDepth = CMenuActions::pathDepth(key); // 0 based
 
                 QList<CMenuAction> actions;
                 QList<CMenuAction> menus;
                 this->splitSubMenus(key, actions, menus);
                 if (actions.isEmpty())
                 {
-                    // uncomment this if a subdir shall be displayed, even if there are no actions
-                    // if (!menus.isEmpty()) { currentMenuForAction(menu, menus.fi, menus, subMenus, key, pathDepth); }
-
                     // No actions directly for that level
                     continue;
                 }
@@ -407,7 +421,7 @@ namespace BlackGui
         CMenuAction CMenuActions::addMenuDatabase()
         {
             if (this->containsMenu(CMenuAction::pathViewDatabase())) { CMenuAction(); }
-            return this->addMenu(CIcons::appDatabase16(), "Database", CMenuAction::pathViewDatabase());
+            return this->addMenu(CMenuAction::subMenuDatabase());
         }
 
         CMenuAction CMenuActions::addMenuModelSet()
@@ -416,17 +430,29 @@ namespace BlackGui
             return this->addMenu(CIcons::appModels16(), "Model set", CMenuAction::pathModelSet());
         }
 
+        const CMenuActions &CMenuActions::predefinedSubmenus()
+        {
+            static const CMenuActions pd(
+            {
+                CMenuAction::subMenuDatabase(),
+                CMenuAction::subMenuSimulator()
+            });
+            return pd;
+        }
+
         QMenu *CMenuActions::currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pathDepth)
         {
             if (pathDepth < 1) { return &menu; }
-
             QMenu *parentMenu = &menu;
             if (pathDepth > 1)
             {
                 // find the corresponding submenu. If this is empty the next higher level will be choosen
                 // if not found at all, use top level menu
                 parentMenu = findUpwardsInMenus(key, subMenus);
-                if (!parentMenu) { parentMenu = &menu; }
+                if (!parentMenu)
+                {
+                    parentMenu = &menu;
+                }
             }
 
             // explicity menu?
@@ -471,7 +497,7 @@ namespace BlackGui
             {
                 if (menus.contains(k))
                 {
-                    return menus[key];
+                    return menus[k];
                 }
                 k = parentPath(k);
             }

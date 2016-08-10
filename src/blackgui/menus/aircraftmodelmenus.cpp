@@ -138,12 +138,12 @@ namespace BlackGui
             if (!sGui->hasWebDataServices()) { this->nestedCustomMenu(menuActions); return; }
 
             menuActions.addMenuDatabase();
-            menuActions.addMenu(CIcons::databaseEdit16(), "Consolidate with DB data", CMenuAction::pathViewDatabaseMerge());
+            menuActions.addMenu(CIcons::databaseEdit16(), "Consolidate with DB data", CMenuAction::pathViewDatabaseConsolidate());
 
-            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, "All", CMenuAction::pathViewDatabaseMerge(), { this, &CConsolidateWithDbDataMenu::ps_consolidateData });
+            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, "All", CMenuAction::pathViewDatabaseConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateData });
             if (mv->hasSelection())
             {
-                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, "Selected only", CMenuAction::pathViewDatabaseMerge(), { this, &CConsolidateWithDbDataMenu::ps_consolidateSelectedData });
+                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, "Selected only", CMenuAction::pathViewDatabaseConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }

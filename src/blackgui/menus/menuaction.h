@@ -149,8 +149,8 @@ namespace BlackGui
             //! Database
             static const QString &pathViewDatabase()  { static const QString p("View.10.Database/Database"); return p; }
 
-            //! Database merge
-            static const QString &pathViewDatabaseMerge()  { static const QString p("View.10.Database/Database/Merge"); return p; }
+            //! Database consolidation
+            static const QString &pathViewDatabaseConsolidate()  { static const QString p("View.10.Database/Database/Consolidate"); return p; }
 
             //! Select add remove
             static const QString &pathViewAddRemove()  { static const QString p("View.11.AddRemove"); return p; }
@@ -177,6 +177,12 @@ namespace BlackGui
 
             //! Nested dock widget
             static const QString &pathDockWidgetNested()  { static const QString p("DockWidget.Nested"); return p; }
+            //! @}
+
+            //! \name Predefined sub sub menus
+            //! @{
+            static const CMenuAction &subMenuDatabase();
+            static const CMenuAction &subMenuSimulator();
             //! @}
 
         private:
@@ -217,6 +223,9 @@ namespace BlackGui
 
             //! Elements
             int size() const { return m_actions.size(); }
+
+            //! Add a sub menu
+            CMenuAction addMenu(const CMenuAction &subdirAction);
 
             //! Add a sub menu
             CMenuAction addMenu(const QString &title, const QString &path);
@@ -309,6 +318,9 @@ namespace BlackGui
             CMenuAction addMenuModelSet();
 
             //! @}
+
+            //! Predfefined sub menus
+            static const CMenuActions &predefinedSubmenus();
 
         private:
             QMultiMap<QString, CMenuAction> m_actions; //!< actions sorted by path

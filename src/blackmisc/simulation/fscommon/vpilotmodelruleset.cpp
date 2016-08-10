@@ -25,7 +25,6 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-
             CVPilotModelRuleSet::CVPilotModelRuleSet(const CCollection<CVPilotModelRule> &other) :
                 CCollection<CVPilotModelRule>(other)
             { }
@@ -143,7 +142,6 @@ namespace BlackMisc
                 }
                 return models;
             }
-
         } // namespace
     } // namespace
 } // namespace
