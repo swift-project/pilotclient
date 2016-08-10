@@ -293,18 +293,25 @@ namespace BlackGui
         void CMenuActions::toQMenu(QMenu &menu, bool separateGroups) const
         {
             if (this->m_actions.isEmpty()) { return; }
-            const QStringList keys(this->m_actions.uniqueKeys());
-            QMap<QString, QMenu *> subMenus;
+            const QStringList keys(this->m_actions.uniqueKeys()); // Sorted ascending
+            QMap<QString, QMenu *> subMenus; // all sub menus
 
             for (const QString &key : keys)
             {
                 bool addedSeparator = false;
-                const int pd = pathDepth(key);
+                const int pathDepth = CMenuActions::pathDepth(key);
 
                 QList<CMenuAction> actions;
                 QList<CMenuAction> menus;
                 this->splitSubMenus(key, actions, menus);
-                if (actions.isEmpty()) { continue; }
+                if (actions.isEmpty())
+                {
+                    // uncomment this if a subdir shall be displayed, even if there are no actions
+                    // if (!menus.isEmpty()) { currentMenuForAction(menu, menus.fi, menus, subMenus, key, pathDepth); }
+
+                    // No actions directly for that level
+                    continue;
+                }
                 if (!menu.isEmpty() && separateGroups)
                 {
                     menu.addSeparator();
@@ -314,13 +321,13 @@ namespace BlackGui
                 int noActionsWithoutPath = 0;
                 QMenu *currentMenu = nullptr;
 
-                // reverse iteration because same key values are inserted and havve reverse order
+                // reverse iteration because same key values are inserted and have reverse order
                 for (const CMenuAction &menuAction : actions)
                 {
                     // create submenu if required
                     if (!currentMenu)
                     {
-                        currentMenu = currentMenuForAction(menu, menuAction, menus, subMenus, key, pd);
+                        currentMenu = currentMenuForAction(menu, menuAction, menus, subMenus, key, pathDepth);
                     }
                     Q_ASSERT_X(currentMenu, Q_FUNC_INFO, "Missing menu");
                     Q_ASSERT_X(!menuAction.isSubMenu() && menuAction.getQAction(), Q_FUNC_INFO, "Wrong menu type");
@@ -409,16 +416,16 @@ namespace BlackGui
             return this->addMenu(CIcons::appModels16(), "Model set", CMenuAction::pathModelSet());
         }
 
-        QMenu *CMenuActions::currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pd)
+        QMenu *CMenuActions::currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pathDepth)
         {
-            if (pd < 1) { return &menu; }
+            if (pathDepth < 1) { return &menu; }
 
             QMenu *parentMenu = &menu;
-            if (pd > 1)
+            if (pathDepth > 1)
             {
-                const QString pk(parentPathKey(key));
-                parentMenu = subMenus.value(pk);
-                BLACK_VERIFY_X(parentMenu, Q_FUNC_INFO, "Missing sub menu");
+                // find the corresponding submenu. If this is empty the next higher level will be choosen
+                // if not found at all, use top level menu
+                parentMenu = findUpwardsInMenus(key, subMenus);
                 if (!parentMenu) { parentMenu = &menu; }
             }
 
@@ -436,7 +443,7 @@ namespace BlackGui
             Q_ASSERT_X(subMenu, Q_FUNC_INFO, "Could not create sub menu");
 
             subMenu->setParent(parentMenu);
-            if (pd > 0 && subMenu)
+            if (pathDepth > 0 && subMenu)
             {
                 subMenus.insert(key, subMenu);
             }
@@ -450,11 +457,25 @@ namespace BlackGui
             return c > 0 ? c : 0;
         }
 
-        QString CMenuActions::parentPathKey(const QString &currentPath)
+        QString CMenuActions::parentPath(const QString &currentPath)
         {
             if (!currentPath.contains('/')) { return ""; }
             const int i = currentPath.lastIndexOf('/');
             return currentPath.left(i);
+        }
+
+        QMenu *CMenuActions::findUpwardsInMenus(const QString &key, const QMap<QString, QMenu *> &menus)
+        {
+            QString k = key;
+            while (!k.isEmpty() && !menus.isEmpty())
+            {
+                if (menus.contains(k))
+                {
+                    return menus[key];
+                }
+                k = parentPath(k);
+            }
+            return nullptr;
         }
     } // ns
 } // ns

@@ -67,7 +67,7 @@ namespace BlackGui
             switch (mode)
             {
             case CAircraftModelListModel::StashModel:
-                this->m_menus = MenuDefaultNoClear | MenuHighlightDbData;
+                this->m_menus = MenuDefaultNoClear;
                 break;
             case CAircraftModelListModel::Database:
                 this->m_menus = MenuDefaultDbViews;
@@ -76,11 +76,11 @@ namespace BlackGui
                 this->m_menus = MenuDefaultNoClear | MenuStashing;
                 break;
             case CAircraftModelListModel::OwnSimulatorModelMapping:
-                this->m_menus = MenuDefaultNoClear | MenuStashing | MenuHighlightDbData | MenuLoadAndSave;
+                this->m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave;
                 break;
             case CAircraftModelListModel::OwnSimulatorModel:
             default:
-                this->m_menus = MenuDefaultNoClear | MenuBackend | MenuHighlightDbData;
+                this->m_menus = MenuDefaultNoClear | MenuBackend;
                 break;
             }
         }

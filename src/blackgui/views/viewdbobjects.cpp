@@ -92,26 +92,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
         void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(Menus::CMenuActions &menuActions)
         {
-            if (this->m_menus.testFlag(CViewBaseNonTemplate::MenuHighlightDbData))
-            {
-                if (!this->m_menuFlagActions.contains(CViewBaseNonTemplate::MenuHighlightDbData))
-                {
-                    CMenuActions ma;
-                    QAction *added = ma.addAction(CIcons::database16(), "Highlight DB data", CMenuAction::pathViewDatabase(), { this, &CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleHighlightDbData });
-                    added->setCheckable(true);
-                    this->m_menuFlagActions.insert(CViewBaseNonTemplate::MenuHighlightDbData, ma);
-                }
-                QAction *a = menuActions.addActions(this->initMenuActions(CViewBaseNonTemplate::MenuHighlightDbData)).first();
-                a->setChecked(this->derivedModel()->highlightDbData());
-            }
             CViewBase<ModelClass, ContainerType, ObjectType>::customMenu(menuActions);
-        }
-
-        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_toggleHighlightDbData()
-        {
-            bool h = this->derivedModel()->highlightDbData();
-            this->derivedModel()->setHighlightDbData(!h);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>

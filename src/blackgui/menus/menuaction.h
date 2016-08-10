@@ -318,7 +318,8 @@ namespace BlackGui
 
             static int pathDepth(const QString &path);
             static QMenu *currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pd);
-            static QString parentPathKey(const QString &cuurentPath);
+            static QString parentPath(const QString &cuurentPath);
+            static QMenu *findUpwardsInMenus(const QString &key, const QMap<QString, QMenu *> &menus);
         };
     } // ns
 } // ns

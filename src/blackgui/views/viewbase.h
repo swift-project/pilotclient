@@ -119,9 +119,8 @@ namespace BlackGui
                 MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightDbData      = 1 << 10,  //!< highlight DB data
-                MenuHighlightStashed     = 1 << 11,  //!< highlight stashed models
-                MenuCanStashModels       = 1 << 12,  //!< stash models
+                MenuHighlightStashed     = 1 << 10,  //!< highlight stashed models
+                MenuCanStashModels       = 1 << 11,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)

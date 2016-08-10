@@ -630,7 +630,6 @@ namespace BlackGui
             this->m_displayAutomatically = a->isChecked();
         }
 
-
         void CViewBaseNonTemplate::ps_setSingleSelection()
         {
             if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
