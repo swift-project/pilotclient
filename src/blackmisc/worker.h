@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <functional>
 #include <type_traits>
+#include <atomic>
 
 namespace BlackMisc
 {
@@ -96,11 +97,14 @@ namespace BlackMisc
         CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
 
         //! Destructor
-        ~CRegularThread()
-        {
-            quit();
-            wait();
-        }
+        ~CRegularThread();
+
+    protected:
+        //! \copydoc QThread::run
+        virtual void run() override;
+
+    private:
+        std::atomic<void *> m_handle { nullptr };
     };
 
     /*!

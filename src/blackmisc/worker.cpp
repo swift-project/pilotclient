@@ -12,8 +12,46 @@
 
 #include <future>
 
+#ifdef Q_OS_WIN32
+#include <windows.h>
+#endif
+
 namespace BlackMisc
 {
+    void CRegularThread::run()
+    {
+#ifdef Q_OS_WIN32
+        m_handle = GetCurrentThread();
+        QThread::run();
+        m_handle = nullptr;
+#else
+        QThread::run();
+#endif
+    }
+
+    CRegularThread::~CRegularThread()
+    {
+#ifdef Q_OS_WIN32
+        auto handle = m_handle.load();
+        if (handle)
+        {
+            auto status = WaitForSingleObject(handle, 0);
+            if (isRunning())
+            {
+                switch (status)
+                {
+                default:
+                case WAIT_FAILED: qWarning() << "Thread" << objectName() << "unspecified error"; break;
+                case WAIT_OBJECT_0: qWarning() << "Thread" << objectName() << "unsafely terminated by program shutdown"; break;
+                case WAIT_TIMEOUT: break;
+                }
+            }
+        }
+#endif
+        quit();
+        wait();
+    }
+
     CWorker *CWorker::fromTaskImpl(QObject *owner, const QString &name, int typeId, std::function<CVariant()> task)
     {
         auto *thread = new CRegularThread(owner);
