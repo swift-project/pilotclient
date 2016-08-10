@@ -112,6 +112,7 @@ namespace BlackGui
             {
                 CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
             }
+            cleanModelList.resetOrder();
             this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
         }
 
@@ -128,6 +129,7 @@ namespace BlackGui
             if (cleanModelList.isEmpty()) { return; }
             CAircraftModelList updatedModels(this->ui->tvp_OwnModelSet->container());
             updatedModels.replaceOrAddModelsWithString(cleanModelList, Qt::CaseInsensitive);
+            updatedModels.resetOrder();
             this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(updatedModels);
         }
 
@@ -165,6 +167,7 @@ namespace BlackGui
             const int d = updateModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (d > 0)
             {
+                updateModels.resetOrder();
                 this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
                 return CStatusMessage(this, CStatusMessage::SeverityInfo, "Modified " + QString::number(d) + " entries in model set " + this->getModelSetSimulator().toQString(true), true);
             }
