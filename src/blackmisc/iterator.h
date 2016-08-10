@@ -148,7 +148,7 @@ namespace BlackMisc
          * By creating a CRange from such iterators, it is possible to perform a transformation on a container without copying elements.
          */
         template <class I, class F> class TransformIterator
-            : public std::iterator<std::input_iterator_tag,
+            : public std::iterator<std::forward_iterator_tag,
                                    std::decay_t<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>>
         {
         public:
@@ -213,7 +213,7 @@ namespace BlackMisc
          *
          * By creating a CRange from such iterators, it is possible to return the results of predicate methods without copying elements.
          */
-        template <class I, class F> class ConditionalIterator : public std::iterator<std::input_iterator_tag, typename std::iterator_traits<I>::value_type>
+        template <class I, class F> class ConditionalIterator : public std::iterator<std::forward_iterator_tag, typename std::iterator_traits<I>::value_type>
         {
         public:
             //! Constructor.
@@ -277,7 +277,7 @@ namespace BlackMisc
         /*!
          * Iterator wrapper which concatenates zero or more pairs of begin and end iterators.
          */
-        template <class I> class ConcatIterator : public std::iterator<std::input_iterator_tag, typename std::iterator_traits<I>::value_type>
+        template <class I> class ConcatIterator : public std::iterator<std::forward_iterator_tag, typename std::iterator_traits<I>::value_type>
         {
         public:
             //! Constructor.
