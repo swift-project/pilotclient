@@ -253,6 +253,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>le_Id</tabstop>
+  <tabstop>cb_Military</tabstop>
   <tabstop>le_Description</tabstop>
   <tabstop>le_Updated</tabstop>
  </tabstops>

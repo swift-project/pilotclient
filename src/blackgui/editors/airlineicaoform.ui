@@ -310,6 +310,7 @@
  <tabstops>
   <tabstop>le_Id</tabstop>
   <tabstop>cb_Va</tabstop>
+  <tabstop>cb_Military</tabstop>
   <tabstop>le_TelephonyDesignator</tabstop>
   <tabstop>le_Updated</tabstop>
  </tabstops>

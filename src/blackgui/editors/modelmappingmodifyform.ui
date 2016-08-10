@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>237</width>
-    <height>110</height>
+    <height>112</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,6 +141,14 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>cb_Name</tabstop>
+  <tabstop>le_Name</tabstop>
+  <tabstop>cb_Description</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>cb_Simulator</tabstop>
+  <tabstop>cb_Mode</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

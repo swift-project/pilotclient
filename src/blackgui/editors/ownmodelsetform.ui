@@ -192,22 +192,33 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Views::CDistributorView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/distributorview.h</header>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CSimulatorSelector</class>
    <extends>QFrame</extends>
    <header>blackgui/components/simulatorselector.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Views::CDistributorView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/distributorview.h</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>rb_Full</tabstop>
+  <tabstop>rb_Incremental</tabstop>
+  <tabstop>rb_DbDataOnly</tabstop>
+  <tabstop>rb_DbIcaoCodesOnly</tabstop>
+  <tabstop>rb_WithIcaoData</tabstop>
+  <tabstop>rb_SelectedDistributors</tabstop>
+  <tabstop>rb_DefaultDistributors</tabstop>
+  <tabstop>cb_Preferences</tabstop>
+  <tabstop>tvp_Distributors</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="bg_SourceSet"/>
-  <buttongroup name="bg_Mode"/>
   <buttongroup name="bg_Distributors"/>
+  <buttongroup name="bg_Mode"/>
+  <buttongroup name="bg_SourceSet"/>
  </buttongroups>
 </ui>

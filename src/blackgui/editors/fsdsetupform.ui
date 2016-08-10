@@ -128,6 +128,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cb_Enabled</tabstop>
+  <tabstop>le_TextCodec</tabstop>
+  <tabstop>cb_AircraftPartsSend</tabstop>
+  <tabstop>cb_AircraftPartsReceive</tabstop>
+  <tabstop>cb_FastPositionSend</tabstop>
+  <tabstop>cb_FastPositionReceive</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

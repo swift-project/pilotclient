@@ -433,6 +433,8 @@
  <tabstops>
   <tabstop>le_Id</tabstop>
   <tabstop>cb_Rank</tabstop>
+  <tabstop>le_Iata</tabstop>
+  <tabstop>le_Family</tabstop>
   <tabstop>le_Manufacturer</tabstop>
   <tabstop>le_ModelDescription</tabstop>
   <tabstop>cb_Wtc</tabstop>

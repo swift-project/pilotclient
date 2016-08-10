@@ -220,6 +220,16 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>le_Name</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>le_Address</tabstop>
+  <tabstop>le_Port</tabstop>
+  <tabstop>le_RealName</tabstop>
+  <tabstop>le_NetworkId</tabstop>
+  <tabstop>le_Password</tabstop>
+  <tabstop>tw_ServerForm</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
