@@ -106,6 +106,8 @@ namespace BlackGui
             connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::ps_onModelsSuccessfullyPublished);
 
             connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onModelSetChanged);
+            connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::ps_tabIndexChanged);
             connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher , &CModelMatcherComponent::tabIndexChanged);
 
@@ -230,6 +232,8 @@ namespace BlackGui
             {
             case TabOwnModels:
                 return ui->comp_OwnAircraftModels->view()->hasSelectedModelsToStash();
+            case TabOwnModelSet:
+                return ui->comp_OwnModelSet->view()->hasSelectedModelsToStash();
             case TabVPilot:
                 return ui->tvp_AircraftModelsForVPilot->hasSelectedModelsToStash();
             default:
@@ -305,6 +309,8 @@ namespace BlackGui
             {
             case TabOwnModels:
                 return ui->comp_OwnAircraftModels->view()->selectedObjects();
+            case TabOwnModelSet:
+                return ui->comp_OwnModelSet->view()->selectedObjects();
             case TabVPilot:
                 return ui->tvp_AircraftModelsForVPilot->selectedObjects();
             default:
@@ -379,9 +385,16 @@ namespace BlackGui
         {
             const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
             if (modelStrings.isEmpty()) { return; }
-            if (currentTabIndex() == TabVPilot || currentTabIndex() == TabOwnModels)
+            switch (currentTabIndex())
             {
+            case TabVPilot:
+            case TabOwnModels:
+            case TabOwnModelSet:
+            case TabStash:
                 this->currentModelView()->removeModelsWithModelString(modelStrings);
+                break;
+            default:
+                break;
             }
         }
 
@@ -861,14 +874,7 @@ namespace BlackGui
                 this->m_stashFiltering = menuActions.addAction(this->m_stashFiltering, CIcons::filter16(), "Auto filtering in DB views (on/off)", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_toggleAutoFiltering });
                 this->m_stashFiltering->setCheckable(true);
                 this->m_stashFiltering->setChecked(mapComp->m_autoFilterInDbViews);
-
-                const int dbModels = sGui->getWebDataServices()->getModelsCount();
-                if (dbModels > 0)
-                {
-                    // we have keys and data by which we could delete them from view
-                    const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from " + mapComp->currentTabText());
-                    menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathStash(), nullptr, { mapComp, &CDbMappingComponent::ps_removeDbModelsFromView});
-                }
+                this->addRemoveDbModels(menuActions);
 
                 this->m_autoStashing = menuActions.addAction(this->m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoStashingDialog });
                 if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
@@ -876,7 +882,25 @@ namespace BlackGui
                     menuActions.addAction(CIcons::appDbStash16(), "Last auto stash run", CMenuAction::pathStash(), nullptr, { mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults });
                 }
             }
+            else if (mapComp->currentTabIndex() == CDbMappingComponent::TabStash)
+            {
+                this->addRemoveDbModels(menuActions);
+            }
             this->nestedCustomMenu(menuActions);
+        }
+
+        void CDbMappingComponent::CModelStashToolsMenu::addRemoveDbModels(CMenuActions &menuActions)
+        {
+            CDbMappingComponent *mapComp = mappingComponent();
+            Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
+
+            const int dbModels = sGui->getWebDataServices()->getModelsCount();
+            if (dbModels > 0)
+            {
+                // we have keys and data by which we could delete them from view
+                const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from " + mapComp->currentTabText());
+                menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathStash(), nullptr, { mapComp, &CDbMappingComponent::ps_removeDbModelsFromView});
+            }
         }
 
         CDbMappingComponent *CDbMappingComponent::CModelStashToolsMenu::mappingComponent() const

@@ -348,6 +348,9 @@ namespace BlackGui
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;
 
+                //! Removel models existing in DB
+                void addRemoveDbModels(Menus::CMenuActions &menuActions);
+
                 QAction *m_autoStashing = nullptr;
                 QAction *m_stashFiltering = nullptr;
             };
