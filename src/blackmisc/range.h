@@ -310,7 +310,7 @@ namespace BlackMisc
     auto CRangeBase<Derived, CIt>::findBy(Predicate p) const
         -> CRange<Iterators::ConditionalIterator<CIt, Predicate>>
     {
-        return makeRange(makeConditionalIterator(derived().cbegin(), derived().cend(), p), derived().cend());
+        return makeRange(Iterators::makeConditionalIterator(derived().cbegin(), derived().cend(), p), derived().cend());
     }
 
     template <class Derived, class CIt>
