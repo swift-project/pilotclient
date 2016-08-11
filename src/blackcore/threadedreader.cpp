@@ -34,7 +34,8 @@ namespace BlackCore
         CContinuousWorker(owner, name),
         m_updateTimer(new QTimer(this))
     {
-        m_toggleConnection = connect(this->m_updateTimer, &QTimer::timeout, this, &CThreadedReader::ps_toggleInterval);
+        connect(m_updateTimer, &QTimer::timeout, this, &CThreadedReader::doWork);
+        m_updateTimer->setSingleShot(true);
     }
 
     CThreadedReader::~CThreadedReader()
@@ -67,12 +68,6 @@ namespace BlackCore
         return delta <= timeLastMs;
     }
 
-    void CThreadedReader::requestReload()
-    {
-        // default implementation, subclasses shall override as required
-        this->initialize();
-    }
-
     bool CThreadedReader::isNetworkAvailable() const
     {
         static const bool nw = CNetworkUtils::hasConnectedInterface();
@@ -88,29 +83,15 @@ namespace BlackCore
         }
     }
 
-    void CThreadedReader::setInterval(int updatePeriodMs)
+    void CThreadedReader::startReader()
     {
-        Q_ASSERT(this->m_updateTimer);
-        QTimer::singleShot(0, this, [this, updatePeriodMs]
-        {
-            QWriteLocker wl(&this->m_lock);
-            if (updatePeriodMs < 1)
-            {
-                this->m_updateTimer->stop();
-            }
-            else {
-                this->m_updateTimer->start(updatePeriodMs);
-            }
-        });
+        Q_ASSERT(m_initialTime > 0);
+        QTimer::singleShot(m_initialTime, this, [=] { this->doWork(); });
     }
 
-    void CThreadedReader::restartTimer(bool onlyWhenActive)
+    void CThreadedReader::pauseReader()
     {
-        const int intervalMs(this->interval());
-        if (!onlyWhenActive || this->isTimerActive())
-        {
-            this->setInterval(intervalMs);
-        }
+        QTimer::singleShot(0, m_updateTimer, &QTimer::stop);
     }
 
     bool CThreadedReader::didContentChange(const QString &content, int startPosition)
@@ -129,24 +110,6 @@ namespace BlackCore
         return true;
     }
 
-    void CThreadedReader::ps_toggleInterval()
-    {
-        disconnect(this->m_toggleConnection);
-        this->setPeriodicTime();
-    }
-
-    int CThreadedReader::interval() const
-    {
-        QReadLocker rl(&this->m_lock);
-        return this->m_updateTimer->interval();
-    }
-
-    bool CThreadedReader::isTimerActive() const
-    {
-        QReadLocker rl(&this->m_lock);
-        return this->m_updateTimer->isActive();
-    }
-
     bool CThreadedReader::isMarkedAsFailed() const
     {
         return this->m_markedAsFailed;
@@ -157,33 +120,30 @@ namespace BlackCore
         this->m_markedAsFailed = failed;
     }
 
-    void CThreadedReader::setIntervalFromSettingsAndStart()
-    {
-        this->setInitialTime();
-    }
-
     void CThreadedReader::threadAssertCheck() const
     {
         Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), Q_FUNC_INFO, "Needs to run in own thread");
         Q_ASSERT_X(QObject::thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong object thread");
     }
 
-    CReaderSettings CThreadedReader::getSettings() const
+    void CThreadedReader::setInitialAndPeriodicTime(int initialTime, int periodicTime)
     {
-        return CReaderSettings::neverUpdateSettings();
+        m_initialTime = initialTime;
+        m_periodicTime = periodicTime;
+        if (m_updateTimer->isActive())
+        {
+            int oldPeriodicTime = m_updateTimer->interval();
+            int delta = m_periodicTime - oldPeriodicTime + m_updateTimer->remainingTime();
+            m_updateTimer->start(qMax(delta, 0));
+        }
     }
 
-    void CThreadedReader::setInitialTime()
+    void CThreadedReader::doWork()
     {
-        const CReaderSettings s = this->getSettings();
-        const int ms = s.getInitialTime().toMs();
-        this->setInterval(s.isNeverUpdate() ? -1 : ms);
+        if (isFinished()) { return; }
+        doWorkImpl();
+        Q_ASSERT(m_periodicTime > 0);
+        m_updateTimer->start(m_periodicTime);
     }
 
-    void CThreadedReader::setPeriodicTime()
-    {
-        const CReaderSettings s = this->getSettings();
-        const int ms = s.getPeriodicTime().toMs();
-        this->setInterval(s.isNeverUpdate() ? -1 : ms);
-    }
 } // namespace

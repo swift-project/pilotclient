@@ -605,7 +605,7 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed bookings");
             this->m_entitiesPeriodicallyRead |= CEntityFlags::BookingEntity;
             this->m_vatsimBookingReader->start(QThread::LowPriority);
-            this->m_vatsimBookingReader->setIntervalFromSettingsAndStart();
+            this->m_vatsimBookingReader->startReader();
         }
 
         // 4. VATSIM data file
@@ -618,7 +618,7 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
             this->m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
             this->m_vatsimDataFileReader->start(QThread::LowPriority);
-            this->m_vatsimDataFileReader->setIntervalFromSettingsAndStart();
+            this->m_vatsimDataFileReader->startReader();
         }
 
         // 5. VATSIM metar data
@@ -631,7 +631,7 @@ namespace BlackCore
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
             this->m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
             this->m_vatsimMetarReader->start(QThread::LowPriority);
-            this->m_vatsimMetarReader->setIntervalFromSettingsAndStart();
+            this->m_vatsimMetarReader->startReader();
         }
 
         // 6. ICAO data reader

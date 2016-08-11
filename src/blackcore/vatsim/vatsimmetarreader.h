@@ -63,7 +63,7 @@ namespace BlackCore
             //! \name BlackCore::CThreadedReader overrides
             //! @{
             virtual void cleanup() override;
-            virtual BlackCore::Vatsim::CReaderSettings getSettings() const override;
+            virtual void doWorkImpl() override;
             //! @}
 
         private:
@@ -74,10 +74,12 @@ namespace BlackCore
             //! Do reading
             void readMetars();
 
+            void reloadSettings();
+
         private:
             BlackMisc::Weather::CMetarDecoder m_metarDecoder;
             BlackMisc::Weather::CMetarList    m_metars;
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimMetars> m_settings { this };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
         };
     } // ns
 } // ns

@@ -128,7 +128,7 @@ namespace BlackCore
             //! \name BlackCore::CThreadedReader overrides
             //! @{
             virtual void cleanup() override;
-            virtual BlackCore::Vatsim::CReaderSettings getSettings() const override;
+            virtual void doWorkImpl() override;
             //! @}
 
         private slots:
@@ -139,10 +139,12 @@ namespace BlackCore
             void ps_read();
 
         private:
+            void reloadSettings();
+
             BlackMisc::Aviation::CAtcStationList           m_atcStations;
             BlackMisc::Simulation::CSimulatedAircraftList  m_aircraft;
             BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_lastGoodSetup { this };
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile>     m_settings { this };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimDataFile> m_settings { this, &CVatsimDataFileReader::reloadSettings };
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
 
             //! Split line and assign values to their corresponding attribute names

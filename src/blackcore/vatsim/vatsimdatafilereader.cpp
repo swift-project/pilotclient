@@ -60,7 +60,7 @@ namespace BlackCore
         CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) :
             CThreadedReader(owner, "CVatsimDataFileReader")
         {
-            this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimDataFileReader::ps_read);
+            reloadSettings();
         }
 
         CSimulatedAircraftList CVatsimDataFileReader::getAircraft() const
@@ -178,22 +178,19 @@ namespace BlackCore
             // void
         }
 
-        CReaderSettings CVatsimDataFileReader::getSettings() const
+        void CVatsimDataFileReader::doWorkImpl()
         {
-            return this->m_settings.get();
+            ps_read();
         }
 
         void CVatsimDataFileReader::ps_read()
         {
             if (!this->isNetworkAvailable())
             {
-                CLogMessage(this).warning("No network, cancel data file reader");
-                this->m_updateTimer->stop();
+                CLogMessage(this).warning("No network, cannot read VATSIM data file");
                 return;
             }
-
             this->threadAssertCheck();
-            this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 
             // round robin for load balancing
             // remark: Don't use QThread to run network operations in the background
@@ -228,7 +225,6 @@ namespace BlackCore
                 nwReply->close(); // close asap
 
                 if (dataFileData.isEmpty()) { return; }
-                this->restartTimer(); // do not consider time for reading
                 if (!this->didContentChange(dataFileData)) // Quick check by hash
                 {
                     CLogMessage(this).info("VATSIM file has same content, skipped");
@@ -438,6 +434,12 @@ namespace BlackCore
                 nwReply->abort();
                 emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0);
             }
+        }
+
+        void CVatsimDataFileReader::reloadSettings()
+        {
+            CReaderSettings s = m_settings.get();
+            setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
         }
 
         const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes)

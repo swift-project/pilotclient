@@ -45,7 +45,7 @@ namespace BlackCore
         CVatsimBookingReader::CVatsimBookingReader(QObject *owner) :
             CThreadedReader(owner, "CVatsimBookingReader")
         {
-            this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimBookingReader::ps_read);
+            reloadSettings();
         }
 
         void CVatsimBookingReader::readInBackgroundThread()
@@ -60,22 +60,20 @@ namespace BlackCore
             // void
         }
 
-        CReaderSettings CVatsimBookingReader::getSettings() const
+        void CVatsimBookingReader::doWorkImpl()
         {
-            return this->m_settings.get();
+            ps_read();
         }
 
         void CVatsimBookingReader::ps_read()
         {
             if (!this->isNetworkAvailable())
             {
-                CLogMessage(this).warning("No network, cancel bookings reader");
-                this->m_updateTimer->stop();
+                CLogMessage(this).warning("No network, cannot read VATSIM bookings");
                 return;
             }
 
             this->threadAssertCheck();
-            this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "No application");
             const QUrl url(sApp->getGlobalSetup().getVatsimBookingsUrl());
@@ -122,7 +120,6 @@ namespace BlackCore
                         if (this->getUpdateTimestamp() == updateTimestamp) return; // nothing to do
 
                         // save parsing and all follow up actions if nothing changed
-                        this->restartTimer(); // do not consider time for reading
                         bool changed = this->didContentChange(xmlData, xmlData.indexOf("</timestamp>"));
                         if (!changed)
                         {
@@ -203,5 +200,12 @@ namespace BlackCore
                 emit this->dataRead(CEntityFlags::BookingEntity, CEntityFlags::ReadFailed, 0);
             }
         } // method
+
+        void CVatsimBookingReader::reloadSettings()
+        {
+            CReaderSettings s = m_settings.get();
+            setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
+        }
+
     } // ns
 } // ns

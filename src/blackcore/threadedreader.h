@@ -52,20 +52,8 @@ namespace BlackCore
         //! \threadsafe
         bool updatedWithinLastMs(qint64 timeLastMs);
 
-        //! Request new reading
-        //! \note override as required, default is to call initialize()
-        virtual void requestReload();
-
         //! Network available
         bool isNetworkAvailable() const;
-
-        //! Get the timer interval (ms)
-        //! \threadsafe
-        int interval() const;
-
-        //! Is timer running
-        //! \threadsafe
-        bool isTimerActive() const;
 
         //! Is marked as read failed
         //! \threadsafe
@@ -75,8 +63,13 @@ namespace BlackCore
         //! \threadsafe
         void setMarkedAsFailed(bool failed);
 
-        //! Set inverval from settings and start
-        void setIntervalFromSettingsAndStart();
+        //! Starts the reader
+        //! \threadsafe
+        void startReader();
+
+        //! Pauses the reader
+        //! \threadsafe
+        void pauseReader();
 
     public slots:
         //! Graceful shutdown
@@ -84,7 +77,6 @@ namespace BlackCore
         void gracefulShutdown();
 
     protected:
-        QTimer *m_updateTimer = nullptr;  //!< update timer
         mutable QReadWriteLock m_lock {QReadWriteLock::Recursive}; //!< lock which can be used from the derived classes
 
         //! Constructor
@@ -96,37 +88,25 @@ namespace BlackCore
         //! Make sure everthing runs correctly in own thread
         void threadAssertCheck() const;
 
-        //! Get settings, default implementation returns BlackCore::Settings::CReaderSettings::neverUpdateSettings
-        virtual BlackCore::Vatsim::CReaderSettings getSettings() const;
-
-        //! Set initial time
-        void setInitialTime();
-
-        //! Set periodic time
-        void setPeriodicTime();
-
-        //! Set the update time
-        //! \param updatePeriodMs <=0 stops the timer
-        //! \threadsafe
-        void setInterval(int updatePeriodMs);
-
-        //! Restart timer
-        //! \threadsafe
-        void restartTimer(bool onlyWhenActive = false);
-
         //! Stores new content hash and returns if content changed (based on hash value
         //! \threadsafe
         bool didContentChange(const QString &content, int startPosition = -1);
 
+        //! Set initial and periodic times
+        void setInitialAndPeriodicTime(int initialTime, int periodicTime);
+
+        //! This method does the actual work in the derived class
+        virtual void doWorkImpl() {}
+
     private:
+        void doWork();
+
+        int                     m_initialTime = -1;         //!< Initial start delay
+        int                     m_periodicTime = -1;        //!< Periodic time after which the task is repeated
         QDateTime               m_updateTimestamp;          //!< when file/resource was read
         uint                    m_contentHash = 0;          //!< has of the content given
         std::atomic<bool>       m_markedAsFailed { false }; //!< marker if reading failed
-        QMetaObject::Connection m_toggleConnection;         //!< connection to switch interval from initial to periodic
-
-    private slots:
-        //! switch from initial to periodic
-        void ps_toggleInterval();
+        QTimer                  *m_updateTimer = nullptr;
     };
 } // namespace
 

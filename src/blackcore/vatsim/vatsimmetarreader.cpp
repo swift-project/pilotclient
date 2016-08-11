@@ -41,7 +41,7 @@ namespace BlackCore
         CVatsimMetarReader::CVatsimMetarReader(QObject *owner) :
             CThreadedReader(owner, "CVatsimMetarReader")
         {
-            this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimMetarReader::readMetars);
+            reloadSettings();
         }
 
         void CVatsimMetarReader::readInBackgroundThread()
@@ -72,9 +72,9 @@ namespace BlackCore
             // void
         }
 
-        CReaderSettings CVatsimMetarReader::getSettings() const
+        void CVatsimMetarReader::doWorkImpl()
         {
-            return m_settings.get();
+            readMetars();
         }
 
         void CVatsimMetarReader::readMetars()
@@ -82,12 +82,10 @@ namespace BlackCore
             if (this->isAbandoned()) { return; }
             if (!this->isNetworkAvailable())
             {
-                CLogMessage(this).warning("No network, cancel METAR reader");
-                this->m_updateTimer->stop();
+                CLogMessage(this).warning("No network, cannot read METARs");
                 return;
             }
             this->threadAssertCheck();
-            this->restartTimer(true); // when timer active, restart so we cause no undesired reads
 
             CFailoverUrlList urls(sApp->getVatsimMetarUrls());
             const CUrl url(urls.obtainNextWorkingUrl(true));
@@ -117,7 +115,6 @@ namespace BlackCore
                 QString metarData = nwReply->readAll();
                 nwReply->close(); // close asap
 
-                this->restartTimer(); // do not consider time for reading
                 if (!this->didContentChange(metarData)) // Quick check by hash
                 {
                     CLogMessage(this).info("METAR file has same content, skipped");
@@ -154,5 +151,12 @@ namespace BlackCore
                 emit dataRead(CEntityFlags::MetarEntity, CEntityFlags::ReadFailed, 0);
             }
         } // method
+
+        void CVatsimMetarReader::reloadSettings()
+        {
+            CReaderSettings s = m_settings.get();
+            setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
+        }
+
     } // ns
 } // ns
