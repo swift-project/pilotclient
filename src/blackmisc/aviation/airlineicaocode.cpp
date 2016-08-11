@@ -137,7 +137,10 @@ namespace BlackMisc
             if (candidate.isEmpty() || !this->hasName()) { return false; }
             // try unaltered name first (should be faster)
             if (this->getName().contains(candidate, Qt::CaseInsensitive)) { return true; }
-            return this->getSimplifiedName().contains(candidate, Qt::CaseInsensitive);
+
+            auto simplifiedName = makeRange(getName().begin(), getName().end()).findBy([](QChar c) { return c.isLetter(); });
+            auto it = std::search(simplifiedName.begin(), simplifiedName.end(), candidate.begin(), candidate.end(), [](QChar a, QChar b) { return a.toUpper() == b.toUpper(); });
+            return it != simplifiedName.end();
         }
 
         bool CAirlineIcaoCode::hasCompleteData() const
@@ -286,11 +289,9 @@ namespace BlackMisc
         bool CAirlineIcaoCode::isValidAirlineDesignator(const QString &airline)
         {
             if (airline.length() < 2 || airline.length() > 5) return false;
-
-            static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z0-9]+$")); }
-            const QRegularExpression &regexp = tsRegex.localData();
-            return (regexp.match(airline).hasMatch());
+            auto chars = makeRange(airline.begin(), airline.end());
+            if (chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); })) { return false; }
+            return true;
         }
 
         QString CAirlineIcaoCode::normalizeDesignator(const QString candidate)
