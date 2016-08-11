@@ -135,9 +135,6 @@ namespace BlackMisc
         bool CAirlineIcaoCode::isContainedInSimplifiedName(const QString &candidate) const
         {
             if (candidate.isEmpty() || !this->hasName()) { return false; }
-            // try unaltered name first (should be faster)
-            if (this->getName().contains(candidate, Qt::CaseInsensitive)) { return true; }
-
             auto simplifiedName = makeRange(getName().begin(), getName().end()).findBy([](QChar c) { return c.isLetter(); });
             auto it = std::search(simplifiedName.begin(), simplifiedName.end(), candidate.begin(), candidate.end(), [](QChar a, QChar b) { return a.toUpper() == b.toUpper(); });
             return it != simplifiedName.end();
