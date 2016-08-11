@@ -81,6 +81,7 @@ namespace BlackGui
             ui->le_Id->setText(model.getDbKeyAsString());
             ui->le_Description->setText(model.getDescription());
             ui->le_Name->setText(model.getName());
+            ui->le_FileName->setText(model.getFileName());
             ui->selector_ModelMode->setValue(model.getModelMode());
             ui->selector_Simulator->setValue(model.getSimulator());
             m_originalModel = model;
