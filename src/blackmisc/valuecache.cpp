@@ -567,7 +567,20 @@ namespace BlackMisc
         if (!status.isEmpty()) // intentionally kept !empty here, debug message supposed to write default value
         {
             element.m_value.uniqueWrite() = defaultValue;
-            CLogMessage::preformatted(status);
+
+            if (status.getSeverity() == CStatusMessage::SeverityDebug)
+            {
+                QMutexLocker lock(&m_cache->m_warnedKeysMutex);
+                if (! m_cache->m_warnedKeys.contains(key))
+                {
+                    m_cache->m_warnedKeys.insert(key);
+                    CLogMessage::preformatted(status);
+                }
+            }
+            else
+            {
+                CLogMessage::preformatted(status);
+            }
         }
 
         return element;

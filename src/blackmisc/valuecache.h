@@ -314,6 +314,10 @@ namespace BlackMisc
 
         virtual void connectPage(Private::CValuePage *page);
 
+        // only used by CValuePage::createElement
+        QSet<QString> m_warnedKeys;
+        QMutex m_warnedKeysMutex;
+
     signals:
         //! \private
         void valuesChanged(const BlackMisc::CValueCachePacket &values, QObject *changedBy);
