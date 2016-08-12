@@ -192,6 +192,9 @@ namespace BlackMisc
             //! From given CDistributorList update the model`s distributor order
             int updateDistributorOrder(const CDistributorList &distributors);
 
+            //! File name normalized for DB
+            void normalizeFileNamesForDb();
+
             //! Completer strings
             QStringList toCompleterStrings(bool sorted = true) const;
 

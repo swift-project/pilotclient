@@ -30,10 +30,12 @@ namespace BlackCore
             if (modified) { *modified = false; }
             if (!model.hasModelString()) { return model; }
             if (!force && model.hasValidDbKey()) { return model; }
+
             CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
             if (dbModel.hasValidDbKey())
             {
                 if (modified) { *modified = true; }
+                dbModel.updateByLocalFileNames(model);
                 return dbModel;
             }
 
@@ -66,6 +68,7 @@ namespace BlackCore
                 if (modified) { *modified = true; }
                 consolidatedModel.setDistributor(dbDistributor);
             }
+            consolidatedModel.updateByLocalFileNames(model);
             return consolidatedModel;
         }
 

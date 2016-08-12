@@ -313,6 +313,12 @@ namespace BlackMisc
             //! Info, which members (Livery, Aircraft ICAO, ...) are already based on DB data
             QString getMembersDbStatus() const;
 
+            //! File path for DB (absolute paths make no sense in DB)
+            void normalizeFileNameForDb();
+
+            //! If we have local file names, we use those
+            void updateByLocalFileNames(const CAircraftModel &model);
+
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
@@ -328,10 +334,13 @@ namespace BlackMisc
             //! Model type
             static QString modelTypeToString(ModelType type);
 
+            //! File path used for DB
+            static QString normalizeFileNameForDb(const QString &filePath);
+
             //! Model mode
             static ModelMode modelModeFromString(const QString &mode);
 
-            //! Model mode
+            //! Model mode-
             static const QString &modelModeToString(ModelMode mode);
 
             //! From swift DB JSON

@@ -13,6 +13,7 @@
 #include "blackmisc/icon.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/simulation/aircraftmodel.h"
@@ -434,12 +435,10 @@ namespace BlackMisc
                 return;
             }
 
+            this->updateByLocalFileNames(otherModel);
             if (this->m_callsign.isEmpty())       { this->setCallsign(otherModel.getCallsign()); }
             if (this->m_modelString.isEmpty())    { this->setModelString(otherModel.getModelString()); }
             if (this->m_description.isEmpty())    { this->setDescription(otherModel.getDescription()); }
-            if (this->m_fileName.isEmpty())       { this->setFileName(otherModel.getFileName()); }
-            if (this->m_iconPath.isEmpty())       { this->setIconPath(otherModel.getIconPath()); }
-            if (this->m_callsign.isEmpty())       { this->setCallsign(otherModel.getCallsign()); }
             if (this->m_modelType == TypeUnknown) { this->m_modelType = otherModel.getModelType(); }
             if (this->m_modelMode == Undefined)   { this->m_modelType = otherModel.getModelType(); }
             if (this->m_simulator.isUnspecified())
@@ -476,9 +475,42 @@ namespace BlackMisc
             QString s(hasValidDbKey() ? "M" : "m");
             s = s.append(getDistributor().hasValidDbKey() ? 'D' : 'd');
             s = s.append(getAircraftIcaoCode().hasValidDbKey() ? 'A' : 'a');
-            s = s.append(getLivery().hasValidDbKey() ? 'L' : 'l');
-            s = s.append(getLivery().getAirlineIcaoCode().hasValidDbKey() ? 'A' : 'a');
+            if (getLivery().isLoadedFromDb() && getLivery().isColorLivery())
+            {
+                s = s.append("C-");
+            }
+            else
+            {
+                s = s.append(getLivery().isLoadedFromDb() ? 'L' : 'l');
+                s = s.append(getLivery().getAirlineIcaoCode().hasValidDbKey() ? 'A' : 'a');
+            }
             return s;
+        }
+
+        void CAircraftModel::normalizeFileNameForDb()
+        {
+            this->m_fileName = CAircraftModel::normalizeFileNameForDb(this->m_fileName);
+        }
+
+        void CAircraftModel::updateByLocalFileNames(const CAircraftModel &model)
+        {
+            if (this->getModelType() == CAircraftModel::TypeOwnSimulatorModel)
+            {
+                // this is local model, ignore
+                return;
+            }
+
+            if (model.getModelType() == CAircraftModel::TypeOwnSimulatorModel)
+            {
+                // other local, priority
+                this->setFileName(model.getFileName());
+                this->setIconPath(model.getIconPath());
+                return;
+            }
+
+            // both not local, override empty values
+            if (this->m_fileName.isEmpty()) { this->setFileName(model.getFileName()); }
+            if (this->m_iconPath.isEmpty()) { this->setIconPath(model.getIconPath()); }
         }
 
         bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
@@ -517,6 +549,13 @@ namespace BlackMisc
             case TypeUnknown:
             default: return "unknown";
             }
+        }
+
+        QString CAircraftModel::normalizeFileNameForDb(const QString &filePath)
+        {
+            QString n = CFileUtils::normalizeFilePathToQtStandard(filePath).toUpper();
+            if (n.count('/') < 2) { return n; }
+            return n.section('/', -2, -1);
         }
 
         CAircraftModel::ModelMode CAircraftModel::modelModeFromString(const QString &mode)

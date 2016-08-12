@@ -503,6 +503,14 @@ namespace BlackMisc
             return found;
         }
 
+        void CAircraftModelList::normalizeFileNamesForDb()
+        {
+            for (CAircraftModel &model : *this)
+            {
+                model.normalizeFileNameForDb();
+            }
+        }
+
         QStringList CAircraftModelList::toCompleterStrings(bool sorted) const
         {
             QStringList c;
@@ -557,7 +565,9 @@ namespace BlackMisc
             QJsonArray array;
             for (const CAircraftModel &model : *this)
             {
-                QJsonValue v(model.toDatabaseJson());
+                CAircraftModel copy(model);
+                copy.normalizeFileNameForDb();
+                QJsonValue v(copy.toDatabaseJson());
                 array.append(v);
             }
             return array;

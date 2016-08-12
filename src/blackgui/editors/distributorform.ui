@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>240</width>
-    <height>178</height>
+    <width>299</width>
+    <height>175</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,12 +18,6 @@
   </property>
   <property name="windowTitle">
    <string>Distributor editor</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QHBoxLayout" name="hl_DistributorEditor">
    <property name="spacing">
