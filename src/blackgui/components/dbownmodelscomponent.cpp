@@ -145,7 +145,8 @@ namespace BlackGui
         void CDbOwnModelsComponent::updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             this->modelLoader()->replaceOrAddCachedModels(models, simulator);
-            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
+            const CAircraftModelList allModels(this->m_modelLoader->getAircraftModels());
+            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(allModels);
         }
 
         bool CDbOwnModelsComponent::initModelLoader(const CSimulatorInfo &simulator)

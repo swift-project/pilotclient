@@ -49,16 +49,14 @@ namespace BlackMisc
 
         CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator();
-            if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value
             return this->m_caches.setCachedModels(models, sim);
         }
 
         CStatusMessage IAircraftModelLoader::replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
-            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator();
-            if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
+            const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default values
             CAircraftModelList allModels(this->m_caches.getSyncronizedCachedModels(sim));
             int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
@@ -159,9 +157,9 @@ namespace BlackMisc
             return this->getSimulator().toQString();
         }
 
-        bool IAircraftModelLoader::supportsSimulator(const CSimulatorInfo &info)
+        bool IAircraftModelLoader::supportsSimulator(const CSimulatorInfo &simulator)
         {
-            return getSimulator().matchesAny(info);
+            return getSimulator().matchesAny(simulator);
         }
 
         void IAircraftModelLoader::cancelLoading()
