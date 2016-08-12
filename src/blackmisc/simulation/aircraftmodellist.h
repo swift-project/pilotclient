@@ -202,7 +202,7 @@ namespace BlackMisc
             CStatusMessageList validateForPublishing() const;
 
             //! Validate for publishing
-            CStatusMessageList validateForPublishing(CAircraftModelList &validateModels) const;
+            CStatusMessageList validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
             //! To database JSON
             QJsonArray toDatabaseJson() const;

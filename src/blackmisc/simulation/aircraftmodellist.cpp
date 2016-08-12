@@ -525,17 +525,18 @@ namespace BlackMisc
         CStatusMessageList CAircraftModelList::validateForPublishing() const
         {
             CAircraftModelList invalidModels;
-            return validateForPublishing(invalidModels);
+            CAircraftModelList validModels;
+            return validateForPublishing(validModels, invalidModels);
         }
 
-        CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &validateModels) const
+        CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
         {
             if (this->isEmpty()) { return CStatusMessageList(); }
             CStatusMessageList msgs;
             for (const CAircraftModel &model : *this)
             {
                 const CStatusMessageList msgsModel(model.validate(false));
-                CStatusMessage msgModel(msgsModel.toSingleMessage());
+                const CStatusMessage msgModel(msgsModel.toSingleMessage());
 
                 QStringList subMsgs;
                 if (!model.getDistributor().hasValidDbKey()) { subMsgs << "No distributor from DB"; }
@@ -546,16 +547,20 @@ namespace BlackMisc
                     // for color codes we do not need to check
                     if (!model.getLivery().getAirlineIcaoCode().hasValidDbKey()) { subMsgs << "No airline ICAO from DB"; }
                 }
-                CStatusMessage msgDb(CStatusMessage::SeverityError, subMsgs.join(", "));
 
+                const CStatusMessage msgDb(CStatusMessage::SeverityError, subMsgs.join(", "));
                 CStatusMessage singleMsg(CStatusMessageList({msgModel, msgDb}).toSingleMessage());
-                if (!singleMsg.isWarningOrAbove()) { continue; }
+                if (!singleMsg.isWarningOrAbove())
+                {
+                    validModels.push_back(model);
+                    continue;
+                }
                 if (model.hasModelString())
                 {
                     singleMsg.prependMessage(model.getModelString() + ": ");
                 }
                 msgs.push_back(singleMsg);
-                validateModels.push_back(model);
+                invalidModels.push_back(model);
             }
             return msgs;
         }

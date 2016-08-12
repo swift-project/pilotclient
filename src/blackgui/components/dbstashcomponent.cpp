@@ -231,7 +231,9 @@ namespace BlackGui
         void CDbStashComponent::ps_onValidatePressed()
         {
             if (this->ui->tvp_StashAircraftModels->isEmpty()) {return; }
-            this->validateAndDisplay(true);
+            CAircraftModelList validModels;
+            CAircraftModelList invalidModels;
+            this->validateAndDisplay(validModels, invalidModels, true);
         }
 
         void CDbStashComponent::ps_onPublishPressed()
@@ -239,21 +241,21 @@ namespace BlackGui
             if (this->ui->tvp_StashAircraftModels->isEmpty()) {return; }
 
             // get models right here, because later steps might affect selection
-            CAircraftModelList models(getSelectedOrAllModels());
+            const CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return; }
 
             // validate
-            if (!this->validateAndDisplay()) { return; }
+            CAircraftModelList validModels;
+            CAircraftModelList invalidModels;
+            if (!this->validateAndDisplay(validModels, invalidModels)) { return; }
             CStatusMessageList msgs;
-            if (models.size() > MaxModelPublished)
+            if (validModels.size() > MaxModelPublished)
             {
-                CAircraftModelList::iterator i = models.begin();
-                std::advance(i, MaxModelPublished);
-                models.erase(i, models.end());
+                validModels.truncate(MaxModelPublished);
                 msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, QString("More than %1 values, values skipped").arg(MaxModelPublished)));
             }
 
-            msgs.push_back(sApp->getWebDataServices()->asyncPublishModels(models));
+            msgs.push_back(sApp->getWebDataServices()->asyncPublishModels(validModels));
             if (msgs.hasWarningOrErrorMessages())
             {
                 this->showMessages(msgs);
@@ -293,13 +295,13 @@ namespace BlackGui
             Q_UNUSED(skippedModels);
         }
 
-        CStatusMessageList CDbStashComponent::validate(CAircraftModelList &invalidModels) const
+        CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
         {
             if (this->ui->tvp_StashAircraftModels->isEmpty()) {return CStatusMessageList(); }
-            CAircraftModelList models(getSelectedOrAllModels());
+            const CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return CStatusMessageList(); }
 
-            const CStatusMessageList msgs(models.validateForPublishing(invalidModels));
+            const CStatusMessageList msgs(models.validateForPublishing(validModels, invalidModels));
 
             // OK?
             if (msgs.isEmpty())
@@ -315,27 +317,27 @@ namespace BlackGui
             }
         }
 
-        bool CDbStashComponent::validateAndDisplay(bool displayInfo)
+        bool CDbStashComponent::validateAndDisplay(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool displayInfo)
         {
-            CAircraftModelList invalidModels;
-            const CStatusMessageList msgs(this->validate(invalidModels));
+            const CStatusMessageList msgs(this->validate(validModels, invalidModels));
             if (msgs.hasWarningOrErrorMessages())
             {
                 this->showMessages(msgs);
                 this->ui->tvp_StashAircraftModels->setHighlightModelStrings(invalidModels.getModelStringList(false));
-                return false;
             }
             else
             {
+                // delete highlighting
                 this->ui->tvp_StashAircraftModels->setHighlightModelStrings(QStringList());
-                if (displayInfo)
-                {
-                    QString no = QString::number(this->getStashedModelsCount());
-                    CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
-                    this->showMessage(msg);
-                }
-                return true; // no error
             }
+
+            if (displayInfo)
+            {
+                QString no = QString::number(this->getStashedModelsCount());
+                CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
+                this->showMessage(msg);
+            }
+            return !validModels.isEmpty(); // at least some valid objects
         }
 
         void CDbStashComponent::enableButtonRow()

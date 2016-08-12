@@ -280,12 +280,12 @@ namespace BlackGui
             void ps_onCustomContextMenu(const QPoint &point);
 
         private:
-            QScopedPointer<Ui::CDbMappingComponent>                ui;
-            QScopedPointer<CDbAutoStashingComponent>               m_autoStashDialog;    //!< dialog auto stashing
-            QScopedPointer<CDbModelMappingModifyComponent>         m_modelModifyDialog;  //!< dialog when modifying models
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader    m_vPilotReader;       //!< read vPilot rules
+            QScopedPointer<Ui::CDbMappingComponent>                 ui;
+            QScopedPointer<CDbAutoStashingComponent>                m_autoStashDialog;    //!< dialog auto stashing
+            QScopedPointer<CDbModelMappingModifyComponent>          m_modelModifyDialog;  //!< dialog when modifying models
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader     m_vPilotReader;       //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDbMappingComponent::ps_userChanged};
-            BlackMisc::CDigestSignal                               m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
+            BlackMisc::CDigestSignal                                m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
             const bool vPilotSupport   = true;   //!< vPilot support
             bool m_vPilot1stInit       = true;   //!< vPilot extensions initaliazed?
             bool m_vPilotEnabled       = false;  //!< use vPilot extensions

@@ -43,11 +43,9 @@ namespace BlackMisc
     }
 }
 namespace Ui { class CDbStashComponent; }
-
 namespace BlackGui
 {
     namespace Views { class CAircraftModelView; }
-
     namespace Components
     {
         /*!
@@ -169,10 +167,10 @@ namespace BlackGui
             bool showMessage(const BlackMisc::CStatusMessage &msg, int timeoutMs = -1);
 
             //! Validate
-            BlackMisc::CStatusMessageList validate(BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
+            BlackMisc::CStatusMessageList validate(BlackMisc::Simulation::CAircraftModelList &validModels, BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
 
             //! Validate and display info messages
-            bool validateAndDisplay(bool displayInfo = false);
+            bool validateAndDisplay(BlackMisc::Simulation::CAircraftModelList &validModels, BlackMisc::Simulation::CAircraftModelList &invalidModels, bool displayInfo = false);
 
             //! Set the button row
             void enableButtonRow();
