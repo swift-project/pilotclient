@@ -132,7 +132,7 @@ namespace BlackMiscTest
     void CTestValueCache::localOnly()
     {
         CValueCache cache;
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
+        for (int i = 0; i < 2; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
         testCommon(user1, user2);
@@ -141,7 +141,7 @@ namespace BlackMiscTest
     void CTestValueCache::localOnlyWithThreads()
     {
         CValueCache cache;
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
+        for (int i = 0; i < 2; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
         CRegularThread thread;
@@ -192,7 +192,7 @@ namespace BlackMiscTest
     void CTestValueCache::batched()
     {
         CValueCache cache;
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
+        for (int i = 0; i < 2; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
 
