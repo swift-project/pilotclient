@@ -57,6 +57,12 @@ namespace BlackMisc
                 return m_fileList;
             }
 
+            bool CVPilotRulesReader::hasFiles() const
+            {
+                QReadLocker l(&m_lockData);
+                return !m_fileList.isEmpty();
+            }
+
             void CVPilotRulesReader::addFilename(const QString &fileName)
             {
                 QWriteLocker l(&m_lockData);
@@ -138,34 +144,31 @@ namespace BlackMisc
 
             bool CVPilotRulesReader::read(bool convertToModels)
             {
-                bool success = true;
                 int loadedFiles = 0;
                 QStringList filesWithProblems;
                 CVPilotModelRuleSet rules;
-                QStringList fileList(getFiles());
-
+                const QStringList fileList(getFiles());
                 for (const QString &fn : fileList)
                 {
                     if (m_shutdown) { return false; }
                     loadedFiles++;
                     bool s = this->loadFile(fn, rules);
                     if (!s) { this->m_fileListWithProblems.append(fn); }
-                    success = s && success;
                 }
 
                 {
-                    {
-                        QWriteLocker l(&m_lockData);
-                        this->m_loadedFiles = loadedFiles;
-                        this->m_fileListWithProblems = filesWithProblems;
-                        this->m_rules = rules;
-                        if (m_shutdown) { return false; }
-                    }
-                    if (convertToModels)
-                    {
-                        const CAircraftModelList vPilotModels(rules.toAircraftModels()); // long lasting operation
-                        this->ps_setCache(vPilotModels);
-                    }
+                    QWriteLocker l(&m_lockData);
+                    this->m_loadedFiles = loadedFiles;
+                    this->m_fileListWithProblems = filesWithProblems;
+                    this->m_rules = rules;
+                    if (m_shutdown) { return false; }
+                }
+
+                const bool success = loadedFiles > 0;
+                if (convertToModels)
+                {
+                    const CAircraftModelList vPilotModels(rules.toAircraftModels()); // long lasting operation
+                    this->ps_setCache(vPilotModels);
                 }
 
                 emit readFinished(success);

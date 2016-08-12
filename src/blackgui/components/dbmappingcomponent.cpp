@@ -532,7 +532,7 @@ namespace BlackGui
             {
                 CLogMessage(this).error("Loading vPilot ruleset failed");
             }
-            this->ui->comp_OwnAircraftModels->view()->hideLoadIndicator();
+            this->ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
         }
 
         void CDbMappingComponent::ps_onVPilotCacheChanged()
@@ -540,6 +540,10 @@ namespace BlackGui
             if (this->ui->tvp_AircraftModelsForVPilot->displayAutomatically())
             {
                 this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(this->m_vPilotReader.getAsModelsFromCache());
+            }
+            else
+            {
+                this->ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
             }
         }
 

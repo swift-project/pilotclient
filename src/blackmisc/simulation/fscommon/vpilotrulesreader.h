@@ -47,6 +47,10 @@ namespace BlackMisc
                 //! \threadsafe
                 QStringList getFiles() const;
 
+                //! Has files
+                //! \threadsafe
+                bool hasFiles() const;
+
                 //! File names
                 //! \threadsafe
                 void addFilename(const QString &fileName);
