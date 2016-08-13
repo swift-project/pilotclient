@@ -34,9 +34,11 @@ namespace BlackGui
             CAircraftModelFilter(const QString &modelKey, const QString &description,
                                  BlackMisc::Simulation::CAircraftModel::ModelModeFilter modelMode,
                                  BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
+                                 Qt::CheckState military, Qt::CheckState colorLiveries,
                                  const QString &aircraftIcao, const QString &aircraftManufacturer,
                                  const QString &airlineIcao, const QString &airlineName,
                                  const QString &liveryCode,
+                                 const QString &fileName,
                                  const BlackMisc::Simulation::CSimulatorInfo &simInfo = BlackMisc::Simulation::CSimulatorInfo::allSimulators(),
                                  const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor()
                                 );
@@ -49,11 +51,14 @@ namespace BlackGui
             QString m_description;
             BlackMisc::Simulation::CAircraftModel::ModelModeFilter m_modelMode;
             BlackMisc::Db::DbKeyStateFilter m_dbKeyFilter;
+            Qt::CheckState m_military;
+            Qt::CheckState m_colorLiveries;
             QString m_aircraftIcao;
             QString m_aircraftManufacturer;
             QString m_airlineIcao;
             QString m_airlineName;
             QString m_liveryCode;
+            QString m_fileName;
             BlackMisc::Simulation::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Simulation::CDistributor   m_distributor;
             bool valid() const;

@@ -21,16 +21,18 @@ namespace BlackGui
     {
         CAircraftModelFilter::CAircraftModelFilter(const QString &modelKey, const QString &description,
                 CAircraftModel::ModelModeFilter modelMode, BlackMisc::Db::DbKeyStateFilter dbKeyFilter,
+                Qt::CheckState military, Qt::CheckState colorLiveries,
                 const QString &aircraftIcao, const QString &aircraftManufacturer,
                 const QString &airlineIcao, const QString &airlineName,
-                const QString &liveryCode,
+                const QString &liveryCode, const QString &fileName,
                 const CSimulatorInfo &simInfo,
                 const CDistributor &distributor) :
             m_modelKey(modelKey.trimmed().toUpper()), m_description(description.trimmed()),
-            m_modelMode(modelMode), m_dbKeyFilter(dbKeyFilter),
+            m_modelMode(modelMode), m_dbKeyFilter(dbKeyFilter), m_military(military), m_colorLiveries(colorLiveries),
             m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftManufacturer(aircraftManufacturer.trimmed().toUpper()),
             m_airlineIcao(airlineIcao.trimmed().toUpper()), m_airlineName(airlineName.trimmed().toUpper()),
             m_liveryCode(liveryCode.trimmed().toUpper()),
+            m_fileName(fileName),
             m_simulatorInfo(simInfo),
             m_distributor(distributor)
         {
@@ -53,6 +55,34 @@ namespace BlackGui
                     if (!this->stringMatchesFilterExpression(model.getModelString(), this->m_modelKey)) { continue; }
                 }
 
+                if (this->m_military != Qt::PartiallyChecked)
+                {
+                    if (this->m_military == Qt::Checked)
+                    {
+                        // military only
+                        if (!model.isMilitary()) { continue; }
+                    }
+                    else if (this->m_military == Qt::Unchecked)
+                    {
+                        // civilian only
+                        if (model.isMilitary()) { continue; }
+                    }
+                }
+
+                if (this->m_colorLiveries != Qt::PartiallyChecked)
+                {
+                    if (this->m_colorLiveries == Qt::Checked)
+                    {
+                        // only color liveries
+                        if (!model.getLivery().isColorLivery()) { continue; }
+                    }
+                    else if (this->m_colorLiveries == Qt::Unchecked)
+                    {
+                        // Only airline liveries
+                        if (model.getLivery().isColorLivery()) { continue; }
+                    }
+                }
+
                 if (!this->m_description.isEmpty())
                 {
                     if (!this->stringMatchesFilterExpression(model.getDescription(), this->m_description)) { continue; }
@@ -66,6 +96,11 @@ namespace BlackGui
                 if (this->m_dbKeyFilter != BlackMisc::Db::All && this->m_dbKeyFilter != BlackMisc::Db::Undefined)
                 {
                     if (!model.matchesDbKeyState(this->m_dbKeyFilter)) { continue; }
+                }
+
+                if (!this->m_fileName.isEmpty())
+                {
+                    if (!this->stringMatchesFilterExpression(model.getFileName(), this->m_fileName)) { continue; }
                 }
 
                 if (!this->m_aircraftIcao.isEmpty())
@@ -108,13 +143,15 @@ namespace BlackGui
             const bool allEmpty = this->m_modelKey.isEmpty() && this->m_description.isEmpty() &&
                                   this->m_aircraftManufacturer.isEmpty() && this->m_aircraftIcao.isEmpty() &&
                                   this->m_airlineIcao.isEmpty() && this->m_airlineName.isEmpty() &&
-                                  this->m_liveryCode.isEmpty();
+                                  this->m_liveryCode.isEmpty() && this->m_fileName.isEmpty();
             if (!allEmpty) { return true; }
             const bool noSim = this->m_simulatorInfo.isNoSimulator() || this->m_simulatorInfo.isAllSimulators();
             const bool noModelMode = this->m_modelMode == CAircraftModel::Undefined || this->m_modelMode == CAircraftModel::All;
             const bool noDbState = this->m_dbKeyFilter == BlackMisc::Db::Undefined || this->m_dbKeyFilter == BlackMisc::Db::All;
             const bool noKey = !this->m_distributor.hasValidDbKey();
-            return !(noSim && noModelMode && noDbState && noKey);
+            const bool noColorRestriction = this->m_colorLiveries == Qt::PartiallyChecked;
+            const bool noMilitary = this->m_military == Qt::PartiallyChecked;
+            return !(noSim && noModelMode && noDbState && noKey && noMilitary && noColorRestriction);
         }
     } // namespace
 } // namespace
