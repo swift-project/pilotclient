@@ -99,9 +99,6 @@ namespace BlackSimPlugin
             //! Process incoming FS9 message
             void ps_processFs9Message(const QByteArray &message);
 
-            //! Reload settings
-            void ps_reloadSettings();
-
         private:
 
             //! Called when data about our own aircraft are received
@@ -112,6 +109,9 @@ namespace BlackSimPlugin
             //! Inject weather grid to simulator
             void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
+            //! Reload Weather settings
+            void reloadWeatherSettings();
+
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             QMetaObject::Connection m_connectionHostMessages;
             int m_dispatchTimerId = -1;
@@ -120,7 +120,7 @@ namespace BlackSimPlugin
             QSharedPointer<CLobbyClient> m_lobbyClient;
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFs9::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFs9::reloadWeatherSettings };
         };
 
         //! Listener for FS9

@@ -142,9 +142,6 @@ namespace BlackSimPlugin
             //! Dispatch SimConnect messages
             void ps_dispatch();
 
-            //! Reload settings
-            void ps_reloadSettings();
-
         private:
             //! Call this method to declare the simulator connected
             void setSimConnected();
@@ -189,6 +186,9 @@ namespace BlackSimPlugin
             //! Inject weather grid to simulator
             void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
+            //! Reload weather settings
+            void reloadWeatherSettings();
+
             static constexpr int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             bool m_simConnected  = false;       //!< Is simulator connected?
             bool m_simSimulating    = false;    //!< Simulator running?
@@ -209,7 +209,7 @@ namespace BlackSimPlugin
             int    m_statsUpdateAircraftCount = 0;
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::reloadWeatherSettings };
         };
 
         //! Listener for FSX

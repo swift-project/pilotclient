@@ -59,7 +59,6 @@ namespace BlackSimPlugin
                                                "B737-800 default model",
                                                CAircraftIcaoCode("B738", "L2J")
                                            ));
-            ps_reloadSettings();
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -95,6 +94,7 @@ namespace BlackSimPlugin
             initEvents();
             initDataDefinitionsWhenConnected();
             m_simconnectTimerId = startTimer(10);
+            reloadWeatherSettings();
             return true;
         }
 
@@ -518,16 +518,6 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsx::ps_reloadSettings()
-        {
-            auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-            {
-                m_lastWeatherPosition = {};
-                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-            }
-        }
-
         bool CSimulatorFsx::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
         {
             // only remove from sim
@@ -852,6 +842,19 @@ namespace BlackSimPlugin
         void CSimulatorFsx::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
             m_fsuipc->write(weatherGrid);
+        }
+
+        void CSimulatorFsx::reloadWeatherSettings()
+        {
+            if (m_fsuipc->isConnected())
+            {
+                auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+                if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+                {
+                    m_lastWeatherPosition = {};
+                    injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
+                }
+            }
         }
 
         CSimulatorFsxListener::CSimulatorFsxListener(const CSimulatorPluginInfo &info) :

@@ -113,7 +113,6 @@ namespace BlackSimPlugin
                                                "B737-400 default model",
                                                CAircraftIcaoCode("B734", "L2J")
                                            ));
-            ps_reloadSettings();
         }
 
         bool CSimulatorFs9::isConnected() const
@@ -133,6 +132,7 @@ namespace BlackSimPlugin
             {
                 m_fsuipc->connect(); // connect FSUIPC too
             }
+            reloadWeatherSettings();
             m_dispatchTimerId = startTimer(50);
             return true;
         }
@@ -355,16 +355,6 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFs9::ps_reloadSettings()
-        {
-            auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-            {
-                m_lastWeatherPosition = {};
-                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-            }
-        }
-
         void CSimulatorFs9::updateOwnAircraftFromSimulator(const CSimulatedAircraft &simDataOwnAircraft)
         {
             this->updateCockpit(
@@ -386,6 +376,19 @@ namespace BlackSimPlugin
         void CSimulatorFs9::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
             m_fsuipc->write(weatherGrid);
+        }
+
+        void CSimulatorFs9::reloadWeatherSettings()
+        {
+            if (m_fsuipc->isConnected())
+            {
+                auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+                if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+                {
+                    m_lastWeatherPosition = {};
+                    injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
+                }
+            }
         }
 
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,

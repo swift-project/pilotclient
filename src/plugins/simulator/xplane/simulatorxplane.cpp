@@ -110,7 +110,6 @@ namespace BlackSimPlugin
                                            ));
 
             resetData();
-            ps_reloadSettings();
         }
 
         // convert xplane squawk mode to swift squawk mode
@@ -231,16 +230,6 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlane::ps_reloadSettings()
-        {
-            auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-            {
-                m_lastWeatherPosition = {};
-                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-            }
-        }
-
         bool CSimulatorXPlane::isConnected() const
         {
             return m_service && m_traffic && m_weather;
@@ -263,6 +252,7 @@ namespace BlackSimPlugin
                 m_service->updateAirportsInRange();
                 m_traffic->updateInstalledModels();
                 m_watcher->setConnection(m_conn);
+                reloadWeatherSettings();
                 emitSimulatorCombinedStatus();
                 return true;
             }
@@ -644,6 +634,19 @@ namespace BlackSimPlugin
 
             m_weather->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
             m_weather->setThunderstormRatio(0.0);
+        }
+
+        void CSimulatorXPlane::reloadWeatherSettings()
+        {
+            if (m_weather)
+            {
+                auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+                if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+                {
+                    m_lastWeatherPosition = {};
+                    injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
+                }
+            }
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

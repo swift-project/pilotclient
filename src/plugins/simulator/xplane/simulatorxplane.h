@@ -134,12 +134,11 @@ namespace BlackSimPlugin
             void ps_fastTimerTimeout();
             void ps_slowTimerTimeout();
             void ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
-            void ps_reloadSettings();
-
 
         private:
             //! Inject weather grid to simulator
             void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
+            void reloadWeatherSettings();
 
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
@@ -152,7 +151,7 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CAircraftModelList m_installedModels; //!< \todo Do we still need this, as we now focus on model set
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::ps_reloadSettings };
+            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::reloadWeatherSettings };
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks
