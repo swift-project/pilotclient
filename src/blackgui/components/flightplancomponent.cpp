@@ -65,6 +65,7 @@ namespace BlackGui
 
             // fix style
             this->tabBar()->setExpanding(false);
+            this->tabBar()->setUsesScrollButtons(true);
 
             // validators
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);

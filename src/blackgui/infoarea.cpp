@@ -537,6 +537,7 @@ namespace BlackGui
                 this->m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
                 this->m_tabBar->setMovable(false);
                 this->m_tabBar->setElideMode(Qt::ElideNone);
+                this->m_tabBar->setUsesScrollButtons(true);
 
                 // East / West does not work (shown, but area itself empty)
                 // South does not have any effect

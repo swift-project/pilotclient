@@ -57,6 +57,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
+            this->tabBar()->setUsesScrollButtons(true);
 
             // some icons
             this->ui->pb_AtcStationsAtisReload->setIcon(CIcons::atis());

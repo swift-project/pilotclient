@@ -38,8 +38,6 @@
 #include <QPixmap>
 #include <QPushButton>
 #include <QStringListModel>
-#include <QTabBar>
-#include <QTabWidget>
 #include <QtGlobal>
 
 using namespace BlackMisc;

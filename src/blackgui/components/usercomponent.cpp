@@ -36,6 +36,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
+            this->tabBar()->setUsesScrollButtons(true);
             connect(this->ui->tvp_AllUsers, &CUserView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
             connect(this->ui->tvp_Clients, &CClientView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::ps_connectionStatusChanged);

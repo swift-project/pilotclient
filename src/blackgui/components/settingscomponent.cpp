@@ -44,6 +44,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
+            this->tabBar()->setUsesScrollButtons(true);
 
             // Opacity, intervals
             this->connect(this->ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsComponent::changedWindowsOpacity);
