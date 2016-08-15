@@ -55,6 +55,7 @@ namespace BlackGui
             void updateHotkeyInSettings(const BlackMisc::Input::CActionHotkey &oldValue, const BlackMisc::Input::CActionHotkey &newValue);
             void removeHotkeyFromSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
             bool checkAndConfirmConflicts(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::Input::CActionHotkeyList &ignore = {});
+            void reloadHotkeysFromSettings();
 
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             BlackGui::Models::CActionHotkeyListModel m_model;

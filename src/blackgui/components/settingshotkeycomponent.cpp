@@ -48,6 +48,7 @@ namespace BlackGui
             connect(ui->pb_editHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_editEntry);
             connect(ui->pb_removeHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_removeEntry);
 
+            reloadHotkeysFromSettings();
             ui->tv_hotkeys->selectRow(0);
         }
 
@@ -147,6 +148,19 @@ namespace BlackGui
                 if (reply == QMessageBox::No) { return false; }
             }
             return true;
+        }
+
+        void CSettingsHotkeyComponent::reloadHotkeysFromSettings()
+        {
+            const CActionHotkeyList hotkeys = m_actionHotkeys.getThreadLocal();
+            m_model.clear();
+            for (const auto &hotkey : hotkeys)
+            {
+                int position = m_model.rowCount();
+                m_model.insertRows(position, 1, QModelIndex());
+                QModelIndex index = m_model.index(position, 0, QModelIndex());
+                m_model.setData(index, QVariant::fromValue(hotkey), CActionHotkeyListModel::ActionHotkeyRole);
+            }
         }
 
         void CSettingsHotkeyComponent::ps_hotkeySlot(bool keyDown)
