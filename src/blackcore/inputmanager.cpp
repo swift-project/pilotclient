@@ -28,8 +28,8 @@ namespace BlackCore
         m_keyboard(IKeyboard::create(this)),
         m_joystick(IJoystick::create(this))
     {
-        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::ps_processKeyCombinationChanged);
-        connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::ps_processButtonCombinationChanged);
+        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::ps_processKeyCombinationChanged, Qt::QueuedConnection);
+        connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::ps_processButtonCombinationChanged, Qt::QueuedConnection);
     }
 
     CInputManager *CInputManager::instance()
