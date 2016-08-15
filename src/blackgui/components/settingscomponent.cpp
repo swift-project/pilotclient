@@ -21,6 +21,7 @@
 #include <QLineEdit>
 #include <QSlider>
 #include <QString>
+#include <QStyleFactory>
 #include <QTabBar>
 #include <QToolButton>
 #include <QtGlobal>
@@ -43,6 +44,9 @@ namespace BlackGui
             ui(new Ui::CSettingsComponent)
         {
             ui->setupUi(this);
+            ui->cb_SettingsGuiWidgetStyle->clear();
+            ui->cb_SettingsGuiWidgetStyle->insertItems(0, QStyleFactory::keys());
+
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
 
@@ -66,7 +70,11 @@ namespace BlackGui
             connected = this->connect(this->ui->cb_SettingsGuiFontStyle, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
             Q_ASSERT(connected);
             this->connect(this->ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsComponent::ps_fontColorDialog);
+            this->connect(this->ui->cb_SettingsGuiWidgetStyle, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+                          this, &CSettingsComponent::widgetStyleChanged);
             Q_UNUSED(connected);
+
+            reloadWidgetStyleFromSettings();
         }
 
         CSettingsComponent::~CSettingsComponent()
@@ -131,6 +139,22 @@ namespace BlackGui
             this->m_fontColor = c;
             this->ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
             this->ps_fontChanged();
+        }
+
+        void CSettingsComponent::reloadWidgetStyleFromSettings()
+        {
+            int index = ui->cb_SettingsGuiWidgetStyle->findText(m_settingsWidgetStyle.get());
+            ui->cb_SettingsGuiWidgetStyle->setCurrentIndex(index);
+        }
+
+        void CSettingsComponent::widgetStyleChanged(const QString &widgetStyle)
+        {
+            if (widgetStyle == m_settingsWidgetStyle.get()) { return; }
+            auto availableStyles = QStyleFactory::keys();
+            if (availableStyles.contains(widgetStyle))
+            {
+                m_settingsWidgetStyle.set(widgetStyle);
+            }
         }
     }
 } // namespace

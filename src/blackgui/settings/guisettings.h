@@ -16,6 +16,8 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 
+#include <QString>
+
 namespace BlackGui
 {
     namespace Settings
@@ -26,6 +28,17 @@ namespace BlackGui
             //! Key in data cache
             static const char *key() { return "guinownaircraftmodel"; }
         };
+
+        //! Widget Style
+        struct TWidgetStyle : public BlackMisc::TSettingTrait<QString>
+        {
+            //! \copydoc BlackCore::TSettingTrait::key
+            static const char *key() { return "application/widgetstyle"; }
+
+            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            static QString defaultValue() { return QStringLiteral("Fusion"); }
+        };
+
     } // ns
 } // ns
 

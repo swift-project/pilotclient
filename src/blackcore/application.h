@@ -457,7 +457,7 @@ namespace BlackCore
         #ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
-        BlackMisc::CSetting<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::crashDumpUploadEnabledChanged };
+        BlackMisc::CSettingReadOnly<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::crashDumpUploadEnabledChanged };
         #endif
     };
 } // namespace

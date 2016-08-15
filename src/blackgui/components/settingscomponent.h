@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/settings/guisettings.h"
 
 #include <QColor>
 #include <QObject>
@@ -92,8 +93,12 @@ namespace BlackGui
             void ps_fontColorDialog();
 
         private:
+            void reloadWidgetStyleFromSettings();
+            void widgetStyleChanged(const QString &widgetStyle);
+
             QScopedPointer<Ui::CSettingsComponent> ui;
             QColor m_fontColor;
+            BlackMisc::CSetting<BlackGui::Settings::TWidgetStyle> m_settingsWidgetStyle { this, &CSettingsComponent::reloadWidgetStyleFromSettings };
         };
     }
 } // namespace

@@ -27,7 +27,7 @@
 #include <QCloseEvent>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
 #include <QEventLoop>
@@ -38,6 +38,7 @@
 #include <QMessageBox>
 #include <QRegExp>
 #include <QSplashScreen>
+#include <QStyleFactory>
 #include <QStringList>
 #include <QStyle>
 #include <QUrl>
@@ -76,6 +77,7 @@ namespace BlackGui
             this->setWindowIcon(icon);
             sGui = this;
             connect(&this->m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
+            reloadWidgetStyleFromSettings();
         }
     }
 
@@ -541,5 +543,15 @@ namespace BlackGui
     bool CGuiApplication::parsingHookIn()
     {
         return true;
+    }
+
+    void CGuiApplication::reloadWidgetStyleFromSettings()
+    {
+        auto widgetStyle = m_settingsWidgetStyle.get();
+        auto availableStyles = QStyleFactory::keys();
+        if (availableStyles.contains(widgetStyle))
+        {
+            QApplication::setStyle(QStyleFactory::create(widgetStyle));
+        }
     }
 } // ns
