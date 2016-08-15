@@ -111,6 +111,9 @@ namespace BlackGui
             //! Hovered role
             void setHoveredRow(int row);
 
+            //! Remove all highlighting
+            virtual void clearHighlighting();
+
             //! Drop actions
             void setDropActions(Qt::DropActions dropActions) { this->m_dropActions = dropActions; }
 

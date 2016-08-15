@@ -164,14 +164,17 @@ namespace BlackGui
             //! View resizing
             static const QString &pathViewResize()  { static const QString p("View.14.Resize"); return p; }
 
+            //! View clear highlighting
+            static const QString &pathViewClearHighlighting()  { static const QString p("View.15.ClearHighlight"); return p; }
+
             //! View filter
-            static const QString &pathViewFilter()  { static const QString p("View.15.Filter"); return p; }
+            static const QString &pathViewFilter()  { static const QString p("View.16.Filter"); return p; }
 
             //! View update
-            static const QString &pathViewUpdates()  { static const QString p("View.16.Updates"); return p; }
+            static const QString &pathViewUpdates()  { static const QString p("View.17.Updates"); return p; }
 
             //! View load/save
-            static const QString &pathViewLoadSave()  { static const QString p("View.17.LoadSave"); return p; }
+            static const QString &pathViewLoadSave()  { static const QString p("View.18.LoadSave"); return p; }
 
             // ---- nested dock widgets ----
 

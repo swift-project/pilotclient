@@ -47,14 +47,18 @@ namespace BlackGui
             //! Destructor
             virtual ~CListModelDbObjects() {}
 
-            //! Highlight the DB models
-            bool highlightDbData() const { return m_highlightDbData; }
-
-            //! Highlight the DB models
-            void setHighlightDbData(bool highlightDbData) { m_highlightDbData = highlightDbData; }
-
             //! Keys to be highlighted
             void setHighlightDbKeys(const QList<KeyType> &keys) { m_highlightKeys = keys; }
+
+            //! Clear the highlighted keys
+            void clearHighlightingDbKeys() { m_highlightKeys.clear(); }
+
+            //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::clearHighlighting
+            virtual void clearHighlighting() override
+            {
+                this->clearHighlightingDbKeys();
+                CListModelBase<ObjectType, ContainerType, UseCompare>::clearHighlighting();
+            }
 
             //! Set color for highlighting
             void setHighlightColor(QColor color) { m_highlightColor = color; }
@@ -73,11 +77,9 @@ namespace BlackGui
             CListModelDbObjects(const QString &translationContext, QObject *parent = nullptr);
 
         private:
-            bool m_highlightDbData = false; //!< highlight if DB data entry (valid key)
             QList<KeyType> m_highlightKeys; //!< keys to be highlighted
             QColor         m_highlightColor = Qt::green;
         };
-
 
         //! List model for DB objects
         template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare = false> class COrderableListModelDbObjects :

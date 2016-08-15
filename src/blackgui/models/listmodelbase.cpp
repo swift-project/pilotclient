@@ -210,6 +210,11 @@ namespace BlackGui
             emit this->dataChanged(topLeft, bottomRight);
         }
 
+        void CListModelBaseNonTemplate::clearHighlighting()
+        {
+            // can be overridden to delete highlighting
+        }
+
         void CListModelBaseNonTemplate::emitDataChanged(int startRowIndex, int endRowIndex)
         {
             BLACK_VERIFY_X(startRowIndex <= endRowIndex, Q_FUNC_INFO, "check rows");

@@ -72,6 +72,9 @@ namespace BlackGui
             //! The highlight color
             void setHighlightModelStringsColor(const QBrush &brush) { m_highlightColor = brush; }
 
+            //! \copydoc CListModelBase::clearHighlighting
+            virtual void clearHighlighting() override;
+
             //! Model strings
             QStringList getModelStrings(bool sort) const;
 
@@ -86,7 +89,7 @@ namespace BlackGui
 
         private:
             AircraftModelMode m_mode = NotSet;                  //!< current mode
-            bool              m_highlightModelStrings = false;  //!< highlight in in model strings
+            bool              m_highlightModelStrings = false;  //!< highlight if in m_highlightStrings
             QStringList       m_highlightStrings;               //!< model strings to highlight
             QBrush            m_highlightColor{Qt::yellow};     //!< how to highlight
         };

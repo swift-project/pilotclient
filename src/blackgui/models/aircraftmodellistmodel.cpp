@@ -197,5 +197,12 @@ namespace BlackGui
             }
             return QVariant();
         }
+
+        void CAircraftModelListModel::clearHighlighting()
+        {
+            this->m_highlightModelStrings = false;
+            this->m_highlightStrings.clear();
+            COrderableListModelDbObjects::clearHighlighting();
+        }
     } // namespace
 } // namespace

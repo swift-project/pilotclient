@@ -309,6 +309,9 @@ namespace BlackGui
             //! Remove selected rows
             virtual int removeSelectedRows() = 0;
 
+            //! Clear any highlighted objects
+            virtual void clearHighlighting() = 0;
+
         protected:
             //! Constructor
             CViewBaseNonTemplate(QWidget *parent);
@@ -543,6 +546,7 @@ namespace BlackGui
             //! @{
             virtual int removeSelectedRows() override;
             virtual void presizeOrFullResizeToContents() override;
+            virtual void clearHighlighting() override;
             //! @}
 
             //! \name BlackGui::Views::CViewBaseNonTemplate implementations

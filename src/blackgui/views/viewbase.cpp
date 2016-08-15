@@ -357,6 +357,9 @@ namespace BlackGui
             actionInteractiveResize->setChecked(autoResize);
             actionInteractiveResize->setEnabled(enabled);
             connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::ps_toggleResizeMode);
+
+            // Clear highlighting
+            menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(), nullptr , { this, &CViewBaseNonTemplate::clearHighlighting });
         }
 
         void CViewBaseNonTemplate::showEvent(QShowEvent *event)
@@ -955,6 +958,13 @@ namespace BlackGui
             {
                 this->fullResizeToContents();
             }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::clearHighlighting()
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->clearHighlighting();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

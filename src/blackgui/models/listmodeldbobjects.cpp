@@ -36,18 +36,8 @@ namespace BlackGui
         QVariant CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::data(const QModelIndex &index, int role) const
         {
             if (role != Qt::BackgroundRole) { return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role); }
-
             if (isHighlightIndex(index)) { return QBrush(m_highlightColor); }
-            if (!highlightDbData()) { return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role); }
-
-            const ObjectType obj(this->at(index));
-            // highlight DB models
-            if (obj.hasValidDbKey())
-            {
-                static const QBrush b(Qt::green);
-                return b;
-            }
-            return QVariant();
+            return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role);
         }
 
         template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>
