@@ -8,6 +8,8 @@
  */
 
 #include "keyboardmac.h"
+#include "blackmisc/logmessage.h"
+
 #include <QHash>
 #include <QtWidgets/QMessageBox>
 #include <CoreFoundation/CoreFoundation.h>
@@ -109,14 +111,14 @@ namespace BlackInput
         CGEventMask eventMask = ((1 << kCGEventKeyDown) | (1 << kCGEventKeyUp) | (1 << kCGEventFlagsChanged));
 
         // try creating an event tap just for keypresses. if it fails, we need Universal Access.
-        CFMachPortRef eventTap = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
+        m_eventTap = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, kCGEventTapOptionDefault,
                                  eventMask, myCGEventCallback, this);
 
         CFRunLoopSourceRef source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault,
-                                    eventTap, 0);
+                                    m_eventTap, 0);
 
         CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopCommonModes);
-        CGEventTapEnable(eventTap, true);
+        CGEventTapEnable(m_eventTap, true);
 
         return true;
     }
@@ -210,7 +212,15 @@ namespace BlackInput
     {
 
         CKeyboardMac *keyboardMac = static_cast<CKeyboardMac*>(refcon);
-        keyboardMac->processKeyEvent(type, event);
+        if (type == kCGEventTapDisabledByTimeout)
+        {
+            BlackMisc::CLogMessage(static_cast<CKeyboardMac *>(nullptr)).warning("Event tap got disabled by timeout. Enable it again.");
+            CGEventTapEnable(keyboardMac->m_eventTap, true);
+        }
+        else
+        {
+            keyboardMac->processKeyEvent(type, event);
+        }
 
         // send event to next application
         return event;
