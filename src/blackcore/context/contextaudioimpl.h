@@ -28,6 +28,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/settingscache.h"
+#include "blacksound/selcalplayer.h"
 
 #include <QHash>
 #include <QList>
@@ -181,6 +182,7 @@ namespace BlackCore
 
             QList<QSharedPointer<IVoiceChannel>> m_unusedVoiceChannels;
             QHash<BlackMisc::Aviation::CComSystem::ComUnit, QSharedPointer<IVoiceChannel>> m_voiceChannelMapping;
+            BlackSound::CSelcalPlayer *m_selcalPlayer = nullptr;
 
             // settings
             BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this };

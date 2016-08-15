@@ -86,6 +86,8 @@ namespace BlackCore
 
             m_unusedVoiceChannels.push_back(m_channel1);
             m_unusedVoiceChannels.push_back(m_channel2);
+
+            m_selcalPlayer = new CSelcalPlayer(QAudioDeviceInfo::defaultOutputDevice(), this);
         }
 
         CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
@@ -413,8 +415,7 @@ namespace BlackCore
         {
             Q_ASSERT(this->m_voice);
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << selcal; }
-            CAudioDeviceInfo outputDevice = m_voiceOutputDevice->getCurrentOutputDevice();
-            CSoundGenerator::playSelcal(90, selcal, outputDevice);
+            m_selcalPlayer->play(90, selcal);
         }
 
         void CContextAudio::playNotification(CNotificationSounds::Notification notification, bool considerSettings) const
