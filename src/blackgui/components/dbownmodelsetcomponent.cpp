@@ -417,6 +417,10 @@ namespace BlackGui
                         });
                         this->m_setNewActions.append(a);
                     }
+
+                    QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
+                    connect(a, &QAction::triggered, ownModelSetComp, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged);
+                    this->m_setActions.append(a);
                 }
                 menuActions.addMenuModelSet();
                 menuActions.addActions(this->m_setActions, CMenuAction::pathModelSet());
