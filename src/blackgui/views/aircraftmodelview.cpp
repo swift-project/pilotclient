@@ -145,7 +145,7 @@ namespace BlackGui
         {
             if (modelStrings.isEmpty()) { return 0; }
             CAircraftModelList copy(this->container());
-            int delta = copy.removeModelsWithString(modelStrings, sensitivity);
+            const int delta = copy.removeModelsWithString(modelStrings, sensitivity);
             if (delta > 0)
             {
                 this->updateContainerMaybeAsync(copy);

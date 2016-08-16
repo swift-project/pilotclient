@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
+    <width>773</width>
     <height>221</height>
    </rect>
   </property>
@@ -91,6 +91,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_RemoveInvald">
+        <property name="toolTip">
+         <string>Remove invalid models</string>
+        </property>
+        <property name="text">
+         <string>Rem. invalid</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_Publish">
         <property name="text">
          <string>Publish</string>
@@ -155,10 +165,16 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>tvp_StashAircraftModels</tabstop>
   <tabstop>pb_Unstash</tabstop>
   <tabstop>pb_Validate</tabstop>
+  <tabstop>pb_RemoveInvald</tabstop>
   <tabstop>pb_Publish</tabstop>
-  <tabstop>tvp_StashAircraftModels</tabstop>
+  <tabstop>cb_SelectedOnly</tabstop>
+  <tabstop>pb_Distributor</tabstop>
+  <tabstop>pb_AircraftIcao</tabstop>
+  <tabstop>pb_Livery</tabstop>
+  <tabstop>pb_AirlineIcao</tabstop>
  </tabstops>
  <resources/>
  <connections/>

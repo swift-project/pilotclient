@@ -77,6 +77,9 @@ namespace BlackGui
             //! Unstash given models by model string
             int unstashModels(QStringList modelStrings);
 
+            //! Unstash given models
+            int unstashModels(const BlackMisc::Simulation::CAircraftModelList &models);
+
             //! The embedded view
             BlackGui::Views::CAircraftModelView *view() const;
 
@@ -139,6 +142,9 @@ namespace BlackGui
 
             //! Validate pressed
             void ps_onValidatePressed();
+
+            //! Remove invalid (validates and removes invalid models)
+            void ps_onRemoveInvalidPressed();
 
             //! Publish pressed
             void ps_onPublishPressed();

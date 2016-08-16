@@ -65,6 +65,7 @@ namespace BlackGui
             connect(this->ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::ps_onPublishPressed);
             connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
             connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::ps_onRowCountChanged);
+            connect(ui->pb_RemoveInvald, &QPushButton::pressed, this, &CDbStashComponent::ps_onRemoveInvalidPressed);
 
             // copy over buttons
             connect(this->ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
@@ -234,6 +235,15 @@ namespace BlackGui
             CAircraftModelList validModels;
             CAircraftModelList invalidModels;
             this->validateAndDisplay(validModels, invalidModels, true);
+        }
+
+        void CDbStashComponent::ps_onRemoveInvalidPressed()
+        {
+            if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
+            CAircraftModelList validModels;
+            CAircraftModelList invalidModels;
+            this->validate(validModels, invalidModels);
+            this->unstashModels(invalidModels);
         }
 
         void CDbStashComponent::ps_onPublishPressed()
