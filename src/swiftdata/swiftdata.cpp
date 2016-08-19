@@ -105,6 +105,8 @@ void CSwiftData::init()
         t += s.getDbHomePageUrl().toQString(true);
         this->setWindowTitle(t);
     }
+
+    sGui->startUpCompleted(true);
 }
 
 void CSwiftData::initLogDisplay()

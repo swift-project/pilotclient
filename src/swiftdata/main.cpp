@@ -27,6 +27,9 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv);
     Q_UNUSED(qa);
     CGuiApplication a("swift mapping tool", CGuiApplication::MappingTool, CIcons::swiftDatabase48());
+    a.setSignalStartupAutomatically(false); // application will signal startup on its own
+    // Todo: Replace texture with a higher quality one
+    a.splashScreen(":/own/icons/own/swift/swift128Database.png");
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forMappingTool());
     if (!a.start()) { return EXIT_FAILURE; }
     CSwiftData w;
