@@ -480,7 +480,12 @@ namespace BlackGui
 
             // this->setParent(this->m_originalParent, this->windowFlags() & ~Qt::Window);
             this->setWindowFlags(this->windowFlags() & ~Qt::Window);
-            this->setVisible(true); // after redocking this is required
+
+            // RW: The line below is commented to prevent making this widget visible as a top window
+            // in case it is constructed without parent or anchestor widget. Contrary to the comment,
+            // it does not seem to be necessary.
+            // https://dev.vatsim-germany.org/issues/738
+            //this->setVisible(true); // after redocking this is required
         }
 
         emit changedWholeInfoAreaFloating(floating);
