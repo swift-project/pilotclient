@@ -168,7 +168,7 @@ namespace BlackCore
         bool isRunningInDeveloperEnvironment() const { return this->m_devEnv; }
 
         //! Signal startup automatically or individually
-        void signalStartupAutomatically(bool signal = false);
+        void setSignalStartupAutomatically(bool enabled);
 
         //! Info string
         QString getEnvironmentInfoString(const QString &separator) const;

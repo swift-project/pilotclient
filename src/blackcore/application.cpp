@@ -342,9 +342,9 @@ namespace BlackCore
         return false;
     }
 
-    void CApplication::signalStartupAutomatically(bool signal)
+    void CApplication::setSignalStartupAutomatically(bool enabled)
     {
-        this->m_signalStartup = signal;
+        this->m_signalStartup = enabled;
     }
 
     QString CApplication::getEnvironmentInfoString(const QString &separator) const
