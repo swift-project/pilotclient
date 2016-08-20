@@ -55,23 +55,23 @@ namespace BlackGui
             ui(new Ui::CDbStashComponent)
         {
             ui->setupUi(this);
-            this->ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
-            this->ui->tvp_StashAircraftModels->allowDragDrop(false, true);
-            this->ui->tvp_StashAircraftModels->setAcceptedMetaTypeIds();
-            this->ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuLoadAndSave);
+            ui->tvp_StashAircraftModels->setAircraftModelMode(CAircraftModelListModel::StashModel);
+            ui->tvp_StashAircraftModels->allowDragDrop(false, true);
+            ui->tvp_StashAircraftModels->setAcceptedMetaTypeIds();
+            ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuLoadAndSave);
 
-            connect(this->ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::ps_onUnstashPressed);
-            connect(this->ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::ps_onValidatePressed);
-            connect(this->ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::ps_onPublishPressed);
-            connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
-            connect(this->ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::ps_onRowCountChanged);
+            connect(ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::ps_onUnstashPressed);
+            connect(ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::ps_onValidatePressed);
             connect(ui->pb_RemoveInvald, &QPushButton::pressed, this, &CDbStashComponent::ps_onRemoveInvalidPressed);
+            connect(ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::ps_onPublishPressed);
+            connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
+            connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::ps_onRowCountChanged);
 
             // copy over buttons
-            connect(this->ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
-            connect(this->ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
-            connect(this->ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
-            connect(this->ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
+            connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
+            connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
+            connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
+            connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
 
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
@@ -86,7 +86,7 @@ namespace BlackGui
 
         CStatusMessage CDbStashComponent::validateStashModel(const CAircraftModel &model, bool allowReplace) const
         {
-            if (!allowReplace && this->ui->tvp_StashAircraftModels->container().containsModelStringOrDbKey(model))
+            if (!allowReplace && ui->tvp_StashAircraftModels->container().containsModelStringOrDbKey(model))
             {
                 const QString msg("Model \"%1\" already stashed");
                 return CStatusMessage(validationCategories(), CStatusMessage::SeverityError, msg.arg(model.getModelString()));
@@ -102,11 +102,11 @@ namespace BlackGui
             {
                 if (replace)
                 {
-                    this->ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, stashModel.getModelString(), stashModel);
+                    ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, stashModel.getModelString(), stashModel);
                 }
                 else
                 {
-                    this->ui->tvp_StashAircraftModels->insert(stashModel);
+                    ui->tvp_StashAircraftModels->insert(stashModel);
                 }
             }
             return m;
@@ -126,19 +126,25 @@ namespace BlackGui
 
         void CDbStashComponent::replaceModelsUnvalidated(const CAircraftModelList &models)
         {
-            this->ui->tvp_StashAircraftModels->updateContainerMaybeAsync(models);
+            ui->tvp_StashAircraftModels->updateContainerMaybeAsync(models);
         }
 
         int CDbStashComponent::unstashModels(QList<int> keys)
         {
             if (keys.isEmpty()) { return 0; }
-            return this->ui->tvp_StashAircraftModels->removeDbKeys(keys);
+            return ui->tvp_StashAircraftModels->removeDbKeys(keys);
         }
 
         int CDbStashComponent::unstashModels(QStringList modelStrings)
         {
             if (modelStrings.isEmpty()) { return 0; }
-            return this->ui->tvp_StashAircraftModels->removeModelsWithModelString(modelStrings);
+            return ui->tvp_StashAircraftModels->removeModelsWithModelString(modelStrings);
+        }
+
+        int CDbStashComponent::unstashModels(const CAircraftModelList &models)
+        {
+            if (models.isEmpty()) { return 0; }
+            return ui->tvp_StashAircraftModels->removeModelsWithModelString(models);
         }
 
         CAircraftModelView *CDbStashComponent::view() const
@@ -148,22 +154,22 @@ namespace BlackGui
 
         bool CDbStashComponent::hasStashedModels() const
         {
-            return !this->ui->tvp_StashAircraftModels->isEmpty();
+            return !ui->tvp_StashAircraftModels->isEmpty();
         }
 
         int CDbStashComponent::getStashedModelsCount() const
         {
-            return this->ui->tvp_StashAircraftModels->rowCount();
+            return ui->tvp_StashAircraftModels->rowCount();
         }
 
         QStringList CDbStashComponent::getStashedModelStrings() const
         {
-            return this->ui->tvp_StashAircraftModels->derivedModel()->getModelStrings(false);
+            return ui->tvp_StashAircraftModels->derivedModel()->getModelStrings(false);
         }
 
         const CAircraftModelList &CDbStashComponent::getStashedModels() const
         {
-            return this->ui->tvp_StashAircraftModels->derivedModel()->container();
+            return ui->tvp_StashAircraftModels->derivedModel()->container();
         }
 
         CAircraftModel CDbStashComponent::getStashedModel(const QString &modelString) const
@@ -174,18 +180,18 @@ namespace BlackGui
 
         void CDbStashComponent::applyToSelected(const CLivery &livery, bool acceptWarnings)
         {
-            if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
+            if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
             CStatusMessageList msgs(livery.validate());
             if (this->showMessages(msgs, acceptWarnings)) { return; }
-            this->ui->tvp_StashAircraftModels->applyToSelected(livery);
+            ui->tvp_StashAircraftModels->applyToSelected(livery);
         }
 
         void CDbStashComponent::applyToSelected(const CAircraftIcaoCode &icao, bool acceptWarnings)
         {
-            if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
+            if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
             CStatusMessageList msgs(icao.validate());
             if (this->showMessages(msgs, acceptWarnings)) { return; }
-            this->ui->tvp_StashAircraftModels->applyToSelected(icao);
+            ui->tvp_StashAircraftModels->applyToSelected(icao);
         }
 
         void CDbStashComponent::applyToSelected(const CAirlineIcaoCode &icao, bool acceptWarnings)
@@ -211,27 +217,27 @@ namespace BlackGui
 
         void CDbStashComponent::applyToSelected(const CDistributor &distributor, bool acceptWarnings)
         {
-            if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
+            if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
             CStatusMessageList msgs(distributor.validate());
             if (this->showMessages(msgs, acceptWarnings)) { return; }
-            this->ui->tvp_StashAircraftModels->applyToSelected(distributor);
+            ui->tvp_StashAircraftModels->applyToSelected(distributor);
         }
 
         void CDbStashComponent::applyToSelected(const CPropertyIndexVariantMap &vm)
         {
             if (vm.isEmpty()) { return; }
-            if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
-            this->ui->tvp_StashAircraftModels->applyToSelected(vm);
+            if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
+            ui->tvp_StashAircraftModels->applyToSelected(vm);
         }
 
         void CDbStashComponent::ps_onUnstashPressed()
         {
-            this->ui->tvp_StashAircraftModels->removeSelectedRows();
+            ui->tvp_StashAircraftModels->removeSelectedRows();
         }
 
         void CDbStashComponent::ps_onValidatePressed()
         {
-            if (this->ui->tvp_StashAircraftModels->isEmpty()) {return; }
+            if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
             CAircraftModelList validModels;
             CAircraftModelList invalidModels;
             this->validateAndDisplay(validModels, invalidModels, true);
@@ -248,7 +254,7 @@ namespace BlackGui
 
         void CDbStashComponent::ps_onPublishPressed()
         {
-            if (this->ui->tvp_StashAircraftModels->isEmpty()) {return; }
+            if (ui->tvp_StashAircraftModels->isEmpty()) {return; }
 
             // get models right here, because later steps might affect selection
             const CAircraftModelList models(getSelectedOrAllModels());
@@ -272,13 +278,13 @@ namespace BlackGui
             }
             else
             {
-                this->ui->tvp_StashAircraftModels->showLoadIndicator();
+                ui->tvp_StashAircraftModels->showLoadIndicator();
             }
         }
 
         void CDbStashComponent::ps_publishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs)
         {
-            this->ui->tvp_StashAircraftModels->hideLoadIndicator();
+            ui->tvp_StashAircraftModels->hideLoadIndicator();
             if (!publishedModels.isEmpty())
             {
                 emit this->modelsSuccessfullyPublished(publishedModels);
@@ -307,7 +313,7 @@ namespace BlackGui
 
         CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
         {
-            if (this->ui->tvp_StashAircraftModels->isEmpty()) {return CStatusMessageList(); }
+            if (ui->tvp_StashAircraftModels->isEmpty()) {return CStatusMessageList(); }
             const CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return CStatusMessageList(); }
 
@@ -333,12 +339,12 @@ namespace BlackGui
             if (msgs.hasWarningOrErrorMessages())
             {
                 this->showMessages(msgs);
-                this->ui->tvp_StashAircraftModels->setHighlightModelStrings(invalidModels.getModelStringList(false));
+                ui->tvp_StashAircraftModels->setHighlightModelStrings(invalidModels.getModelStringList(false));
             }
             else
             {
-                // delete highlighting
-                this->ui->tvp_StashAircraftModels->setHighlightModelStrings(QStringList());
+                // delete highlighting because no errors
+                ui->tvp_StashAircraftModels->setHighlightModelStrings(QStringList());
             }
 
             if (displayInfo)
@@ -352,14 +358,14 @@ namespace BlackGui
 
         void CDbStashComponent::enableButtonRow()
         {
-            bool e = !this->ui->tvp_StashAircraftModels->isEmpty();
-            this->ui->pb_AircraftIcao->setEnabled(e);
-            this->ui->pb_AirlineIcao->setEnabled(e);
-            this->ui->pb_Distributor->setEnabled(e);
-            this->ui->pb_Livery->setEnabled(e);
-            this->ui->pb_Publish->setEnabled(e);
-            this->ui->pb_Unstash->setEnabled(e);
-            this->ui->pb_Validate->setEnabled(e);
+            bool e = !ui->tvp_StashAircraftModels->isEmpty();
+            ui->pb_AircraftIcao->setEnabled(e);
+            ui->pb_AirlineIcao->setEnabled(e);
+            ui->pb_Distributor->setEnabled(e);
+            ui->pb_Livery->setEnabled(e);
+            ui->pb_Publish->setEnabled(e);
+            ui->pb_Unstash->setEnabled(e);
+            ui->pb_Validate->setEnabled(e);
         }
 
         const CLogCategoryList &CDbStashComponent::validationCategories() const
@@ -371,7 +377,7 @@ namespace BlackGui
         CAircraftModelList CDbStashComponent::getSelectedOrAllModels() const
         {
             bool selectedOnly = ui->cb_SelectedOnly->isChecked();
-            const CAircraftModelList models(selectedOnly ? this->ui->tvp_StashAircraftModels->selectedObjects() : this->ui->tvp_StashAircraftModels->containerOrFilteredContainer());
+            const CAircraftModelList models(selectedOnly ? ui->tvp_StashAircraftModels->selectedObjects() : ui->tvp_StashAircraftModels->containerOrFilteredContainer());
             return models;
         }
 
@@ -416,22 +422,22 @@ namespace BlackGui
             QObject *sender = QObject::sender();
             BLACK_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
             if (!this->getMappingComponent()) { return; }
-            if (!this->ui->tvp_StashAircraftModels->hasSelection()) { return; }
+            if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
 
             CAircraftModel model(this->getMappingComponent()->getEditorAircraftModel());
-            if (sender == this->ui->pb_AircraftIcao)
+            if (sender == ui->pb_AircraftIcao)
             {
                 this->applyToSelected(model.getAircraftIcaoCode());
             }
-            else if (sender == this->ui->pb_AirlineIcao)
+            else if (sender == ui->pb_AirlineIcao)
             {
                 this->applyToSelected(model.getAirlineIcaoCode());
             }
-            else if (sender == this->ui->pb_Distributor)
+            else if (sender == ui->pb_Distributor)
             {
                 this->applyToSelected(model.getDistributor());
             }
-            else if (sender == this->ui->pb_Livery)
+            else if (sender == ui->pb_Livery)
             {
                 this->applyToSelected(model.getLivery());
             }
