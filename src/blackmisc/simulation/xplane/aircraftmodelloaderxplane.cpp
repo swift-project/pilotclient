@@ -68,11 +68,11 @@ namespace BlackMisc
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
             }
 
-            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation)
+            void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
             {
                 //! \todo according to meeting XP needs to support multiple directories
                 const CSimulatorInfo simulator = this->getSimulator();
-                const QString modelDirectory(this->getFirstModelDirectoryOrDefault()); // directory
+                const QString modelDirectory(!directory.isEmpty() ? directory : this->getFirstModelDirectoryOrDefault()); // directory
                 const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (modelDirectory.isEmpty())

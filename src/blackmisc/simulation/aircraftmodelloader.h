@@ -75,7 +75,7 @@ namespace BlackMisc
 
             //! Start the loading process from disk.
             //! Optional DB models can be passed and used for data consolidation.
-            void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidation &modelConsolidation = {});
+            void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidation &modelConsolidation = {}, const QString &directory = {});
 
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
@@ -153,11 +153,8 @@ namespace BlackMisc
             //! Clear cache
             BlackMisc::CStatusMessage clearCache();
 
-            //! Check if directory exists
-            bool existsDir(const QString &directory) const;
-
             //! Start the loading process from disk
-            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation) = 0;
+            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory) = 0;
 
             std::atomic<bool> m_cancelLoading { false };                        //!< flag
             std::atomic<bool> m_loadingInProgress { false };                    //!< Loading in progress

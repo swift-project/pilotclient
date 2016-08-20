@@ -38,15 +38,6 @@ namespace BlackMisc
             this->gracefulShutdown();
         }
 
-        bool IAircraftModelLoader::existsDir(const QString &directory) const
-        {
-            if (directory.isEmpty()) { return false; }
-            QDir dir(directory);
-
-            //! \todo not available network dir can make this hang here, however there is no obvious solution to that
-            return dir.exists();
-        }
-
         CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value
@@ -119,7 +110,7 @@ namespace BlackMisc
             return this->setCachedModels(CAircraftModelList());
         }
 
-        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidation &modelConsolidation)
+        void IAircraftModelLoader::startLoading(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
         {
             if (this->m_loadingInProgress) { return; }
             this->m_loadingInProgress = true;
@@ -144,7 +135,7 @@ namespace BlackMisc
                 emit loadingFinished(false, this->getSimulator());
                 return;
             }
-            this->startLoadingFromDisk(mode, modelConsolidation);
+            this->startLoadingFromDisk(mode, modelConsolidation, directory);
         }
 
         const CSimulatorInfo IAircraftModelLoader::getSimulator() const

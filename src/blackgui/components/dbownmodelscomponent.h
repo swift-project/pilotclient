@@ -110,13 +110,13 @@ namespace BlackGui
             void ps_requestOwnModelsUpdate();
 
             //! Load the models
-            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+            void ps_loadInstalledModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QString &directory = "");
 
             //! Model loading finished
             void ps_onOwnModelsLoadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Request simulator models
-            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode);
+            void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QString &directory = "");
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
@@ -128,6 +128,9 @@ namespace BlackGui
 
             //! File name for savinf
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
+
+            //! Directory selector
+            static QString directorySelector(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
 
             //! The menu for loading and handling own models for mapping tasks
             //! \note This is specific for that very component

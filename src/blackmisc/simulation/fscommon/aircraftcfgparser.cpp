@@ -63,10 +63,10 @@ namespace BlackMisc
                 if (this->m_parserWorker) { this->m_parserWorker->waitForFinished(); }
             }
 
-            void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation)
+            void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
             {
                 const CSimulatorInfo simulator = this->getSimulator();
-                const QString modelDirectory(this->m_settings.getFirstModelDirectoryOrDefault(simulator)); // expect only one directory
+                const QString modelDirectory(!directory.isEmpty() ? directory : this->m_settings.getFirstModelDirectoryOrDefault(simulator)); // expect only one directory
                 const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (mode.testFlag(LoadInBackground))
