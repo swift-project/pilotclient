@@ -104,6 +104,7 @@ namespace BlackMisc
 
             QStringList CXPlaneUtil::xplaneModelDirectories()
             {
+                if (xplaneRootDir().isEmpty()) { return QStringList(); }
                 return QStringList({ xplaneRootDir() });
             }
 

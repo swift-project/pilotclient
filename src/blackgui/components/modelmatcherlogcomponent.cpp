@@ -66,7 +66,7 @@ namespace BlackGui
 
         void CModelMatcherLogComponent::ps_updateCallsignCompleter()
         {
-            if (!sGui || !sGui->getIContextNetwork()->isConnected()) { return; }
+            if (!sGui || !sGui->getIContextNetwork() || sGui->getIContextNetwork()->isEmptyObject() || !sGui->getIContextNetwork()->isConnected()) { return; }
 
             const QStringList callsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns().toStringList(false);
             QCompleter *completer = ui->le_Callsign->completer();
