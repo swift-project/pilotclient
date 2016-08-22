@@ -262,7 +262,13 @@ namespace BlackGui
             void ps_toggleAutoFiltering();
 
             //! Apply current DB data from form
-            void ps_applyFormData();
+            void ps_applyFormLiveryData();
+
+            //! Apply current DB data from form
+            void ps_applyFormAircraftIcaoData();
+
+            //! Apply current DB data from form
+            void ps_applyFormDistributorData();
 
             //! Open model modify dialog
             void ps_modifyModelDialog();
