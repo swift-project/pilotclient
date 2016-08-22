@@ -21,6 +21,7 @@ namespace BlackGui
             ui(new Ui::CDataSettingsComponent)
         {
             ui->setupUi(this);
+            ui->comp_GuiSettings->hideOpacity(true);
         }
 
         CDataSettingsComponent::~CDataSettingsComponent()

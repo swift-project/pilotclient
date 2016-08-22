@@ -190,7 +190,7 @@ namespace BlackGui
         return this->m_styleSheets.contains(fileName.toLower().trimmed());
     }
 
-    bool CStyleSheetUtility::updateFonts(const QFont &font)
+    bool CStyleSheetUtility::updateFont(const QFont &font)
     {
         QString fs;
         if (font.pixelSize() >= 0)
@@ -201,10 +201,10 @@ namespace BlackGui
         {
             fs.append(QString::number(font.pointSizeF())).append("pt");
         }
-        return updateFonts(font.family(), fs, fontStyleAsString(font), fontWeightAsString(font), "white");
+        return updateFont(font.family(), fs, fontStyleAsString(font), fontWeightAsString(font), "white");
     }
 
-    bool CStyleSheetUtility::updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    bool CStyleSheetUtility::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
     {
         const QString indent("     ");
         QString fontStyleSheet;
@@ -228,6 +228,12 @@ namespace BlackGui
             ok = this->read();
         }
         return ok;
+    }
+
+    bool CStyleSheetUtility::resetFont()
+    {
+        QFile fontFile(CBuildConfig::getStylesheetsDir() + "/" + fileNameFontsModified());
+        return fontFile.remove();
     }
 
     QString CStyleSheetUtility::fontStyle(const QString &combinedStyleAndWeight)

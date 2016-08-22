@@ -14,14 +14,10 @@
 #include "blackmisc/logmessage.h"
 #include "ui_settingscomponent.h"
 
-#include <QColorDialog>
 #include <QComboBox>
-#include <QFont>
-#include <QFontComboBox>
 #include <QLineEdit>
 #include <QSlider>
 #include <QString>
-#include <QStyleFactory>
 #include <QTabBar>
 #include <QToolButton>
 #include <QtGlobal>
@@ -44,37 +40,14 @@ namespace BlackGui
             ui(new Ui::CSettingsComponent)
         {
             ui->setupUi(this);
-            ui->cb_SettingsGuiWidgetStyle->clear();
-            ui->cb_SettingsGuiWidgetStyle->insertItems(0, QStyleFactory::keys());
 
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
 
-            // Opacity, intervals
-            this->connect(this->ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsComponent::changedWindowsOpacity);
-            this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftUpdateInterval);
-            this->connect(this->ui->hs_SettingsGuiAtcRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAtcStationsUpdateInterval);
-            this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedUsersUpdateInterval);
-
-            // Font
-            const QFont font = this->font();
-            this->ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(font));
-            this->ui->cb_SettingsGuiFont->setCurrentFont(font);
-            this->ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
-            this->m_fontColor = QColor(sGui->getStyleSheetUtility().fontColor());
-            this->ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
-            bool connected = this->connect(this->ui->cb_SettingsGuiFont, SIGNAL(currentFontChanged(QFont)), this, SLOT(ps_fontChanged()));
-            Q_ASSERT(connected);
-            connected = this->connect(this->ui->cb_SettingsGuiFontSize, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
-            Q_ASSERT(connected);
-            connected = this->connect(this->ui->cb_SettingsGuiFontStyle, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
-            Q_ASSERT(connected);
-            this->connect(this->ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsComponent::ps_fontColorDialog);
-            this->connect(this->ui->cb_SettingsGuiWidgetStyle, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
-                          this, &CSettingsComponent::widgetStyleChanged);
-            Q_UNUSED(connected);
-
-            reloadWidgetStyleFromSettings();
+            this->connect(ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftUpdateInterval);
+            this->connect(ui->hs_SettingsGuiAtcRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAtcStationsUpdateInterval);
+            this->connect(ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedUsersUpdateInterval);
+            this->connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);
         }
 
         CSettingsComponent::~CSettingsComponent()
@@ -85,24 +58,19 @@ namespace BlackGui
             return ui->comp_AudioSetup->playNotificationSounds();
         }
 
-        void CSettingsComponent::setGuiOpacity(double value)
-        {
-            this->ui->hs_SettingsGuiOpacity->setValue(value);
-        }
-
         int CSettingsComponent::getAtcUpdateIntervalSeconds() const
         {
-            return this->ui->hs_SettingsGuiAtcRefreshTime->value();
+            return ui->hs_SettingsGuiAtcRefreshTime->value();
         }
 
         int CSettingsComponent::getAircraftUpdateIntervalSeconds() const
         {
-            return this->ui->hs_SettingsGuiAircraftRefreshTime->value();
+            return ui->hs_SettingsGuiAircraftRefreshTime->value();
         }
 
         int CSettingsComponent::getUsersUpdateIntervalSeconds() const
         {
-            return this->ui->hs_SettingsGuiUserRefreshTime->value();
+            return ui->hs_SettingsGuiUserRefreshTime->value();
         }
 
         void CSettingsComponent::setSettingsTab(CSettingsComponent::SettingTab tab)
@@ -110,51 +78,9 @@ namespace BlackGui
             this->setCurrentIndex(static_cast<int>(tab));
         }
 
-        void CSettingsComponent::ps_fontChanged()
+        void CSettingsComponent::setGuiOpacity(double value)
         {
-            QString fontSize = this->ui->cb_SettingsGuiFontSize->currentText().append("pt");
-            QString fontFamily = this->ui->cb_SettingsGuiFont->currentFont().family();
-            QString fontStyleCombined = this->ui->cb_SettingsGuiFontStyle->currentText();
-            QString fontColor = this->m_fontColor.name();
-            if (!this->m_fontColor.isValid() || this->m_fontColor.name().isEmpty())
-            {
-                fontColor = sGui->getStyleSheetUtility().fontColor();
-            }
-            this->ui->le_SettingsGuiFontColor->setText(fontColor);
-            bool ok = sGui->updateFonts(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
-            if (ok)
-            {
-                CLogMessage(this).info("Updated font style");
-            }
-            else
-            {
-                CLogMessage(this).info("Updating style failed");
-            }
-        }
-
-        void CSettingsComponent::ps_fontColorDialog()
-        {
-            QColor c =  QColorDialog::getColor(this->m_fontColor, this, "Font color");
-            if (c == this->m_fontColor) return;
-            this->m_fontColor = c;
-            this->ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
-            this->ps_fontChanged();
-        }
-
-        void CSettingsComponent::reloadWidgetStyleFromSettings()
-        {
-            int index = ui->cb_SettingsGuiWidgetStyle->findText(m_settingsWidgetStyle.get());
-            ui->cb_SettingsGuiWidgetStyle->setCurrentIndex(index);
-        }
-
-        void CSettingsComponent::widgetStyleChanged(const QString &widgetStyle)
-        {
-            if (widgetStyle == m_settingsWidgetStyle.get()) { return; }
-            auto availableStyles = QStyleFactory::keys();
-            if (availableStyles.contains(widgetStyle))
-            {
-                m_settingsWidgetStyle.set(widgetStyle);
-            }
+            ui->comp_SettingsGuiGeneral->setGuiOpacity(value);
         }
     }
 } // namespace

@@ -13,8 +13,6 @@
 #define BLACKGUI_COMPONENTS_SETTINGSCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/settings/guisettings.h"
-
 #include <QColor>
 #include <QObject>
 #include <QScopedPointer>
@@ -28,8 +26,7 @@ namespace BlackGui
     namespace Components
     {
         //! Settings component
-        class BLACKGUI_EXPORT CSettingsComponent :
-            public QTabWidget
+        class BLACKGUI_EXPORT CSettingsComponent : public QTabWidget
         {
             Q_OBJECT
 
@@ -55,9 +52,6 @@ namespace BlackGui
 
             //! \copydoc CAudioSetupComponent::playNotificationSounds
             bool playNotificationSounds() const;
-
-            //! GUI Opacity 0-100%
-            void setGuiOpacity(double value);
 
             //! ATC refresh time
             int getAtcUpdateIntervalSeconds() const;
@@ -85,20 +79,11 @@ namespace BlackGui
             //! Set the tab
             void setSettingsTab(SettingTab tab);
 
-        private slots:
-            //! Font has been changed
-            void ps_fontChanged();
-
-            //! Font color dialof
-            void ps_fontColorDialog();
+            //! GUI Opacity 0-100%
+            void setGuiOpacity(double value);
 
         private:
-            void reloadWidgetStyleFromSettings();
-            void widgetStyleChanged(const QString &widgetStyle);
-
             QScopedPointer<Ui::CSettingsComponent> ui;
-            QColor m_fontColor;
-            BlackMisc::CSetting<BlackGui::Settings::TWidgetStyle> m_settingsWidgetStyle { this, &CSettingsComponent::reloadWidgetStyleFromSettings };
         };
     }
 } // namespace

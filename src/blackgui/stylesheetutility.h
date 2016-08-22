@@ -51,10 +51,13 @@ namespace BlackGui
         bool containsStyle(const QString &fileName) const;
 
         //! Update the fonts
-        bool updateFonts(const QFont &font);
+        bool updateFont(const QFont &font);
 
         //! Update the fonts
-        bool updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+
+        //! Reset font
+        bool resetFont();
 
         //! Current font color from style sheet
         QString fontColor() const;

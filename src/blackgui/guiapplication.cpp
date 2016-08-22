@@ -487,9 +487,14 @@ namespace BlackGui
         return m_styleSheetUtility.read();
     }
 
-    bool CGuiApplication::updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    bool CGuiApplication::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
     {
-        return m_styleSheetUtility.updateFonts(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+        return m_styleSheetUtility.updateFont(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
+    }
+
+    bool CGuiApplication::resetFont()
+    {
+        return m_styleSheetUtility.resetFont();
     }
 
     QDialog::DialogCode CGuiApplication::showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent)

@@ -139,7 +139,10 @@ namespace BlackGui
         bool reloadStyleSheets();
 
         //! Update the fonts
-        bool updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+
+        //! Reset the font to default
+        bool resetFont();
 
         //! Show close dialog
         QDialog::DialogCode showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent);

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>497</height>
+    <height>401</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -32,45 +32,7 @@
    <property name="bottomMargin">
     <number>4</number>
    </property>
-   <item row="0" column="0" rowspan="2">
-    <widget class="QGroupBox" name="gb_SwiftDb">
-     <property name="title">
-      <string>swift DB</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0">
-       <widget class="BlackGui::Components::CDbDebugDatabaseSetup" name="comp_DebugDb">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="BlackGui::Components::CDbLoginComponent" name="comp_LoginComponent">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>150</height>
-         </size>
-        </property>
-        <zorder>comp_DebugDb</zorder>
-        <zorder>comp_DebugDb</zorder>
-        <zorder>comp_DebugDb</zorder>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item row="1" column="4">
     <widget class="QGroupBox" name="gb_DistributorPreferences">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -108,6 +70,19 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QGroupBox" name="gb_Simulator">
+     <property name="title">
+      <string>Simulator</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_Simulator">
+      <item>
+       <widget class="BlackGui::Components::CSettingsSimulatorBasicsComponent" name="comp_SimulatorComponent">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -119,19 +94,65 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="1" rowspan="2">
-    <widget class="QGroupBox" name="gb_Simulator">
-     <property name="title">
-      <string>Simulator</string>
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="gb_GuiSettings">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>150</height>
+      </size>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="title">
+      <string>GUI</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_GuiSettings">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
       <item>
-       <widget class="BlackGui::Components::CSettingsSimulatorBasicsComponent" name="comp_SimulatorComponent">
+       <widget class="BlackGui::Components::CSettingsGuiComponent" name="comp_GuiSettings"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="gb_SwiftDb">
+     <property name="title">
+      <string>swift DB</string>
+     </property>
+     <layout class="QGridLayout" name="gl_SwiftDB">
+      <item row="1" column="0">
+       <widget class="BlackGui::Components::CDbDebugDatabaseSetup" name="comp_DebugDb">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="BlackGui::Components::CDbLoginComponent" name="comp_LoginComponent">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>150</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -163,6 +184,12 @@
    <class>BlackGui::Components::CSettingsSimulatorBasicsComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingssimulatorbasicscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsGuiComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsguicomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
