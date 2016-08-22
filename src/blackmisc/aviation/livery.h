@@ -173,13 +173,16 @@ namespace BlackMisc
             //! Color livery marker
             static const QString &colorLiveryMarker();
 
+            //! The code for a temporary livery
+            static const QString &tempLiveryCode();
+
         private:
             CAirlineIcaoCode m_airline;           //!< corresponding airline, if any
             QString m_combinedCode;               //!< livery code and pseudo airline ICAO code
             QString m_description;                //!< describes the livery
-            BlackMisc::CRgbColor m_colorFuselage; //! color of fuselage
-            BlackMisc::CRgbColor m_colorTail;     //! color of tail
-            bool m_military = false;              //! Military livery?
+            BlackMisc::CRgbColor m_colorFuselage; //!< color of fuselage
+            BlackMisc::CRgbColor m_colorTail;     //!< color of tail
+            bool m_military = false;              //!< military livery?
 
             BLACK_METACLASS(
                 CLivery,

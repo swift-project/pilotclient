@@ -23,7 +23,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CLiveryList::CLiveryList() { }
 
         CLiveryList::CLiveryList(const CSequence<CLivery> &other) :

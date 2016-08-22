@@ -236,6 +236,12 @@ namespace BlackMisc
             return s;
         }
 
+        const QString &CLivery::tempLiveryCode()
+        {
+            static const QString temp("_CC_NOCOLOR");
+            return temp;
+        }
+
         CVariant CLivery::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

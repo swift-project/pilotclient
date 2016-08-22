@@ -80,6 +80,9 @@ namespace BlackGui
             //! Airline of embedded form has changed
             void ps_airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &code);
 
+            //! Set data for a temp.livery
+            void ps_setTemporaryLivery();
+
         private:
             QScopedPointer<Ui::CLiveryForm> ui;
             BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
