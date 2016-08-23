@@ -305,7 +305,8 @@ namespace BlackMisc
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
                 meta.forEachMemberName(*derived(), [ & ](auto & member, const QString & name)
                 {
-                    if (json.contains(name)) { json.value(name) >> member; }
+                    auto it = json.find(name);
+                    if (it != json.end()) { it.value() >> member; }
                 });
             }
 
