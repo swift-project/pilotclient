@@ -11,12 +11,6 @@ Used dynamic properties
 framelessMainWindow (infobar.qss , here)
 */
 
-QFrame {
-  border-style: solid;
-  border-color: transparent;
-  border-width: 1px;
-}
-
 QCheckBox::indicator {
   color: #b1b1b1;
   border: 1px solid #7f7f7f;
@@ -26,10 +20,6 @@ QCheckBox::indicator {
 
 QCheckBox::indicator::checked {
   image: url(:/diagona/icons/diagona/icons/tick.png);
-}
-
-QCheckBox::indicator:indeterminate {
-  image: url(:/diagona/icons/diagona/icons/question.png);
 }
 
 /* Main window */
@@ -482,10 +472,6 @@ QHeaderView::section {
   color: white; /* font */
   padding: 1px;
   margin: 0px;
-}
-
-QHeaderView {
-  border-width: 0px;
 }
 
 /* style the sort indicator */
