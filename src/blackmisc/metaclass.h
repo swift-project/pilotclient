@@ -124,6 +124,9 @@ namespace BlackMisc
         {
             return Private::invoke(m_ptr, std::forward<T>(object), std::forward<Ts>(args)...);
         }
+
+        //! Return name as QLatin1String.
+        Q_DECL_CONSTEXPR auto latin1Name() const { return QLatin1String(m_name); }
     };
 
     /*!
@@ -241,12 +244,12 @@ namespace BlackMisc
         template <typename F>
         static void forEachMemberName(T &object, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), QString(member.m_name)); });
+            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), member.latin1Name()); });
         }
         template <typename F>
         static void forEachMemberName(const T &object, F &&visitor)
         {
-            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), QString(member.m_name)); });
+            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), member.latin1Name()); });
         }
         //! @}
 

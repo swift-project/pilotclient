@@ -28,9 +28,43 @@
 #include <type_traits>
 #include <utility>
 
+#if QT_VERSION >= 0x50701
+#define BLACK_USE_LATIN1_JSON_KEYS
+#endif
+
 class QDateTime;
 class QPixmap;
 class QStringList;
+
+namespace BlackMisc
+{
+    /*!
+     * Simple literal type containing a single QLatin1String.
+     *
+     * Just useful for encapsulating a QLatin1String in a way that inhibits implicit conversion to QString
+     * to avoid ambiguities in overload resolution.
+     */
+    struct CExplicitLatin1String
+    {
+        //! Embedded string.
+        const QLatin1String m_latin1;
+
+        //! Implicit constructor.
+        Q_DECL_CONSTEXPR CExplicitLatin1String(QLatin1String s) : m_latin1(s) {}
+
+#ifdef BLACK_USE_LATIN1_JSON_KEYS
+        //! Type usable as key in QJsonObject.
+        Q_DECL_CONSTEXPR auto toJsonKey() const { return *this; }
+        //! Implicit conversion.
+        Q_DECL_CONSTEXPR operator QLatin1String() const { return m_latin1; }
+#else
+        //! Type usable as key in QJsonObject.
+        QString toJsonKey() const { return m_latin1; }
+        //! Implicit conversion.
+        operator QString() const { return m_latin1; }
+#endif
+    };
+}
 
 /*!
  * \defgroup JSON Streaming operators for JSON
@@ -69,6 +103,7 @@ BLACKMISC_EXPORT const QJsonValueRef &operator >>(const QJsonValueRef &json, QBy
 //! \brief Specialized JSON serialization for enum
 //! \remarks needs to be in global namespace
 //! \ingroup JSON
+//! @{
 template<class ENUM>
 std::enable_if_t<std::is_enum<ENUM>::value, QJsonObject>
 &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
@@ -76,15 +111,31 @@ std::enable_if_t<std::is_enum<ENUM>::value, QJsonObject>
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
+template<class ENUM>
+std::enable_if_t<std::is_enum<ENUM>::value, QJsonObject>
+&operator<<(QJsonObject &json, std::pair<BlackMisc::CExplicitLatin1String, const ENUM &> value)
+{
+    json[value.first] = QJsonValue(static_cast<int>(value.second));
+    return json;
+}
+//! @}
 
 //! \brief Specialized JSON serialization for QFlags generated enum
 //! \ingroup JSON
+//! @{
 template<class ENUM>
 QJsonObject &operator<<(QJsonObject &json, std::pair<QString, const QFlags<ENUM> &> value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
+template<class ENUM>
+QJsonObject &operator<<(QJsonObject &json, std::pair<BlackMisc::CExplicitLatin1String, const QFlags<ENUM> &> value)
+{
+    json[value.first] = QJsonValue(static_cast<int>(value.second));
+    return json;
+}
+//! @}
 
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
@@ -173,6 +224,18 @@ BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QStr
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateTime &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QPixmap &> &value);
 BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteArray &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const int &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qint16 &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qlonglong &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const uint &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qulonglong &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QString &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QStringList &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const double &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const bool &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QDateTime &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QPixmap &> &value);
+BLACKMISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QByteArray &> &value);
 //! @}
 
 namespace BlackMisc
@@ -268,6 +331,13 @@ namespace BlackMisc
                 json.insert(value.first, QJsonValue(value.second.toJson()));
                 return json;
             }
+
+            //! operator << for JSON
+            friend QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const Derived &> &value)
+            {
+                json[value.first] = QJsonValue(value.second.toJson());
+                return json;
+            }
         };
 
         /*!
@@ -284,9 +354,9 @@ namespace BlackMisc
             {
                 QJsonObject json;
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMemberName(*derived(), [ & ](const auto & member, const QString & name)
+                meta.forEachMemberName(*derived(), [ & ](const auto & member, CExplicitLatin1String name)
                 {
-                    json << std::pair<QString, const std::decay_t<decltype(member)> &>(name, member); // std::make_pair causes an ambiguous operator<<
+                    json << std::make_pair(name.toJsonKey(), std::cref(member));
                 });
                 return Json::appendJsonObject(json, baseToJson(static_cast<const TBaseOfT<Derived> *>(derived())));
             }
@@ -303,7 +373,7 @@ namespace BlackMisc
             {
                 baseConvertFromJson(static_cast<TBaseOfT<Derived> *>(derived()), json);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMemberName(*derived(), [ & ](auto & member, const QString & name)
+                meta.forEachMemberName(*derived(), [ & ](auto & member, CExplicitLatin1String name)
                 {
                     auto it = json.find(name);
                     if (it != json.end()) { it.value() >> member; }

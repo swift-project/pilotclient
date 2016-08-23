@@ -308,6 +308,80 @@ QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteA
     return json;
 }
 
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const int &> &value)
+{
+    json[value.first] = QJsonValue(value.second);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qint16 &> &value)
+{
+    json[value.first] = QJsonValue(value.second);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qulonglong &> &value)
+{
+    json[value.first] = QJsonValue(static_cast<int>(value.second));
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const qlonglong &> &value)
+{
+    json[value.first] = QJsonValue(value.second);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const uint &> &value)
+{
+    json[value.first] = QJsonValue(static_cast<int>(value.second));
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QString &> &value)
+{
+    json[value.first] = QJsonValue(value.second);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QStringList &> &value)
+{
+    json[value.first] = QJsonValue(QJsonArray::fromStringList(value.second));
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const double &> &value)
+{
+    json[value.first] = QJsonValue(value.second);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const bool &> &value)
+{
+    json[value.first] = QJsonValue(value.second);
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QDateTime &> &value)
+{
+    json[value.first] = QJsonValue(value.second.toString());
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QPixmap &> &value)
+{
+    QString pm(BlackMisc::pixmapToPngHexString(value.second));
+    json[value.first] = pm;
+    return json;
+}
+
+QJsonObject &operator<<(QJsonObject &json, const std::pair<BlackMisc::CExplicitLatin1String, const QByteArray &> &value)
+{
+    QString pm(BlackMisc::bytesToHexString(value.second));
+    json[value.first] = pm;
+    return json;
+}
+
 namespace BlackMisc
 {
     namespace Json
