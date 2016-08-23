@@ -15,6 +15,8 @@
 #include "blackmisc/logmessage.h"
 #include <QStringListModel>
 #include <QModelIndexList>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace BlackMisc;
 using namespace BlackGui;
@@ -30,7 +32,11 @@ namespace BlackGui
             ui->setupUi(this);
             this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
             this->initSettingsView();
+            ui->bb_ApplicationCloseDialog->button(QDialogButtonBox::Save)->setDefault(true);
+
             connect(this, &CApplicationCloseDialog::accepted, this, &CApplicationCloseDialog::ps_onAccepted);
+            connect(this, &CApplicationCloseDialog::rejected, this, &CApplicationCloseDialog::ps_onRejected);
+            connect(ui->bb_ApplicationCloseDialog, &QDialogButtonBox::clicked, this, &CApplicationCloseDialog::ps_buttonClicked);
         }
 
         CApplicationCloseDialog::~CApplicationCloseDialog()
@@ -38,7 +44,7 @@ namespace BlackGui
 
         void CApplicationCloseDialog::ps_onAccepted()
         {
-            QModelIndexList indexes = ui->lv_UnsavedSettings->selectionModel()->selectedIndexes();
+            const QModelIndexList indexes = ui->lv_UnsavedSettings->selectionModel()->selectedIndexes();
             if (indexes.isEmpty()) { return; }
             const QList<int> rows = CGuiUtility::indexToUniqueRows(indexes);
             QStringList saveKeys;
@@ -49,6 +55,20 @@ namespace BlackGui
             }
             CStatusMessage msg = sApp->saveSettingsByKey(saveKeys);
             if (msg.isFailure()) { CLogMessage::preformatted(msg); }
+        }
+
+        void CApplicationCloseDialog::ps_onRejected()
+        {
+            // void
+        }
+
+        void CApplicationCloseDialog::ps_buttonClicked(QAbstractButton *button)
+        {
+            if (button == ui->bb_ApplicationCloseDialog->button(QDialogButtonBox::Discard))
+            {
+                ui->lv_UnsavedSettings->clearSelection();
+                this->accept(); // fake accept with unselected items
+            }
         }
 
         void CApplicationCloseDialog::initSettingsView()

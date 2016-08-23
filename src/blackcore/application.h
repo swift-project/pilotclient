@@ -182,7 +182,7 @@ namespace BlackCore
         //! Automatically and always save settings
         void setSettingsAutoSave(bool autoSave);
 
-        //! All unsave settings
+        //! All unsaved settings
         QStringList getAllUnsavedSettings() const;
 
         //! Save all settings

@@ -14,6 +14,7 @@
 
 #include <QDialog>
 #include <QScopedPointer>
+#include <QAbstractButton>
 
 namespace Ui { class CApplicationCloseDialog; }
 namespace BlackGui
@@ -37,6 +38,12 @@ namespace BlackGui
         private slots:
             //! Accepted
             void ps_onAccepted();
+
+            //! Rejected
+            void ps_onRejected();
+
+            //! Button pressed
+            void ps_buttonClicked(QAbstractButton *button);
 
         private:
             QScopedPointer<Ui::CApplicationCloseDialog> ui;
