@@ -324,6 +324,22 @@ namespace BlackSample
         return 0;
     }
 
+    int CSamplesPerformance::samplesJson(QTextStream &out)
+    {
+        QTime timer;
+        auto situations = createSituations(0, 10000, 10);
+
+        timer.start();
+        QString s = situations.toJsonString();
+        out << "Convert 100,000 aircraft situations to JSON:   " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        situations.convertFromJson(s);
+        out << "Convert 100,000 aircraft situations from JSON: " << timer.elapsed() << "ms" << endl << endl;
+
+        return 0;
+    }
+
     CAircraftSituationList CSamplesPerformance::createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes)
     {
         CAircraftSituationList situations;

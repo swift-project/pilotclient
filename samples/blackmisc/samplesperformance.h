@@ -35,6 +35,9 @@ namespace BlackSample
         //! Interpolator scenario
         static int interpolatorScenario(QTextStream &out, int numberOfCallsigns, int numberOfTimes);
 
+        //! JSON (de)serialization
+        static int samplesJson(QTextStream &out);
+
         //! Situation values for testing
         static BlackMisc::Aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes);
 
