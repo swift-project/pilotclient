@@ -57,8 +57,9 @@ namespace BlackGui
             // embedded form
             connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChanged, this, &CLiveryForm::ps_airlineChanged);
 
-            // Set as temp.livery
+            // Set as temp.livery or search color
             connect(ui->pb_TempLivery, &QPushButton::pressed, this, &CLiveryForm::ps_setTemporaryLivery);
+            connect(ui->pb_SearchColor, &QPushButton::pressed, this, &CLiveryForm::ps_searchForColor);
         }
 
         CLiveryForm::~CLiveryForm() { }
@@ -202,6 +203,22 @@ namespace BlackGui
             if (l.isLoadedFromDb())
             {
                 this->setValue(l);
+            }
+        }
+
+        void CLiveryForm::ps_searchForColor()
+        {
+            if (!this->m_colorSearch)
+            {
+                this->m_colorSearch = new CDbLiveryColorSearch(this);
+                this->m_colorSearch->setModal(true);
+            }
+            const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(this->m_colorSearch->exec());
+            if (c == QDialog::Rejected) { return; }
+            const CLivery found = this->m_colorSearch->getLivery();
+            if (found.isLoadedFromDb())
+            {
+                this->setValue(found);
             }
         }
     } // ns

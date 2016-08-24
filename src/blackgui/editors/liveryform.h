@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
+#include "blackgui/components/dbliverycolorsearch.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/statusmessagelist.h"
@@ -25,7 +26,6 @@
 class QWidget;
 
 namespace Ui { class CLiveryForm; }
-
 namespace BlackGui
 {
     namespace Editors
@@ -83,10 +83,13 @@ namespace BlackGui
             //! Set data for a temp.livery
             void ps_setTemporaryLivery();
 
+            //! Search for color
+            void ps_searchForColor();
+
         private:
             QScopedPointer<Ui::CLiveryForm> ui;
             BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
-
+            BlackGui::Components::CDbLiveryColorSearch *m_colorSearch = nullptr; //!< search for color
         };
     } // ns
 } // ns
