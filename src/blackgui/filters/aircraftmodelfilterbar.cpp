@@ -50,10 +50,10 @@ namespace BlackGui
             connect(ui->le_ModelString, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_FileName, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
-            connect(ui->cbt_Db, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-            connect(ui->cbt_IncludeExclude, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-            connect(ui->cbt_Military, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
-            connect(ui->cbt_ColorLiveries, &QCheckBox::toggled, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
+            connect(ui->cbt_Db, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
+            connect(ui->cbt_IncludeExclude, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
+            connect(ui->cbt_Military, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
+            connect(ui->cbt_ColorLiveries, &QCheckBox::clicked, this, &CAircraftModelFilterBar::ps_checkBoxChanged);
 
             connect(ui->frp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::ps_simulatorSelectionChanged);
             connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::ps_distributorChanged);
