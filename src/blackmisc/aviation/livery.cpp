@@ -103,6 +103,11 @@ namespace BlackMisc
             return c == this->m_combinedCode;
         }
 
+        bool CLivery::matchesColors(const CRgbColor &fuselage, const CRgbColor &tail) const
+        {
+            return this->getColorFuselage() == fuselage && this->getColorTail() == tail;
+        }
+
         QString CLivery::convertToQString(bool i18n) const
         {
             QString s(i18n ? QCoreApplication::translate("Aviation", "Livery") : "Livery");
@@ -176,6 +181,23 @@ namespace BlackMisc
         bool CLivery::isColorLivery() const
         {
             return m_combinedCode.startsWith(colorLiveryMarker());
+        }
+
+        double CLivery::getColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const
+        {
+            if (!fuselage.isValid() || !tail.isValid()) { return 1.0; }
+            if (this->getColorFuselage().isValid() && this->getColorTail().isValid())
+            {
+                if (this->matchesColors(fuselage, tail)) { return 0.0; } // avoid rounding
+                const double xDist = this->getColorFuselage().colorDistance(fuselage);
+                const double yDist = this->getColorTail().colorDistance(tail);
+                const double d = xDist * xDist + yDist * yDist;
+                return d / 2.0; // normalize to 0..1
+            }
+            else
+            {
+                return 1.0;
+            }
         }
 
         CLivery CLivery::fromDatabaseJson(const QJsonObject &json, const QString &prefix)

@@ -122,6 +122,9 @@ namespace BlackMisc
             //! Matches combined code
             bool matchesCombinedCode(const QString &candidate) const;
 
+            //! Matches colors
+            bool matchesColors(const BlackMisc::CRgbColor &fuselage, const BlackMisc::CRgbColor &tail) const;
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -154,6 +157,9 @@ namespace BlackMisc
 
             //! Color livery
             bool isColorLivery() const;
+
+            //! Combined color distance (fuselage/tail): 0..1
+            double getColorDistance(const BlackMisc::CRgbColor &fuselage, const BlackMisc::CRgbColor &tail) const;
 
             //! Update missing parts
             void updateMissingParts(const CLivery &otherLivery);

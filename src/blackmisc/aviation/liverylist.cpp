@@ -74,6 +74,34 @@ namespace BlackMisc
             return this->findStdLiveryByAirlineIcaoVDesignator(icao.getVDesignator());
         }
 
+        CLivery CLiveryList::findColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
+        {
+            if (!fuselage.isValid() || !tail.isValid()) { return CLivery(); }
+            return this->findFirstByOrDefault([&](const CLivery & livery)
+            {
+                if (!livery.isColorLivery()) { return false; }
+                return livery.matchesColors(fuselage, tail);
+            });
+        }
+
+        CLivery CLiveryList::findClosestColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
+        {
+            if (!fuselage.isValid() || !tail.isValid()) { return CLivery(); }
+            CLivery bestMatch;
+            double bestDistance = 1.0;
+            for (const CLivery &livery : *this)
+            {
+                double d = livery.getColorDistance(fuselage, tail);
+                if (d == 0.0) { return livery; } // exact match
+                if (d < bestDistance)
+                {
+                    bestMatch = livery;
+                    bestDistance = d;
+                }
+            }
+            return bestMatch;
+        }
+
         CLivery CLiveryList::findByCombinedCode(const QString &combinedCode) const
         {
             if (!CLivery::isValidCombinedCode(combinedCode)) { return CLivery(); }

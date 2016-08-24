@@ -52,6 +52,12 @@ namespace BlackMisc
             //! Find livery by airline
             CLivery findStdLiveryByAirlineIcaoVDesignator(const CAirlineIcaoCode &icao) const;
 
+            //! Search for colors
+            CLivery findColorLiveryOrDefault(const BlackMisc::CRgbColor &fuselage, const CRgbColor &tail) const;
+
+            //! Search for colors
+            CLivery findClosestColorLiveryOrDefault(const BlackMisc::CRgbColor &fuselage, const CRgbColor &tail) const;
+
             //! By simplified name
             CLiveryList findStdLiveriesBySimplifiedAirlineName(const QString &containedString) const;
 
