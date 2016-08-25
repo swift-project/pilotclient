@@ -345,14 +345,15 @@ namespace BlackGui
             {
                 // delete highlighting because no errors
                 ui->tvp_StashAircraftModels->setHighlightModelStrings(QStringList());
+
+                if (displayInfo)
+                {
+                    QString no = QString::number(this->getStashedModelsCount());
+                    CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
+                    this->showMessage(msg);
+                }
             }
 
-            if (displayInfo)
-            {
-                QString no = QString::number(this->getStashedModelsCount());
-                CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
-                this->showMessage(msg);
-            }
             return !validModels.isEmpty(); // at least some valid objects
         }
 
