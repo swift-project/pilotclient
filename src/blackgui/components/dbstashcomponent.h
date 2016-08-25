@@ -118,7 +118,7 @@ namespace BlackGui
 
         public slots:
             //! Stash given model (includes validation and consolidation with DB data)
-            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false);
+            BlackMisc::CStatusMessage stashModel(const BlackMisc::Simulation::CAircraftModel &model, bool replace = false, bool consolidateWithDbData = true);
 
             //! Stash given models (includes validation and consolidation with DB data)
             BlackMisc::CStatusMessageList stashModels(const BlackMisc::Simulation::CAircraftModelList &models);

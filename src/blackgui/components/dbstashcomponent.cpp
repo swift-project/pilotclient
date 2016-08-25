@@ -94,9 +94,9 @@ namespace BlackGui
             return CStatusMessage();
         }
 
-        CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace)
+        CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace, bool consolidateWithDbData)
         {
-            const CAircraftModel stashModel(this->consolidateModel(model));
+            const CAircraftModel stashModel(consolidateWithDbData ? this->consolidateModel(model) : model);
             const CStatusMessage m(validateStashModel(stashModel, replace));
             if (!m.isWarningOrAbove())
             {

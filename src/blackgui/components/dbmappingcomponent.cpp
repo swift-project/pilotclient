@@ -362,12 +362,14 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_stashCurrentModel()
         {
-            const CAircraftModel model(getEditorAircraftModel());
             CStatusMessageList msgs(this->validateCurrentModel(true));
             if (!msgs.hasErrorMessages())
             {
+                const CAircraftModel editorModel(getEditorAircraftModel());
+
+                // do not consolidate, because we want to keep data as they are from the editor
                 msgs.push_back(
-                    ui->comp_StashAircraft->stashModel(model, true)
+                    ui->comp_StashAircraft->stashModel(editorModel, true, false)
                 );
             }
             if (msgs.hasErrorMessages())

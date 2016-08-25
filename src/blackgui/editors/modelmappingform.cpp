@@ -37,6 +37,7 @@ namespace BlackGui
             ui->lai_Id->set(CIcons::appMappings16(), "Id:");
             connect(ui->pb_Stash, &QPushButton::clicked, this, &CModelMappingForm::requestStash);
 
+            // for setting mode (include/exclude)
             this->ps_userChanged();
         }
 
