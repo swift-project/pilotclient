@@ -6,18 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>195</width>
-    <height>112</height>
+    <width>300</width>
+    <height>150</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>300</width>
+    <height>150</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Modify model data</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QGridLayout" name="gl_ModelMappingModifyForm">
    <item row="2" column="2">
@@ -28,12 +28,12 @@
     </widget>
    </item>
    <item row="2" column="3">
-    <widget class="BlackGui::Components::CSimulatorSelector" name="frp_SimulatorSelector">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+    <widget class="BlackGui::Components::CSimulatorSelector" name="selector_SimulatorSelector">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </item>
@@ -109,12 +109,12 @@
     </widget>
    </item>
    <item row="3" column="3">
-    <widget class="BlackGui::Components::CModelModeSelector" name="frp_IncludeSelector">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+    <widget class="BlackGui::Components::CModelModeSelector" name="selector_ModeSelector">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </item>

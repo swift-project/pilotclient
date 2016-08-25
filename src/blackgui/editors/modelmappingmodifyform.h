@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 #define BLACKGUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 
+#include "form.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/propertyindexvariantmap.h"
 
@@ -32,7 +33,7 @@ namespace BlackGui
         /*!
          * Allows to modify individual fields of the model form
          */
-        class BLACKGUI_EXPORT CModelMappingModifyForm : public QFrame
+        class BLACKGUI_EXPORT CModelMappingModifyForm : public CForm
         {
             Q_OBJECT
 
@@ -48,6 +49,13 @@ namespace BlackGui
 
             //! Set value
             void setValue(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! \copydoc CForm::setReadOnly
+            virtual void setReadOnly(bool readOnly) override;
+
+        protected slots:
+            //! \copydoc CForm::ps_userChanged
+            virtual void ps_userChanged() override;
 
         private slots:
             //! Return pressed

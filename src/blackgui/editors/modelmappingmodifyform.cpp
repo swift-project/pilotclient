@@ -12,6 +12,7 @@
 #include "blackgui/editors/modelmappingmodifyform.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/network/authenticateduser.h"
 #include "ui_modelmappingmodifyform.h"
 
 #include <QCheckBox>
@@ -19,6 +20,7 @@
 #include <QString>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui::Components;
 
@@ -27,14 +29,16 @@ namespace BlackGui
     namespace Editors
     {
         CModelMappingModifyForm::CModelMappingModifyForm(QWidget *parent) :
-            QFrame(parent),
+            CForm(parent),
             ui(new Ui::CModelMappingModifyForm)
         {
             ui->setupUi(this);
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::ps_returnPressed);
             connect(ui->le_Name, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::ps_returnPressed);
-            connect(ui->frp_IncludeSelector, &CModelModeSelector::changed, this, &CModelMappingModifyForm::ps_changed);
-            connect(ui->frp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMappingModifyForm::ps_changed);
+            connect(ui->selector_ModeSelector, &CModelModeSelector::changed, this, &CModelMappingModifyForm::ps_changed);
+            connect(ui->selector_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMappingModifyForm::ps_changed);
+
+            this->ps_userChanged();
         }
 
         CModelMappingModifyForm::~CModelMappingModifyForm()
@@ -55,19 +59,19 @@ namespace BlackGui
                 vm.addValue(CAircraftModel::IndexDescription, ui->le_Description->text().trimmed());
             }
 
-            if (ui->cb_Simulator->isChecked())
+            if (ui->cb_Mode->isChecked())
             {
-                vm.addValue(CAircraftModel::IndexSimulatorInfo, ui->frp_SimulatorSelector->getValue());
+                vm.addValue(CAircraftModel::IndexModelMode, ui->selector_ModeSelector->getMode());
             }
 
             if (ui->cb_Simulator->isChecked())
             {
-                vm.addValue(CAircraftModel::IndexSimulatorInfo, ui->frp_SimulatorSelector->getValue());
+                vm.addValue(CAircraftModel::IndexSimulatorInfo, ui->selector_SimulatorSelector->getValue());
             }
 
             if (ui->cb_Mode->isChecked())
             {
-                vm.addValue(CAircraftModel::IndexModelMode, ui->frp_IncludeSelector->getMode());
+                vm.addValue(CAircraftModel::IndexModelMode, ui->selector_ModeSelector->getMode());
             }
             return vm;
         }
@@ -76,8 +80,30 @@ namespace BlackGui
         {
             this->ui->le_Description->setText(model.getDescription());
             this->ui->le_Name->setText(model.getName());
-            this->ui->frp_SimulatorSelector->setValue(model.getSimulator());
-            this->ui->frp_IncludeSelector->setValue(model);
+            this->ui->selector_SimulatorSelector->setValue(model.getSimulator());
+            this->ui->selector_ModeSelector->setValue(model);
+        }
+
+        void CModelMappingModifyForm::setReadOnly(bool readOnly)
+        {
+            // void
+            Q_UNUSED(readOnly);
+        }
+
+        void CModelMappingModifyForm::ps_userChanged()
+        {
+            const CAuthenticatedUser user(this->getSwiftDbUser());
+            if (user.isAdmin())
+            {
+                ui->selector_ModeSelector->setValue(CAircraftModel::Include);
+                ui->selector_ModeSelector->setReadOnly(false);
+            }
+            else
+            {
+                ui->selector_ModeSelector->setReadOnly(true);
+            }
+
+            CForm::ps_userChanged();
         }
 
         void CModelMappingModifyForm::ps_returnPressed()
@@ -99,8 +125,8 @@ namespace BlackGui
             if (!widget) { return nullptr; }
             if (widget == ui->le_Description) { return ui->cb_Description; }
             if (widget == ui->le_Name) { return ui->cb_Name; }
-            if (widget == ui->frp_IncludeSelector) { return ui->cb_Mode; }
-            if (widget == ui->frp_SimulatorSelector) { return ui->cb_Simulator; }
+            if (widget == ui->selector_ModeSelector) { return ui->cb_Mode; }
+            if (widget == ui->selector_SimulatorSelector) { return ui->cb_Simulator; }
             return nullptr;
         }
     } // ns
