@@ -63,14 +63,13 @@ namespace BlackGui
             void requestStash();
 
         protected slots:
-            //! User has been changed
+            //! \copydoc CForm::ps_userChanged
             virtual void ps_userChanged() override;
 
         private:
             QScopedPointer<Ui::CModelMappingForm> ui;
             BlackMisc::Simulation::CAircraftModel m_originalModel;
         };
-
     } // ns
 } // ns
 

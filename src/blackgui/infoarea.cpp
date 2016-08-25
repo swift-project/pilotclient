@@ -485,7 +485,7 @@ namespace BlackGui
             // in case it is constructed without parent or anchestor widget. Contrary to the comment,
             // it does not seem to be necessary.
             // https://dev.vatsim-germany.org/issues/738
-            //this->setVisible(true); // after redocking this is required
+            // this->setVisible(true); // after redocking this is required
         }
 
         emit changedWholeInfoAreaFloating(floating);

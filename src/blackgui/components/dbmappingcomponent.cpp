@@ -72,11 +72,11 @@ namespace BlackGui
             m_modelModifyDialog(new CDbModelMappingModifyComponent(this))
         {
             ui->setupUi(this);
-            this->ui->comp_StashAircraft->setMappingComponent(this);
-            this->ui->comp_OwnModelSet->setMappingComponent(this);
+            ui->comp_StashAircraft->setMappingComponent(this);
+            ui->comp_OwnModelSet->setMappingComponent(this);
 
-            this->ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
-            this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
+            ui->tvp_AircraftModelsForVPilot->setAircraftModelMode(CAircraftModelListModel::VPilotRuleModel);
+            ui->tvp_AircraftModelsForVPilot->addFilterDialog();
 
             // model menus
             ui->comp_OwnAircraftModels->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnAircraftModels->view(), this, true));
@@ -123,9 +123,9 @@ namespace BlackGui
             ui->editor_Distributor->setSelectOnly();
             ui->editor_Livery->setSelectOnly();
 
-            this->ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
-            this->ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
-            this->ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModelSet, CIcons::appModels16());
+            ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
+            ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
+            ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModelSet, CIcons::appModels16());
 
             // custom menu
             this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -142,43 +142,43 @@ namespace BlackGui
 
         void CDbMappingComponent::initVPilotLoading()
         {
-            this->m_vPilotEnabled = vPilotSupport && this->m_swiftDbUser.get().isMappingAdmin();
-            static const QString tabName(this->ui->tw_ModelsToBeMapped->tabText(TabVPilot));
+            this->m_vPilotEnabled = this->vPilotSupport && this->m_swiftDbUser.get().isMappingAdmin();
+            static const QString tabName(ui->tw_ModelsToBeMapped->tabText(TabVPilot));
 
             if (this->m_vPilot1stInit && vPilotSupport)
             {
                 this->m_vPilot1stInit = false;
-                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
-                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onVPilotDataChanged);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onVPilotDataChanged);
                 connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::ps_onLoadVPilotDataFinished);
-                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
-                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
-                connect(this->ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::ps_requestVPilotDataUpdate);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::ps_onStashedModelsChanged);
+                connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::ps_requestVPilotDataUpdate);
 
-                this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
-                this->ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CModelStashToolsMenu(this, false));
-                this->ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
+                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this, true));
+                ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CModelStashToolsMenu(this, false));
+                ui->tvp_AircraftModelsForVPilot->setDisplayAutomatically(true);
 
-                this->ui->tvp_AircraftModelsForVPilot->addFilterDialog();
+                ui->tvp_AircraftModelsForVPilot->addFilterDialog();
                 const CAircraftModelList vPilotModels(m_vPilotReader.getAsModelsFromCache());
-                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(vPilotModels);
+                ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(vPilotModels);
                 const int noModels = vPilotModels.size();
                 CLogMessage(this).info("%1 cached vPilot models loaded") << noModels;
             }
-            this->ui->tab_VPilot->setEnabled(this->m_vPilotEnabled);
-            this->ui->tab_VPilot->setVisible(this->m_vPilotEnabled);
+            ui->tab_VPilot->setEnabled(this->m_vPilotEnabled);
+            ui->tab_VPilot->setVisible(this->m_vPilotEnabled);
             if (this->m_vPilotEnabled)
             {
                 // create / restore tab
-                this->ui->tw_ModelsToBeMapped->addTab(this->ui->tab_VPilot, tabName);
+                ui->tw_ModelsToBeMapped->addTab(ui->tab_VPilot, tabName);
                 this->ps_onVPilotDataChanged(
-                    this->ui->tvp_AircraftModelsForVPilot->rowCount(),
-                    this->ui->tvp_AircraftModelsForVPilot->hasFilter());
+                    ui->tvp_AircraftModelsForVPilot->rowCount(),
+                    ui->tvp_AircraftModelsForVPilot->hasFilter());
             }
             else
             {
                 this->m_vPilotFormatted = false;
-                this->ui->tw_ModelsToBeMapped->removeTab(TabVPilot);
+                ui->tw_ModelsToBeMapped->removeTab(TabVPilot);
             }
         }
 
@@ -186,7 +186,7 @@ namespace BlackGui
         {
             if (!this->m_vPilotEnabled || this->m_vPilotFormatted) { return; }
             this->m_vPilotFormatted = true;
-            this->ui->tvp_AircraftModelsForVPilot->presizeOrFullResizeToContents();
+            ui->tvp_AircraftModelsForVPilot->presizeOrFullResizeToContents();
         }
 
         CAircraftModel CDbMappingComponent::getModelFromView(const QModelIndex &index) const
@@ -195,21 +195,21 @@ namespace BlackGui
             const QObject *sender = QObject::sender();
 
             // check if we have an explicit sender
-            if (sender == this->ui->tvp_AircraftModelsForVPilot)
+            if (sender == ui->tvp_AircraftModelsForVPilot)
             {
-                return this->ui->tvp_AircraftModelsForVPilot->at(index);
+                return ui->tvp_AircraftModelsForVPilot->at(index);
             }
-            else if (sender == this->ui->comp_OwnAircraftModels->view())
+            else if (sender == ui->comp_OwnAircraftModels->view())
             {
-                return this->ui->comp_OwnAircraftModels->view()->at(index);
+                return ui->comp_OwnAircraftModels->view()->at(index);
             }
-            else if (sender == this->ui->comp_StashAircraft || sender == this->ui->comp_StashAircraft->view())
+            else if (sender == ui->comp_StashAircraft || sender == ui->comp_StashAircraft->view())
             {
-                return this->ui->comp_StashAircraft->view()->at(index);
+                return ui->comp_StashAircraft->view()->at(index);
             }
-            else if (sender == this->ui->comp_OwnModelSet->view())
+            else if (sender == ui->comp_OwnModelSet->view())
             {
-                return this->ui->comp_OwnModelSet->view()->at(index);
+                return ui->comp_OwnModelSet->view()->at(index);
             }
 
             // no sender, use current tab
@@ -262,8 +262,8 @@ namespace BlackGui
 
         QString CDbMappingComponent::currentTabText() const
         {
-            const int i = this->ui->tw_ModelsToBeMapped->currentIndex();
-            return this->ui->tw_ModelsToBeMapped->tabText(i);
+            const int i = ui->tw_ModelsToBeMapped->currentIndex();
+            return ui->tw_ModelsToBeMapped->tabText(i);
         }
 
         void CDbMappingComponent::updateEditorsWhenApplicable()
@@ -343,7 +343,7 @@ namespace BlackGui
 
         CStatusMessageList CDbMappingComponent::validateCurrentModel(bool withNestedForms) const
         {
-            CStatusMessageList msgs(this->ui->editor_Model->validate(!withNestedForms));
+            CStatusMessageList msgs(ui->editor_Model->validate(!withNestedForms));
             if (withNestedForms)
             {
                 msgs.push_back(ui->editor_AircraftIcao->validate());
@@ -357,7 +357,7 @@ namespace BlackGui
         {
             const CLivery stdLivery(sGui->getWebDataServices()->getStdLiveryForAirlineCode(code));
             if (!stdLivery.hasValidDbKey()) { return; }
-            this->ui->comp_StashAircraft->applyToSelected(stdLivery);
+            ui->comp_StashAircraft->applyToSelected(stdLivery);
         }
 
         void CDbMappingComponent::ps_stashCurrentModel()
@@ -367,7 +367,7 @@ namespace BlackGui
             if (!msgs.hasErrorMessages())
             {
                 msgs.push_back(
-                    this->ui->comp_StashAircraft->stashModel(model, true)
+                    ui->comp_StashAircraft->stashModel(model, true)
                 );
             }
             if (msgs.hasErrorMessages())
@@ -405,58 +405,58 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_applyFormLiveryData()
         {
-            if (this->ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
-            const CStatusMessageList msgs = this->ui->editor_Livery->validate(true);
+            if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
+            const CStatusMessageList msgs = ui->editor_Livery->validate(true);
             if (msgs.hasErrorMessages())
             {
                 this->showOverlayMessages(msgs);
             }
             else
             {
-                this->ui->comp_StashAircraft->applyToSelected(this->ui->editor_Livery->getValue());
+                ui->comp_StashAircraft->applyToSelected(ui->editor_Livery->getValue());
             }
         }
 
         void CDbMappingComponent::ps_applyFormAircraftIcaoData()
         {
-            if (this->ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
-            const CStatusMessageList msgs = this->ui->editor_AircraftIcao->validate(true);
+            if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
+            const CStatusMessageList msgs = ui->editor_AircraftIcao->validate(true);
             if (msgs.hasErrorMessages())
             {
                 this->showOverlayMessages(msgs);
             }
             else
             {
-                this->ui->comp_StashAircraft->applyToSelected(this->ui->editor_AircraftIcao->getValue());
+                ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftIcao->getValue());
             }
         }
 
         void CDbMappingComponent::ps_applyFormDistributorData()
         {
-            if (this->ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
-            const CStatusMessageList msgs = this->ui->editor_Distributor->validate(true);
+            if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
+            const CStatusMessageList msgs = ui->editor_Distributor->validate(true);
             if (msgs.hasErrorMessages())
             {
                 this->showOverlayMessages(msgs);
             }
             else
             {
-                this->ui->comp_StashAircraft->applyToSelected(this->ui->editor_Distributor->getValue());
+                ui->comp_StashAircraft->applyToSelected(ui->editor_Distributor->getValue());
             }
         }
 
         void CDbMappingComponent::ps_modifyModelDialog()
         {
             // only one model selected, use as default
-            if (this->ui->comp_StashAircraft->view()->hasSingleSelectedRow())
+            if (ui->comp_StashAircraft->view()->hasSingleSelectedRow())
             {
-                this->m_modelModifyDialog->setValue(this->ui->comp_StashAircraft->view()->selectedObject());
+                this->m_modelModifyDialog->setValue(ui->comp_StashAircraft->view()->selectedObject());
             }
 
             QDialog::DialogCode s = static_cast<QDialog::DialogCode>(this->m_modelModifyDialog->exec());
             if (s == QDialog::Rejected) { return; }
             CPropertyIndexVariantMap vm = this->m_modelModifyDialog->getValues();
-            this->ui->comp_StashAircraft->applyToSelected(vm);
+            ui->comp_StashAircraft->applyToSelected(vm);
         }
 
         void CDbMappingComponent::resizeForSelect()
@@ -484,7 +484,7 @@ namespace BlackGui
                 h2 = h / 3 * 2;
             }
             const QList<int> sizes({h1, h2});
-            this->ui->sp_MappingComponent->setSizes(sizes);
+            ui->sp_MappingComponent->setSizes(sizes);
         }
 
         void CDbMappingComponent::maxTableView()
@@ -493,7 +493,7 @@ namespace BlackGui
             int h1 = h;
             int h2 = 0;
             const QList<int> sizes({h1, h2});
-            this->ui->sp_MappingComponent->setSizes(sizes);
+            ui->sp_MappingComponent->setSizes(sizes);
         }
 
         void CDbMappingComponent::ps_loadVPilotData()
@@ -501,7 +501,7 @@ namespace BlackGui
             if (this->m_vPilotReader.readInBackground(true))
             {
                 CLogMessage(this).info("Start loading vPilot rulesets");
-                this->ui->tvp_AircraftModelsForVPilot->showLoadIndicator();
+                ui->tvp_AircraftModelsForVPilot->showLoadIndicator();
             }
             else
             {
@@ -516,27 +516,27 @@ namespace BlackGui
             {
                 CLogMessage(this).info("Loading vPilot ruleset completed");
                 const CAircraftModelList models(this->m_vPilotReader.getAsModels());
-                if (this->ui->tvp_AircraftModelsForVPilot->displayAutomatically())
+                if (ui->tvp_AircraftModelsForVPilot->displayAutomatically())
                 {
-                    this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(models);
+                    ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(models);
                 }
             }
             else
             {
                 CLogMessage(this).error("Loading vPilot ruleset failed");
             }
-            this->ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
+            ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
         }
 
         void CDbMappingComponent::ps_onVPilotCacheChanged()
         {
-            if (this->ui->tvp_AircraftModelsForVPilot->displayAutomatically())
+            if (ui->tvp_AircraftModelsForVPilot->displayAutomatically())
             {
-                this->ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(this->m_vPilotReader.getAsModelsFromCache());
+                ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(this->m_vPilotReader.getAsModelsFromCache());
             }
             else
             {
-                this->ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
+                ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
             }
         }
 
@@ -552,18 +552,18 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_onStashedModelsChangedDigest()
         {
-            const bool hlvp = this->ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
-            const bool hlom = this->ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModelStrings();
+            const bool hlvp = ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
+            const bool hlom = ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModelStrings();
             const bool highlight =  hlom || hlvp;
             if (!highlight) { return; }
-            const QStringList stashedModels(this->ui->comp_StashAircraft->getStashedModelStrings());
+            const QStringList stashedModels(ui->comp_StashAircraft->getStashedModelStrings());
             if (hlvp)
             {
-                this->ui->tvp_AircraftModelsForVPilot->derivedModel()->setHighlightModelStrings(stashedModels);
+                ui->tvp_AircraftModelsForVPilot->derivedModel()->setHighlightModelStrings(stashedModels);
             }
             if (hlom)
             {
-                this->ui->comp_OwnAircraftModels->view()->derivedModel()->setHighlightModelStrings(stashedModels);
+                ui->comp_OwnAircraftModels->view()->derivedModel()->setHighlightModelStrings(stashedModels);
             }
         }
 
@@ -603,25 +603,25 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            const int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_VPilot);
-            QString o = this->ui->tw_ModelsToBeMapped->tabText(i);
-            QString f = this->ui->tvp_AircraftModelsForVPilot->hasFilter() ? "F" : "";
-            o = CGuiUtility::replaceTabCountValue(o, this->ui->tvp_AircraftModelsForVPilot->rowCount()) + f;
-            this->ui->tw_ModelsToBeMapped->setTabText(i, o);
+            const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_VPilot);
+            QString o = ui->tw_ModelsToBeMapped->tabText(i);
+            QString f = ui->tvp_AircraftModelsForVPilot->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, ui->tvp_AircraftModelsForVPilot->rowCount()) + f;
+            ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 
         void CDbMappingComponent::ps_onOwnModelsChanged(int count, bool withFilter)
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            const int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_OwnModels);
-            static const QString ot(this->ui->tw_ModelsToBeMapped->tabText(i));
+            const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModels);
+            static const QString ot(ui->tw_ModelsToBeMapped->tabText(i));
             QString o(ot);
             const QString sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator().toQString(true));
             if (!sim.isEmpty()) { o = o.append(" ").append(sim); }
-            QString f = this->ui->comp_OwnAircraftModels->view()->hasFilter() ? "F" : "";
-            o = CGuiUtility::replaceTabCountValue(o, this->ui->comp_OwnAircraftModels->view()->rowCount()) + f;
-            this->ui->tw_ModelsToBeMapped->setTabText(i, o);
+            QString f = ui->comp_OwnAircraftModels->view()->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, ui->comp_OwnAircraftModels->view()->rowCount()) + f;
+            ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 
         void CDbMappingComponent::ps_addToOwnModelSet()
@@ -679,11 +679,11 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_StashAircraftModels);
-            QString o = this->ui->tw_ModelsToBeMapped->tabText(i);
-            const QString f = this->ui->comp_StashAircraft->view()->hasFilter() ? "F" : "";
-            o = CGuiUtility::replaceTabCountValue(o, this->ui->comp_StashAircraft->view()->rowCount()) + f;
-            this->ui->tw_ModelsToBeMapped->setTabText(i, o);
+            int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_StashAircraftModels);
+            QString o = ui->tw_ModelsToBeMapped->tabText(i);
+            const QString f = ui->comp_StashAircraft->view()->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, ui->comp_StashAircraft->view()->rowCount()) + f;
+            ui->tw_ModelsToBeMapped->setTabText(i, o);
 
             // update editors
             this->updateEditorsWhenApplicable();
@@ -693,11 +693,11 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int i = this->ui->tw_ModelsToBeMapped->indexOf(this->ui->tab_OwnModelSet);
+            int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_OwnModelSet);
             QString o = "Model set " + ui->comp_OwnModelSet->getModelSetSimulator().toQString(true);
-            const QString f = this->ui->comp_OwnModelSet->view()->hasFilter() ? "F" : "";
-            o = CGuiUtility::replaceTabCountValue(o, this->ui->comp_OwnModelSet->view()->rowCount()) + f;
-            this->ui->tw_ModelsToBeMapped->setTabText(i, o);
+            const QString f = ui->comp_OwnModelSet->view()->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, ui->comp_OwnModelSet->view()->rowCount()) + f;
+            ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
 
         void CDbMappingComponent::ps_userChanged()
@@ -709,7 +709,7 @@ namespace BlackGui
         {
             if (!this->hasSelectedModelsToStash()) { return; }
             CStatusMessageList msgs =
-                this->ui->comp_StashAircraft->stashModels(
+                ui->comp_StashAircraft->stashModels(
                     this->getSelectedModelsToStash()
                 );
             if (msgs.hasWarningOrErrorMessages())
@@ -730,32 +730,32 @@ namespace BlackGui
             const CDistributor distributor(dbModel ? model.getDistributor() : sGui->getWebDataServices()->smartDistributorSelector(model.getDistributor()));
 
             // set model part
-            this->ui->editor_Model->setValue(model);
+            ui->editor_Model->setValue(model);
 
             // if found, then set in editor
             if (livery.hasValidDbKey())
             {
-                this->ui->editor_Livery->setValue(livery);
+                ui->editor_Livery->setValue(livery);
             }
             else
             {
-                this->ui->editor_Livery->clear();
+                ui->editor_Livery->clear();
             }
             if (aircraftIcao.hasValidDbKey())
             {
-                this->ui->editor_AircraftIcao->setValue(aircraftIcao);
+                ui->editor_AircraftIcao->setValue(aircraftIcao);
             }
             else
             {
-                this->ui->editor_AircraftIcao->clear();
+                ui->editor_AircraftIcao->clear();
             }
             if (distributor.hasValidDbKey())
             {
-                this->ui->editor_Distributor->setValue(distributor);
+                ui->editor_Distributor->setValue(distributor);
             }
             else
             {
-                this->ui->editor_Distributor->clear();
+                ui->editor_Distributor->clear();
             }
 
             // request filtering
@@ -778,63 +778,63 @@ namespace BlackGui
 
         CAircraftModelList CDbMappingComponent::getOwnModels() const
         {
-            return this->ui->comp_OwnAircraftModels->getOwnModels();
+            return ui->comp_OwnAircraftModels->getOwnModels();
         }
 
         CAircraftModelList CDbMappingComponent::getOwnSelectedModels() const
         {
-            return this->ui->comp_OwnAircraftModels->getOwnSelectedModels();
+            return ui->comp_OwnAircraftModels->getOwnSelectedModels();
         }
 
         CAircraftModel CDbMappingComponent::getOwnModelForModelString(const QString &modelString) const
         {
-            return this->ui->comp_OwnAircraftModels->getOwnModelForModelString(modelString);
+            return ui->comp_OwnAircraftModels->getOwnModelForModelString(modelString);
         }
 
         const CSimulatorInfo CDbMappingComponent::getOwnModelsSimulator() const
         {
-            return this->ui->comp_OwnAircraftModels->getOwnModelsSimulator();
+            return ui->comp_OwnAircraftModels->getOwnModelsSimulator();
         }
 
         void CDbMappingComponent::setOwnModelsSimulator(const CSimulatorInfo &simulator)
         {
-            this->ui->comp_OwnAircraftModels->setSimulator(simulator);
+            ui->comp_OwnAircraftModels->setSimulator(simulator);
         }
 
         int CDbMappingComponent::getOwnModelsCount() const
         {
-            return this->ui->comp_OwnAircraftModels->getOwnModelsCount();
+            return ui->comp_OwnAircraftModels->getOwnModelsCount();
         }
 
         void CDbMappingComponent::setOwnModelSetSimulator(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            this->ui->comp_OwnModelSet->setModelSetSimulator(simulator);
+            ui->comp_OwnModelSet->setModelSetSimulator(simulator);
         }
 
         CStatusMessage CDbMappingComponent::stashModel(const CAircraftModel &model, bool replace)
         {
-            return this->ui->comp_StashAircraft->stashModel(model, replace);
+            return ui->comp_StashAircraft->stashModel(model, replace);
         }
 
         CStatusMessageList CDbMappingComponent::stashModels(const CAircraftModelList &models)
         {
-            return this->ui->comp_StashAircraft->stashModels(models);
+            return ui->comp_StashAircraft->stashModels(models);
         }
 
         CStatusMessage CDbMappingComponent::addToOwnModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
-            return this->ui->comp_OwnModelSet->addToModelSet(models, simulator);
+            return ui->comp_OwnModelSet->addToModelSet(models, simulator);
         }
 
         CAircraftModel CDbMappingComponent::consolidateModel(const CAircraftModel &model) const
         {
-            return this->ui->comp_StashAircraft->consolidateModel(model);
+            return ui->comp_StashAircraft->consolidateModel(model);
         }
 
         void CDbMappingComponent::replaceStashedModelsUnvalidated(const CAircraftModelList &models) const
         {
-            this->ui->comp_StashAircraft->replaceModelsUnvalidated(models);
+            ui->comp_StashAircraft->replaceModelsUnvalidated(models);
         }
 
         void CDbMappingComponent::CMappingVPilotMenu::customMenu(CMenuActions &menuActions)
