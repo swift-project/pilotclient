@@ -194,6 +194,9 @@ namespace BlackMisc
             //! Valid designator?
             static bool isValidAirlineDesignator(const QString &airline);
 
+            //! Some special valid designator which do not fit standard rule (e.g. 3-letter code)
+            static QSet<QString> specialValidDesignators();
+
             //! Normalize string as airline designator
             static QString normalizeDesignator(const QString candidate);
 

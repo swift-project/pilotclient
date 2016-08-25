@@ -147,7 +147,7 @@ namespace BlackMisc
 
         CIcon CAirlineIcaoCode::toIcon() const
         {
-            if (this->m_designator.length() > 2)
+            if (hasValidDesignator())
             {
                 // relative to images
                 return CIcon("airlines/" + m_designator.toLower() + ".png", this->convertToQString());
@@ -285,16 +285,23 @@ namespace BlackMisc
 
         bool CAirlineIcaoCode::isValidAirlineDesignator(const QString &airline)
         {
+            // allow 2 chars for IATA
             if (airline.length() < 2 || airline.length() > 5) return false;
             auto chars = makeRange(airline.begin(), airline.end());
             if (chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); })) { return false; }
             return true;
         }
 
+        QSet<QString> CAirlineIcaoCode::specialValidDesignators()
+        {
+            static const QSet<QString> valid({ "VV", "VM"});
+            return valid;
+        }
+
         QString CAirlineIcaoCode::normalizeDesignator(const QString candidate)
         {
             QString n(candidate.trimmed().toUpper());
-            if (n.contains(' ')) { n = n.left(n.indexOf(' ')); } // cutoff as first space
+            if (n.contains(' ')) { n = n.left(n.indexOf(' ')); } // cutoff at first space
             if (n.isEmpty()) { return n; }
 
             static QThreadStorage<QRegularExpression> tsRegex;
