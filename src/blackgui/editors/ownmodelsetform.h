@@ -42,7 +42,7 @@ namespace BlackGui
             void reloadData();
 
             //! Selected providers?
-            bool selectedDistributors() const;
+            bool useSelectedDistributors() const;
 
             //! Get selected providers
             BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
@@ -59,11 +59,14 @@ namespace BlackGui
             //! Request incremental build
             bool incrementalBuild() const;
 
-            //! Distributors (from preferences or web)
-            BlackMisc::Simulation::CDistributorList getDistributors() const;
+            //! Distributors from preferences
+            BlackMisc::Simulation::CDistributorList getDistributorsFromPreferences() const;
 
-            //! Preferences for given simulator
-            bool hasDIstributorPreferences() const;
+            //! All distributors
+            BlackMisc::Simulation::CDistributorList getAllDistributors() const;
+
+            //! Preferences for given simulator?
+            bool hasDistributorPreferences() const;
 
             //! \name Form functions, here not used
             //! \@{
@@ -81,7 +84,16 @@ namespace BlackGui
             //! Simulator changed
             void ps_simulatorChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Display distributors based on checkboxes
+            void ps_changeDistributorDisplay();
+
         private:
+            //! Init the options which distributors are displayed
+            void initDistributorDisplay();
+
+            //! Set mode for view
+            void setDistributorView(bool hasPreferences);
+
             QScopedPointer<Ui::COwnModelSetForm>  ui;
             BlackMisc::Simulation::CSimulatorInfo m_simulator;
             BlackMisc::CSetting<BlackCore::Simulator::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::ps_preferencesChanged };

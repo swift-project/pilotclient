@@ -6,18 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>433</width>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Frame</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QVBoxLayout" name="vl_OwnModelSetForm">
    <property name="leftMargin">
@@ -35,7 +29,7 @@
    <item>
     <layout class="QGridLayout" name="gq_OwnModelSetForm">
      <property name="spacing">
-      <number>3</number>
+      <number>6</number>
      </property>
      <item row="2" column="1">
       <widget class="QRadioButton" name="rb_DbDataOnly">
@@ -50,30 +44,10 @@
        </attribute>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="lbl_SelectSourceSet">
-       <property name="text">
-        <string>Source set:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QRadioButton" name="rb_DefaultDistributors">
-       <property name="text">
-        <string>default</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">bg_Distributors</string>
-       </attribute>
-      </widget>
-     </item>
      <item row="2" column="3">
       <widget class="QRadioButton" name="rb_WithIcaoData">
        <property name="toolTip">
-        <string>Model has ICAO code</string>
+        <string>Model has ICAO code, but not necessarily valid data</string>
        </property>
        <property name="text">
         <string> ICAO data</string>
@@ -93,10 +67,20 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QRadioButton" name="rb_SelectedDistributors">
+     <item row="2" column="0">
+      <widget class="QLabel" name="lbl_SelectSourceSet">
        <property name="text">
-        <string>selected</string>
+        <string>Source set:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QRadioButton" name="rb_AllDistributors">
+       <property name="text">
+        <string>all</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
        <attribute name="buttonGroup">
         <string notr="true">bg_Distributors</string>
@@ -108,29 +92,6 @@
        <property name="text">
         <string>Mode:</string>
        </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QRadioButton" name="rb_Full">
-       <property name="text">
-        <string>full</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">bg_Mode</string>
-       </attribute>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QRadioButton" name="rb_Incremental">
-       <property name="text">
-        <string>incremental</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">bg_Mode</string>
-       </attribute>
       </widget>
      </item>
      <item row="2" column="2">
@@ -149,11 +110,43 @@
        </attribute>
       </widget>
      </item>
-     <item row="3" column="3">
-      <widget class="QCheckBox" name="cb_Preferences">
-       <property name="text">
-        <string>preferences</string>
+     <item row="1" column="1">
+      <widget class="QRadioButton" name="rb_Full">
+       <property name="toolTip">
+        <string>new set, existing data will be deleted</string>
        </property>
+       <property name="text">
+        <string>full</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">bg_Mode</string>
+       </attribute>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QRadioButton" name="rb_Incremental">
+       <property name="toolTip">
+        <string>add to existing set</string>
+       </property>
+       <property name="text">
+        <string>incremental</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">bg_Mode</string>
+       </attribute>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QRadioButton" name="rb_SelectedDistributors">
+       <property name="text">
+        <string>selected</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">bg_Distributors</string>
+       </attribute>
       </widget>
      </item>
      <item row="0" column="1" colspan="3">
@@ -166,11 +159,54 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="3">
+      <widget class="QCheckBox" name="cb_ConsolidateModelSet">
+       <property name="text">
+        <string>consolidate with DB</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="lbl_Simulator">
        <property name="text">
         <string>Simulator:</string>
        </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QRadioButton" name="rb_DisplayPreferencesDistributors">
+       <property name="text">
+        <string>from preferences</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">bg_DisplayedDistributors</string>
+       </attribute>
+      </widget>
+     </item>
+     <item row="4" column="3">
+      <widget class="QCheckBox" name="cb_SortByPreferences">
+       <property name="toolTip">
+        <string>If checked the distributors from the settings page will be used</string>
+       </property>
+       <property name="text">
+        <string>sort by dist. preferences</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QRadioButton" name="rb_DisplayAllDistributors">
+       <property name="text">
+        <string>all distributors</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">bg_DisplayedDistributors</string>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -210,8 +246,7 @@
   <tabstop>rb_DbIcaoCodesOnly</tabstop>
   <tabstop>rb_WithIcaoData</tabstop>
   <tabstop>rb_SelectedDistributors</tabstop>
-  <tabstop>rb_DefaultDistributors</tabstop>
-  <tabstop>cb_Preferences</tabstop>
+  <tabstop>rb_AllDistributors</tabstop>
   <tabstop>tvp_Distributors</tabstop>
  </tabstops>
  <resources/>
@@ -220,5 +255,6 @@
   <buttongroup name="bg_Distributors"/>
   <buttongroup name="bg_Mode"/>
   <buttongroup name="bg_SourceSet"/>
+  <buttongroup name="bg_DisplayedDistributors"/>
  </buttongroups>
 </ui>

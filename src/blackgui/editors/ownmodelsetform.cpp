@@ -35,9 +35,12 @@ namespace BlackGui
             ui->tvp_Distributors->setDistributorMode(CDistributorListModel::Minimal);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->comp_SimulatorSelector->setLeftMargin(0);
-            CGuiUtility::checkBoxReadOnly(ui->cb_Preferences, true);
 
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::ps_simulatorChanged);
+            connect(ui->rb_DisplayAllDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::ps_changeDistributorDisplay);
+            connect(ui->rb_DisplayPreferencesDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::ps_changeDistributorDisplay);
+
+            this->ps_simulatorChanged(ui->comp_SimulatorSelector->getValue());
         }
 
         COwnModelSetForm::~COwnModelSetForm()
@@ -47,18 +50,15 @@ namespace BlackGui
 
         void COwnModelSetForm::reloadData()
         {
-            const CDistributorList distributors(this->getDistributors());
-            const bool hasPreferences = this->hasDIstributorPreferences();
-            ui->cb_Preferences->setChecked(hasPreferences);
+            const bool hasPreferences = this->hasDistributorPreferences();
+            ui->cb_SortByPreferences->setChecked(hasPreferences);
+            CGuiUtility::checkBoxReadOnly(ui->cb_SortByPreferences, !hasPreferences);
             ui->comp_SimulatorSelector->setValue(this->m_simulator);
-            ui->tvp_Distributors->setDistributorMode(hasPreferences ? CDistributorListModel::MinimalWithOrder : CDistributorListModel::Minimal);
-            if (!distributors.isEmpty())
-            {
-                this->ui->tvp_Distributors->updateContainerMaybeAsync(distributors);
-            }
+            this->setDistributorView(hasPreferences);
+            this->initDistributorDisplay();
         }
 
-        bool COwnModelSetForm::selectedDistributors() const
+        bool COwnModelSetForm::useSelectedDistributors() const
         {
             return this->ui->rb_SelectedDistributors->isChecked();
         }
@@ -85,15 +85,55 @@ namespace BlackGui
             emit simulatorChanged(simulator);
         }
 
-        CDistributorList COwnModelSetForm::getDistributors() const
+        void COwnModelSetForm::ps_changeDistributorDisplay()
         {
-            Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
+            if (ui->rb_DisplayAllDistributors->isChecked())
+            {
+                ui->tvp_Distributors->updateContainerMaybeAsync(this->getAllDistributors());
+                ui->cb_SortByPreferences->setChecked(false);
+                CGuiUtility::checkBoxReadOnly(ui->cb_SortByPreferences, true);
+                this->setDistributorView(false);
+            }
+            else
+            {
+                ui->tvp_Distributors->updateContainerMaybeAsync(this->getDistributorsFromPreferences());
+                ui->cb_SortByPreferences->setChecked(true);
+                CGuiUtility::checkBoxReadOnly(ui->cb_SortByPreferences, false);
+                this->setDistributorView(true);
+            }
+        }
+
+        void COwnModelSetForm::initDistributorDisplay()
+        {
+            if (this->hasDistributorPreferences())
+            {
+                ui->rb_DisplayPreferencesDistributors->setChecked(true);
+            }
+            else
+            {
+                ui->rb_DisplayAllDistributors->setChecked(true);
+            }
+            this->ps_changeDistributorDisplay();
+        }
+
+        void COwnModelSetForm::setDistributorView(bool hasPreferences)
+        {
+            ui->tvp_Distributors->setDistributorMode(hasPreferences ? CDistributorListModel::MinimalWithOrder : CDistributorListModel::Minimal);
+            ui->tvp_Distributors->fullResizeToContents();
+        }
+
+        CDistributorList COwnModelSetForm::getDistributorsFromPreferences() const
+        {
             Q_ASSERT_X(this->m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             const CDistributorListPreferences prefs(this->m_distributorPreferences.get());
             const CDistributorList distributors(prefs.getDistributors(this->m_simulator));
-            if (!distributors.isEmpty()) { return distributors; }
+            return distributors;
+        }
 
-            // no preferences
+        CDistributorList COwnModelSetForm::getAllDistributors() const
+        {
+            Q_ASSERT_X(this->m_simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
             return sGui->getWebDataServices()->getDistributors().matchesSimulator(this->m_simulator);
         }
 
@@ -113,11 +153,10 @@ namespace BlackGui
             m_simulator = simulator;
         }
 
-        bool COwnModelSetForm::hasDIstributorPreferences() const
+        bool COwnModelSetForm::hasDistributorPreferences() const
         {
             const CDistributorListPreferences prefs(this->m_distributorPreferences.get());
             return !prefs.getDistributors(this->m_simulator).isEmpty();
         }
     } // ns
 } // ns
-
