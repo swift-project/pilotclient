@@ -181,6 +181,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CLivery getLiveryForCombinedCode(const QString &combinedCode) const;
 
+        //! The temp. livery if available
+        //! \threadsafe
+        BlackMisc::Aviation::CLivery getTempLiveryOrDefault() const;
+
         //! Standard livery for airline code
         //! \threadsafe
         BlackMisc::Aviation::CLivery getStdLiveryForAirlineCode(const BlackMisc::Aviation::CAirlineIcaoCode &icao) const;

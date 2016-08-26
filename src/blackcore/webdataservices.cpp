@@ -370,6 +370,12 @@ namespace BlackCore
         return CLivery();
     }
 
+    CLivery CWebDataServices::getTempLiveryOrDefault() const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->getLiveryForCombinedCode(CLivery::tempLiveryCode()); }
+        return CLivery();
+    }
+
     CLivery CWebDataServices::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getStdLiveryForAirlineVDesignator(icao); }

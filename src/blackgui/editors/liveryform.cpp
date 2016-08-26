@@ -199,7 +199,7 @@ namespace BlackGui
         void CLiveryForm::ps_setTemporaryLivery()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
-            const CLivery l = sGui->getWebDataServices()->getLiveryForCombinedCode(CLivery::tempLiveryCode());
+            const CLivery l = sGui->getWebDataServices()->getTempLiveryOrDefault();
             if (l.isLoadedFromDb())
             {
                 this->setValue(l);
