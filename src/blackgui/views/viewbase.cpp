@@ -1172,15 +1172,9 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::mouseOverCallback(const QModelIndex &index, bool mouseOver)
         {
-            if (mouseOver && index.isValid())
-            {
-                const int row = index.row();
-                this->m_model->setHoveredRow(row);
-            }
-            else
-            {
-                // this->m_model->setHoveredRow(-1);
-            }
+            // void
+            Q_UNUSED(index);
+            Q_UNUSED(mouseOver);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

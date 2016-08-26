@@ -197,19 +197,6 @@ namespace BlackGui
             return m_modelDestroyed;
         }
 
-        void CListModelBaseNonTemplate::setHoveredRow(int row)
-        {
-            if (this->m_hoverRow == row) { return; }
-            this->m_hoverRow = row;
-            const int columns = columnCount();
-            if (columns < 1) { return; }
-            if (row < 0) { return; }
-
-            const QModelIndex topLeft(createIndex(row, 0));
-            const QModelIndex bottomRight(createIndex(row, columns - 1));
-            emit this->dataChanged(topLeft, bottomRight);
-        }
-
         void CListModelBaseNonTemplate::clearHighlighting()
         {
             // can be overridden to delete highlighting
@@ -243,20 +230,6 @@ namespace BlackGui
 
             // connect
             connect(this, &CListModelBaseNonTemplate::dataChanged, this, &CListModelBaseNonTemplate::ps_onDataChanged);
-        }
-
-        bool CListModelBaseNonTemplate::isHoveredRow(int row) const
-        {
-            if (this->m_hoverRow < 0) { return false; }
-            if (row < 0) { return false; }
-            return row == this->m_hoverRow;
-        }
-
-        bool CListModelBaseNonTemplate::isHoveredRow(const QModelIndex &modelIndex) const
-        {
-            if (this->m_hoverRow < 0) { return false; }
-            if (!modelIndex.isValid()) { return false; }
-            return modelIndex.row() == this->m_hoverRow;
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
@@ -316,16 +289,9 @@ namespace BlackGui
         {
             // check / init
             if (!this->isValidIndex(index)) { return QVariant(); }
-            const int row = index.row();
-            const int col = index.column();
 
-            // Hover effect
             if (role == Qt::BackgroundRole)
             {
-                if (this->isHoveredRow(row))
-                {
-                    return QBrush(Qt::red);
-                }
                 return CListModelBaseNonTemplate::data(index, role);
             }
 
@@ -337,6 +303,8 @@ namespace BlackGui
             if (!formatter || !formatter->supportsRole(role)) { return CListModelBaseNonTemplate::data(index, role); }
 
             // index, updront checking
+            const int row = index.row();
+            const int col = index.column();
             const BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
             if (static_cast<int>(CPropertyIndex::GlobalIndexLineNumber) == propertyIndex.frontCasted<int>())
             {

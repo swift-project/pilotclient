@@ -108,9 +108,6 @@ namespace BlackGui
             //! Model about to be destroyed?
             bool isModelDestroyed();
 
-            //! Hovered role
-            void setHoveredRow(int row);
-
             //! Remove all highlighting
             virtual void clearHighlighting();
 
@@ -167,14 +164,7 @@ namespace BlackGui
             //! Helper method with template free signature
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) = 0;
 
-            //! Row to be hovered?
-            bool isHoveredRow(int row) const;
-
-            //! Row to be hovered?
-            bool isHoveredRow(const QModelIndex &modelIndex) const;
-
             CColumns        m_columns;                         //!< columns metadata
-            int             m_hoverRow = -1;                   //!< hovered row number
             int             m_sortedColumn;                    //!< currently sorted column
             bool            m_modelDestroyed = false;          //!< model is about to be destroyed
             Qt::SortOrder   m_sortOrder;                       //!< sort order (asc/desc)
