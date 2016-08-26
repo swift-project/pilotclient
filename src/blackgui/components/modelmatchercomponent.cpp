@@ -159,7 +159,7 @@ namespace BlackGui
             const QString combined(ui->comp_CombinedCode->getCombinedType());
             const QString manufacturer(ui->le_Manufacturer->text().trimmed().toUpper());
             const QString liveryCombinedCode(ui->comp_LiverySelector->getRawCombinedCode());
-            const CCallsign cs(ui->le_Callsign->text());
+            const CCallsign cs(ui->le_Callsign->text().isEmpty() ? "SWIFT" : ui->le_Callsign->text()); // need callsign
             static const CUser pilot("123456", "swift Test", cs);
 
             CAircraftIcaoCode icao(aircraft, combined);
@@ -183,7 +183,8 @@ namespace BlackGui
             const CAircraftIcaoCode icaoAircraft("B737", "L2J", "FooBar", "Dummy", "M", false, false, false, 1);
             const CAirlineIcaoCode icaoAirline("Foo", "FooBar airlines", { "DE", "Germany" }, "FOO", true, true);
             const CLivery livery(CLivery::getStandardCode(icaoAirline), icaoAirline, "Standard Foo airlines", "red", "blue", false);
-            const CAircraftModel model("default model", CAircraftModel::TypeOwnSimulatorModel, "dummy model", icaoAircraft, livery);
+            CAircraftModel model("default model", CAircraftModel::TypeOwnSimulatorModel, "dummy model", icaoAircraft, livery);
+            if (model.getCallsign().isEmpty()) { model.setCallsign("SWIFT"); }
             return model;
         }
     } // ns
