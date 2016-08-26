@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>357</height>
+    <width>453</width>
+    <height>413</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,48 +16,14 @@
   <layout class="QVBoxLayout" name="vl_AutoStashing">
    <item>
     <layout class="QGridLayout" name="gl_AutoStashing">
-     <item row="6" column="0" colspan="4">
-      <widget class="QProgressBar" name="pb_StashingProgress">
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLineEdit" name="le_All">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="placeholderText">
-        <string>all</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0" colspan="2" alignment="Qt::AlignLeft">
-      <widget class="QCheckBox" name="cb_RemovedChecked">
+     <item row="2" column="0">
+      <widget class="QLabel" name="lbl_Description">
        <property name="text">
-        <string>Remove stashed</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>Description:</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="lbl_Max">
-       <property name="text">
-        <string>Max stashed:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="le_MaxModelsStashed">
-       <property name="placeholderText">
-        <string>max.models stashed</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0" colspan="4">
+     <item row="5" column="0" colspan="4">
       <widget class="BlackGui::Views::CStatusMessageView" name="tvp_StatusMessages">
        <property name="selectionMode">
         <enum>QAbstractItemView::NoSelection</enum>
@@ -67,7 +33,14 @@
        </attribute>
       </widget>
      </item>
-     <item row="7" column="2" colspan="2">
+     <item row="0" column="2">
+      <widget class="QRadioButton" name="rb_All">
+       <property name="text">
+        <string>All:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2" colspan="2">
       <widget class="QDialogButtonBox" name="bb_AutoStashing">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -77,10 +50,13 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QRadioButton" name="rb_All">
-       <property name="text">
-        <string>All:</string>
+     <item row="2" column="1" colspan="2">
+      <widget class="QLineEdit" name="le_Description">
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+       <property name="placeholderText">
+        <string>Override description in model</string>
        </property>
       </widget>
      </item>
@@ -94,23 +70,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="lbl_Description">
-       <property name="text">
-        <string>Description:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="3">
-      <widget class="QLineEdit" name="le_Description">
-       <property name="maxLength">
-        <number>255</number>
-       </property>
-       <property name="placeholderText">
-        <string>Override description in model</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QRadioButton" name="rb_Selected">
        <property name="text">
@@ -121,7 +80,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="0" colspan="4">
+     <item row="6" column="0" colspan="4">
       <widget class="QFrame" name="fr_Statistics">
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -199,6 +158,106 @@
        </layout>
       </widget>
      </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="le_MaxModelsStashed">
+       <property name="placeholderText">
+        <string>max.models to be stashed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QWidget" name="wi_DescriptionRadioButtons" native="true">
+       <layout class="QHBoxLayout" name="hl_DescriptionButtons">
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>1</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="rb_DescriptionAll">
+          <property name="text">
+           <string>all</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rb_DescriptionEmptyOnly">
+          <property name="toolTip">
+           <string>apply only if description is empty</string>
+          </property>
+          <property name="text">
+           <string>empty only</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPushButton" name="pb_ResetDescription">
+       <property name="text">
+        <string>reset description</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0" colspan="4">
+      <widget class="QProgressBar" name="pb_StashingProgress">
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="lbl_Max">
+       <property name="text">
+        <string>Max stashed:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="le_All">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>all</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0" colspan="2" alignment="Qt::AlignLeft">
+      <widget class="QCheckBox" name="cb_RemovedChecked">
+       <property name="text">
+        <string>Remove stashed</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="lbl_Livery">
+       <property name="text">
+        <string>Livery:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QCheckBox" name="cb_UseTempLivery">
+       <property name="text">
+        <string>use 'temp' livery if not resolved</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
@@ -210,6 +269,23 @@
    <header>blackgui/views/statusmessageview.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>rb_Selected</tabstop>
+  <tabstop>le_Selected</tabstop>
+  <tabstop>rb_All</tabstop>
+  <tabstop>le_All</tabstop>
+  <tabstop>le_MaxModelsStashed</tabstop>
+  <tabstop>pb_ResetDescription</tabstop>
+  <tabstop>le_Description</tabstop>
+  <tabstop>rb_DescriptionAll</tabstop>
+  <tabstop>rb_DescriptionEmptyOnly</tabstop>
+  <tabstop>cb_UseTempLivery</tabstop>
+  <tabstop>tvp_StatusMessages</tabstop>
+  <tabstop>le_Stashed</tabstop>
+  <tabstop>le_NoData</tabstop>
+  <tabstop>le_ValidationFailed</tabstop>
+  <tabstop>cb_RemovedChecked</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

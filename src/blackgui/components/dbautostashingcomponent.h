@@ -30,11 +30,9 @@ namespace BlackMisc
     namespace Simulation { class CAircraftModel; }
 }
 namespace Ui { class CDbAutoStashingComponent; }
-
 namespace BlackGui
 {
     namespace Views { class CAircraftModelView; }
-
     namespace Components
     {
         /*!
@@ -78,6 +76,9 @@ namespace BlackGui
             //! Data have been read
             void ps_entitiesRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState readState, int count);
 
+            //! Reset the description settings
+            void ps_resetDescription();
+
         private:
             QScopedPointer<Ui::CDbAutoStashingComponent> ui;
 
@@ -105,7 +106,13 @@ namespace BlackGui
             //! Try stashing a model
             //! \param model this model can be updated with consolidated data
             //! \return true means stashing is possible
-            bool tryToStashModel(BlackMisc::Simulation::CAircraftModel &model);
+            bool tryToStashModel(BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::Aviation::CLivery &tempLivery);
+
+            //! Set the model description
+            void setModelDescription(BlackMisc::Simulation::CAircraftModel &model, const QString &description) const;
+
+            //! Get the temp.livery if available
+            static BlackMisc::Aviation::CLivery getTempLivery();
 
             //! Categories
             const BlackMisc::CLogCategoryList &categgories();
