@@ -109,6 +109,7 @@ namespace BlackGui
         {
             ui->te_Results->clear();
             CStatusMessageList msgs;
+            this->ps_simulatorChanged(ui->comp_SimulatorSelector->getValue()); // update model set to latest version
             CSimulatedAircraft remoteAircraft(createAircraft());
             if (this->ui->cb_withReverseLookup->isChecked())
             {
