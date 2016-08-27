@@ -63,6 +63,9 @@ DEFINES += XPLM200=1
 # TODO add config option to select minimum X-Plane version when building
 DEFINES += XPLM210=1
 
+# Name will be used in libxplanemp log messages
+DEFINES += XPMP_CLIENT_NAME=\\\"xbus\\\"
+DEFINES += XPMP_CLIENT_LONGNAME=\\\"xbus\\\"
 
 # X-Plane plugins must follow a prescribed filename and directory structure.
 TARGET_EXT = .xpl
