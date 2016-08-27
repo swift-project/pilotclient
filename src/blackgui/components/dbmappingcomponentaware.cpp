@@ -31,6 +31,5 @@ namespace BlackGui
             if (!m) { return; }
             m_mappingComponent = m;
         }
-
     } // ns
 } // ns

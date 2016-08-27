@@ -57,7 +57,8 @@ namespace BlackGui
             this->m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
             Q_ASSERT_X(this->m_simulatorInfo.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             ui->form_OwnModelSet->setSimulator(this->m_simulatorInfo);
-            this->ui->form_OwnModelSet->reloadData();
+            ui->form_OwnModelSet->reloadData();
+            this->m_modelSet = this->getMappingComponent()->getOwnModelSet();
         }
 
         int CDbOwnModelSetDialog::exec()
@@ -118,22 +119,30 @@ namespace BlackGui
         CAircraftModelList CDbOwnModelSetDialog::buildSet(const CSimulatorInfo &simulator, const CAircraftModelList &currentSet)
         {
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
-            const bool selectedProviders  = this->ui->form_OwnModelSet->useSelectedDistributors();
-            const bool dbDataOnly = this->ui->form_OwnModelSet->dbDataOnly();
-            const bool dbIcaoOnly = this->ui->form_OwnModelSet->dbIcaoCodesOnly();
-            const bool incremnental = this->ui->form_OwnModelSet->incrementalBuild();
+            const bool givenDistributorsOnly  = !ui->form_OwnModelSet->optionUseAllDistributors();
+            const bool dbDataOnly = ui->form_OwnModelSet->optionDbDataOnly();
+            const bool dbIcaoOnly = ui->form_OwnModelSet->optionDbIcaoCodesOnly();
+            const bool incremnental = ui->form_OwnModelSet->optionIncrementalBuild();
+            const bool sortByDistributor = ui->form_OwnModelSet->optionSortByDistributorPreferences();
+            const bool consolidateWithDb = ui->form_OwnModelSet->optionConsolidateModelSetWithDbData();
 
-            const CAircraftModelList models = this->getMappingComponent()->getOwnModels();
             this->m_simulatorInfo = this->getMappingComponent()->getOwnModelsSimulator();
-            const CDistributorList distributors = selectedProviders ?
-                                                  ui->form_OwnModelSet->getSelectedDistributors() :
-                                                  ui->form_OwnModelSet->getDistributorsFromPreferences();
+            const CAircraftModelList models = this->getMappingComponent()->getOwnModels();
+            const CDistributorList distributors = ui->form_OwnModelSet->getDistributorsBasedOnOptions();
+
+            if (givenDistributorsOnly && distributors.isEmpty())
+            {
+                // nothing to do, keep current set
+                return currentSet;
+            }
+
             const CModelSetBuilder builder(this);
-            CModelSetBuilder::Builder options = selectedProviders ? CModelSetBuilder::FilterDistributos : CModelSetBuilder::NoOptions;
+            CModelSetBuilder::Builder options = givenDistributorsOnly ? CModelSetBuilder::GivenDistributorsOnly : CModelSetBuilder::NoOptions;
             if (dbDataOnly)   { options |= CModelSetBuilder::OnlyDbData; }
             if (dbIcaoOnly)   { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
             if (incremnental) { options |= CModelSetBuilder::Incremental; }
-            if (ui->form_OwnModelSet->hasDistributorPreferences()) { options |= CModelSetBuilder::SortByDistributors; }
+            if (sortByDistributor) { options |= CModelSetBuilder::SortByDistributors; }
+            if (consolidateWithDb) { options |= CModelSetBuilder::ConsolidateWithDb; }
             return builder.buildModelSet(simulator, models, currentSet, options, distributors);
         }
     } // ns

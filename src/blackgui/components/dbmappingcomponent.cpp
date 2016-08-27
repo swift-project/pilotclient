@@ -814,6 +814,11 @@ namespace BlackGui
             ui->comp_OwnModelSet->setModelSetSimulator(simulator);
         }
 
+        CAircraftModelList CDbMappingComponent::getOwnModelSet() const
+        {
+            return ui->comp_OwnModelSet->getModelSet();
+        }
+
         CStatusMessage CDbMappingComponent::stashModel(const CAircraftModel &model, bool replace)
         {
             return ui->comp_StashAircraft->stashModel(model, replace);

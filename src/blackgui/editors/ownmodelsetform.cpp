@@ -58,19 +58,34 @@ namespace BlackGui
             this->initDistributorDisplay();
         }
 
-        bool COwnModelSetForm::useSelectedDistributors() const
+        bool COwnModelSetForm::optionUseSelectedDistributors() const
         {
-            return this->ui->rb_SelectedDistributors->isChecked();
+            return ui->rb_DistributorsSelected->isChecked();
         }
 
-        bool COwnModelSetForm::dbDataOnly() const
+        bool COwnModelSetForm::optionUseAllDistributors() const
         {
-            return this->ui->rb_DbDataOnly->isChecked();
+            return ui->rb_DistributorsAll->isChecked();
         }
 
-        bool COwnModelSetForm::incrementalBuild() const
+        bool COwnModelSetForm::optionDbDataOnly() const
+        {
+            return ui->rb_DbDataOnly->isChecked();
+        }
+
+        bool COwnModelSetForm::optionIncrementalBuild() const
         {
             return ui->rb_Incremental->isChecked();
+        }
+
+        bool COwnModelSetForm::optionSortByDistributorPreferences() const
+        {
+            return ui->cb_SortByPreferences->isChecked() && this->hasDistributorPreferences();
+        }
+
+        bool COwnModelSetForm::optionConsolidateModelSetWithDbData() const
+        {
+            return ui->cb_ConsolidateModelSet->isChecked();
         }
 
         void COwnModelSetForm::ps_preferencesChanged()
@@ -120,6 +135,14 @@ namespace BlackGui
         {
             ui->tvp_Distributors->setDistributorMode(hasPreferences ? CDistributorListModel::MinimalWithOrder : CDistributorListModel::Minimal);
             ui->tvp_Distributors->fullResizeToContents();
+            if (hasPreferences)
+            {
+                ui->tvp_Distributors->setSorting(CDistributor::IndexOrder);
+            }
+            else
+            {
+                ui->tvp_Distributors->setSorting(CDistributor::IndexDbStringKey);
+            }
         }
 
         CDistributorList COwnModelSetForm::getDistributorsFromPreferences() const
@@ -137,14 +160,28 @@ namespace BlackGui
             return sGui->getWebDataServices()->getDistributors().matchesSimulator(this->m_simulator);
         }
 
-        bool COwnModelSetForm::dbIcaoCodesOnly() const
+        CDistributorList COwnModelSetForm::getDistributorsBasedOnOptions() const
         {
-            return this->ui->rb_DbIcaoCodesOnly->isChecked();
+            if (ui->rb_DistributorsAll->isChecked()) { return this->getAllDistributors(); }
+            if (ui->rb_DistributorsSelected->isChecked()) { return this->getSelectedDistributors(); }
+            if (ui->rb_DistributorsFromBelow->isChecked()) { return this->getShownDistributors(); }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong option");
+            return CDistributorList();
+        }
+
+        bool COwnModelSetForm::optionDbIcaoCodesOnly() const
+        {
+            return ui->rb_DbIcaoCodesOnly->isChecked();
         }
 
         CDistributorList COwnModelSetForm::getSelectedDistributors() const
         {
             return ui->tvp_Distributors->selectedObjects();
+        }
+
+        CDistributorList COwnModelSetForm::getShownDistributors() const
+        {
+            return ui->tvp_Distributors->containerOrFilteredContainer();
         }
 
         void COwnModelSetForm::setSimulator(const CSimulatorInfo &simulator)

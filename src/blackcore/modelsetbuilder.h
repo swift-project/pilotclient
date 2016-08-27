@@ -35,11 +35,12 @@ namespace BlackCore
         enum BuilderFlag
         {
             NoOptions              = 0,
-            FilterDistributos      = 1 << 0,
+            GivenDistributorsOnly  = 1 << 0,
             OnlyDbData             = 1 << 1,
             OnlyDbIcaoCodes        = 1 << 2,
             Incremental            = 1 << 3,
-            SortByDistributors     = 1 << 4
+            SortByDistributors     = 1 << 4,
+            ConsolidateWithDb      = 1 << 5
         };
         Q_DECLARE_FLAGS(Builder, BuilderFlag)
 
@@ -51,7 +52,7 @@ namespace BlackCore
             const BlackMisc::Simulation::CSimulatorInfo &simulator,
             const BlackMisc::Simulation::CAircraftModelList &models,
             const BlackMisc::Simulation::CAircraftModelList &currentSet, Builder oprions,
-            const BlackMisc::Simulation::CDistributorList &onlyByDistributors = {}) const;
+            const BlackMisc::Simulation::CDistributorList &distributors = {}) const;
     };
 } // ns
 

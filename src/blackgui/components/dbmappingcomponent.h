@@ -148,10 +148,13 @@ namespace BlackGui
             int getOwnModelsCount() const;
             //! @}
 
-            // ---------------- own models -----------------
+            // ---------------- own model set -----------------
 
             //! Set simulator for own models
             void setOwnModelSetSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+            //! Own model set
+            BlackMisc::Simulation::CAircraftModelList getOwnModelSet() const;
 
         public slots:
             //! \copydoc CDbStashComponent::stashModel

@@ -7,9 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/application.h"
-#include "blackcore/modelsetbuilder.h"
-#include "blackcore/webdataservices.h"
+#include "application.h"
+#include "modelsetbuilder.h"
+#include "webdataservices.h"
+#include "db/databaseutils.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 
@@ -18,6 +19,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Db;
 
 namespace BlackCore
 {
@@ -31,8 +33,9 @@ namespace BlackCore
         if (models.isEmpty()) { return CAircraftModelList(); }
         CAircraftModelList modelSet;
 
-        // I avoid and empty distributor set wipes out everything
-        if (oprions.testFlag(FilterDistributos) && !distributors.isEmpty())
+        // Select by distributor:
+        // I avoid an empty distributor set because it wipes out everything
+        if (oprions.testFlag(GivenDistributorsOnly) && !distributors.isEmpty())
         {
             modelSet = models.findByDistributors(distributors);
         }
@@ -41,6 +44,7 @@ namespace BlackCore
             modelSet = models;
         }
 
+        // Only DB data?
         if (oprions.testFlag(OnlyDbData))
         {
             modelSet.removeObjectsWithoutDbKey();
@@ -57,16 +61,22 @@ namespace BlackCore
             modelSet = modelSet.findWithKnownAircraftDesignator();
         }
 
+        // Include only
         modelSet = modelSet.matchesSimulator(simulator);
         modelSet.setModelMode(CAircraftModel::Include); // in sets we only include, exclude means not present in set
 
         if (oprions.testFlag(Incremental))
         {
-            if (currentSet.isEmpty()) { return modelSet; }
-            CAircraftModelList copy(currentSet);
-            copy.replaceOrAddModelsWithString(modelSet, Qt::CaseInsensitive); // incremental
+            if (!currentSet.isEmpty())
+            {
+                // update in full set
+                CAircraftModelList copy(currentSet);
+                copy.replaceOrAddModelsWithString(modelSet, Qt::CaseInsensitive);
+                modelSet = copy;
+            }
         }
 
+        // sort by preferences if applicable
         modelSet.resetOrder();
         if (oprions.testFlag(SortByDistributors))
         {
@@ -74,6 +84,13 @@ namespace BlackCore
             modelSet.sortBy(&CAircraftModel::getDistributorOrder);
         }
 
+        // DB consolidation
+        if (oprions.testFlag(ConsolidateWithDb))
+        {
+            CDatabaseUtils::consolidateModelsWithDbData(modelSet, true);
+        }
+
+        // result
         return modelSet;
     }
 } // ns

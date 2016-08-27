@@ -41,29 +41,44 @@ namespace BlackGui
             //! Reload data
             void reloadData();
 
-            //! Selected providers?
-            bool useSelectedDistributors() const;
-
-            //! Get selected providers
-            BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
-
             //! Current simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Selected distributors?
+            bool optionUseSelectedDistributors() const;
+
+            //! All distributors?
+            bool optionUseAllDistributors() const;
+
             //! Only DB data
-            bool dbDataOnly() const;
+            bool optionDbDataOnly() const;
 
             //! DB ICAO codes
-            bool dbIcaoCodesOnly() const;
+            bool optionDbIcaoCodesOnly() const;
 
             //! Request incremental build
-            bool incrementalBuild() const;
+            bool optionIncrementalBuild() const;
+
+            //! Sort by distributor preferences
+            bool optionSortByDistributorPreferences() const;
+
+            //! Consolidate with DB data?
+            bool optionConsolidateModelSetWithDbData() const;
+
+            //! Get selected distributors
+            BlackMisc::Simulation::CDistributorList getSelectedDistributors() const;
+
+            //! Get shown distributors
+            BlackMisc::Simulation::CDistributorList getShownDistributors() const;
 
             //! Distributors from preferences
             BlackMisc::Simulation::CDistributorList getDistributorsFromPreferences() const;
 
             //! All distributors
             BlackMisc::Simulation::CDistributorList getAllDistributors() const;
+
+            //! Get distributors based on options
+            BlackMisc::Simulation::CDistributorList getDistributorsBasedOnOptions() const;
 
             //! Preferences for given simulator?
             bool hasDistributorPreferences() const;

@@ -51,10 +51,13 @@ namespace BlackGui
             //! Last build set
             const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
 
+            //! Init last set
+            void setModelSet(const BlackMisc::Simulation::CAircraftModelList &models) { m_modelSet = models; }
+
             //! Simulator info
             const BlackMisc::Simulation::CSimulatorInfo &getSimulatorInfo() const { return m_simulatorInfo; }
 
-            //! Reload data
+            //! Reload data e.g. current model set and simulator
             void reloadData();
 
             //! Exec and display simulator
