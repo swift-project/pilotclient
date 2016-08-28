@@ -28,7 +28,7 @@ namespace BlackGui
             ui(new Ui::CCockpitComponent)
         {
             ui->setupUi(this);
-            this->m_minHeightInfoArea = this->ui->comp_CockpitInfoArea->minimumHeight();
+            this->m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
             connect(ui->wip_CockpitComPanelShowHideBar, &BlackGui::CShowHideBar::toggleShowHide, this, &CCockpitComponent::ps_onToggleShowHideDetails);
         }
 
@@ -48,12 +48,12 @@ namespace BlackGui
 
         bool CCockpitComponent::isInfoAreaShown() const
         {
-            return this->ui->wip_CockpitComPanelShowHideBar->isShown();
+            return ui->wip_CockpitComPanelShowHideBar->isShown();
         }
 
         void CCockpitComponent::setSelectedTransponderModeStateIdent()
         {
-            this->ui->comp_CockpitComComponent->setSelectedTransponderModeStateIdent();
+            ui->comp_CockpitComComponent->setSelectedTransponderModeStateIdent();
         }
 
         void CCockpitComponent::ps_onToggleShowHideDetails(bool show)
@@ -76,12 +76,12 @@ namespace BlackGui
             QSize manuallySetSize = this->window()->size();
 
             // hide area
-            this->ui->comp_CockpitInfoArea->setVisible(show);
+            ui->comp_CockpitInfoArea->setVisible(show);
 
             // adjust size
             if (show)
             {
-                this->ui->comp_CockpitInfoArea->setMinimumHeight(m_minHeightInfoArea);
+                ui->comp_CockpitInfoArea->setMinimumHeight(m_minHeightInfoArea);
                 if (this->m_sizeFloatingShown.isValid())
                 {
                     this->window()->resize(m_sizeFloatingShown);
@@ -96,7 +96,7 @@ namespace BlackGui
             }
             else
             {
-                this->ui->comp_CockpitInfoArea->setMinimumHeight(0);
+                ui->comp_CockpitInfoArea->setMinimumHeight(0);
                 this->window()->setMinimumSize(defaultSizeHidden);
                 if (this->m_sizeFloatingHidden.isValid())
                 {
@@ -114,7 +114,7 @@ namespace BlackGui
 
         void CCockpitComponent::ps_onToggleFloating(bool floating)
         {
-            this->ui->wip_CockpitComPanelShowHideBar->setVisible(floating);
+            ui->wip_CockpitComPanelShowHideBar->setVisible(floating);
             if (floating)
             {
                 // use the toggle method to set the sizes
@@ -123,10 +123,9 @@ namespace BlackGui
             else
             {
                 const QSize sizeMinimum(200, 100); // set when docked, must fit into parent info area
-                this->ui->comp_CockpitInfoArea->setVisible(true);
+                ui->comp_CockpitInfoArea->setVisible(true);
                 this->window()->setMinimumSize(sizeMinimum);
             }
         }
-
     } // namespace
 } // namespace

@@ -64,11 +64,11 @@ namespace BlackGui
 
             // SELCAL pairs in cockpit
             this->ui->frp_ComPanelSelcalBottom->clear();
-            connect(this->ui->pb_ComPanelSelcalTest, &QPushButton::clicked, this, &CCockpitComComponent::ps_testSelcal);
+            connect(this->ui->tb_ComPanelSelcalTest, &QPushButton::clicked, this, &CCockpitComComponent::ps_testSelcal);
 
             // COM GUI events
-            connect(this->ui->pb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(this->ui->pb_ComPanelCom2Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
+            connect(this->ui->tb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
+            connect(this->ui->tb_ComPanelCom2Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom1Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
@@ -102,14 +102,14 @@ namespace BlackGui
         void CCockpitComComponent::ps_guiChangedCockpitValues()
         {
             QObject *sender = QObject::sender();
-            if (sender == this->ui->pb_ComPanelCom1Toggle)
+            if (sender == this->ui->tb_ComPanelCom1Toggle)
             {
                 if (this->ui->ds_ComPanelCom1Standby->value() == this->ui->ds_ComPanelCom1Active->value()) return;
                 double f = this->ui->ds_ComPanelCom1Active->value();
                 this->ui->ds_ComPanelCom1Active->setValue(this->ui->ds_ComPanelCom1Standby->value());
                 this->ui->ds_ComPanelCom1Standby->setValue(f);
             }
-            else if (sender == this->ui->pb_ComPanelCom2Toggle)
+            else if (sender == this->ui->tb_ComPanelCom2Toggle)
             {
                 if (this->ui->ds_ComPanelCom2Standby->value() == this->ui->ds_ComPanelCom2Active->value()) return;
                 double f = this->ui->ds_ComPanelCom2Active->value();

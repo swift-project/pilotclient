@@ -26,15 +26,18 @@ namespace BlackGui
         CSelcalCodeSelector::CSelcalCodeSelector(QWidget *parent) :
             QFrame(parent), ui(new Ui::CSelcalCodeSelector)
         {
-            this->ui->setupUi(this);
+            ui->setupUi(this);
             this->resetSelcalCodes(true);
             this->setValidityHint();
-            this->ui->lblp_ValidCodeIcon->setToolTips("valid SELCAL", "invalid SELCAL");
+            ui->lblp_ValidCodeIcon->setToolTips("valid SELCAL", "invalid SELCAL");
 
-            bool c;
-            c = connect(this->ui->cb_SelcalPairs1, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
+            // limit number of elements: https://forum.qt.io/topic/11315/limit-the-number-of-visible-items-on-qcombobox/6
+            ui->cb_SelcalPairs1->setStyleSheet("combobox-popup: 0;");
+            ui->cb_SelcalPairs2->setStyleSheet("combobox-popup: 0;");
+
+            bool c = connect(ui->cb_SelcalPairs1, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
             Q_ASSERT(c);
-            c = connect(this->ui->cb_SelcalPairs2, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
+            c = connect(ui->cb_SelcalPairs2, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
             Q_ASSERT(c);
             Q_UNUSED(c);
         }
@@ -44,8 +47,8 @@ namespace BlackGui
 
         QString CSelcalCodeSelector::getSelcalCode() const
         {
-            QString selcal = this->ui->cb_SelcalPairs1->currentText();
-            selcal.append(this->ui->cb_SelcalPairs2->currentText());
+            QString selcal = ui->cb_SelcalPairs1->currentText();
+            selcal.append(ui->cb_SelcalPairs2->currentText());
             return selcal;
         }
 
@@ -57,12 +60,12 @@ namespace BlackGui
 
         void CSelcalCodeSelector::resetSelcalCodes(bool allowEmptyValue)
         {
-            this->ui->cb_SelcalPairs1->clear();
-            if (allowEmptyValue) this->ui->cb_SelcalPairs1->addItem("  ");
-            this->ui->cb_SelcalPairs1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
-            this->ui->cb_SelcalPairs2->clear();
-            if (allowEmptyValue) this->ui->cb_SelcalPairs2->addItem("  ");
-            this->ui->cb_SelcalPairs2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+            ui->cb_SelcalPairs1->clear();
+            if (allowEmptyValue) ui->cb_SelcalPairs1->addItem("  ");
+            ui->cb_SelcalPairs1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+            ui->cb_SelcalPairs2->clear();
+            if (allowEmptyValue) ui->cb_SelcalPairs2->addItem("  ");
+            ui->cb_SelcalPairs2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
         }
 
         void CSelcalCodeSelector::setSelcalCode(const QString &selcal)
@@ -75,11 +78,11 @@ namespace BlackGui
             QString s2 = s.right(2);
             if (BlackMisc::Aviation::CSelcal::codePairs().contains(s1))
             {
-                this->ui->cb_SelcalPairs1->setCurrentText(s1);
+                ui->cb_SelcalPairs1->setCurrentText(s1);
             }
             if (BlackMisc::Aviation::CSelcal::codePairs().contains(s2))
             {
-                this->ui->cb_SelcalPairs2->setCurrentText(s2);
+                ui->cb_SelcalPairs2->setCurrentText(s2);
             }
         }
 
@@ -97,9 +100,9 @@ namespace BlackGui
 
         void CSelcalCodeSelector::clear()
         {
-            if (this->ui->cb_SelcalPairs1->count() < 1) { this->resetSelcalCodes(true); }
-            this->ui->cb_SelcalPairs1->setCurrentIndex(0);
-            this->ui->cb_SelcalPairs2->setCurrentIndex(0);
+            if (ui->cb_SelcalPairs1->count() < 1) { this->resetSelcalCodes(true); }
+            ui->cb_SelcalPairs1->setCurrentIndex(0);
+            ui->cb_SelcalPairs2->setCurrentIndex(0);
         }
 
         void CSelcalCodeSelector::ps_selcalIndexChanged()
@@ -110,7 +113,7 @@ namespace BlackGui
 
         void CSelcalCodeSelector::setValidityHint()
         {
-            this->ui->lblp_ValidCodeIcon->setTicked(this->hasValidCode());
+            ui->lblp_ValidCodeIcon->setTicked(this->hasValidCode());
         }
     }  // ns
 } // ns
