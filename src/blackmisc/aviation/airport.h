@@ -63,7 +63,7 @@ namespace BlackMisc
             const CAirportIcaoCode &getIcao() const { return m_icao; }
 
             //! Get ICAO code as string.
-            QString getIcaoAsString() const { return m_icao.asString(); }
+            const QString &getIcaoAsString() const { return m_icao.asString(); }
 
             //! Set ICAO code.
             void setIcao(const CAirportIcaoCode &icao) {  m_icao = icao; }
@@ -81,7 +81,7 @@ namespace BlackMisc
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
             //! Get the country
-            const CCountry& getCountry() const { return m_country; }
+            const CCountry &getCountry() const { return m_country; }
 
             //! Set the country
             void setCountry(const CCountry &country) { this->m_country = country; }

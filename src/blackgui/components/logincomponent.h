@@ -159,6 +159,7 @@ namespace BlackGui
             //! Set ICAO values
             void setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
 
+            //! Completers
             void initCompleters(BlackMisc::Network::CEntityFlags::Entity entity);
 
             QScopedPointer<Ui::CLoginComponent> ui;

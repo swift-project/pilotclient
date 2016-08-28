@@ -45,7 +45,6 @@
 #include <QString>
 #include <QStringList>
 
-
 namespace BlackMisc
 {
     class CLogCategoryList;
@@ -58,7 +57,7 @@ namespace BlackMisc
 namespace BlackCore
 {
     class CApplication;
-
+    class CAirportDataReader;
     namespace Vatsim
     {
         class CVatsimBookingReader;
@@ -75,8 +74,6 @@ namespace BlackCore
         class CModelDataReader;
         class CInfoDataReader;
     }
-
-    class CAirportDataReader;
 
     /*!
      * Encapsulates reading data from web sources
@@ -280,6 +277,10 @@ namespace BlackCore
         //! Country by name (France, China ..)
         //! \threadsafe
         BlackMisc::CCountry getCountryForName(const QString &name) const;
+
+        //! Get airports
+        //! \\threadsafe
+        BlackMisc::Aviation::CAirportList getAirports() const;
 
         //! Get METARs
         //! \threadsafe

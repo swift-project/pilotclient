@@ -21,7 +21,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAirportList::CAirportList() { }
 
         CAirportList::CAirportList(const CSequence<CAirport> &other) :
@@ -44,11 +43,27 @@ namespace BlackMisc
             return this->findFirstByOrDefault(&CAirport::getIcao, icao, ifNotFound);
         }
 
+        QStringList CAirportList::allIcaoCodes(bool sorted) const
+        {
+            QStringList icaos;
+            for (const CAirport &airport : *this)
+            {
+                if (!airport.getIcaoAsString().isEmpty())
+                {
+                    icaos.push_back(airport.getIcaoAsString());
+                }
+            }
+            if (sorted)
+            {
+                icaos.sort();
+            }
+            return icaos;
+        }
+
         void CAirportList::convertFromDatabaseJson(const QJsonArray &json)
         {
             clear();
-
-            for (const QJsonValue& value: json)
+            for (const QJsonValue &value : json)
             {
                 QJsonObject object = value.toObject();
                 CAirport airport;
@@ -56,6 +71,5 @@ namespace BlackMisc
                 push_back(airport);
             }
         }
-
     } // namespace
 } // namespace
