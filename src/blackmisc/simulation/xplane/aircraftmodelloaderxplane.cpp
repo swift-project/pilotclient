@@ -138,7 +138,8 @@ namespace BlackMisc
             CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QString &rootDirectory, const QStringList &excludeDirectories)
             {
                 CAircraftModelList allModels;
-                allModels.push_back(parseCslPackages(CXPlaneUtil::xbusLegacyDir(), excludeDirectories));
+                allModels.push_back(parseCslPackages(CXPlaneUtil::xbusLegacyDir(rootDirectory), excludeDirectories));
+                allModels.push_back(parseCslPackages(rootDirectory, excludeDirectories));
                 allModels.push_back(parseFlyableAirplanes(rootDirectory, excludeDirectories));
                 return allModels;
             }

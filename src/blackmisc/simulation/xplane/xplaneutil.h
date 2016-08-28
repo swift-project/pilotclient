@@ -48,7 +48,7 @@ namespace BlackMisc
                 static QStringList xplaneModelExcludeDirectoryPatterns();
 
                 //! XBus legacy directory
-                static QString xbusLegacyDir();
+                static QString xbusLegacyDir(const QString &rootDir);
             };
         } // namespace
     } // namespace

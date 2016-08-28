@@ -113,10 +113,18 @@ namespace BlackMisc
                 return QStringList();
             }
 
-            QString CXPlaneUtil::xbusLegacyDir()
+            QString CXPlaneUtil::xbusLegacyDir(const QString &rootDir)
             {
                 QString legacyPath("/Resources/plugins/xbus/LegacyData");
                 // Return the first non empty path, we can find.
+                if (!rootDir.isEmpty())
+                {
+                    QString xbusLegacy = rootDir + legacyPath;
+                    if (QDir(xbusLegacy).exists())
+                    {
+                        return xbusLegacy;
+                    }
+                }
                 if (!xplane10Dir().isEmpty())
                 {
                     QString xbusLegacy = xplane10Dir() + legacyPath;
@@ -125,7 +133,6 @@ namespace BlackMisc
                         return xbusLegacy;
                     }
                 }
-
                 if (!xplane9Dir().isEmpty())
                 {
                     QString xbusLegacy = xplane9Dir() + legacyPath;
