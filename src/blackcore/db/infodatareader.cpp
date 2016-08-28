@@ -14,7 +14,6 @@
 #include "infodatareader.h"
 
 #include <QTimer>
-#include <QRegularExpression>
 #include <QJsonDocument>
 #include <QJsonObject>
 

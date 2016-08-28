@@ -34,6 +34,7 @@ namespace BlackMisc
         {
             if (this->m_entity != CEntityFlags::NoEntity) { return this->m_entity; }
             if (this->m_tableName.isEmpty()) { return CEntityFlags::NoEntity; }
+            if (this->m_tableName.contains("airport", Qt::CaseInsensitive))       { return CEntityFlags::AirportEntity; }
             if (this->m_tableName.contains("airlineicao", Qt::CaseInsensitive))   { return CEntityFlags::AirlineIcaoEntity; }
             if (this->m_tableName.contains("aircrafticao", Qt::CaseInsensitive))  { return CEntityFlags::AircraftIcaoEntity; }
             if (this->m_tableName.contains("livery", Qt::CaseInsensitive))        { return CEntityFlags::LiveryEntity; }
