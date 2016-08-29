@@ -123,6 +123,9 @@ namespace BlackGui
         //! Reset margin settings
         void resetSettings();
 
+        //! Reset window position
+        void resetPosition();
+
         //! Set title and internally keep a backup
         void setWindowTitle(const QString &title);
 

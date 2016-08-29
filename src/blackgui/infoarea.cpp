@@ -15,6 +15,7 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/verify.h"
 
 #include <QAction>
 #include <QCloseEvent>
@@ -100,9 +101,12 @@ namespace BlackGui
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
             QMenu *subMenuDisplay = new QMenu("Display", menu);
             QMenu *subMenuRestore = new QMenu("Restore", menu);
+            QMenu *subMenuResetPositions = new QMenu("Reset position", menu);
             subMenuRestore->setIcon(CIcons::load16());
+            subMenuResetPositions->setIcon(CIcons::refresh16());
             subMenuRestore->addActions(this->getInfoAreaRestoreActions(subMenuRestore));
             subMenuDisplay->addActions(this->getInfoAreaSelectActions(subMenuDisplay));
+            subMenuResetPositions->addActions(this->getInfoAreaResetPositionActions(subMenuResetPositions));
 
             QSignalMapper *signalMapperToggleFloating = new QSignalMapper(menu);
             bool c = false; // check connections
@@ -131,6 +135,7 @@ namespace BlackGui
 
             menu->addMenu(subMenuDisplay);
             menu->addMenu(subMenuToggleFloat);
+            menu->addMenu(subMenuResetPositions);
             menu->addMenu(subMenuRestore);
 
             // where and how to display tab bar
@@ -164,7 +169,6 @@ namespace BlackGui
     {
         if (!infoArea) { return false; }
         if (infoArea->isFloating()) { return false; }
-
         return infoArea == this->getSelectedDockInfoArea();
     }
 
@@ -214,6 +218,25 @@ namespace BlackGui
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaSelectActions:").append(wt));
             connect(action, &QAction::triggered, this, &CInfoArea::selectAreaByAction);
+            actions.append(action);
+            i++;
+        }
+        return actions;
+    }
+
+    QList<QAction *> CInfoArea::getInfoAreaResetPositionActions(QWidget *parent) const
+    {
+        Q_ASSERT(parent);
+        int i = 0;
+        QList<QAction *> actions;
+        for (const CDockWidgetInfoArea *dockWidgetInfoArea : m_dockWidgetInfoAreas)
+        {
+            const QPixmap pm = this->indexToPixmap(i);
+            const QString wt(dockWidgetInfoArea->windowTitleBackup());
+            QAction *action = new QAction(QIcon(pm), wt, parent);
+            action->setData(i);
+            action->setObjectName(this->objectName().append(":getInfoAreaResetPositionActions:").append(wt));
+            connect(action, &QAction::triggered, this, &CInfoArea::resetPositionByAction);
             actions.append(action);
             i++;
         }
@@ -326,8 +349,8 @@ namespace BlackGui
     {
         if (!this->isValidAreaIndex(areaIndex)) { return; }
         CDockWidgetInfoArea *dw = this->m_dockWidgetInfoAreas.at(areaIndex);
-        Q_ASSERT(dw);
-        if (!dw) return;
+        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
+        if (!dw) { return; }
         dw->toggleFloating();
     }
 
@@ -335,15 +358,15 @@ namespace BlackGui
     {
         if (!this->isValidAreaIndex(areaIndex)) { return; }
         CDockWidgetInfoArea *dw = this->m_dockWidgetInfoAreas.at(areaIndex);
-        Q_ASSERT(dw);
-        if (!dw) return;
+        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
+        if (!dw) { return; }
         dw->toggleVisibility();
     }
 
     void CInfoArea::selectArea(int areaIndex)
     {
         CDockWidgetInfoArea *dw = this->m_dockWidgetInfoAreas.at(areaIndex);
-        Q_ASSERT(dw);
+        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
         if (!dw) { return; }
         Q_ASSERT(this->m_tabBar);
         if (m_tabBar->count() < 1) { return; }
@@ -358,20 +381,35 @@ namespace BlackGui
         }
     }
 
+    void CInfoArea::resetPosition(int areaIndex)
+    {
+        CDockWidgetInfoArea *dw = this->m_dockWidgetInfoAreas.at(areaIndex);
+        BLACK_VERIFY_X(dw, Q_FUNC_INFO, "Missing info area");
+        if (!dw) { return; }
+        dw->resetPosition();
+    }
+
     void CInfoArea::selectAreaByAction()
     {
         const QObject *sender = QObject::sender();
-        Q_ASSERT(sender);
         const QAction *action = qobject_cast<const QAction *>(sender);
         Q_ASSERT(action);
         int index = action->data().toInt();
         this->selectArea(index);
     }
 
+    void CInfoArea::resetPositionByAction()
+    {
+        const QObject *sender = QObject::sender();
+        const QAction *action = qobject_cast<const QAction *>(sender);
+        Q_ASSERT(action);
+        int index = action->data().toInt();
+        this->resetPosition(index);
+    }
+
     void CInfoArea::toggleAreaFloatingByAction()
     {
         const QObject *sender = QObject::sender();
-        Q_ASSERT(sender);
         const QAction *action = qobject_cast<const QAction *>(sender);
         Q_ASSERT(action);
         int index = action->data().toInt();

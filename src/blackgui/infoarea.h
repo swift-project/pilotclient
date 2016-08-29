@@ -84,6 +84,11 @@ namespace BlackGui
         //! \param parent which will own the action (deletion)
         QList<QAction *> getInfoAreaRestoreActions(QWidget *parent) const;
 
+        //! Create a list of actions to reset the position the info areas.
+        //! This could be used in a menu or somewhere else.
+        //! \param parent which will own the action (deletion)
+        QList<QAction *> getInfoAreaResetPositionActions(QWidget *parent) const;
+
         //! Docked area indexes
         QList<int> getAreaIndexesDockedOrFloating(bool floating) const;
 
@@ -119,11 +124,17 @@ namespace BlackGui
         //! Select area
         void selectArea(int areaIndex);
 
+        //! Reset position
+        void resetPosition(int areaIndex);
+
         //! Set current tab bar index by given widget
         void selectArea(const CDockWidgetInfoArea *dockWidgetInfoArea);
 
         //! Select area (sender is QAction)
         void selectAreaByAction();
+
+        //! Reset window position of area (sender is QAction)
+        void resetPositionByAction();
 
         //! Toggle area floating (sender is QAction)
         void toggleAreaFloatingByAction();

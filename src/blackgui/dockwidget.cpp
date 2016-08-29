@@ -31,6 +31,8 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+#include <QApplication>
+#include <QDesktopWidget>
 
 using namespace BlackMisc;
 using namespace BlackGui::Components;
@@ -339,10 +341,12 @@ namespace BlackGui
             contextMenu->addAction(BlackMisc::CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
         }
 
-        // Margin actions
+        // State actions (windows state)
         contextMenu->addAction(BlackMisc::CIcons::load16(), "Restore", this, &CDockWidget::restoreFromSettings);
         contextMenu->addAction(BlackMisc::CIcons::save16(), "Save state", this, &CDockWidget::saveToSettings);
-        contextMenu->addAction(BlackMisc::CIcons::save16(), "Reset to defaults", this, &CDockWidget::resetSettings);
+        contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Reset to defaults", this, &CDockWidget::resetSettings);
+        contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Reset position", this, &CDockWidget::resetPosition);
+
         this->m_input->setMargins(this->contentsMargins());
         contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), "Margins", this, &CDockWidget::ps_dummy);
         contextMenu->addAction(this->m_marginMenuAction);
@@ -586,5 +590,12 @@ namespace BlackGui
         s.reset();
         this->setSettings(s);
         this->restoreFromSettings();
+    }
+
+    void CDockWidget::resetPosition()
+    {
+        // center on screen when floating
+        if (!this->isFloating()) { return; }
+        this->move(QApplication::desktop()->screen()->rect().center() - this->rect().center());
     }
 } // namespace
