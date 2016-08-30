@@ -10,6 +10,7 @@
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/components/dblogincomponent.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiutility.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/authenticateduser.h"
@@ -29,6 +30,7 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Db;
+using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
@@ -59,7 +61,7 @@ namespace BlackGui
         void CDbLoginComponent::displayOverlayMessages(const CStatusMessageList &msgs)
         {
             if (msgs.isEmpty()) { return; }
-            COverlayMessagesFrame *mf = qobject_cast<COverlayMessagesFrame *>(parentWidget());
+            COverlayMessagesFrame *mf = CGuiUtility::nextOverlayMessageFrame(this);
             BLACK_VERIFY_X(mf, Q_FUNC_INFO, "No overlay widget");
             if (!mf) { return; }
             mf->showOverlayMessages(msgs);
@@ -112,6 +114,5 @@ namespace BlackGui
             this->ui->fr_Login->setVisible(modeLogin);
             this->ui->fr_Logoff->setVisible(!modeLogin);
         }
-
     } // ns
 } // ns

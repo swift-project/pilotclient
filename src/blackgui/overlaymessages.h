@@ -33,11 +33,10 @@ class QWidget;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
 namespace Ui { class COverlayMessages; }
-
 namespace BlackGui
 {
     /*!
-     * Display status messages (nested in another widget)
+     * Display status messages (nested in the parent widget)
      */
     class BLACKGUI_EXPORT COverlayMessages : public QFrame
     {

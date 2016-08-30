@@ -31,7 +31,6 @@ class QWidget;
 namespace BlackGui
 {
     class CEnableForFramelessWindow;
-
     class COverlayMessagesFrame;
 
     //! GUI utilities

@@ -30,13 +30,13 @@ class QPaintEvent;
 class QWidget;
 
 namespace BlackMisc { namespace Network { class CTextMessage; } }
-
 namespace BlackGui
 {
     class COverlayMessages;
 
     /*!
-     * Display status messages (nested in another widget)
+     * Display status messages (nested in this widget).
+     * Using this class provides a QFrame with the overlay functionality already integrated.
      */
     class BLACKGUI_EXPORT COverlayMessagesFrame : public QFrame
     {
