@@ -16,6 +16,16 @@
 
 namespace BlackMisc
 {
+    QList<QStringRef> splitLinesRefs(const QString &s)
+    {
+        return splitStringRefs(s, [](QChar c) { return c == '\n' || c == '\r'; });
+    }
+
+    QStringList splitLines(const QString &s)
+    {
+        return splitString(s, [](QChar c) { return c == '\n' || c == '\r'; });
+    }
+
     QString boolToOnOff(bool v, bool i18n)
     {
         Q_UNUSED(i18n);
@@ -166,9 +176,7 @@ namespace BlackMisc
 
     QString simplifyNameForSearch(const QString &name)
     {
-        static const QRegularExpression reg("[^A-Z]");
-        const QString r = name.toUpper().remove(reg);
-        return r;
+        return removeChars(name.toUpper(), [](QChar c) { return !c.isUpper(); });
     }
 }
 

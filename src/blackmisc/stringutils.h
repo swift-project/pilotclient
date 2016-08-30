@@ -13,22 +13,84 @@
 #define BLACKMISC_STRINGUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/range.h"
 
 #include <QByteArray>
 #include <QDataStream>
 #include <QDebug>
+#include <QList>
 #include <QMapIterator>
 #include <QString>
+#include <QStringRef>
 #include <QTextStream>
 #include <QtGlobal>
 #include <iosfwd>
 #include <string>
+#include <algorithm>
 
 template <class T1, class T2> class QMap;
 
 //! Free functions in BlackMisc
 namespace BlackMisc
 {
+    //! Return a string with characters removed that match the given predicate.
+    template <class F> QString removeChars(const QString &s, F predicate)
+    {
+        QString result;
+        std::copy_if(s.begin(), s.end(), std::back_inserter(result), [=](auto c) { return !predicate(c); });
+        return result;
+    }
+
+    //! True if any character in the string matches the given predicate.
+    template <class F> bool containsChar(const QString &s, F predicate)
+    {
+        return std::any_of(s.begin(), s.end(), predicate);
+    }
+
+    //! Index of first character in the string matching the given predicate, or -1 if not found.
+    template <class F> int indexOfChar(const QString &s, F predicate)
+    {
+        auto it = std::find_if(s.begin(), s.end(), predicate);
+        if (it == s.end()) { return -1; }
+        return std::distance(s.begin(), it);
+    }
+
+    //! Split a string into multiple strings, using a predicate function to identify the split points.
+    //! \warning The returned refs are only valid during the lifetime of the original string.
+    template <class F> QList<QStringRef> splitStringRefs(const QString &s, F predicate)
+    {
+        QList<QStringRef> result;
+        auto notPredicate = [=](auto c) { return !predicate(c); };
+        auto begin = s.begin();
+        while (true)
+        {
+            begin = std::find_if(begin, s.end(), notPredicate);
+            if (begin == s.end()) { return result; }
+            auto end = std::find_if(begin, s.end(), predicate);
+            result.push_back(QStringRef(&s, std::distance(s.begin(), begin), std::distance(begin, end)));
+            begin = end;
+        }
+    }
+
+    //! Split a string into multiple lines. Blank lines are skipped.
+    //! \warning The returned refs are only valid during the lifetime of the original string.
+    BLACKMISC_EXPORT QList<QStringRef> splitLinesRefs(const QString &s);
+
+    //! It would be risky to call splitStringRefs with an rvalue, so forbid it.
+    template <class F> void splitStringRefs(const QString &&, F) = delete;
+
+    //! It would be risky to call splitLinesRefs with an rvalue, so forbid it.
+    void splitLinesRefs(const QString &&) = delete;
+
+    //! Split a string into multiple strings, using a predicate function to identify the split points.
+    template <class F> QStringList splitString(const QString &s, F predicate)
+    {
+        return makeRange(splitStringRefs(s, predicate)).transform([](QStringRef sr) { return sr.toString(); });
+    }
+
+    //! Split a string into multiple lines. Blank lines are skipped.
+    BLACKMISC_EXPORT QStringList splitLines(const QString &s);
+
     //! A map converted to string
     template<class K, class V> QString qmapToString(const QMap<K, V> &map)
     {

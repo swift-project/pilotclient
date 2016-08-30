@@ -18,6 +18,7 @@
 #include "blackmisc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/worker.h"
 
 #include <string.h>
@@ -386,7 +387,7 @@ namespace BlackMisc
                 // Version number.
                 QString versionLine = readLineFrom(ts);
                 if (versionLine.isNull()) { return false; }
-                QString version = versionLine.split(QRegularExpression("\\s"), QString::SkipEmptyParts).at(0);
+                QString version = splitStringRefs(versionLine, [](QChar c) { return c.isSpace(); }).value(0).toString();
 
                 // For version 7, there is another line 'obj'
                 if (version == "700") { readLineFrom(ts); }
@@ -394,7 +395,7 @@ namespace BlackMisc
                 // Texture
                 QString textureLine = readLineFrom(ts);
                 if (textureLine.isNull()) { return false; }
-                QString texture = textureLine.split(QRegularExpression("\\s"), QString::SkipEmptyParts).at(0);
+                QString texture = splitStringRefs(textureLine, [](QChar c) { return c.isSpace(); }).value(0).toString();
 
                 objFile.close();
 
@@ -570,7 +571,7 @@ namespace BlackMisc
                 {
                     ++lineNum;
                     QString line = in.readLine();
-                    auto tokens = line.split(QRegularExpression("\\s+"));
+                    auto tokens = splitString(line, [](QChar c) { return c.isSpace(); });
                     if (!tokens.empty())
                     {
                         auto it = commands.find(tokens[0]);
@@ -614,7 +615,7 @@ namespace BlackMisc
                 {
                     ++lineNum;
                     QString line = in.readLine();
-                    auto tokens = line.split(QRegularExpression("\\s+"), QString::SkipEmptyParts);
+                    auto tokens = splitString(line, [](QChar c) { return c.isSpace(); });
                     if (!tokens.empty())
                     {
                         auto it = commands.find(tokens[0]);

@@ -32,10 +32,7 @@ namespace BlackMisc
 
         QString CCallsign::unifyCallsign(const QString &callsign)
         {
-            QString unified = callsign.toUpper();
-            // allow A-Z, 0-9, _, but no spaces
-            unified = unified.remove(QRegExp("[^A-Z\\d_]"));
-            return unified;
+            return removeChars(callsign.toUpper(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
         }
 
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
@@ -227,12 +224,7 @@ namespace BlackMisc
         bool CCallsign::isValidAircraftCallsign(const QString &callsign)
         {
             if (callsign.length() < 2 || callsign.length() > 10) { return false; }
-
-            // We allow all number callsigns
-            static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z0-9]*$")); }
-            const QRegularExpression &regexp = tsRegex.localData();
-            return (regexp.match(callsign).hasMatch());
+            return !containsChar(callsign, [](QChar c) { return !c.isUpper() && !c.isDigit(); });
         }
 
         bool CCallsign::isValidAircraftCallsign(const CCallsign &callsign)
@@ -243,12 +235,7 @@ namespace BlackMisc
         bool CCallsign::isValidAtcCallsign(const QString &callsign)
         {
             if (callsign.length() < 2 || callsign.length() > 10) { return false; }
-
-            // We allow all number callsigns
-            static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z0-9_]*$")); }
-            const QRegularExpression &regexp = tsRegex.localData();
-            return (regexp.match(callsign).hasMatch());
+            return !containsChar(callsign, [](QChar c) { return !c.isUpper() && !c.isDigit(); });
         }
 
         bool CCallsign::isValidAtcCallsign(const CCallsign &callsign)

@@ -102,14 +102,15 @@ namespace BlackCore
                 nwReply->close(); // close asap
 
                 if (dataFileData.isEmpty()) return;
-                const QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+                const QList<QStringRef> lines = splitLinesRefs(dataFileData);
                 if (lines.isEmpty()) { return; }
 
                 CUrlList dataFileUrls;
                 CUrlList serverFileUrls;
                 CUrlList metarFileUrls;
 
-                for (const QString &cl : lines)
+                QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
+                for (QStringRef clRef : lines)
                 {
                     if (this->isAbandoned())
                     {
@@ -119,7 +120,7 @@ namespace BlackCore
                     }
 
                     // parse lines
-                    const QString currentLine(cl.trimmed());
+                    currentLine = clRef.toString().trimmed();
                     if (currentLine.isEmpty()) { continue; }
                     if (currentLine.startsWith(";")) { continue; }
                     if (!currentLine.contains("=")) { continue; }

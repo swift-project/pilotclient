@@ -31,9 +31,8 @@ namespace BlackMisc
         {
             QString code = icaoCode.trimmed().toUpper();
             if (code.length() != 4) return "";
-            QRegularExpression reg("^[A-Z0-9]{4}$");
-            auto match = reg.match(code);
-            return match.hasMatch() ? code : QString();
+            if (containsChar(code, [](QChar c) { return !c.isLetterOrNumber(); })) { return ""; }
+            return code;
         }
 
         bool CAirportIcaoCode::isValidIcaoDesignator(const QString &icaoCode)

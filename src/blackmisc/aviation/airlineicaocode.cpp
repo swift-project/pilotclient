@@ -301,13 +301,8 @@ namespace BlackMisc
         QString CAirlineIcaoCode::normalizeDesignator(const QString candidate)
         {
             QString n(candidate.trimmed().toUpper());
-            if (n.contains(' ')) { n = n.left(n.indexOf(' ')); } // cutoff at first space
-            if (n.isEmpty()) { return n; }
-
-            static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-zA-Z\\d\\s]")); }
-            const QRegularExpression &regexp = tsRegex.localData();
-            return n.remove(regexp);
+            n = n.left(indexOfChar(n, [](QChar c) { return c.isSpace(); }));
+            return removeChars(n, [](QChar c) { return !c.isLetterOrNumber(); });
         }
 
         QString CAirlineIcaoCode::getCombinedStringWithKey() const

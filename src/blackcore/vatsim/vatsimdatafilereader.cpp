@@ -230,7 +230,7 @@ namespace BlackCore
                     CLogMessage(this).info("VATSIM file has same content, skipped");
                     return;
                 }
-                const QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+                const QList<QStringRef> lines = splitLinesRefs(dataFileData);
                 if (lines.isEmpty()) { return; }
 
                 // build on local vars for thread safety
@@ -243,7 +243,9 @@ namespace BlackCore
 
                 QStringList clientSectionAttributes;
                 Section section = SectionNone;
-                for (const QString &cl : lines)
+
+                QString currentLine; // declared outside of the for loop, to amortize the cost of allocation
+                for (QStringRef clRef : lines)
                 {
                     if (this->isAbandoned())
                     {
@@ -253,7 +255,7 @@ namespace BlackCore
                     }
 
                     // parse lines
-                    QString currentLine(cl.trimmed());
+                    currentLine = clRef.toString().trimmed();
                     if (currentLine.isEmpty()) continue;
                     if (currentLine.startsWith(";"))
                     {

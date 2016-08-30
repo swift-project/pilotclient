@@ -450,11 +450,8 @@ namespace BlackMisc
         bool CAircraftIcaoCode::isValidDesignator(const QString &designator)
         {
             if (designator.length() < 2 || designator.length() > 5) { return false; }
-
-            static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[A-Z]+[A-Z0-9]*$")); }
-            const QRegularExpression &regexp = tsRegex.localData();
-            return (regexp.match(designator).hasMatch());
+            if (!designator[0].isUpper()) { return false; }
+            return !containsChar(designator, [](QChar c) { return !c.isUpper() && !c.isDigit(); });
         }
 
         bool CAircraftIcaoCode::isValidCombinedType(const QString &combinedType)
@@ -462,11 +459,14 @@ namespace BlackMisc
             if (combinedType.length() != 3) { return false; }
 
             // Amphibian, Glider, Helicopter, Seaplane, Landplane, Tilt wing
+            static const QString validDescriptions = "AGHSLT";
             // Electric, Jet, Piston, Turpoprop
-            static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("^[AGHSLT][0-9][EJPT]$")); }
-            const QRegularExpression &regexp = tsRegex.localData();
-            return (regexp.match(combinedType).hasMatch());
+            static const QString validEngines = "EJPT";
+
+            if (!validDescriptions.contains(combinedType[0])) { return false; }
+            if (!combinedType[1].isDigit()) { return false; }
+            if (!validEngines.contains(combinedType[2])) { return false; }
+            return true;
         }
 
         bool CAircraftIcaoCode::isValidWtc(const QString &candidate)
@@ -491,16 +491,11 @@ namespace BlackMisc
             return s;
         }
 
-        QString CAircraftIcaoCode::normalizeDesignator(const QString candidate)
+        QString CAircraftIcaoCode::normalizeDesignator(const QString &candidate)
         {
             QString n(candidate.trimmed().toUpper());
-            if (n.contains(' ')) { n = n.left(n.indexOf(' ')); } // cutoff as first space
-            if (n.isEmpty()) { return n; }
-
-            static QThreadStorage<QRegularExpression> tsRegex;
-            if (! tsRegex.hasLocalData()) { tsRegex.setLocalData(QRegularExpression("[^a-zA-Z\\d\\s]")); }
-            const QRegularExpression &regexp = tsRegex.localData();
-            return n.remove(regexp);
+            n = n.left(indexOfChar(n, [](QChar c) { return c.isSpace(); }));
+            return removeChars(n, [](QChar c) { return !c.isLetterOrNumber(); });
         }
 
         QStringList CAircraftIcaoCode::alternativeCombinedCodes(const QString &combinedCode)

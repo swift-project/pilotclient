@@ -24,6 +24,7 @@
 #include "testmath.h"
 #include "testphysicalquantities.h"
 #include "testslot.h"
+#include "teststringutils.h"
 #include "testvaluecache.h"
 #include "testvariantandmap.h"
 #include "testweather.h"
@@ -73,6 +74,10 @@ namespace BlackMiscTest
         {
             CTestSlot slotTests;
             status |= test.exec(&slotTests, "blackmisc_slot");
+        }
+        {
+            CTestStringUtils stringUtilTests;
+            status |= test.exec(&stringUtilTests, "blackmisc_stringutils");
         }
         {
             CTestValueCache valueCacheTests;
