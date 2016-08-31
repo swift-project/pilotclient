@@ -595,9 +595,10 @@ namespace BlackGui
             emit this->tabIndexChanged(index);
         }
 
-        void CDbMappingComponent::ps_onModelsSuccessfullyPublished(const CAircraftModelList &models)
+        void CDbMappingComponent::ps_onModelsSuccessfullyPublished(const CAircraftModelList &models, bool directWrite)
         {
             if (models.isEmpty()) { return; }
+            if (!directWrite) { return; } // no models wwritten, but CRs
             emit this->requestUpdatedData(CEntityFlags::ModelEntity);
         }
 

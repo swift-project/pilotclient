@@ -46,7 +46,10 @@ namespace BlackMisc
             static QDateTime parseTimestamp(const QString &timestamp);
 
             //! Get data from a DB response
-            static bool parseSwiftPublishResponse(const QString &jsonResponse, BlackMisc::Simulation::CAircraftModelList &publishedModels, BlackMisc::Simulation::CAircraftModelList &skippedModels, BlackMisc::CStatusMessageList &messages);
+            static bool parseSwiftPublishResponse(const QString &jsonResponse,
+                                                  BlackMisc::Simulation::CAircraftModelList &publishedModels,
+                                                  BlackMisc::Simulation::CAircraftModelList &skippedModels,
+                                                  BlackMisc::CStatusMessageList &messages, bool &directWrite);
         };
     } // namespace
 } // namespace

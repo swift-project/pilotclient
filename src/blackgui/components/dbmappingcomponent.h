@@ -235,7 +235,7 @@ namespace BlackGui
             void ps_onStashedModelsDataChanged(int count, bool withFilter);
 
             //! Models have been published successfully
-            void ps_onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models);
+            void ps_onModelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &models, bool directWrite);
 
             //! Stash drop request
             void ps_handleStashDropRequest(const BlackMisc::Aviation::CAirlineIcaoCode &code) const;

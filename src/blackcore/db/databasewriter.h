@@ -44,7 +44,10 @@ namespace BlackCore
 
         signals:
             //! Published models, the response to \sa asyncPublishModels
-            void publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished, const BlackMisc::Simulation::CAircraftModelList &modelsSkipped, const BlackMisc::CStatusMessageList &messages);
+            void publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
+                                 const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
+                                 const BlackMisc::CStatusMessageList &messages,
+                                 bool success, bool directWrite);
 
         private slots:
             //! Post response
@@ -53,7 +56,14 @@ namespace BlackCore
         private:
             BlackMisc::Network::CUrl                       m_modelPublishUrl;
             QNetworkReply                                 *m_pendingReply = nullptr;
+            qint64                                         m_replyPendingSince = -1;
             bool                                           m_shutdown = false;
+
+            //! Kill the pending reply
+            bool killPendingReply();
+
+            //! Reply timed out?
+            bool isReplyOverdue() const;
 
             //! URL model web service
             static BlackMisc::Network::CUrl getModelPublishUrl(const BlackMisc::Network::CUrl &baseUrl);

@@ -282,12 +282,12 @@ namespace BlackGui
             }
         }
 
-        void CDbStashComponent::ps_publishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs)
+        void CDbStashComponent::ps_publishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs, bool success, bool directWrite)
         {
             ui->tvp_StashAircraftModels->hideLoadIndicator();
-            if (!publishedModels.isEmpty())
+            if (!publishedModels.isEmpty() && success)
             {
-                emit this->modelsSuccessfullyPublished(publishedModels);
+                emit this->modelsSuccessfullyPublished(publishedModels, directWrite);
             }
 
             if (!msgs.isEmpty())

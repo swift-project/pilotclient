@@ -49,6 +49,18 @@ namespace BlackCore
                 return msgs;
             }
 
+            if (this->isReplyOverdue())
+            {
+                bool killed = this->killPendingReply();
+                if (killed)
+                {
+                    const CStatusMessage msg(CStatusMessage::SeverityWarning, "Aborted outdated pending reply");
+                    msgs.push_back(CStatusMessage(msg));
+                    // need to let a potential receiver know it has failed
+                    emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msg, false, false);
+                }
+            }
+
             if (m_pendingReply)
             {
                 msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Another write operation in progress"));
@@ -66,17 +78,14 @@ namespace BlackCore
             }
 
             m_pendingReply = sApp->postToNetwork(request, multiPart, { this, &CDatabaseWriter::ps_postModelsResponse});
+            m_replyPendingSince = QDateTime::currentMSecsSinceEpoch();
             return msgs;
         }
 
         void CDatabaseWriter::gracefulShutdown()
         {
             m_shutdown = true;
-            if (m_pendingReply)
-            {
-                m_pendingReply->abort();
-                m_pendingReply = nullptr;
-            }
+            this->killPendingReply();
         }
 
         void CDatabaseWriter::ps_postModelsResponse(QNetworkReply *nwReplyPtr)
@@ -100,24 +109,40 @@ namespace BlackCore
                 if (dataFileData.isEmpty())
                 {
                     const CStatusMessageList msgs({CStatusMessage(cats, CStatusMessage::SeverityError, "No response data from " + urlString)});
-                    emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs);
+                    emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
                     return;
                 }
 
                 CAircraftModelList modelsPublished;
                 CAircraftModelList modelsSkipped;
                 CStatusMessageList msgs;
-                bool success = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs);
-                emit publishedModels(modelsPublished, modelsSkipped, msgs);
-                Q_UNUSED(success);
+                bool directWrite;
+                const bool success = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs, directWrite);
+                emit publishedModels(modelsPublished, modelsSkipped, msgs, success, directWrite);
             }
             else
             {
                 QString error = nwReply->errorString();
                 nwReply->close(); // close asap
                 const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, "HTTP error: " + error)});
-                emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs);
+                emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
             }
+        }
+
+        bool CDatabaseWriter::killPendingReply()
+        {
+            if (!m_pendingReply) { return false; }
+            m_pendingReply->abort();
+            m_pendingReply = nullptr;
+            m_replyPendingSince = -1;
+            return true;
+        }
+
+        bool CDatabaseWriter::isReplyOverdue() const
+        {
+            if (m_replyPendingSince < 0 || !m_pendingReply) { return false; }
+            qint64 ms = QDateTime::currentMSecsSinceEpoch() - m_replyPendingSince;
+            return ms > 7500;
         }
 
         CUrl CDatabaseWriter::getModelPublishUrl(const Network::CUrl &baseUrl)

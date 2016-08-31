@@ -134,7 +134,7 @@ namespace BlackGui
             void stashedModelsChanged();
 
             //! Models succesfully published
-            void modelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &publishedModels);
+            void modelsSuccessfullyPublished(const BlackMisc::Simulation::CAircraftModelList &publishedModels, bool directWrite);
 
         private slots:
             //! Unstash pressed
@@ -152,7 +152,7 @@ namespace BlackGui
             //! Publish response received
             void ps_publishedModelsResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
                                             const BlackMisc::Simulation::CAircraftModelList &skippedModels,
-                                            const BlackMisc::CStatusMessageList &msgs);
+                                            const BlackMisc::CStatusMessageList &msgs, bool success, bool directWrite);
 
             //! Copy over values
             void ps_copyOverPartsToSelected();

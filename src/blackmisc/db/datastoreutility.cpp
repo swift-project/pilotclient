@@ -77,9 +77,11 @@ namespace BlackMisc
             }
         }
 
-        bool CDatastoreUtility::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages)
+        bool CDatastoreUtility::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,  CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
         {
             static const CLogCategoryList cats({ CLogCategory::swiftDbWebservice()});
+            directWrite = false;
+
             if (jsonResponse.isEmpty())
             {
                 messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Empty JSON data"));
@@ -88,7 +90,7 @@ namespace BlackMisc
 
             QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonResponse.toUtf8()));
 
-            // array of messages
+            // array of messages only
             if (jsonDoc.isArray())
             {
                 CStatusMessageList msgs(CStatusMessageList::fromDatabaseJson(jsonDoc.array()));
@@ -106,7 +108,7 @@ namespace BlackMisc
 
             // fully blown object
             QJsonObject json(jsonDoc.object());
-            bool data = false;
+            bool hasData = false;
             if (json.contains("msgs"))
             {
                 QJsonValue msgJson(json.take("msgs"));
@@ -114,8 +116,15 @@ namespace BlackMisc
                 if (!msgs.isEmpty())
                 {
                     messages.push_back(msgs);
-                    data = true;
+                    hasData = true;
                 }
+            }
+
+            // direct write means models written, otherwise CRs
+            if (json.contains("directWrite"))
+            {
+                QJsonValue dw(json.take("directWrite"));
+                directWrite = dw.toBool(false);
             }
 
             if (json.contains("publishedModels"))
@@ -125,7 +134,7 @@ namespace BlackMisc
                 if (!published.isEmpty())
                 {
                     publishedModels.push_back(published);
-                    data = true;
+                    hasData = true;
                 }
             }
 
@@ -136,16 +145,16 @@ namespace BlackMisc
                 if (!skipped.isEmpty())
                 {
                     skippedModels.push_back(skipped);
-                    data = true;
+                    hasData = true;
                 }
             }
 
-            if (!data)
+            if (!hasData)
             {
                 messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Received response, but no JSON data"));
             }
 
-            return data;
+            return hasData;
         }
     } // ns
 } // ns
