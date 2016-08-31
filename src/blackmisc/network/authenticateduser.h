@@ -139,6 +139,9 @@ namespace BlackMisc
             //! Enabled
             bool isEnabled() const { return this->m_enabled; }
 
+            //! Entitled to directly update models
+            bool canDirectlyWriteModels() const;
+
             //! \copydoc BlackMisc::Mixin::Icon::toIcon()
             BlackMisc::CIcon toIcon() const;
 

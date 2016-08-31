@@ -45,10 +45,11 @@ namespace BlackGui
             ui->setupUi(this);
             this->setModeLogin(true);
             CUrl url(sGui->getGlobalSetup().getDbHomePageUrl());
-            ui->lbl_SwiftDB->setText("<a href=\"" + url.getFullUrl() + "\">swift DB@" + url.getHost() + "</a>");
-            ui->lbl_SwiftDB->setTextFormat(Qt::RichText);
-            ui->lbl_SwiftDB->setTextInteractionFlags(Qt::TextBrowserInteraction);
-            ui->lbl_SwiftDB->setOpenExternalLinks(true);
+            QString html = ui->tbr_InfoAndHints->toHtml();
+            html = html.replace("##swiftDB##", url.getFullUrl(), Qt::CaseInsensitive);
+            html = html.replace("##swiftEnableSSO##", url.getFullUrl(), Qt::CaseInsensitive);
+            ui->tbr_InfoAndHints->setHtml(html);
+            ui->tbr_InfoAndHints->setOpenExternalLinks(true);
 
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
@@ -98,21 +99,29 @@ namespace BlackGui
             {
                 CLogMessage(this).info("User authenticated: %1") << user.toQString();
                 this->setModeLogin(false);
-                this->ui->le_Name->setText(user.getRealNameAndId());
-                this->ui->te_Roles->setPlainText(user.getRolesAsString());
+                ui->le_Name->setText(user.getRealNameAndId());
+                ui->te_Roles->setPlainText(user.getRolesAsString());
+                if (user.canDirectlyWriteModels())
+                {
+                    ui->le_Info->setText("You can directly update models");
+                }
+                else
+                {
+                    ui->le_Info->setText("You can create model change requests");
+                }
             }
             else
             {
                 this->setModeLogin(true);
                 this->displayOverlayMessages(status);
                 CLogMessage::preformatted(status);
+                ui->le_Info->setText("Authentication failed, see hints");
             }
         }
 
         void CDbLoginComponent::setModeLogin(bool modeLogin)
         {
-            this->ui->fr_Login->setVisible(modeLogin);
-            this->ui->fr_Logoff->setVisible(!modeLogin);
+            ui->sw_LoginLogoff->setCurrentIndex(modeLogin ? 0 : 1);
         }
     } // ns
 } // ns

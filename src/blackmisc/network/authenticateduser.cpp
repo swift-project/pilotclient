@@ -101,6 +101,11 @@ namespace BlackMisc
             return this->hasRole("MAPPINGADMIN") || this->isAdmin();
         }
 
+        bool CAuthenticatedUser::canDirectlyWriteModels() const
+        {
+            return this->isAdmin() || this->isMappingAdmin();
+        }
+
         CIcon CAuthenticatedUser::toIcon() const
         {
             return CIconList::iconByIndex(CIcons::StandardIconUser16);

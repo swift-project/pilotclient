@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>401</height>
+    <height>407</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -150,33 +150,7 @@
       <string>swift DB</string>
      </property>
      <layout class="QGridLayout" name="gl_SwiftDB">
-      <item row="0" column="0">
-       <widget class="BlackGui::Components::CDbLoginComponent" name="comp_LoginComponent">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>150</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
-       <widget class="BlackGui::Components::CDbDebugDatabaseSetup" name="comp_DebugDb">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -189,6 +163,16 @@
         </property>
        </spacer>
       </item>
+      <item row="0" column="0">
+       <widget class="BlackGui::Components::CDbLoginComponent" name="comp_LoginComponent">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>150</height>
+         </size>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -199,12 +183,6 @@
    <class>BlackGui::Components::CDbLoginComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dblogincomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CDbDebugDatabaseSetup</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbdebugdatabasesetup.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
