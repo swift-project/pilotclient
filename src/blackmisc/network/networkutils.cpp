@@ -28,6 +28,7 @@
 #include <QUrlQuery>
 #include <QVariant>
 #include <QtDebug>
+#include <QRegularExpression>
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -277,6 +278,14 @@ namespace BlackMisc
                 }
             }
             return -1;
+        }
+
+        QString CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(const QString &errorMessage)
+        {
+            if (errorMessage.isEmpty()) { return errorMessage; }
+            QString phpError(errorMessage);
+            static const QRegularExpression regEx("<[^>]*>");
+            return phpError.remove(regEx);
         }
     } // namespace
 } // namespacee

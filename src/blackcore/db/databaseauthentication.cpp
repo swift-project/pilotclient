@@ -109,12 +109,18 @@ namespace BlackCore
 
             if (nwReply->error() == QNetworkReply::NoError)
             {
-                QString json(nwReply->readAll());
+                const QString json(nwReply->readAll().trimmed());
                 if (json.isEmpty())
                 {
                     CLogMessage(this).error("Authentication failed, no response from %1") << urlString;
                     return;
                 }
+                if (!json.startsWith('{') || !json.endsWith('}'))
+                {
+                    CLogMessage(this).error("Illegal JSON object: %1") << CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(json);
+                    return;
+                }
+
                 QJsonObject jsonObj(Json::jsonObjectFromString(json));
                 CAuthenticatedUser user(CAuthenticatedUser::fromDatabaseJson(jsonObj));
 

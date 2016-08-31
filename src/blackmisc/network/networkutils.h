@@ -39,7 +39,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CNetworkUtils
         {
         public:
-
             //! Request type
             enum RequestType
             {
@@ -125,6 +124,9 @@ namespace BlackMisc
             //! Last modified from reply
             static qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply);
 
+            //! Remove the HTML formatting from a PHP error message
+            static QString removeHtmlPartsFromPhpErrorMessage(const QString &errorMessage);
+
         private:
             //! Hidden constructor
             CNetworkUtils() {}
@@ -133,4 +135,3 @@ namespace BlackMisc
 } // namespace
 
 #endif // guard
-

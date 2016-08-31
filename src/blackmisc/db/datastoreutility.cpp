@@ -11,6 +11,7 @@
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/stringutils.h"
@@ -24,6 +25,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
@@ -97,8 +99,7 @@ namespace BlackMisc
             // no object -> most likely some fucked up HTML string with the PHP error
             if (!jsonDoc.isObject())
             {
-                QString phpError(jsonResponse);
-                phpError.remove(QRegExp("<[^>]*>"));
+                const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
                 messages.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, phpError));
                 return false;
             }
