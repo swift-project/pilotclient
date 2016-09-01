@@ -19,6 +19,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/testing.h"
 
 #include <QDateTime>
@@ -36,6 +37,7 @@
 #include <algorithm>
 #include <iterator>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -336,6 +338,87 @@ namespace BlackSample
         timer.start();
         situations.convertFromJson(s);
         out << "Convert 100,000 aircraft situations from JSON: " << timer.elapsed() << "ms" << endl << endl;
+
+        return 0;
+    }
+
+    int CSamplesPerformance::samplesString(QTextStream &out)
+    {
+        QTime timer;
+        static const QString chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_-=+!\"@#$%^&*()[]{} \t;:\\/?,.<>";
+        QStringList strings;
+        std::generate_n(std::back_inserter(strings), 100000, []
+        {
+            QString s;
+            std::generate_n(std::back_inserter(s), 10, [] { return chars[qrand() % chars.size()]; });
+            return s;
+        });
+        QString bigString = strings.join("\n");
+
+        QRegularExpression upperRegex("[A-Z]");
+        upperRegex.optimize();
+
+        timer.start();
+        for (const QString &s : strings)
+        {
+            auto c = containsChar(s, [](QChar c) { return c.isUpper(); });
+            Q_UNUSED(c);
+        }
+        out << "Check 100,000 strings for containing uppercase letter: (utility)     " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (const QString &s : strings)
+        {
+            auto c = s.contains(upperRegex);
+            Q_UNUSED(c);
+        }
+        out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << endl << endl;
+
+        timer.start();
+        for (const QString &s : strings)
+        {
+            auto i = indexOfChar(s, [](QChar c) { return c.isUpper(); });
+            Q_UNUSED(i);
+        }
+        out << "Check 100,000 strings for index of first uppercase letter: (utility) " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        for (const QString &s : strings)
+        {
+            auto i = s.indexOf(upperRegex);
+            Q_UNUSED(i);
+        }
+        out << "Check 100,000 strings for index of first uppercase letter: (regex)   " << timer.elapsed() << "ms" << endl << endl;
+
+        auto temp = strings;
+        timer.start();
+        for (QString &s : strings)
+        {
+            removeChars(s, [](QChar c) { return c.isUpper(); });
+        }
+        out << "Remove from 100,000 strings all uppercase letters: (utility)         " << timer.elapsed() << "ms" << endl;
+        strings = temp;
+
+        timer.start();
+        for (QString &s : strings)
+        {
+            s.remove(upperRegex);
+        }
+        out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms" << endl << endl;
+
+        timer.start();
+        {
+            auto lines = splitLines(bigString);
+            Q_UNUSED(lines);
+        }
+        out << "Split 100,000 line string into list of lines: (QStringList)          " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        {
+            auto lines = splitLinesRefs(bigString);
+            Q_UNUSED(lines);
+        }
+        out << "Split 100,000 line string into list of lines: (QList<QStringRef>)    " << timer.elapsed() << "ms" << endl;
 
         return 0;
     }

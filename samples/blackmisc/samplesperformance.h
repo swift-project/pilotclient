@@ -38,6 +38,9 @@ namespace BlackSample
         //! JSON (de)serialization
         static int samplesJson(QTextStream &out);
 
+        //! String manipulation
+        static int samplesString(QTextStream &out);
+
         //! Situation values for testing
         static BlackMisc::Aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes);
 

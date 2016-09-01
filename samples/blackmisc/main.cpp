@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
         qtout << "6c .. 25/20 Performance impl. type" << endl;
         qtout << "6d .. 40/20 Interpolator scenario" << endl;
         qtout << "6e .. JSON performance" << endl;
+        qtout << "6f .. string utils vs. regex" << endl;
         qtout << "7 .. Algorithms" << endl;
         qtout << "-----" << endl;
         qtout << "x .. Bye" << endl;
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
         else if (s.startsWith("6c")) { CSamplesPerformance::samplesImplementationType(qtout, 25, 20); }
         else if (s.startsWith("6d")) { CSamplesPerformance::interpolatorScenario(qtout, 40, 20); }
         else if (s.startsWith("6e")) { CSamplesPerformance::samplesJson(qtout); }
+        else if (s.startsWith("6f")) { CSamplesPerformance::samplesString(qtout); }
         else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
         else if (s.startsWith("x")) { break; }
     }
