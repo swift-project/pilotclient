@@ -216,8 +216,11 @@ namespace BlackMisc
             //! Set distributor
             void setDistributor(const CDistributor &distributor) { m_distributor = distributor; }
 
+            //! Set the distributor order
+            bool setDistributorOrder(int order);
+
             //! Update distributor`s order attribute
-            bool updateDistributorOrder(const CDistributorList &distributors);
+            bool setDistributorOrder(const CDistributorList &distributors);
 
             //! Distributor
             bool hasDistributor() const;

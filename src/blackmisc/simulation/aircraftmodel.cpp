@@ -327,7 +327,15 @@ namespace BlackMisc
                    this->getLivery().isMilitary();
         }
 
-        bool CAircraftModel::updateDistributorOrder(const CDistributorList &distributors)
+        bool CAircraftModel::setDistributorOrder(int order)
+        {
+            if (order < 0) { return false; }
+            if (!this->m_distributor.isLoadedFromDb()) { return false; }
+            this->m_distributor.setOrder(order);
+            return true;
+        }
+
+        bool CAircraftModel::setDistributorOrder(const CDistributorList &distributors)
         {
             if (distributors.isEmpty()) { return false; }
             bool found = false;

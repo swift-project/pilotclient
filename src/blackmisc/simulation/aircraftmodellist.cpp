@@ -498,7 +498,7 @@ namespace BlackMisc
             int found = 0;
             for (CAircraftModel &model : *this)
             {
-                if (model.updateDistributorOrder(distributors)) { found ++; }
+                if (model.setDistributorOrder(distributors)) { found ++; }
             }
             return found;
         }
