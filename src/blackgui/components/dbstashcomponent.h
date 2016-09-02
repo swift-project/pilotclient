@@ -15,8 +15,10 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackcore/data/authenticateduser.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/network/authenticateduser.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributor.h"
@@ -160,8 +162,12 @@ namespace BlackGui
             //! Row count changed
             void ps_onRowCountChanged(int number, bool filter);
 
+            //! User has been changed
+            void ps_userChanged();
+
         private:
             QScopedPointer<Ui::CDbStashComponent> ui;
+            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CDbStashComponent::ps_userChanged}; //!< authenticated user
 
             //! Display messages
             bool showMessages(const BlackMisc::CStatusMessageList &msgs, bool onlyErrors = false, int timeoutMs = -1);
@@ -192,6 +198,9 @@ namespace BlackGui
 
             //! Consolidate with own models (if available). This updates mostly with model description, path etc.
             BlackMisc::Simulation::CAircraftModel consolidateWithOwnModels(const BlackMisc::Simulation::CAircraftModel &model) const;
+
+            //! Authenticated DB user
+            BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;
         };
     } // ns
 } // ns

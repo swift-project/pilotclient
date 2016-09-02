@@ -54,11 +54,11 @@ namespace BlackGui
             bool isReadOnly() const { return m_readOnly; }
 
             //! Authenticated DB user
-            const BlackMisc::Network::CAuthenticatedUser &getSwiftDbUser() const;
+            BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;
 
         protected:
             bool m_readOnly = false; //!< read only
-            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CForm::ps_userChanged}; //!< authenticated user
+            BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CForm::ps_userChanged}; //!< authenticated user
 
         protected slots:
             //! User has been changed

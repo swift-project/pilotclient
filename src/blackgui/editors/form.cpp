@@ -32,9 +32,9 @@ namespace BlackGui
             return CStatusMessageList();
         }
 
-        const CAuthenticatedUser &CForm::getSwiftDbUser() const
+        CAuthenticatedUser CForm::getSwiftDbUser() const
         {
-            return this->m_swiftDbUser.getThreadLocal();
+            return this->m_swiftDbUser.get();
         }
 
         void CForm::ps_userChanged()

@@ -79,6 +79,7 @@ namespace BlackGui
             this->enableButtonRow();
 
             connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbStashComponent::ps_publishedModelsResponse);
+            this->ps_userChanged();
         }
 
         CDbStashComponent::~CDbStashComponent()
@@ -364,9 +365,9 @@ namespace BlackGui
             ui->pb_AirlineIcao->setEnabled(e);
             ui->pb_Distributor->setEnabled(e);
             ui->pb_Livery->setEnabled(e);
-            ui->pb_Publish->setEnabled(e);
             ui->pb_Unstash->setEnabled(e);
             ui->pb_Validate->setEnabled(e);
+            this->ps_userChanged();
         }
 
         const CLogCategoryList &CDbStashComponent::validationCategories() const
@@ -396,6 +397,11 @@ namespace BlackGui
             if (!ownModel.hasModelString()) { return model; }
             ownModel.updateMissingParts(model);
             return ownModel;
+        }
+
+        CAuthenticatedUser CDbStashComponent::getSwiftDbUser() const
+        {
+            return this->m_swiftDbUser.get();
         }
 
         CAircraftModel CDbStashComponent::consolidateModel(const CAircraftModel &model) const
@@ -449,6 +455,29 @@ namespace BlackGui
             Q_UNUSED(number);
             Q_UNUSED(filter);
             this->enableButtonRow();
+        }
+
+        void CDbStashComponent::ps_userChanged()
+        {
+            const CAuthenticatedUser user(this->getSwiftDbUser());
+            if (!user.isAuthenticated())
+            {
+                ui->pb_Publish->setText("Publish (login)");
+                ui->pb_Publish->setToolTip("Login first");
+                ui->pb_Publish->setEnabled(false);
+            }
+            else if (user.canDirectlyWriteModels())
+            {
+                ui->pb_Publish->setText("Publish (admin)");
+                ui->pb_Publish->setToolTip("Models directly released");
+                ui->pb_Publish->setEnabled(true);
+            }
+            else
+            {
+                ui->pb_Publish->setText("Publish (user)");
+                ui->pb_Publish->setToolTip("Models published as change request");
+                ui->pb_Publish->setEnabled(true);
+            }
         }
 
         bool CDbStashComponent::showMessages(const CStatusMessageList &msgs, bool onlyErrors, int timeoutMs)
