@@ -230,8 +230,15 @@ namespace BlackGui
             }
             else
             {
-                const QString es(e.join('\n'));
-                ui->pte_ExcludeDirectories->setPlaceholderText(es);
+                //! \todo correct version when multiline placeholder is fixed
+                // const QString es(e.join('\n'));
+                // ui->pte_ExcludeDirectories->setPlaceholderText(es);
+
+                // workaround
+                if (!e.empty())
+                {
+                    ui->pte_ExcludeDirectories->setPlaceholderText(e.first());
+                }
             }
         }
 
