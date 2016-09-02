@@ -27,12 +27,13 @@ namespace BlackGui
 {
     CDropSite::CDropSite(QWidget *parent) : QLabel(parent)
     {
-        setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
-        setAlignment(Qt::AlignCenter);
-        setAcceptDrops(true);
-        this->setInfoText(tr("<drop content>"));
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::ps_onStyleSheetsChanged);
+        this->setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
+        this->setAlignment(Qt::AlignCenter);
+        this->setAcceptDrops(true);
+        this->setTextFormat(Qt::RichText);
+        this->setInfoText("drop data here");
         this->ps_onStyleSheetsChanged();
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::ps_onStyleSheetsChanged);
     }
 
     void CDropSite::setInfoText(const QString &dropSiteText)
@@ -50,7 +51,8 @@ namespace BlackGui
 
     void CDropSite::resetText()
     {
-        setText(this->m_infoText);
+        const QString html = "<img src=':/own/icons/own/drophere16.png'>&nbsp;&nbsp;" + this->m_infoText.toHtmlEscaped();
+        setText(html);
     }
 
     void CDropSite::dragEnterEvent(QDragEnterEvent *event)

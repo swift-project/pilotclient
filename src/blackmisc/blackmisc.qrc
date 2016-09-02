@@ -423,6 +423,9 @@
         <file>icons/own/swift/swiftCircle512.png</file>
         <file>icons/own/swift/swiftCircle1024.png</file>
         <file>icons/own/swift/swiftCartoonNova64.png</file>
+        <file>icons/own/drophere24.png</file>
+        <file>icons/own/drophere48.png</file>
+        <file>icons/own/drophere16.png</file>
     </qresource>
     <qresource prefix="/qled">
         <file>icons/qled/circle_black.svg</file>

@@ -125,6 +125,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_Model">
+        <property name="text">
+         <string>Model</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_Distributor">
         <property name="text">
          <string>Distributor</string>
@@ -171,6 +178,7 @@
   <tabstop>pb_RemoveInvald</tabstop>
   <tabstop>pb_Publish</tabstop>
   <tabstop>cb_SelectedOnly</tabstop>
+  <tabstop>pb_Model</tabstop>
   <tabstop>pb_Distributor</tabstop>
   <tabstop>pb_AircraftIcao</tabstop>
   <tabstop>pb_Livery</tabstop>

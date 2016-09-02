@@ -187,6 +187,9 @@ namespace BlackGui
             //! Stash models
             void stashSelectedModels();
 
+            //! Open model modify dialog
+            void modifyModelDialog();
+
         signals:
             //! Request to filter by livery
             void filterByLivery(const BlackMisc::Aviation::CLivery &livery);
@@ -272,9 +275,6 @@ namespace BlackGui
 
             //! Apply current DB data from form
             void ps_applyFormDistributorData();
-
-            //! Open model modify dialog
-            void ps_modifyModelDialog();
 
             //! Add to own model set
             void ps_addToOwnModelSet();

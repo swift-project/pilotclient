@@ -72,6 +72,7 @@ namespace BlackGui
             connect(ui->pb_AirlineIcao, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
             connect(ui->pb_Livery, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
             connect(ui->pb_Distributor, &QPushButton::pressed, this, &CDbStashComponent::ps_copyOverPartsToSelected);
+            connect(ui->pb_Model, &QPushButton::pressed, this, &CDbStashComponent::ps_modifyModelDialog);
 
             ui->tvp_StashAircraftModels->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows);
             ui->tvp_StashAircraftModels->setHighlightModelStrings(true);
@@ -447,6 +448,14 @@ namespace BlackGui
             else if (sender == ui->pb_Livery)
             {
                 this->applyToSelected(model.getLivery());
+            }
+        }
+
+        void CDbStashComponent::ps_modifyModelDialog()
+        {
+            if (this->getMappingComponent())
+            {
+                this->getMappingComponent()->modifyModelDialog();
             }
         }
 

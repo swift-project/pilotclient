@@ -119,12 +119,13 @@ BlackGui--COverlayMessages {
 }
 
 BlackGui--CDropSite {
-  color: blue;
-  border: 2px solid green;
+  color: grey;
+  border: 2px dashed grey;
   border-radius: 5px;
-  min-height: 20px;
-  max-height: 20px;
+  min-height: 18px;
+  max-height: 18px;
   margin: 2px;
+  padding: 2px;
 }
 
 /* Validator bar */

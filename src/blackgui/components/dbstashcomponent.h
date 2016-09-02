@@ -159,6 +159,9 @@ namespace BlackGui
             //! Copy over values
             void ps_copyOverPartsToSelected();
 
+            //! Display model dialog
+            void ps_modifyModelDialog();
+
             //! Row count changed
             void ps_onRowCountChanged(int number, bool filter);
 

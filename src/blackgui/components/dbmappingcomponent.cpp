@@ -447,7 +447,7 @@ namespace BlackGui
             }
         }
 
-        void CDbMappingComponent::ps_modifyModelDialog()
+        void CDbMappingComponent::modifyModelDialog()
         {
             // only one model selected, use as default
             if (ui->comp_StashAircraft->view()->hasSingleSelectedRow())
@@ -945,7 +945,7 @@ namespace BlackGui
                 this->m_menuActions[0] = menuActions.addAction(this->m_menuActions[0], CIcons::appAircraftIcao16(), "Current aircraft ICAO", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyFormAircraftIcaoData });
                 this->m_menuActions[1] = menuActions.addAction(this->m_menuActions[1], CIcons::appDistributors16(), "Current distributor", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyFormDistributorData });
                 this->m_menuActions[2] = menuActions.addAction(this->m_menuActions[2], CIcons::appLiveries16(), "Current livery", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_applyFormLiveryData });
-                this->m_menuActions[3] = menuActions.addAction(this->m_menuActions[3], CIcons::databaseTable16(), "Modify DB model data", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::ps_modifyModelDialog });
+                this->m_menuActions[3] = menuActions.addAction(this->m_menuActions[3], CIcons::databaseTable16(), "Modify DB model data", CMenuAction::pathStashEditor(), this, { mapComp, &CDbMappingComponent::modifyModelDialog });
             }
             this->nestedCustomMenu(menuActions);
         }

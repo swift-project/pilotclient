@@ -40,7 +40,7 @@
      <property name="title">
       <string>Airline ICAO</string>
      </property>
-     <layout class="QGridLayout" name="gl_AirlineIcao">
+     <layout class="QGridLayout" name="gl_AirlineIcao" columnstretch="0,1,0">
       <item row="5" column="1">
        <widget class="QWidget" name="wi_Timestamps" native="true">
         <layout class="QHBoxLayout" name="hl_Timestamps">
