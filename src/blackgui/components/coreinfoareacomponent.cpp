@@ -33,12 +33,12 @@ namespace BlackGui
 
         CLogComponent *CCoreInfoAreaComponent::getLogComponent()
         {
-            return this->ui->comp_Log;
+            return ui->comp_Log;
         }
 
         CCoreStatusComponent *CCoreInfoAreaComponent::getStatusComponent()
         {
-            return this->ui->comp_Status;
+            return ui->comp_Status;
         }
 
         QSize CCoreInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const

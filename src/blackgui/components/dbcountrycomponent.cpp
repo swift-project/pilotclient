@@ -31,13 +31,13 @@ namespace BlackGui
             ui(new Ui::CDbCountryComponent)
         {
             ui->setupUi(this);
-            this->setViewWithIndicator(this->ui->tvp_Countries);
-            this->ui->tvp_Countries->setResizeMode(CViewBaseNonTemplate::ResizingOnce);
-            connect(this->ui->tvp_Countries, &CCountryView::requestNewBackendData, this, &CDbCountryComponent::ps_reload);
+            this->setViewWithIndicator(ui->tvp_Countries);
+            ui->tvp_Countries->setResizeMode(CViewBaseNonTemplate::ResizingOnce);
+            connect(ui->tvp_Countries, &CCountryView::requestNewBackendData, this, &CDbCountryComponent::ps_reload);
 
             // filter and drag and drop
-            this->ui->tvp_Countries->setFilterWidget(this->ui->filter_CountryComponent);
-            this->ui->tvp_Countries->allowDragDrop(true, false);
+            ui->tvp_Countries->setFilterWidget(ui->filter_CountryComponent);
+            ui->tvp_Countries->allowDragDrop(true, false);
 
             connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::ps_countriesRead);
             this->ps_countriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
@@ -51,7 +51,7 @@ namespace BlackGui
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::CountryEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_Countries->updateContainerMaybeAsync(sApp->getWebDataServices()->getCountries());
+                ui->tvp_Countries->updateContainerMaybeAsync(sApp->getWebDataServices()->getCountries());
             }
         }
 

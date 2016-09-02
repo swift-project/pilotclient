@@ -49,10 +49,10 @@ namespace BlackGui
             QFrame(parent), ui(new Ui::CLogComponent)
         {
             ui->setupUi(this);
-            this->ui->tvp_StatusMessages->setAutoResizeFrequency(3);
-            connect(this->ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, this->ui->form_StatusMessage, &CStatusMessageForm::setVariant);
-            this->ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
-            this->ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
+            ui->tvp_StatusMessages->setAutoResizeFrequency(3);
+            connect(ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, ui->form_StatusMessage, &CStatusMessageForm::setVariant);
+            ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
+            ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         }
 
         CLogComponent::~CLogComponent()
@@ -60,13 +60,13 @@ namespace BlackGui
 
         void CLogComponent::displayLog(bool attention)
         {
-            this->ui->tw_StatusPage->setCurrentIndex(0);
+            ui->tw_StatusPage->setCurrentIndex(0);
             if (attention) { emit requestAttention(); }
         }
 
         void CLogComponent::displayConsole(bool attention)
         {
-            this->ui->tw_StatusPage->setCurrentIndex(1);
+            ui->tw_StatusPage->setCurrentIndex(1);
             if (attention) { emit requestAttention(); }
         }
 
@@ -78,24 +78,24 @@ namespace BlackGui
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) return;
-            this->ui->tep_StatusPageConsole->appendHtml(statusMessage.toHtml());
+            ui->tep_StatusPageConsole->appendHtml(statusMessage.toHtml());
         }
 
         void CLogComponent::appendPlainTextToConsole(const QString &text)
         {
-            this->ui->tep_StatusPageConsole->appendPlainText(text);
+            ui->tep_StatusPageConsole->appendPlainText(text);
         }
 
         void CLogComponent::appendStatusMessageToList(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) { return; }
-            this->ui->tvp_StatusMessages->insert(statusMessage);
+            ui->tvp_StatusMessages->insert(statusMessage);
         }
 
         void CLogComponent::appendStatusMessagesToList(const CStatusMessageList &statusMessages)
         {
             if (statusMessages.isEmpty()) { return; }
-            this->ui->tvp_StatusMessages->insert(statusMessages);
+            ui->tvp_StatusMessages->insert(statusMessages);
         }
 
         void CLogComponent::CLogMenu::customMenu(CMenuActions &menuActions)

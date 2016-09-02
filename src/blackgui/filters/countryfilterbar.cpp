@@ -30,12 +30,12 @@ namespace BlackGui
             ui(new Ui::CCountryFilterBar)
         {
             ui->setupUi(this);
-            this->setButtonsAndCount(this->ui->filter_Buttons);
+            this->setButtonsAndCount(ui->filter_Buttons);
             connect(ui->le_IsoCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
-            this->ui->le_IsoCode->setValidator(ucv);
+            ui->le_IsoCode->setValidator(ucv);
 
             // reset form
             this->clearForm();
@@ -55,7 +55,7 @@ namespace BlackGui
 
         void CCountryFilterBar::onRowCountChanged(int count, bool withFilter)
         {
-            this->ui->filter_Buttons->onRowCountChanged(count, withFilter);
+            ui->filter_Buttons->onRowCountChanged(count, withFilter);
         }
 
         void CCountryFilterBar::clearForm()

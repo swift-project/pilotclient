@@ -102,7 +102,7 @@ namespace BlackGui
             this->setModelSetSimulator(simulator);
             if (models.isEmpty())
             {
-                this->ui->tvp_OwnModelSet->clear();
+                ui->tvp_OwnModelSet->clear();
                 return;
             }
 
@@ -114,7 +114,7 @@ namespace BlackGui
                 CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
             }
             cleanModelList.resetOrder();
-            this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
+            ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
         }
 
         void CDbOwnModelSetComponent::replaceOrAddModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
@@ -128,10 +128,10 @@ namespace BlackGui
                 CLogMessage(this).warning("Removed %1 models from set because not matching %2") << diff << simulator.toQString(true);
             }
             if (cleanModelList.isEmpty()) { return; }
-            CAircraftModelList updatedModels(this->ui->tvp_OwnModelSet->container());
+            CAircraftModelList updatedModels(ui->tvp_OwnModelSet->container());
             updatedModels.replaceOrAddModelsWithString(cleanModelList, Qt::CaseInsensitive);
             updatedModels.resetOrder();
-            this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(updatedModels);
+            ui->tvp_OwnModelSet->updateContainerMaybeAsync(updatedModels);
         }
 
         const CAircraftModelList &CDbOwnModelSetComponent::getModelSet() const
@@ -169,7 +169,7 @@ namespace BlackGui
             if (d > 0)
             {
                 updateModels.resetOrder();
-                this->ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
+                ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
                 return CStatusMessage(this, CStatusMessage::SeverityInfo, "Modified " + QString::number(d) + " entries in model set " + this->getModelSetSimulator().toQString(true), true);
             }
             else
@@ -225,7 +225,7 @@ namespace BlackGui
             }
             else if (sender == ui->pb_LoadExistingSet)
             {
-                this->ui->tvp_OwnModelSet->showFileLoadDialog();
+                ui->tvp_OwnModelSet->showFileLoadDialog();
             }
             else if (sender == ui->pb_SaveAsSetForSimulator)
             {
@@ -260,7 +260,7 @@ namespace BlackGui
             Q_UNUSED(withFilter);
             int realUnfilteredCount = ui->tvp_OwnModelSet->container().size();
             bool canSave = this->getModelSetSimulator().isSingleSimulator() && (realUnfilteredCount > 0);
-            this->ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
+            ui->pb_SaveAsSetForSimulator->setEnabled(canSave);
             if (canSave)
             {
                 this->setSaveFileName(this->getModelSetSimulator());
@@ -299,7 +299,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             const QString name("modelset" + sim.toQString(true));
-            this->ui->tvp_OwnModelSet->setSaveFileName(name);
+            ui->tvp_OwnModelSet->setSaveFileName(name);
         }
 
         void CDbOwnModelSetComponent::updateViewToCurrentModels()

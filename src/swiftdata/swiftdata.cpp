@@ -88,9 +88,9 @@ void CSwiftData::init()
     sGui->initMainApplicationWindow(this);
     this->initLogDisplay();
 
-    this->m_mwaLogComponent = this->ui->comp_MainInfoArea->getLogComponent();
+    this->m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
     this->m_mwaStatusBar = &this->m_statusBar;
-    this->m_mwaOverlayFrame = this->ui->comp_MainInfoArea->getMappingComponent();
+    this->m_mwaOverlayFrame = ui->comp_MainInfoArea->getMappingComponent();
 
     this->initStyleSheet();
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftData::ps_onStyleSheetsChanged);
@@ -111,7 +111,7 @@ void CSwiftData::init()
 
 void CSwiftData::initLogDisplay()
 {
-    this->m_statusBar.initStatusBar(this->ui->sb_SwiftData);
+    this->m_statusBar.initStatusBar(ui->sb_SwiftData);
 
     CLogHandler::instance()->install(true);
     CLogHandler::instance()->enableConsoleOutput(false); // default disable
@@ -126,16 +126,16 @@ void CSwiftData::initMenu()
     // menu
 
     this->initDynamicMenus();
-    this->ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
+    ui->menu_WindowMinimize->setIcon(this->style()->standardIcon(QStyle::SP_TitleBarMinButton));
 
-    connect(this->ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
-    connect(this->ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(ui->menu_WindowFont, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(ui->menu_MappingMaxData, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
+    connect(ui->menu_MappingMaxMapping, &QAction::triggered, this, &CSwiftData::ps_onMenuClicked);
 
-    sGui->addMenuFile(*this->ui->menu_File);
-    sGui->addMenuInternals(*this->ui->menu_Internals);
-    sGui->addMenuWindow(*this->ui->menu_Window);
-    sGui->addMenuHelp(*this->ui->menu_Help);
+    sGui->addMenuFile(*ui->menu_File);
+    sGui->addMenuInternals(*ui->menu_Internals);
+    sGui->addMenuWindow(*ui->menu_Window);
+    sGui->addMenuHelp(*ui->menu_Help);
 }
 
 void CSwiftData::performGracefulShutdown()
@@ -145,10 +145,10 @@ void CSwiftData::performGracefulShutdown()
 
 void CSwiftData::displayConsole()
 {
-    this->ui->comp_MainInfoArea->displayConsole();
+    ui->comp_MainInfoArea->displayConsole();
 }
 
 void CSwiftData::displayLog()
 {
-    this->ui->comp_MainInfoArea->displayLog();
+    ui->comp_MainInfoArea->displayLog();
 }

@@ -80,7 +80,7 @@ namespace BlackGui
                 CLogMessage(this).validationError("Cannot send aircraft parts, network not connected");
                 return;
             }
-            CCallsign callsign(this->ui->comp_RemoteAircraftSelector->getSelectedCallsign());
+            CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
             if (callsign.isEmpty())
             {
                 CLogMessage(this).validationError("No valid callsign selected");
@@ -92,7 +92,7 @@ namespace BlackGui
 
             if (json)
             {
-                QString jsonParts = this->ui->te_AircraftPartsJson->toPlainText().trimmed();
+                QString jsonParts = ui->te_AircraftPartsJson->toPlainText().trimmed();
                 if (jsonParts.isEmpty())
                 {
                     CLogMessage(this).validationError("No JSON content");
@@ -114,37 +114,37 @@ namespace BlackGui
                 this->ps_guiToJson();
             }
 
-            sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, this->ui->cb_AircraftPartsIncremental->isChecked());
+            sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, ui->cb_AircraftPartsIncremental->isChecked());
             CLogMessage(this).info("Added parts for %1") << callsign.toQString();
         }
 
         void CInternalsComponent::ps_setAllLights()
         {
             bool on = QObject::sender() == ui->pb_AircraftPartsLightsOn ? true : false;
-            this->ui->cb_AircraftPartsLightsStrobe->setChecked(on);
-            this->ui->cb_AircraftPartsLightsLanding->setChecked(on);
-            this->ui->cb_AircraftPartsLightsTaxi->setChecked(on);
-            this->ui->cb_AircraftPartsLightsBeacon->setChecked(on);
-            this->ui->cb_AircraftPartsLightsNav->setChecked(on);
-            this->ui->cb_AircraftPartsLightsLogo->setChecked(on);
+            ui->cb_AircraftPartsLightsStrobe->setChecked(on);
+            ui->cb_AircraftPartsLightsLanding->setChecked(on);
+            ui->cb_AircraftPartsLightsTaxi->setChecked(on);
+            ui->cb_AircraftPartsLightsBeacon->setChecked(on);
+            ui->cb_AircraftPartsLightsNav->setChecked(on);
+            ui->cb_AircraftPartsLightsLogo->setChecked(on);
         }
 
         void CInternalsComponent::ps_setAllEngines()
         {
             bool on = QObject::sender() == ui->pb_AircraftPartsEnginesOn ? true : false;
-            this->ui->cb_AircraftPartsEngine1->setChecked(on);
-            this->ui->cb_AircraftPartsEngine2->setChecked(on);
-            this->ui->cb_AircraftPartsEngine3->setChecked(on);
-            this->ui->cb_AircraftPartsEngine4->setChecked(on);
-            this->ui->cb_AircraftPartsEngine5->setChecked(on);
-            this->ui->cb_AircraftPartsEngine6->setChecked(on);
+            ui->cb_AircraftPartsEngine1->setChecked(on);
+            ui->cb_AircraftPartsEngine2->setChecked(on);
+            ui->cb_AircraftPartsEngine3->setChecked(on);
+            ui->cb_AircraftPartsEngine4->setChecked(on);
+            ui->cb_AircraftPartsEngine5->setChecked(on);
+            ui->cb_AircraftPartsEngine6->setChecked(on);
         }
 
         void CInternalsComponent::ps_guiToJson()
         {
             QJsonDocument json(guiToAircraftParts().toJson());
             QString j(json.toJson(QJsonDocument::Indented));
-            this->ui->te_AircraftPartsJson->setText(j);
+            ui->te_AircraftPartsJson->setText(j);
         }
 
         void CInternalsComponent::ps_enableDebug(int state)
@@ -167,8 +167,8 @@ namespace BlackGui
             else if (sender == ui->cb_DebugDriver || sender == ui->cb_DebugInterpolator)
             {
                 sGui->getIContextSimulator()->enableDebugMessages(
-                    this->ui->cb_DebugDriver->isChecked(),
-                    this->ui->cb_DebugInterpolator->isChecked()
+                    ui->cb_DebugDriver->isChecked(),
+                    ui->cb_DebugInterpolator->isChecked()
                 );
             }
         }
@@ -176,55 +176,55 @@ namespace BlackGui
         CAircraftParts CInternalsComponent::guiToAircraftParts() const
         {
             CAircraftLights lights(
-                this->ui->cb_AircraftPartsLightsStrobe->isChecked(),
-                this->ui->cb_AircraftPartsLightsLanding->isChecked(),
-                this->ui->cb_AircraftPartsLightsTaxi->isChecked(),
-                this->ui->cb_AircraftPartsLightsBeacon->isChecked(),
-                this->ui->cb_AircraftPartsLightsNav->isChecked(),
-                this->ui->cb_AircraftPartsLightsLogo->isChecked()
+                ui->cb_AircraftPartsLightsStrobe->isChecked(),
+                ui->cb_AircraftPartsLightsLanding->isChecked(),
+                ui->cb_AircraftPartsLightsTaxi->isChecked(),
+                ui->cb_AircraftPartsLightsBeacon->isChecked(),
+                ui->cb_AircraftPartsLightsNav->isChecked(),
+                ui->cb_AircraftPartsLightsLogo->isChecked()
             );
             CAircraftEngineList engines(
             {
-                this->ui->cb_AircraftPartsEngine1->isChecked(),
-                this->ui->cb_AircraftPartsEngine2->isChecked(),
-                this->ui->cb_AircraftPartsEngine3->isChecked(),
-                this->ui->cb_AircraftPartsEngine4->isChecked(),
-                this->ui->cb_AircraftPartsEngine5->isChecked(),
-                this->ui->cb_AircraftPartsEngine6->isChecked()
+                ui->cb_AircraftPartsEngine1->isChecked(),
+                ui->cb_AircraftPartsEngine2->isChecked(),
+                ui->cb_AircraftPartsEngine3->isChecked(),
+                ui->cb_AircraftPartsEngine4->isChecked(),
+                ui->cb_AircraftPartsEngine5->isChecked(),
+                ui->cb_AircraftPartsEngine6->isChecked()
             }
             );
             CAircraftParts parts(lights,
-                                 this->ui->cb_AircraftPartsGearDown->isChecked(),
-                                 this->ui->sb_AircraftPartsFlapsPercentage->value(),
-                                 this->ui->cb_AircraftPartsSpoilers->isChecked(),
+                                 ui->cb_AircraftPartsGearDown->isChecked(),
+                                 ui->sb_AircraftPartsFlapsPercentage->value(),
+                                 ui->cb_AircraftPartsSpoilers->isChecked(),
                                  engines,
-                                 this->ui->cb_AircraftPartsIsOnGround->isChecked()
+                                 ui->cb_AircraftPartsIsOnGround->isChecked()
                                 );
             return parts;
         }
 
         void CInternalsComponent::partsToGui(const CAircraftParts &parts)
         {
-            this->ui->cb_AircraftPartsGearDown->setChecked(parts.isGearDown());
-            this->ui->cb_AircraftPartsIsOnGround->setChecked(parts.isOnGround());
-            this->ui->cb_AircraftPartsSpoilers->setChecked(parts.isSpoilersOut());
-            this->ui->sb_AircraftPartsFlapsPercentage->setValue(parts.getFlapsPercent());
+            ui->cb_AircraftPartsGearDown->setChecked(parts.isGearDown());
+            ui->cb_AircraftPartsIsOnGround->setChecked(parts.isOnGround());
+            ui->cb_AircraftPartsSpoilers->setChecked(parts.isSpoilersOut());
+            ui->sb_AircraftPartsFlapsPercentage->setValue(parts.getFlapsPercent());
 
             CAircraftLights lights = parts.getLights();
-            this->ui->cb_AircraftPartsLightsBeacon->setChecked(lights.isBeaconOn());
-            this->ui->cb_AircraftPartsLightsLanding->setChecked(lights.isLandingOn());
-            this->ui->cb_AircraftPartsLightsLogo->setChecked(lights.isLogoOn());
-            this->ui->cb_AircraftPartsLightsNav->setChecked(lights.isNavOn());
-            this->ui->cb_AircraftPartsLightsStrobe->setChecked(lights.isStrobeOn());
-            this->ui->cb_AircraftPartsLightsTaxi->setChecked(lights.isTaxiOn());
+            ui->cb_AircraftPartsLightsBeacon->setChecked(lights.isBeaconOn());
+            ui->cb_AircraftPartsLightsLanding->setChecked(lights.isLandingOn());
+            ui->cb_AircraftPartsLightsLogo->setChecked(lights.isLogoOn());
+            ui->cb_AircraftPartsLightsNav->setChecked(lights.isNavOn());
+            ui->cb_AircraftPartsLightsStrobe->setChecked(lights.isStrobeOn());
+            ui->cb_AircraftPartsLightsTaxi->setChecked(lights.isTaxiOn());
 
             CAircraftEngineList engines = parts.getEngines();
-            this->ui->cb_AircraftPartsEngine1->setChecked(engines.isEngineOn(1));
-            this->ui->cb_AircraftPartsEngine2->setChecked(engines.isEngineOn(2));
-            this->ui->cb_AircraftPartsEngine3->setChecked(engines.isEngineOn(3));
-            this->ui->cb_AircraftPartsEngine4->setChecked(engines.isEngineOn(4));
-            this->ui->cb_AircraftPartsEngine5->setChecked(engines.isEngineOn(5));
-            this->ui->cb_AircraftPartsEngine6->setChecked(engines.isEngineOn(6));
+            ui->cb_AircraftPartsEngine1->setChecked(engines.isEngineOn(1));
+            ui->cb_AircraftPartsEngine2->setChecked(engines.isEngineOn(2));
+            ui->cb_AircraftPartsEngine3->setChecked(engines.isEngineOn(3));
+            ui->cb_AircraftPartsEngine4->setChecked(engines.isEngineOn(4));
+            ui->cb_AircraftPartsEngine5->setChecked(engines.isEngineOn(5));
+            ui->cb_AircraftPartsEngine6->setChecked(engines.isEngineOn(6));
 
         }
 

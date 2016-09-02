@@ -34,7 +34,7 @@ namespace BlackGui
             ui(new Ui::CAirlineIcaoFilterBar)
         {
             ui->setupUi(this);
-            this->setButtonsAndCount(this->ui->filter_Buttons);
+            this->setButtonsAndCount(ui->filter_Buttons);
 
             connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
@@ -52,11 +52,11 @@ namespace BlackGui
         {
             return std::unique_ptr<CAirlineIcaoFilter>(
                        new CAirlineIcaoFilter(
-                           this->ui->le_Designator->text().trimmed(),
-                           this->ui->le_Name->text().trimmed(),
-                           this->ui->country_Selector->isSet() ? this->ui->country_Selector->getCountry().getIsoCode() : "",
-                           this->ui->cb_RealAirline->isChecked(),
-                           this->ui->cb_VirtualAirline->isChecked()
+                           ui->le_Designator->text().trimmed(),
+                           ui->le_Name->text().trimmed(),
+                           ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
+                           ui->cb_RealAirline->isChecked(),
+                           ui->cb_VirtualAirline->isChecked()
                        ));
         }
 
@@ -65,41 +65,41 @@ namespace BlackGui
             bool filter = false;
             if (icao.hasValidDesignator())
             {
-                this->ui->le_Designator->setText(icao.getVDesignator());
+                ui->le_Designator->setText(icao.getVDesignator());
                 filter = true;
             }
             if (icao.hasName())
             {
-                this->ui->le_Name->setText(icao.getName());
+                ui->le_Name->setText(icao.getName());
                 filter = true;
             }
 
             if (filter)
             {
-                this->ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+                ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
             }
         }
 
         void CAirlineIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
         {
-            this->ui->filter_Buttons->onRowCountChanged(count, withFilter);
+            ui->filter_Buttons->onRowCountChanged(count, withFilter);
         }
 
         void CAirlineIcaoFilterBar::ps_CountryChanged(const CCountry &country)
         {
             if (country.hasIsoCode())
             {
-                this->ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+                ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
             }
         }
 
         void CAirlineIcaoFilterBar::clearForm()
         {
-            this->ui->le_Designator->clear();
-            this->ui->le_Name->clear();
-            this->ui->country_Selector->clear();
-            this->ui->cb_RealAirline->setChecked(true);
-            this->ui->cb_VirtualAirline->setChecked(true);
+            ui->le_Designator->clear();
+            ui->le_Name->clear();
+            ui->country_Selector->clear();
+            ui->cb_RealAirline->setChecked(true);
+            ui->cb_VirtualAirline->setChecked(true);
         }
 
     } // ns

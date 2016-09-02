@@ -35,7 +35,6 @@
 
 namespace BlackCore
 {
-
     /*!
      * Interface for a connection to a multi-user flight simulation and ATC network.
      *
@@ -534,7 +533,6 @@ namespace BlackCore
 
         //! @}
     };
-
 } // namespace
 
 Q_DECLARE_METATYPE(BlackCore::INetwork::ConnectionStatus)

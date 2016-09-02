@@ -40,7 +40,7 @@ namespace BlackGui
         {
             if (!sGui) { return; }
             Q_ASSERT_X(sGui->supportsContexts(), Q_FUNC_INFO, "Application does not support contexts");
-            this->ui->tvp_RegisteredComponents->updateContainer(sGui->getIContextApplication()->getRegisteredApplications());
+            ui->tvp_RegisteredComponents->updateContainer(sGui->getIContextApplication()->getRegisteredApplications());
         }
     } // ns
 } // ns

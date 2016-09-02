@@ -26,7 +26,7 @@ namespace BlackGui
             ui(new Ui::CNetworkServerForm)
         {
             ui->setupUi(this);
-            this->ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
+            ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
         }
 
         CServerForm::~CServerForm()
@@ -35,51 +35,51 @@ namespace BlackGui
         void CServerForm::setServer(const CServer &server)
         {
             CUser user = server.getUser();
-            this->ui->le_NetworkId->setText(user.getId());
-            this->ui->le_RealName->setText(user.getRealName());
-            this->ui->le_Name->setText(server.getName());
-            this->ui->le_Password->setText(user.getPassword());
-            this->ui->le_Description->setText(server.getDescription());
-            this->ui->le_Address->setText(server.getAddress());
-            this->ui->le_Port->setText(QString::number(server.getPort()));
-            this->ui->form_ServerFsd->setValue(server.getFsdSetup());
+            ui->le_NetworkId->setText(user.getId());
+            ui->le_RealName->setText(user.getRealName());
+            ui->le_Name->setText(server.getName());
+            ui->le_Password->setText(user.getPassword());
+            ui->le_Description->setText(server.getDescription());
+            ui->le_Address->setText(server.getAddress());
+            ui->le_Port->setText(QString::number(server.getPort()));
+            ui->form_ServerFsd->setValue(server.getFsdSetup());
         }
 
         BlackMisc::Network::CServer CServerForm::getServer() const
         {
             CUser user(
-                this->ui->le_NetworkId->text().trimmed(),
-                this->ui->le_RealName->text().trimmed().simplified(),
+                ui->le_NetworkId->text().trimmed(),
+                ui->le_RealName->text().trimmed().simplified(),
                 "",
-                this->ui->le_Password->text().trimmed()
+                ui->le_Password->text().trimmed()
             );
             CServer server(
-                this->ui->le_Name->text().trimmed().simplified(),
-                this->ui->le_Description->text().trimmed().simplified(),
-                this->ui->le_Address->text().trimmed(),
-                this->ui->le_Port->text().trimmed().toInt(),
+                ui->le_Name->text().trimmed().simplified(),
+                ui->le_Description->text().trimmed().simplified(),
+                ui->le_Address->text().trimmed(),
+                ui->le_Port->text().trimmed().toInt(),
                 user
             );
-            CFsdSetup setup(this->ui->form_ServerFsd->getValue());
+            CFsdSetup setup(ui->form_ServerFsd->getValue());
             server.setFsdSetup(setup);
             return server;
         }
 
         void CServerForm::setReadOnly(bool readOnly)
         {
-            this->ui->le_NetworkId->setReadOnly(readOnly);
-            this->ui->le_RealName->setReadOnly(readOnly);
-            this->ui->le_Name->setReadOnly(readOnly);
-            this->ui->le_Description->setReadOnly(readOnly);
-            this->ui->le_Address->setReadOnly(readOnly);
-            this->ui->le_Port->setReadOnly(readOnly);
-            this->ui->le_Password->setReadOnly(readOnly);
-            this->ui->form_ServerFsd->setReadOnly(readOnly);
+            ui->le_NetworkId->setReadOnly(readOnly);
+            ui->le_RealName->setReadOnly(readOnly);
+            ui->le_Name->setReadOnly(readOnly);
+            ui->le_Description->setReadOnly(readOnly);
+            ui->le_Address->setReadOnly(readOnly);
+            ui->le_Port->setReadOnly(readOnly);
+            ui->le_Password->setReadOnly(readOnly);
+            ui->form_ServerFsd->setReadOnly(readOnly);
         }
 
         void CServerForm::showPasswordField(bool show)
         {
-            if (this->ui->le_Password->isVisible() == show) { return; }
+            if (ui->le_Password->isVisible() == show) { return; }
             if (m_passwordNameLabel.isEmpty()) { m_passwordNameLabel = ui->lbl_IdPassword->text(); }
             if (show)
             {
@@ -89,7 +89,7 @@ namespace BlackGui
             {
                 ui->lbl_IdPassword->setText("Id");
             }
-            this->ui->le_Password->setVisible(show);
+            ui->le_Password->setVisible(show);
         }
 
         BlackMisc::CStatusMessageList CServerForm::validate(bool nested) const

@@ -33,16 +33,16 @@ namespace BlackGui
             ui(new Ui::CAudioVolumeComponent)
         {
             ui->setupUi(this);
-            bool c = connect(this->ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::ps_onWindowsMixerRequested);
+            bool c = connect(ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::ps_onWindowsMixerRequested);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            c = connect(this->ui->hs_Volume, &QSlider::valueChanged, this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSlider);
+            c = connect(ui->hs_Volume, &QSlider::valueChanged, this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSlider);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            c = connect(this->ui->sb_Volume, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged), this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox);
+            c = connect(ui->sb_Volume, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged), this, &CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox);
             Q_ASSERT(c);
             Q_UNUSED(c);
-            c = connect(this->ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::ps_setVolume100);
+            c = connect(ui->pb_Volume100, &QPushButton::clicked, this, &CAudioVolumeComponent::ps_setVolume100);
             Q_ASSERT(c);
             Q_UNUSED(c);
 
@@ -54,17 +54,17 @@ namespace BlackGui
             Q_UNUSED(c);
 
             // to audio audio context
-            c = connect(this->ui->pb_Mute, &QPushButton::toggled, sGui->getIContextAudio(), &IContextAudio::setMute);
+            c = connect(ui->pb_Mute, &QPushButton::toggled, sGui->getIContextAudio(), &IContextAudio::setMute);
             Q_ASSERT(c);
             Q_UNUSED(c);
 
             if (sGui->getIContextAudio()->isUsingImplementingObject())
             {
-                this->ui->lbl_ContextLocation->setText("local");
+                ui->lbl_ContextLocation->setText("local");
             }
             else
             {
-                this->ui->lbl_ContextLocation->setText("remote");
+                ui->lbl_ContextLocation->setText("remote");
             }
 
             // init volume
@@ -76,20 +76,20 @@ namespace BlackGui
 
         void CAudioVolumeComponent::ps_onMuteChanged(bool muted)
         {
-            if (muted == this->ui->pb_Mute->isChecked()) { return; } // avoid roundtrips
-            this->ui->pb_Mute->setChecked(muted);
+            if (muted == ui->pb_Mute->isChecked()) { return; } // avoid roundtrips
+            ui->pb_Mute->setChecked(muted);
         }
 
         void CAudioVolumeComponent::ps_onOutputVolumeChanged(int volume)
         {
-            this->ui->hs_Volume->setToolTip(QString::number(volume));
+            ui->hs_Volume->setToolTip(QString::number(volume));
 
             // comparisons to avoid rountrips
             QString v = QString::number(volume);
-            if (volume != this->ui->sb_Volume->value())
+            if (volume != ui->sb_Volume->value())
             {
-                this->ui->sb_Volume->setValue(volume);
-                this->ui->sb_Volume->setToolTip(v);
+                ui->sb_Volume->setValue(volume);
+                ui->sb_Volume->setToolTip(v);
             }
 
             if (volume > 100)
@@ -98,10 +98,10 @@ namespace BlackGui
                 volume = 100 + v / 5;
             }
 
-            if (volume != this->ui->hs_Volume->value())
+            if (volume != ui->hs_Volume->value())
             {
-                this->ui->hs_Volume->setValue(volume);
-                this->ui->hs_Volume->setToolTip(v);
+                ui->hs_Volume->setValue(volume);
+                ui->hs_Volume->setToolTip(v);
             }
         }
 
@@ -118,7 +118,7 @@ namespace BlackGui
                 int v = volume - 100;
                 volume = 100 + v * 5;
             }
-            this->ui->hs_Volume->setToolTip(QString::number(volume));
+            ui->hs_Volume->setToolTip(QString::number(volume));
 
             Q_ASSERT(sGui->getIContextAudio());
             if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
@@ -129,7 +129,7 @@ namespace BlackGui
 
         void CAudioVolumeComponent::ps_changeOutputVolumeFromSpinBox(int volume)
         {
-            this->ui->sb_Volume->setToolTip(QString::number(volume));
+            ui->sb_Volume->setToolTip(QString::number(volume));
             Q_ASSERT(sGui->getIContextAudio());
             if (sGui->getIContextAudio()->getVoiceOutputVolume() != volume)
             {

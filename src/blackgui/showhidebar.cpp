@@ -20,7 +20,7 @@ namespace BlackGui
         ui(new Ui::CShowHideBar)
     {
         ui->setupUi(this);
-        connect(this->ui->pb_ShowHidePushButton, &QPushButton::clicked, this, &CShowHideBar::toggleShowHide);
+        connect(ui->pb_ShowHidePushButton, &QPushButton::clicked, this, &CShowHideBar::toggleShowHide);
     }
 
     CShowHideBar::~CShowHideBar()
@@ -28,6 +28,6 @@ namespace BlackGui
 
     bool CShowHideBar::isShown() const
     {
-        return this->ui->pb_ShowHidePushButton->isChecked();
+        return ui->pb_ShowHidePushButton->isChecked();
     }
 } // namespacee

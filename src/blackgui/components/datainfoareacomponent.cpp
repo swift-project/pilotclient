@@ -54,32 +54,32 @@ namespace BlackGui
 
         CDbModelComponent *CDataInfoAreaComponent::getModelComponent() const
         {
-            return this->ui->comp_DbModels;
+            return ui->comp_DbModels;
         }
 
         CDbLiveryComponent *CDataInfoAreaComponent::getLiveryComponent() const
         {
-            return this->ui->comp_DbLiveries;
+            return ui->comp_DbLiveries;
         }
 
         CDbDistributorComponent *CDataInfoAreaComponent::getDistributorComponent() const
         {
-            return this->ui->comp_DbDistributors;
+            return ui->comp_DbDistributors;
         }
 
         CDbAircraftIcaoComponent *CDataInfoAreaComponent::getAircraftComponent() const
         {
-            return this->ui->comp_DbAircraftIcao;
+            return ui->comp_DbAircraftIcao;
         }
 
         CDbAirlineIcaoComponent *CDataInfoAreaComponent::getAirlineComponent() const
         {
-            return this->ui->comp_DbAirlineIcao;
+            return ui->comp_DbAirlineIcao;
         }
 
         CDbCountryComponent *CDataInfoAreaComponent::getCountryComponent() const
         {
-            return this->ui->comp_DbCountries;
+            return ui->comp_DbCountries;
         }
 
         bool CDataInfoAreaComponent::writeDbDataToResourceDir() const
@@ -112,12 +112,12 @@ namespace BlackGui
             if (s)
             {
                 CLogMessage(this).info("Read DB data from directory: %1") << CBuildConfig::getSwiftStaticDbFilesDir();
-                this->ui->comp_DbAircraftIcao->showLoadIndicator();
-                this->ui->comp_DbAirlineIcao->showLoadIndicator();
-                this->ui->comp_DbCountries->showLoadIndicator();
-                this->ui->comp_DbDistributors->showLoadIndicator();
-                this->ui->comp_DbLiveries->showLoadIndicator();
-                this->ui->comp_DbModels->showLoadIndicator();
+                ui->comp_DbAircraftIcao->showLoadIndicator();
+                ui->comp_DbAirlineIcao->showLoadIndicator();
+                ui->comp_DbCountries->showLoadIndicator();
+                ui->comp_DbDistributors->showLoadIndicator();
+                ui->comp_DbLiveries->showLoadIndicator();
+                ui->comp_DbModels->showLoadIndicator();
             }
             else
             {
@@ -173,7 +173,7 @@ namespace BlackGui
             bool requested = false;
             if (entity.testFlag(CEntityFlags::ModelEntity))
             {
-                this->ui->comp_DbModels->requestUpdatedData();
+                ui->comp_DbModels->requestUpdatedData();
                 requested = true;
             }
 

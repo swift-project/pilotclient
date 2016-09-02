@@ -30,12 +30,12 @@ namespace BlackGui
             ui(new Ui::CDbLiveryComponent)
         {
             ui->setupUi(this);
-            this->setViewWithIndicator(this->ui->tvp_Liveries);
-            connect(this->ui->tvp_Liveries, &CLiveryView::requestNewBackendData, this, &CDbLiveryComponent::ps_reload);
+            this->setViewWithIndicator(ui->tvp_Liveries);
+            connect(ui->tvp_Liveries, &CLiveryView::requestNewBackendData, this, &CDbLiveryComponent::ps_reload);
 
             // filter and drag and drop
-            this->ui->tvp_Liveries->setFilterWidget(this->ui->filter_Livery);
-            this->ui->tvp_Liveries->allowDragDrop(true, false);
+            ui->tvp_Liveries->setFilterWidget(ui->filter_Livery);
+            ui->tvp_Liveries->allowDragDrop(true, false);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiveryComponent::ps_liveriesRead);
             this->ps_liveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount());
@@ -46,7 +46,7 @@ namespace BlackGui
 
         void CDbLiveryComponent::filter(const BlackMisc::Aviation::CLivery &livery)
         {
-            this->ui->filter_Livery->filter(livery);
+            ui->filter_Livery->filter(livery);
         }
 
         void CDbLiveryComponent::ps_liveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
@@ -54,7 +54,7 @@ namespace BlackGui
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::LiveryEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_Liveries->updateContainerMaybeAsync(sGui->getWebDataServices()->getLiveries());
+                ui->tvp_Liveries->updateContainerMaybeAsync(sGui->getWebDataServices()->getLiveries());
             }
         }
 

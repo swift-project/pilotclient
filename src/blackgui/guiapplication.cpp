@@ -178,7 +178,7 @@ namespace BlackGui
         mainWindow->setWindowTitle(name);
         mainWindow->setWindowIcon(m_windowIcon);
         mainWindow->setWindowIconText(name);
-        emit this->uiObjectTreeReady();
+        emit uiObjectTreeReady();
     }
 
     void CGuiApplication::setWindowIcon(const QPixmap &icon)

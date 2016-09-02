@@ -47,7 +47,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
-            this->ui->le_Aircraft->setValidator(new CUpperCaseValidator(this));
+            ui->le_Aircraft->setValidator(new CUpperCaseValidator(this));
             connect(ui->le_Aircraft, &QLineEdit::returnPressed, this, &CDbAircraftIcaoSelectorComponent::ps_dataChanged);
             connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoSelectorComponent::ps_codesRead);
             this->ps_codesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getAircraftIcaoCodesCount());
@@ -59,7 +59,7 @@ namespace BlackGui
         void CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
         {
             QString icaoStr(icao.getDesignator());
-            this->ui->le_Aircraft->setText(icaoStr);
+            ui->le_Aircraft->setText(icaoStr);
             ui->lbl_Description->setText(icao.getManufacturer());
             if (icao != m_currentIcao)
             {
@@ -80,7 +80,7 @@ namespace BlackGui
 
         CAircraftIcaoCode CDbAircraftIcaoSelectorComponent::getAircraftIcao() const
         {
-            QString text(this->ui->le_Aircraft->text().trimmed().toUpper());
+            QString text(ui->le_Aircraft->text().trimmed().toUpper());
             int key = CDatastoreUtility::extractIntegerKey(text);
             if (key < 0)
             {
@@ -92,7 +92,7 @@ namespace BlackGui
 
         void CDbAircraftIcaoSelectorComponent::setReadOnly(bool readOnly)
         {
-            this->ui->le_Aircraft->setReadOnly(readOnly);
+            ui->le_Aircraft->setReadOnly(readOnly);
         }
 
         QString CDbAircraftIcaoSelectorComponent::getRawDesignator() const
@@ -102,7 +102,7 @@ namespace BlackGui
 
         void CDbAircraftIcaoSelectorComponent::withIcaoDescription(bool description)
         {
-            this->ui->lbl_Description->setVisible(description);
+            ui->lbl_Description->setVisible(description);
         }
 
         bool CDbAircraftIcaoSelectorComponent::isSet() const
@@ -112,7 +112,7 @@ namespace BlackGui
 
         void CDbAircraftIcaoSelectorComponent::clear()
         {
-            this->ui->le_Aircraft->clear();
+            ui->le_Aircraft->clear();
         }
 
         void CDbAircraftIcaoSelectorComponent::dragEnterEvent(QDragEnterEvent *event)
@@ -168,7 +168,7 @@ namespace BlackGui
                     c->setMaxVisibleItems(10);
                     this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbAircraftIcaoSelectorComponent::ps_completerActivated);
 
-                    this->ui->le_Aircraft->setCompleter(c);
+                    ui->le_Aircraft->setCompleter(c);
                     m_completerIcaoDescription.reset(c); // deletes any old completer
                     this->setReadOnly(false);
                 }
@@ -183,7 +183,7 @@ namespace BlackGui
         void CDbAircraftIcaoSelectorComponent::ps_dataChanged()
         {
             if (!sGui) { return; }
-            int key = CDatastoreUtility::extractIntegerKey(this->ui->le_Aircraft->text());
+            int key = CDatastoreUtility::extractIntegerKey(ui->le_Aircraft->text());
             CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
             this->setAircraftIcao(icao);
         }

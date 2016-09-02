@@ -48,7 +48,7 @@ namespace BlackGui
             ui->setupUi(this);
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
-            this->ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
+            ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
 
             bool c = connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::ps_dataChanged);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
@@ -70,7 +70,7 @@ namespace BlackGui
             if (key.isEmpty()) { return; }
             if (distributor != m_currentDistributor)
             {
-                this->ui->le_Distributor->setText(key);
+                ui->le_Distributor->setText(key);
                 m_currentDistributor = distributor;
                 emit changedDistributor(distributor);
             }
@@ -87,15 +87,15 @@ namespace BlackGui
             }
             else
             {
-                this->ui->lbl_Description->setText("");
-                this->ui->le_Distributor->setText(keyOrAlias);
+                ui->lbl_Description->setText("");
+                ui->le_Distributor->setText(keyOrAlias);
             }
         }
 
         CDistributor CDbDistributorSelectorComponent::getDistributor() const
         {
             if (!sGui) { return CDistributor(); }
-            QString distributorKeyOrAlias(this->ui->le_Distributor->text().trimmed().toUpper());
+            QString distributorKeyOrAlias(ui->le_Distributor->text().trimmed().toUpper());
             if (distributorKeyOrAlias.isEmpty()) { return CDistributor(); }
             if (this->m_currentDistributor.matchesKeyOrAlias(distributorKeyOrAlias)) { return this->m_currentDistributor; }
 
@@ -110,12 +110,12 @@ namespace BlackGui
 
         void CDbDistributorSelectorComponent::setReadOnly(bool readOnly)
         {
-            this->ui->le_Distributor->setReadOnly(readOnly);
+            ui->le_Distributor->setReadOnly(readOnly);
         }
 
         void CDbDistributorSelectorComponent::withDistributorDescription(bool description)
         {
-            this->ui->lbl_Description->setVisible(description);
+            ui->lbl_Description->setVisible(description);
         }
 
         bool CDbDistributorSelectorComponent::isSet() const
@@ -125,7 +125,7 @@ namespace BlackGui
 
         void CDbDistributorSelectorComponent::clear()
         {
-            this->ui->le_Distributor->clear();
+            ui->le_Distributor->clear();
         }
 
         void CDbDistributorSelectorComponent::dragEnterEvent(QDragEnterEvent *event)
@@ -182,7 +182,7 @@ namespace BlackGui
                     c->setMaxVisibleItems(10);
                     this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbDistributorSelectorComponent::ps_completerActivated);
 
-                    this->ui->le_Distributor->setCompleter(c);
+                    ui->le_Distributor->setCompleter(c);
                     m_completerDistributors.reset(c); // deletes any old completer
                     this->setReadOnly(false);
                 }
@@ -197,7 +197,7 @@ namespace BlackGui
         void CDbDistributorSelectorComponent::ps_dataChanged()
         {
             if (!sGui) { return; }
-            QString keyOrAlias(this->ui->le_Distributor->text().trimmed().toUpper());
+            QString keyOrAlias(ui->le_Distributor->text().trimmed().toUpper());
             if (keyOrAlias.isEmpty()) { return; }
             CDistributor d(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
             this->setDistributor(d);

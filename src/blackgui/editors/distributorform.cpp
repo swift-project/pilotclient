@@ -34,15 +34,15 @@ namespace BlackGui
             ui(new Ui::CDistributorForm)
         {
             ui->setupUi(this);
-            this->ui->le_Updated->setReadOnly(true);
-            this->ui->distributor_Selector->withDistributorDescription(false);
+            ui->le_Updated->setReadOnly(true);
+            ui->distributor_Selector->withDistributorDescription(false);
             ui->lai_Id->set(CIcons::appDistributors16(), "Id:");
 
             // drag and drop
-            connect(this->ui->drop_DropData, &CDropSite::droppedValueObject, this, &CDistributorForm::ps_droppedCode);
-            connect(this->ui->distributor_Selector, &CDbDistributorSelectorComponent::changedDistributor, this, &CDistributorForm::setValue);
-            this->ui->drop_DropData->setInfoText("<drop distributor>");
-            this->ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
+            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CDistributorForm::ps_droppedCode);
+            connect(ui->distributor_Selector, &CDbDistributorSelectorComponent::changedDistributor, this, &CDistributorForm::setValue);
+            ui->drop_DropData->setInfoText("<drop distributor>");
+            ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
         }
 
         CDistributorForm::~CDistributorForm()
@@ -53,20 +53,20 @@ namespace BlackGui
             const CDistributor currentDistributor(this->getValue());
             if (currentDistributor == distributor) { return false; }
 
-            this->ui->distributor_Selector->setDistributor(distributor);
-            this->ui->le_Description->setText(distributor.getDescription());
-            this->ui->le_Alias1->setText(distributor.getAlias1());
-            this->ui->le_Alias2->setText(distributor.getAlias2());
-            this->ui->le_Updated->setText(distributor.getFormattedUtcTimestampYmdhms());
+            ui->distributor_Selector->setDistributor(distributor);
+            ui->le_Description->setText(distributor.getDescription());
+            ui->le_Alias1->setText(distributor.getAlias1());
+            ui->le_Alias2->setText(distributor.getAlias2());
+            ui->le_Updated->setText(distributor.getFormattedUtcTimestampYmdhms());
             return true;
         }
 
         CDistributor CDistributorForm::getValue() const
         {
             CDistributor distributor(ui->distributor_Selector->getDistributor());
-            distributor.setAlias1(this->ui->le_Alias1->text());
-            distributor.setAlias2(this->ui->le_Alias2->text());
-            distributor.setDescription(this->ui->le_Description->text());
+            distributor.setAlias1(ui->le_Alias1->text());
+            distributor.setAlias2(ui->le_Alias2->text());
+            distributor.setDescription(ui->le_Description->text());
             return distributor;
         }
 
@@ -80,38 +80,38 @@ namespace BlackGui
                 // in readonly I cannot change the data anyway, so skip warnings
                 msgs.removeWarningsAndBelow();
             }
-            this->ui->val_Indicator->setState(msgs);
+            ui->val_Indicator->setState(msgs);
             return msgs;
         }
 
         void CDistributorForm::allowDrop(bool allowDrop)
         {
-            this->ui->drop_DropData->allowDrop(allowDrop);
+            ui->drop_DropData->allowDrop(allowDrop);
         }
 
         bool CDistributorForm::isDropAllowed() const
         {
-            return this->ui->drop_DropData->isDropAllowed();
+            return ui->drop_DropData->isDropAllowed();
         }
 
         void CDistributorForm::setReadOnly(bool readOnly)
         {
-            this->ui->le_Alias1->setReadOnly(readOnly);
-            this->ui->le_Alias2->setReadOnly(readOnly);
-            this->ui->le_Description->setReadOnly(readOnly);
-            this->ui->distributor_Selector->setReadOnly(readOnly);
+            ui->le_Alias1->setReadOnly(readOnly);
+            ui->le_Alias2->setReadOnly(readOnly);
+            ui->le_Description->setReadOnly(readOnly);
+            ui->distributor_Selector->setReadOnly(readOnly);
         }
 
         void CDistributorForm::setSelectOnly()
         {
             this->setReadOnly(true);
-            this->ui->distributor_Selector->setReadOnly(false);
+            ui->distributor_Selector->setReadOnly(false);
         }
 
         void CDistributorForm::clear()
         {
             setValue(CDistributor());
-            this->ui->distributor_Selector->setReadOnly(false);
+            ui->distributor_Selector->setReadOnly(false);
         }
 
         void CDistributorForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)

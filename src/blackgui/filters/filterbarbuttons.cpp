@@ -23,9 +23,9 @@ namespace BlackGui
             ui(new Ui::CFilterBarButtons)
         {
             ui->setupUi(this);
-            connect(this->ui->tb_ClearForm, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
-            connect(this->ui->tb_Filter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
-            connect(this->ui->tb_RemoveFilter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
+            connect(ui->tb_ClearForm, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
+            connect(ui->tb_Filter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
+            connect(ui->tb_RemoveFilter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
         }
 
         CFilterBarButtons::~CFilterBarButtons()
@@ -48,7 +48,7 @@ namespace BlackGui
         {
             QString v = QString::number(count);
             if (withFilter) { v += "F";}
-            this->ui->le_Count->setText(v);
+            ui->le_Count->setText(v);
         }
 
         void CFilterBarButtons::clickButton(CFilterBarButtons::FilterButton filterButton)
@@ -56,13 +56,13 @@ namespace BlackGui
             switch (filterButton)
             {
             case ClearForm:
-                this->ui->tb_ClearForm->click();
+                ui->tb_ClearForm->click();
                 break;
             case RemoveFilter:
-                this->ui->tb_RemoveFilter->click();
+                ui->tb_RemoveFilter->click();
                 break;
             case Filter:
-                this->ui->tb_Filter->click();
+                ui->tb_Filter->click();
                 break;
             default:
                 break;

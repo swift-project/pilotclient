@@ -45,10 +45,10 @@ namespace BlackGui
             ui->setupUi(this);
 
             // Settings server
-            this->connect(this->ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(this->ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(this->ui->pb_AddServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
-            this->connect(this->ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_serverSelected);
+            this->connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            this->connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            this->connect(ui->pb_AddServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::ps_alterTrafficServer);
+            this->connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::ps_serverSelected);
             this->ps_reloadSettings();
         }
 
@@ -65,18 +65,18 @@ namespace BlackGui
             {
                 serverList.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
             }
-            this->ui->tvp_Servers->updateContainer(serverList);
+            ui->tvp_Servers->updateContainer(serverList);
         }
 
         void CSettingsNetworkServersComponent::ps_serverSelected(const QModelIndex &index)
         {
-            const CServer clickedServer = this->ui->tvp_Servers->at(index);
-            this->ui->form_Server->setServer(clickedServer);
+            const CServer clickedServer = ui->tvp_Servers->at(index);
+            ui->form_Server->setServer(clickedServer);
         }
 
         void CSettingsNetworkServersComponent::ps_alterTrafficServer()
         {
-            CServer server(this->ui->form_Server->getServer());
+            CServer server(ui->form_Server->getServer());
             CStatusMessageList msgs = server.validate();
             if (!msgs.isEmpty()) { msgs.addCategories(this); }
 
@@ -85,13 +85,13 @@ namespace BlackGui
             CStatusMessage msg;
             bool changed = false;
             bool save = false;
-            if (sender == this->ui->pb_RemoveServer)
+            if (sender == ui->pb_RemoveServer)
             {
                 // lenient name removal
                 serverList.removeByName(server.getName());
                 changed = true;
             }
-            else if (sender == this->ui->pb_AddServer)
+            else if (sender == ui->pb_AddServer)
             {
                 if (!msgs.isEmpty())
                 {
@@ -101,7 +101,7 @@ namespace BlackGui
                 serverList.replaceOrAdd(&CServer::getName, server.getName(), server);
                 changed = true;
             }
-            else if (sender == this->ui->pb_SaveServer)
+            else if (sender == ui->pb_SaveServer)
             {
                 save = true;
                 if (msgs.isEmpty() && server.hasAddressAndPort())

@@ -190,7 +190,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             const QString n("simulator models " + sim.toQString(true));
-            this->ui->tvp_OwnAircraftModels->setSaveFileName(n);
+            ui->tvp_OwnAircraftModels->setSaveFileName(n);
         }
 
         QString CDbOwnModelsComponent::directorySelector(const CSimulatorInfo &simulatorInfo)
@@ -390,7 +390,7 @@ namespace BlackGui
         void CDbOwnModelsComponent::ps_requestOwnModelsUpdate()
         {
             if (!this->m_modelLoader) { return; }
-            this->ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(
+            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(
                 this->m_modelLoader->getAircraftModels()
             );
         }
@@ -410,7 +410,7 @@ namespace BlackGui
             }
 
             CLogMessage(this).info("Starting loading for %1") << simulator.toQString();
-            this->ui->tvp_OwnAircraftModels->showLoadIndicator();
+            ui->tvp_OwnAircraftModels->showLoadIndicator();
             Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
             this->m_modelLoader->startLoading(mode, &CDatabaseUtils::consolidateModelsWithDbData, directory);
         }
@@ -422,7 +422,7 @@ namespace BlackGui
             {
                 const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
                 const int modelsLoaded = models.size();
-                this->ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
+                ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
                 if (modelsLoaded < 1)
                 {
                     // loading ok, but no data
@@ -431,10 +431,10 @@ namespace BlackGui
             }
             else
             {
-                this->ui->tvp_OwnAircraftModels->clear();
+                ui->tvp_OwnAircraftModels->clear();
                 CLogMessage(this).error("Loading of models failed, simulator %1") << simulator.toQString();
             }
-            this->ui->tvp_OwnAircraftModels->hideLoadIndicator();
+            ui->tvp_OwnAircraftModels->hideLoadIndicator();
         }
 
         void CDbOwnModelsComponent::ps_requestSimulatorModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QString &directory)

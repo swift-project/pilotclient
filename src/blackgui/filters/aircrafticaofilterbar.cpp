@@ -32,14 +32,14 @@ namespace BlackGui
             ui(new Ui::CAircraftIcaoFilterBar)
         {
             ui->setupUi(this);
-            this->setButtonsAndCount(this->ui->filter_Buttons);
+            this->setButtonsAndCount(ui->filter_Buttons);
             connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Manufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
-            this->ui->le_Designator->setValidator(ucv);
-            this->ui->le_Manufacturer->setValidator(ucv);
+            ui->le_Designator->setValidator(ucv);
+            ui->le_Manufacturer->setValidator(ucv);
 
             // reset form
             this->clearForm();
@@ -52,10 +52,10 @@ namespace BlackGui
         {
             return std::unique_ptr<CAircraftIcaoFilter>(
                        new CAircraftIcaoFilter(
-                           this->ui->le_Designator->text(),
-                           this->ui->le_Manufacturer->text(),
-                           this->ui->le_Description->text(),
-                           this->ui->combinedType_Selector->getCombinedType()
+                           ui->le_Designator->text(),
+                           ui->le_Manufacturer->text(),
+                           ui->le_Description->text(),
+                           ui->combinedType_Selector->getCombinedType()
                        ));
         }
 
@@ -64,28 +64,28 @@ namespace BlackGui
             bool filter = false;
             if (icao.hasDesignator())
             {
-                this->ui->le_Designator->setText(icao.getDesignator());
+                ui->le_Designator->setText(icao.getDesignator());
                 filter = true;
             }
             if (icao.hasManufacturer())
             {
-                this->ui->le_Manufacturer->setText(icao.getManufacturer());
+                ui->le_Manufacturer->setText(icao.getManufacturer());
                 filter = true;
             }
             if (icao.hasModelDescription())
             {
-                this->ui->le_Manufacturer->setText("*" + icao.getModelDescription() + "*");
+                ui->le_Manufacturer->setText("*" + icao.getModelDescription() + "*");
                 filter = true;
             }
             if (filter)
             {
-                this->ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+                ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
             }
         }
 
         void CAircraftIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
         {
-            this->ui->filter_Buttons->onRowCountChanged(count, withFilter);
+            ui->filter_Buttons->onRowCountChanged(count, withFilter);
         }
 
         void CAircraftIcaoFilterBar::clearForm()

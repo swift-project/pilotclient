@@ -43,16 +43,16 @@ namespace BlackGui
             ui(new Ui::CAircraftIcaoForm)
         {
             ui->setupUi(this);
-            this->ui->lai_id->set(CIcons::appAircraftIcao16(), "Id:");
-            this->ui->le_Updated->setReadOnly(true);
-            this->ui->le_Id->setReadOnly(true);
-            this->ui->aircraft_Selector->withIcaoDescription(false);
-            connect(this->ui->aircraft_Selector, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CAircraftIcaoForm::setValue);
+            ui->lai_id->set(CIcons::appAircraftIcao16(), "Id:");
+            ui->le_Updated->setReadOnly(true);
+            ui->le_Id->setReadOnly(true);
+            ui->aircraft_Selector->withIcaoDescription(false);
+            connect(ui->aircraft_Selector, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CAircraftIcaoForm::setValue);
 
             // drag and drop
-            connect(this->ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAircraftIcaoForm::ps_droppedCode);
-            this->ui->drop_DropData->setInfoText("<drop aircraft ICAO code>");
-            this->ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
+            connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAircraftIcaoForm::ps_droppedCode);
+            ui->drop_DropData->setInfoText("<drop aircraft ICAO code>");
+            ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>()});
         }
 
         CAircraftIcaoForm::~CAircraftIcaoForm()
@@ -63,30 +63,30 @@ namespace BlackGui
             if (icao == this->m_originalCode) { return false; }
             this->m_originalCode = icao;
 
-            this->ui->le_Id->setText(icao.getDbKeyAsString());
-            this->ui->aircraft_Selector->setAircraftIcao(icao);
-            this->ui->le_Manufacturer->setText(icao.getManufacturer());
-            this->ui->le_ModelDescription->setText(icao.getModelDescription());
-            this->ui->le_Family->setText(icao.getFamily());
-            this->ui->le_Iata->setText(icao.getIataCode());
+            ui->le_Id->setText(icao.getDbKeyAsString());
+            ui->aircraft_Selector->setAircraftIcao(icao);
+            ui->le_Manufacturer->setText(icao.getManufacturer());
+            ui->le_ModelDescription->setText(icao.getModelDescription());
+            ui->le_Family->setText(icao.getFamily());
+            ui->le_Iata->setText(icao.getIataCode());
 
-            this->ui->cb_Legacy->setChecked(icao.isLegacyAircraft());
-            this->ui->cb_Military->setChecked(icao.isMilitary());
-            this->ui->cb_RealWorld->setChecked(icao.isRealWorld());
-            this->ui->combined_TypeSelector->setCombinedType(icao.getCombinedType());
+            ui->cb_Legacy->setChecked(icao.isLegacyAircraft());
+            ui->cb_Military->setChecked(icao.isMilitary());
+            ui->cb_RealWorld->setChecked(icao.isRealWorld());
+            ui->combined_TypeSelector->setCombinedType(icao.getCombinedType());
 
             QString rank(icao.getRankString());
             QString wtc(icao.getWtc());
-            CGuiUtility::setComboBoxValueByStartingString(this->ui->cb_Rank, rank, "unspecified");
-            CGuiUtility::setComboBoxValueByStartingString(this->ui->cb_Wtc, wtc, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_Rank, rank, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_Wtc, wtc, "unspecified");
 
-            this->ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
+            ui->le_Updated->setText(icao.getFormattedUtcTimestampYmdhms());
             return true;
         }
 
         CAircraftIcaoCode CAircraftIcaoForm::getValue() const
         {
-            CAircraftIcaoCode icao(this->ui->aircraft_Selector->getAircraftIcao());
+            CAircraftIcaoCode icao(ui->aircraft_Selector->getAircraftIcao());
             if (!icao.hasValidDbKey())
             {
                 // not based on DB yet, do we have a DB key
@@ -103,18 +103,18 @@ namespace BlackGui
                 }
             }
 
-            const QString manufacturer(this->ui->le_Manufacturer->text().trimmed().toUpper());
-            const QString modelDescription(this->ui->le_ModelDescription->text().trimmed());
-            const QString iata(this->ui->le_Family->text().trimmed().toUpper());
-            const QString family(this->ui->le_Iata->text().trimmed().toUpper());
+            const QString manufacturer(ui->le_Manufacturer->text().trimmed().toUpper());
+            const QString modelDescription(ui->le_ModelDescription->text().trimmed());
+            const QString iata(ui->le_Family->text().trimmed().toUpper());
+            const QString family(ui->le_Iata->text().trimmed().toUpper());
             const QString wtc(ui->cb_Wtc->currentText().left(1));
             const QString combined(ui->combined_TypeSelector->getCombinedType());
             bool ok;
-            int rank = this->ui->cb_Rank->currentText().toInt(&ok);
+            int rank = ui->cb_Rank->currentText().toInt(&ok);
             if (!ok) { rank = 10; }
-            bool legacy = this->ui->cb_Legacy->isChecked();
-            bool military = this->ui->cb_Military->isChecked();
-            bool realWorld = this->ui->cb_RealWorld->isChecked();
+            bool legacy = ui->cb_Legacy->isChecked();
+            bool military = ui->cb_Military->isChecked();
+            bool realWorld = ui->cb_RealWorld->isChecked();
             icao.setManufacturer(manufacturer);
             icao.setModelDescription(modelDescription);
             icao.setWtc(wtc);
@@ -131,13 +131,13 @@ namespace BlackGui
             Q_UNUSED(nested);
             CAircraftIcaoCode code(getValue());
             CStatusMessageList msgs(code.validate());
-            this->ui->val_Indicator->setState(msgs);
+            ui->val_Indicator->setState(msgs);
             return msgs;
         }
 
         void CAircraftIcaoForm::allowDrop(bool allowDrop)
         {
-            this->ui->drop_DropData->allowDrop(allowDrop);
+            ui->drop_DropData->allowDrop(allowDrop);
         }
 
         bool CAircraftIcaoForm::isDropAllowed() const
@@ -148,25 +148,25 @@ namespace BlackGui
         void CAircraftIcaoForm::setReadOnly(bool readOnly)
         {
             this->m_readOnly = readOnly;
-            this->ui->aircraft_Selector->setReadOnly(readOnly);
-            this->ui->le_Manufacturer->setReadOnly(readOnly);
-            this->ui->le_ModelDescription->setReadOnly(readOnly);
-            this->ui->le_Family->setReadOnly(readOnly);
-            this->ui->le_Iata->setReadOnly(readOnly);
+            ui->aircraft_Selector->setReadOnly(readOnly);
+            ui->le_Manufacturer->setReadOnly(readOnly);
+            ui->le_ModelDescription->setReadOnly(readOnly);
+            ui->le_Family->setReadOnly(readOnly);
+            ui->le_Iata->setReadOnly(readOnly);
 
-            CGuiUtility::checkBoxReadOnly(this->ui->cb_Legacy, readOnly);
-            CGuiUtility::checkBoxReadOnly(this->ui->cb_Military, readOnly);
-            CGuiUtility::checkBoxReadOnly(this->ui->cb_RealWorld, readOnly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_Legacy, readOnly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
+            CGuiUtility::checkBoxReadOnly(ui->cb_RealWorld, readOnly);
 
-            this->ui->cb_Wtc->setEnabled(!readOnly);
-            this->ui->cb_Rank->setEnabled(!readOnly);
-            this->ui->combined_TypeSelector->setReadOnly(readOnly);
+            ui->cb_Wtc->setEnabled(!readOnly);
+            ui->cb_Rank->setEnabled(!readOnly);
+            ui->combined_TypeSelector->setReadOnly(readOnly);
         }
 
         void CAircraftIcaoForm::setSelectOnly()
         {
             this->setReadOnly(true);
-            this->ui->aircraft_Selector->setReadOnly(false);
+            ui->aircraft_Selector->setReadOnly(false);
         }
 
         void CAircraftIcaoForm::clear()
@@ -196,7 +196,7 @@ namespace BlackGui
 
         int CAircraftIcaoForm::getDbKeyFromGui() const
         {
-            QString key(this->ui->le_Id->text().trimmed());
+            QString key(ui->le_Id->text().trimmed());
             return IDatastoreObjectWithIntegerKey::stringToDbKey(key);
         }
     } // ns

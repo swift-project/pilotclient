@@ -63,8 +63,8 @@ void SwiftGuiStd::init()
 
     this->setVisible(false); // hide all, so no flashing windows during init
     this->m_mwaStatusBar = &this->m_statusBar;
-    this->m_mwaOverlayFrame = this->ui->fr_CentralFrameInside;
-    this->m_mwaLogComponent = this->ui->comp_MainInfoArea->getLogComponent();
+    this->m_mwaOverlayFrame = ui->fr_CentralFrameInside;
+    this->m_mwaLogComponent = ui->comp_MainInfoArea->getLogComponent();
 
     sGui->initMainApplicationWindow(this);
 
@@ -79,19 +79,19 @@ void SwiftGuiStd::init()
     if (this->isFrameless())
     {
         // wrap menu in layout, add button to menu bar and insert on top
-        QHBoxLayout *menuBarLayout = this->addFramelessCloseButton(this->ui->mb_MainMenuBar);
-        this->ui->vl_CentralWidgetOutside->insertLayout(0, menuBarLayout, 0);
+        QHBoxLayout *menuBarLayout = this->addFramelessCloseButton(ui->mb_MainMenuBar);
+        ui->vl_CentralWidgetOutside->insertLayout(0, menuBarLayout, 0);
 
         // now insert the dock widget info bar into the widget
-        this->ui->vl_CentralWidgetOutside->insertWidget(1, this->ui->dw_InfoBarStatus);
+        ui->vl_CentralWidgetOutside->insertWidget(1, ui->dw_InfoBarStatus);
 
         // move the status bar into the frame
         // (otherwise it is dangling outside the frame as it belongs to the window)
-        this->ui->sb_MainStatusBar->setParent(this->ui->wi_CentralWidgetOutside);
-        this->ui->vl_CentralWidgetOutside->addWidget(this->ui->sb_MainStatusBar, 0);
+        ui->sb_MainStatusBar->setParent(ui->wi_CentralWidgetOutside);
+        ui->vl_CentralWidgetOutside->addWidget(ui->sb_MainStatusBar, 0);
 
         // grip
-        this->addFramelessSizeGripToStatusBar(this->ui->sb_MainStatusBar);
+        this->addFramelessSizeGripToStatusBar(ui->sb_MainStatusBar);
     }
 
     // timers
@@ -102,13 +102,13 @@ void SwiftGuiStd::init()
     }
 
     // info bar and status bar
-    this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
-    this->ui->dw_InfoBarStatus->allowStatusBar(false);
-    this->ui->dw_InfoBarStatus->setPreferredSizeWhenFloating(this->ui->dw_InfoBarStatus->size()); // set floating size
+    this->m_statusBar.initStatusBar(ui->sb_MainStatusBar);
+    ui->dw_InfoBarStatus->allowStatusBar(false);
+    ui->dw_InfoBarStatus->setPreferredSizeWhenFloating(ui->dw_InfoBarStatus->size()); // set floating size
 
     // navigator
     this->m_navigator->addAction(this->getToggleWindowVisibilityAction(this->m_navigator.data()));
-    this->m_navigator->addActions(this->ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(this->m_navigator.data()));
+    this->m_navigator->addActions(ui->comp_MainInfoArea->getInfoAreaToggleFloatingActions(this->m_navigator.data()));
     this->m_navigator->addAction(this->getWindowNormalAction(this->m_navigator.data()));
     this->m_navigator->addAction(this->getWindowMinimizeAction(this->m_navigator.data()));
     this->m_navigator->addAction(this->getToggleStayOnTopAction(this->m_navigator.data()));
@@ -120,8 +120,8 @@ void SwiftGuiStd::init()
     // signal / slots contexts / timers
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
-    connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
-    connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
+    connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
+    connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageSent);
     connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
 
     // start timers, update timers will be started when network is connected
@@ -138,8 +138,8 @@ void SwiftGuiStd::init()
     this->initMenus();
 
     // info
-    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
-    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CBuildConfig::compiledWithInfo());
+    ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
+    ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CBuildConfig::compiledWithInfo());
 
     // update timers
     this->startUpdateTimersWhenConnected();
@@ -175,59 +175,59 @@ void SwiftGuiStd::initGuiSignals()
     // This is why we still have some "old" SIGNAL/SLOT connections here
 
     // main window
-    connect(this->ui->sw_MainMiddle, &QStackedWidget::currentChanged, this, &SwiftGuiStd::ps_onCurrentMainWidgetChanged);
+    connect(ui->sw_MainMiddle, &QStackedWidget::currentChanged, this, &SwiftGuiStd::ps_onCurrentMainWidgetChanged);
 
     // main keypad
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this, &SwiftGuiStd::ps_setMainPageInfoArea);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &SwiftGuiStd::ps_loginRequested);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::ps_onChangedWindowOpacity);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, this->ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::commandEntered, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLine);
-    connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this, &SwiftGuiStd::ps_setMainPageInfoArea);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &SwiftGuiStd::ps_loginRequested);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::ps_onChangedWindowOpacity);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::commandEntered, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLine);
+    connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
 
     // menu
-    connect(this->ui->menu_TestLocationsEDDF, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsEDDM, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsLOWW, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_TestLocationsEDDF, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_TestLocationsEDDM, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_TestLocationsEDNX, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_TestLocationsLOWW, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
-    connect(this->ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
-    connect(this->ui->menu_WindowToggleNavigator, &QAction::triggered, this->m_navigator.data(), &CNavigatorDialog::toggleNavigator);
-    connect(this->ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_WindowFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(ui->menu_WindowToggleNavigator, &QAction::triggered, this->m_navigator.data(), &CNavigatorDialog::toggleNavigator);
+    connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
-    connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);
+    connect(ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, ui->fr_CentralFrameInside, &COverlayMessagesFrame::showOverlayVariant);
 
     // settings (GUI component), styles
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_onChangedWindowOpacity);
+    connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_onChangedWindowOpacity);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &SwiftGuiStd::ps_onStyleSheetsChanged);
 
     // sliders
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, this->ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAircraftUpdateInterval, this->ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::setUpdateIntervalSeconds);
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
+    connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);
+    connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAircraftUpdateInterval, ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::setUpdateIntervalSeconds);
+    connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
 
     // login
-    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffCancelled, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
-    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
-    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this->ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
-    connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, this->ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
-    connect(this->ui->comp_Login, &CLoginComponent::requestNetworkSettings, this->ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
+    connect(ui->comp_Login, &CLoginComponent::loginOrLogoffCancelled, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
+    connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
+    connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
+    connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
+    connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
     {
         this->ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
-        this->ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetworkServers);
+        ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetworkServers);
     });
 
     // text messages
-    connect(this->ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessageWidget, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
-    connect(this->ui->comp_MainInfoArea->getMappingComponet(), &CMappingComponent::requestTextMessageWidget, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
-    connect(this->ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::requestTextMessageWidget, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+    connect(ui->comp_MainInfoArea->getAtcStationComponent(), &CAtcStationComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+    connect(ui->comp_MainInfoArea->getMappingComponet(), &CMappingComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
+    connect(ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::requestTextMessageWidget, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::showCorrespondingTab);
 
     // main info area
-    connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::ps_onChangedMainInfoAreaFloating);
+    connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::ps_onChangedMainInfoAreaFloating);
 }
 
 void SwiftGuiStd::initialDataReads()
@@ -245,16 +245,16 @@ void SwiftGuiStd::initialDataReads()
 
 void SwiftGuiStd::startUpdateTimersWhenConnected()
 {
-    this->ui->comp_MainInfoArea->getAtcStationComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAtcUpdateIntervalSeconds());
-    this->ui->comp_MainInfoArea->getAircraftComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAircraftUpdateIntervalSeconds());
-    this->ui->comp_MainInfoArea->getUserComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getUsersUpdateIntervalSeconds());
+    ui->comp_MainInfoArea->getAtcStationComponent()->setUpdateIntervalSeconds(ui->comp_MainInfoArea->getSettingsComponent()->getAtcUpdateIntervalSeconds());
+    ui->comp_MainInfoArea->getAircraftComponent()->setUpdateIntervalSeconds(ui->comp_MainInfoArea->getSettingsComponent()->getAircraftUpdateIntervalSeconds());
+    ui->comp_MainInfoArea->getUserComponent()->setUpdateIntervalSeconds(ui->comp_MainInfoArea->getSettingsComponent()->getUsersUpdateIntervalSeconds());
 }
 
 void SwiftGuiStd::stopUpdateTimersWhenDisconnected()
 {
-    this->ui->comp_MainInfoArea->getAtcStationComponent()->stopTimer();
-    this->ui->comp_MainInfoArea->getAircraftComponent()->stopTimer();
-    this->ui->comp_MainInfoArea->getUserComponent()->stopTimer();
+    ui->comp_MainInfoArea->getAtcStationComponent()->stopTimer();
+    ui->comp_MainInfoArea->getAircraftComponent()->stopTimer();
+    ui->comp_MainInfoArea->getUserComponent()->stopTimer();
 }
 
 void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)

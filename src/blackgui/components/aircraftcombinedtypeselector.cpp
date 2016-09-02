@@ -49,11 +49,11 @@ namespace BlackGui
             if (cc.length() > 1) { engineCount = cc.mid(1, 1); }
             if (cc.length() > 2) { engineType = cc.mid(2, 1); }
 
-            CGuiUtility::setComboBoxValueByStartingString(this->ui->cb_EngineCount, engineCount, "unspecified");
-            CGuiUtility::setComboBoxValueByStartingString(this->ui->cb_EngineType, engineType, "unspecified");
-            CGuiUtility::setComboBoxValueByStartingString(this->ui->cb_Type, aircraftType, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineCount, engineCount, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_EngineType, engineType, "unspecified");
+            CGuiUtility::setComboBoxValueByStartingString(ui->cb_Type, aircraftType, "unspecified");
 
-            this->ui->le_CombinedType->setText(cc);
+            ui->le_CombinedType->setText(cc);
         }
 
         void CAircraftCombinedTypeSelector::setCombinedType(const BlackMisc::Aviation::CAircraftIcaoCode &icao)
@@ -64,7 +64,7 @@ namespace BlackGui
         void CAircraftCombinedTypeSelector::clear()
         {
             this->setCombinedType("");
-            this->ui->le_CombinedType->clear();
+            ui->le_CombinedType->clear();
         }
 
         void CAircraftCombinedTypeSelector::setReadOnly(bool readOnly)

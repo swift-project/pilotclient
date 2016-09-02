@@ -60,8 +60,8 @@ namespace BlackGui
             Q_ASSERT(sGui->getIContextOwnAircraft()); // voice room resolution is part of own aircraft
             QString url1;
             QString url2;
-            if (this->ui->cb_CockpitVoiceRoom1Override->isChecked()) { url1 = this->ui->le_CockpitVoiceRoomCom1->text().trimmed(); }
-            if (this->ui->cb_CockpitVoiceRoom2Override->isChecked()) { url2 = this->ui->le_CockpitVoiceRoomCom2->text().trimmed(); }
+            if (ui->cb_CockpitVoiceRoom1Override->isChecked()) { url1 = ui->le_CockpitVoiceRoomCom1->text().trimmed(); }
+            if (ui->cb_CockpitVoiceRoom2Override->isChecked()) { url2 = ui->le_CockpitVoiceRoomCom2->text().trimmed(); }
             sGui->getIContextOwnAircraft()->setAudioVoiceRoomOverrideUrls(url1, url2);
         }
 
@@ -69,8 +69,8 @@ namespace BlackGui
         {
             bool c1 = ui->cb_CockpitVoiceRoom1Override->isChecked();
             bool c2 = ui->cb_CockpitVoiceRoom2Override->isChecked();
-            this->ui->le_CockpitVoiceRoomCom1->setReadOnly(!c1);
-            this->ui->le_CockpitVoiceRoomCom2->setReadOnly(!c2);
+            ui->le_CockpitVoiceRoomCom1->setReadOnly(!c1);
+            ui->le_CockpitVoiceRoomCom2->setReadOnly(!c2);
         }
 
         void CVoiceRoomsComponent::ps_updateAudioVoiceRoomsFromContext(const CVoiceRoomList &selectedVoiceRooms, bool connected)
@@ -82,29 +82,29 @@ namespace BlackGui
             // remark
             // isAudioPlaying() is not set, as this is only a temporary value when really "something is playing"
 
-            bool changedUrl1 = (room1.getVoiceRoomUrl() == this->ui->le_CockpitVoiceRoomCom1->text());
-            this->ui->le_CockpitVoiceRoomCom1->setText(room1.getVoiceRoomUrl());
+            bool changedUrl1 = (room1.getVoiceRoomUrl() == ui->le_CockpitVoiceRoomCom1->text());
+            ui->le_CockpitVoiceRoomCom1->setText(room1.getVoiceRoomUrl());
             if (room1.isConnected())
             {
-                this->ui->le_CockpitVoiceRoomCom1->setStyleSheet("background: green");
-                if (sGui->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
+                ui->le_CockpitVoiceRoomCom1->setStyleSheet("background: green");
+                if (sGui->getIContextAudio()) ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
             }
             else
             {
-                this->ui->le_CockpitVoiceRoomCom1->setStyleSheet("");
-                this->ui->tvp_CockpitVoiceRoom1->clear();
+                ui->le_CockpitVoiceRoomCom1->setStyleSheet("");
+                ui->tvp_CockpitVoiceRoom1->clear();
             }
 
-            bool changedUrl2 = (room2.getVoiceRoomUrl() == this->ui->le_CockpitVoiceRoomCom2->text());
-            this->ui->le_CockpitVoiceRoomCom2->setText(room2.getVoiceRoomUrl());
+            bool changedUrl2 = (room2.getVoiceRoomUrl() == ui->le_CockpitVoiceRoomCom2->text());
+            ui->le_CockpitVoiceRoomCom2->setText(room2.getVoiceRoomUrl());
             if (room2.isConnected())
             {
-                this->ui->le_CockpitVoiceRoomCom2->setStyleSheet("background: green");
+                ui->le_CockpitVoiceRoomCom2->setStyleSheet("background: green");
             }
             else
             {
-                this->ui->le_CockpitVoiceRoomCom2->setStyleSheet("");
-                this->ui->tvp_CockpitVoiceRoom2->clear();
+                ui->le_CockpitVoiceRoomCom2->setStyleSheet("");
+                ui->tvp_CockpitVoiceRoom2->clear();
             }
             if (changedUrl1 || changedUrl2)
             {
@@ -124,22 +124,22 @@ namespace BlackGui
         void CVoiceRoomsComponent::ps_updateVoiceRoomMembers()
         {
             if (!sGui->getIContextAudio()) { return; }
-            if (!this->ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
+            if (!ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
+                ui->tvp_CockpitVoiceRoom1->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com1));
             }
             else
             {
-                this->ui->tvp_CockpitVoiceRoom1->clear();
+                ui->tvp_CockpitVoiceRoom1->clear();
             }
 
-            if (!this->ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
+            if (!ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
             {
-                this->ui->tvp_CockpitVoiceRoom2->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com2));
+                ui->tvp_CockpitVoiceRoom2->updateContainer(sGui->getIContextAudio()->getRoomUsers(BlackMisc::Aviation::CComSystem::Com2));
             }
             else
             {
-                this->ui->tvp_CockpitVoiceRoom2->clear();
+                ui->tvp_CockpitVoiceRoom2->clear();
             }
         }
     } // namespace

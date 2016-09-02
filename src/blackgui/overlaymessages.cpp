@@ -45,11 +45,11 @@ namespace BlackGui
     {
         this->init(w, h);
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
-        connect(this->ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
-        connect(this->ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
+        connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
+        connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
 
-        this->ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAuto);
-        this->ui->fr_Confirmation->setVisible(false);
+        ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAuto);
+        ui->fr_Confirmation->setVisible(false);
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
@@ -66,8 +66,8 @@ namespace BlackGui
         ui->setupUi(this);
         resize(w, h);
         this->setAutoFillBackground(true);
-        this->ui->tvp_StatusMessages->setMode(CStatusMessageListModel::Simplified);
-        connect(this->ui->tb_Close, &QToolButton::released, this, &COverlayMessages::close);
+        ui->tvp_StatusMessages->setMode(CStatusMessageListModel::Simplified);
+        connect(ui->tb_Close, &QToolButton::released, this, &COverlayMessages::close);
         m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
         connect(&m_autoCloseTimer, &QTimer::timeout, this, &COverlayMessages::close);
     }
@@ -117,7 +117,7 @@ namespace BlackGui
     {
         if (messages.isEmpty()) { return; }
         this->setModeToMessages();
-        this->ui->tvp_StatusMessages->updateContainer(messages);
+        ui->tvp_StatusMessages->updateContainer(messages);
         this->display(timeOutMs);
     }
 
@@ -127,12 +127,12 @@ namespace BlackGui
         if (this->useSmall())
         {
             this->setModeToMessageSmall();
-            this->ui->form_StatusMessageSmall->setValue(message);
+            ui->form_StatusMessageSmall->setValue(message);
         }
         else
         {
             this->setModeToMessage();
-            this->ui->form_StatusMessage->setValue(message);
+            ui->form_StatusMessage->setValue(message);
         }
         this->display(timeOutMs);
     }
@@ -143,10 +143,10 @@ namespace BlackGui
         this->setModeToTextMessage();
 
         // message and display
-        this->ui->le_TmFrom->setText(textMessage.getSenderCallsign().asString());
-        this->ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
-        this->ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
-        this->ui->te_TmText->setText(textMessage.getMessage());
+        ui->le_TmFrom->setText(textMessage.getSenderCallsign().asString());
+        ui->le_TmTo->setText(textMessage.getRecipientCallsign().asString());
+        ui->le_TmReceived->setText(textMessage.getFormattedUtcTimestampHms());
+        ui->te_TmText->setText(textMessage.getMessage());
 
         this->display(timeOutMs);
     }
@@ -159,22 +159,22 @@ namespace BlackGui
     void COverlayMessages::showOverlayImage(const QPixmap &image, int timeOutMs)
     {
         this->setModeToImage();
-        QSize sizeAvailable = this->ui->fr_StatusMessagesComponentsInner->size();
+        QSize sizeAvailable = ui->fr_StatusMessagesComponentsInner->size();
         if (sizeAvailable.width() < 300)
         {
             // first time inner frame is not giving correct size, workaround
             sizeAvailable = this->size() * 0.9;
         }
 
-        this->ui->lbl_Image->setText("");
+        ui->lbl_Image->setText("");
         if (image.isNull())
         {
             static const QPixmap e;
-            this->ui->lbl_Image->setPixmap(e);
+            ui->lbl_Image->setPixmap(e);
         }
         else
         {
-            this->ui->lbl_Image->setPixmap(
+            ui->lbl_Image->setPixmap(
                 image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation)
             );
         }
@@ -208,31 +208,31 @@ namespace BlackGui
 
     void COverlayMessages::setModeToMessages()
     {
-        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_StatusMessages);
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessages);
         this->setHeader("Messages");
     }
 
     void COverlayMessages::setModeToMessage()
     {
-        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_StatusMessage);
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessage);
         this->setHeader("Message");
     }
 
     void COverlayMessages::setModeToMessageSmall()
     {
-        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_StatusMessageSmall);
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessageSmall);
         this->setHeader("Message");
     }
 
     void COverlayMessages::setModeToTextMessage()
     {
-        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_TextMessage);
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_TextMessage);
         this->setHeader("Text message");
     }
 
     void COverlayMessages::setModeToImage()
     {
-        this->ui->sw_StatusMessagesComponent->setCurrentWidget(this->ui->pg_Image);
+        ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_Image);
         this->setHeader("Image");
     }
 
@@ -240,12 +240,12 @@ namespace BlackGui
     {
         if (message.isEmpty())
         {
-            this->ui->fr_Confirmation->setVisible(false);
+            ui->fr_Confirmation->setVisible(false);
         }
         else
         {
-            this->ui->fr_Confirmation->setVisible(true);
-            this->ui->lbl_Confirmation->setText(message);
+            ui->fr_Confirmation->setVisible(true);
+            ui->lbl_Confirmation->setText(message);
         }
     }
 
@@ -262,20 +262,20 @@ namespace BlackGui
         switch (button)
         {
         case QMessageBox::Ok:
-            this->ui->pb_Cancel->setDefault(false);
-            this->ui->pb_Cancel->setAutoDefault(false);
-            this->ui->pb_Ok->setDefault(true);
-            this->ui->pb_Ok->setAutoDefault(true);
+            ui->pb_Cancel->setDefault(false);
+            ui->pb_Cancel->setAutoDefault(false);
+            ui->pb_Ok->setDefault(true);
+            ui->pb_Ok->setAutoDefault(true);
             this->m_lastConfirmation = QMessageBox::Ok;
-            this->ui->pb_Ok->setFocus();
+            ui->pb_Ok->setFocus();
             break;
         case QMessageBox::Cancel:
-            this->ui->pb_Ok->setDefault(false);
-            this->ui->pb_Ok->setAutoDefault(false);
-            this->ui->pb_Cancel->setDefault(true);
-            this->ui->pb_Cancel->setAutoDefault(true);
+            ui->pb_Ok->setDefault(false);
+            ui->pb_Ok->setAutoDefault(false);
+            ui->pb_Cancel->setDefault(true);
+            ui->pb_Cancel->setAutoDefault(true);
             this->m_lastConfirmation = QMessageBox::Cancel;
-            this->ui->pb_Cancel->setFocus();
+            ui->pb_Cancel->setFocus();
             break;
         default:
             break;
@@ -300,7 +300,7 @@ namespace BlackGui
     {
         this->hide();
         this->setEnabled(false);
-        this->ui->fr_Confirmation->setVisible(false);
+        ui->fr_Confirmation->setVisible(false);
         this->m_lastConfirmation = QMessageBox::Cancel;
         this->m_okLambda = nullptr;
     }

@@ -34,12 +34,12 @@ namespace BlackGui
             ui(new Ui::CDbAircraftIcaoComponent)
         {
             ui->setupUi(this);
-            this->setViewWithIndicator(this->ui->tvp_AircraftIcao);
-            this->ui->tvp_AircraftIcao->setResizeMode(CAircraftIcaoCodeView::ResizingOff);
-            connect(this->ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::ps_reload);
+            this->setViewWithIndicator(ui->tvp_AircraftIcao);
+            ui->tvp_AircraftIcao->setResizeMode(CAircraftIcaoCodeView::ResizingOff);
+            connect(ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::ps_reload);
 
-            this->ui->tvp_AircraftIcao->allowDragDrop(true, false);
-            this->ui->tvp_AircraftIcao->setFilterWidget(this->ui->filter_AircraftIcao);
+            ui->tvp_AircraftIcao->allowDragDrop(true, false);
+            ui->tvp_AircraftIcao->setFilterWidget(ui->filter_AircraftIcao);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::ps_icaoRead);
             this->ps_icaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftIcaoCodesCount());
@@ -50,7 +50,7 @@ namespace BlackGui
 
         void CDbAircraftIcaoComponent::filter(const CAircraftIcaoCode &icao)
         {
-            this->ui->filter_AircraftIcao->filter(icao);
+            ui->filter_AircraftIcao->filter(icao);
         }
 
         void CDbAircraftIcaoComponent::ps_icaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
@@ -58,7 +58,7 @@ namespace BlackGui
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_AircraftIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAircraftIcaoCodes());
+                ui->tvp_AircraftIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAircraftIcaoCodes());
             }
         }
 

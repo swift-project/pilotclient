@@ -45,8 +45,8 @@ namespace BlackGui
             ui->setupUi(this);
             this->initLeds();
 
-            this->ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(this->ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::ps_customAudioContextMenuRequested);
+            ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
+            connect(ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::ps_customAudioContextMenuRequested);
 
             if (sGui->getIContextSimulator())
             {
@@ -65,12 +65,12 @@ namespace BlackGui
 
             if (sGui->getIContextApplication())
             {
-                this->ui->led_DBus->setOn(sGui->getIContextApplication()->isUsingImplementingObject());
+                ui->led_DBus->setOn(sGui->getIContextApplication()->isUsingImplementingObject());
             }
 
             if (sGui->getIContextAudio())
             {
-                this->ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
+                ui->led_Audio->setOn(!sGui->getIContextAudio()->isMuted());
                 connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::ps_onMuteChanged);
             }
         }
@@ -81,24 +81,24 @@ namespace BlackGui
         void CInfoBarStatusComponent::initLeds()
         {
             CLedWidget::LedShape shape = CLedWidget::Circle;
-            this->ui->led_DBus->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
-            this->ui->led_Network->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
-            this->ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Simulator running", "Simulator disconnected", "Simulator connected", 14);
-            this->ui->led_MapperReady->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Mapper ready", "Mappings loading", "Mappings loading", 14);
+            ui->led_DBus->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
+            ui->led_Network->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
+            ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Simulator running", "Simulator disconnected", "Simulator connected", 14);
+            ui->led_MapperReady->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Mapper ready", "Mappings loading", "Mappings loading", 14);
 
             shape = CLedWidget::Rounded;
-            this->ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
-            this->ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "On", "Muted", 18);
+            ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
+            ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "On", "Muted", 18);
         }
 
         void CInfoBarStatusComponent::setDBusStatus(bool dbus)
         {
-            this->ui->led_DBus->setOn(dbus);
+            ui->led_DBus->setOn(dbus);
         }
 
         void CInfoBarStatusComponent::setDBusTooltip(const QString &tooltip)
         {
-            this->ui->led_DBus->setOnToolTip(tooltip);
+            ui->led_DBus->setOnToolTip(tooltip);
         }
 
         void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(int status)
@@ -113,23 +113,23 @@ namespace BlackGui
                 if (status & ISimulator::Paused)
                 {
                     // in paused state
-                    this->ui->led_Simulator->setTriState();
-                    this->ui->led_Simulator->setTriStateToolTip(s);
+                    ui->led_Simulator->setTriState();
+                    ui->led_Simulator->setTriStateToolTip(s);
                 }
                 else if (status & ISimulator::Simulating)
                 {
-                    this->ui->led_Simulator->setOn(true);
-                    this->ui->led_Simulator->setOnToolTip(s);
+                    ui->led_Simulator->setOn(true);
+                    ui->led_Simulator->setOnToolTip(s);
                 }
                 else
                 {
-                    this->ui->led_Simulator->setTriState();
-                    this->ui->led_Simulator->setTriStateToolTip(s);
+                    ui->led_Simulator->setTriState();
+                    ui->led_Simulator->setTriStateToolTip(s);
                 }
             }
             else
             {
-                this->ui->led_Simulator->setOn(false);
+                ui->led_Simulator->setOn(false);
             }
         }
 
@@ -143,17 +143,17 @@ namespace BlackGui
             case INetwork::DisconnectedError:
             case INetwork::DisconnectedFailed:
             case INetwork::DisconnectedLost:
-                this->ui->led_Network->setOn(false);
+                ui->led_Network->setOn(false);
                 break;
             case INetwork::Connected:
-                this->ui->led_Network->setOn(true);
-                this->ui->led_Network->setOnToolTip("Connected: " + sGui->getIContextNetwork()->getConnectedServer().getName());
+                ui->led_Network->setOn(true);
+                ui->led_Network->setOnToolTip("Connected: " + sGui->getIContextNetwork()->getConnectedServer().getName());
                 break;
             case INetwork::Connecting:
-                this->ui->led_Network->setTriStateColor(CLedWidget::Yellow);
+                ui->led_Network->setTriStateColor(CLedWidget::Yellow);
                 break;
             default:
-                this->ui->led_Network->setOn(false);
+                ui->led_Network->setOn(false);
                 break;
             }
         }
@@ -190,24 +190,24 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::ps_onMuteChanged(bool muted)
         {
-            this->ui->led_Audio->setOn(!muted);
+            ui->led_Audio->setOn(!muted);
         }
 
         void CInfoBarStatusComponent::ps_onMapperReady()
         {
             if (!sGui->getIContextSimulator())
             {
-                this->ui->led_MapperReady->setOn(false);
+                ui->led_MapperReady->setOn(false);
                 return;
             }
 
             int models = sGui->getIContextSimulator()->getInstalledModelsCount();
             bool on = (models > 0);
-            this->ui->led_MapperReady->setOn(on);
+            ui->led_MapperReady->setOn(on);
             if (on)
             {
                 QString m = QString("Mapper with %1 models").arg(models);
-                this->ui->led_MapperReady->setToolTip(m);
+                ui->led_MapperReady->setToolTip(m);
             }
         }
     } // namespace

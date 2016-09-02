@@ -47,11 +47,11 @@ namespace BlackGui
         BlackMisc::Simulation::CAircraftModel CModelMappingForm::getValue() const
         {
             CAircraftModel model(m_originalModel);
-            model.setSimulator(this->ui->selector_Simulator->getValue());
-            model.setDescription(this->ui->le_Description->text());
-            model.setModelString(this->ui->le_ModelKey->text());
-            model.setName(this->ui->le_Name->text());
-            model.setModelMode(this->ui->selector_ModelMode->getMode());
+            model.setSimulator(ui->selector_Simulator->getValue());
+            model.setDescription(ui->le_Description->text());
+            model.setModelString(ui->le_ModelKey->text());
+            model.setName(ui->le_Name->text());
+            model.setModelMode(ui->selector_ModelMode->getMode());
             return model;
         }
 
@@ -59,15 +59,15 @@ namespace BlackGui
         {
             CAircraftModel model(getValue());
             CStatusMessageList msgs(model.validate(withNestedObjects));
-            this->ui->val_Indicator->setState(msgs);
+            ui->val_Indicator->setState(msgs);
             return msgs;
         }
 
         void CModelMappingForm::setReadOnly(bool readOnly)
         {
-            this->ui->le_Description->setReadOnly(readOnly);
-            this->ui->le_ModelKey->setReadOnly(readOnly);
-            this->ui->le_Name->setReadOnly(readOnly);
+            ui->le_Description->setReadOnly(readOnly);
+            ui->le_ModelKey->setReadOnly(readOnly);
+            ui->le_Name->setReadOnly(readOnly);
         }
 
         void CModelMappingForm::setSelectOnly()

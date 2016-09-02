@@ -78,10 +78,10 @@ namespace BlackGui
 
         void CModelMappingModifyForm::setValue(const CAircraftModel &model)
         {
-            this->ui->le_Description->setText(model.getDescription());
-            this->ui->le_Name->setText(model.getName());
-            this->ui->selector_SimulatorSelector->setValue(model.getSimulator());
-            this->ui->selector_ModeSelector->setValue(model);
+            ui->le_Description->setText(model.getDescription());
+            ui->le_Name->setText(model.getName());
+            ui->selector_SimulatorSelector->setValue(model.getSimulator());
+            ui->selector_ModeSelector->setValue(model);
         }
 
         void CModelMappingModifyForm::setReadOnly(bool readOnly)

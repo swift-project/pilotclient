@@ -33,7 +33,7 @@ namespace BlackGui
             ui(new Ui::CDbAirlineNameSelectorComponent)
         {
             ui->setupUi(this);
-            connect(this->ui->le_AirlineName, &QLineEdit::returnPressed, this, &CDbAirlineNameSelectorComponent::ps_dataChanged);
+            connect(ui->le_AirlineName, &QLineEdit::returnPressed, this, &CDbAirlineNameSelectorComponent::ps_dataChanged);
         }
 
         CDbAirlineNameSelectorComponent::~CDbAirlineNameSelectorComponent()
@@ -45,18 +45,18 @@ namespace BlackGui
         {
             if (!CDbAirlineIcaoSelectorBase::setAirlineIcao(icao)) { return false; }
             QString name(icao.getName());
-            this->ui->le_AirlineName->setText(name);
+            ui->le_AirlineName->setText(name);
             return true;
         }
 
         void CDbAirlineNameSelectorComponent::clear()
         {
-            this->ui->le_AirlineName->clear();
+            ui->le_AirlineName->clear();
         }
 
         void CDbAirlineNameSelectorComponent::setReadOnly(bool readOnly)
         {
-            this->ui->le_AirlineName->setReadOnly(readOnly);
+            ui->le_AirlineName->setReadOnly(readOnly);
         }
 
         QCompleter *CDbAirlineNameSelectorComponent::createCompleter()
@@ -65,14 +65,14 @@ namespace BlackGui
             c->setCaseSensitivity(Qt::CaseInsensitive);
             c->setCompletionMode(QCompleter::PopupCompletion);
             c->setMaxVisibleItems(10);
-            this->ui->le_AirlineName->setCompleter(c);
+            ui->le_AirlineName->setCompleter(c);
             return c;
         }
 
         void CDbAirlineNameSelectorComponent::ps_dataChanged()
         {
             if (!sGui) { return; }
-            QString s(this->ui->le_AirlineName->text());
+            QString s(ui->le_AirlineName->text());
             if (s.isEmpty()) { return; }
             int dbKey = CDatastoreUtility::extractIntegerKey(s);
             if (dbKey >= 0)

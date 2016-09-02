@@ -32,12 +32,12 @@ namespace BlackGui
             ui(new Ui::CDbAirlineIcaoComponent)
         {
             ui->setupUi(this);
-            this->setViewWithIndicator(this->ui->tvp_AirlineIcao);
-            this->ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);
-            this->ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);
-            this->ui->tvp_AirlineIcao->allowDragDrop(true, false);
-            this->ui->tvp_AirlineIcao->setFilterWidget(this->ui->filter_AirlineIcao);
-            connect(this->ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::ps_reload);
+            this->setViewWithIndicator(ui->tvp_AirlineIcao);
+            ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);
+            ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);
+            ui->tvp_AirlineIcao->allowDragDrop(true, false);
+            ui->tvp_AirlineIcao->setFilterWidget(ui->filter_AirlineIcao);
+            connect(ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::ps_reload);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoComponent::ps_icaoRead);
             this->ps_icaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
@@ -51,7 +51,7 @@ namespace BlackGui
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_AirlineIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAirlineIcaoCodes());
+                ui->tvp_AirlineIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAirlineIcaoCodes());
             }
         }
 

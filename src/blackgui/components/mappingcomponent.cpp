@@ -62,38 +62,38 @@ namespace BlackGui
             m_updateTimer(new CUpdateTimer("CMappingComponent", &CMappingComponent::ps_backgroundUpdate, this))
         {
             ui->setupUi(this);
-            this->ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
-            this->ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
-            this->ui->tvp_AircraftModels->addFilterDialog();
+            ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
+            ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
+            ui->tvp_AircraftModels->addFilterDialog();
 
-            this->ui->tvp_SimulatedAircraft->setAircraftMode(CSimulatedAircraftListModel::ModelMode);
-            this->ui->tvp_SimulatedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
+            ui->tvp_SimulatedAircraft->setAircraftMode(CSimulatedAircraftListModel::ModelMode);
+            ui->tvp_SimulatedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
 
-            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
-            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
-            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
-            connect(this->ui->tvp_AircraftModels, &CAircraftModelView::requestNewBackendData, this, &CMappingComponent::ps_onMenuRequestModelReload);
+            connect(ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
+            connect(ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
+            connect(ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
+            connect(ui->tvp_AircraftModels, &CAircraftModelView::requestNewBackendData, this, &CMappingComponent::ps_onMenuRequestModelReload);
 
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::ps_onSimulatedAircraftUpdateRequested);
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::ps_onMenuEnableAircraft);
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestFastPositionUpdates, this, &CMappingComponent::ps_onMenuChangeFastPositionUpdates);
-            connect(this->ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CMappingComponent::ps_onMenuHighlightInSimulator);
+            connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
+            connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
+            connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::ps_onSimulatedAircraftUpdateRequested);
+            connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
+            connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::ps_onMenuEnableAircraft);
+            connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestFastPositionUpdates, this, &CMappingComponent::ps_onMenuChangeFastPositionUpdates);
+            connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CMappingComponent::ps_onMenuHighlightInSimulator);
 
-            connect(this->ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onSaveAircraft);
+            connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onSaveAircraft);
 
             this->m_modelCompleter = new QCompleter(this);
             this->m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
-            this->ui->tvp_SimulatedAircraft->setItemDelegateForColumn(0, this->m_currentMappingsViewDelegate);
+            ui->tvp_SimulatedAircraft->setItemDelegateForColumn(0, this->m_currentMappingsViewDelegate);
 
             // Aircraft previews
-            connect(this->ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
-            this->ui->lbl_AircraftIconDisplayed->setText("Icon displayed here");
+            connect(ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
+            ui->lbl_AircraftIconDisplayed->setText("Icon displayed here");
 
             // Updates
-            this->ui->tvp_AircraftModels->setDisplayAutomatically(false);
+            ui->tvp_AircraftModels->setDisplayAutomatically(false);
             this->m_updateTimer->setUpdateInterval(10 * 1000);
 
             connect(sGui->getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CMappingComponent::ps_onAircraftModelsLoaded);
@@ -105,7 +105,7 @@ namespace BlackGui
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::ps_onConnectionStatusChanged);
 
             // requires simulator context
-            connect(this->ui->tvp_SimulatedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::ps_onChangedSimulatedAircraftInView);
+            connect(ui->tvp_SimulatedAircraft, &CAircraftModelView::objectChanged, this, &CMappingComponent::ps_onChangedSimulatedAircraftInView);
 
             // with external core models might be already available
             this->ps_onAircraftModelsLoaded();
@@ -116,20 +116,20 @@ namespace BlackGui
 
         int CMappingComponent::countCurrentMappings() const
         {
-            Q_ASSERT(this->ui->tvp_SimulatedAircraft);
-            return this->ui->tvp_SimulatedAircraft->rowCount();
+            Q_ASSERT(ui->tvp_SimulatedAircraft);
+            return ui->tvp_SimulatedAircraft->rowCount();
         }
 
         int CMappingComponent::countAircraftModels() const
         {
-            Q_ASSERT(this->ui->tvp_AircraftModels);
-            return this->ui->tvp_AircraftModels->rowCount();
+            Q_ASSERT(ui->tvp_AircraftModels);
+            return ui->tvp_AircraftModels->rowCount();
         }
 
         CAircraftModelList CMappingComponent::findModelsStartingWith(const QString modelName, Qt::CaseSensitivity cs)
         {
-            Q_ASSERT(this->ui->tvp_AircraftModels);
-            return this->ui->tvp_AircraftModels->container().findModelsStartingWith(modelName, cs);
+            Q_ASSERT(ui->tvp_AircraftModels);
+            return ui->tvp_AircraftModels->container().findModelsStartingWith(modelName, cs);
         }
 
         void CMappingComponent::ps_onAircraftModelsLoaded()
@@ -154,15 +154,15 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int am = this->ui->tw_ListViews->indexOf(this->ui->tb_AircraftModels);
-            int cm = this->ui->tw_ListViews->indexOf(this->ui->tb_CurrentMappings);
-            QString amf = this->ui->tvp_AircraftModels->derivedModel()->hasFilter() ? "F" : "";
-            QString a = this->ui->tw_ListViews->tabBar()->tabText(am);
-            QString c = this->ui->tw_ListViews->tabBar()->tabText(cm);
+            int am = ui->tw_ListViews->indexOf(ui->tb_AircraftModels);
+            int cm = ui->tw_ListViews->indexOf(ui->tb_CurrentMappings);
+            QString amf = ui->tvp_AircraftModels->derivedModel()->hasFilter() ? "F" : "";
+            QString a = ui->tw_ListViews->tabBar()->tabText(am);
+            QString c = ui->tw_ListViews->tabBar()->tabText(cm);
             a = CGuiUtility::replaceTabCountValue(a, this->countAircraftModels()) + amf;
             c = CGuiUtility::replaceTabCountValue(c, this->countCurrentMappings());
-            this->ui->tw_ListViews->tabBar()->setTabText(am, a);
-            this->ui->tw_ListViews->tabBar()->setTabText(cm, c);
+            ui->tw_ListViews->tabBar()->setTabText(am, a);
+            ui->tw_ListViews->tabBar()->setTabText(cm, c);
         }
 
         void CMappingComponent::ps_onChangedSimulatedAircraftInView(const BlackMisc::CVariant &object, const BlackMisc::CPropertyIndex &index)
@@ -185,27 +185,27 @@ namespace BlackGui
 
         void CMappingComponent::ps_onAircraftSelectedInView(const QModelIndex &index)
         {
-            const CSimulatedAircraft simAircraft = this->ui->tvp_SimulatedAircraft->at(index);
-            this->ui->cb_AircraftEnabled->setChecked(simAircraft.isEnabled());
-            this->ui->le_Callsign->setText(simAircraft.getCallsign().asString());
-            this->ui->le_AircraftModel->setText(simAircraft.getModel().getModelString());
+            const CSimulatedAircraft simAircraft = ui->tvp_SimulatedAircraft->at(index);
+            ui->cb_AircraftEnabled->setChecked(simAircraft.isEnabled());
+            ui->le_Callsign->setText(simAircraft.getCallsign().asString());
+            ui->le_AircraftModel->setText(simAircraft.getModel().getModelString());
         }
 
         void CMappingComponent::ps_onModelSelectedInView(const QModelIndex &index)
         {
-            const CAircraftModel model = this->ui->tvp_AircraftModels->at(index);
-            this->ui->le_AircraftModel->setText(model.getModelString());
+            const CAircraftModel model = ui->tvp_AircraftModels->at(index);
+            ui->le_AircraftModel->setText(model.getModelString());
 
-            if (this->ui->cb_AircraftIconDisplayed->isChecked())
+            if (ui->cb_AircraftIconDisplayed->isChecked())
             {
                 const int MaxHeight = 125;
-                this->ui->lbl_AircraftIconDisplayed->setText("");
-                this->ui->lbl_AircraftIconDisplayed->setToolTip(model.getDescription());
+                ui->lbl_AircraftIconDisplayed->setText("");
+                ui->lbl_AircraftIconDisplayed->setToolTip(model.getDescription());
                 QString modelString(model.getModelString());
                 CPixmap pm =  sGui->getIContextSimulator()->iconForModel(modelString);
                 if (pm.isNull())
                 {
-                    this->ui->lbl_AircraftIconDisplayed->setPixmap(CIcons::crossWhite16());
+                    ui->lbl_AircraftIconDisplayed->setPixmap(CIcons::crossWhite16());
                 }
                 else
                 {
@@ -214,7 +214,7 @@ namespace BlackGui
                     {
                         qpm = qpm.scaledToWidth(MaxHeight, Qt::SmoothTransformation);
                     }
-                    this->ui->lbl_AircraftIconDisplayed->setPixmap(qpm);
+                    ui->lbl_AircraftIconDisplayed->setPixmap(qpm);
                 }
             }
             else
@@ -233,21 +233,21 @@ namespace BlackGui
             }
 
             const CCallsign callsign(cs);
-            bool hasCallsign = this->ui->tvp_SimulatedAircraft->container().containsCallsign(callsign);
+            bool hasCallsign = ui->tvp_SimulatedAircraft->container().containsCallsign(callsign);
             if (!hasCallsign)
             {
                 CLogMessage(this).validationError("Unmapped callsign %1 for mapping") << callsign.asString();
                 return;
             }
 
-            QString modelString = this->ui->le_AircraftModel->text().trimmed();
+            QString modelString = ui->le_AircraftModel->text().trimmed();
             if (modelString.isEmpty())
             {
                 CLogMessage(this).validationError("Missing model for mapping");
                 return;
             }
 
-            bool hasModel = this->ui->tvp_AircraftModels->container().containsModelString(modelString);
+            bool hasModel = ui->tvp_AircraftModels->container().containsModelString(modelString);
             if (!hasModel)
             {
                 CLogMessage(this).validationError("Invalid model for mapping");
@@ -255,7 +255,7 @@ namespace BlackGui
             }
 
             CSimulatedAircraft aircraftFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign);
-            bool enabled = this->ui->cb_AircraftEnabled->isChecked();
+            bool enabled = ui->cb_AircraftEnabled->isChecked();
             bool changed = false;
             if (aircraftFromBackend.getModelString() != modelString)
             {
@@ -295,13 +295,13 @@ namespace BlackGui
             Qt::CheckState s = static_cast<Qt::CheckState>(state);
             if (s == Qt::Unchecked)
             {
-                this->ui->lbl_AircraftIconDisplayed->setPixmap(empty);
-                this->ui->lbl_AircraftIconDisplayed->setText("Icon disabled");
+                ui->lbl_AircraftIconDisplayed->setPixmap(empty);
+                ui->lbl_AircraftIconDisplayed->setText("Icon disabled");
             }
             else if (s == Qt::Checked)
             {
-                this->ui->lbl_AircraftIconDisplayed->setPixmap(empty);
-                this->ui->lbl_AircraftIconDisplayed->setText("Icon will go here");
+                ui->lbl_AircraftIconDisplayed->setPixmap(empty);
+                ui->lbl_AircraftIconDisplayed->setText("Icon will go here");
             }
         }
 
@@ -313,7 +313,7 @@ namespace BlackGui
         void CMappingComponent::ps_onModelsUpdateRequested()
         {
             CAircraftModelList ml(sGui->getIContextSimulator()->getInstalledModels());
-            this->ui->tvp_AircraftModels->updateContainer(ml);
+            ui->tvp_AircraftModels->updateContainer(ml);
 
             // model completer
             this->m_modelCompleter->setModel(new QStringListModel(ml.getModelStringList(), this->m_modelCompleter));
@@ -321,7 +321,7 @@ namespace BlackGui
             this->m_modelCompleter->setCaseSensitivity(Qt::CaseInsensitive);
             this->m_modelCompleter->setWrapAround(true);
             this->m_modelCompleter->setCompletionMode(QCompleter::InlineCompletion);
-            this->ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
+            ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
         void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft)
@@ -347,7 +347,7 @@ namespace BlackGui
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))
             {
-                this->ui->tvp_SimulatedAircraft->clear();
+                ui->tvp_SimulatedAircraft->clear();
             }
         }
 
@@ -410,11 +410,11 @@ namespace BlackGui
             if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
             {
                 const CSimulatedAircraftList aircraft(sGui->getIContextNetwork()->getAircraftInRange());
-                this->ui->tvp_SimulatedAircraft->updateContainer(aircraft);
+                ui->tvp_SimulatedAircraft->updateContainer(aircraft);
             }
             else
             {
-                this->ui->tvp_SimulatedAircraft->clear();
+                ui->tvp_SimulatedAircraft->clear();
             }
         }
 

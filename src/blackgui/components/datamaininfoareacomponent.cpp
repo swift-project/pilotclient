@@ -48,17 +48,17 @@ namespace BlackGui
 
         CLogComponent *CDataMainInfoAreaComponent::getLogComponent() const
         {
-            return this->ui->comp_Log;
+            return ui->comp_Log;
         }
 
         CDbMappingComponent *CDataMainInfoAreaComponent::getMappingComponent() const
         {
-            return this->ui->comp_Mapping;
+            return ui->comp_Mapping;
         }
 
         CDataInfoAreaComponent *CDataMainInfoAreaComponent::getDataInfoAreaComponent() const
         {
-            return this->ui->comp_DataInfoArea;
+            return ui->comp_DataInfoArea;
         }
 
         void CDataMainInfoAreaComponent::displayLog()

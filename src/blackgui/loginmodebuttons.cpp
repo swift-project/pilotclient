@@ -29,11 +29,11 @@ namespace BlackGui
     BlackCore::INetwork::LoginMode BlackGui::CLoginModeButtons::getLoginMode() const
     {
         INetwork::LoginMode mode = INetwork::LoginNormal;
-        if (this->ui->rb_LoginStealth->isChecked())
+        if (ui->rb_LoginStealth->isChecked())
         {
             mode = INetwork::LoginStealth;
         }
-        else if (this->ui->rb_LoginObserver->isChecked())
+        else if (ui->rb_LoginObserver->isChecked())
         {
             mode = INetwork::LoginAsObserver;
         }
@@ -45,14 +45,14 @@ namespace BlackGui
         switch (mode)
         {
         case INetwork::LoginAsObserver:
-            this->ui->rb_LoginObserver->setChecked(true);
+            ui->rb_LoginObserver->setChecked(true);
             break;
         case INetwork::LoginStealth:
-            this->ui->rb_LoginStealth->setChecked(true);
+            ui->rb_LoginStealth->setChecked(true);
             break;
         default:
         case INetwork::LoginNormal:
-            this->ui->rb_LoginNormal->setChecked(true);
+            ui->rb_LoginNormal->setChecked(true);
             break;
         }
     }

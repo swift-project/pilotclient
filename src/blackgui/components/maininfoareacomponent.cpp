@@ -37,63 +37,63 @@ namespace BlackGui
 
         CAtcStationComponent *CMainInfoAreaComponent::getAtcStationComponent()
         {
-            return this->ui->comp_AtcStations;
+            return ui->comp_AtcStations;
         }
 
         CAircraftComponent *CMainInfoAreaComponent::getAircraftComponent()
         {
-            return this->ui->comp_Aircraft;
+            return ui->comp_Aircraft;
         }
 
         CMappingComponent *CMainInfoAreaComponent::getMappingComponet()
         {
-            return this->ui->comp_Mappings;
+            return ui->comp_Mappings;
         }
 
         CUserComponent *CMainInfoAreaComponent::getUserComponent()
         {
-            return this->ui->comp_Users;
+            return ui->comp_Users;
         }
 
         CCockpitComponent *CMainInfoAreaComponent::getCockpitComponent()
         {
-            return this->ui->comp_Cockpit;
+            return ui->comp_Cockpit;
         }
 
         CFlightPlanComponent *CMainInfoAreaComponent::getFlightPlanComponent()
         {
-            return this->ui->comp_FlightPlan;
+            return ui->comp_FlightPlan;
         }
 
         CSettingsComponent *CMainInfoAreaComponent::getSettingsComponent()
         {
-            return this->ui->comp_Settings;
+            return ui->comp_Settings;
         }
 
         CLogComponent *CMainInfoAreaComponent::getLogComponent()
         {
-            return this->ui->comp_Log;
+            return ui->comp_Log;
         }
 
         CSimulatorComponent *CMainInfoAreaComponent::getSimulatorComponent()
         {
-            return this->ui->comp_Simulator;
+            return ui->comp_Simulator;
         }
 
         CTextMessageComponent *CMainInfoAreaComponent::getTextMessageComponent()
         {
-            return this->ui->comp_TextMessages;
+            return ui->comp_TextMessages;
         }
 
         void CMainInfoAreaComponent::displayLog()
         {
-            this->ui->comp_Log->displayLog();
+            ui->comp_Log->displayLog();
             this->selectArea(InfoAreaLog);
         }
 
         void CMainInfoAreaComponent::displayConsole()
         {
-            this->ui->comp_Log->displayConsole();
+            ui->comp_Log->displayConsole();
             this->selectArea(InfoAreaLog);
         }
 
@@ -129,7 +129,7 @@ namespace BlackGui
         void CMainInfoAreaComponent::selectSettingsTab(int index)
         {
             this->selectArea(InfoAreaSettings);
-            this->ui->comp_Settings->setSettingsTab(static_cast<CSettingsComponent::SettingTab>(index));
+            ui->comp_Settings->setSettingsTab(static_cast<CSettingsComponent::SettingTab>(index));
         }
 
         const QPixmap &CMainInfoAreaComponent::indexToPixmap(int areaIndex) const

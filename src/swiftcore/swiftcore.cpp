@@ -46,7 +46,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     setSystemTrayMode(MinimizeToTray | QuitOnClose);
     setSystemTrayToolTip(name);
 
-    this->m_mwaLogComponent = this->ui->comp_InfoArea->getLogComponent();
+    this->m_mwaLogComponent = ui->comp_InfoArea->getLogComponent();
     this->m_mwaOverlayFrame = nullptr;
     this->m_mwaStatusBar = nullptr;
 
@@ -75,16 +75,16 @@ void CSwiftCore::initDBusMode()
     const QString dBusAddress(sGui->getCmdDBusAddressValue());
     if (dBusAddress.startsWith(CDBusServer::sessionBusAddress()))
     {
-        this->ui->rb_SessionBus->setChecked(true);
+        ui->rb_SessionBus->setChecked(true);
     }
     else if (dBusAddress.startsWith(CDBusServer::systemBusAddress()))
     {
-        this->ui->rb_SystemBus->setChecked(true);
+        ui->rb_SystemBus->setChecked(true);
     }
     else
     {
-        this->ui->rb_P2PBus->setChecked(true);
-        this->ui->le_P2PAddress->setText(dBusAddress);
+        ui->rb_P2PBus->setChecked(true);
+        ui->le_P2PAddress->setText(dBusAddress);
     }
 }
 

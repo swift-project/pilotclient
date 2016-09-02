@@ -37,8 +37,8 @@ namespace BlackGui
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
-            connect(this->ui->tvp_AllUsers, &CUserView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
-            connect(this->ui->tvp_Clients, &CClientView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
+            connect(ui->tvp_AllUsers, &CUserView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
+            connect(ui->tvp_Clients, &CClientView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::ps_connectionStatusChanged);
         }
 
@@ -47,21 +47,21 @@ namespace BlackGui
 
         int CUserComponent::countClients() const
         {
-            Q_ASSERT(this->ui->tvp_Clients);
-            return this->ui->tvp_Clients->rowCount();
+            Q_ASSERT(ui->tvp_Clients);
+            return ui->tvp_Clients->rowCount();
         }
 
         int CUserComponent::countUsers() const
         {
-            Q_ASSERT(this->ui->tvp_AllUsers);
-            return this->ui->tvp_AllUsers->rowCount();
+            Q_ASSERT(ui->tvp_AllUsers);
+            return ui->tvp_AllUsers->rowCount();
         }
 
         void CUserComponent::update()
         {
             if (!sGui || !sGui->getIContextNetwork()) { return; }
-            Q_ASSERT(this->ui->tvp_AllUsers);
-            Q_ASSERT(this->ui->tvp_Clients);
+            Q_ASSERT(ui->tvp_AllUsers);
+            Q_ASSERT(ui->tvp_Clients);
 
             if (sGui->getIContextNetwork()->isConnected())
             {
@@ -73,8 +73,8 @@ namespace BlackGui
                 }
 
                 // load data
-                this->ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getOtherClients());
-                this->ui->tvp_AllUsers->updateContainer(sGui->getIContextNetwork()->getUsers());
+                ui->tvp_Clients->updateContainer(sGui->getIContextNetwork()->getOtherClients());
+                ui->tvp_AllUsers->updateContainer(sGui->getIContextNetwork()->getUsers());
             }
         }
 
@@ -82,8 +82,8 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int iu = this->indexOf(this->ui->tb_AllUsers);
-            int ic = this->indexOf(this->ui->tb_Clients);
+            int iu = this->indexOf(ui->tb_AllUsers);
+            int ic = this->indexOf(ui->tb_Clients);
             QString u = this->tabBar()->tabText(iu);
             QString c = this->tabBar()->tabText(ic);
             u = CGuiUtility::replaceTabCountValue(u, this->countUsers());
@@ -97,8 +97,8 @@ namespace BlackGui
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))
             {
-                this->ui->tvp_AllUsers->clear();
-                this->ui->tvp_Clients->clear();
+                ui->tvp_AllUsers->clear();
+                ui->tvp_Clients->clear();
             }
         }
     } // namespace

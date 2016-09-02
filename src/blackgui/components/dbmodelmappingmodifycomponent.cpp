@@ -40,7 +40,7 @@ namespace BlackGui
 
         void CDbModelMappingModifyComponent::setValue(const CAircraftModel &model)
         {
-            this->ui->editor_ModelMappingModify->setValue(model);
+            ui->editor_ModelMappingModify->setValue(model);
         }
     } // ns
 } // ns

@@ -48,15 +48,15 @@ namespace BlackGui
             ui->setupUi(this);
             ui->tb_ColorDialog->setIcon(CIcons::color16());
             this->setAcceptDrops(true);
-            connect(this->ui->tb_ColorDialog, &QToolButton::clicked, this, &CColorSelector::ps_colorDialog);
-            connect(this->ui->le_Color, &QLineEdit::editingFinished, this, &CColorSelector::ps_returnPressed);
-            connect(this->ui->le_Color, &QLineEdit::returnPressed, this, &CColorSelector::ps_returnPressed);
+            connect(ui->tb_ColorDialog, &QToolButton::clicked, this, &CColorSelector::ps_colorDialog);
+            connect(ui->le_Color, &QLineEdit::editingFinished, this, &CColorSelector::ps_returnPressed);
+            connect(ui->le_Color, &QLineEdit::returnPressed, this, &CColorSelector::ps_returnPressed);
 
             QCompleter *completer = new QCompleter(QColor::colorNames(), this);
             completer->setCaseSensitivity(Qt::CaseInsensitive);
             completer->setMaxVisibleItems(10);
             completer->setCompletionMode(QCompleter::PopupCompletion);
-            this->ui->le_Color->setCompleter(completer);
+            ui->le_Color->setCompleter(completer);
             this->connect(completer, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CColorSelector::ps_colorName);
         }
 
@@ -72,8 +72,8 @@ namespace BlackGui
             }
             else
             {
-                this->ui->le_Color->setText(color.hex());
-                this->ui->lbl_ColorIcon->setPixmap(color.toPixmap());
+                ui->le_Color->setText(color.hex());
+                ui->lbl_ColorIcon->setPixmap(color.toPixmap());
                 m_lastColor = color;
             }
             emit colorChanged(color);
@@ -86,21 +86,21 @@ namespace BlackGui
 
         const BlackMisc::CRgbColor CColorSelector::getColor() const
         {
-            CRgbColor q(this->ui->le_Color->text());
+            CRgbColor q(ui->le_Color->text());
             return q;
         }
 
         void CColorSelector::setReadOnly(bool readOnly)
         {
-            this->ui->le_Color->setReadOnly(readOnly);
-            this->ui->tb_ColorDialog->setVisible(!readOnly);
+            ui->le_Color->setReadOnly(readOnly);
+            ui->tb_ColorDialog->setVisible(!readOnly);
             this->setAcceptDrops(!readOnly);
         }
 
         void CColorSelector::clear()
         {
-            this->ui->le_Color->clear();
-            this->ui->lbl_ColorIcon->setPixmap(QPixmap());
+            ui->le_Color->clear();
+            ui->lbl_ColorIcon->setPixmap(QPixmap());
         }
 
         void CColorSelector::dragEnterEvent(QDragEnterEvent *event)

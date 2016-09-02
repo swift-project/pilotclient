@@ -83,8 +83,8 @@ namespace BlackSimPlugin
 
         void CSimConnectSettingsComponent::testSimConnectConnection()
         {
-            QString address = this->ui->le_SettingsFsxAddress->text().trimmed();
-            QString port = this->ui->le_SettingsFsxPort->text().trimmed();
+            QString address = ui->le_SettingsFsxAddress->text().trimmed();
+            QString port = ui->le_SettingsFsxPort->text().trimmed();
 
             if (address.isEmpty() || port.isEmpty())
             {

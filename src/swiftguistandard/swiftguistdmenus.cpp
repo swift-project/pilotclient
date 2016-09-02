@@ -34,44 +34,44 @@ using namespace BlackMisc::Aviation;
 void SwiftGuiStd::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
-    if (sender == this->ui->menu_TestLocationsEDRY)
+    if (sender == ui->menu_TestLocationsEDRY)
     {
         this->setTestPosition("N 049° 18' 17", "E 008° 27' 05", CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
     }
-    else if (sender == this->ui->menu_TestLocationsEDNX)
+    else if (sender == ui->menu_TestLocationsEDNX)
     {
         this->setTestPosition("N 048° 14′ 22", "E 011° 33′ 41", CAltitude(486, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
-    else if (sender == this->ui->menu_TestLocationsEDDM)
+    else if (sender == ui->menu_TestLocationsEDDM)
     {
         this->setTestPosition("N 048° 21′ 14", "E 011° 47′ 10", CAltitude(448, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
-    else if (sender == this->ui->menu_TestLocationsEDDF)
+    else if (sender == ui->menu_TestLocationsEDDF)
     {
         this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
-    else if (sender == this->ui->menu_TestLocationsLOWW)
+    else if (sender == ui->menu_TestLocationsLOWW)
     {
         this->setTestPosition("N 48° 7′ 6.3588", "E 16° 33′ 39.924", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
-    else if (sender == this->ui->menu_WindowFont)
+    else if (sender == ui->menu_WindowFont)
     {
         this->ps_setMainPageToInfoArea();
-        this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
+        ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
     }
-    else if (sender == this->ui->menu_InternalsPage)
+    else if (sender == ui->menu_InternalsPage)
     {
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
+        ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
     }
 }
 
 void SwiftGuiStd::initMenus()
 {
-    Q_ASSERT(this->ui->menu_InfoAreas);
-    Q_ASSERT(this->ui->comp_MainInfoArea);
-    sGui->addMenuFile(*this->ui->menu_File);
-    sGui->addMenuInternals(*this->ui->menu_Internals);
-    sGui->addMenuWindow(*this->ui->menu_Window);
-    sGui->addMenuHelp(*this->ui->menu_Help);
-    this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
+    Q_ASSERT(ui->menu_InfoAreas);
+    Q_ASSERT(ui->comp_MainInfoArea);
+    sGui->addMenuFile(*ui->menu_File);
+    sGui->addMenuInternals(*ui->menu_Internals);
+    sGui->addMenuWindow(*ui->menu_Window);
+    sGui->addMenuHelp(*ui->menu_Help);
+    ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(ui->menu_InfoAreas));
 }

@@ -34,7 +34,7 @@ namespace BlackGui
             ui(new Ui::CLiveryFilterBar)
         {
             ui->setupUi(this);
-            this->setButtonsAndCount(this->ui->filter_Buttons);
+            this->setButtonsAndCount(ui->filter_Buttons);
 
             connect(ui->le_AirlineIcaoCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_Description, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
@@ -61,14 +61,14 @@ namespace BlackGui
             double maxColorDistance = ui->hs_ColorDistance->value() / 100.0;
             return std::unique_ptr<CLiveryFilter>(
                        new CLiveryFilter(
-                           this->ui->le_LiveryCode->text(),
-                           this->ui->le_Description->text(),
-                           this->ui->le_AirlineIcaoCode->text(),
-                           this->ui->color_Fuselage->getColor(),
-                           this->ui->color_Tail->getColor(),
+                           ui->le_LiveryCode->text(),
+                           ui->le_Description->text(),
+                           ui->le_AirlineIcaoCode->text(),
+                           ui->color_Fuselage->getColor(),
+                           ui->color_Tail->getColor(),
                            maxColorDistance,
-                           this->ui->cb_Colors->isChecked(),
-                           this->ui->cb_Airlines->isChecked()
+                           ui->cb_Colors->isChecked(),
+                           ui->cb_Airlines->isChecked()
                        ));
         }
 
@@ -76,22 +76,22 @@ namespace BlackGui
         {
             if (livery.hasCombinedCode())
             {
-                this->ui->le_LiveryCode->setText(livery.getCombinedCode());
+                ui->le_LiveryCode->setText(livery.getCombinedCode());
             }
             else if (livery.hasValidAirlineDesignator())
             {
-                this->ui->le_AirlineIcaoCode->setText(livery.getAirlineIcaoCodeDesignator());
+                ui->le_AirlineIcaoCode->setText(livery.getAirlineIcaoCodeDesignator());
             }
             else
             {
                 return;
             }
-            this->ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
         }
 
         void CLiveryFilterBar::onRowCountChanged(int count, bool withFilter)
         {
-            this->ui->filter_Buttons->onRowCountChanged(count, withFilter);
+            ui->filter_Buttons->onRowCountChanged(count, withFilter);
         }
 
         void CLiveryFilterBar::clearForm()

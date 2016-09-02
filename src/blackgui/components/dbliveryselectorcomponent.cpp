@@ -68,12 +68,12 @@ namespace BlackGui
             QString code(livery.getCombinedCode());
             if (code.isEmpty())
             {
-                this->ui->le_Livery->clear();
+                ui->le_Livery->clear();
                 return;
             }
             if (livery != m_currentLivery)
             {
-                this->ui->le_Livery->setText(code);
+                ui->le_Livery->setText(code);
                 m_currentLivery = livery;
                 emit changedLivery(livery);
             }
@@ -95,8 +95,8 @@ namespace BlackGui
             }
             else
             {
-                this->ui->lbl_Description->setText("");
-                this->ui->le_Livery->setText(code);
+                ui->lbl_Description->setText("");
+                ui->le_Livery->setText(code);
             }
         }
 
@@ -104,7 +104,7 @@ namespace BlackGui
         {
             if (!sApp) { return CLivery(); }
             const QString liveryCode(
-                this->stripExtraInfo(this->ui->le_Livery->text())
+                this->stripExtraInfo(ui->le_Livery->text())
             );
             const CLivery liv(sApp->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode));
             if (liv.hasCompleteData() && liv.hasValidDbKey())
@@ -120,18 +120,18 @@ namespace BlackGui
 
         QString CDbLiverySelectorComponent::getRawCombinedCode() const
         {
-            const QString cc(this->ui->le_Livery->text().trimmed().toUpper());
+            const QString cc(ui->le_Livery->text().trimmed().toUpper());
             return stripDesignatorFromCompleterString(cc);
         }
 
         void CDbLiverySelectorComponent::setReadOnly(bool readOnly)
         {
-            this->ui->le_Livery->setReadOnly(readOnly);
+            ui->le_Livery->setReadOnly(readOnly);
         }
 
         void CDbLiverySelectorComponent::withLiveryDescription(bool description)
         {
-            this->ui->lbl_Description->setVisible(description);
+            ui->lbl_Description->setVisible(description);
         }
 
         bool CDbLiverySelectorComponent::isSet() const
@@ -141,7 +141,7 @@ namespace BlackGui
 
         void CDbLiverySelectorComponent::clear()
         {
-            this->ui->le_Livery->clear();
+            ui->le_Livery->clear();
         }
 
         void CDbLiverySelectorComponent::dragEnterEvent(QDragEnterEvent *event)
@@ -198,7 +198,7 @@ namespace BlackGui
                     c->setMaxVisibleItems(10);
                     this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbLiverySelectorComponent::ps_completerActivated);
 
-                    this->ui->le_Livery->setCompleter(c);
+                    ui->le_Livery->setCompleter(c);
                     m_completerLiveries.reset(c); // deletes any old completer
                 }
                 else
@@ -212,7 +212,7 @@ namespace BlackGui
         {
             if (!sApp) { return; }
             const QString code(
-                this->stripExtraInfo(this->ui->le_Livery->text())
+                this->stripExtraInfo(ui->le_Livery->text())
             );
             if (code.isEmpty()) { return; }
             const CLivery livery(sApp->getWebDataServices()->getLiveries().findByCombinedCode(code));

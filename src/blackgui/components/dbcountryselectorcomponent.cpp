@@ -50,7 +50,7 @@ namespace BlackGui
             connect(ui->le_CountryIso, &QLineEdit::editingFinished, this, &CDbCountrySelectorComponent::ps_dataChanged);
             connect(ui->le_CountryName, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::ps_dataChanged);
 
-            this->ui->le_CountryIso->setValidator(new CUpperCaseValidator(this));
+            ui->le_CountryIso->setValidator(new CUpperCaseValidator(this));
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountrySelectorComponent::ps_CountriesRead);
             this->ps_CountriesRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
         }
@@ -62,9 +62,9 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::setCountry(const BlackMisc::CCountry &country)
         {
-            this->ui->le_CountryIso->setText(country.getIsoCode());
-            this->ui->le_CountryName->setText(country.getName());
-            this->ui->lbl_CountryIcon->setPixmap(country.toPixmap());
+            ui->le_CountryIso->setText(country.getIsoCode());
+            ui->le_CountryName->setText(country.getName());
+            ui->lbl_CountryIcon->setPixmap(country.toPixmap());
             if (country != m_currentCountry)
             {
                 m_currentCountry = country;
@@ -81,8 +81,8 @@ namespace BlackGui
         BlackMisc::CCountry CDbCountrySelectorComponent::getCountry() const
         {
             if (!sGui) { return CCountry(); }
-            QString iso(this->ui->le_CountryIso->text().trimmed().toUpper());
-            QString name(this->ui->le_CountryName->text().trimmed());
+            QString iso(ui->le_CountryIso->text().trimmed().toUpper());
+            QString name(ui->le_CountryName->text().trimmed());
             if (CCountry::isValidIsoCode(iso))
             {
                 return sGui->getWebDataServices()->getCountryForIsoCode(iso);
@@ -96,10 +96,10 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::setReadOnly(bool readOnly)
         {
-            this->ui->le_CountryIso->setReadOnly(readOnly);
-            this->ui->le_CountryName->setReadOnly(readOnly);
-            this->ui->le_CountryName->setEnabled((!readOnly));
-            this->ui->lbl_CountryIcon->setVisible(!readOnly);
+            ui->le_CountryIso->setReadOnly(readOnly);
+            ui->le_CountryName->setReadOnly(readOnly);
+            ui->le_CountryName->setEnabled((!readOnly));
+            ui->lbl_CountryIcon->setVisible(!readOnly);
             this->setEnabled(!readOnly);
         }
 
@@ -110,9 +110,9 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::clear()
         {
-            this->ui->le_CountryIso->clear();
-            this->ui->le_CountryName->clear();
-            this->ui->lbl_CountryIcon->setPixmap(QPixmap());
+            ui->le_CountryIso->clear();
+            ui->le_CountryName->clear();
+            ui->lbl_CountryIcon->setPixmap(QPixmap());
         }
 
         void CDbCountrySelectorComponent::dragEnterEvent(QDragEnterEvent *event)
@@ -168,7 +168,7 @@ namespace BlackGui
                     c->setMaxVisibleItems(10);
                     this->connect(c, static_cast<void (QCompleter::*)(const QString &)>(&QCompleter::activated), this, &CDbCountrySelectorComponent::ps_completerActivated);
 
-                    this->ui->le_CountryName->setCompleter(c);
+                    ui->le_CountryName->setCompleter(c);
                     this->m_completerCountryNames.reset(c); // deletes any old completer
                 }
                 else
@@ -182,17 +182,17 @@ namespace BlackGui
         {
             if (!sGui) { return; }
             QObject *sender = this->sender();
-            if (sender == this->ui->le_CountryIso)
+            if (sender == ui->le_CountryIso)
             {
-                QString iso(this->ui->le_CountryIso->text().trimmed().toUpper());
+                QString iso(ui->le_CountryIso->text().trimmed().toUpper());
                 if (CCountry::isValidIsoCode(iso))
                 {
                     this->setCountry(sGui->getWebDataServices()->getCountryForIsoCode(iso));
                 }
             }
-            else if (sender == this->ui->le_CountryName)
+            else if (sender == ui->le_CountryName)
             {
-                QString name(this->ui->le_CountryName->text().trimmed());
+                QString name(ui->le_CountryName->text().trimmed());
                 if (!name.isEmpty())
                 {
                     this->setCountry(sGui->getWebDataServices()->getCountryForName(name));
@@ -202,7 +202,7 @@ namespace BlackGui
 
         void CDbCountrySelectorComponent::ps_completerActivated(const QString &countryName)
         {
-            this->ui->le_CountryName->setText(countryName);
+            ui->le_CountryName->setText(countryName);
             this->setCountry(sGui->getWebDataServices()->getCountryForName(countryName));
         }
 

@@ -113,7 +113,7 @@ void SwiftGuiStd::performGracefulShutdown()
     }
 
     // clean up GUI
-    this->ui->comp_MainInfoArea->dockAllWidgets();
+    ui->comp_MainInfoArea->dockAllWidgets();
 
     // allow some other parts to react
     if (!sGui) { return; } // overall shutdown
@@ -186,27 +186,27 @@ QAction *SwiftGuiStd::getToggleStayOnTopAction(QObject *parent)
 
 void SwiftGuiStd::ps_setMainPage(SwiftGuiStd::MainPageIndex mainPage)
 {
-    this->ui->sw_MainMiddle->setCurrentIndex(mainPage);
+    ui->sw_MainMiddle->setCurrentIndex(mainPage);
 }
 
 void SwiftGuiStd::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
 {
     this->ps_setMainPageToInfoArea();
-    this->ui->comp_MainInfoArea->selectArea(infoArea);
+    ui->comp_MainInfoArea->selectArea(infoArea);
 }
 
 bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 {
-    return this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
+    return ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
 }
 
 
 void SwiftGuiStd::ps_loginRequested()
 {
-    if (this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
+    if (ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
     {
         // already main page, we fake a re-trigger here
-        emit this->currentMainInfoAreaChanged(this->ui->sw_MainMiddle->currentWidget());
+        emit this->currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
     }
     else
     {
@@ -237,15 +237,15 @@ void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessa
     this->m_statusBar.displayStatusMessage(statusMessage);
 
     // main info areas
-    this->ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
+    ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
 
     // list
-    this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);
+    ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);
 
     // display overlay for errors, but not for validation
     if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategories().contains(CLogCategory::validation()))
     {
-        this->ui->fr_CentralFrameInside->showOverlayMessage(statusMessage);
+        ui->fr_CentralFrameInside->showOverlayMessage(statusMessage);
     }
 }
 
@@ -323,12 +323,12 @@ void SwiftGuiStd::updateGuiStatusInformation()
     {
         bool dbus = !sGui->getIContextNetwork()->isUsingImplementingObject();
         network = dbus ? now : "local";
-        this->ui->comp_InfoBarStatus->setDBusStatus(dbus);
+        ui->comp_InfoBarStatus->setDBusStatus(dbus);
     }
 
     // update status fields
     QString s = QString("network: %1").arg(network);
-    this->ui->comp_InfoBarStatus->setDBusTooltip(s);
+    ui->comp_InfoBarStatus->setDBusTooltip(s);
 }
 
 void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
@@ -337,7 +337,7 @@ void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
     o = o < 0.3 ? 0.3 : o;
     o = o > 1.0 ? 1.0 : o;
     QWidget::setWindowOpacity(o);
-    this->ui->comp_MainInfoArea->getSettingsComponent()->setGuiOpacity(o * 100.0);
+    ui->comp_MainInfoArea->getSettingsComponent()->setGuiOpacity(o * 100.0);
 }
 
 void SwiftGuiStd::ps_toogleWindowStayOnTop()
@@ -364,7 +364,7 @@ void SwiftGuiStd::ps_onStyleSheetsChanged()
 
 void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 {
-    emit currentMainInfoAreaChanged(this->ui->sw_MainMiddle->currentWidget());
+    emit currentMainInfoAreaChanged(ui->sw_MainMiddle->currentWidget());
     Q_UNUSED(currentIndex);
 }
 
@@ -387,16 +387,16 @@ void SwiftGuiStd::ps_showNormal()
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) { return; }
-    if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
+    if (!ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) { return; }
     sGui->getIContextAudio()->playNotification(notification, true);
 }
 
 void SwiftGuiStd::displayConsole()
 {
-    this->ui->comp_MainInfoArea->displayConsole();
+    ui->comp_MainInfoArea->displayConsole();
 }
 
 void SwiftGuiStd::displayLog()
 {
-    this->ui->comp_MainInfoArea->displayLog();
+    ui->comp_MainInfoArea->displayLog();
 }

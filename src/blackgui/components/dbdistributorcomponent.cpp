@@ -32,10 +32,10 @@ namespace BlackGui
             ui(new Ui::CDbDistributorComponent)
         {
             ui->setupUi(this);
-            this->setViewWithIndicator(this->ui->tvp_Distributors);
-            this->ui->tvp_Distributors->setResizeMode(CViewBaseNonTemplate::ResizingAuto);
-            this->ui->tvp_Distributors->allowDragDrop(true, false);
-            connect(this->ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::ps_reload);
+            this->setViewWithIndicator(ui->tvp_Distributors);
+            ui->tvp_Distributors->setResizeMode(CViewBaseNonTemplate::ResizingAuto);
+            ui->tvp_Distributors->allowDragDrop(true, false);
+            connect(ui->tvp_Distributors, &CDistributorView::requestNewBackendData, this, &CDbDistributorComponent::ps_reload);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::ps_distributorsRead);
             this->ps_distributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
         }
@@ -48,7 +48,7 @@ namespace BlackGui
             Q_UNUSED(count);
             if (entity.testFlag(CEntityFlags::DistributorEntity) && readState == CEntityFlags::ReadFinished)
             {
-                this->ui->tvp_Distributors->updateContainer(sGui->getWebDataServices()->getDistributors());
+                ui->tvp_Distributors->updateContainer(sGui->getWebDataServices()->getDistributors());
             }
         }
 

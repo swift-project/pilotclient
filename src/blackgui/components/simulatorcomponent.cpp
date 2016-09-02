@@ -44,8 +44,8 @@ namespace BlackGui
             m_updateTimer(new CUpdateTimer("CSimulatorComponent", &CSimulatorComponent::update, this))
         {
             ui->setupUi(this);
-            this->ui->tvp_LiveData->setIconMode(true);
-            this->ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
+            ui->tvp_LiveData->setIconMode(true);
+            ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
             this->addOrUpdateByName("info", "no data yet", CIcons::StandardIconWarning16);
 
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
@@ -61,8 +61,8 @@ namespace BlackGui
 
         void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, const CIcon &icon)
         {
-            bool resize = this->currentWidget() == this->ui->tb_LiveData; // simulator live data selected?
-            this->ui->tvp_LiveData->addOrUpdateByName(name, value, icon, resize, false);
+            bool resize = this->currentWidget() == ui->tb_LiveData; // simulator live data selected?
+            ui->tvp_LiveData->addOrUpdateByName(name, value, icon, resize, false);
         }
 
         void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, CIcons::IconIndex iconIndex)
@@ -72,12 +72,12 @@ namespace BlackGui
 
         int CSimulatorComponent::rowCount() const
         {
-            return this->ui->tvp_LiveData->rowCount();
+            return ui->tvp_LiveData->rowCount();
         }
 
         void CSimulatorComponent::clear()
         {
-            this->ui->tvp_LiveData->clear();
+            ui->tvp_LiveData->clear();
         }
 
         void CSimulatorComponent::update()

@@ -39,17 +39,17 @@ namespace BlackGui
             ui(new Ui::CDbModelComponent)
         {
             ui->setupUi(this);
-            this->setViewWithIndicator(this->ui->tvp_AircraftModel);
-            this->ui->tvp_AircraftModel->setAircraftModelMode(CAircraftModelListModel::Database);
-            this->ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashing);
-            this->ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
-            connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
-            connect(this->ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
+            this->setViewWithIndicator(ui->tvp_AircraftModel);
+            ui->tvp_AircraftModel->setAircraftModelMode(CAircraftModelListModel::Database);
+            ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashing);
+            ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
+            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
+            connect(ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
             connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::ps_onStyleSheetChanged);
 
             // configure view
-            this->ui->tvp_AircraftModel->setFilterWidget(this->ui->filter_AircraftModelFilter);
-            this->ui->tvp_AircraftModel->allowDragDrop(true, false);
+            ui->tvp_AircraftModel->setFilterWidget(ui->filter_AircraftModelFilter);
+            ui->tvp_AircraftModel->allowDragDrop(true, false);
 
             connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::ps_modelsRead);
             this->ps_modelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount());
@@ -62,15 +62,15 @@ namespace BlackGui
 
         bool CDbModelComponent::hasModels() const
         {
-            return !this->ui->tvp_AircraftModel->isEmpty();
+            return !ui->tvp_AircraftModel->isEmpty();
         }
 
         void CDbModelComponent::requestUpdatedData()
         {
             QDateTime ts;
-            if (!this->ui->tvp_AircraftModel->isEmpty())
+            if (!ui->tvp_AircraftModel->isEmpty())
             {
-                CAircraftModel model(this->ui->tvp_AircraftModel->container().latestObject());
+                CAircraftModel model(ui->tvp_AircraftModel->container().latestObject());
                 ts = model.getUtcTimestamp();
             }
             sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::ModelEntity, ts);
@@ -83,7 +83,7 @@ namespace BlackGui
             {
                 if (readState == CEntityFlags::ReadFinished || readState == CEntityFlags::ReadFinishedRestricted)
                 {
-                    this->ui->tvp_AircraftModel->updateContainerMaybeAsync(sGui->getWebDataServices()->getModels());
+                    ui->tvp_AircraftModel->updateContainerMaybeAsync(sGui->getWebDataServices()->getModels());
                 }
             }
         }
@@ -101,8 +101,8 @@ namespace BlackGui
 
         void CDbModelComponent::ps_stashSelectedModels()
         {
-            if (!this->ui->tvp_AircraftModel->hasSelection()) { return; }
-            const CAircraftModelList models(this->ui->tvp_AircraftModel->selectedObjects());
+            if (!ui->tvp_AircraftModel->hasSelection()) { return; }
+            const CAircraftModelList models(ui->tvp_AircraftModel->selectedObjects());
             if (!models.isEmpty())
             {
                 emit requestStash(models);

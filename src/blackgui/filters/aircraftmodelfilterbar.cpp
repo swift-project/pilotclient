@@ -37,9 +37,9 @@ namespace BlackGui
             ui(new Ui::CAircraftModelFilterBar)
         {
             ui->setupUi(this);
-            this->ui->frp_SimulatorSelector->setAll();
-            this->ui->comp_DistributorSelector->withDistributorDescription(false);
-            this->setButtonsAndCount(this->ui->filter_Buttons);
+            ui->frp_SimulatorSelector->setAll();
+            ui->comp_DistributorSelector->withDistributorDescription(false);
+            this->setButtonsAndCount(ui->filter_Buttons);
 
             connect(ui->le_AircraftIcao, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_AircraftManufacturer, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
@@ -59,11 +59,11 @@ namespace BlackGui
             connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::ps_distributorChanged);
 
             CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
-            this->ui->le_AircraftIcao->setValidator(ucv);
-            this->ui->le_AirlineIcao->setValidator(ucv);
-            this->ui->le_ModelString->setValidator(ucv);
-            this->ui->le_AircraftManufacturer->setValidator(ucv);
-            this->ui->le_LiveryCode->setValidator(ucv);
+            ui->le_AircraftIcao->setValidator(ucv);
+            ui->le_AirlineIcao->setValidator(ucv);
+            ui->le_ModelString->setValidator(ucv);
+            ui->le_AircraftManufacturer->setValidator(ucv);
+            ui->le_LiveryCode->setValidator(ucv);
 
             // reset form
             this->clearForm();
@@ -101,44 +101,44 @@ namespace BlackGui
 
             return std::unique_ptr<CAircraftModelFilter>(
                        new CAircraftModelFilter(
-                           this->ui->le_ModelString->text(),
-                           this->ui->le_ModelDescription->text(),
+                           ui->le_ModelString->text(),
+                           ui->le_ModelDescription->text(),
                            mf,
                            dbf,
                            ui->cbt_Military->checkState(),
                            ui->cbt_ColorLiveries->checkState(),
-                           this->ui->le_AircraftIcao->text(),
-                           this->ui->le_AircraftManufacturer->text(),
-                           this->ui->le_AirlineIcao->text(),
-                           this->ui->le_AirlineName->text(),
-                           this->ui->le_LiveryCode->text(),
-                           this->ui->le_FileName->text(),
-                           this->ui->frp_SimulatorSelector->getValue(),
-                           this->ui->comp_DistributorSelector->getDistributor()
+                           ui->le_AircraftIcao->text(),
+                           ui->le_AircraftManufacturer->text(),
+                           ui->le_AirlineIcao->text(),
+                           ui->le_AirlineName->text(),
+                           ui->le_LiveryCode->text(),
+                           ui->le_FileName->text(),
+                           ui->frp_SimulatorSelector->getValue(),
+                           ui->comp_DistributorSelector->getDistributor()
                        ));
         }
 
         void CAircraftModelFilterBar::onRowCountChanged(int count, bool withFilter)
         {
-            this->ui->filter_Buttons->onRowCountChanged(count, withFilter);
+            ui->filter_Buttons->onRowCountChanged(count, withFilter);
         }
 
         void CAircraftModelFilterBar::clearForm()
         {
-            this->ui->le_ModelString->clear();
-            this->ui->le_ModelDescription->clear();
-            this->ui->le_AircraftIcao->clear();
-            this->ui->le_AircraftManufacturer->clear();
-            this->ui->le_AirlineIcao->clear();
-            this->ui->le_AirlineName->clear();
-            this->ui->le_LiveryCode->clear();
-            this->ui->le_FileName->clear();
-            this->ui->frp_SimulatorSelector->setAll();
-            this->ui->comp_DistributorSelector->clear();
-            this->ui->cbt_IncludeExclude->setCheckState(Qt::PartiallyChecked);
-            this->ui->cbt_Db->setCheckState(Qt::PartiallyChecked);
-            this->ui->cbt_Military->setCheckState(Qt::PartiallyChecked);
-            this->ui->cbt_ColorLiveries->setCheckState(Qt::PartiallyChecked);
+            ui->le_ModelString->clear();
+            ui->le_ModelDescription->clear();
+            ui->le_AircraftIcao->clear();
+            ui->le_AircraftManufacturer->clear();
+            ui->le_AirlineIcao->clear();
+            ui->le_AirlineName->clear();
+            ui->le_LiveryCode->clear();
+            ui->le_FileName->clear();
+            ui->frp_SimulatorSelector->setAll();
+            ui->comp_DistributorSelector->clear();
+            ui->cbt_IncludeExclude->setCheckState(Qt::PartiallyChecked);
+            ui->cbt_Db->setCheckState(Qt::PartiallyChecked);
+            ui->cbt_Military->setCheckState(Qt::PartiallyChecked);
+            ui->cbt_ColorLiveries->setCheckState(Qt::PartiallyChecked);
         }
 
         void CAircraftModelFilterBar::ps_simulatorSelectionChanged(const BlackMisc::Simulation::CSimulatorInfo &info)

@@ -45,15 +45,15 @@ namespace BlackGui
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
-            this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
+            ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
 
-            this->ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::InfoMode);
-            this->ui->tvp_AircraftInRange->configureMenu(true, false, false);
+            ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::InfoMode);
+            ui->tvp_AircraftInRange->configureMenu(true, false, false);
 
-            connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);
-            connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
-            connect(this->ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
-            connect(this->ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);
+            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);
+            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
+            connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
+            connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
         }
 
@@ -62,14 +62,14 @@ namespace BlackGui
 
         int CAircraftComponent::countAircraft() const
         {
-            Q_ASSERT(this->ui->tvp_AircraftInRange);
-            return this->ui->tvp_AircraftInRange->rowCount();
+            Q_ASSERT(ui->tvp_AircraftInRange);
+            return ui->tvp_AircraftInRange->rowCount();
         }
 
         int CAircraftComponent::countAirportsInRange() const
         {
-            Q_ASSERT(this->ui->tvp_AirportsInRange);
-            return this->ui->tvp_AirportsInRange->rowCount();
+            Q_ASSERT(ui->tvp_AirportsInRange);
+            return ui->tvp_AirportsInRange->rowCount();
         }
 
         bool CAircraftComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
@@ -83,24 +83,24 @@ namespace BlackGui
 
         void CAircraftComponent::update()
         {
-            Q_ASSERT(this->ui->tvp_AircraftInRange);
+            Q_ASSERT(ui->tvp_AircraftInRange);
             Q_ASSERT(sGui->getIContextNetwork());
             Q_ASSERT(sGui->getIContextSimulator());
 
             if (sGui->getIContextNetwork()->isConnected())
             {
-                bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AircraftInRange);
+                bool visible = (this->isVisibleWidget() && this->currentWidget() == ui->tb_AircraftInRange);
                 if (this->countAircraft() < 1 || visible)
                 {
-                    this->ui->tvp_AircraftInRange->updateContainer(sGui->getIContextNetwork()->getAircraftInRange());
+                    ui->tvp_AircraftInRange->updateContainer(sGui->getIContextNetwork()->getAircraftInRange());
                 }
             }
             if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
             {
-                bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AirportsInRange);
+                bool visible = (this->isVisibleWidget() && this->currentWidget() == ui->tb_AirportsInRange);
                 if (this->countAirportsInRange() < 1 || visible)
                 {
-                    this->ui->tvp_AirportsInRange->updateContainer(sGui->getIContextSimulator()->getAirportsInRange());
+                    ui->tvp_AirportsInRange->updateContainer(sGui->getIContextSimulator()->getAirportsInRange());
                 }
             }
         }
@@ -121,8 +121,8 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int ac = this->indexOf(this->ui->tb_AircraftInRange);
-            int ap = this->indexOf(this->ui->tb_AirportsInRange);
+            int ac = this->indexOf(ui->tb_AircraftInRange);
+            int ap = this->indexOf(ui->tb_AirportsInRange);
             QString acs = this->tabBar()->tabText(ac);
             QString aps = this->tabBar()->tabText(ap);
             acs = CGuiUtility::replaceTabCountValue(acs, this->countAircraft());
@@ -136,7 +136,7 @@ namespace BlackGui
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))
             {
-                this->ui->tvp_AircraftInRange->clear();
+                ui->tvp_AircraftInRange->clear();
             }
         }
 

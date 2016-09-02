@@ -81,7 +81,7 @@ namespace BlackGui
         {
             if (!this->isVisible()) { return; } // for performance reasons
             m_aircraft = sGui->getIContextNetwork()->getAircraftInRange();
-            this->ui->cb_RemoteAircraftSelector->clear();
+            ui->cb_RemoteAircraftSelector->clear();
             if (m_aircraft.isEmpty()) { return; }
 
             CCallsign currentSelection(this->getSelectedCallsign());
@@ -105,14 +105,14 @@ namespace BlackGui
             }
 
             // new combobox
-            this->ui->cb_RemoteAircraftSelector->addItems(items);
+            ui->cb_RemoteAircraftSelector->addItems(items);
 
             // set old selection if possible
             if (currentSelection.isEmpty()) { return; }
             int index = m_aircraft.firstIndexOfCallsign(currentSelection);
-            if (index >= 0 && index < this->ui->cb_RemoteAircraftSelector->count())
+            if (index >= 0 && index < ui->cb_RemoteAircraftSelector->count())
             {
-                this->ui->cb_RemoteAircraftSelector->setCurrentIndex(index);
+                ui->cb_RemoteAircraftSelector->setCurrentIndex(index);
             }
         }
 

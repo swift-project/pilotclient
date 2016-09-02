@@ -111,7 +111,7 @@ namespace BlackGui
             CStatusMessageList msgs;
             this->ps_simulatorChanged(ui->comp_SimulatorSelector->getValue()); // update model set to latest version
             CSimulatedAircraft remoteAircraft(createAircraft());
-            if (this->ui->cb_withReverseLookup->isChecked())
+            if (ui->cb_withReverseLookup->isChecked())
             {
                 const QString liveryString(ui->comp_LiverySelector->getRawCombinedCode());
                 const CAircraftModel reverseModel = CAircraftMatcher::reverselLookupModel(remoteAircraft.getModel(), liveryString, &msgs);

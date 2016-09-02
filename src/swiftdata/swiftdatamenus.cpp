@@ -33,39 +33,39 @@ using namespace BlackMisc;
 void CSwiftData::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
-    if (sender == this->ui->menu_WindowFont)
+    if (sender == ui->menu_WindowFont)
     {
         // this->ps_setMainPageToInfoArea();
-        // this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
+        // ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
     }
-    else if (sender == this->ui->menu_MappingMaxData)
+    else if (sender == ui->menu_MappingMaxData)
     {
-        CDbMappingComponent *mappingComponent = this->ui->comp_MainInfoArea->getMappingComponent();
+        CDbMappingComponent *mappingComponent = ui->comp_MainInfoArea->getMappingComponent();
         mappingComponent->resizeForSelect();
     }
-    else if (sender == this->ui->menu_MappingMaxMapping)
+    else if (sender == ui->menu_MappingMaxMapping)
     {
-        CDbMappingComponent *mappingComponent = this->ui->comp_MainInfoArea->getMappingComponent();
+        CDbMappingComponent *mappingComponent = ui->comp_MainInfoArea->getMappingComponent();
         mappingComponent->resizeForMapping();
     }
 }
 
 void CSwiftData::initDynamicMenus()
 {
-    Q_ASSERT_X(this->ui->menu_InfoAreas, Q_FUNC_INFO, "missing info areas");
-    Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "missing main area");
-    this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
+    Q_ASSERT_X(ui->menu_InfoAreas, Q_FUNC_INFO, "missing info areas");
+    Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "missing main area");
+    ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(ui->menu_InfoAreas));
 
     QString resourceDir(CBuildConfig::getSwiftResourceDir());
     if (!resourceDir.isEmpty() && QDir(resourceDir).exists())
     {
-        Q_ASSERT_X(this->ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");
-        Q_ASSERT_X(this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), Q_FUNC_INFO, "Missing DB info area");
-        this->ui->menu_Mapping->addAction(CIcons::database16(), "Load all DB data", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(requestUpdateOfAllDbData()));
-        this->ui->menu_Mapping->addAction(CIcons::load16(), "Load DB test data from disk", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(readDbDataFromResourceDir()));
+        Q_ASSERT_X(ui->comp_MainInfoArea, Q_FUNC_INFO, "Missing main info area");
+        Q_ASSERT_X(ui->comp_MainInfoArea->getDataInfoAreaComponent(), Q_FUNC_INFO, "Missing DB info area");
+        ui->menu_Mapping->addAction(CIcons::database16(), "Load all DB data", ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(requestUpdateOfAllDbData()));
+        ui->menu_Mapping->addAction(CIcons::load16(), "Load DB test data from disk", ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(readDbDataFromResourceDir()));
         if (sGui->isRunningInDeveloperEnvironment())
         {
-            this->ui->menu_Mapping->addAction(CIcons::save16(), "Save DB test data to disk", this->ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(writeDbDataToResourceDir()));
+            ui->menu_Mapping->addAction(CIcons::save16(), "Save DB test data to disk", ui->comp_MainInfoArea->getDataInfoAreaComponent(), SLOT(writeDbDataToResourceDir()));
         }
     }
 }

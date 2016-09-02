@@ -78,21 +78,21 @@ namespace BlackGui
             this->ps_onStyleSheetsChanged();
 
             // remove old layout
-            CGuiUtility::deleteLayout(this->ui->fr_NavigatorDialogInner->layout(), false);
+            CGuiUtility::deleteLayout(ui->fr_NavigatorDialogInner->layout(), false);
 
             // new layout
-            QGridLayout *gridLayout = new QGridLayout(this->ui->fr_NavigatorDialogInner);
+            QGridLayout *gridLayout = new QGridLayout(ui->fr_NavigatorDialogInner);
             gridLayout->setObjectName("gl_CNavigatorDialog");
             gridLayout->setSpacing(0);
             gridLayout->setMargin(0);
             gridLayout->setContentsMargins(0, 0, 0, 0);
-            this->ui->fr_NavigatorDialogInner->setLayout(gridLayout);
+            ui->fr_NavigatorDialogInner->setLayout(gridLayout);
             int r = 0;
             int c = 0;
 
             for (const auto &action : this->actions())
             {
-                QToolButton *tb = new QToolButton(this->ui->fr_NavigatorDialogInner);
+                QToolButton *tb = new QToolButton(ui->fr_NavigatorDialogInner);
                 tb->setDefaultAction(action);
                 tb->setObjectName(this->objectName().append(":").append(action->objectName()));
 
@@ -272,7 +272,7 @@ namespace BlackGui
 
             // adjust
             const QSize min(w + 2, h + 2);
-            this->ui->fr_NavigatorDialogInner->setMinimumSize(min);
+            ui->fr_NavigatorDialogInner->setMinimumSize(min);
             this->setMinimumSize(min);
             this->adjustSize();
         }
