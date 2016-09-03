@@ -32,12 +32,10 @@ class QWidget;
 
 namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace Ui { class CDbOwnModelSetComponent; }
-
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
     namespace Views { class CAircraftModelView; }
-
     namespace Components
     {
         class CDbMappingComponent;

@@ -37,7 +37,6 @@ class QMimeData;
 class QModelIndex;
 
 namespace BlackMisc { class CWorker; }
-
 namespace BlackGui
 {
     namespace Models
@@ -204,6 +203,9 @@ namespace BlackGui
 
             //! Used container data
             const ContainerType &container() const;
+
+            //! Used container data
+            const ContainerType &containerFiltered() const;
 
             //! Full container or cached filtered container as approproiate
             const ContainerType &containerOrFilteredContainer() const;

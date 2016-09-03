@@ -500,6 +500,25 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
+        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerFiltered() const
+        {
+            return this->m_containerFiltered;
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
+        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerOrFilteredContainer() const
+        {
+            if (this->hasFilter())
+            {
+                return this->m_containerFiltered;
+            }
+            else
+            {
+                return this->m_container;
+            }
+        }
+
+        template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::push_back(const ObjectType &object)
         {
             beginInsertRows(QModelIndex(), this->m_container.size(), this->m_container.size());
@@ -583,19 +602,6 @@ namespace BlackGui
         {
             ContainerType c(variant.to<ContainerType>());
             return this->update(c, sort);
-        }
-
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerOrFilteredContainer() const
-        {
-            if (this->hasFilter())
-            {
-                return this->m_containerFiltered;
-            }
-            else
-            {
-                return this->m_container;
-            }
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>

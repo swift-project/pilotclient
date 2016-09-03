@@ -56,6 +56,7 @@ namespace BlackGui
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuStashing);
             ui->tvp_OwnModelSet->menuRemoveItems(CAircraftModelView::MenuDisplayAutomaticallyAndRefresh | CAircraftModelView::MenuBackend | CAircraftModelView::MenuRefresh);
             ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuClear);
+            ui->tvp_OwnModelSet->menuAddItems(CAircraftModelView::MenuRemoveSelectedRows | CAircraftModelView::MenuMaterializeFilter);
             ui->tvp_OwnModelSet->addFilterDialog();
             ui->tvp_OwnModelSet->setJsonLoad(CAircraftModelView::AllowOnlySingleSimulator | CAircraftModelView::ReduceToOneSimulator);
             ui->tvp_OwnModelSet->setCustomMenu(new CLoadModelsMenu(this));

@@ -41,12 +41,10 @@ namespace BlackMisc
     }
 }
 namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
-
 namespace BlackGui
 {
     namespace Filters { class CAircraftModelFilterDialog; }
     namespace Menus { class CMenuActions; }
-
     namespace Views
     {
         //! Aircraft view

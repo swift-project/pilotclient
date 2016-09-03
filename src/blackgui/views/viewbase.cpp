@@ -257,6 +257,7 @@ namespace BlackGui
                     ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_removeFilter });
                     break;
                 }
+            case MenuMaterializeFilter: { ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter }); break; }
             case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_loadJsonAction }); break; }
             case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_saveJsonAction }, CShortcut::keySaveViews()); break; }
             default:
@@ -297,6 +298,10 @@ namespace BlackGui
             if (this->m_menus.testFlag(MenuFilter))
             {
                 menuActions.addActions(this->initMenuActions(MenuFilter));
+                if (this->m_menus.testFlag(MenuMaterializeFilter))
+                {
+                    menuActions.addActions(this->initMenuActions(MenuMaterializeFilter));
+                }
             }
 
             // selection menus, not in menu action list because it depends on current selection
@@ -965,6 +970,17 @@ namespace BlackGui
         {
             Q_ASSERT(this->m_model);
             return this->m_model->clearHighlighting();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::materializeFilter()
+        {
+            Q_ASSERT(this->m_model);
+            if (!this->m_model->hasFilter()) { return; }
+            if (this->isEmpty()) { return; }
+            ContainerType filtered(this->m_model->containerFiltered());
+            this->removeFilter();
+            this->updateContainerMaybeAsync(filtered);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

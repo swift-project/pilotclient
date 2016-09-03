@@ -107,10 +107,11 @@ namespace BlackGui
                 MenuDisplayAutomatically = 1 << 4,   //!< allow to switch display automatically
                 MenuDisplayAutomaticallyAndRefresh = MenuDisplayAutomatically | MenuRefresh,  //!< should come together
                 MenuFilter               = 1 << 5,   //!< filter can be opened
-                MenuSave                 = 1 << 6,   //!< save as JSON
-                MenuLoad                 = 1 << 7,   //!< load from JSON
-                MenuToggleSelectionMode  = 1 << 8,   //!< allow to toggle selection mode
-                MenuOrderable            = 1 << 9,   //!< items can be ordered (if container is BlackMisc::IOrderableList
+                MenuMaterializeFilter    = 1 << 6,   //!< materialize filter (filtered data become model data)
+                MenuSave                 = 1 << 7,   //!< save as JSON
+                MenuLoad                 = 1 << 8,   //!< load from JSON
+                MenuToggleSelectionMode  = 1 << 9,   //!< allow to toggle selection mode
+                MenuOrderable            = 1 << 10,  //!< items can be ordered (if container is BlackMisc::IOrderableList
                 MenuStandard             = MenuClear | MenuRemoveSelectedRows | MenuRefresh | MenuBackend |
                                            MenuDisplayAutomatically | MenuFilter | MenuSave | MenuLoad | MenuToggleSelectionMode,
                 MenuLoadAndSave          = MenuLoad  | MenuSave,
@@ -119,8 +120,8 @@ namespace BlackGui
                 MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightStashed     = 1 << 10,  //!< highlight stashed models
-                MenuCanStashModels       = 1 << 11,  //!< stash models
+                MenuHighlightStashed     = 1 << 11,  //!< highlight stashed models
+                MenuCanStashModels       = 1 << 12,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
@@ -311,6 +312,9 @@ namespace BlackGui
 
             //! Clear any highlighted objects
             virtual void clearHighlighting() = 0;
+
+            //! Materialize filter
+            virtual void materializeFilter() = 0;
 
         protected:
             //! Constructor
@@ -547,6 +551,7 @@ namespace BlackGui
             virtual int removeSelectedRows() override;
             virtual void presizeOrFullResizeToContents() override;
             virtual void clearHighlighting() override;
+            virtual void materializeFilter() override;
             //! @}
 
             //! \name BlackGui::Views::CViewBaseNonTemplate implementations
