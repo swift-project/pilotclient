@@ -171,7 +171,7 @@ namespace BlackGui
             const int modelSize = models.size();
             const bool filtered = unfilteredSize > modelSize;
 
-            int c = CDatabaseUtils::consolidateModelsWithDbData(models, true);
+            int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
             if (c > 0 && this->modelsTargetSetable() && this->modelsTargetUpdatable())
             {
                 if (filtered)
@@ -204,7 +204,7 @@ namespace BlackGui
                 CLogMessage().warning("No updatable target");
                 return;
             }
-            int c = CDatabaseUtils::consolidateModelsWithDbData(models, true);
+            int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
             if (c > 0 && this->modelsTargetUpdatable())
             {
                 this->modelsTargetUpdatable()->updateModels(models);

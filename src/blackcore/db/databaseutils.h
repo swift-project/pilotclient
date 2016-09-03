@@ -35,6 +35,9 @@ namespace BlackCore
             //! Consolidate models with DB data
             static int consolidateModelsWithDbData(BlackMisc::Simulation::CAircraftModelList &models, bool force);
 
+            //! Consolidate models with DB data
+            static int consolidateModelsWithDbDataAllowsGuiRefresh(BlackMisc::Simulation::CAircraftModelList &models, bool force, bool processEvents);
+
             //! Consolidate models with DB data (simpler/faster version of CAircraftModel::consolidateModelWithDbData)
             static int consolidateModelsWithDbModelAndDistributor(BlackMisc::Simulation::CAircraftModelList &models, bool force);
 

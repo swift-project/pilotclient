@@ -77,16 +77,28 @@ namespace BlackCore
 
         int CDatabaseUtils::consolidateModelsWithDbData(CAircraftModelList &models, bool force)
         {
+            return CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, force, false);
+        }
+
+        int CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(CAircraftModelList &models, bool force, bool processEvents)
+        {
             QTime timer;
             timer.start();
             int c = 0;
             if (models.isEmpty()) { return c; }
             for (CAircraftModel &model : models)
             {
-                if (!force && model.hasValidDbKey()) { continue; }
+                if (!force && model.isLoadedFromDb()) { continue; }
                 bool modified = false;
                 model = CDatabaseUtils::consolidateModelWithDbData(model, force, &modified);
-                if (modified || model.hasValidDbKey()) { c++; }
+                if (modified || model.hasValidDbKey())
+                {
+                    c++;
+                    if (processEvents && c % 125 == 0)
+                    {
+                        sApp->processEventsFor(25);
+                    }
+                }
             }
             CLogMessage().debug() << "Consolidated " << models.size() << " in " << timer.elapsed() << "ms";
             return c;
