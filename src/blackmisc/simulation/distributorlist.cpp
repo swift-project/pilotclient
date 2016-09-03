@@ -41,6 +41,9 @@ namespace BlackMisc
             if (model.getModelString().startsWith("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
             if (model.getDescription().contains("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
             if (model.getDescription().contains("IVAO", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("IVAO"); }
+            if (model.getModelString().startsWith("PAI ", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("PAI"); }
+            if (model.getDescription().startsWith("Project AI ", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("PAI"); }
+
             return CDistributor();
         }
 
