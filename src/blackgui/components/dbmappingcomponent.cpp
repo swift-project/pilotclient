@@ -879,7 +879,10 @@ namespace BlackGui
                 this->m_stashFiltering = menuActions.addAction(this->m_stashFiltering, CIcons::filter16(), "Auto filtering in DB views (on/off)", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_toggleAutoFiltering });
                 this->m_stashFiltering->setCheckable(true);
                 this->m_stashFiltering->setChecked(mapComp->m_autoFilterInDbViews);
-                this->addRemoveDbModels(menuActions);
+
+                // Currently disabled as the same effect can be realized by filtering than
+                //! \todo remove if not needed in the long term (added 2016-Sep)
+                // this->addRemoveDbModels(menuActions);
 
                 this->m_autoStashing = menuActions.addAction(this->m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoStashingDialog });
                 if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
@@ -903,7 +906,7 @@ namespace BlackGui
             if (dbModels > 0)
             {
                 // we have keys and data by which we could delete them from view
-                const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from " + mapComp->currentTabText());
+                const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from '" + mapComp->currentTabText() + "'");
                 menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathStash(), nullptr, { mapComp, &CDbMappingComponent::ps_removeDbModelsFromView});
             }
         }
