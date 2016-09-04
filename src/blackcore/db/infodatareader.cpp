@@ -50,7 +50,7 @@ namespace BlackCore
             return getDbInfoObjectCount() > 4;
         }
 
-        void CInfoDataReader::syncronizeCaches(CEntityFlags::Entity entities)
+        void CInfoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             // no caching used here
             Q_UNUSED(entities);

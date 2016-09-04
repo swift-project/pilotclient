@@ -393,7 +393,7 @@ namespace BlackCore
             return true;
         }
 
-        void CIcaoDataReader::syncronizeCaches(CEntityFlags::Entity entities)
+        void CIcaoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { this->m_aircraftIcaoCache.synchronize(); }
             if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { this->m_airlineIcaoCache.synchronize(); }

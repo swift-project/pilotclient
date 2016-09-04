@@ -13,8 +13,8 @@
 
 #include "testreaders.h"
 #include "blackcore/application.h"
-#include "blackcore/airportdatareader.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/db/airportdatareader.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/modeldatareader.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
@@ -45,7 +45,7 @@ namespace BlackCoreTest
 {
     CTestReaders::CTestReaders(QObject *parent) :
         QObject(parent),
-        m_airportReader(new CAirportDataReader(this)),
+        m_airportReader(new CAirportDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess())),
         m_icaoReader(new CIcaoDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess())),
         m_modelReader(new CModelDataReader(this, CDatabaseReaderConfigList::allDirectDbAccess()))
     { }

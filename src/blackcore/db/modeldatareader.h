@@ -127,7 +127,7 @@ namespace BlackCore
             // cache handling for base class
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-            virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+            virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
 
         protected:
             // cache handling for base class

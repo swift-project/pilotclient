@@ -68,7 +68,7 @@ namespace BlackCore
                         Q_ASSERT_X(latestEntityTimestamp >= 0, Q_FUNC_INFO, "Missing timestamp");
                         if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp >= 0 && latestEntityTimestamp >= 0)
                         {
-                            this->syncronizeCaches(currentEntity);
+                            this->synchronizeCaches(currentEntity);
                             entities &= ~currentEntity; // do not load from web
                             cachedEntities |= currentEntity; // read from cache
                             CLogMessage(this).info("Using cache for %1 (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
@@ -88,7 +88,7 @@ namespace BlackCore
                     else
                     {
                         // no info objects, server down
-                        this->syncronizeCaches(currentEntity);
+                        this->synchronizeCaches(currentEntity);
                         const int c = this->getCacheCount(currentEntity);
                         CLogMessage(this).info("No info object for %1, using cache with %2 objects") << currentEntityName << c;
                         entities &= ~currentEntity; // do not load from web

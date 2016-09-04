@@ -466,7 +466,7 @@ namespace BlackCore
             return true;
         }
 
-        void CModelDataReader::syncronizeCaches(CEntityFlags::Entity entities)
+        void CModelDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::LiveryEntity)) { this->m_liveryCache.synchronize(); }
             if (entities.testFlag(CEntityFlags::ModelEntity))  { this->m_modelCache.synchronize(); }

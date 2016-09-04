@@ -179,8 +179,8 @@ namespace BlackCore
 
             //! \name  Cache access
             //! @{
-            //! Syncronize caches for given entities
-            virtual void syncronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
+            //! Synchronize caches for given entities
+            virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
 
             //! Invalidate the caches for given entities
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;

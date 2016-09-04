@@ -57,7 +57,7 @@ namespace BlackMisc
 namespace BlackCore
 {
     class CApplication;
-    class CAirportDataReader;
+
     namespace Vatsim
     {
         class CVatsimBookingReader;
@@ -68,6 +68,7 @@ namespace BlackCore
 
     namespace Db
     {
+        class CAirportDataReader;
         class CDatabaseWriter;
         class CDatabaseReader;
         class CIcaoDataReader;
@@ -390,7 +391,7 @@ namespace BlackCore
         Db::CIcaoDataReader             *m_icaoDataReader       = nullptr;
         Db::CModelDataReader            *m_modelDataReader      = nullptr;
         Db::CInfoDataReader             *m_infoDataReader       = nullptr;
-        CAirportDataReader              *m_airportDataReader    = nullptr;
+        Db::CAirportDataReader          *m_airportDataReader    = nullptr;
 
         // writing objects directly into DB
         Db::CDatabaseWriter     *m_databaseWriter       = nullptr;

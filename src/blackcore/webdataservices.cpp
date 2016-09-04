@@ -7,9 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/airportdatareader.h"
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
+#include "blackcore/db/airportdatareader.h"
 #include "blackcore/db/infodatareader.h"
 #include "blackcore/db/icaodatareader.h"
 #include "blackcore/db/databasewriter.h"
@@ -172,8 +172,8 @@ namespace BlackCore
 
     void CWebDataServices::syncronizeDbCaches(CEntityFlags::Entity entities)
     {
-        if (this->m_modelDataReader) { this->m_modelDataReader->syncronizeCaches(entities); }
-        if (this->m_icaoDataReader) { this->m_icaoDataReader->syncronizeCaches(entities); }
+        if (this->m_modelDataReader) { this->m_modelDataReader->synchronizeCaches(entities); }
+        if (this->m_icaoDataReader) { this->m_icaoDataReader->synchronizeCaches(entities); }
     }
 
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
@@ -688,7 +688,7 @@ namespace BlackCore
         // 6. Airport list reader
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
-            this->m_airportDataReader = new CAirportDataReader(this);
+            this->m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
             c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Airport reader signals");
             c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
