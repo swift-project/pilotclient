@@ -605,7 +605,7 @@ namespace BlackGui
                         QCompleter *completer = new QCompleter(airports, this);
                         QStyledItemDelegate *itemDelegate = new QStyledItemDelegate(completer);
                         completer->popup()->setItemDelegate(itemDelegate);
-                        ui->le_AirlineIcaoDesignator->setCompleter(completer);
+                        ui->le_VatsimHomeAirport->setCompleter(completer);
                         completer->popup()->setObjectName("AirportCompleter");
                         completer->popup()->setMinimumWidth(175);
                     }

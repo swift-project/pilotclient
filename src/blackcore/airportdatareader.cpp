@@ -96,10 +96,12 @@ namespace BlackCore
 
         m_airportCache.synchronize();
 
-        if (m_airportCache.get().size() > 0 &&
+        int size = m_airportCache.get().size();
+        if (size > 0 &&
                 m_airportCache.getAvailableTimestamp().toMSecsSinceEpoch() >= static_cast<qint64>(m_lastModified)) // cache is up-to-date
         {
             CLogMessage(this).info("Loaded %1 airports from cache") << m_airportCache.get().size();
+            emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, size);
         }
         else
         {

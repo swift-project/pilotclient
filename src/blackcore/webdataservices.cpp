@@ -94,7 +94,7 @@ namespace BlackCore
 
         CEntityFlags::Entity restEntities = entities & ~icaoPart;
         restEntities &= ~modelPart;
-        this->readDeferredInBackground(modelPart, 3000);
+        this->readDeferredInBackground(restEntities, 3000);
     }
 
     CServerList CWebDataServices::getVatsimFsdServers() const
@@ -689,9 +689,10 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             this->m_airportDataReader = new CAirportDataReader(this);
-            bool c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromAirportDb);
+            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromAirportDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Airport reader signals");
-            Q_UNUSED(c);
+            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed for airports");
             this->m_airportDataReader->start(QThread::LowPriority);
         }
     }
