@@ -67,6 +67,12 @@ namespace BlackMisc
 
             //! Find for given simulator
             CDistributorList matchesSimulator(const CSimulatorInfo &simulator) const;
+
+            //! All data from DB?
+            bool isCompletelyFromDb() const;
+
+            //! Remove distributors not from DB
+            int removeIfNotLoadedFromDb();
         };
     } //namespace
 } // namespace

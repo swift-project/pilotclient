@@ -204,6 +204,9 @@ namespace BlackMisc
             //! Validate for publishing
             CStatusMessageList validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
+            //! Validate distributors
+            CStatusMessageList validateDistributors(const BlackMisc::Simulation::CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
+
             //! To database JSON
             QJsonArray toDatabaseJson() const;
 

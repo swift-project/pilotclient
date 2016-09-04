@@ -36,7 +36,7 @@ namespace BlackMisc
 
         CDistributor CDistributorList::findByModelData(const CAircraftModel &model) const
         {
-            // some stuipd hardcoded resolutions
+            // some stuipd hardcoded resolutions for distributors
             if (model.getDistributor().hasValidDbKey()) { return model.getDistributor(); }
             if (model.getModelString().startsWith("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
             if (model.getDescription().contains("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
@@ -113,6 +113,16 @@ namespace BlackMisc
                 }
             }
             return distributors;
+        }
+
+        bool CDistributorList::isCompletelyFromDb() const
+        {
+            return !this->contains(&CDistributor::isLoadedFromDb, false);
+        }
+
+        int CDistributorList::removeIfNotLoadedFromDb()
+        {
+            return this->removeIf(&CDistributor::isLoadedFromDb, false);
         }
     } // namespace
 } // namespace

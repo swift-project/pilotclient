@@ -243,7 +243,7 @@ namespace BlackMisc
             if (distributors.isEmpty()) { return CAircraftModelList(); }
             return this->findBy([ = ](const CAircraftModel & model)
             {
-                return model.matchesAnyDistributor(distributors);
+                return model.matchesAnyDbDistributor(distributors);
             });
         }
 
@@ -561,6 +561,37 @@ namespace BlackMisc
                 }
                 msgs.push_back(singleMsg);
                 invalidModels.push_back(model);
+            }
+            return msgs;
+        }
+
+        CStatusMessageList CAircraftModelList::validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
+        {
+            CStatusMessageList msgs;
+            CDistributorList distributorsFromDb(distributors);
+            distributorsFromDb.removeIfNotLoadedFromDb();
+
+            // Any DB distributors?
+            if (distributorsFromDb.isEmpty())
+            {
+                const CStatusMessage msg = CStatusMessage(this).validationError("No DB distributors for validation");
+                msgs.push_back(msg);
+                invalidModels.push_back(*this);
+                return msgs;
+            }
+
+            for (const CAircraftModel &model : *this)
+            {
+                if (model.hasDbDistributor() || model.matchesAnyDbDistributor(distributorsFromDb))
+                {
+                    validModels.push_back(model);
+                }
+                else
+                {
+                    const CStatusMessage msg = CStatusMessage(this).validationError("No valid distributor for '%1', was '%2'") << model.getModelString() << model.getDistributor().getDbKey();
+                    msgs.push_back(msg);
+                    invalidModels.push_back(model);
+                }
             }
             return msgs;
         }

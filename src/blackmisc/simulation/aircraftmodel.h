@@ -222,14 +222,17 @@ namespace BlackMisc
             //! Update distributor`s order attribute
             bool setDistributorOrder(const CDistributorList &distributors);
 
-            //! Distributor
+            //! Distributor loaded from DB
+            bool hasDbDistributor() const;
+
+            //! Distributor, but not necessarily loaded from DB
             bool hasDistributor() const;
 
             //! By distributor
-            bool matchesDistributor(const CDistributor &distributor) const;
+            bool matchesDbDistributor(const CDistributor &distributor) const;
 
             //! By distributor
-            bool matchesAnyDistributor(const CDistributorList &distributors) const;
+            bool matchesAnyDbDistributor(const CDistributorList &distributors) const;
 
             //! Name
             const QString &getName() const { return this->m_name; }

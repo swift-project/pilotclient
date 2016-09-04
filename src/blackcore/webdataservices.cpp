@@ -539,6 +539,23 @@ namespace BlackCore
         return 0;
     }
 
+    CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
+    {
+        CStatusMessageList msgs(models.validateForPublishing(validModels, invalidModels));
+
+        // check against existing distributors
+        const CDistributorList distributors(this->getDistributors());
+        if (!distributors.isEmpty())
+        {
+            // only further check the valid ones
+            CAircraftModelList newValidModels;
+            CStatusMessageList msgsDistributos(validModels.validateDistributors(distributors, newValidModels, invalidModels));
+            validModels = newValidModels;
+            msgs.push_back(msgsDistributos);
+        }
+        return msgs;
+    }
+
     CAirlineIcaoCodeList CWebDataServices::getAirlineIcaoCodesForDesignator(const QString &designator) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodesForDesignator(designator); }

@@ -90,7 +90,7 @@ namespace BlackGui
         {
             if (!allowReplace && ui->tvp_StashAircraftModels->container().containsModelStringOrDbKey(model))
             {
-                const QString msg("Model \"%1\" already stashed");
+                const QString msg("Model '%1' already stashed");
                 return CStatusMessage(validationCategories(), CStatusMessage::SeverityError, msg.arg(model.getModelString()));
             }
             return CStatusMessage();
@@ -316,10 +316,10 @@ namespace BlackGui
         CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
         {
             if (ui->tvp_StashAircraftModels->isEmpty()) {return CStatusMessageList(); }
+            Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "No web services");
             const CAircraftModelList models(getSelectedOrAllModels());
             if (models.isEmpty()) { return CStatusMessageList(); }
-
-            const CStatusMessageList msgs(models.validateForPublishing(validModels, invalidModels));
+            const CStatusMessageList msgs(sGui->getWebDataServices()->validateForPublishing(models, validModels, invalidModels));
 
             // OK?
             if (msgs.isEmpty())
@@ -346,16 +346,14 @@ namespace BlackGui
             else
             {
                 // delete highlighting because no errors
-                ui->tvp_StashAircraftModels->setHighlightModelStrings(QStringList());
-
+                ui->tvp_StashAircraftModels->clearHighlighting();
                 if (displayInfo)
                 {
-                    QString no = QString::number(this->getStashedModelsCount());
+                    const QString no = QString::number(this->getStashedModelsCount());
                     CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
                     this->showMessage(msg);
                 }
             }
-
             return !validModels.isEmpty(); // at least some valid objects
         }
 

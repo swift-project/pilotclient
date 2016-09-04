@@ -294,6 +294,10 @@ namespace BlackCore
         //! \threadsafe
         int getMetarsCount() const;
 
+        //! Validate for publishing
+        //! \remark More detailed check than BlackMisc::Simulation::CAircraftModelList::validateForPublishing
+        BlackMisc::CStatusMessageList validateForPublishing(const BlackMisc::Simulation::CAircraftModelList &models, BlackMisc::Simulation::CAircraftModelList &validModels, BlackMisc::Simulation::CAircraftModelList &invalidModels) const;
+
         //! Publish models to database
         BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
 

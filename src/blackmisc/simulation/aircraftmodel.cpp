@@ -340,7 +340,7 @@ namespace BlackMisc
             if (distributors.isEmpty()) { return false; }
             bool found = false;
             const int noDistributorOrder = distributors.size();
-            if (this->hasDistributor())
+            if (this->hasDbDistributor())
             {
                 const CDistributor d = distributors.findByKeyOrAlias(this->m_distributor.getDbKey());
                 if (d.hasValidDbKey())
@@ -360,22 +360,27 @@ namespace BlackMisc
             return found;
         }
 
-        bool CAircraftModel::hasDistributor() const
+        bool CAircraftModel::hasDbDistributor() const
         {
-            return this->m_distributor.hasValidDbKey();
+            return this->m_distributor.isLoadedFromDb();
         }
 
-        bool CAircraftModel::matchesDistributor(const CDistributor &distributor) const
+        bool CAircraftModel::hasDistributor() const
         {
-            if (!distributor.hasValidDbKey()) { return false; }
-            if (!this->hasDistributor()) { return false; }
+            return this->m_distributor.hasValidDbKey(); // key is valid, but not guaranteed from DB
+        }
+
+        bool CAircraftModel::matchesDbDistributor(const CDistributor &distributor) const
+        {
+            if (!distributor.isLoadedFromDb()) { return false; }
+            if (!this->hasDbDistributor()) { return false; }
             return this->m_distributor.getDbKey() == distributor.getDbKey();
         }
 
-        bool CAircraftModel::matchesAnyDistributor(const CDistributorList &distributors) const
+        bool CAircraftModel::matchesAnyDbDistributor(const CDistributorList &distributors) const
         {
             if (distributors.isEmpty()) { return false; }
-            if (!this->hasDistributor()) { return false; }
+            if (!this->hasDbDistributor()) { return false; }
             return distributors.matchesAnyKeyOrAlias(this->m_distributor.getDbKey());
         }
 
