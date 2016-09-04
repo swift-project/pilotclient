@@ -362,9 +362,6 @@ namespace BlackCore
         //! Read finished from reader
         void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
-        //! Read from airport data reader
-        void ps_readFromAirportDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
         //! Setup changed
         void ps_setupChanged();
 

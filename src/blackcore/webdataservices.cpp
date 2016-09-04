@@ -689,7 +689,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             this->m_airportDataReader = new CAirportDataReader(this);
-            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromAirportDb);
+            c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Airport reader signals");
             c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed for airports");
@@ -761,11 +761,6 @@ namespace BlackCore
         {
             emit allSwiftDbDataRead();
         }
-    }
-
-    void CWebDataServices::ps_readFromAirportDb(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
-    {
-        CLogMessage(this).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
     }
 
     void CWebDataServices::ps_setupChanged()
