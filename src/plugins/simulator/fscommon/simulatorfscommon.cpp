@@ -109,7 +109,9 @@ namespace BlackSimPlugin
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             // remove upfront, and then enable / disable again
-            this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
+            auto callsign = aircraft.getCallsign();
+            if (!isPhysicallyRenderedAircraft(callsign)) { return false; }
+            this->physicallyRemoveRemoteAircraft(callsign);
             return this->changeRemoteAircraftEnabled(aircraft);
         }
 
