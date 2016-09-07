@@ -26,38 +26,39 @@ namespace BlackMisc
     {
     public:
         //! Default constructor.
-        Optional() : m_isValid(false) {}
+        Optional() {}
 
         //! Construct from a value.
-        Optional(T value) : m_isValid(true) { new (m_data.bytes) T(std::move(value)); }
+        Optional(T value) { new (m_data.bytes) T(std::move(value)); m_isValid = true; }
 
         //! Construct from a nullptr, equivalent to default constructor.
-        Optional(std::nullptr_t) : m_isValid(false) {}
+        Optional(std::nullptr_t) {}
 
         //! Copy constructor.
-        Optional(const Optional &other) : m_isValid(other.m_isValid)
+        Optional(const Optional &other)
         {
             if (other.m_isValid) { new (m_data.bytes) T(*other); }
+            m_isValid = other.m_isValid;
         }
 
         //! Move constructor.
-        Optional(Optional &&other) noexcept(std::is_nothrow_move_constructible<T>::value) : m_isValid(other.m_isValid)
+        Optional(Optional &&other) noexcept(std::is_nothrow_move_constructible<T>::value)
         {
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
+            m_isValid = other.m_isValid;
         }
 
         //! Assign a nullptr.
         Optional &operator =(std::nullptr_t)
         {
-            if (m_isValid) { (*this)->~T(); }
-            m_isValid = false;
+            reset();
             return *this;
         }
 
         //! Copy assignment.
         Optional &operator =(const Optional &other)
         {
-            if (m_isValid) { (*this)->~T(); }
+            reset();
             if (other.m_isValid) { new (m_data.bytes) T(*other); }
             m_isValid = other.m_isValid;
             return *this;
@@ -66,7 +67,7 @@ namespace BlackMisc
         //! Move assignment.
         Optional &operator =(Optional &&other) noexcept(std::is_nothrow_move_assignable<T>::value)
         {
-            if (m_isValid) { (*this)->~T(); }
+            reset();
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
             m_isValid = other.m_isValid;
             return *this;
@@ -77,6 +78,13 @@ namespace BlackMisc
 
         //! Explicit cast to bool, true if this Optional contains a value.
         explicit operator bool() const { return m_isValid; }
+
+        //! If object is valid, destroy to make it invalid.
+        void reset() noexcept
+        {
+            if (m_isValid) { (*this)->~T(); }
+            m_isValid = false;
+        }
 
         //! Dereference operator, returns reference to contained value, undefined if there is no value contained.
         T &operator *() { return dereference(); }
@@ -91,7 +99,7 @@ namespace BlackMisc
         const T *operator ->() const { return &dereference(); }
 
     private:
-        bool m_isValid;
+        bool m_isValid = false;
 
         T &dereference() { Q_ASSERT(m_isValid); return m_data.object; }
         const T &dereference() const { Q_ASSERT(m_isValid); return m_data.object; }
