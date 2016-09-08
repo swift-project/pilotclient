@@ -286,22 +286,26 @@ namespace BlackMisc
     class CData : public BlackMisc::CCached<typename Trait::type>
     {
     public:
-        //! \copydoc BlackMisc::CCached::NotifySlot
-        template <typename T>
-        using NotifySlot = typename BlackMisc::CCached<typename Trait::type>::template NotifySlot<T>;
-
         //! Constructor.
         //! \param owner Will be the parent of the internal QObject used to access the value.
-        //! \param slot Slot to call when the value is modified by another object.
-        //!             Must be a void, non-const member function of the owner.
         template <typename T>
-        CData(T *owner, NotifySlot<T> slot = nullptr) :
-            CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner, slot)
+        CData(T *owner) :
+            CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
         {
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(Trait::key(), Trait::timeToLive()); }
             if (Trait::isPinned()) { CDataCache::instance()->pinValue(Trait::key()); }
             if (Trait::isDeferred()) { CDataCache::instance()->deferValue(Trait::key()); }
             static_assert(! (Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
+        }
+
+        //! Constructor.
+        //! \param owner Will be the parent of the internal QObject used to access the value.
+        //! \param slot Slot to call when the value is modified by another object.
+        //!             Must be a void, non-const member function of the owner.
+        template <typename T, typename F>
+        CData(T *owner, F slot) : CData(owner)
+        {
+            this->setNotifySlot(slot);
         }
 
         //! \copydoc BlackMisc::CCached::set

@@ -335,20 +335,14 @@ namespace BlackMisc
     class CCached
     {
     public:
-        //! Type of pointer to non-const member function of U taking no arguments and returning void,
-        //! for slot parameter of CCached constructor.
-        template <typename U>
-        using NotifySlot = Private::TNonDeduced<void (U::*)()>;
-
         //! Constructor.
         //! \param cache The CValueCache object which manages the value.
         //! \param key The key string which identifies the value.
         //! \param name Human readable name corresponding to the key.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
-        //! \param slot A member function of owner which will be called when the value is changed by another source.
         template <typename U>
-        CCached(CValueCache *cache, const QString &key, const QString &name, U *owner, NotifySlot<U> slot = nullptr) :
-            CCached(cache, key, name, nullptr, T{}, owner, slot)
+        CCached(CValueCache *cache, const QString &key, const QString &name, U *owner) :
+            CCached(cache, key, name, nullptr, T{}, owner)
         {}
 
         //! Constructor.
@@ -358,13 +352,22 @@ namespace BlackMisc
         //! \param validator A functor which tests the validity of a value and returns true if it is valid.
         //! \param defaultValue A value which will be used as default if the value is invalid.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
-        //! \param slot A member function of owner which will be called when the value is changed by another source.
         template <typename U, typename F>
-        CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner, NotifySlot<U> slot = nullptr) :
+        CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner) :
             m_page(Private::CValuePage::getPageFor(owner, cache)),
-            m_element(m_page.createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue), slot_cast(slot)))
+            m_element(m_page.createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
         {
             cache->setHumanReadableName(key, name);
+        }
+
+        //! Set a callback to be called when the value is changed by another source.
+        //! \todo Qt 5.7.0: in assert use m_page.parent()->metaObject()->inherits(&U::staticMetaObject)
+        template <typename F>
+        void setNotifySlot(F slot)
+        {
+            using U = typename Private::TClassOfPointerToMember<F>::type;
+            Q_ASSERT_X(m_page.parent()->inherits(U::staticMetaObject.className()), Q_FUNC_INFO, "Slot is member function of wrong class");
+            m_page.setNotifySlot(m_element, [slot](QObject *obj) { Private::invokeSlot(slot, static_cast<U *>(obj)); });
         }
 
         //! Read the current value.
@@ -415,9 +418,6 @@ namespace BlackMisc
         template <typename F>
         static Private::CValuePage::Validator wrap(F func) { return [func](const CVariant &value)->bool { return func(value.to<T>()); }; }
         static Private::CValuePage::Validator wrap(std::nullptr_t) { return {}; }
-
-        template <typename F>
-        static Private::CValuePage::NotifySlot slot_cast(F slot) { return static_cast<Private::CValuePage::NotifySlot>(slot); }
 
         const QVariant &getVariant() const { return m_page.getValue(m_element).getQVariant(); }
         QVariant getVariantCopy() const { return m_page.getValueCopy(m_element).getQVariant(); }

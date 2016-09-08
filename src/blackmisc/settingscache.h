@@ -69,18 +69,22 @@ namespace BlackMisc
     class CSetting : public BlackMisc::CCached<typename Trait::type>
     {
     public:
-        //! \copydoc BlackMisc::CCached::NotifySlot
+        //! Constructor.
+        //! \param owner Will be the parent of the internal QObject used to access the value.
         template <typename T>
-        using NotifySlot = typename BlackMisc::CCached<typename Trait::type>::template NotifySlot<T>;
+        CSetting(T *owner) :
+            CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
+        {}
 
         //! Constructor.
         //! \param owner Will be the parent of the internal QObject used to access the value.
         //! \param slot Slot to call when the value is modified by another object.
         //!             Must be a void, non-const member function of the owner.
-        template <typename T>
-        CSetting(T *owner, NotifySlot<T> slot = nullptr) :
-            CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner, slot)
-        {}
+        template <typename T, typename F>
+        CSetting(T *owner, F slot) : CSetting(owner)
+        {
+            this->setNotifySlot(slot);
+        }
 
         //! Reset the setting to its default value.
         CStatusMessage setDefault() { return this->set(Trait::defaultValue()); }

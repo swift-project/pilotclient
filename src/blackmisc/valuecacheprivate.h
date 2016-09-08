@@ -28,19 +28,20 @@ namespace BlackMisc
     {
 
         /*!
-         * \private Identity type trait.
+         * \private Trait for obtaining the class type of a pointer to member type, or QObject if T is not a pointer to member.
          */
         template <typename T>
-        struct TIdentity
+        struct TClassOfPointerToMember
+        {
+            using type = QObject;
+        };
+        //! \cond
+        template <typename T, typename M>
+        struct TClassOfPointerToMember<M T::*>
         {
             using type = T;
         };
-
-        /*!
-         * \private Trick to force a non-deduced context during template argument type deduction.
-         */
-        template <typename T>
-        using TNonDeduced = typename TIdentity<T>::type;
+        //! \endcond
 
         /*!
          * \private QObject subclass used by CCached<T> class template for signal/slot communication with CValueCache.
@@ -61,8 +62,8 @@ namespace BlackMisc
             //! Functor used for validating values.
             using Validator = std::function<bool(const CVariant &)>;
 
-            //! Pointer-to-member-function type of slot to notify parent of changes.
-            using NotifySlot = void (QObject:: *)();
+            //! Functor used to notify parent of changes.
+            using NotifySlot = std::function<void(QObject *)>;
 
             //! Returns a new instance of the opaque Element type for use by CCached<T> to interact with CValuePage.
             //! \param key The key string of the value in the cache.
@@ -70,8 +71,10 @@ namespace BlackMisc
             //! \param metaType The Qt metatype ID of the value object's expected type.
             //! \param validator Optional functor which returns true if the value is valid.
             //! \param defaultValue Optional value which is used in case the value is invalid.
-            //! \param slot Optional member function of parent, will be called when value changes.
-            Element &createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot);
+            Element &createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue);
+
+            //! Set the functor to call to notify that the value corresponding to the element's key was modified.
+            void setNotifySlot(Element &element, NotifySlot slot);
 
             //! True if the currently paged value is a valid instance of the given type.
             //! \threadsafe

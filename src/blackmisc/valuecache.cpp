@@ -538,8 +538,8 @@ namespace BlackMisc
 
     struct CValuePage::Element
     {
-        Element(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot) :
-            m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue), m_notifySlot(slot)
+        Element(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue) :
+            m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue)
         {}
         const QString m_key;
         const QString m_name;
@@ -549,18 +549,18 @@ namespace BlackMisc
         const int m_metaType = QMetaType::UnknownType;
         const Validator m_validator;
         const CVariant m_default;
-        const NotifySlot m_notifySlot = nullptr;
+        NotifySlot m_notifySlot;
         int m_pendingChanges = 0;
         bool m_saved = false;
     };
 
-    CValuePage::Element &CValuePage::createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue, NotifySlot slot)
+    CValuePage::Element &CValuePage::createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue)
     {
         Q_ASSERT_X(! m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
         Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
         Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue) : true, "CValuePage", "Validator rejects default value");
 
-        auto &element = *(m_elements[key] = ElementPtr(new Element(key, name, metaType, validator, defaultValue, slot)));
+        auto &element = *(m_elements[key] = ElementPtr(new Element(key, name, metaType, validator, defaultValue)));
         std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp, element.m_saved) = m_cache->getValue(key);
 
         auto status = validate(element, element.m_value.read(), CStatusMessage::SeverityDebug);
@@ -584,6 +584,11 @@ namespace BlackMisc
         }
 
         return element;
+    }
+
+    void CValuePage::setNotifySlot(Element &element, NotifySlot slot)
+    {
+        element.m_notifySlot = slot;
     }
 
     bool CValuePage::isValid(const Element &element, int typeId) const
@@ -667,7 +672,7 @@ namespace BlackMisc
         Q_ASSERT(QThread::currentThread() == thread());
         Q_ASSERT_X(values.valuesChanged(), Q_FUNC_INFO, "packet with unchanged values should not reach here");
 
-        QList<NotifySlot> notifySlots;
+        QList<NotifySlot *> notifySlots;
 
         forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString &, const ElementPtr & element, CValueCachePacket::const_iterator it)
         {
@@ -684,9 +689,9 @@ namespace BlackMisc
                     element->m_value.uniqueWrite() = it.value();
                     element->m_timestamp = it.timestamp();
                     element->m_saved = values.isSaved();
-                    if (element->m_notifySlot && ! notifySlots.contains(element->m_notifySlot))
+                    if (element->m_notifySlot && ! notifySlots.contains(&element->m_notifySlot))
                     {
-                        notifySlots.push_back(element->m_notifySlot);
+                        notifySlots.push_back(&element->m_notifySlot);
                     }
                 }
                 else
@@ -696,7 +701,7 @@ namespace BlackMisc
             }
         });
 
-        for (auto slot : notifySlots) { (parent()->*slot)(); }
+        for (auto slot : notifySlots) { (*slot)(parent()); }
     }
 
     void CValuePage::beginBatch()
