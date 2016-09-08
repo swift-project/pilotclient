@@ -133,6 +133,8 @@ namespace BlackGui
 
             // vPilot
             this->initVPilotLoading();
+
+            m_swiftDbUser.setNotifySlot(&CDbMappingComponent::ps_userChanged);
         }
 
         CDbMappingComponent::~CDbMappingComponent()
