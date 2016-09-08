@@ -303,14 +303,14 @@ namespace BlackCore
             return m_simulatorPlugin.second->getTimeSynchronizationOffset();
         }
 
-        bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo, bool withListener)
+        bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorPluginInfo, bool withListener)
         {
             Q_ASSERT(getIContextApplication());
             Q_ASSERT(getIContextApplication()->isUsingImplementingObject());
-            Q_ASSERT(!simulatorInfo.isUnspecified());
+            Q_ASSERT(!simulatorPluginInfo.isUnspecified());
             Q_ASSERT(CThreadUtils::isCurrentThreadApplicationThread()); // only run in main thread
 
-            if (!simulatorInfo.isValid())
+            if (!simulatorPluginInfo.isValid())
             {
                 CLogMessage(this).error("Illegal plugin");
                 return false;
@@ -327,17 +327,17 @@ namespace BlackCore
             // now we have a state where no driver is loaded
             if (withListener)
             {
-                this->listenForSimulator(simulatorInfo);
+                this->listenForSimulator(simulatorPluginInfo);
                 return false; // not a plugin yet, just listener
             }
 
-            if (!simulatorInfo.isValid() || simulatorInfo.isUnspecified())
+            if (!simulatorPluginInfo.isValid() || simulatorPluginInfo.isUnspecified())
             {
                 CLogMessage(this).error("Illegal plugin");
                 return false;
             }
 
-            ISimulatorFactory *factory = m_plugins->getFactory(simulatorInfo.getIdentifier());
+            ISimulatorFactory *factory = m_plugins->getFactory(simulatorPluginInfo.getIdentifier());
             Q_ASSERT_X(factory, Q_FUNC_INFO, "no factory");
 
             // We assume we run in the same process as the own aircraft context
@@ -346,7 +346,7 @@ namespace BlackCore
             Q_ASSERT(this->getIContextNetwork()->isUsingImplementingObject());
             IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
             IRemoteAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
-            ISimulator *simulator = factory->create(simulatorInfo, ownAircraftProvider, renderedAircraftProvider, &m_weatherManager);
+            ISimulator *simulator = factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, &m_weatherManager);
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "no simulator driver can be created");
 
             bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
@@ -374,11 +374,11 @@ namespace BlackCore
             // try to connect to simulator
             simulator->connectTo();
             // when everything is set up connected, update the current plugin info
-            m_simulatorPlugin.first = simulatorInfo;
+            m_simulatorPlugin.first = simulatorPluginInfo;
             m_simulatorPlugin.second = simulator;
 
-            emit simulatorPluginChanged(simulatorInfo);
-            CLogMessage(this).info("Simulator plugin loaded: %1") << simulatorInfo.toQString(true);
+            emit simulatorPluginChanged(simulatorPluginInfo);
+            CLogMessage(this).info("Simulator plugin loaded: %1") << simulatorPluginInfo.toQString(true);
 
             return true;
         }

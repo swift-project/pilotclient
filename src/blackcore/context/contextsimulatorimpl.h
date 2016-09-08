@@ -187,7 +187,7 @@ namespace BlackCore
 
         private:
             //! Load plugin, if required start listeners before
-            bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo, bool withListeners);
+            bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorPluginInfo, bool withListeners);
 
             //! Unload plugin, if desired restart listeners
             void unloadSimulatorPlugin();
