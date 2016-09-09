@@ -191,7 +191,6 @@ namespace BlackMiscTest
 
     void CTestValueCache::batched()
     {
-#if 0 // MS temp disabled 2016-09-09
         CValueCache cache;
         for (int i = 0; i < 2; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
         CValueCacheUser user1(&cache);
@@ -209,7 +208,6 @@ namespace BlackMiscTest
             QVERIFY(user2.m_value1.get() == 42);
             QVERIFY(user2.m_value2.get() == 42);
         });
-#endif
     }
 
     void CTestValueCache::json()

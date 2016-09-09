@@ -672,7 +672,7 @@ namespace BlackMisc
         Q_ASSERT(QThread::currentThread() == thread());
         Q_ASSERT_X(values.valuesChanged(), Q_FUNC_INFO, "packet with unchanged values should not reach here");
 
-        QList<NotifySlot *> notifySlots;
+        CSequence<NotifySlot *> notifySlots;
 
         forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString &, const ElementPtr & element, CValueCachePacket::const_iterator it)
         {
@@ -689,7 +689,7 @@ namespace BlackMisc
                     element->m_value.uniqueWrite() = it.value();
                     element->m_timestamp = it.timestamp();
                     element->m_saved = values.isSaved();
-                    if (element->m_notifySlot && ! notifySlots.contains(&element->m_notifySlot))
+                    if (element->m_notifySlot.first && (! element->m_notifySlot.second || ! notifySlots.containsBy([ & ](auto slot) { return slot->second == element->m_notifySlot.second; })))
                     {
                         notifySlots.push_back(&element->m_notifySlot);
                     }
@@ -701,7 +701,7 @@ namespace BlackMisc
             }
         });
 
-        for (auto slot : notifySlots) { (*slot)(parent()); }
+        for (auto slot : notifySlots) { slot->first(parent()); }
     }
 
     void CValuePage::beginBatch()

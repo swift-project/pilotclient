@@ -367,7 +367,7 @@ namespace BlackMisc
         {
             using U = typename Private::TClassOfPointerToMember<F>::type;
             Q_ASSERT_X(m_page.parent()->inherits(U::staticMetaObject.className()), Q_FUNC_INFO, "Slot is member function of wrong class");
-            m_page.setNotifySlot(m_element, [slot](QObject *obj) { Private::invokeSlot(slot, static_cast<U *>(obj)); });
+            m_page.setNotifySlot(m_element, { [slot](QObject *obj) { Private::invokeSlot(slot, static_cast<U *>(obj)); }, makeId(slot) });
         }
 
         //! Read the current value.
@@ -418,6 +418,11 @@ namespace BlackMisc
         template <typename F>
         static Private::CValuePage::Validator wrap(F func) { return [func](const CVariant &value)->bool { return func(value.to<T>()); }; }
         static Private::CValuePage::Validator wrap(std::nullptr_t) { return {}; }
+
+        template <typename F>
+        static auto makeId(F &&) { return nullptr; }
+        template <typename U, typename M>
+        static auto makeId(M U::* slot) { return static_cast<std::tuple_element_t<1, Private::CValuePage::NotifySlot>>(slot); }
 
         const QVariant &getVariant() const { return m_page.getValue(m_element).getQVariant(); }
         QVariant getVariantCopy() const { return m_page.getValueCopy(m_element).getQVariant(); }

@@ -63,7 +63,7 @@ namespace BlackMisc
             using Validator = std::function<bool(const CVariant &)>;
 
             //! Functor used to notify parent of changes.
-            using NotifySlot = std::function<void(QObject *)>;
+            using NotifySlot = std::pair<std::function<void(QObject *)>, void (QObject::*)()>;
 
             //! Returns a new instance of the opaque Element type for use by CCached<T> to interact with CValuePage.
             //! \param key The key string of the value in the cache.
