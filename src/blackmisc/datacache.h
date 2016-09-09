@@ -292,9 +292,9 @@ namespace BlackMisc
         CData(T *owner) :
             CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
         {
-            if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(Trait::key(), Trait::timeToLive()); }
-            if (Trait::isPinned()) { CDataCache::instance()->pinValue(Trait::key()); }
-            if (Trait::isDeferred()) { CDataCache::instance()->deferValue(Trait::key()); }
+            if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive()); }
+            if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
+            if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
             static_assert(! (Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
@@ -311,14 +311,14 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CCached::set
         CStatusMessage set(const typename Trait::type &value, qint64 timestamp = 0)
         {
-            CDataCache::instance()->admitValue(Trait::key(), false);
+            CDataCache::instance()->admitValue(this->getKey(), false);
             return CCached<typename Trait::type>::set(value, timestamp);
         }
 
         //! \copydoc BlackMisc::CCached::setProperty
         CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0)
         {
-            CDataCache::instance()->admitValue(Trait::key(), false);
+            CDataCache::instance()->admitValue(this->getKey(), false);
             return CCached<typename Trait::type>::setProperty(index, value, timestamp);
         }
 
@@ -342,7 +342,7 @@ namespace BlackMisc
         }
 
         //! If the value is load-deferred, trigger the deferred load (async).
-        void admit() { if (Trait::isDeferred()) { CDataCache::instance()->admitValue(Trait::key(), true); } }
+        void admit() { if (Trait::isDeferred()) { CDataCache::instance()->admitValue(this->getKey(), true); } }
 
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()

@@ -434,6 +434,27 @@ namespace BlackMisc
     };
 
     /*!
+     * Helper class for generating cache key variations from a key template.
+     */
+    class BLACKMISC_EXPORT CValueCacheCategory : public QObject
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor.
+        CValueCacheCategory(QObject *parent, const QString &category) : QObject(parent), m_category(category)
+        {
+            Q_ASSERT_X(parent->findChildren<CValueCacheCategory *>().size() == 1, Q_FUNC_INFO, "Only one CValueCacheCategory per object allowed");
+        }
+
+        //! Get category string.
+        const QString &getCategory() const { return m_category; }
+
+    private:
+        const QString m_category;
+    };
+
+    /*!
      * RAII object returned by CValueCache::batchChanges. Applies deferred changes when it is destroyed.
      */
     class BLACKMISC_EXPORT CValueCache::BatchGuard

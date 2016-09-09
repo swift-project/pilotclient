@@ -19,6 +19,7 @@
 #include "blackmisc/logmessage.h"
 
 #include <QByteArray>
+#include <QCoreApplication>
 #include <QDBusMetaType>
 #include <QDir>
 #include <QFile>
@@ -554,8 +555,14 @@ namespace BlackMisc
         bool m_saved = false;
     };
 
-    CValuePage::Element &CValuePage::createElement(const QString &key, const QString &name, int metaType, Validator validator, const CVariant &defaultValue)
+    CValuePage::Element &CValuePage::createElement(const QString &keyTemplate, const QString &name, int metaType, Validator validator, const CVariant &defaultValue)
     {
+        auto *category = parent()->findChild<CValueCacheCategory *>();
+        QString key = keyTemplate;
+        key.replace("%Application%", QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName(), Qt::CaseInsensitive);
+        key.replace("%OwnerClass%", QString(parent()->metaObject()->className()).replace("::", "/"), Qt::CaseInsensitive);
+        key.replace("%OwnerCategory%", category ? category->getCategory() : QString(parent()->metaObject()->className()).replace("::", "/"), Qt::CaseInsensitive);
+
         Q_ASSERT_X(! m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
         Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
         Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue) : true, "CValuePage", "Validator rejects default value");
