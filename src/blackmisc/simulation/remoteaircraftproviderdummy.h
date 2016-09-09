@@ -16,6 +16,7 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
@@ -98,7 +99,7 @@ namespace BlackMisc
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) override;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates) override;

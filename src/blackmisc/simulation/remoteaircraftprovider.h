@@ -114,7 +114,7 @@ namespace BlackMisc
 
             //! Change model string
             //! \threadsafe
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) = 0;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Change fast position updates
             //! \threadsafe
@@ -188,7 +188,7 @@ namespace BlackMisc
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model);
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);

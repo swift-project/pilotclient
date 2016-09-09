@@ -65,6 +65,7 @@ namespace BlackCore
     CAirspaceMonitor::CAirspaceMonitor(BlackMisc::Simulation::IOwnAircraftProvider *ownAircraftProvider, INetwork *network, QObject *parent)
         : QObject(parent),
           COwnAircraftAware(ownAircraftProvider),
+          CIdentifiable(this),
           m_network(network),
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, this, network, this))
     {
@@ -214,8 +215,9 @@ namespace BlackCore
         return c > 0;
     }
 
-    bool CAirspaceMonitor::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model)
+    bool CAirspaceMonitor::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
     {
+        if (CIdentifiable::isMyIdentifier(originator)) { return false; }
         const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
         const int c = this->updateAircraftInRange(callsign, vm);
         return c > 0;
@@ -923,7 +925,9 @@ namespace BlackCore
         {
             CAircraftModel model = CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
             model.updateMissingParts(aircraft.getModel());
-            this->updateAircraftModel(callsign, model);
+            // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to updateAircraftModel() would
+            // return without doing anything.
+            this->updateAircraftModel(callsign, model, CIdentifier::anonymous());
         }
         else
         {

@@ -76,10 +76,10 @@ namespace BlackMisc
             return this->m_remoteAircraftProvider->remoteAircraftSituationsCount(callsign);
         }
 
-        bool CRemoteAircraftAware::updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model)
+        bool CRemoteAircraftAware::updateAircraftModel(const Aviation::CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
-            return this->m_remoteAircraftProvider->updateAircraftModel(callsign, model);
+            return this->m_remoteAircraftProvider->updateAircraftModel(callsign, model, originator);
         }
 
         bool CRemoteAircraftAware::updateAircraftRendered(const CCallsign &callsign, bool rendered)

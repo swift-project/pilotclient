@@ -562,14 +562,14 @@ namespace BlackCore
             return c;
         }
 
-        bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model)
+        bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
-            bool c = this->m_airspace->updateAircraftModel(callsign, model);
+            bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
             if (c)
             {
                 CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-                emit this->changedRemoteAircraftModel(aircraft);
+                emit this->changedRemoteAircraftModel(aircraft, originator);
             }
             return c;
         }

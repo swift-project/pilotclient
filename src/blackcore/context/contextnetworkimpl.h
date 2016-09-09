@@ -136,7 +136,7 @@ namespace BlackCore
 
             //! \copydoc IContextNetwork::updateAircraftModel
             //! \ingroup remoteaircraftprovider
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) override;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc IContextNetwork::updateFastPositionEnabled
             //! \ingroup remoteaircraftprovider

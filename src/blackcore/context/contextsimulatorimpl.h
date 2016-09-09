@@ -50,7 +50,9 @@ namespace BlackCore
     namespace Context
     {
         //! Network simulator concrete implementation
-        class BLACKCORE_EXPORT CContextSimulator : public IContextSimulator
+        class BLACKCORE_EXPORT CContextSimulator :
+                public IContextSimulator,
+                public BlackMisc::CIdentifiable
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
@@ -173,7 +175,7 @@ namespace BlackCore
             void ps_cockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! Changed remote aircraft model
-            void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Enable / disable aircraft
             void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);

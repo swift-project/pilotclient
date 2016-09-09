@@ -26,6 +26,7 @@
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/server.h"
@@ -126,7 +127,7 @@ namespace BlackCore
             //! Aircraft model was changed
             //! \details All remote aircraft are stored in the network context. The model can be updated here
             //!          via \sa updateAircraftModel and then this signal is fired
-            void changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Aircraft enabled / disabled
             //! \details All remote aircraft are stored in the network context. The aircraft can be enabled (for rendering) here
@@ -257,7 +258,7 @@ namespace BlackCore
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) = 0;
 
             //! Change model string
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) = 0;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Change fast position updates
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) = 0;

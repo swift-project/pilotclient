@@ -262,10 +262,11 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) override
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override
             {
                 Q_UNUSED(callsign);
                 Q_UNUSED(model);
+                Q_UNUSED(originator);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }

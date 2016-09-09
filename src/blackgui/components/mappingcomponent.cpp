@@ -58,6 +58,7 @@ namespace BlackGui
     {
         CMappingComponent::CMappingComponent(QWidget *parent) :
             QFrame(parent),
+            CIdentifiable(this),
             ui(new Ui::CMappingComponent),
             m_updateTimer(new CUpdateTimer("CMappingComponent", &CMappingComponent::ps_backgroundUpdate, this))
         {
@@ -273,7 +274,7 @@ namespace BlackGui
                 CAircraftModel model(models.front());
                 model.setModelType(CAircraftModel::TypeManuallySet);
                 CLogMessage(this).info("Requesting changes for %1") << callsign.asString();
-                sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model);
+                sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
                 changed = true;
             }
             if (aircraftFromBackend.isEnabled() != enabled)
@@ -324,8 +325,9 @@ namespace BlackGui
             ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
-        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft)
+        void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
         {
+            if (CIdentifiable::isMyIdentifier(originator)) { return; }
             this->updateSimulatedAircraftView();
             Q_UNUSED(aircraft);
         }

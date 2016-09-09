@@ -47,6 +47,7 @@ namespace BlackCore
     {
         CContextSimulator::CContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) :
             IContextSimulator(mode, runtime),
+            CIdentifiable(this),
             m_plugins(new CPluginManagerSimulator(this))
         {
             this->setObjectName("CContextSimulator");
@@ -526,8 +527,9 @@ namespace BlackCore
             getIContextOwnAircraft()->changedAircraftCockpit(ownAircraft, IContextSimulator::InterfaceName());
         }
 
-        void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft)
+        void CContextSimulator::ps_changedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator)
         {
+            if (CIdentifiable::isMyIdentifier(originator)) { return; }
             if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft);
         }

@@ -33,6 +33,7 @@
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/clientlist.h"
 #include "blackmisc/network/userlist.h"
@@ -68,7 +69,8 @@ namespace BlackCore
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
         public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
-        public BlackMisc::Simulation::COwnAircraftAware // used to obtain in memory information about own aircraft
+        public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
+        public BlackMisc::CIdentifiable
     {
         Q_OBJECT
         Q_INTERFACES(BlackMisc::Simulation::IRemoteAircraftProvider)
@@ -94,7 +96,7 @@ namespace BlackCore
         virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
         virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
         virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) override;
-        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model) override;
+        virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
         virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
         virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
         virtual void updateMarkAllAsNotRendered() override;

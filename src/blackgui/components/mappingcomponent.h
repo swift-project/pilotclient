@@ -15,6 +15,7 @@
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -48,7 +49,8 @@ namespace BlackGui
         //! Mappings, models etc.
         class BLACKGUI_EXPORT CMappingComponent :
             public QFrame,
-            public CEnableForDockWidgetInfoArea
+            public CEnableForDockWidgetInfoArea,
+            public BlackMisc::CIdentifiable
         {
             Q_OBJECT
 
@@ -105,7 +107,7 @@ namespace BlackGui
             void ps_onModelsUpdateRequested();
 
             //! Rendered aircraft changed in backend
-            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
             //! Aircraft enabled, disabled in backend
             void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
