@@ -122,6 +122,7 @@ namespace BlackMisc
 
             CAircraftModel CAircraftCfgEntries::toAircraftModel() const
             {
+                // creates raw, unconsolidated data
                 CAircraftModel model(this->getTitle(), CAircraftModel::TypeOwnSimulatorModel);
                 model.setDescription(this->getUiCombinedDescription()); // Manufacturer and type
                 model.setFileName(this->getFileName());
@@ -129,7 +130,7 @@ namespace BlackMisc
                 model.setUtcTimestamp(this->getUtcTimestamp()); // aircraft.cfg file last modified
                 model.setIconPath(this->getThumbnailFileNameChecked());
 
-                const QString designator(CAircraftIcaoCode::normalizeDesignator(getAtcModel()));
+                const QString designator(CAircraftIcaoCode::normalizeDesignator(this->getAtcModel()));
                 CAircraftIcaoCode aircraft(
                     CAircraftIcaoCode::isValidDesignator(designator) ?
                     designator :
@@ -137,16 +138,23 @@ namespace BlackMisc
                 aircraft.setManufacturer(this->getUiManufacturer());
                 model.setAircraftIcaoCode(aircraft);
 
+                // livery
                 CLivery livery;
                 livery.setCombinedCode(this->getTexture());
+
                 CAirlineIcaoCode airline;
-                airline.setName(this->getAtcAirline());
+                airline.setName(this->getAtcAirline()); // descriptive name like "BATAVIA"
+                const QString airlineDesignator(this->getAtcParkingCode());
+                if (CAirlineIcaoCode::isValidAirlineDesignator(airlineDesignator))
+                {
+                    airline.setDesignator(airlineDesignator);
+                }
                 livery.setAirlineIcaoCode(airline);
                 model.setLivery(livery);
 
+                // distributor
                 const CDistributor distributor(this->getCreatedBy());
                 model.setDistributor(distributor);
-
                 return model;
             }
 
