@@ -180,9 +180,10 @@ namespace BlackMisc
             CIcon(CIcons::SwiftDatabase16, "swift"),
             CIcon(CIcons::SwiftDatabase24, "swift"),
             CIcon(CIcons::SwiftDatabase48, "swift"),
-            CIcon(CIcons::SwiftNova16, "swift"),
-            CIcon(CIcons::SwiftNova24, "swift"),
-            CIcon(CIcons::SwiftNova48, "swift")
+            CIcon(CIcons::SwiftDatabase1024, "swift"),
+            CIcon(CIcons::SwiftCore16, "swift"),
+            CIcon(CIcons::SwiftCore24, "swift"),
+            CIcon(CIcons::SwiftCore48, "swift")
         });
         return icons;
     }

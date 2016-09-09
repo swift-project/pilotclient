@@ -20,10 +20,11 @@ DEPENDPATH += . $$SourceRoot/src/blackmisc \
 
 INCLUDEPATH += . $$SourceRoot/src
 
-OTHER_FILES += *.qss *.ico *.rc
+OTHER_FILES += *.qss *.ico *.rc *.icns
 RESOURCES += swiftlauncher.qrc
-RC_FILE = swift.rc
-DISTFILES += swift.rc
+RC_FILE = swiftlauncher.rc
+DISTFILES += swiftlauncher.rc
+ICON = swiftlauncher.icns
 
 DESTDIR = $$DestRoot/bin
 

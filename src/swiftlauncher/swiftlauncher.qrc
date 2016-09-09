@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/launcher">
-        <file>icons/swift256Launcher.png</file>
-        <file>icons/swift256Launcher.xcf</file>
         <file>icons/swiftFrameless.png</file>
         <file>icons/swiftNormal.png</file>
         <file>icons/swiftFrameless100x162.png</file>

@@ -470,63 +470,172 @@ namespace BlackMisc
 
     const QPixmap &CIcons::swift16()
     {
-        static const QPixmap pm(swift64().scaled(16, 16));
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-16.png");
         return pm;
     }
 
     const QPixmap &CIcons::swift24()
     {
-        static const QPixmap pm(swift64().scaled(16, 16));
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swift48()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-48.png");
         return pm;
     }
 
     const QPixmap &CIcons::swift64()
     {
-        static const QPixmap pm(":/own/icons/own/swift/swiftCircle64.png");
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-64.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swift128()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-128.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swift256()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-256.png");
         return pm;
     }
 
     const QPixmap &CIcons::swift1024()
     {
-        static const QPixmap pm(":/own/icons/own/swift/swiftCircle1024.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::swiftNova24()
-    {
-        static const QPixmap pm(":/own/icons/own/swift/swiftCartoonNova24.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::swiftNova48()
-    {
-        static const QPixmap pm(":/own/icons/own/swift/swiftCartoonNova48.png");
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-1024.png");
         return pm;
     }
 
     const QPixmap &CIcons::swiftDatabase16()
     {
-        static const QPixmap pm(":/own/icons/own/swift/swiftDatabase16.png");
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DGreen-16.png");
         return pm;
     }
 
     const QPixmap &CIcons::swiftDatabase24()
     {
-        static const QPixmap pm(":/own/icons/own/swift/swiftDatabase24.png");
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DGreen-24.png");
         return pm;
     }
 
     const QPixmap &CIcons::swiftDatabase48()
     {
-        static const QPixmap pm(":/own/icons/own/swift/swiftDatabase48.png");
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DGreen-48.png");
         return pm;
     }
 
-    const QPixmap &CIcons::swiftNova16()
+    const QPixmap &CIcons::swiftDatabase64()
     {
-        static const QPixmap pm(swiftNova48().scaled(16, 16));
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DGreen-64.png");
         return pm;
     }
+
+    const QPixmap &CIcons::swiftDatabase128()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DGreen-128.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftDatabase256()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DGreen-256.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftDatabase1024()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DGreen-1024.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftCore16()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DOrange-16.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftCore24()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DOrange-24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftCore48()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DOrange-48.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftCore64()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DOrange-64.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftCore128()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DOrange-128.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftCore256()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DOrange-256.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftCore1024()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DOrange-1024.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftLauncher16()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlack-16.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftLauncher24()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlack-24.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftLauncher48()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlack-48.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftLauncher64()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlack-64.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftLauncher128()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlack-128.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftLauncher256()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlack-256.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::swiftLauncher1024()
+    {
+        static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlack-1024.png");
+        return pm;
+    }
+
 
     const QPixmap &CIcons::appWeather16()
     {
@@ -1100,22 +1209,58 @@ namespace BlackMisc
             return swift16();
         case Swift24:
             return swift24();
+        case Swift48:
+            return swift48();
         case Swift64:
             return swift64();
+        case Swift128:
+            return swift128();
+        case Swift256:
+            return swift256();
         case Swift1024:
             return swift1024();
-        case SwiftNova16:
-            return swiftNova16();
-        case SwiftNova24:
-            return swiftNova24();
-        case SwiftNova48:
-            return swiftNova48();
+        case SwiftCore16:
+            return swiftCore16();
+        case SwiftCore24:
+            return swiftCore24();
+        case SwiftCore48:
+            return swiftCore48();
+        case SwiftCore64:
+            return swiftCore64();
+        case SwiftCore128:
+            return swiftCore128();
+        case SwiftCore256:
+            return swiftCore256();
+        case SwiftCore1024:
+            return swiftCore1024();
         case SwiftDatabase16:
             return swiftDatabase16();
         case SwiftDatabase24:
             return swiftDatabase24();
         case SwiftDatabase48:
             return swiftDatabase48();
+        case SwiftDatabase64:
+            return swiftDatabase64();
+        case SwiftDatabase128:
+            return swiftDatabase128();
+        case SwiftDatabase256:
+            return swiftDatabase256();
+        case SwiftDatabase1024:
+            return swiftDatabase1024();
+        case SwiftLauncher16:
+            return swiftLauncher16();
+        case SwiftLauncher24:
+            return swiftLauncher24();
+        case SwiftLauncher48:
+            return swiftLauncher48();
+        case SwiftLauncher64:
+            return swiftLauncher64();
+        case SwiftLauncher128:
+            return swiftLauncher128();
+        case SwiftLauncher256:
+            return swiftLauncher256();
+        case SwiftLauncher1024:
+            return swiftLauncher1024();
         default:
             return empty();
         }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>365</width>
-    <height>625</height>
+    <width>400</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -88,8 +88,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
-               <height>301</height>
+               <width>390</width>
+               <height>326</height>
               </rect>
              </property>
              <attribute name="label">
@@ -116,8 +116,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
-               <height>301</height>
+               <width>390</width>
+               <height>326</height>
               </rect>
              </property>
              <attribute name="label">
@@ -181,8 +181,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>341</width>
-               <height>309</height>
+               <width>390</width>
+               <height>326</height>
               </rect>
              </property>
              <attribute name="label">
@@ -406,8 +406,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
-               <height>301</height>
+               <width>390</width>
+               <height>326</height>
               </rect>
              </property>
              <attribute name="label">
@@ -428,9 +428,6 @@
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <zorder>fr_SoftwareUpdates</zorder>
-                <zorder>fr_SoftwareUpdates</zorder>
-                <zorder>fr_SoftwareUpdates</zorder>
                </widget>
               </item>
               <item>
@@ -580,8 +577,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
-               <height>301</height>
+               <width>390</width>
+               <height>326</height>
               </rect>
              </property>
              <attribute name="label">
@@ -628,7 +625,7 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>355</width>
+               <width>390</width>
                <height>112</height>
               </rect>
              </property>
@@ -660,7 +657,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <property name="icon">
                  <iconset resource="../blackmisc/blackmisc.qrc">
-                  <normaloff>:/own/icons/own/swift/swiftCartoonNova64.png</normaloff>:/own/icons/own/swift/swiftCartoonNova64.png</iconset>
+                  <normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png</normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -680,7 +677,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <property name="icon">
                  <iconset resource="../blackmisc/blackmisc.qrc">
-                  <normaloff>:/own/icons/own/swift/swiftCircle64.png</normaloff>:/own/icons/own/swift/swiftCircle64.png</iconset>
+                  <normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png</normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -700,7 +697,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <property name="icon">
                  <iconset resource="../blackmisc/blackmisc.qrc">
-                  <normaloff>:/own/icons/own/swift/swift64Database.png</normaloff>:/own/icons/own/swift/swift64Database.png</iconset>
+                  <normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -720,7 +717,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <property name="icon">
                  <iconset resource="../blackmisc/blackmisc.qrc">
-                  <normaloff>:/own/icons/own/swift/swift64Database.png</normaloff>:/own/icons/own/swift/swift64Database.png</iconset>
+                  <normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -840,8 +837,8 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../blackmisc/blackmisc.qrc"/>
   <include location="swiftlauncher.qrc"/>
+  <include location="../blackmisc/blackmisc.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

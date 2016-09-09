@@ -399,33 +399,75 @@
         <file>icons/own/attitude_indicator_climbing_24.png</file>
         <file>icons/own/attitude_indicator_descend_right_turn_16.png</file>
         <file>icons/own/attitude_indicator_descend_right_turn_24.png</file>
-        <file>icons/own/swift/swift24.png</file>
-        <file>icons/own/swift/swift48.png</file>
-        <file>icons/own/swift/swiftCartoonNova24.png</file>
-        <file>icons/own/swift/swiftCartoonNova48.png</file>
         <file>icons/own/twr.jpg</file>
         <file>icons/own/transparent1px.png</file>
         <file>icons/own/arrowWide300x10down.png</file>
         <file>icons/own/arrowWide300x10up.png</file>
         <file>icons/own/gripdown42x15.png</file>
         <file>icons/own/gripup42x15.png</file>
-        <file>icons/own/swift/swift128Database.xcf</file>
-        <file>icons/own/swift/swift32Database.png</file>
-        <file>icons/own/swift/swift48Database.png</file>
-        <file>icons/own/swift/swift64Database.png</file>
-        <file>icons/own/swift/swift128Database.png</file>
-        <file>icons/own/swift/swift24Database.png</file>
-        <file>icons/own/swift/swift16Database.png</file>
-        <file>icons/own/swift/swift64.png</file>
-        <file>icons/own/swift/swiftCirclePilotClient1024.png</file>
-        <file>icons/own/swift/swiftCircle64.png</file>
-        <file>icons/own/swift/swiftCircle256.png</file>
-        <file>icons/own/swift/swiftCircle512.png</file>
-        <file>icons/own/swift/swiftCircle1024.png</file>
-        <file>icons/own/swift/swiftCartoonNova64.png</file>
         <file>icons/own/drophere24.png</file>
         <file>icons/own/drophere48.png</file>
         <file>icons/own/drophere16.png</file>
+        <file>icons/own/swift3D/sw3DBlack-16.png</file>
+        <file>icons/own/swift3D/sw3DBlack-24.png</file>
+        <file>icons/own/swift3D/sw3DBlack-32.png</file>
+        <file>icons/own/swift3D/sw3DBlack-48.png</file>
+        <file>icons/own/swift3D/sw3DBlack-64.png</file>
+        <file>icons/own/swift3D/sw3DBlack-96.png</file>
+        <file>icons/own/swift3D/sw3DBlack-128.png</file>
+        <file>icons/own/swift3D/sw3DBlack-256.png</file>
+        <file>icons/own/swift3D/sw3DBlack-512.png</file>
+        <file>icons/own/swift3D/sw3DBlack-1024.png</file>
+        <file>icons/own/swift3D/sw3DBlue-16.png</file>
+        <file>icons/own/swift3D/sw3DBlue-24.png</file>
+        <file>icons/own/swift3D/sw3DBlue-32.png</file>
+        <file>icons/own/swift3D/sw3DBlue-48.png</file>
+        <file>icons/own/swift3D/sw3DBlue-64.png</file>
+        <file>icons/own/swift3D/sw3DBlue-96.png</file>
+        <file>icons/own/swift3D/sw3DBlue-128.png</file>
+        <file>icons/own/swift3D/sw3DBlue-256.png</file>
+        <file>icons/own/swift3D/sw3DBlue-512.png</file>
+        <file>icons/own/swift3D/sw3DBlue-1024.png</file>
+        <file>icons/own/swift3D/sw3DGreen-16.png</file>
+        <file>icons/own/swift3D/sw3DGreen-24.png</file>
+        <file>icons/own/swift3D/sw3DGreen-32.png</file>
+        <file>icons/own/swift3D/sw3DGreen-48.png</file>
+        <file>icons/own/swift3D/sw3DGreen-64.png</file>
+        <file>icons/own/swift3D/sw3DGreen-96.png</file>
+        <file>icons/own/swift3D/sw3DGreen-128.png</file>
+        <file>icons/own/swift3D/sw3DGreen-256.png</file>
+        <file>icons/own/swift3D/sw3DGreen-512.png</file>
+        <file>icons/own/swift3D/sw3DGreen-1024.png</file>
+        <file>icons/own/swift3D/sw3DOrange-16.png</file>
+        <file>icons/own/swift3D/sw3DOrange-24.png</file>
+        <file>icons/own/swift3D/sw3DOrange-32.png</file>
+        <file>icons/own/swift3D/sw3DOrange-48.png</file>
+        <file>icons/own/swift3D/sw3DOrange-64.png</file>
+        <file>icons/own/swift3D/sw3DOrange-96.png</file>
+        <file>icons/own/swift3D/sw3DOrange-128.png</file>
+        <file>icons/own/swift3D/sw3DOrange-256.png</file>
+        <file>icons/own/swift3D/sw3DOrange-512.png</file>
+        <file>icons/own/swift3D/sw3DOrange-1024.png</file>
+        <file>icons/own/swift3D/sw3DRed-16.png</file>
+        <file>icons/own/swift3D/sw3DRed-24.png</file>
+        <file>icons/own/swift3D/sw3DRed-32.png</file>
+        <file>icons/own/swift3D/sw3DRed-48.png</file>
+        <file>icons/own/swift3D/sw3DRed-64.png</file>
+        <file>icons/own/swift3D/sw3DRed-96.png</file>
+        <file>icons/own/swift3D/sw3DRed-128.png</file>
+        <file>icons/own/swift3D/sw3DRed-256.png</file>
+        <file>icons/own/swift3D/sw3DRed-512.png</file>
+        <file>icons/own/swift3D/sw3DRed-1024.png</file>
+        <file>icons/own/swift3D/sw3DYellow-16.png</file>
+        <file>icons/own/swift3D/sw3DYellow-24.png</file>
+        <file>icons/own/swift3D/sw3DYellow-32.png</file>
+        <file>icons/own/swift3D/sw3DYellow-48.png</file>
+        <file>icons/own/swift3D/sw3DYellow-64.png</file>
+        <file>icons/own/swift3D/sw3DYellow-96.png</file>
+        <file>icons/own/swift3D/sw3DYellow-128.png</file>
+        <file>icons/own/swift3D/sw3DYellow-256.png</file>
+        <file>icons/own/swift3D/sw3DYellow-512.png</file>
+        <file>icons/own/swift3D/sw3DYellow-1024.png</file>
     </qresource>
     <qresource prefix="/qled">
         <file>icons/qled/circle_black.svg</file>

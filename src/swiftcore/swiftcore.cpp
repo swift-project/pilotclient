@@ -36,7 +36,7 @@ using namespace BlackGui;
 using namespace BlackGui::Components;
 
 CSwiftCore::CSwiftCore(QWidget *parent) :
-    CSystemTrayWindow(CIcons::swiftNova24(), parent),
+    CSystemTrayWindow(CIcons::swiftCore24(), parent),
     CIdentifiable(this),
     ui(new Ui::CSwiftCore)
 {

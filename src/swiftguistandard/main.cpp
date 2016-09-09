@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv);
     CSwiftGuiStdApplication a;
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
-    a.splashScreen(":/own/icons/own/swift/swiftCirclePilotClient1024.png");
+    a.splashScreen(CIcons::swift256());
     if (!a.start())
     {
         a.gracefulShutdown();

@@ -170,14 +170,35 @@ namespace BlackMisc
             StandardIconWrench16,
             Swift16,
             Swift24,
+            Swift48,
             Swift64,
+            Swift128,
+            Swift256,
             Swift1024,
             SwiftDatabase16,
             SwiftDatabase24,
             SwiftDatabase48,
-            SwiftNova16,
-            SwiftNova24,
-            SwiftNova48,
+            SwiftDatabase64,
+            SwiftDatabase128,
+            SwiftDatabase256,
+            SwiftDatabase1024,
+            SwiftCore16,
+            SwiftCore24,
+            SwiftCore48,
+            SwiftCore64,
+            SwiftCore128,
+            SwiftCore256,
+            SwiftCore512,
+            SwiftCore1024,
+            SwiftLauncher16,
+            SwiftLauncher24,
+            SwiftLauncher48,
+            SwiftLauncher64,
+            SwiftLauncher128,
+            SwiftLauncher256,
+            SwiftLauncher512,
+            SwiftLauncher1024,
+
 
             // ---------------------------
             // Icon is not from resources, but generated at runtime
@@ -423,34 +444,37 @@ namespace BlackMisc
         // --------------------------------------------------
 
         //! swift icon
+        //! @{
         static const QPixmap &swift16();
-
-        //! swift icon
         static const QPixmap &swift24();
-
-        //! swift icon
+        static const QPixmap &swift48();
         static const QPixmap &swift64();
-
-        //! swift icon
+        static const QPixmap &swift128();
+        static const QPixmap &swift256();
         static const QPixmap &swift1024();
-
-        //! swift icon / database
         static const QPixmap &swiftDatabase16();
-
-        //! swift icon / database
         static const QPixmap &swiftDatabase24();
-
-        //! swift icon / database
         static const QPixmap &swiftDatabase48();
+        static const QPixmap &swiftDatabase64();
+        static const QPixmap &swiftDatabase128();
+        static const QPixmap &swiftDatabase256();
+        static const QPixmap &swiftDatabase1024();
+        static const QPixmap &swiftCore16();
+        static const QPixmap &swiftCore24();
+        static const QPixmap &swiftCore48();
+        static const QPixmap &swiftCore64();
+        static const QPixmap &swiftCore128();
+        static const QPixmap &swiftCore256();
+        static const QPixmap &swiftCore1024();
+        static const QPixmap &swiftLauncher16();
+        static const QPixmap &swiftLauncher24();
+        static const QPixmap &swiftLauncher48();
+        static const QPixmap &swiftLauncher64();
+        static const QPixmap &swiftLauncher128();
+        static const QPixmap &swiftLauncher256();
+        static const QPixmap &swiftLauncher1024();
 
-        //! swift icon (nova)
-        static const QPixmap &swiftNova16();
-
-        //! swift icon (nova)
-        static const QPixmap &swiftNova24();
-
-        //! swift icon (nova)
-        static const QPixmap &swiftNova48();
+        //! @}
 
         // --------------------------------------------------
         // -- application icons
