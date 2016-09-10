@@ -5,7 +5,7 @@
     "dbHttpPort": 5080,
     "dbHttpsPort": 50443,
     "dbRootDirectoryUrl": {
-        "url": "https://vatsim-germany.org:50443/mapping/public"
+        "url": "https://datastore.swift-project.org"
     },
     "development": false,
     "fsdTestServers": {
@@ -22,7 +22,7 @@
     "sharedUrls": {
         "containerbase": [
             {
-                "url": "https://vatsim-germany.org:50443/mapping/public/shared"
+                "url": "https://datastore.swift-project.org/shared"
             },
             {
                 "url": "http://ubuntu12/public/bootstrap/shared"

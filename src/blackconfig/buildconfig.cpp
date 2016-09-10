@@ -119,7 +119,9 @@ namespace BlackConfig
 
     const QStringList &CBuildConfig::swiftTeamDefaultServers()
     {
-        static const QStringList s({ "https://vatsim-germany.org:50443/mapping/public/shared",
+        static const QStringList s(
+        {
+            "https://datastore.swift-project.org/shared",
             "http://ubuntu12/public/bootstrap/shared"
         });
         return s;

@@ -251,7 +251,7 @@ namespace BlackCore
 
     const QString &CSetupReader::unitTestBootstrapUrl()
     {
-        static const QString url("https://vatsim-germany.org:50443/mapping/public/shared");
+        static const QString url("https://datastore.swift-project.org/shared");
         return url;
     }
 
