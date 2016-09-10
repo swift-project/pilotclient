@@ -69,14 +69,17 @@ namespace BlackCoreTest
         for (int i = 0; i < 60; i++)
         {
             CApplication::processEventsFor(500);
+            QTest::qWait(10); // process events completes if there are no events. So I need to make sure we wait properly for a response
             if (this->m_icaoReader->getAircraftIcaoCodesCount() > 0 && this->m_icaoReader->getAirlineIcaoCodesCount() > 0)
             {
                 break;
             }
         }
 
-        QVERIFY2(this->m_icaoReader->getAircraftIcaoCodesCount() > 0, "No aircraft ICAOs");
-        QVERIFY2(this->m_icaoReader->getAirlineIcaoCodesCount() > 0, "No airline ICAOs");
+        const QString m1("No aircraft ICAOs " + url.getFullUrl());
+        const QString m2("No airline ICAOs " + url.getFullUrl());
+        QVERIFY2(this->m_icaoReader->getAircraftIcaoCodesCount() > 0, m1.toLocal8Bit().constData());
+        QVERIFY2(this->m_icaoReader->getAirlineIcaoCodesCount() > 0, m2.toLocal8Bit().constData());
 
         const CAircraftIcaoCode aircraftIcao(this->m_icaoReader->getAircraftIcaoCodes().frontOrDefault());
         const CAirlineIcaoCode airlineIcao(this->m_icaoReader->getAirlineIcaoCodes().frontOrDefault());
@@ -96,13 +99,15 @@ namespace BlackCoreTest
         for (int i = 0; i < 120; i++)
         {
             CApplication::processEventsFor(500);
+            QTest::qWait(10); // process events completes if there are no events. So I need to make sure we wait properly for a response
             if (this->m_modelReader->getModelsCount() > 0)
             {
                 break;
             }
         }
 
-        QVERIFY2(this->m_modelReader->getModelsCount() > 0, "No models");
+        const QString m1("No models " + url.getFullUrl());
+        QVERIFY2(this->m_modelReader->getModelsCount() > 0, m1.toLocal8Bit().constData());
 
         const CAircraftModel model(m_modelReader->getModels().frontOrDefault());
         QVERIFY2(model.getLivery().hasCompleteData(), "Missing data for livery");
@@ -123,6 +128,7 @@ namespace BlackCoreTest
         for (int i = 0; i < 120; ++i)
         {
             CApplication::processEventsFor(500);
+            QTest::qWait(10); // process events completes if there are no events. So I need to make sure we wait properly for a response
             if (this->m_airportReader->getAirports().size() > 0) break;
         }
 
