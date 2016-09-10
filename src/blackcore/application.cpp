@@ -98,7 +98,12 @@ namespace BlackCore
             QCoreApplication::setApplicationVersion(CVersion::version());
             this->setObjectName(this->m_applicationName);
             const QString executable = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
-            if (executable.startsWith("test")) { this->m_unitTest = true; }
+            if (executable.startsWith("test"))
+            {
+                this->m_unitTest = true;
+                const QString tempPath(this->getTemporaryDirectory());
+                BlackMisc::setMockCacheRootDirectory(tempPath);
+            }
             this->initParser();
             this->initLogging();
 
@@ -385,6 +390,18 @@ namespace BlackCore
         }
     }
 
+    QString CApplication::getTemporaryDirectory() const
+    {
+        if (this->m_tempDirectory.isValid())
+        {
+            return this->m_tempDirectory.path();
+        }
+        else
+        {
+            return QDir::tempPath();
+        }
+    }
+
     QString CApplication::getInfoString(const QString &separator) const
     {
         QString str(CVersion::version());
@@ -398,17 +415,17 @@ namespace BlackCore
 
     QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CSlot<void(QNetworkReply *)> &callback)
     {
-        return httpRequestImpl(url.toNetworkRequest(), callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.get(request); });
+        return httpRequestImpl(url.toNetworkRequest(), callback, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.get(request); });
     }
 
     QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const CSlot<void(QNetworkReply *)> &callback)
     {
-        return httpRequestImpl(request, callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.get(request); });
+        return httpRequestImpl(request, callback, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.get(request); });
     }
 
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
     {
-        return httpRequestImpl(request, callback, [ data ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.post(request, data); });
+        return httpRequestImpl(request, callback, [ data ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.post(request, data); });
     }
 
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
@@ -418,24 +435,23 @@ namespace BlackCore
             multiPart->moveToThread(this->m_accessManager.thread());
         }
 
-        return httpRequestImpl(request, callback, [ this, multiPart ] (QNetworkAccessManager &nam, const QNetworkRequest &request)
-            {
-                QNetworkReply *reply = nam.post(request, multiPart);
-                Q_ASSERT(reply);
-                multiPart->setParent(reply);
-                return reply;
-            }
-        );
+        return httpRequestImpl(request, callback, [ this, multiPart ](QNetworkAccessManager & nam, const QNetworkRequest & request)
+        {
+            QNetworkReply *reply = nam.post(request, multiPart);
+            Q_ASSERT(reply);
+            multiPart->setParent(reply);
+            return reply;
+        });
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
     {
-        return httpRequestImpl(url.toNetworkRequest(), callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.head(request); });
+        return httpRequestImpl(url.toNetworkRequest(), callback, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.head(request); });
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
     {
-        return httpRequestImpl(request, callback, [ ] (QNetworkAccessManager &nam, const QNetworkRequest &request) { return nam.head(request); });
+        return httpRequestImpl(request, callback, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.head(request); });
     }
 
     void CApplication::deleteAllCookies()
@@ -941,29 +957,29 @@ namespace BlackCore
         return CUrlList();
     }
 
-    #ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
     base::FilePath qstringToFilePath(const QString &str)
     {
-        #ifdef Q_OS_WIN
+#ifdef Q_OS_WIN
         return base::FilePath(str.toStdWString());
-        #else
+#else
         return base::FilePath(str.toStdString());
-        #endif
+#endif
     }
-    #endif
+#endif
 
     void CApplication::initCrashHandler()
     {
-        #ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
         // No crash handling for unit tests
         if (isUnitTest()) { return; }
 
         static const QString extension = CBuildConfig::isRunningOnWindowsNtPlatform() ? ".exe" : QString();
         static const QString handler = CDirectoryUtils::applicationDirectoryPath() + "/" + "swift_crashpad_handler" + extension;
         static const QString database = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                                       "/org.swift-project/" +
-                                       CDirectoryUtils::normalizedApplicationDirectory() +
-                                       "/crashpad";
+                                        "/org.swift-project/" +
+                                        CDirectoryUtils::normalizedApplicationDirectory() +
+                                        "/crashpad";
 
         if (!QFileInfo::exists(handler))
         {
@@ -986,16 +1002,16 @@ namespace BlackCore
         m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database),
                                        serverUrl.getFullUrl().toStdString(), annotations, {}, false);
         m_crashpadClient->UseHandler();
-        #endif
+#endif
     }
 
     void CApplication::crashDumpUploadEnabledChanged()
     {
-        #ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
         if (!m_crashReportDatabase) { return; }
         auto settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal());
-        #endif
+#endif
     }
 
     QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> method)
