@@ -199,7 +199,13 @@ namespace BlackMisc
             //! Destructor
             virtual ~CRemoteAircraftAware() {}
 
+            //! Set remote aircraft provider
+            void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { m_remoteAircraftProvider = remoteAircraftProvider; }
+
         protected:
+            //! Default constructor
+            CRemoteAircraftAware() {}
+
             //! Constructor
             CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : m_remoteAircraftProvider(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
             IRemoteAircraftProvider *m_remoteAircraftProvider = nullptr; //!< access to object
