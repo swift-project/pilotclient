@@ -67,6 +67,7 @@ namespace BlackCore
 
         //! \name ISimulator implementations
         //! @{
+        virtual BlackMisc::Simulation::CAircraftModel getDefaultModel() const override;
         virtual int getMaxRenderedAircraft() const override;
         virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
         virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
@@ -75,7 +76,6 @@ namespace BlackCore
         virtual bool isMaxAircraftRestricted() const override;
         virtual bool isMaxDistanceRestricted() const override;
         virtual void enableDebugMessages(bool driverMessages, bool interpolatorMessages) override;
-        virtual int getInstalledModelsCount() const override;
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
         virtual bool isRenderingEnabled() const override;
         virtual bool isRenderingRestricted() const override;
@@ -130,10 +130,7 @@ namespace BlackCore
         BlackMisc::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
-
-        //! \todo unclear if this is valid for all simulators or for MS/P3D simulators only
-        BlackCore::CAircraftMatcher m_modelMatcher;              //!< Model matcher
-        BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
+        BlackMisc::Simulation::CAircraftModel m_defaultModel;    //!< default model
 
     private:
         bool m_debugMessages = false;             //!< Display debug messages

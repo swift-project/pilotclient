@@ -53,12 +53,12 @@ namespace BlackSimPlugin
 
             m_useFsuipc = true; // Temporarily enabled until Simconnect Weather is implemented.
             this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
-            m_modelMatcher.setDefaultModel(CAircraftModel(
-                                               "Boeing 737-800 Paint1",
-                                               CAircraftModel::TypeModelMatchingDefaultModel,
-                                               "B737-800 default model",
-                                               CAircraftIcaoCode("B738", "L2J")
-                                           ));
+            m_defaultModel = {
+                "Boeing 737-800 Paint1",
+                CAircraftModel::TypeModelMatchingDefaultModel,
+                "B737-800 default model",
+                CAircraftIcaoCode("B738", "L2J")
+            };
         }
 
         CSimulatorFsx::~CSimulatorFsx()
@@ -129,6 +129,7 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
         {
             CCallsign callsign(newRemoteAircraft.getCallsign());
+
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this),  Q_FUNC_INFO, "thread");
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             if (callsign.isEmpty()) { return false; }
@@ -144,21 +145,17 @@ namespace BlackSimPlugin
             CSimConnectObject simObj(callsign, m_nextObjID, 0, newRemoteAircraft.isVtol());
             ++m_nextObjID;
 
-            // matched models
-            CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraft);
-            Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
-
-            this->updateAircraftModel(callsign, aircraftModel);
-            CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
+            CAircraftModel aircraftModel = newRemoteAircraft.getModel();
 
             // create AI
+            CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
             bool rendered = false;
             if (isConnected())
             {
                 // initial position
-                this->setInitialAircraftSituation(aircraftAfterModelApplied); // set interpolated data/parts if available
+                this->setInitialAircraftSituation(remoteAircraftCopy); // set interpolated data/parts if available
 
-                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(aircraftAfterModelApplied.getSituation());
+                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(remoteAircraftCopy.getSituation());
                 QByteArray m = aircraftModel.getModelString().toLocal8Bit();
                 HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(simObj.getRequestId()));
                 if (hr != S_OK) { CLogMessage(this).error("SimConnect, can not create AI traffic"); }
@@ -171,9 +168,9 @@ namespace BlackSimPlugin
                 CLogMessage(this).warning("FSX: Not connected, not added aircraft %1") << callsign.toQString();
             }
 
-            aircraftAfterModelApplied.setRendered(rendered);
+            remoteAircraftCopy.setRendered(rendered);
             this->updateAircraftRendered(callsign, rendered);
-            emit modelMatchingCompleted(aircraftAfterModelApplied);
+            emit aircraftRenderingChanged(remoteAircraftCopy);
 
             return rendered;
         }

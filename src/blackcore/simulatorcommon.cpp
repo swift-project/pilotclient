@@ -61,11 +61,6 @@ namespace BlackCore
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
         this->m_oneSecondTimer.start(1000);
 
-        // init mapper
-        const CSimulatorInfo sim(info.getIdentifier());
-        this->m_modelSetLoader.changeSimulator(sim);
-        this->m_modelMatcher.setModelSet(this->m_modelSetLoader.getAircraftModels());
-
         // info
         CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
     }
@@ -167,6 +162,11 @@ namespace BlackCore
         }
     }
 
+    CAircraftModel CSimulatorCommon::getDefaultModel() const
+    {
+        return m_defaultModel;
+    }
+
     int CSimulatorCommon::getMaxRenderedAircraft() const
     {
         return (m_maxRenderedAircraft <= MaxAircraftInfinite) ? m_maxRenderedAircraft : MaxAircraftInfinite;
@@ -265,11 +265,6 @@ namespace BlackCore
     {
         this->m_debugMessages = driverMessages;
         Q_UNUSED(interpolatorMessages);
-    }
-
-    int CSimulatorCommon::getInstalledModelsCount() const
-    {
-        return getInstalledModels().size();
     }
 
     void CSimulatorCommon::highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime)

@@ -96,6 +96,9 @@ namespace BlackCore
             //! A single model has been matched for given aircraft
             void modelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Aircraft rendering changed
+            void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
             //! Emitted when own aircraft model changes
             void ownAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 

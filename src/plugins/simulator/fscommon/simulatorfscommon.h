@@ -36,9 +36,6 @@ namespace BlackSimPlugin
             //! FSUIPC connected?
             bool isFsuipcConnected() const;
 
-            //! Experimental model matching
-            BlackMisc::Simulation::CAircraftModel getClosestMatch(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
-
             //! \copydoc BlackCore::ISimulator::isPaused
             virtual bool isPaused() const override { return m_simPaused; }
 
@@ -53,12 +50,6 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
-
-            //! \copydoc BlackCore::ISimulator::getInstalledModels
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
-
-            //! \copydoc BlackCore::Context::IContextSimulator::iconForModel
-            virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
 
             //! \copydoc BlackCore::ISimulator::changeRemoteAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;

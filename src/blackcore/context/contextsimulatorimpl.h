@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 #define BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 
+#include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/corefacadeconfig.h"
@@ -25,6 +26,8 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/aircraftmodelsetloader.h"
+#include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorsetup.h"
@@ -52,6 +55,7 @@ namespace BlackCore
         //! Network simulator concrete implementation
         class BLACKCORE_EXPORT CContextSimulator :
                 public IContextSimulator,
+                public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
                 public BlackMisc::CIdentifiable
         {
             Q_OBJECT
@@ -209,6 +213,9 @@ namespace BlackCore
             BlackCore::CWeatherManager m_weatherManager { this };
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
             bool m_initallyAddAircrafts = false;
+
+            BlackCore::CAircraftMatcher m_modelMatcher;              //!< Model matcher
+            BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
         };
     } // namespace
 } // namespace

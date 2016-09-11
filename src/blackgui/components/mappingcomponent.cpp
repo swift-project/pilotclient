@@ -99,6 +99,7 @@ namespace BlackGui
 
             connect(sGui->getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CMappingComponent::ps_onAircraftModelsLoaded);
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_onModelMatchingCompleted);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::ps_onAircraftRenderingChanged);
             connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::ps_onAirspaceSnapshotHandled);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::ps_onRemoteAircraftModelChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::ps_onChangedAircraftEnabled);
@@ -146,6 +147,12 @@ namespace BlackGui
         }
 
         void CMappingComponent::ps_onModelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft)
+        {
+            Q_UNUSED(aircraft);
+            this->ps_onSimulatedAircraftUpdateRequested();
+        }
+
+        void CMappingComponent::ps_onAircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft)
         {
             Q_UNUSED(aircraft);
             this->ps_onSimulatedAircraftUpdateRequested();

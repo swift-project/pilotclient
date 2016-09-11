@@ -93,11 +93,9 @@ namespace BlackSimPlugin
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator) override;
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
-            virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
             //! @}
 
             //! Creates an appropriate dbus connection from the string describing it

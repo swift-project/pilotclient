@@ -81,6 +81,9 @@ namespace BlackGui
             //! Model matched
             void ps_onModelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Model matched
+            void ps_onAircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
             //! Changed count
             void ps_onRowCountChanged(int count, bool withFilter);
 

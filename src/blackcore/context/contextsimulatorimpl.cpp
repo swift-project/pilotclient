@@ -149,7 +149,7 @@ namespace BlackCore
             }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getInstalledModels();
+            return m_modelMatcher.getModelSet();
         }
 
         int CContextSimulator::getInstalledModelsCount() const
@@ -158,7 +158,7 @@ namespace BlackCore
             if (m_simulatorPlugin.first.isUnspecified()) { return 0; }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getInstalledModels().size();
+            return getInstalledModels().size();
         }
 
         CAircraftModelList CContextSimulator::getInstalledModelsStartingWith(const QString modelString) const
@@ -170,7 +170,7 @@ namespace BlackCore
             }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getInstalledModels().findModelsStartingWith(modelString);
+            return getInstalledModels().findModelsStartingWith(modelString);
         }
 
         void CContextSimulator::reloadInstalledModels()
@@ -350,11 +350,17 @@ namespace BlackCore
             ISimulator *simulator = factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, &m_weatherManager);
             Q_ASSERT_X(simulator, Q_FUNC_INFO, "no simulator driver can be created");
 
+            setRemoteAircraftProvider(renderedAircraftProvider);
+            const CSimulatorInfo simInfo(simulatorPluginInfo.getIdentifier());
+            m_modelSetLoader.changeSimulator(simInfo);
+            m_modelMatcher.setModelSet(m_modelSetLoader.getAircraftModels());
+            m_modelMatcher.setDefaultModel(simulator->getDefaultModel());
+
             bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
             Q_ASSERT(c);
-            c = connect(simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
+            c = connect(simulator, &ISimulator::aircraftRenderingChanged, this, &IContextSimulator::aircraftRenderingChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
             Q_ASSERT(c);
@@ -476,7 +482,13 @@ namespace BlackCore
             if (!isSimulatorSimulating()) { return; }
             Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
 
-            m_simulatorPlugin.second->logicallyAddRemoteAircraft(remoteAircraft);
+            CCallsign callsign = remoteAircraft.getCallsign();
+            CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(remoteAircraft);
+            Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
+            updateAircraftModel(callsign, aircraftModel, identifier());
+            CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
+            m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
+            emit modelMatchingCompleted(remoteAircraft);
         }
 
         void CContextSimulator::ps_removedRemoteAircraft(const CCallsign &callsign)
@@ -500,7 +512,7 @@ namespace BlackCore
                 for (const CSimulatedAircraft &simulatedAircraft : aircrafts)
                 {
                     Q_ASSERT(!simulatedAircraft.getCallsign().isEmpty());
-                    m_simulatorPlugin.second->logicallyAddRemoteAircraft(simulatedAircraft);
+                    ps_addRemoteAircraft(simulatedAircraft);
                 }
                 m_initallyAddAircrafts = false;
             }
@@ -569,7 +581,13 @@ namespace BlackCore
         {
             if (m_simulatorPlugin.first.isUnspecified()) { return CPixmap(); }
             Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
-            return m_simulatorPlugin.second->iconForModel(modelString);
+            const CAircraftModel model(this->m_modelSetLoader.getModelForModelString(modelString));
+
+            // load from file
+            CStatusMessage msg;
+            const CPixmap pm(model.loadIcon(msg));
+            if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
+            return pm;
         }
 
         void CContextSimulator::enableDebugMessages(bool driver, bool interpolator)

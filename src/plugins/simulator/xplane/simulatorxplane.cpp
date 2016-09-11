@@ -102,12 +102,12 @@ namespace BlackSimPlugin
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
 
-            m_modelMatcher.setDefaultModel(CAircraftModel(
-                                               "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines",
-                                               CAircraftModel::TypeModelMatchingDefaultModel,
-                                               "A320 AUA",
-                                               CAircraftIcaoCode("A320", "L2J")
-                                           ));
+            m_defaultModel = {
+                "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines",
+                CAircraftModel::TypeModelMatchingDefaultModel,
+                "A320 AUA",
+                CAircraftIcaoCode("A320", "L2J")
+            };
 
             resetData();
         }
@@ -351,12 +351,6 @@ namespace BlackSimPlugin
             m_service->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(), color.redF(), color.greenF(), color.blueF());
         }
 
-        CAircraftModelList CSimulatorXPlane::getInstalledModels() const
-        {
-            Q_ASSERT(isConnected());
-            return m_installedModels;
-        }
-
         void CSimulatorXPlane::ps_setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
         {
             m_airportsInRange.clear();
@@ -388,12 +382,6 @@ namespace BlackSimPlugin
                 CLogMessage(this).info("X-Plane provides real time synchronization, use this on");
             }
             return false;
-        }
-
-        CPixmap CSimulatorXPlane::iconForModel(const QString &modelString) const
-        {
-            Q_UNUSED(modelString);
-            return CPixmap();
         }
 
         QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
@@ -452,26 +440,23 @@ namespace BlackSimPlugin
             //! \todo XPlane driver check if already exists, how?
             //! \todo XPlane driver set correct return value
 
-            // matched models
-            CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(newRemoteAircraft);
-            Q_ASSERT_X(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
 
-            CCallsign callsign(newRemoteAircraft.getCallsign());
-            this->updateAircraftModel(callsign, aircraftModel);
-            CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
+            CAircraftModel aircraftModel = newRemoteAircraft.getModel();
 
             QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
             m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
                                 newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
                                 newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
                                 livery);
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), true);
+
             CLogMessage(this).info("XP: Added aircraft %1") << newRemoteAircraft.getCallsign().toQString();
 
             bool rendered = true;
-            aircraftAfterModelApplied.setRendered(rendered);
-            this->updateAircraftRendered(callsign, rendered);
-            emit modelMatchingCompleted(aircraftAfterModelApplied);
+            updateAircraftRendered(newRemoteAircraft.getCallsign(), rendered);
+
+            CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
+            remoteAircraftCopy.setRendered(rendered);
+            emit aircraftRenderingChanged(remoteAircraftCopy);
 
             return rendered;
         }

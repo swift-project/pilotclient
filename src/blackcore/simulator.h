@@ -88,6 +88,9 @@ namespace BlackCore
         //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 
+        //! Get default aircraft model
+        virtual BlackMisc::Simulation::CAircraftModel getDefaultModel() const = 0;
+
         //! Logically add a new aircraft. Depending on max. aircraft, enabled status etc.
         //! it will physically added to the simulator.
         //! \sa physicallyAddRemoteAircraft
@@ -112,12 +115,6 @@ namespace BlackCore
         //! Display a text message
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
 
-        //! Aircraft models for available remote aircrafts
-        virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
-
-        //! Count of aircraft models for available remote aircrafts
-        virtual int getInstalledModelsCount() const = 0;
-
         //! Reload the installed models from disk
         virtual void reloadInstalledModels() = 0;
 
@@ -130,9 +127,6 @@ namespace BlackCore
 
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
-
-        //! Representing icon for model string
-        virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
 
         //! Max. rendered aircraft
         virtual int getMaxRenderedAircraft() const = 0;
@@ -199,8 +193,8 @@ namespace BlackCore
         //! Render restrictions have been changed
         void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
-        //! A single model has been matched
-        void modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft aircraft);
+        //! Aircraft rendering changed
+        void aircraftRenderingChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
 
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();

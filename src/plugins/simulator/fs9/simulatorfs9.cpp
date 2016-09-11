@@ -107,12 +107,12 @@ namespace BlackSimPlugin
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             this->m_interpolator = new BlackMisc::CInterpolatorLinear(remoteAircraftProvider, this);
-            m_modelMatcher.setDefaultModel(CAircraftModel(
-                                               "Boeing 737-400",
-                                               CAircraftModel::TypeModelMatchingDefaultModel,
-                                               "B737-400 default model",
-                                               CAircraftIcaoCode("B734", "L2J")
-                                           ));
+            m_defaultModel = {
+                "Boeing 737-400",
+                CAircraftModel::TypeModelMatchingDefaultModel,
+                "B737-400 default model",
+                CAircraftIcaoCode("B734", "L2J")
+            };
         }
 
         bool CSimulatorFs9::isConnected() const
@@ -163,23 +163,19 @@ namespace BlackSimPlugin
                 this->physicallyRemoveRemoteAircraft(callsign);
             }
 
-            CSimulatedAircraft newRemoteAircraftCopy(newRemoteAircraft);
-            // matched models
-            CAircraftModel aircraftModel = getClosestMatch(newRemoteAircraftCopy);
-            Q_ASSERT(newRemoteAircraft.getCallsign() == aircraftModel.getCallsign());
-            updateAircraftModel(newRemoteAircraft.getCallsign(), aircraftModel);
-            updateAircraftRendered(newRemoteAircraft.getCallsign(), true);
-            CSimulatedAircraft aircraftAfterModelApplied(getAircraftInRangeForCallsign(newRemoteAircraft.getCallsign()));
-            aircraftAfterModelApplied.setRendered(true);
-            emit modelMatchingCompleted(aircraftAfterModelApplied);
-
-            CFs9Client *client = new CFs9Client(callsign, aircraftModel.getModelString(), m_interpolator, CTime(25, CTimeUnit::ms()), this);
+            bool rendered = true;
+            updateAircraftRendered(callsign, rendered);
+            CFs9Client *client = new CFs9Client(callsign, newRemoteAircraft.getModelString(), m_interpolator, CTime(25, CTimeUnit::ms()), this);
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
-
             client->start();
+
+
             m_hashFs9Clients.insert(callsign, client);
-            updateAircraftRendered(callsign, true);
+            updateAircraftRendered(callsign, rendered);
+            CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
+            remoteAircraftCopy.setRendered(rendered);
+            emit aircraftRenderingChanged(remoteAircraftCopy);
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }

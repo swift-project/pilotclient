@@ -85,27 +85,6 @@ namespace BlackSimPlugin
             }
         }
 
-        CAircraftModel CSimulatorFsCommon::getClosestMatch(const CSimulatedAircraft &remoteAircraft)
-        {
-            return m_modelMatcher.getClosestMatch(remoteAircraft);
-        }
-
-        CAircraftModelList CSimulatorFsCommon::getInstalledModels() const
-        {
-            return m_modelMatcher.getModelSet();
-        }
-
-        CPixmap CSimulatorFsCommon::iconForModel(const QString &modelString) const
-        {
-            const CAircraftModel model(this->m_modelSetLoader.getModelForModelString(modelString));
-
-            // load from file
-            CStatusMessage msg;
-            const CPixmap pm(model.loadIcon(msg));
-            if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
-            return pm;
-        }
-
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             // remove upfront, and then enable / disable again
