@@ -54,6 +54,7 @@ namespace BlackGui
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
             connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::ps_AuthenticationFinished);
+            connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::ps_onLoginClicked);
         }
 
         CDbLoginComponent::~CDbLoginComponent()

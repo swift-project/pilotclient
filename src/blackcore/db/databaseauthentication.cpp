@@ -121,15 +121,22 @@ namespace BlackCore
                     return;
                 }
 
-                QJsonObject jsonObj(Json::jsonObjectFromString(json));
-                CAuthenticatedUser user(CAuthenticatedUser::fromDatabaseJson(jsonObj));
-
-                CStatusMessageList msgs;
                 static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
+                QJsonObject jsonObj(Json::jsonObjectFromString(json));
+                CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
+                CStatusMessageList msgs;
+                if (jsonObj.contains("messages"))
+                {
+                    msgs = CStatusMessageList::fromDatabaseJson(jsonObj["messages"].toArray());
+                    msgs.setCategories(cats);
+                }
 
                 if (!user.isAuthenticated() || !user.isValid())
                 {
-                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Cannot login, user or password wrong"));
+                    if (!msgs.hasErrorMessages())
+                    {
+                        msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Cannot login, user or password wrong"));
+                    }
                 }
                 else
                 {
