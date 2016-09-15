@@ -212,7 +212,8 @@ namespace BlackCore
         {
             if (whatToRead.testFlag(CEntityFlags::AirportEntity))
             {
-                m_airportDataReader->readInBackgroundThread();
+                CEntityFlags::Entity airportEntities = whatToRead & CEntityFlags::AirportEntity;
+                m_airportDataReader->readInBackgroundThread(airportEntities, newerThan);
                 triggeredRead |= CEntityFlags::AirportEntity;
             }
         }

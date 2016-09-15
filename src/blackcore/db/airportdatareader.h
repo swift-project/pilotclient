@@ -38,9 +38,6 @@ namespace BlackCore
             //! Constructor
             CAirportDataReader(QObject* parent, const CDatabaseReaderConfigList &config);
 
-            //! Read airports
-            void readInBackgroundThread();
-
             //! Returns a list of all airports in the database.
             //! \threadsafe
             BlackMisc::Aviation::CAirportList getAirports() const;
@@ -69,19 +66,20 @@ namespace BlackCore
             //! Parse downloaded JSON file
             void ps_parseAirportData(QNetworkReply *nwReply);
 
-            //! Read Last-Modified header
-            void ps_parseAirportHeader(QNetworkReply *nwReply);
-
-            //! Read airports
-            void ps_readAirports();
+            //! Read / re-read data file
+            void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel, const QDateTime &newerThan = QDateTime());
 
             //! Airport cache changed
             void ps_airportCacheChanged();
 
+            //! Base url cache changed
+            void ps_baseUrlCacheChanged();
+
         private:
             BlackMisc::CData<BlackCore::Data::TDbAirportCache> m_airportCache {this, &CAirportDataReader::ps_airportCacheChanged};
-            mutable QReadWriteLock m_lock;
-            quint64 m_lastModified = 0; //!< When was data file updated, obtained from HTTP Last-Modified header, in ms from epoch
+
+            //! Reader URL (we read from where?) used to detect changes of location
+            BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::ps_baseUrlCacheChanged };
 
         };
     }

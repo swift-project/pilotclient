@@ -10,6 +10,8 @@
 #include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/countrylist.h"
+#include "blackmisc/aviation/airport.h"
+#include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
@@ -170,6 +172,7 @@ namespace BlackMisc
         template class IDatastoreObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int>;
         template class IDatastoreObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString>;
         template class IDatastoreObjectList<BlackMisc::CCountry, BlackMisc::CCountryList, QString>;
+        template class IDatastoreObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, int>;
 
     } // ns
 } // ns

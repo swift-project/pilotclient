@@ -66,20 +66,6 @@ namespace BlackMisc
         class CDbInfo;
         class CDbInfoList;
 
-        namespace Aviation
-        {
-            class CLivery;
-            class CLiveryList;
-        }
-
-        namespace Simulation
-        {
-            class CDistributor;
-            class CDistributorList;
-            class CAircraftModel;
-            class CAircraftModelList;
-        }
-
         extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int>;
         extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, int>;
         extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int>;
@@ -87,6 +73,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int>;
         extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString>;
         extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::CCountry, BlackMisc::CCountryList, QString>;
+        extern template class BLACKMISC_EXPORT_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, int>;
         //! \endcond
 
     } // ns

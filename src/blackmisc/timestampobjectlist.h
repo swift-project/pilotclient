@@ -104,6 +104,8 @@ namespace BlackMisc
         class CAircraftSituationList;
         class CAircraftParts;
         class CAircraftPartsList;
+        class CAirport;
+        class CAirportList;
         class CLivery;
         class CLiveryList;
         class CAircraftIcaoCode;
@@ -144,6 +146,7 @@ namespace BlackMisc
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList>;
+    extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     extern template class BLACKMISC_EXPORT_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;

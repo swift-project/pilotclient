@@ -123,7 +123,7 @@ namespace BlackCoreTest
         const CUrl url(sApp->getGlobalSetup().getSwiftAirportUrls().getRandomWorkingUrl());
         if (!this->pingServer(url)) { return; }
         m_airportReader->start();
-        m_airportReader->readInBackgroundThread();
+        m_airportReader->readInBackgroundThread(CEntityFlags::AirportEntity, QDateTime());
 
         for (int i = 0; i < 120; ++i)
         {

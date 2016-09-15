@@ -27,13 +27,6 @@ namespace BlackCore
             // void
         }
 
-        void CAirportDataReader::readInBackgroundThread()
-        {
-            bool s = QMetaObject::invokeMethod(this, "ps_readAirports");
-            Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke ");
-            Q_UNUSED(s);
-        }
-
         BlackMisc::Aviation::CAirportList CAirportDataReader::getAirports() const
         {
             return m_airportCache.get();
@@ -61,83 +54,83 @@ namespace BlackCore
 
         bool CAirportDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
-            // TODO
-            return false;
+            Q_UNUSED(entity);
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), this->getAirportsUrl());
         }
 
         CUrl CAirportDataReader::getAirportsUrl() const
         {
-            const CUrl url(sApp->getGlobalSetup().getSwiftAirportUrls().getRandomWorkingUrl());
-            return url;
+            return sApp->getGlobalSetup().getDbRootDirectoryUrl().withAppendedPath("service/jsonairport.php");
         }
 
         void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReply)
         {
-            QJsonParseError error;
-            QByteArray data = nwReply->readAll();
-            QJsonDocument document = QJsonDocument::fromJson(data, &error);
-            if (error.error != QJsonParseError::NoError)
+            CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply);
+            if (res.hasErrorMessage())
             {
-                CLogMessage(this).error("Error parsing airport list from JSON (%1)") << error.errorString();
-                return;
-            }
-
-            QJsonArray array = document.array();
-            if (array.isEmpty())
-            {
-                CLogMessage(this).error("Error parsing airport list from JSON (document is not an array)");
+                CLogMessage::preformatted(res.lastWarningOrAbove());
+                emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
 
             CAirportList airports;
-            airports.convertFromDatabaseJson(array);
-            quint64 timestamp = lastModifiedMsSinceEpoch(nwReply);
 
+            if (res.isRestricted())
             {
-                QWriteLocker wl(&this->m_lock);
-                m_airportCache.set(airports, timestamp);
+                airports = this->getAirports();
+                CAirportList updates;
+                updates.convertFromDatabaseJson(res);
+                airports.replaceOrAddObjectsByKey(updates);
             }
+            else
+            {
+                airports.convertFromDatabaseJson(res);
+            }
+
+            int size = airports.size();
+            qint64 timestamp = lastModifiedMsSinceEpoch(nwReply);
+            if (size > 0 && timestamp < 0)
+            {
+                CLogMessage(this).error("No timestamp in airport list, setting to last modified value");
+                timestamp = lastModifiedMsSinceEpoch(nwReply);
+            }
+
+            m_airportCache.set(airports, timestamp);
 
             emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, airports.size());
         }
 
-        void CAirportDataReader::ps_parseAirportHeader(QNetworkReply *nwReply)
+        void CAirportDataReader::ps_read(CEntityFlags::Entity entity, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
-            m_lastModified = lastModifiedMsSinceEpoch(nwReply);
-            ps_readAirports();
-        }
+            if (this->isAbandoned()) { return; }
 
-        void CAirportDataReader::ps_readAirports()
-        {
-            this->threadAssertCheck();
-            Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
-
-            CFailoverUrlList urls(sApp->getGlobalSetup().getSwiftAirportUrls());
-            const CUrl url(urls.obtainNextWorkingUrl(true));
-            if (url.isEmpty()) { return; }
-
-            if (0 == m_lastModified) {
-                sApp->headerFromNetwork(url, { this, &CAirportDataReader::ps_parseAirportHeader });
-                return;
-            }
-
-            m_airportCache.synchronize();
-
-            int size = m_airportCache.get().size();
-            if (size > 0 &&
-                    m_airportCache.getAvailableTimestamp().toMSecsSinceEpoch() >= static_cast<qint64>(m_lastModified)) // cache is up-to-date
+            if (entity.testFlag(CEntityFlags::AirportEntity))
             {
-                CLogMessage(this).info("Loaded %1 airports from cache") << m_airportCache.get().size();
-                emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, size);
-            }
-            else
-            {
-                sApp->getFromNetwork(url, { this, &CAirportDataReader::ps_parseAirportData });
+                CUrl url = getAirportsUrl();
+                if (!url.isEmpty())
+                {
+                    if (!newerThan.isNull())
+                    {
+                        const QString tss(newerThan.toString(Qt::ISODate));
+                        url.appendQuery(QString(parameterLatestTimestamp() + "=" + tss));
+                    }
+                    sApp->getFromNetwork(url, { this, &CAirportDataReader::ps_parseAirportData });
+                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::StartRead, 0);
+                }
+                else
+                {
+                    CLogMessage(this).error("No URL for %1") << CEntityFlags::flagToString(CEntityFlags::AirportEntity);
+                }
             }
         }
 
         void CAirportDataReader::ps_airportCacheChanged()
+        {
+            // void
+        }
+
+        void CAirportDataReader::ps_baseUrlCacheChanged()
         {
             // void
         }

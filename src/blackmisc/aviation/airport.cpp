@@ -74,6 +74,24 @@ namespace BlackMisc
             setPosition(pos);
         }
 
+        CAirport CAirport::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
+        {
+            CAirport airport(json.value("icao").toString());
+            airport.setDescriptiveName(json.value("name").toString());
+            airport.setElevation(CLength(json.value("altitude").toInt(), CLengthUnit::ft()));
+            CCoordinateGeodetic pos(json.value("latitude").toDouble(), json.value("longitude").toDouble(), 0);
+            airport.setPosition(pos);
+
+            if (json.value("alpha3").isString() && json.value("country").isString())
+            {
+                CCountry country(json.value("alpha3").toString(), json.value("country").toString());
+                airport.setCountry(country);
+            }
+
+            airport.setKeyAndTimestampFromDatabaseJson(json, prefix);
+            return airport;
+        }
+
         CVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

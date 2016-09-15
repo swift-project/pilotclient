@@ -14,6 +14,7 @@
 
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/db/datastore.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
@@ -34,7 +35,10 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about an airpot.
-        class BLACKMISC_EXPORT CAirport : public CValueObject<CAirport>, public Geo::ICoordinateWithRelativePosition
+        class BLACKMISC_EXPORT CAirport :
+                public CValueObject<CAirport>,
+                public BlackMisc::Db::IDatastoreObjectWithIntegerKey,
+                public Geo::ICoordinateWithRelativePosition
         {
         public:
             //! Properties by index
@@ -133,6 +137,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::CValueObject::convertFromJson
             void convertFromDatabaseJson(const QJsonObject &json);
+
+            //! Object from JSON
+            static CAirport fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("apt_"));
 
         private:
             CAirportIcaoCode                    m_icao;
