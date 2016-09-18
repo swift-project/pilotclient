@@ -65,6 +65,7 @@ namespace BlackMisc
             user.setDbKey(json.value("id").toInt(-1));
             user.setVatsimId(json.value("vatsimId").toInt(-1));
             user.setRealName(json.value("name").toString());
+            user.setUsername(json.value("username").toString());
             user.setEmail(json.value("email").toString(""));
             user.setCountry(CCountry(json.value("country").toString(), json.value("countryname").toString()));
             user.setEnabled(json.value("enabled").toBool());
@@ -76,8 +77,14 @@ namespace BlackMisc
 
         void CAuthenticatedUser::setRealName(const QString &realname)
         {
-            QString rn(realname.trimmed().simplified());
+            const QString rn(realname.trimmed().simplified());
             this->m_realname = rn;
+        }
+
+        void CAuthenticatedUser::setUsername(const QString &username)
+        {
+            const QString un(username.trimmed().simplified().toUpper());
+            this->m_username = un;
         }
 
         CStatusMessageList CAuthenticatedUser::validate() const
@@ -126,6 +133,8 @@ namespace BlackMisc
                 return CVariant::fromValue(this->m_password);
             case IndexRealName:
                 return CVariant::fromValue(this->m_realname);
+            case IndexUsername:
+                return CVariant::fromValue(this->m_username);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -149,6 +158,9 @@ namespace BlackMisc
                 break;
             case IndexRealName:
                 this->setRealName(variant.value<QString>());
+                break;
+            case IndexUsername:
+                this->setUsername(variant.value<QString>());
                 break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);

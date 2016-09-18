@@ -46,7 +46,8 @@ namespace BlackMisc
                 IndexEmail = BlackMisc::CPropertyIndex::GlobalIndexCAuthenticatedUser,
                 IndexVatsimId,
                 IndexPassword,
-                IndexRealName
+                IndexRealName,
+                IndexUsername
             };
 
             //! Default constructor.
@@ -64,8 +65,14 @@ namespace BlackMisc
             //! Full name + id
             QString getRealNameAndId() const;
 
-            //! setRealName
+            //! Set real name
             void setRealName(const QString &realname);
+
+            //! Username
+            const QString &getUsername() const { return m_username; }
+
+            //! Set username
+            void setUsername(const QString &username);
 
             //! Get password
             const QString &getPassword() const { return m_password; }
@@ -160,6 +167,7 @@ namespace BlackMisc
         private:
             int                 m_vatsimId;
             QString             m_realname;
+            QString             m_username;
             QString             m_email;
             QString             m_password;
             BlackMisc::CCountry m_country;
@@ -172,6 +180,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(dbKey),
                 BLACK_METAMEMBER(vatsimId),
                 BLACK_METAMEMBER(realname),
+                BLACK_METAMEMBER(username),
                 BLACK_METAMEMBER(email),
                 BLACK_METAMEMBER(password),
                 BLACK_METAMEMBER(country),
