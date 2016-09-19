@@ -386,6 +386,11 @@ namespace BlackGui
 
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
     {
+    #ifdef Q_OS_LINUX
+        // Give XCB platforms enough time to handle window events before adjusting it.
+        QThread::msleep(100);
+    #endif
+
         this->setMargins();
         if (topLevel)
         {
