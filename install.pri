@@ -47,10 +47,9 @@ else:unix: {
     QT5_LIBRARIES *= libQt5Xml.so.5
     QT5_LIBRARIES *= libqgsttools_p.so.1
 
-# Todo: ICU is necessary on Linux. Uncomment lines below when 5.6.1 is built with ICU enabled on Jenkins
-#    QT5_LIBRARIES *= libicui18n.so.56
-#    QT5_LIBRARIES *= libicuuc.so.56
-#    QT5_LIBRARIES *= libicudata.so.56
+    QT5_LIBRARIES *= libicui18n.so.56
+    QT5_LIBRARIES *= libicuuc.so.56
+    QT5_LIBRARIES *= libicudata.so.56
 
     qt5_target.path = $${PREFIX}/lib
     QT5_LIBRARY_DIR = $$[QT_INSTALL_LIBS]
