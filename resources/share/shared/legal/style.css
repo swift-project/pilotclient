@@ -12,7 +12,25 @@ body {
 	color: #000000;
 }
 
+h1 {
+  font-weight: bold;
+  font-size: 1.25em;
+}
+
+h2 {
+  font-weight: bold;
+  font-size: 1.10em;
+}
+
 iframe {
 	border: 0;
 }
 
+pre {
+	border-radius: 10px;
+	border: 2px solid blue;
+	background-color: lightgrey;
+	padding: 15px;
+	font: 100% Courier;
+	
+}
