@@ -48,8 +48,12 @@ namespace BlackGui
             QString html = ui->tbr_InfoAndHints->toHtml();
             html = html.replace("##swiftDB##", url.getFullUrl(), Qt::CaseInsensitive);
             html = html.replace("##swiftEnableSSO##", url.getFullUrl(), Qt::CaseInsensitive);
+
             ui->tbr_InfoAndHints->setHtml(html);
             ui->tbr_InfoAndHints->setOpenExternalLinks(true);
+
+            const bool devEnv = sGui->isRunningInDeveloperEnvironment();
+            ui->comp_DebugSetup->setVisible(devEnv);
 
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);

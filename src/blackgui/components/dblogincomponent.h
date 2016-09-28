@@ -43,7 +43,7 @@ namespace BlackGui
             ~CDbLoginComponent();
 
         private:
-            QScopedPointer<Ui::CDbLoginComponent>     ui;
+            QScopedPointer<Ui::CDbLoginComponent> ui;
             BlackCore::Db::CDatabaseAuthenticationService m_loginService {this};  //!< login service
 
             //! Overlay messages

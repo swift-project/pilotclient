@@ -98,19 +98,24 @@ namespace BlackMisc
             return msgs;
         }
 
-        bool CAuthenticatedUser::isAdmin() const
+        bool CAuthenticatedUser::hasAdminRole() const
         {
             return this->hasRole("ADMIN");
         }
 
-        bool CAuthenticatedUser::isMappingAdmin() const
+        bool CAuthenticatedUser::hasMappingAdminRole() const
         {
-            return this->hasRole("MAPPINGADMIN") || this->isAdmin();
+            return this->hasRole("MAPPINGADMIN");
+        }
+
+        bool CAuthenticatedUser::hasBulkRole() const
+        {
+            return this->hasRole("BULK");
         }
 
         bool CAuthenticatedUser::canDirectlyWriteModels() const
         {
-            return this->isAdmin() || this->isMappingAdmin();
+            return this->hasBulkRole();
         }
 
         CIcon CAuthenticatedUser::toIcon() const

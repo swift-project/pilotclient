@@ -129,10 +129,13 @@ namespace BlackMisc
             void setCountry(const BlackMisc::CCountry &country) { m_country = country; }
 
             //! Admin?
-            bool isAdmin() const;
+            bool hasAdminRole() const;
 
             //! Admin?
-            bool isMappingAdmin() const;
+            bool hasMappingAdminRole() const;
+
+            //! Has bulk role?
+            bool hasBulkRole() const;
 
             //! Authenticated
             void setAuthenticated(bool authenticated) { m_authenticated = authenticated; }

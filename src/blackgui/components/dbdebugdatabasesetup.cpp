@@ -26,7 +26,7 @@ namespace BlackGui
             ui(new Ui::CDbDebugDatabaseSetup)
         {
             ui->setupUi(this);
-            bool enabled = sGui->isRunningInDeveloperEnvironment();
+            const bool enabled = sGui->isRunningInDeveloperEnvironment();
             this->setEnabled(enabled);
             if (!enabled)
             {

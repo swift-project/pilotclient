@@ -475,13 +475,13 @@ namespace BlackGui
             }
             else if (user.canDirectlyWriteModels())
             {
-                ui->pb_Publish->setText("Publish (admin)");
+                ui->pb_Publish->setText("Publish (direct)");
                 ui->pb_Publish->setToolTip("Models directly released");
                 ui->pb_Publish->setEnabled(true);
             }
             else
             {
-                ui->pb_Publish->setText("Publish (user)");
+                ui->pb_Publish->setText("Publish (CR)");
                 ui->pb_Publish->setToolTip("Models published as change request");
                 ui->pb_Publish->setEnabled(true);
             }

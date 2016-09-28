@@ -91,7 +91,7 @@ namespace BlackGui
         void CModelMappingForm::ps_userChanged()
         {
             const CAuthenticatedUser user(this->getSwiftDbUser());
-            if (user.isAdmin())
+            if (user.hasAdminRole())
             {
                 ui->selector_ModelMode->setValue(CAircraftModel::Include);
                 ui->selector_ModelMode->setReadOnly(false);

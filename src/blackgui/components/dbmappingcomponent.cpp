@@ -144,7 +144,7 @@ namespace BlackGui
 
         void CDbMappingComponent::initVPilotLoading()
         {
-            this->m_vPilotEnabled = this->vPilotSupport && this->m_swiftDbUser.get().isMappingAdmin();
+            this->m_vPilotEnabled = this->vPilotSupport && this->m_swiftDbUser.get().hasAdminRole();
             static const QString tabName(ui->tw_ModelsToBeMapped->tabText(TabVPilot));
 
             if (this->m_vPilot1stInit && vPilotSupport)
