@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>88</width>
-    <height>25</height>
+    <width>107</width>
+    <height>26</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
       <string>Include model</string>
      </property>
      <property name="text">
-      <string>In</string>
+      <string>Incl.</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -48,7 +48,7 @@
    <item>
     <widget class="QRadioButton" name="rb_Exclude">
      <property name="text">
-      <string>Ex.</string>
+      <string>Excl.</string>
      </property>
     </widget>
    </item>
