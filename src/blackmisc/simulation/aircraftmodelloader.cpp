@@ -48,7 +48,7 @@ namespace BlackMisc
         {
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default values
-            CAircraftModelList allModels(this->m_caches.getSyncronizedCachedModels(sim));
+            CAircraftModelList allModels(this->m_caches.getSynchronizedCachedModels(sim));
             int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {
@@ -93,6 +93,11 @@ namespace BlackMisc
         CAircraftModelList IAircraftModelLoader::getAircraftModels() const
         {
             return this->m_caches.getCurrentCachedModels();
+        }
+
+        CAircraftModelList IAircraftModelLoader::getCachedAircraftModels(const CSimulatorInfo &simulator) const
+        {
+            return this->m_caches.getCachedModels(simulator);
         }
 
         QDateTime IAircraftModelLoader::getCacheTimestamp() const
@@ -162,6 +167,16 @@ namespace BlackMisc
         void IAircraftModelLoader::gracefulShutdown()
         {
             this->cancelLoading();
+        }
+
+        QString IAircraftModelLoader::getInfoString() const
+        {
+            return this->m_caches.getInfoString();
+        }
+
+        QString IAircraftModelLoader::getInfoStringFsFamily() const
+        {
+            return this->m_caches.getInfoStringFsFamily();
         }
 
         std::unique_ptr<IAircraftModelLoader> IAircraftModelLoader::createModelLoader(const CSimulatorInfo &simulator)

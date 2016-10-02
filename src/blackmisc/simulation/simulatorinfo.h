@@ -21,6 +21,7 @@
 #include <QFlags>
 #include <QJsonObject>
 #include <QList>
+#include <QSet>
 #include <QMetaType>
 #include <QMultiMap>
 #include <QString>
@@ -45,14 +46,14 @@ namespace BlackMisc
             //! Simulator
             enum SimulatorFlag
             {
-                None    = 0,
-                FSX     = 1 << 0,
-                FS9     = 1 << 1,
-                XPLANE  = 1 << 2,
-                P3D     = 1 << 3,
-                FSX_P3D = FSX | P3D,
-                AllMS   = FSX | FS9 | P3D,
-                All     = FSX | FS9 | XPLANE | P3D
+                None        = 0,
+                FSX         = 1 << 0,
+                FS9         = 1 << 1,
+                XPLANE      = 1 << 2,
+                P3D         = 1 << 3,
+                FSX_P3D     = FSX | P3D,
+                AllFsFamily = FSX | FS9 | P3D,
+                All         = FSX | FS9 | XPLANE | P3D
             };
             Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
@@ -143,6 +144,9 @@ namespace BlackMisc
             //! Add simulator
             void add(const CSimulatorInfo &other);
 
+            //! As a set of single simulator info objects
+            QSet<CSimulatorInfo> asSingleSimulatorSet() const;
+
             //! Bool flags to enum
             static Simulator boolToFlag(bool fsx, bool fs9, bool xp, bool p3d);
 
@@ -151,6 +155,9 @@ namespace BlackMisc
 
             //! All simulators
             static const CSimulatorInfo &allSimulators();
+
+            //! All simulators of the FS family (P3D FSX, FS9)
+            static const CSimulatorInfo &allFsFamilySimulators();
 
             //! Locally installed simulators
             static const CSimulatorInfo getLocallyInstalledSimulators();

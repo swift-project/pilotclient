@@ -80,9 +80,13 @@ namespace BlackMisc
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
 
-            //! The loaded models
+            //! Get the loaded models
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getAircraftModels() const;
+
+            //! Get the cached models
+            //! \threadsafe
+            BlackMisc::Simulation::CAircraftModelList getCachedAircraftModels(const CSimulatorInfo &simulator) const;
 
             //! Count of loaded models
             int getAircraftModelsCount() const { return getAircraftModels().size(); }
@@ -113,6 +117,12 @@ namespace BlackMisc
 
             //! Shutdown
             void gracefulShutdown();
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
+            QString getInfoString() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
+            QString getInfoStringFsFamily() const;
 
             //! \name Implementations of the model interfaces (allows to set models modified in utility functions)
             //! @{

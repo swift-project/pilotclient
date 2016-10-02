@@ -42,8 +42,8 @@ namespace BlackMisc
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->m_caches.getCurrentSimulator();
             if (!sim.isSingleSimulator()) { return CStatusMessage(this, CStatusMessage::SeverityError, "Invalid simuataor"); }
-            this->m_caches.syncronizeCache(sim);
-            CAircraftModelList allModels(this->m_caches.getSyncronizedCachedModels(sim));
+            this->m_caches.synchronizeCache(sim);
+            CAircraftModelList allModels(this->m_caches.getSynchronizedCachedModels(sim));
             const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {
@@ -60,7 +60,7 @@ namespace BlackMisc
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             if (this->getSimulator() == simulator) { return; }
             this->m_caches.setCurrentSimulator(simulator);
-            this->m_caches.syncronizeCurrentCache();
+            this->m_caches.synchronizeCurrentCache();
             emit simulatorChanged(simulator);
         }
 
@@ -72,7 +72,7 @@ namespace BlackMisc
         CAircraftModelList CAircraftModelSetLoader::getAircraftModels(const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-            return this->m_caches.getSyncronizedCachedModels(simulator);
+            return this->m_caches.getSynchronizedCachedModels(simulator);
         }
 
         int CAircraftModelSetLoader::getAircraftModelsCount() const
@@ -86,14 +86,19 @@ namespace BlackMisc
             return this->getAircraftModels().findFirstByModelStringOrDefault(modelString);
         }
 
+        CAircraftModelList CAircraftModelSetLoader::getCachedModels(const CSimulatorInfo &simulator) const
+        {
+            return this->m_caches.getCachedModels(simulator);
+        }
+
         QDateTime CAircraftModelSetLoader::getCacheTimestamp() const
         {
             return this->m_caches.getCurrentCacheTimestamp();
         }
 
-        bool CAircraftModelSetLoader::syncronizeCache()
+        bool CAircraftModelSetLoader::synchronizeCache()
         {
-            return this->m_caches.syncronizeCurrentCache();
+            return this->m_caches.synchronizeCurrentCache();
         }
 
         bool CAircraftModelSetLoader::hasCachedData() const
@@ -118,12 +123,22 @@ namespace BlackMisc
 
         bool CAircraftModelSetLoader::supportsSimulator(const CSimulatorInfo &info)
         {
-            return getSimulator().matchesAny(info);
+            return this->getSimulator().matchesAny(info);
         }
 
         void CAircraftModelSetLoader::gracefulShutdown()
         {
             // void
+        }
+
+        QString CAircraftModelSetLoader::getInfoString() const
+        {
+            return this->m_caches.getInfoString();
+        }
+
+        QString CAircraftModelSetLoader::getInfoStringFsFamily() const
+        {
+            return this->m_caches.getInfoStringFsFamily();
         }
     } // ns
 } // ns

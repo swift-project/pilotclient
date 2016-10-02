@@ -109,7 +109,7 @@ namespace BlackMisc
             CAircraftModelList findWithKnownAircraftDesignator() const;
 
             //! Find by manufacturer
-            CAircraftModelList findByManunfacturer(const QString &manufacturer) const;
+            CAircraftModelList findByManufacturer(const QString &manufacturer) const;
 
             //! Models with aircraft family
             CAircraftModelList findByFamily(const QString &family) const;
@@ -119,6 +119,9 @@ namespace BlackMisc
 
             //! Find by military flag
             CAircraftModelList findByMilitaryFlag(bool military) const;
+
+            //! All models of the FS (FSX, P3D, FS9) family
+            CAircraftModelList getAllFsFamilyModels() const;
 
             //! Model icon path
             QString findModelIconPathByModelString(const QString &modelString) const;
@@ -174,7 +177,7 @@ namespace BlackMisc
             //! Simulator counts
             CCountPerSimulator countPerSimulator() const;
 
-            //! Which simulator(s) have the most entries
+            //! Which simulator(s) have the most entries?
             CSimulatorInfo simulatorsWithMaxEntries() const;
 
             //! Update distributor, all models in list are set to given distributor

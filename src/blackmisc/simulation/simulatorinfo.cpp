@@ -145,6 +145,16 @@ namespace BlackMisc
             this->setSimulator(this->getSimulator() | other.getSimulator());
         }
 
+        QSet<CSimulatorInfo> CSimulatorInfo::asSingleSimulatorSet() const
+        {
+            QSet<CSimulatorInfo> set;
+            if (this->m_simulator & FSX) { set.insert(CSimulatorInfo(FSX)); }
+            if (this->m_simulator & FS9) { set.insert(CSimulatorInfo(FS9)); }
+            if (this->m_simulator & P3D) { set.insert(CSimulatorInfo(P3D)); }
+            if (this->m_simulator & XPLANE) { set.insert(CSimulatorInfo(XPLANE)); }
+            return set;
+        }
+
         CSimulatorInfo::Simulator CSimulatorInfo::boolToFlag(bool fsx, bool fs9, bool xp, bool p3d)
         {
             Simulator s = fsx ? FSX : None;
@@ -182,6 +192,12 @@ namespace BlackMisc
         const CSimulatorInfo &CSimulatorInfo::allSimulators()
         {
             static const CSimulatorInfo s(All);
+            return s;
+        }
+
+        const CSimulatorInfo &CSimulatorInfo::allFsFamilySimulators()
+        {
+            static const CSimulatorInfo s(CSimulatorInfo::AllFsFamily);
             return s;
         }
 

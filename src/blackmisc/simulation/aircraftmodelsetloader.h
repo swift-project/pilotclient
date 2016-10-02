@@ -51,8 +51,8 @@ namespace BlackMisc
             //! Destructor
             virtual ~CAircraftModelSetLoader();
 
-            //! Make sure cache is syncronized
-            bool syncronizeCache();
+            //! Make sure cache is synchronized
+            bool synchronizeCache();
 
             //! The loaded models
             //! \threadsafe
@@ -60,7 +60,7 @@ namespace BlackMisc
 
             //! The loaded models for given simulator
             //! \threadsafe
-            //! \remark non-const because it syncronizes cache
+            //! \remark non-const because it synchronizes cache
             BlackMisc::Simulation::CAircraftModelList getAircraftModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Count of loaded models
@@ -70,6 +70,10 @@ namespace BlackMisc
             //! Model for given model string
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModel getModelForModelString(const QString &modelString) const;
+
+            //! Models from cache
+            //! \threadsafe
+            BlackMisc::Simulation::CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Which simulator is supported by that very loader
             CSimulatorInfo getSimulator() const;
@@ -82,6 +86,12 @@ namespace BlackMisc
 
             //! Shutdown
             void gracefulShutdown();
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
+            QString getInfoString() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
+            QString getInfoStringFsFamily() const;
 
             //! \name Implementations of the models interfaces
             //! @{

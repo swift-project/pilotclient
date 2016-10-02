@@ -35,7 +35,7 @@ namespace BlackCore
 {
     const CLogCategoryList &CAircraftMatcher::getLogCategories()
     {
-        static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::matching() };
+        static const BlackMisc::CLogCategoryList cats { CLogCategory::matching() };
         return cats;
     }
 
@@ -545,7 +545,7 @@ namespace BlackCore
             return inList;
         }
 
-        const CAircraftModelList outList(inList.findByManunfacturer(m));
+        const CAircraftModelList outList(inList.findByManufacturer(m));
         if (outList.isEmpty())
         {
             if (log) { CMatchingUtils::addLogDetailsToList(log , remoteAircraft, info + " Not found " + m + ", cannot reduce", getLogCategories()); }

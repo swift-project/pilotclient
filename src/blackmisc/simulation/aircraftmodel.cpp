@@ -417,6 +417,11 @@ namespace BlackMisc
             return (static_cast<int>(simulator.getSimulator()) & static_cast<int>(this->getSimulator().getSimulator())) > 0;
         }
 
+        bool CAircraftModel::matchesSimulatorFlag(CSimulatorInfo::Simulator simulator) const
+        {
+            return (static_cast<int>(simulator) & static_cast<int>(this->getSimulator().getSimulator())) > 0;
+        }
+
         CPixmap CAircraftModel::loadIcon(CStatusMessage &success) const
         {
             static const CStatusMessage noIcon(this, CStatusMessage::SeverityInfo, "no icon");

@@ -151,13 +151,16 @@ namespace BlackMisc
                 IMultiSimulatorModelCaches(QObject *parent = nullptr) : QObject(parent)
                 { }
 
-                //! Models
+                //! Models for simulator
                 //! \threadsafe
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
+                //! Count of models for simulator
+                int getCachedModelsCount(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+
                 //! Models
                 //! \todo is that threadsafe?
-                CAircraftModelList getSyncronizedCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                CAircraftModelList getSynchronizedCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Models
                 //! \threadsafe
@@ -169,7 +172,7 @@ namespace BlackMisc
 
                 //! Timestamp
                 //! \todo is that threadsafe?
-                QDateTime getSyncronizedTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                QDateTime getSynchronizedTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Last selection`s timestamp
                 //! \threadsafe
@@ -178,12 +181,12 @@ namespace BlackMisc
                 //! Set cache
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
-                //! Syncronize
+                //! Synchronize
                 //! \todo is that threadsafe?
-                virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+                virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
                 //! Last cache
-                bool syncronizeCurrentCache();
+                bool synchronizeCurrentCache();
 
                 //! Selected simulator
                 //! \threadsafe
@@ -194,6 +197,12 @@ namespace BlackMisc
 
                 //! \copydoc IModelsPerSimulatorSetable::setModels
                 virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+
+                //! Info string about models in cache
+                QString getInfoString() const;
+
+                //! Info string without XPlane (FSX,P3D, FS9)
+                QString getInfoStringFsFamily() const;
 
             signals:
                 //! Cache has been changed
@@ -228,7 +237,7 @@ namespace BlackMisc
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
-                virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
@@ -241,7 +250,7 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_currentSimulator { this };              //!< current simulator
 
                 //! Non virtaul version (used in ctor)
-                void syncronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };
 
             //! Bundle of caches for model sets of all simulators
@@ -259,7 +268,7 @@ namespace BlackMisc
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
-                virtual void syncronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
@@ -272,7 +281,7 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_currentSimulator { this };                       //!< current simulator
 
                 //! Non virtaul version (used in ctor)
-                void syncronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+                void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };
         } // ns
     } // ns

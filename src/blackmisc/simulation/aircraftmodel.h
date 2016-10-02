@@ -276,6 +276,9 @@ namespace BlackMisc
             //! Matches given simulator?
             bool matchesSimulator(const CSimulatorInfo &simulator) const;
 
+            //! Matches given simulator?
+            bool matchesSimulatorFlag(CSimulatorInfo::Simulator simulator) const;
+
             //! File name (corresponding data for simulator, only available if representing simulator model
             QString getFileName() const { return m_fileName; }
 

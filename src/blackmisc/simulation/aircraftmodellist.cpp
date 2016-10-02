@@ -160,7 +160,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::findByManunfacturer(const QString &manufacturer) const
+        CAircraftModelList CAircraftModelList::findByManufacturer(const QString &manufacturer) const
         {
             if (manufacturer.isEmpty()) { return CAircraftModelList(); }
             const QString m(manufacturer.toUpper().trimmed());
@@ -198,6 +198,14 @@ namespace BlackMisc
             return this->findBy([ = ](const CAircraftModel & model)
             {
                 return (model.isMilitary() == military);
+            });
+        }
+
+        CAircraftModelList CAircraftModelList::getAllFsFamilyModels() const
+        {
+            return this->findBy([ = ](const CAircraftModel & model)
+            {
+                return model.getSimulator().isMicrosoftOrPrepare3DSimulator();
             });
         }
 
