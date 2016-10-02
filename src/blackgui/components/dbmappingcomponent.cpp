@@ -9,6 +9,7 @@
 
 #include "blackcore/webdataservices.h"
 #include "blackgui/components/dbautostashingcomponent.h"
+#include "blackgui/components/dbautosimulatorstashingcomponent.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbmodelmappingmodifycomponent.h"
 #include "blackgui/components/dbownmodelscomponent.h"
@@ -69,6 +70,7 @@ namespace BlackGui
             COverlayMessagesFrame(parent),
             ui(new Ui::CDbMappingComponent),
             m_autoStashDialog(new CDbAutoStashingComponent(this)),
+            m_autoSimulatorDialog(new CDbAutoSimulatorStashingComponent(this)),
             m_modelModifyDialog(new CDbModelMappingModifyComponent(this))
         {
             ui->setupUi(this);
@@ -173,9 +175,8 @@ namespace BlackGui
             {
                 // create / restore tab
                 ui->tw_ModelsToBeMapped->addTab(ui->tab_VPilot, tabName);
-                this->ps_onVPilotDataChanged(
-                    ui->tvp_AircraftModelsForVPilot->rowCount(),
-                    ui->tvp_AircraftModelsForVPilot->hasFilter());
+                this->ps_onVPilotDataChanged(ui->tvp_AircraftModelsForVPilot->rowCount(),
+                                             ui->tvp_AircraftModelsForVPilot->hasFilter());
             }
             else
             {
@@ -385,6 +386,11 @@ namespace BlackGui
             this->m_autoStashDialog->exec();
         }
 
+        void CDbMappingComponent::ps_displayAutoSimulatorStashingDialog()
+        {
+            this->m_autoSimulatorDialog->exec();
+        }
+
         void CDbMappingComponent::ps_removeDbModelsFromView()
         {
             const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
@@ -556,18 +562,23 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_onStashedModelsChangedDigest()
         {
-            const bool hlvp = ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
-            const bool hlom = ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModelStrings();
-            const bool highlight =  hlom || hlvp;
+            const bool highlightVPilot = ui->tvp_AircraftModelsForVPilot->derivedModel()->highlightModelStrings();
+            const bool highlightOwnModels = ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModelStrings();
+            const bool highlightModelSet = ui->comp_OwnModelSet->view()->derivedModel()->highlightModelStrings();
+            const bool highlight =  highlightOwnModels || highlightModelSet || highlightVPilot;
             if (!highlight) { return; }
             const QStringList stashedModels(ui->comp_StashAircraft->getStashedModelStrings());
-            if (hlvp)
+            if (highlightVPilot)
             {
                 ui->tvp_AircraftModelsForVPilot->derivedModel()->setHighlightModelStrings(stashedModels);
             }
-            if (hlom)
+            if (highlightOwnModels)
             {
                 ui->comp_OwnAircraftModels->view()->derivedModel()->setHighlightModelStrings(stashedModels);
+            }
+            if (highlightModelSet)
+            {
+                ui->comp_OwnModelSet->view()->derivedModel()->setHighlightModelStrings(stashedModels);
             }
         }
 
@@ -577,21 +588,29 @@ namespace BlackGui
             switch (ti)
             {
             case CDbMappingComponent::TabOwnModelSet:
-                ui->frp_Editors->setVisible(true);
-                ui->editor_Model->setVisible(true);
-                this->resizeForSelect();
+                {
+                    ui->frp_Editors->setVisible(true);
+                    ui->editor_Model->setVisible(true);
+                    this->resizeForSelect();
+                }
                 break;
             case CDbMappingComponent::TabModelMatcher:
-                ui->editor_Model->setVisible(false);
-                ui->frp_Editors->setVisible(false);
-                this->resizeForSelect();
+                {
+                    ui->editor_Model->setVisible(false);
+                    ui->frp_Editors->setVisible(false);
+                    this->resizeForSelect();
+                }
                 break;
             case CDbMappingComponent::TabVPilot:
-                // fall thru intended
-                this->formatVPilotView();
+                {
+                    // fall thru intended
+                    this->formatVPilotView();
+                }
             default:
-                ui->frp_Editors->setVisible(true);
-                ui->editor_Model->setVisible(true);
+                {
+                    ui->frp_Editors->setVisible(true);
+                    ui->editor_Model->setVisible(true);
+                }
                 break;
             }
             emit this->tabIndexChanged(index);
@@ -610,7 +629,7 @@ namespace BlackGui
             Q_UNUSED(withFilter);
             const int i = ui->tw_ModelsToBeMapped->indexOf(ui->tab_VPilot);
             QString o = ui->tw_ModelsToBeMapped->tabText(i);
-            QString f = ui->tvp_AircraftModelsForVPilot->hasFilter() ? "F" : "";
+            const QString f = ui->tvp_AircraftModelsForVPilot->hasFilter() ? "F" : "";
             o = CGuiUtility::replaceTabCountValue(o, ui->tvp_AircraftModelsForVPilot->rowCount()) + f;
             ui->tw_ModelsToBeMapped->setTabText(i, o);
         }
@@ -658,7 +677,7 @@ namespace BlackGui
             if (!ui->comp_OwnAircraftModels->view()->hasSelection()) { return; }
             const CSimulatorInfo sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator());
             if (!sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator()) { return; }
-            CAircraftModelList ownModels(getOwnSelectedModels()); // subset
+            CAircraftModelList ownModels(this->getOwnSelectedModels()); // subset
             if (ownModels.isEmpty()) { return; }
             ui->comp_OwnAircraftModels->view()->showLoadIndicator();
             CAircraftModelUtilities::mergeWithVPilotData(ownModels, this->m_vPilotReader.getAsModelsFromCache(), true);
@@ -786,6 +805,11 @@ namespace BlackGui
             return ui->comp_OwnAircraftModels->getOwnModels();
         }
 
+        CAircraftModelList CDbMappingComponent::getOwnCachedModels(const CSimulatorInfo &simulator) const
+        {
+            return ui->comp_OwnAircraftModels->getOwnCachedModels(simulator);
+        }
+
         CAircraftModelList CDbMappingComponent::getOwnSelectedModels() const
         {
             return ui->comp_OwnAircraftModels->getOwnSelectedModels();
@@ -809,6 +833,16 @@ namespace BlackGui
         int CDbMappingComponent::getOwnModelsCount() const
         {
             return ui->comp_OwnAircraftModels->getOwnModelsCount();
+        }
+
+        QString CDbMappingComponent::getOwnModelsInfoString() const
+        {
+            return ui->comp_OwnAircraftModels->getInfoString();
+        }
+
+        QString CDbMappingComponent::getOwnModelsInfoStringFsFamily() const
+        {
+            return ui->comp_OwnAircraftModels->getInfoStringFsFamily();
         }
 
         void CDbMappingComponent::setOwnModelSetSimulator(const CSimulatorInfo &simulator)
@@ -883,10 +917,11 @@ namespace BlackGui
                 this->m_stashFiltering->setChecked(mapComp->m_autoFilterInDbViews);
 
                 // Currently disabled as the same effect can be realized by filtering than
-                //! \todo remove if not needed in the long term (added 2016-Sep)
                 // this->addRemoveDbModels(menuActions);
+                //! \todo remove if not needed in the long term (added 2016-Sep)
 
                 this->m_autoStashing = menuActions.addAction(this->m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoStashingDialog });
+                this->m_autoSimulatorStashing = menuActions.addAction(this->m_autoSimulatorStashing, CIcons::appDbStash16(), "Cross simulator updating (FSX-P3D-FS9)", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoSimulatorStashingDialog });
                 if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
                 {
                     menuActions.addAction(CIcons::appDbStash16(), "Last auto stash run", CMenuAction::pathStash(), nullptr, { mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults });

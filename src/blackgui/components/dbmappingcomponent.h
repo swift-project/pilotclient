@@ -58,6 +58,7 @@ namespace BlackGui
     namespace Components
     {
         class CDbAutoStashingComponent;
+        class CDbAutoSimulatorStashingComponent;
         class CDbModelMappingModifyComponent;
 
         /*!
@@ -132,6 +133,9 @@ namespace BlackGui
             //! Own models
             BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
 
+            //! Own cached models
+            BlackMisc::Simulation::CAircraftModelList getOwnCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+
             //! Own selected models
             BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
 
@@ -146,6 +150,12 @@ namespace BlackGui
 
             //! Number of own models
             int getOwnModelsCount() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
+            QString getOwnModelsInfoString() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
+            QString getOwnModelsInfoStringFsFamily() const;
             //! @}
 
             // ---------------- own model set -----------------
@@ -261,6 +271,9 @@ namespace BlackGui
             //! Display auto stashing dialog
             void ps_displayAutoStashingDialog();
 
+            //! Display auto simulator stashing dialog
+            void ps_displayAutoSimulatorStashingDialog();
+
             //! Remove DB models from current view
             void ps_removeDbModelsFromView();
 
@@ -290,9 +303,10 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbMappingComponent>                 ui;
-            QScopedPointer<CDbAutoStashingComponent>                m_autoStashDialog;    //!< dialog auto stashing
-            QScopedPointer<CDbModelMappingModifyComponent>          m_modelModifyDialog;  //!< dialog when modifying models
-            BlackMisc::Simulation::FsCommon::CVPilotRulesReader     m_vPilotReader;       //!< read vPilot rules
+            QScopedPointer<CDbAutoStashingComponent>                m_autoStashDialog;     //!< dialog auto stashing
+            QScopedPointer<CDbAutoSimulatorStashingComponent>       m_autoSimulatorDialog; //!< dialog auto simulator update
+            QScopedPointer<CDbModelMappingModifyComponent>          m_modelModifyDialog;   //!< dialog when modifying models
+            BlackMisc::Simulation::FsCommon::CVPilotRulesReader     m_vPilotReader;        //!< read vPilot rules
             BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this };
             BlackMisc::CDigestSignal                                m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
             const bool vPilotSupport   = true;   //!< vPilot support
@@ -342,6 +356,7 @@ namespace BlackGui
             //! Menu for tools:
             //! -# removing DB models from current view and
             //! -# for auto stashing
+            //! -# automatically updating simulators (FSX, FS9, P3D family)
             //! -# toggle auto filtering
             //! \note This is a specific menu for that very component
             class CModelStashToolsMenu : public BlackGui::Menus::IMenuDelegate
@@ -361,6 +376,7 @@ namespace BlackGui
                 void addRemoveDbModels(Menus::CMenuActions &menuActions);
 
                 QAction *m_autoStashing = nullptr;
+                QAction *m_autoSimulatorStashing = nullptr;
                 QAction *m_stashFiltering = nullptr;
             };
 
