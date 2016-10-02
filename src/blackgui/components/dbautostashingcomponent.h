@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
+#include "blackcore/progress.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/statusmessage.h"
@@ -40,7 +41,8 @@ namespace BlackGui
          */
         class BLACKGUI_EXPORT CDbAutoStashingComponent :
             public QDialog,
-            public BlackGui::Components::CDbMappingComponentAware
+            public BlackGui::Components::CDbMappingComponentAware,
+            public BlackCore::IProgressIndicator
         {
             Q_OBJECT
 
@@ -53,6 +55,9 @@ namespace BlackGui
                 Completed
             };
 
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Constructor
             explicit CDbAutoStashingComponent(QWidget *parent = nullptr);
 
@@ -61,6 +66,9 @@ namespace BlackGui
 
             //! At least run once and completed
             bool isCompleted() const { return m_state == Completed; }
+
+            //! \copydoc BlackCore::IProgressIndicator::updateProgressIndicator
+            virtual void updateProgressIndicator(int percent) override;
 
         public slots:
             //! \copydoc QDialog::accept
@@ -84,9 +92,6 @@ namespace BlackGui
 
             //! Init the component
             void initGui();
-
-            //! Update GUI values
-            void updateGuiValues(int percent);
 
             //! Number of all or selected models
             int getSelectedOrAllCount() const;
@@ -113,9 +118,6 @@ namespace BlackGui
 
             //! Get the temp.livery if available
             static BlackMisc::Aviation::CLivery getTempLivery();
-
-            //! Categories
-            const BlackMisc::CLogCategoryList &categgories();
 
             int m_noStashed = 0;           //!< stashed models
             int m_noData = 0;              //!< not stashed because no data

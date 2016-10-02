@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>453</width>
-    <height>413</height>
+    <width>600</width>
+    <height>416</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>400</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Auto stashing</string>
@@ -36,7 +42,7 @@
      <item row="0" column="2">
       <widget class="QRadioButton" name="rb_All">
        <property name="text">
-        <string>All:</string>
+        <string>all</string>
        </property>
       </widget>
      </item>
@@ -47,16 +53,6 @@
        </property>
        <property name="standardButtons">
         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="2">
-      <widget class="QLineEdit" name="le_Description">
-       <property name="maxLength">
-        <number>255</number>
-       </property>
-       <property name="placeholderText">
-        <string>Override description in model</string>
        </property>
       </widget>
      </item>
@@ -73,7 +69,7 @@
      <item row="0" column="0">
       <widget class="QRadioButton" name="rb_Selected">
        <property name="text">
-        <string>Selected:</string>
+        <string>selected</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -158,58 +154,6 @@
        </layout>
       </widget>
      </item>
-     <item row="1" column="1" colspan="2">
-      <widget class="QLineEdit" name="le_MaxModelsStashed">
-       <property name="placeholderText">
-        <string>max.models to be stashed</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QWidget" name="wi_DescriptionRadioButtons" native="true">
-       <layout class="QHBoxLayout" name="hl_DescriptionButtons">
-        <property name="leftMargin">
-         <number>2</number>
-        </property>
-        <property name="topMargin">
-         <number>1</number>
-        </property>
-        <property name="rightMargin">
-         <number>2</number>
-        </property>
-        <property name="bottomMargin">
-         <number>1</number>
-        </property>
-        <item>
-         <widget class="QRadioButton" name="rb_DescriptionAll">
-          <property name="text">
-           <string>all</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="rb_DescriptionEmptyOnly">
-          <property name="toolTip">
-           <string>apply only if description is empty</string>
-          </property>
-          <property name="text">
-           <string>empty only</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QPushButton" name="pb_ResetDescription">
-       <property name="text">
-        <string>reset description</string>
-       </property>
-      </widget>
-     </item>
      <item row="7" column="0" colspan="4">
       <widget class="QProgressBar" name="pb_StashingProgress">
        <property name="value">
@@ -251,11 +195,90 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="2">
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="le_MaxModelsStashed">
+       <property name="placeholderText">
+        <string>max.models to be stashed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="le_Description">
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+       <property name="placeholderText">
+        <string>Override description in model</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="3">
       <widget class="QCheckBox" name="cb_UseTempLivery">
        <property name="text">
         <string>use 'temp' livery if not resolved</string>
        </property>
+      </widget>
+     </item>
+     <item row="2" column="2" colspan="2" alignment="Qt::AlignLeft">
+      <widget class="QWidget" name="wi_DescriptionRadioButtons" native="true">
+       <layout class="QHBoxLayout" name="hl_DescriptionButtons">
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>1</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="QRadioButton" name="rb_DescriptionAll">
+          <property name="text">
+           <string>all</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignLeft">
+         <widget class="QRadioButton" name="rb_DescriptionEmptyOnly">
+          <property name="toolTip">
+           <string>apply only if description is empty</string>
+          </property>
+          <property name="text">
+           <string>empty only</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="hs_ResetDescription">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item alignment="Qt::AlignRight">
+         <widget class="QToolButton" name="tb_ResetDescription">
+          <property name="toolTip">
+           <string>reset description</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../blackmisc/blackmisc.qrc">
+            <normaloff>:/diagona/icons/diagona/icons/cross-white.png</normaloff>:/diagona/icons/diagona/icons/cross-white.png</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>
@@ -275,10 +298,7 @@
   <tabstop>rb_All</tabstop>
   <tabstop>le_All</tabstop>
   <tabstop>le_MaxModelsStashed</tabstop>
-  <tabstop>pb_ResetDescription</tabstop>
   <tabstop>le_Description</tabstop>
-  <tabstop>rb_DescriptionAll</tabstop>
-  <tabstop>rb_DescriptionEmptyOnly</tabstop>
   <tabstop>cb_UseTempLivery</tabstop>
   <tabstop>tvp_StatusMessages</tabstop>
   <tabstop>le_Stashed</tabstop>
@@ -286,7 +306,9 @@
   <tabstop>le_ValidationFailed</tabstop>
   <tabstop>cb_RemovedChecked</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>bb_AutoStashing</sender>

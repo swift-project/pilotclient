@@ -48,6 +48,12 @@ namespace BlackGui
 {
     namespace Components
     {
+        const CLogCategoryList &CDbAutoStashingComponent::getLogCategories()
+        {
+            static const BlackMisc::CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
+            return cats;
+        }
+
         CDbAutoStashingComponent::CDbAutoStashingComponent(QWidget *parent) :
             QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
             CDbMappingComponentAware(qobject_cast<CDbMappingComponent * >(parent)),
@@ -60,7 +66,7 @@ namespace BlackGui
             Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Expect mapping componet");
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAutoStashingComponent::ps_entitiesRead);
-            connect(ui->pb_ResetDescription, &QPushButton::clicked, this, &CDbAutoStashingComponent::ps_resetDescription);
+            connect(ui->tb_ResetDescription, &QToolButton::clicked, this, &CDbAutoStashingComponent::ps_resetDescription);
 
             this->ps_resetDescription();
         }
@@ -70,30 +76,37 @@ namespace BlackGui
 
         void CDbAutoStashingComponent::accept()
         {
-            if (m_state == Running) { return; }
-            if (m_state == Completed)
+            switch (this->m_state)
             {
-                if (!this->m_modelsToStash.isEmpty())
+            case Running: return;
+            case Completed:
                 {
-                    // this removes previously stashed models
-                    this->getMappingComponent()->replaceStashedModelsUnvalidated(this->m_modelsToStash);
-                    if (ui->cb_RemovedChecked->isChecked())
+                    if (!this->m_modelsToStash.isEmpty())
                     {
-                        this->currentModelView()->removeModelsWithModelString(this->m_modelsToStash);
+                        // this removes previously stashed models
+                        this->getMappingComponent()->replaceStashedModelsUnvalidated(this->m_modelsToStash);
+                        if (ui->cb_RemovedChecked->isChecked())
+                        {
+                            this->currentModelView()->removeModelsWithModelString(this->m_modelsToStash);
+                        }
+                        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QString("Auto stashed %1 models").arg(m_modelsToStash.size()));
+                        this->addStatusMessage(stashedMsg);
+                        this->m_modelsToStash.clear();
                     }
-                    const CStatusMessage stashedMsg(categgories(), CStatusMessage::SeverityInfo, QString("Auto stashed %1 models").arg(m_modelsToStash.size()));
-                    this->addStatusMessage(stashedMsg);
-                    this->m_modelsToStash.clear();
+                    QDialog::accept();
+                    break;
                 }
-                QDialog::accept();
+            default:
+                {
+                    if (this->getSelectedOrAllCount() < 1)
+                    {
+                        const CStatusMessage m(this, CStatusMessage::SeverityError, "No data, nothing to do");
+                        this->addStatusMessage(m);
+                        QDialog::accept();
+                    }
+                    this->tryToStashModels();
+                }
             }
-            if (this->getSelectedOrAllCount() < 1)
-            {
-                const CStatusMessage m(categgories(), CStatusMessage::SeverityError, "No data, nothing to do");
-                this->addStatusMessage(m);
-                QDialog::accept();
-            }
-            this->tryToStashModels();
         }
 
         int CDbAutoStashingComponent::exec()
@@ -129,11 +142,11 @@ namespace BlackGui
             this->m_noData = 0;
             this->m_noValidationFailed = 0;
             this->m_noStashed = 0;
-            this->updateGuiValues(0);
+            this->updateProgressIndicator(0);
 
             if (!this->currentModelView())
             {
-                const CStatusMessage m(categgories(), CStatusMessage::SeverityError, "No data for auto stashing");
+                const CStatusMessage m(this, CStatusMessage::SeverityError, "No data for auto stashing");
                 this->addStatusMessage(m);
             }
             else
@@ -164,7 +177,7 @@ namespace BlackGui
             }
         }
 
-        void CDbAutoStashingComponent::updateGuiValues(int percent)
+        void CDbAutoStashingComponent::updateProgressIndicator(int percent)
         {
             if (percent > 100) { percent = 100; }
             if (percent < 0) { percent = 0; }
@@ -262,15 +275,15 @@ namespace BlackGui
                         int maxPercent = autoStashed.size() * 100 / max;
                         if (maxPercent > percent) { percent = maxPercent; }
                     }
-                    this->updateGuiValues(percent);
+                    this->updateProgressIndicator(percent);
                 }
                 if (autoStashed.size() >= max) { break; }
             }
 
-            this->updateGuiValues(100);
+            this->updateProgressIndicator(100);
             sGui->processEventsToRefreshGui();
 
-            const CStatusMessage stashedMsg(categgories(), CStatusMessage::SeverityInfo, QString("Ready to auto stashed %1 models").arg(autoStashed.size()));
+            const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QString("Ready to auto stashed %1 models").arg(autoStashed.size()));
             this->addStatusMessage(stashedMsg);
             this->m_modelsToStash = autoStashed;
             this->m_state = Completed;
@@ -290,18 +303,18 @@ namespace BlackGui
             //! Some upfront tests
             if (!model.hasModelString())
             {
-                this->addStatusMessage(CStatusMessage(this->categgories(), CStatusMessage::SeverityError, "No model string"));
+                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, "No model string"));
                 this->m_noData++;
             }
             else if (!model.hasAircraftDesignator())
             {
-                this->addStatusMessage(CStatusMessage(this->categgories(), CStatusMessage::SeverityError, "No aircraft designator"), model);
+                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, "No aircraft designator"), model);
                 this->m_noData++;
             }
             else if (!model.hasAirlineDesignator() && !model.getLivery().hasValidDbKey())
             {
                 // if there is no livery (normal) we need an airline
-                this->addStatusMessage(CStatusMessage(this->categgories(), CStatusMessage::SeverityError, "No airline designator"), model);
+                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, "No airline designator"), model);
                 this->m_noData++;
             }
             else
@@ -317,7 +330,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    msg = CStatusMessage(categgories(), CStatusMessage::SeverityInfo, "Stashed succesfully");
+                    msg = CStatusMessage(this, CStatusMessage::SeverityInfo, "Stashed succesfully");
                     stashed = true;
                     this->m_noStashed++;
                     model = stashModel;
@@ -346,12 +359,6 @@ namespace BlackGui
         {
             if (!sGui || !sGui->hasWebDataServices()) { return CLivery(); }
             return sGui->getWebDataServices()->getTempLiveryOrDefault();
-        }
-
-        const CLogCategoryList &CDbAutoStashingComponent::categgories()
-        {
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::guiComponent() }).join({ CLogCategory::mapping()}));
-            return cats;
         }
     } // ns
 } // ns
