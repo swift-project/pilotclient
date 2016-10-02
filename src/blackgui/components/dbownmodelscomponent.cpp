@@ -10,6 +10,7 @@
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackgui/components/dbownmodelscomponent.h"
+#include "blackgui/components/simulatorselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/menus/aircraftmodelmenus.h"
 #include "blackgui/menus/menuaction.h"
@@ -41,6 +42,7 @@ namespace BlackGui
             ui(new Ui::CDbOwnModelsComponent)
         {
             ui->setupUi(this);
+            ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
             ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
@@ -51,8 +53,8 @@ namespace BlackGui
             // should be single simulator or no simulator (default)
             this->m_simulatorSelection.synchronize();
             const CSimulatorInfo simulator(this->m_simulatorSelection.get());
-            const bool s = this->initModelLoader(!simulator.isSingleSimulator() ? CSimulatorInfo(CSimulatorInfo::FSX) : simulator);
-            if (s)
+            const bool succes = this->initModelLoader(!simulator.isSingleSimulator() ? CSimulatorInfo(CSimulatorInfo::FSX) : simulator);
+            if (succes)
             {
                 this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
             }
@@ -60,6 +62,10 @@ namespace BlackGui
             {
                 CLogMessage(this).error("Init of model loader failed in component");
             }
+
+            ui->comp_SimulatorSelector->setValue(simulator);
+            ui->le_Simulator->setText(simulator.toQString());
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::ps_requestSimulatorModelsWithCacheInBackground);
 
             // menu
             ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this, false));
@@ -98,6 +104,13 @@ namespace BlackGui
             return this->m_modelLoader->getAircraftModels();
         }
 
+        CAircraftModelList CDbOwnModelsComponent::getOwnCachedModels(const CSimulatorInfo &simulator) const
+        {
+            static const CAircraftModelList empty;
+            if (!this->m_modelLoader) { return empty; }
+            return this->m_modelLoader->getCachedAircraftModels(simulator);
+        }
+
         CAircraftModelList CDbOwnModelsComponent::getOwnSelectedModels() const
         {
             return ui->tvp_OwnAircraftModels->selectedObjects();
@@ -120,6 +133,18 @@ namespace BlackGui
         {
             if (!this->m_modelLoader) { return 0; }
             return this->m_modelLoader->getAircraftModelsCount();
+        }
+
+        QString CDbOwnModelsComponent::getInfoString() const
+        {
+            if (!this->m_modelLoader) { return ""; }
+            return this->m_modelLoader->getInfoString();
+        }
+
+        QString CDbOwnModelsComponent::getInfoStringFsFamily() const
+        {
+            if (!this->m_modelLoader) { return ""; }
+            return this->m_modelLoader->getInfoStringFsFamily();
         }
 
         CStatusMessage CDbOwnModelsComponent::updateViewAndCache(const CAircraftModelList &models)
@@ -196,8 +221,7 @@ namespace BlackGui
         QString CDbOwnModelsComponent::directorySelector(const CSimulatorInfo &simulatorInfo)
         {
             const QString text("Open directory (%1)");
-            const QString dir = QFileDialog::getExistingDirectory(nullptr, text.arg(simulatorInfo.toQString()),
-                                "",
+            const QString dir = QFileDialog::getExistingDirectory(nullptr, text.arg(simulatorInfo.toQString()), "",
                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
             return dir;
         }
@@ -222,7 +246,7 @@ namespace BlackGui
                         connect(this->m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FSX), IAircraftModelLoader::InBackgroundWithCache);
+                            ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::FSX));
                         });
                     }
                     menuActions.addAction(this->m_loadActions[0], CMenuAction::pathSimulator());
@@ -235,7 +259,7 @@ namespace BlackGui
                         connect(this->m_loadActions[1], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::P3D), IAircraftModelLoader::InBackgroundWithCache);
+                            ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::P3D));
                         });
                     }
                     menuActions.addAction(this->m_loadActions[1], CMenuAction::pathSimulator());
@@ -248,7 +272,7 @@ namespace BlackGui
                         connect(this->m_loadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::FS9), IAircraftModelLoader::InBackgroundWithCache);
+                            ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::FS9));
                         });
                     }
                     menuActions.addAction(this->m_loadActions[2], CMenuAction::pathSimulator());
@@ -261,7 +285,7 @@ namespace BlackGui
                         connect(this->m_loadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                         {
                             Q_UNUSED(checked);
-                            ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundWithCache);
+                            ownModelsComp->ps_requestSimulatorModelsWithCacheInBackground(CSimulatorInfo(CSimulatorInfo::XPLANE));
                         });
                     }
                     menuActions.addAction(this->m_loadActions[3], CMenuAction::pathSimulator());
@@ -435,11 +459,18 @@ namespace BlackGui
                 CLogMessage(this).error("Loading of models failed, simulator %1") << simulator.toQString();
             }
             ui->tvp_OwnAircraftModels->hideLoadIndicator();
+            ui->le_Simulator->setText(simulator.toQString());
+            ui->comp_SimulatorSelector->setValue(simulator);
         }
 
         void CDbOwnModelsComponent::ps_requestSimulatorModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QString &directory)
         {
             this->ps_loadInstalledModels(simulator, mode, directory);
+        }
+
+        void CDbOwnModelsComponent::ps_requestSimulatorModelsWithCacheInBackground(const CSimulatorInfo &simulator)
+        {
+            this->ps_requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundWithCache);
         }
     } // ns
 } // ns

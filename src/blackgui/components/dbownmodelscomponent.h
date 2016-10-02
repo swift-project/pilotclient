@@ -70,6 +70,9 @@ namespace BlackGui
             //! Own models
             BlackMisc::Simulation::CAircraftModelList getOwnModels() const;
 
+            //! Own cached models from loader
+            BlackMisc::Simulation::CAircraftModelList getOwnCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+
             //! Own models selected in view
             BlackMisc::Simulation::CAircraftModelList getOwnSelectedModels() const;
 
@@ -81,6 +84,12 @@ namespace BlackGui
 
             //! Number of own models
             int getOwnModelsCount() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoString
+            QString getInfoString() const;
+
+            //! \copydoc BlackMisc::Simulation::Data::CModelCaches::getInfoStringFsFamily
+            QString getInfoStringFsFamily() const;
 
             //! Update view and cache
             BlackMisc::CStatusMessage updateViewAndCache(const BlackMisc::Simulation::CAircraftModelList &models);
@@ -118,6 +127,9 @@ namespace BlackGui
             //! Request simulator models
             void ps_requestSimulatorModels(const BlackMisc::Simulation::CSimulatorInfo &simulator, BlackMisc::Simulation::IAircraftModelLoader::LoadMode mode, const QString &directory = "");
 
+            //! Request simulator models from cache
+            void ps_requestSimulatorModelsWithCacheInBackground(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>            m_modelLoader;                //!< read own aircraft models
@@ -129,7 +141,7 @@ namespace BlackGui
             //! File name for savinf
             void setSaveFileName(const BlackMisc::Simulation::CSimulatorInfo &sim);
 
-            //! Directory selector
+            //! Directory selector for given simulator
             static QString directorySelector(const BlackMisc::Simulation::CSimulatorInfo &simulatorInfo);
 
             //! The menu for loading and handling own models for mapping tasks
