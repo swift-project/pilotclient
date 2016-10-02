@@ -13,6 +13,7 @@
 #define BLACKCORE_DB_DATABASEUTILS_H
 
 #include "blackcore/blackcoreexport.h"
+#include "blackcore/progress.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 
 namespace BlackCore
@@ -46,6 +47,9 @@ namespace BlackCore
 
             //! Consolidate model data with DB distributors
             static int consolidateModelsWithDbDistributor(BlackMisc::Simulation::CAircraftModelList &models, bool force);
+
+            //! Create stash models if the DB models miss that simulator
+            static BlackMisc::Simulation::CAircraftModelList updateSimulatorForFsFamily(const BlackMisc::Simulation::CAircraftModelList &ownModels, int maxToStash = -1, BlackCore::IProgressIndicator *progressIndicator = nullptr, bool processEvents = true);
         };
     } // ns
 } // ns

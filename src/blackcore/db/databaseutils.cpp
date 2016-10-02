@@ -41,8 +41,8 @@ namespace BlackCore
                 return dbModel;
             }
 
-            // we try to best update by DB data here
-            // we have no(!) DB model, so we update each of it subobjects
+            // we try our best to update by DB data here
+            // since we have no(!) DB model, we update each of it subobjects
             CAircraftModel consolidatedModel(model); // copy over
             if (!consolidatedModel.getLivery().hasValidDbKey())
             {
@@ -94,10 +94,7 @@ namespace BlackCore
                 if (modified || model.hasValidDbKey())
                 {
                     c++;
-                    if (processEvents && c % 125 == 0)
-                    {
-                        sApp->processEventsFor(25);
-                    }
+                    if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
                 }
             }
             CLogMessage().debug() << "Consolidated " << models.size() << " in " << timer.elapsed() << "ms";
@@ -148,6 +145,53 @@ namespace BlackCore
                 if (model.getDistributor().hasValidDbKey()) { c++; }
             }
             return c;
+        }
+
+        CAircraftModelList CDatabaseUtils::updateSimulatorForFsFamily(const CAircraftModelList &ownModels, int maxToStash, IProgressIndicator *progressIndicator, bool processEvents)
+        {
+            CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().getAllFsFamilyModels());
+            CAircraftModelList stashModels;
+            if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
+            const QSet<QString> dbKeys = dbFsFamilyModels.getModelStringSet();
+            const int mexModelsCount = maxToStash >= 0 ? maxToStash : ownModels.size();
+            if (mexModelsCount < 1) { return stashModels; }
+
+            int c = 0; // counter
+            for (const CAircraftModel &ownModel : ownModels)
+            {
+                c++;
+
+                // process events
+                if (processEvents && c % 500 == 0)
+                {
+                    if (progressIndicator)
+                    {
+                        const int percentage = c * 100 / mexModelsCount;
+                        progressIndicator->updateProgressIndicatorAndProcessEvents(percentage);
+                    }
+                    else
+                    {
+                        sApp->processEventsFor(10);
+                    }
+                }
+
+                // values to be skipped
+                if (maxToStash >= 0 && maxToStash == stashModels.size()) { break; }
+                if (!dbKeys.contains(ownModel.getModelString())) { continue; }
+                if (ownModel.matchesSimulatorFlag(CSimulatorInfo::XPLANE)) { continue; }
+
+                // in DB
+                CAircraftModel dbModel = dbFsFamilyModels.findFirstByModelStringOrDefault(ownModel.getModelString());
+                if (!dbModel.isLoadedFromDb()) {continue; }
+                if (dbModel.getSimulator() == ownModel.getSimulator()) {continue; }
+
+                // update simulator and add
+                CSimulatorInfo simulator(dbModel.getSimulator());
+                simulator.add(ownModel.getSimulator());
+                dbModel.setSimulator(simulator);
+                stashModels.push_back(dbModel);
+            }
+            return stashModels;
         }
     } // ns
 } // ns
