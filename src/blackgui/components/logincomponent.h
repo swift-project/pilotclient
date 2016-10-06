@@ -100,6 +100,9 @@ namespace BlackGui
             //! Reverse lookup model
             void ps_reverseLookupModel();
 
+            //! Simulator model has been changed
+            void ps_simulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+
         private:
             //! GUI aircraft values, formatted
             struct CGuiAircraftValues
@@ -119,9 +122,6 @@ namespace BlackGui
                 QString vatsimRealName;
                 QString vatsimHomeAirport;
             };
-
-            //! GUI values from aircraft
-            void setGuiValuesFromAircraft(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
             //! Load from settings
             void loadRememberedVatsimData();

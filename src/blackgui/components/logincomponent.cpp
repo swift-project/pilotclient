@@ -132,6 +132,11 @@ namespace BlackGui
             connect(ui->le_AircraftIcaoDesignator, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
             connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::ps_reverseLookupModel);
 
+            if (sGui && sGui->getIContextSimulator())
+            {
+                connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::ps_simulatorModelChanged);
+            }
+
             // server GUI element
             ui->frp_CurrentServer->setReadOnly(true);
             ui->frp_CurrentServer->showPasswordField(false);
@@ -176,7 +181,7 @@ namespace BlackGui
                 else
                 {
                     this->m_visible = true;
-                    bool isConnected = sGui->getIContextNetwork()->isConnected();
+                    const bool isConnected = sGui->getIContextNetwork()->isConnected();
                     this->setGuiVisibility(isConnected);
                     this->setOkButtonString(isConnected);
                     if (isConnected) { this->startLogoffTimerCountdown(); }
@@ -198,7 +203,7 @@ namespace BlackGui
                 CLogMessage(this).validationError("No login possible from this very tab, use VATSIM or other servers");
                 return;
             }
-            const bool isConnected = sGui->getIContextNetwork()->isConnected();
+            const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
             const bool vatsimLogin = (ui->tw_Network->currentWidget() == ui->pg_NetworkVatsim);
             CServer currentServer; // used for login
             CSimulatedAircraft ownAircraft; // used own aircraft
@@ -335,15 +340,6 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::setGuiValuesFromAircraft(const CSimulatedAircraft &ownAircraft)
-        {
-            const CAircraftIcaoCode aircraftIcao = ownAircraft.getAircraftIcaoCode();
-            ui->le_Callsign->setText(ownAircraft.getCallsignAsString());
-            ui->le_AircraftIcaoDesignator->setText(aircraftIcao.getDesignator());
-            ui->le_AirlineIcaoDesignator->setText(ownAircraft.getAirlineIcaoCodeDesignator());
-            ui->le_AircraftCombinedType->setText(aircraftIcao.getCombinedType());
-        }
-
         void CLoginComponent::loadRememberedVatsimData()
         {
             const CServer lastServer = this->m_currentVatsimServer.get();
@@ -465,6 +461,7 @@ namespace BlackGui
 
         void CLoginComponent::setGuiIcaoValues(const CAircraftModel &model, bool onlyIfEmpty)
         {
+            ui->le_SimulatorModel->setText(model.getModelStringAndDbKey());
             if (!onlyIfEmpty || ui->le_AircraftIcaoDesignator->text().trimmed().isEmpty())
             {
                 ui->le_AircraftIcaoDesignator->setText(model.getAircraftIcaoCode().getDesignator());
@@ -544,11 +541,11 @@ namespace BlackGui
         void CLoginComponent::ps_reverseLookupModel()
         {
             if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
-            CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
-            QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
+            const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
+            const QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
             if (model.getAircraftIcaoCode().hasDesignator())
             {
-                CLogMessage(this).validationInfo("Reverse lookup for '%1'") << modelStr;
+                CLogMessage(this).validationInfo("Reverse lookup for '%1' successful: %2") << modelStr << model.toQString();
 
                 // update GUI
                 this->setGuiIcaoValues(model, false);
@@ -557,6 +554,14 @@ namespace BlackGui
             {
                 CLogMessage(this).validationInfo("Reverse lookup for '%1'' failed, set data manually") << modelStr;
             }
+        }
+
+        void CLoginComponent::ps_simulatorModelChanged(const CAircraftModel &model)
+        {
+            const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
+            if (isConnected) { return; }
+            this->setGuiIcaoValues(model, false);
+            this->ps_reverseLookupModel();
         }
 
         void CLoginComponent::initCompleters(CEntityFlags::Entity entity)

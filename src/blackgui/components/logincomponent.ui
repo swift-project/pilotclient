@@ -448,6 +448,9 @@
         <property name="readOnly">
          <bool>true</bool>
         </property>
+        <property name="placeholderText">
+         <string>unique model identifier</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="0">

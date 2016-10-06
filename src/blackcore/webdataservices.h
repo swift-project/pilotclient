@@ -381,7 +381,7 @@ namespace BlackCore
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None;  //!< which readers are available
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                  //!< how to read DB data
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< those entities which are permanently updated by timers
-        BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesReaad = BlackMisc::Network::CEntityFlags::NoEntity;     //!< entities read
+        BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead = BlackMisc::Network::CEntityFlags::NoEntity;      //!< entities read
         bool                                     m_initialRead = false;                             //!< Initial read started
         int                                      m_infoObjectTrials = 0;                            //!< Tried to read info objects
 
