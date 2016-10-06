@@ -188,13 +188,13 @@ namespace BlackCore
         void simulatorStatusChanged(int status);
 
         //! Emitted when own aircraft model has changed
-        void ownAircraftModelChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
+        void ownAircraftModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
         //! Render restrictions have been changed
         void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
 
         //! Aircraft rendering changed
-        void aircraftRenderingChanged(BlackMisc::Simulation::CSimulatedAircraft aircraft);
+        void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Installed aircraft models ready or changed
         void installedAircraftModelsChanged();

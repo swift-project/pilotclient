@@ -33,10 +33,11 @@ namespace BlackCore
             const int distributorOrder = model.getDistributorOrder(); // later restore that order
 
             CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
-            if (dbModel.hasValidDbKey())
+            if (dbModel.isLoadedFromDb())
             {
+                // take the db model as original
                 if (modified) { *modified = true; }
-                dbModel.updateByLocalFileNames(model);
+                dbModel.updateMissingParts(model);
                 dbModel.setDistributorOrder(distributorOrder);
                 return dbModel;
             }
@@ -70,7 +71,7 @@ namespace BlackCore
                 if (modified) { *modified = true; }
                 consolidatedModel.setDistributor(dbDistributor);
             }
-            consolidatedModel.updateByLocalFileNames(model);
+            consolidatedModel.updateLocalFileNames(model);
             consolidatedModel.setDistributorOrder(distributorOrder);
             return consolidatedModel;
         }

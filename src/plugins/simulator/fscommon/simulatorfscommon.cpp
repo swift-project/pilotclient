@@ -81,7 +81,7 @@ namespace BlackSimPlugin
                 CAircraftModel newModel(model);
                 newModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                 updateOwnModel(newModel);
-                emit ownAircraftModelChanged(getOwnAircraft());
+                emit ownAircraftModelChanged(newModel);
             }
         }
 

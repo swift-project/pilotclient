@@ -102,7 +102,8 @@ namespace BlackSimPlugin
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
 
-            m_defaultModel = {
+            m_defaultModel =
+            {
                 "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines",
                 CAircraftModel::TypeModelMatchingDefaultModel,
                 "A320 AUA",
@@ -309,10 +310,9 @@ namespace BlackSimPlugin
             model.setFileName(path + "/" + filename);
             model.setLivery(CLivery("XPLANE." + livery, airlineIcaoCode, "XP livery", "", "", false));
 
-            // updates
-            updateOwnIcaoCodes(model.getAircraftIcaoCode(), airlineIcaoCode);
-            updateOwnModel(model);
-            emit ownAircraftModelChanged(getOwnAircraft());
+            // updated model.
+            // Hint: will update in own model context by using reverse lookup
+            emit ownAircraftModelChanged(model);
         }
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const

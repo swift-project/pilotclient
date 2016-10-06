@@ -100,7 +100,7 @@ namespace BlackCore
             void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Emitted when own aircraft model changes
-            void ownAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void ownAircraftModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! An airspace snapshot was handled
             void airspaceSnapshotHandled();

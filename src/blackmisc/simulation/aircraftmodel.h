@@ -61,7 +61,7 @@ namespace BlackMisc
             {
                 TypeUnknown,
                 TypeQueriedFromNetwork,        //!< model was queried by network protocol
-                TypeFSInnData,                   //!< model based on FSD ICAO data
+                TypeFSInnData,                 //!< model based on FSD ICAO data
                 TypeModelMatching,             //!< model is result of model matching
                 TypeModelMatchingDefaultModel, //!< a default model assigned by model matching
                 TypeDatabaseEntry,             //!< used along with mapping definition
@@ -326,7 +326,7 @@ namespace BlackMisc
             void normalizeFileNameForDb();
 
             //! If we have local file names, we use those
-            void updateByLocalFileNames(const CAircraftModel &model);
+            void updateLocalFileNames(const CAircraftModel &model);
 
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;

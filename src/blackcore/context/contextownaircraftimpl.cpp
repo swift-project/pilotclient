@@ -11,6 +11,8 @@
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraftimpl.h"
+#include "blackcore/application.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/audio/voiceroom.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
@@ -42,6 +44,7 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore;
 
 namespace BlackCore
 {
@@ -53,6 +56,11 @@ namespace BlackCore
         {
             Q_ASSERT(this->getRuntime());
             this->setObjectName("CContextOwnAircraft");
+
+            if (sApp && sApp->getWebDataServices())
+            {
+                connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CContextOwnAircraft::ps_allSwiftWebDataRead);
+            }
 
             // Init own aircraft
             this->initOwnAircraft();
@@ -100,28 +108,49 @@ namespace BlackCore
         void CContextOwnAircraft::initOwnAircraft()
         {
             Q_ASSERT(this->getRuntime());
+            CSimulatedAircraft ownAircraft;
             {
-                QWriteLocker l(&m_lockAircraft);
-                this->m_ownAircraft.initComSystems();
-                this->m_ownAircraft.initTransponder();
-                CAircraftSituation situation(
-                    CCoordinateGeodetic(
-                        CLatitude::fromWgs84("N 049° 18' 17"),
-                        CLongitude::fromWgs84("E 008° 27' 05"),
-                        CLength(0, CLengthUnit::m())),
-                    CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
-                );
-                this->m_ownAircraft.setSituation(situation);
-                this->m_ownAircraft.setPilot(this->m_currentNetworkServer.getThreadLocal().getUser());
+                // use copy to minimize lock time
+                QReadLocker rl(&m_lockAircraft);
+                ownAircraft = this->m_ownAircraft;
+            }
 
-                // from simulator, if available
-                this->m_ownAircraft.setCallsign(CCallsign("SWIFT")); // would come from settings
+            ownAircraft.initComSystems();
+            ownAircraft.initTransponder();
+            CAircraftSituation situation(
+                CCoordinateGeodetic(
+                    CLatitude::fromWgs84("N 049° 18' 17"),
+                    CLongitude::fromWgs84("E 008° 27' 05"),
+                    CLength(0, CLengthUnit::m())),
+                CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
+            );
+            ownAircraft.setSituation(situation);
+            ownAircraft.setPilot(this->m_currentNetworkServer.getThreadLocal().getUser());
 
-                //! \todo Own aircraft ICAO default data, this would need to come from somewhere (mappings) -> Own callsign, plane ICAO status, model used
-                this->m_ownAircraft.setIcaoCodes(
+            // reverse lookup if possible
+            if (!ownAircraft.getModel().isLoadedFromDb() && !ownAircraft.getModelString().isEmpty())
+            {
+                ownAircraft.setModel(reverseLookupModel(ownAircraft.getModelString()));
+            }
+
+            // override empty values
+            if (!ownAircraft.hasValidCallsign())
+            {
+                ownAircraft.setCallsign(CCallsign("SWIFT"));
+            }
+
+            if (!ownAircraft.getAircraftIcaoCode().hasValidDesignator())
+            {
+                ownAircraft.setIcaoCodes(
                     CAircraftIcaoCode("C172", "L1P"),
                     CAirlineIcaoCode()
                 );
+            }
+
+            // update object
+            {
+                QWriteLocker l(&m_lockAircraft);
+                m_ownAircraft = ownAircraft;
             }
 
             // voice rooms, if network is already available
@@ -154,12 +183,37 @@ namespace BlackCore
             emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
         }
 
+        CAircraftModel CContextOwnAircraft::reverseLookupModel(const QString &modelString)
+        {
+            if (modelString.isEmpty()) { return CAircraftModel(); }
+            if (!sApp || !sApp->hasWebDataServices()) { return CAircraftModel(); }
+            const CAircraftModel reverseLookupModel = sApp->getWebDataServices()->getModelForModelString(modelString);
+            return reverseLookupModel;
+        }
+
         bool CContextOwnAircraft::updateOwnModel(const CAircraftModel &model)
         {
+            // reverse lookup if not yet from DB:
+            // this is the central place where we keep our own model, so we use best effort
+            // to make that model as accuarate as we can
+            CAircraftModel updateModel(model);
+            if (!updateModel.isLoadedFromDb())
+            {
+                CAircraftModel reverseModel = reverseLookupModel(model.getModelString());
+                if (reverseModel.isLoadedFromDb())
+                {
+                    // special case here, as we have some specific values for a local model
+                    updateModel = reverseModel;
+                    updateModel.updateMissingParts(model);
+                    updateModel.setFileName(model.getFileName());
+                }
+            }
+
             QWriteLocker l(&m_lockAircraft);
-            bool changed = (this->m_ownAircraft.getModel() != model);
+            const bool changed = (this->m_ownAircraft.getModel() != updateModel);
             if (!changed) { return false; }
-            this->m_ownAircraft.setModel(model);
+            updateModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+            this->m_ownAircraft.setModel(updateModel);
             return true;
         }
 
@@ -292,11 +346,18 @@ namespace BlackCore
             this->resolveVoiceRooms();
         }
 
-        void CContextOwnAircraft::ps_changedSimulatorModel(const CSimulatedAircraft &ownAircraft)
+        void CContextOwnAircraft::ps_changedSimulatorModel(const CAircraftModel &model)
         {
-            CAircraftModel model(ownAircraft.getModel());
-            QWriteLocker l(&m_lockAircraft);
-            this->m_ownAircraft.setModel(model);
+            this->updateOwnModel(model);
+        }
+
+        void CContextOwnAircraft::ps_allSwiftWebDataRead()
+        {
+            const CAircraftModel model = this->getOwnAircraftModel();
+            if (model.isLoadedFromDb()) { return; }
+
+            // a reverse lookup of the model could make sense
+            this->updateOwnModel(model); // force reverse lookup
         }
 
         void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)

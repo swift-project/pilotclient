@@ -89,6 +89,7 @@ namespace BlackCore
 
             //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnModel
             //! \ingroup ownaircraftprovider
+            //! \remark perform reverse lookup if possible
             virtual bool updateOwnModel(const BlackMisc::Simulation::CAircraftModel &model) override;
 
             //! \copydoc BlackMisc::Simulation::IOwnAircraftProvider::updateOwnSituation
@@ -161,7 +162,10 @@ namespace BlackCore
 
             //! Simulator model has been changed
             //! \note Connected in runtime
-            void ps_changedSimulatorModel(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+            void ps_changedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Web data loaded
+            void ps_allSwiftWebDataRead();
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
@@ -177,6 +181,9 @@ namespace BlackCore
 
             //! Resolve voice rooms
             void resolveVoiceRooms();
+
+            //! Reverse lookup of the model
+            static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const QString &modelString);
         };
     } // ns
 } // ns
