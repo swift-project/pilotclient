@@ -120,7 +120,7 @@ namespace BlackGui
             void ps_currentTabGenerator();
 
             //! GUI init complete
-            void ps_swiftDataRead();
+            void ps_swiftWebDataRead();
         };
     } // ns
 } // ns

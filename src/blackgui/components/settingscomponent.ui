@@ -20,7 +20,7 @@
    <string>Settings</string>
   </property>
   <property name="currentIndex">
-   <number>6</number>
+   <number>1</number>
   </property>
   <widget class="QWidget" name="tb_SettingsTrafficNetworkServers">
    <attribute name="title">

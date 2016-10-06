@@ -105,7 +105,7 @@ namespace BlackGui
             connect(ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::ps_currentTabGenerator);
 
             // web services
-            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CFlightPlanComponent::ps_swiftDataRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CFlightPlanComponent::ps_swiftWebDataRead);
 
             // init GUI
             this->ps_resetFlightPlan();
@@ -537,7 +537,7 @@ namespace BlackGui
             this->setCurrentWidget(ui->tb_RemarksGenerator);
         }
 
-        void CFlightPlanComponent::ps_swiftDataRead()
+        void CFlightPlanComponent::ps_swiftWebDataRead()
         {
             this->initCompleters();
         }
