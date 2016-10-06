@@ -58,10 +58,16 @@ namespace BlackMisc
             QString CAircraftCfgEntries::getUiCombinedDescription() const
             {
                 QString d(this->m_uiManufacturer);
-                if (m_uiType.isEmpty()) { return d; }
-                if (d.isEmpty()) { return m_uiType; }
-                d += " ";
-                d += m_uiType;
+                if (!this->getUiType().isEmpty())
+                {
+                    d += " ";
+                    d += this->getUiType();
+                }
+                if (!this->getUiVariation().isEmpty())
+                {
+                    d += " ";
+                    d += this->getUiVariation();
+                }
                 return d;
             }
 
@@ -124,7 +130,7 @@ namespace BlackMisc
             {
                 // creates raw, unconsolidated data
                 CAircraftModel model(this->getTitle(), CAircraftModel::TypeOwnSimulatorModel);
-                model.setDescription(this->getUiCombinedDescription()); // Manufacturer and type
+                model.setDescription(this->getUiCombinedDescription()); // Manufacturer, variation, type
                 model.setFileName(this->getFileName());
                 model.setName(this->getSimName());
                 model.setUtcTimestamp(this->getUtcTimestamp()); // aircraft.cfg file last modified
@@ -187,10 +193,12 @@ namespace BlackMisc
                 case IndexAirline: return CVariant::from(this->m_atcAirline);
                 case IndexAtcType: return CVariant::from(this->m_atcType);
                 case IndexAtcModel: return CVariant::from(this->m_atcModel);
+                case IndexAtcIdColor: return CVariant::from(this->m_atcIdColor);
                 case IndexParkingCode: return CVariant::from(this->m_atcParkingCode);
                 case IndexDescription: return CVariant::from(this->m_description);
                 case IndexUiType: return CVariant::from(this->m_uiType);
                 case IndexUiManufacturer: return CVariant::from(this->m_uiManufacturer);
+                case IndexUiVariation: return CVariant::from(this->m_uiVariation);
                 case IndexTexture: return CVariant::from(this->m_texture);
                 case IndexSimulatorName: return CVariant::from(this->m_simName);
                 case IndexCreatedBy: return CVariant::from(this->m_createdBy);
@@ -212,9 +220,11 @@ namespace BlackMisc
                 case IndexAirline: this->setTitle(this->m_atcAirline); break;
                 case IndexAtcType: this->setAtcType(variant.toQString()); break;
                 case IndexAtcModel: this->setAtcModel(variant.toQString()); break;
+                case IndexAtcIdColor: this->setAtcIdColor(variant.toQString()); break;
                 case IndexParkingCode: this->setAtcParkingCode(variant.toQString()); break;
                 case IndexDescription: this->setDescription(variant.toQString()); break;
                 case IndexUiType: this->setUiType(variant.toQString()); break;
+                case IndexUiVariation: this->setUiVariation(variant.toQString()); break;
                 case IndexUiManufacturer: this->setUiManufacturer(variant.toQString()); break;
                 case IndexTexture: this->setTexture(variant.toQString()); break;
                 case IndexSimulatorName: this->setSimName(variant.toQString()); break;

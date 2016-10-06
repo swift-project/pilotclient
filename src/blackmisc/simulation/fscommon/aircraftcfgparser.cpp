@@ -166,7 +166,7 @@ namespace BlackMisc
                 }
 
                 // set directory with name filters, get aircraft.cfg and sub directories
-                QDir dir(directory, fileFilter(), QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
+                const QDir dir(directory, fileFilter(), QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
                 if (!dir.exists())
                 {
                     *ok = true;
@@ -177,7 +177,7 @@ namespace BlackMisc
                 CAircraftCfgEntriesList result;
 
                 // Dirs last is crucial,since I will break recursion on "aircraft.cfg" level
-                QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
+                const QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
                 for (const auto &fileInfo : files)
                 {
                     if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
@@ -251,9 +251,15 @@ namespace BlackMisc
                                     if (lineFixed.startsWith("//")) { break; }
                                     if (atcType.isEmpty() || atcModel.isEmpty())
                                     {
-                                        QString c = getFixedIniLineContent(lineFixed);
-                                        if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive)) { atcType = c; }
-                                        else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive)) { atcModel = c; }
+                                        const QString c = getFixedIniLineContent(lineFixed);
+                                        if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive))
+                                        {
+                                            atcType = c;
+                                        }
+                                        else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
+                                        {
+                                            atcModel = c;
+                                        }
                                     }
                                 }
                                 break;
@@ -261,30 +267,44 @@ namespace BlackMisc
                                 {
                                     if (lineFixed.startsWith("//")) { break; }
                                     CAircraftCfgEntries &e = tempEntries[tempEntries.size() - 1];
-                                    if (lineFixed.startsWith("atc_parking_codes", Qt::CaseInsensitive))
+                                    if (lineFixed.startsWith("atc_", Qt::CaseInsensitive))
                                     {
-                                        e.setAtcParkingCode(getFixedIniLineContent(lineFixed));
+                                        if (lineFixed.startsWith("atc_parking_codes", Qt::CaseInsensitive))
+                                        {
+                                            e.setAtcParkingCode(getFixedIniLineContent(lineFixed));
+                                        }
+                                        else if (lineFixed.startsWith("atc_airline", Qt::CaseInsensitive))
+                                        {
+                                            e.setAtcAirline(getFixedIniLineContent(lineFixed));
+                                        }
+                                        else if (lineFixed.startsWith("atc_id_color", Qt::CaseInsensitive))
+                                        {
+                                            e.setAtcIdColor(getFixedIniLineContent(lineFixed));
+                                        }
                                     }
-                                    else if (lineFixed.startsWith("atc_airline", Qt::CaseInsensitive))
+                                    else if (lineFixed.startsWith("ui_", Qt::CaseInsensitive))
                                     {
-                                        e.setAtcAirline(getFixedIniLineContent(lineFixed));
+                                        if (lineFixed.startsWith("ui_manufacturer", Qt::CaseInsensitive))
+                                        {
+                                            e.setUiManufacturer(getFixedIniLineContent(lineFixed));
+                                        }
+                                        else if (lineFixed.startsWith("ui_typerole", Qt::CaseInsensitive))
+                                        {
+                                            bool r = getFixedIniLineContent(lineFixed).toLower().contains("rotor");
+                                            e.setRotorcraft(r);
+                                        }
+                                        else if (lineFixed.startsWith("ui_type", Qt::CaseInsensitive))
+                                        {
+                                            e.setUiType(getFixedIniLineContent(lineFixed));
+                                        }
+                                        else if (lineFixed.startsWith("ui_variation", Qt::CaseInsensitive))
+                                        {
+                                            e.setUiVariation(getFixedIniLineContent(lineFixed));
+                                        }
                                     }
                                     else if (lineFixed.startsWith("description", Qt::CaseInsensitive))
                                     {
                                         e.setDescription(getFixedIniLineContent(lineFixed));
-                                    }
-                                    else if (lineFixed.startsWith("ui_manufacturer", Qt::CaseInsensitive))
-                                    {
-                                        e.setUiManufacturer(getFixedIniLineContent(lineFixed));
-                                    }
-                                    else if (lineFixed.startsWith("ui_typerole", Qt::CaseInsensitive))
-                                    {
-                                        bool r = getFixedIniLineContent(lineFixed).toLower().contains("rotor");
-                                        e.setRotorcraft(r);
-                                    }
-                                    else if (lineFixed.startsWith("ui_type", Qt::CaseInsensitive))
-                                    {
-                                        e.setUiType(getFixedIniLineContent(lineFixed));
                                     }
                                     else if (lineFixed.startsWith("texture", Qt::CaseInsensitive))
                                     {

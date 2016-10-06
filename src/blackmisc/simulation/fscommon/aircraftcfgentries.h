@@ -46,9 +46,11 @@ namespace BlackMisc
                     IndexAirline,
                     IndexAtcType,
                     IndexAtcModel,
+                    IndexAtcIdColor,
                     IndexParkingCode,
                     IndexDescription,
                     IndexUiType,
+                    IndexUiVariation,
                     IndexUiManufacturer,
                     IndexTexture,
                     IndexSimulatorName,
@@ -86,6 +88,9 @@ namespace BlackMisc
                 //! ATC airline
                 const QString &getAtcAirline() const { return this->m_atcAirline; }
 
+                //! ATC id color (e.g. 0xffffffff)
+                const QString &getAtcIdColor() const { return this->m_atcIdColor; }
+
                 //! Sim name
                 const QString &getSimName() const { return this->m_simName; }
 
@@ -97,6 +102,9 @@ namespace BlackMisc
 
                 //! UI type (e.g. A321-231 IAE)
                 const QString &getUiType() const { return this->m_uiType; }
+
+                //! UI variation (e.g. White,Green)
+                const QString &getUiVariation() const { return this->m_uiVariation; }
 
                 //! UI manufacturer (e.g. Airbus)
                 const QString &getUiManufacturer() const { return this->m_uiManufacturer; }
@@ -134,6 +142,9 @@ namespace BlackMisc
                 //! Airline
                 void setAtcAirline(const QString &airline);
 
+                //! ATC color (e.g. 0xffffffff)
+                void setAtcIdColor(const QString &color) { this->m_atcIdColor = color.trimmed(); }
+
                 //! Simulator name
                 void setSimName(const QString &simName);
 
@@ -148,6 +159,9 @@ namespace BlackMisc
 
                 //! UI type (e.g. A321-231 IAE)
                 void setUiType(const QString &type);
+
+                //! UI variation (e.g. White,Green)
+                void setUiVariation(const QString &variation) { this->m_uiVariation = variation.trimmed(); }
 
                 //! UI manufacturer (e.g. Airbus)
                 void setUiManufacturer(const QString &manufacturer) { this->m_uiManufacturer = manufacturer.trimmed(); }
@@ -182,9 +196,11 @@ namespace BlackMisc
                 QString m_atcModel;        //!< ATC model
                 QString m_atcAirline;      //!< ATC airline
                 QString m_atcParkingCode;  //!< ATC parking code
+                QString m_atcIdColor;      //!< e.g. 0xffffffff (not for all aircrafts)
                 QString m_description;     //!< descriptive text
                 QString m_uiType;          //!< e.g. A321-231 IAE
                 QString m_uiManufacturer;  //!< e.g. Airbus
+                QString m_uiVariation;     //!< e.g. White,Green
                 QString m_texture;         //!< texture, needed to identify thumbnail.jpg
                 QString m_simName;         //!< name in simulator
                 QString m_createdBy;       //!< created by, "distributor"
@@ -198,9 +214,11 @@ namespace BlackMisc
                     BLACK_METAMEMBER(atcType),
                     BLACK_METAMEMBER(atcModel),
                     BLACK_METAMEMBER(atcParkingCode),
+                    BLACK_METAMEMBER(atcIdColor),
                     BLACK_METAMEMBER(description),
                     BLACK_METAMEMBER(uiType),
                     BLACK_METAMEMBER(uiManufacturer),
+                    BLACK_METAMEMBER(uiVariation),
                     BLACK_METAMEMBER(texture),
                     BLACK_METAMEMBER(simName),
                     BLACK_METAMEMBER(createdBy),
