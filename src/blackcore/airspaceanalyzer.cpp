@@ -43,6 +43,7 @@ namespace BlackCore
         // all in new thread from here on
         m_timer.setObjectName(this->objectName().append(":m_timer"));
         m_timer.start(7500);
+        m_lastWatchdogCallMsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
         bool c = connect(&m_timer, &QTimer::timeout, this, &CAirspaceAnalyzer::ps_timeout);
         Q_ASSERT(c);
 
