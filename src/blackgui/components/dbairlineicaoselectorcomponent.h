@@ -17,6 +17,7 @@
 #include "blackmisc/aviation/airlineicaocode.h"
 
 #include <QObject>
+#include <QScopedPointer>
 #include <QString>
 
 class QCompleter;
@@ -65,7 +66,7 @@ namespace BlackGui
             void ps_dataChanged();
 
         private:
-            Ui::CDbAirlineIcaoSelectorComponent *ui;
+            QScopedPointer<Ui::CDbAirlineIcaoSelectorComponent> ui;
         };
     }
 } // ns
