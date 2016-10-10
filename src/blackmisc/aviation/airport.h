@@ -49,6 +49,7 @@ namespace BlackMisc
                 IndexPosition,
                 IndexCountry,
                 IndexElevation,
+                IndexOperating,
             };
 
             //! Default constructor.
@@ -98,6 +99,12 @@ namespace BlackMisc
             //! \sa setGeodeticHeight
             void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_position.setGeodeticHeight(elevation); }
 
+            //! Is the airport still active?
+            bool isOperating() const { return m_operating; }
+
+            //! Sets the value of \sa isOperating().
+            void setOperating(bool operating) { m_operating = operating; }
+
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
@@ -146,6 +153,7 @@ namespace BlackMisc
             QString                             m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
             CCountry                            m_country;
+            bool                                m_operating;
 
             BLACK_METACLASS(
                 CAirport,
@@ -153,6 +161,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(descriptiveName),
                 BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(country),
+                BLACK_METAMEMBER(operating),
                 BLACK_METAMEMBER(relativeDistance),
                 BLACK_METAMEMBER(relativeBearing)
             );

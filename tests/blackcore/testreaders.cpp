@@ -135,10 +135,10 @@ namespace BlackCoreTest
         QVERIFY2(this->m_airportReader->getAirports().size() > 0, "No airports");
         auto heathrow = this->m_airportReader->getAirports().findByIcao("EGLL");
         QVERIFY2(heathrow.size() == 1, "No Heathrow");
+        QVERIFY2(heathrow[0].isOperating(), "Wrong airport data");
 
         auto airports = m_airportReader->getAirports();
         airports.sortByRange(CCoordinateGeodetic(CLatitude(51.5085300, CAngleUnit::deg()), CLongitude(-0.1257400, CAngleUnit::deg()), CLength()), true);
-        qDebug() << airports[0].getIcao() << airports[1].getIcao();
         QVERIFY2(airports[0].getIcao() == CAirportIcaoCode("EGLW"), "Wrong airport data");
 
         CApplication::processEventsFor(2500); // make sure events are processed

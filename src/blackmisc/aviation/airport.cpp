@@ -72,6 +72,8 @@ namespace BlackMisc
             Q_ASSERT(json.value("longitude").isDouble());
             CCoordinateGeodetic pos(json.value("latitude").toDouble(), json.value("longitude").toDouble(), 0);
             setPosition(pos);
+
+            setOperating(json.value("operating").toString() == QStringLiteral("Y"));
         }
 
         CAirport CAirport::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
@@ -81,6 +83,7 @@ namespace BlackMisc
             airport.setElevation(CLength(json.value("altitude").toInt(), CLengthUnit::ft()));
             CCoordinateGeodetic pos(json.value("latitude").toDouble(), json.value("longitude").toDouble(), 0);
             airport.setPosition(pos);
+            airport.setOperating(json.value("operating").toString() == QStringLiteral("Y"));
 
             if (json.value("alpha3").isString() && json.value("country").isString())
             {
@@ -106,6 +109,8 @@ namespace BlackMisc
                 return this->m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexElevation:
                 return this->getElevation().propertyByIndex(index.copyFrontRemoved());
+            case IndexOperating:
+                return CVariant::from(this->isOperating());
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -127,6 +132,9 @@ namespace BlackMisc
                 break;
             case IndexPosition:
                 this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                break;
+            case IndexOperating:
+                this->setOperating(variant.toBool());
                 break;
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
