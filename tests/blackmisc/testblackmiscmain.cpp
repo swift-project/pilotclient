@@ -23,6 +23,7 @@
 #include "testlibrarypath.h"
 #include "testmath.h"
 #include "testphysicalquantities.h"
+#include "testprocess.h"
 #include "testslot.h"
 #include "teststringutils.h"
 #include "testvaluecache.h"
@@ -94,6 +95,10 @@ namespace BlackMiscTest
         {
             CTestLibraryPath libraryPathTests;
             status |= test.exec(&libraryPathTests, "blackmisc_librarypath");
+        }
+        {
+            CTestProcess processTests;
+            status |= test.exec(&processTests, "blackmisc_process");
         }
         return status;
     }

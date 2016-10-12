@@ -28,6 +28,7 @@
 #include "blackmisc/network/registermetadatanetwork.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/registermetadatapq.h"
+#include "blackmisc/processinfo.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/propertyindexlist.h"
 #include "blackmisc/propertyindexvariantmap.h"
@@ -71,6 +72,7 @@ namespace BlackMisc
         CNameVariantPair::registerMetadata();
         CNameVariantPairList::registerMetadata();
         CPixmap::registerMetadata();
+        CProcessInfo::registerMetadata();
         CPropertyIndex::registerMetadata();
         CPropertyIndex::registerMetadata();
         CPropertyIndexList::registerMetadata();
