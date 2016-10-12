@@ -39,6 +39,7 @@
 #include <QtDebug>
 #include <QtGlobal>
 #include <future>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -85,7 +86,10 @@ namespace BlackMisc
     {
     public:
         //! Construct the single instance of the revision metastate.
-        CDataCacheRevision(const QString &basename) : m_basename(basename) {}
+        CDataCacheRevision(const QString &basename);
+
+        //! Destructor.
+        ~CDataCacheRevision();
 
         //! Non-copyable.
         //! @{
@@ -155,6 +159,12 @@ namespace BlackMisc
         //! Set the flag which will cause a deferred-load value to be loaded.
         void admitValue(const QString &key);
 
+        //! Set the flag which will cause a value to be reset when starting a new session.
+        void sessionValue(const QString &key);
+
+        //! True if the current update is the first of a new session.
+        bool isNewSession() const;
+
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -170,7 +180,11 @@ namespace BlackMisc
         QSet<QString> m_deferredValues;
         QSet<QString> m_admittedValues;
         QSet<QString> m_admittedQueue;
+        QSet<QString> m_sessionValues;
         std::vector<std::promise<void>> m_promises;
+
+        class Session;
+        std::unique_ptr<Session> m_session;
 
         static QJsonObject toJson(const QMap<QString, qint64> &timestamps);
         static QMap<QString, qint64> fromJson(const QJsonObject &timestamps);
@@ -262,6 +276,9 @@ namespace BlackMisc
         //! Method used for implementing deferring values.
         void admitValue(const QString &key, bool triggerLoad);
 
+        //! Method used for implementing session values.
+        void sessionValue(const QString &key);
+
     private:
         CDataCache();
 
@@ -295,6 +312,7 @@ namespace BlackMisc
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive()); }
             if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
             if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
+            if (Trait::isSession()) { CDataCache::instance()->sessionValue(this->getKey()); }
             static_assert(! (Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
@@ -419,6 +437,11 @@ namespace BlackMisc
         //! If true, then value will not be loaded until it is explicitly admitted.
         //! Good for large values the loading of which might depend on some other condition.
         static constexpr bool isDeferred() { return false; }
+
+        //! If true, then upon starting an application, value will be overwritten with the default
+        //! if there are no other applications currently using the cache. In effect, the value
+        //! is retained only while there are applications using the cache.
+        static constexpr bool isSession() { return false; }
 
         //! Deleted default constructor.
         TDataTrait() = delete;

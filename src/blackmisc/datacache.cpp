@@ -14,6 +14,7 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/processinfo.h"
 
 #include <QByteArray>
 #include <QDir>
@@ -165,6 +166,11 @@ namespace BlackMisc
         if (triggerLoad) { loadFromStoreAsync(); }
     }
 
+    void CDataCache::sessionValue(const QString &key)
+    {
+        QTimer::singleShot(0, &m_serializer, [this, key] { m_revision.sessionValue(key); });
+    }
+
     QString lockFileError(const QLockFile &lock)
     {
         switch (lock.error())
@@ -292,6 +298,7 @@ namespace BlackMisc
 
             auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps().subtract(newValues.keys());
             if (! missingKeys.isEmpty()) { m_cache->m_revision.writeNewRevision({}, missingKeys); }
+            else if (m_cache->m_revision.isNewSession()) { m_cache->m_revision.writeNewRevision({}); }
 
             msg.setCategories(this);
             CLogMessage::preformatted(msg);
@@ -324,6 +331,21 @@ namespace BlackMisc
         });
     }
 
+    class BLACKMISC_EXPORT CDataCacheRevision::Session
+    {
+    public:
+        Session(const QString &filename) : m_filename(filename) {}
+        void updateSession();
+        bool isNewSession() const { return m_isNewSession; }
+    private:
+        const QString m_filename;
+        bool m_isNewSession = false;
+    };
+
+    CDataCacheRevision::CDataCacheRevision(const QString &basename) : m_basename(basename) {}
+
+    CDataCacheRevision::~CDataCacheRevision() = default;
+
     CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid, bool pinsOnly)
     {
         QMutexLocker lock(&m_mutex);
@@ -341,6 +363,7 @@ namespace BlackMisc
 
         m_timestamps.clear();
         m_originalTimestamps.clear();
+        if (! m_session) { m_session = std::make_unique<Session>(m_basename + "/.session"); }
 
         QFile revisionFile(m_basename + "/.rev");
         if (revisionFile.exists())
@@ -398,6 +421,12 @@ namespace BlackMisc
                 {
                     if (deferrals.contains(key) && ! m_admittedValues.contains(key)) { m_timestamps.remove(key); }
                 }
+
+                m_session->updateSession();
+                if (isNewSession())
+                {
+                    for (const auto &key : fromJson(json.value("session").toArray())) { m_timestamps.remove(key); }
+                }
             }
             else if (revisionFile.size() > 0)
             {
@@ -440,6 +469,7 @@ namespace BlackMisc
         json.insert("ttl", toJson(m_timesToLive));
         json.insert("pins", toJson(m_pinnedValues));
         json.insert("deferrals", toJson(m_deferredValues));
+        json.insert("session", toJson(m_sessionValues));
         revisionFile.write(QJsonDocument(json).toJson());
 
         if (! revisionFile.checkedClose())
@@ -648,6 +678,23 @@ namespace BlackMisc
         m_admittedQueue.insert(key);
     }
 
+    void CDataCacheRevision::sessionValue(const QString &key)
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(! m_updateInProgress);
+        m_sessionValues.insert(key);
+    }
+
+    bool CDataCacheRevision::isNewSession() const
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        Q_ASSERT(m_session);
+        return m_session->isNewSession();
+    }
+
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)
     {
         QJsonObject result;
@@ -687,6 +734,32 @@ namespace BlackMisc
         }
         return result;
     }
+
+    void CDataCacheRevision::Session::updateSession()
+    {
+        CAtomicFile file(m_filename);
+        bool ok = file.open(QIODevice::ReadWrite | QFile::Text);
+        if (! ok)
+        {
+            CLogMessage(this).error("Failed to open session file %1: %2") << m_filename << file.errorString();
+            m_isNewSession = true;
+            return;
+        }
+        CSequence<CProcessInfo> session;
+        session.convertFromJson(file.readAll());
+        session.removeIf([](const CProcessInfo &pi) { return ! pi.exists(); });
+
+        m_isNewSession = session.isEmpty();
+
+        CProcessInfo currentProcess = CProcessInfo::currentProcess();
+        Q_ASSERT(currentProcess.exists());
+        session.replaceOrAdd(currentProcess, currentProcess);
+        if (!(file.seek(0) && file.resize(0) && file.write(QJsonDocument(session.toJson()).toJson()) && file.checkedClose()))
+        {
+            CLogMessage(this).error("Failed to write to session file %1: %2") << m_filename << file.errorString();
+        }
+    }
+
 }
 
 //! \endcond
