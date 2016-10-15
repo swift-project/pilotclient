@@ -74,7 +74,12 @@ namespace BlackMisc
         template <typename T>
         CSetting(T *owner) :
             CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
-        {}
+        {
+            if (! this->isInitialized())
+            {
+                this->onOwnerNameChanged([this, owner] { Private::reconstruct(this, owner); });
+            }
+        }
 
         //! Constructor.
         //! \param owner Will be the parent of the internal QObject used to access the value.

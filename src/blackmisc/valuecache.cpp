@@ -48,7 +48,6 @@ namespace BlackMisc
     template <typename T>
     bool isSafeToIncrement(const T &value) { return value < std::numeric_limits<T>::max(); }
 
-
     //! \private
     std::pair<QString &, std::atomic<bool> &> getCacheRootDirectoryMutable()
     {
@@ -557,11 +556,16 @@ namespace BlackMisc
 
     CValuePage::Element &CValuePage::createElement(const QString &keyTemplate, const QString &name, int metaType, Validator validator, const CVariant &defaultValue)
     {
-        auto *category = parent()->findChild<CValueCacheCategory *>();
+        if (parent()->objectName().isEmpty() && keyTemplate.contains("%OwnerName%"))
+        {
+            static Element dummy("", "", QMetaType::UnknownType, nullptr, {});
+            return dummy;
+        }
+
         QString key = keyTemplate;
         key.replace("%Application%", QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName(), Qt::CaseInsensitive);
         key.replace("%OwnerClass%", QString(parent()->metaObject()->className()).replace("::", "/"), Qt::CaseInsensitive);
-        key.replace("%OwnerCategory%", category ? category->getCategory() : QString(parent()->metaObject()->className()).replace("::", "/"), Qt::CaseInsensitive);
+        key.replace("%OwnerName%", parent()->objectName(), Qt::CaseInsensitive);
 
         Q_ASSERT_X(! m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
         Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
@@ -598,6 +602,11 @@ namespace BlackMisc
         element.m_notifySlot = slot;
     }
 
+    bool CValuePage::isInitialized(const Element &element) const
+    {
+        return ! element.m_key.isEmpty();
+    }
+
     bool CValuePage::isValid(const Element &element, int typeId) const
     {
         auto reader = element.m_value.read();
@@ -606,6 +615,7 @@ namespace BlackMisc
 
     const CVariant &CValuePage::getValue(const Element &element) const
     {
+        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         Q_ASSERT(QThread::currentThread() == thread());
 
         return element.m_value.read();
@@ -613,11 +623,13 @@ namespace BlackMisc
 
     CVariant CValuePage::getValueCopy(const Element &element) const
     {
+        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         return element.m_value.read();
     }
 
     CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save, bool ignoreValue)
     {
+        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         Q_ASSERT(QThread::currentThread() == thread());
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
@@ -661,6 +673,7 @@ namespace BlackMisc
 
     qint64 CValuePage::getTimestamp(const Element &element) const
     {
+        Q_ASSERT_X(! element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         return element.m_timestamp;
     }
 

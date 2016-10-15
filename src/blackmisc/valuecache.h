@@ -43,6 +43,7 @@
 #include <cstddef>
 #include <tuple>
 #include <utility>
+#include <memory>
 
 namespace BlackMisc
 {
@@ -357,7 +358,7 @@ namespace BlackMisc
             m_page(Private::CValuePage::getPageFor(owner, cache)),
             m_element(m_page.createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
         {
-            cache->setHumanReadableName(key, name);
+            if (isInitialized()) { cache->setHumanReadableName(getKey(), name); }
         }
 
         //! Set a callback to be called when the value is changed by another source.
@@ -365,6 +366,11 @@ namespace BlackMisc
         template <typename F>
         void setNotifySlot(F slot)
         {
+            if (! isInitialized())
+            {
+                onOwnerNameChanged([this, slot] { setNotifySlot(slot); });
+                return;
+            }
             using U = typename Private::TClassOfPointerToMember<F>::type;
             Q_ASSERT_X(m_page.parent()->inherits(U::staticMetaObject.className()), Q_FUNC_INFO, "Slot is member function of wrong class");
             m_page.setNotifySlot(m_element, { [slot](QObject *obj) { Private::invokeSlot(slot, static_cast<U *>(obj)); }, makeId(slot) });
@@ -408,6 +414,9 @@ namespace BlackMisc
         //! Return true if this value is currently saving.
         bool isSaving() const { return m_page.isSaving(m_element); }
 
+        //! Can be false if key contains %OwnerName% and owner's objectName was empty.
+        bool isInitialized() const { return m_page.isInitialized(m_element); }
+
         //! Deleted copy constructor.
         CCached(const CCached &) = delete;
 
@@ -429,6 +438,17 @@ namespace BlackMisc
         bool isValid() const { return m_page.isValid(m_element, qMetaTypeId<T>()); }
 
     protected:
+        //! \private Connect a function to be called (only once) when the owner's objectName changes.
+        void onOwnerNameChanged(std::function<void()> function)
+        {
+            auto connection = std::make_shared<QMetaObject::Connection>();
+            *connection = QObject::connect(m_page.parent(), &QObject::objectNameChanged, [connection, function](const QString &)
+            {
+                QObject::disconnect(*connection);
+                function();
+            });
+        }
+
         Private::CValuePage &m_page; //!< \private
         Private::CValuePage::Element &m_element; //!< \private
     };

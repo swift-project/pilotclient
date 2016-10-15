@@ -44,6 +44,16 @@ namespace BlackMisc
         //! \endcond
 
         /*!
+         * \private Destroy an object and reconstruct it with the given constructor arguments.
+         */
+        template <typename T, typename... Args>
+        void reconstruct(T *object, Args &&... args)
+        {
+            object->~T();
+            new (object) T(std::forward<Args>(args)...);
+        }
+
+        /*!
          * \private QObject subclass used by CCached<T> class template for signal/slot communication with CValueCache.
          * An instance of this class is shared between all CCached<T> referring to the same CValueCache and owned by the same QObject,
          * with the latter QObject becoming parent of this instance.
@@ -75,6 +85,9 @@ namespace BlackMisc
 
             //! Set the functor to call to notify that the value corresponding to the element's key was modified.
             void setNotifySlot(Element &element, NotifySlot slot);
+
+            //! True if the currently paged value corresponds to a valid key.
+            bool isInitialized(const Element &element) const;
 
             //! True if the currently paged value is a valid instance of the given type.
             //! \threadsafe

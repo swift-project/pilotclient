@@ -309,6 +309,11 @@ namespace BlackMisc
         CData(T *owner) :
             CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
         {
+            if (! this->isInitialized())
+            {
+                this->onOwnerNameChanged([this, owner] { Private::reconstruct(this, owner); });
+                return;
+            }
             if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive()); }
             if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
             if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
