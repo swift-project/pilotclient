@@ -248,14 +248,10 @@ namespace BlackCore
 
     bool CApplication::waitForStart()
     {
-        // process events return immediatley if nothing is to be processed
-        const QTime dieTime = QTime::currentTime().addMSecs(5000);
-        while (QTime::currentTime() < dieTime && !this->m_started && !this->m_startUpCompleted)
-        {
-            // Alternative: use QEventLoop, which seemed to make the scenario here more complex
-            QCoreApplication::instance()->processEvents(QEventLoop::AllEvents, 250);
-            QThread::msleep(250); // avoid CPU loop overload by "infinite loop"
-        }
+        QEventLoop eventLoop;
+        QTimer::singleShot(5000, &eventLoop, &QEventLoop::quit);
+        connect(this, &CApplication::setupAvailable, &eventLoop, &QEventLoop::quit);
+        eventLoop.exec();
         if (!this->m_startUpCompleted)
         {
             CLogMessage(this).error("Waiting for startup timed out");
