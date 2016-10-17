@@ -40,6 +40,11 @@ namespace BlackCore
             // void
         }
 
+        CStatusMessageList CDatabaseWriter::asyncPublishModel(const CAircraftModel &model)
+        {
+            return this->asyncPublishModels(CAircraftModelList({ model }));
+        }
+
         CStatusMessageList CDatabaseWriter::asyncPublishModels(const CAircraftModelList &models)
         {
             CStatusMessageList msgs;

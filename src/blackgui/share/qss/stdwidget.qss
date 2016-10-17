@@ -50,7 +50,7 @@ QMainWindow::separator:hover {
   background: transparent;
 }
 
-/* Dialog, sometime main window */
+/* Dialog, sometimes main window */
 QDialog {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
@@ -511,6 +511,10 @@ QTableView, QTreeView, QListView {
   margin-top: 2px;
   margin-bottom: 2px;
   padding:0px;
+}
+
+QTableView::item:selected {
+  background-color: blue;
 }
 
 QTreeView {

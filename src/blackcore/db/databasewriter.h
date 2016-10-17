@@ -36,7 +36,10 @@ namespace BlackCore
             //! Constructor
             CDatabaseWriter(const BlackMisc::Network::CUrl &baseUrl, QObject *parent);
 
-            //! Write model to DB
+            //! Write models to DB
+            BlackMisc::CStatusMessageList asyncPublishModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Write models to DB
             BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models);
 
             //! Shutdown
@@ -54,10 +57,10 @@ namespace BlackCore
             void ps_postModelsResponse(QNetworkReply *nwReplyPtr);
 
         private:
-            BlackMisc::Network::CUrl                       m_modelPublishUrl;
-            QNetworkReply                                 *m_pendingReply = nullptr;
-            qint64                                         m_replyPendingSince = -1;
-            bool                                           m_shutdown = false;
+            BlackMisc::Network::CUrl m_modelPublishUrl;
+            QNetworkReply           *m_pendingReply = nullptr;
+            qint64                   m_replyPendingSince = -1;
+            bool                     m_shutdown = false;
 
             //! Kill the pending reply
             bool killPendingReply();

@@ -1,0 +1,120 @@
+/* Copyright (C) 2016
+ * swift project Community / Contributors
+ *
+ * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
+#ifndef BLACKGUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
+#define BLACKGUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
+
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include <QWizard>
+#include <QScopedPointer>
+
+namespace Ui { class CDbQuickMappingWizard; }
+namespace BlackGui
+{
+    namespace Components
+    {
+        /*!
+         * Wizard to quickly provide a single mapping
+         */
+        class CDbQuickMappingWizard : public QWizard
+        {
+            Q_OBJECT
+
+        public:
+            //! The wizard pages
+            enum Pages
+            {
+                PageIntro,
+                PageAircraftSelect,
+                PageColor,
+                PageLiverySelect,
+                PageDistributorSelect,
+                PageConfirmation,
+                PageCredentials,
+                PageSendStatus
+            };
+
+            //! Constructor
+            explicit CDbQuickMappingWizard(QWidget *parent = nullptr);
+
+            //! Destructor
+            ~CDbQuickMappingWizard();
+
+            //! Preset values
+            void presetAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao);
+
+            //! Preset a model
+            void presetModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Clear wizard
+            void clear();
+
+            //! \copydoc QWizard::validateCurrentPage
+            virtual bool validateCurrentPage() override;
+
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
+        private:
+            QScopedPointer<Ui::CDbQuickMappingWizard> ui;
+            int m_lastId = 0;
+            BlackMisc::Simulation::CAircraftModel m_model; // model to be mapped
+
+            //! Set the filter
+            void setAircraftIcaoFilter();
+
+            //! Set the filter
+            void setAirlineIcaoFilter();
+
+            //! Set color filter
+            void setColorFilter();
+
+            //! Livery assigned
+            BlackMisc::Aviation::CLivery getFirstSelectedOrDefaultLivery() const;
+
+            //! Aircraft ICAO assigned
+            BlackMisc::Aviation::CAircraftIcaoCode getFirstSelectedOrDefaultAircraftIcao() const;
+
+            //! Distributor assigned
+            BlackMisc::Simulation::CDistributor getFirstSelectedOrDefaultDistributor() const;
+
+            //! Validate the data
+            BlackMisc::CStatusMessageList validateData() const;
+
+            //! Consolidate model data
+            void consolidateModel();
+
+            //! Write the model to DB
+            void writeModeltoDb();
+
+        private slots:
+            //! Web data have been read
+            void ps_webDataRead();
+
+            //! Models published
+            void ps_publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
+                                    const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
+                                    const BlackMisc::CStatusMessageList &messages,
+                                    bool requestSuccessful, bool directWrite);
+
+            //! Current page has been changed
+            void ps_currentWizardPageChanged(int id);
+
+            //! Airline selected
+            void ps_airlineSelected(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+
+            //! Aircraft selected
+            void ps_aircraftSelected(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+        };
+    } // ns
+} // ns
+#endif // guard
