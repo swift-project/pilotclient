@@ -71,6 +71,9 @@ namespace BlackGui
             //! Show log details
             void showDetails(bool details);
 
+            //! Clear
+            void clear();
+
         signals:
             //! Make me visible
             void requestAttention();
@@ -103,7 +106,6 @@ namespace BlackGui
 
             private:
                 QAction *m_action = nullptr;
-
             };
         };
     } // ns

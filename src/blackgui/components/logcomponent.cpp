@@ -75,6 +75,13 @@ namespace BlackGui
             ui->form_StatusMessage->setVisible(details);
         }
 
+        void CLogComponent::clear()
+        {
+            ui->tvp_StatusMessages->clear();
+            ui->form_StatusMessage->clear();
+            ui->tep_StatusPageConsole->clear();
+        }
+
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
             if (statusMessage.isEmpty()) return;
