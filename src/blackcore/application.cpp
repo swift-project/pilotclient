@@ -16,6 +16,7 @@
 #include "blackcore/registermetadata.h"
 #include "blackcore/setupreader.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/atomicfile.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/directoryutils.h"
@@ -73,6 +74,13 @@ using namespace BlackCore::Db;
 using namespace crashpad;
 
 BlackCore::CApplication *sApp = nullptr; // set by constructor
+
+//! \private
+static const QString &swiftDataRoot()
+{
+    static const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/";
+    return path;
+}
 
 namespace BlackCore
 {
@@ -138,9 +146,42 @@ namespace BlackCore
         }
     }
 
+    int CApplication::exec()
+    {
+        Q_ASSERT_X(instance(), Q_FUNC_INFO, "missing application");
+
+        CApplicationInfoList apps = getRunningApplications();
+        apps.push_back(instance()->getApplicationInfo());
+        bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), swiftDataRoot() + "apps.json");
+        if (!ok) { CLogMessage(static_cast<CApplication*>(nullptr)).error("Failed to write to application list file"); }
+
+        return QCoreApplication::exec();
+    }
+
     CApplication::~CApplication()
     {
         this->gracefulShutdown();
+    }
+
+    CApplicationInfo CApplication::getApplicationInfo() const
+    {
+        CApplicationInfo::ApplicationMode mode;
+        if (isRunningInDeveloperEnvironment()) { mode |= CApplicationInfo::Developer; }
+        if (CBuildConfig::isBetaTest()) { mode |= CApplicationInfo::BetaTest; }
+        return { getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CVersion::version(), CProcessInfo::currentProcess() };
+    }
+
+    CApplicationInfoList CApplication::getRunningApplications()
+    {
+        CApplicationInfoList apps;
+        apps.convertFromJson(CFileUtils::readLockedFileToString(swiftDataRoot() + "apps.json"));
+        apps.removeIf([](const CApplicationInfo &info) { return !info.processInfo().exists(); });
+        return apps;
+    }
+
+    bool CApplication::isAlreadyRunning() const
+    {
+        return getRunningApplications().containsBy([this](const CApplicationInfo &info) { return info.application() == getSwiftApplication(); });
     }
 
     const QString &CApplication::getApplicationNameAndVersion() const
@@ -455,12 +496,6 @@ namespace BlackCore
     void CApplication::deleteAllCookies()
     {
         this->m_cookieManager.deleteAllCookies();
-    }
-
-    int CApplication::exec()
-    {
-        Q_ASSERT_X(instance(), Q_FUNC_INFO, "missing application");
-        return QCoreApplication::exec();
     }
 
     void CApplication::exit(int retcode)

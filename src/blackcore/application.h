@@ -108,6 +108,15 @@ namespace BlackCore
         //! Destructor
         virtual ~CApplication();
 
+        //! Application information
+        BlackMisc::CApplicationInfo getApplicationInfo() const;
+
+        //! Information about all running apps (including this one only if exec() has already been called)
+        static BlackMisc::CApplicationInfoList getRunningApplications();
+
+        //! True if this swift application is already running (including different versions)
+        bool isAlreadyRunning() const;
+
         //! Application name and version
         const QString &getApplicationNameAndVersion() const;
 
