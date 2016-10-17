@@ -38,7 +38,6 @@ namespace BlackGui
             //! \copydoc BlackCore::TSettingTrait::defaultValue
             static QString defaultValue() { return QStringLiteral("Fusion"); }
         };
-
     } // ns
 } // ns
 

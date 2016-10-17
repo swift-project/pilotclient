@@ -60,7 +60,7 @@ namespace BlackGui
             void ps_onLogoffClicked();
 
             //! User authentication completed
-            void ps_AuthenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &status);
+            void ps_authenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &status);
         };
     } // ns
 } // ns

@@ -57,8 +57,8 @@ namespace BlackGui
 
             ui->setupUi(this);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
-            ui->comp_AirlineSelector->withIcaoDescription(false);
-            ui->comp_AircraftSelector->withIcaoDescription(false);
+            ui->comp_AirlineSelector->displayWithIcaoDescription(false);
+            ui->comp_AircraftSelector->displayWithIcaoDescription(false);
             ui->comp_LiverySelector->withLiveryDescription(false);
             ui->tvp_ResultMessages->setMode(CStatusMessageListModel::Simplified);
 

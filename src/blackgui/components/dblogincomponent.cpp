@@ -57,7 +57,7 @@ namespace BlackGui
 
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
-            connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::ps_AuthenticationFinished);
+            connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::ps_authenticationFinished);
             connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::ps_onLoginClicked);
         }
 
@@ -97,7 +97,7 @@ namespace BlackGui
             this->setModeLogin(true);
         }
 
-        void CDbLoginComponent::ps_AuthenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &status)
+        void CDbLoginComponent::ps_authenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &status)
         {
             bool ok = !status.hasErrorMessages();
             if (ok)
