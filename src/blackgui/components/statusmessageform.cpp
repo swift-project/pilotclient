@@ -57,6 +57,13 @@ namespace BlackGui
             ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
         }
 
+        void CStatusMessageForm::clear()
+        {
+            ui->le_Timestamp->clear();
+            ui->le_Categories->clear();
+            ui->le_Severity->clear();
+        }
+
         void CStatusMessageForm::toggleVisibility()
         {
             this->setVisible(!isVisible());

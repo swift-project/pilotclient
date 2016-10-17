@@ -48,6 +48,9 @@ namespace BlackGui
             //! Set message
             void setValue(const BlackMisc::CStatusMessage &message);
 
+            //! Clear
+            void clear();
+
             //! Toggle visibility
             void toggleVisibility();
 
