@@ -30,7 +30,6 @@ class QDropEvent;
 class QWidget;
 
 namespace Ui { class CDbAircraftIcaoSelectorComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -45,6 +44,13 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! How to display the info
+            enum Display
+            {
+                DisplayIcaoAndId,
+                DisplayCompleterString
+            };
+
             //! Constructor
             explicit CDbAircraftIcaoSelectorComponent(QWidget *parent = nullptr);
 
@@ -67,7 +73,10 @@ namespace BlackGui
             void setReadOnly(bool readOnly);
 
             //! Display distributor description
-            void withIcaoDescription(bool description);
+            void displayWithIcaoDescription(bool description);
+
+            //! How to display string in text field
+            void displayMode(Display mode) { m_display = mode; }
 
             //! Set with valid Distributor
             bool isSet() const;
@@ -106,7 +115,12 @@ namespace BlackGui
             QScopedPointer<Ui::CDbAircraftIcaoSelectorComponent> ui;
             QScopedPointer<QCompleter> m_completerIcaoDescription;
             BlackMisc::Aviation::CAircraftIcaoCode m_currentIcao;
+            Display m_display = DisplayIcaoAndId;
+
+            //! Get the completer strings
+            //! \remark shared for performance reasons
+            static const QStringList &completerStrings();
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

@@ -61,8 +61,15 @@ namespace BlackGui
         bool CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
         {
             if (icao == m_currentIcao) { return false; }
-            m_currentIcao = icao;
-            emit changedAirlineIcao(icao);
+            if (icao.isLoadedFromDb())
+            {
+                this->m_currentIcao = icao;
+            }
+            else
+            {
+                this->m_currentIcao = sGui->getWebDataServices()->smartAirlineIcaoSelector(icao);
+            }
+            emit changedAirlineIcao(this->m_currentIcao);
             return true;
         }
 
@@ -78,6 +85,12 @@ namespace BlackGui
             {
                 return false;
             }
+        }
+
+        bool CDbAirlineIcaoSelectorBase::isSet() const
+        {
+            const CAirlineIcaoCode icao(this->getAirlineIcao());
+            return icao.isLoadedFromDb() || icao.hasCompleteData();
         }
 
         void CDbAirlineIcaoSelectorBase::dragEnterEvent(QDragEnterEvent *event)

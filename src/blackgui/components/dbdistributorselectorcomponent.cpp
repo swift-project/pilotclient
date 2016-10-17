@@ -46,6 +46,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             ui->setupUi(this);
+            this->setFocusProxy(ui->le_Distributor);
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>()});
             ui->le_Distributor->setValidator(new CUpperCaseValidator(this));

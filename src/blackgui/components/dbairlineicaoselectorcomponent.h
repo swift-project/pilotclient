@@ -19,12 +19,12 @@
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+#include <QScopedPointer>
 
 class QCompleter;
 class QWidget;
 
 namespace Ui { class CDbAirlineIcaoSelectorComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -37,6 +37,13 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! How to display the info
+            enum Display
+            {
+                DisplayVDesignatorAndId,
+                DisplayCompleterString
+            };
+
             //! Constructor
             explicit CDbAirlineIcaoSelectorComponent(QWidget *parent = nullptr);
 
@@ -55,7 +62,10 @@ namespace BlackGui
             QString getRawDesignator() const;
 
             //! Display ICAO description
-            void withIcaoDescription(bool description);
+            void displayWithIcaoDescription(bool description);
+
+            //! Display mode
+            void displayMode(Display mode) { this->m_display = mode; }
 
         protected:
             //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter
@@ -67,7 +77,12 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbAirlineIcaoSelectorComponent> ui;
+            Display m_display = DisplayVDesignatorAndId;
+
+            //! Get the completer strings
+            //! \remark shared for performance reasons
+            static const QStringList &completerStrings();
         };
-    }
+    } // ns
 } // ns
 #endif // guard

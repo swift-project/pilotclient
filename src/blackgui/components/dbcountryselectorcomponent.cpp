@@ -42,6 +42,7 @@ namespace BlackGui
             ui(new Ui::CDbCountrySelectorComponent)
         {
             ui->setupUi(this);
+            this->setFocusProxy(ui->le_CountryIso);
             this->setAcceptDrops(true);
             this->setAcceptedMetaTypeIds({qMetaTypeId<CCountry>(), qMetaTypeId<CCountryList>()});
 

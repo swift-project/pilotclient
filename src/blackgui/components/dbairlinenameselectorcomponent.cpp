@@ -33,7 +33,8 @@ namespace BlackGui
             ui(new Ui::CDbAirlineNameSelectorComponent)
         {
             ui->setupUi(this);
-            connect(ui->le_AirlineName, &QLineEdit::returnPressed, this, &CDbAirlineNameSelectorComponent::ps_dataChanged);
+            this->setFocusProxy(ui->le_AirlineName);
+            connect(ui->le_AirlineName, &QLineEdit::editingFinished, this, &CDbAirlineNameSelectorComponent::ps_dataChanged);
         }
 
         CDbAirlineNameSelectorComponent::~CDbAirlineNameSelectorComponent()
@@ -44,7 +45,7 @@ namespace BlackGui
         bool CDbAirlineNameSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
         {
             if (!CDbAirlineIcaoSelectorBase::setAirlineIcao(icao)) { return false; }
-            QString name(icao.getName());
+            const QString name(icao.getName());
             ui->le_AirlineName->setText(name);
             return true;
         }
@@ -65,6 +66,7 @@ namespace BlackGui
             c->setCaseSensitivity(Qt::CaseInsensitive);
             c->setCompletionMode(QCompleter::PopupCompletion);
             c->setMaxVisibleItems(10);
+            c->popup()->setMinimumWidth(175);
             ui->le_AirlineName->setCompleter(c);
             return c;
         }
@@ -79,14 +81,6 @@ namespace BlackGui
             {
                 CAirlineIcaoCode icao(sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey));
                 this->setAirlineIcao(icao);
-            }
-            else
-            {
-                // second choice, first object found by designator
-                // for name
-
-                // CAirlineIcaoCode icao(getAirlineIcao));
-                // this->setAirlineIcao(icao);
             }
         }
     } // ns

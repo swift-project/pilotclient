@@ -36,14 +36,13 @@ namespace BlackGui
             ui(new Ui::CDbAirlineIcaoSelectorComponent)
         {
             ui->setupUi(this);
+            this->setFocusProxy(ui->le_Airline);
             ui->le_Airline->setValidator(new CUpperCaseValidator(this));
-            connect(ui->le_Airline, &QLineEdit::returnPressed, this, &CDbAirlineIcaoSelectorComponent::ps_dataChanged);
+            connect(ui->le_Airline, &QLineEdit::editingFinished, this, &CDbAirlineIcaoSelectorComponent::ps_dataChanged);
         }
 
         CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent()
-        {
-            // no inline destructor, read QScopedPointer Forward Declared Pointers
-        }
+        { }
 
         void CDbAirlineIcaoSelectorComponent::setReadOnly(bool readOnly)
         {
@@ -52,14 +51,16 @@ namespace BlackGui
 
         bool CDbAirlineIcaoSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
         {
-            if (!CDbAirlineIcaoSelectorBase::setAirlineIcao(icao)) { return false; }
-            const QString icaoStr(icao.getVDesignator());
+            const bool changed = CDbAirlineIcaoSelectorBase::setAirlineIcao(icao);
+
+            // Always update GUI regardless of changed because of formattimg
+            const QString icaoStr(m_display == DisplayVDesignatorAndId ? this->m_currentIcao.getVDesignatorDbKey() : this->m_currentIcao.getCombinedStringWithKey());
             ui->le_Airline->setText(icaoStr);
-            ui->lbl_Description->setText(icao.getName());
-            return true;
+            ui->lbl_Description->setText(this->m_currentIcao.getName());
+            return changed;
         }
 
-        void CDbAirlineIcaoSelectorComponent::withIcaoDescription(bool description)
+        void CDbAirlineIcaoSelectorComponent::displayWithIcaoDescription(bool description)
         {
             ui->lbl_Description->setVisible(description);
         }
@@ -75,12 +76,22 @@ namespace BlackGui
             return stripDesignatorFromCompleterString(ui->le_Airline->text());
         }
 
+        const QStringList &CDbAirlineIcaoSelectorComponent::completerStrings()
+        {
+            // done for performance reasons
+            // init only once, future instance can share thte list
+            // only to be called when data are read!
+            static const QStringList cs(sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(true, true));
+            return cs;
+        }
+
         QCompleter *CDbAirlineIcaoSelectorComponent::createCompleter()
         {
-            QCompleter *c = new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(true, true), this);
+            QCompleter *c = new QCompleter(completerStrings(), this);
             c->setCaseSensitivity(Qt::CaseInsensitive);
             c->setCompletionMode(QCompleter::PopupCompletion);
             c->setMaxVisibleItems(10);
+            c->popup()->setMinimumWidth(175);
             ui->le_Airline->setCompleter(c);
             return c;
         }
@@ -90,12 +101,18 @@ namespace BlackGui
             if (!sGui) { return; }
             QString s(ui->le_Airline->text());
             if (s.isEmpty()) { return; }
+            CAirlineIcaoCode icao;
             int dbKey = CDatastoreUtility::extractIntegerKey(s);
             if (dbKey >= 0)
             {
-                CAirlineIcaoCode icao(sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey));
-                this->setAirlineIcao(icao);
+                icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey);
             }
+            else
+            {
+                const QString designator = this->getRawDesignator();
+                icao = sGui->getWebDataServices()->smartAirlineIcaoSelector(CAirlineIcaoCode(designator));
+            }
+            this->setAirlineIcao(icao);
         }
     }// class
 } // ns

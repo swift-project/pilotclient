@@ -61,6 +61,9 @@ namespace BlackGui
             //! Clear selection
             virtual void clear() = 0;
 
+            //! Set with valid value
+            bool isSet() const;
+
         signals:
             //! ICAO was changed
             void changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
