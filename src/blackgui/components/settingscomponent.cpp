@@ -43,11 +43,14 @@ namespace BlackGui
 
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
+            this->setCurrentIndex(0); // 1st tab
+            ui->comp_DataLoadOverview->setVisibleDbRefreshButtons(false);
 
             this->connect(ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftUpdateInterval);
             this->connect(ui->hs_SettingsGuiAtcRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAtcStationsUpdateInterval);
             this->connect(ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedUsersUpdateInterval);
             this->connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);
+
         }
 
         CSettingsComponent::~CSettingsComponent()
