@@ -8,6 +8,8 @@
  */
 
 #include "registermetadata.h"
+#include "blackmisc/applicationinfo.h"
+#include "blackmisc/applicationinfolist.h"
 #include "blackmisc/audio/registermetadataaudio.h"
 #include "blackmisc/aviation/registermetadataaviation.h"
 #include "blackmisc/country.h"
@@ -60,6 +62,8 @@ namespace BlackMisc
     {
         initBlackMiscResourcesImpl();
 
+        CApplicationInfo::registerMetadata();
+        CApplicationInfoList::registerMetadata();
         CCountry::registerMetadata();
         CCountryList::registerMetadata();
         CIcon::registerMetadata();
