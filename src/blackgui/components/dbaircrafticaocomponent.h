@@ -22,12 +22,11 @@
 #include <QScopedPointer>
 
 class QWidget;
-
 namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
 namespace Ui { class CDbAircraftIcaoComponent; }
-
 namespace BlackGui
 {
+    namespace Views { class CAircraftIcaoCodeView; }
     namespace Components
     {
         /**
@@ -46,6 +45,9 @@ namespace BlackGui
 
             //! Destructor
             ~CDbAircraftIcaoComponent();
+
+            //! Get the view
+            BlackGui::Views::CAircraftIcaoCodeView *view() const;
 
         public slots:
             //! Filter by ICAO as default

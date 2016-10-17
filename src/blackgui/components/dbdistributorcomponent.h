@@ -16,17 +16,15 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackmisc/network/entityflags.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 
 class QWidget;
-
 namespace Ui { class CDbDistributorComponent; }
-
 namespace BlackGui
 {
+    namespace Views { class CDistributorView; }
     namespace Components
     {
         /**
@@ -45,6 +43,9 @@ namespace BlackGui
 
             //! Destructor
             ~CDbDistributorComponent();
+
+            //! Get the view
+            BlackGui::Views::CDistributorView *view() const;
 
         private slots:
             //! Distributors have been read

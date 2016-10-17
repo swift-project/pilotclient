@@ -48,6 +48,11 @@ namespace BlackGui
         CDbAircraftIcaoComponent::~CDbAircraftIcaoComponent()
         { }
 
+        BlackGui::Views::CAircraftIcaoCodeView *CDbAircraftIcaoComponent::view() const
+        {
+            return ui->tvp_AircraftIcao;
+        }
+
         void CDbAircraftIcaoComponent::filter(const CAircraftIcaoCode &icao)
         {
             ui->filter_AircraftIcao->filter(icao);
@@ -67,6 +72,5 @@ namespace BlackGui
             if (!sGui) { return; }
             sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::AircraftIcaoEntity, QDateTime());
         }
-
     } // ns
 } // ns

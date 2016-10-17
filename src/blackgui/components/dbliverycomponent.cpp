@@ -44,9 +44,19 @@ namespace BlackGui
         CDbLiveryComponent::~CDbLiveryComponent()
         { }
 
+        CLiveryView *CDbLiveryComponent::view()
+        {
+            return ui->tvp_Liveries;
+        }
+
         void CDbLiveryComponent::filter(const BlackMisc::Aviation::CLivery &livery)
         {
             ui->filter_Livery->filter(livery);
+        }
+
+        void CDbLiveryComponent::filterByAirline(const BlackMisc::Aviation::CAirlineIcaoCode &icao)
+        {
+            ui->filter_Livery->filter(icao);
         }
 
         void CDbLiveryComponent::ps_liveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
@@ -63,7 +73,6 @@ namespace BlackGui
             if (!sGui) { return; }
             sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::LiveryEntity);
         }
-
     } // ns
 } // ns
 

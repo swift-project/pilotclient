@@ -24,9 +24,9 @@
 class QWidget;
 
 namespace Ui { class CDbAirlineIcaoComponent; }
-
 namespace BlackGui
 {
+    namespace Views { class CAirlineIcaoCodeView; }
     namespace Components
     {
         /**
@@ -45,6 +45,9 @@ namespace BlackGui
 
             //! Destructor
             ~CDbAirlineIcaoComponent();
+
+            //! Get the view
+            BlackGui::Views::CAirlineIcaoCodeView *view() const;
 
         private slots:
             //! ICAO codes have been read

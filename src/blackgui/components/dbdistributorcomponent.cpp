@@ -43,6 +43,11 @@ namespace BlackGui
         CDbDistributorComponent::~CDbDistributorComponent()
         { }
 
+        CDistributorView *CDbDistributorComponent::view() const
+        {
+            return ui->tvp_Distributors;
+        }
+
         void CDbDistributorComponent::ps_distributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);

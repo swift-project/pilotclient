@@ -16,6 +16,7 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackmisc/network/entityflags.h"
+#include "blackmisc/aviation/airlineicaocode.h"
 
 #include <QFrame>
 #include <QObject>
@@ -25,9 +26,9 @@ class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CLivery; } }
 namespace Ui { class CDbLiveryComponent; }
-
 namespace BlackGui
 {
+    namespace Views { class CLiveryView; }
     namespace Components
     {
         /*!
@@ -47,9 +48,15 @@ namespace BlackGui
             //! Destructor
             virtual ~CDbLiveryComponent();
 
+            //! The livery view
+            BlackGui::Views::CLiveryView *view();
+
         public slots:
-            //! Filter by livery as default
+            //! Filter by livery
             void filter(const BlackMisc::Aviation::CLivery &livery);
+
+            //! Filter by airline ICAO
+            void filterByAirline(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
 
         private slots:
             //! Liveries codes have been read

@@ -46,6 +46,11 @@ namespace BlackGui
         CDbAirlineIcaoComponent::~CDbAirlineIcaoComponent()
         { }
 
+        BlackGui::Views::CAirlineIcaoCodeView *CDbAirlineIcaoComponent::view() const
+        {
+            return ui->tvp_AirlineIcao;
+        }
+
         void CDbAirlineIcaoComponent::ps_icaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
         {
             Q_UNUSED(count);
