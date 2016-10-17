@@ -21,7 +21,6 @@
 class QWidget;
 
 namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
-
 namespace BlackGui
 {
     namespace Editors

@@ -101,15 +101,15 @@
        <widget class="BlackGui::Editors::CValidationIndicator" name="val_Indicator">
         <property name="minimumSize">
          <size>
-          <width>10</width>
+          <width>16</width>
           <height>0</height>
          </size>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16777215</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -120,6 +120,9 @@
           <width>0</width>
           <height>20</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
@@ -170,7 +173,11 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>distributor_Selector</tabstop>
   <tabstop>le_Description</tabstop>
+  <tabstop>le_Alias1</tabstop>
+  <tabstop>le_Alias2</tabstop>
+  <tabstop>le_Updated</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -42,7 +42,7 @@ namespace BlackGui
             ui->le_Id->setReadOnly(true);
             ui->lai_Id->set(CIcons::appAirlineIcao16(), "Id:");
 
-            ui->selector_AirlineDesignator->withIcaoDescription(false);
+            ui->selector_AirlineDesignator->displayWithIcaoDescription(false);
             connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
             connect(ui->selector_AirlineDesignator, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
 

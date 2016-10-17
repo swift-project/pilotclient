@@ -14,7 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/editors/form.h"
-#include "blackgui/components/dbliverycolorsearch.h"
+#include "blackgui/components/dbliverycolorsearchdialog.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/statusmessagelist.h"
@@ -89,7 +89,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CLiveryForm> ui;
             BlackMisc::Aviation::CLivery m_originalLivery; //!< object allowing to override values
-            BlackGui::Components::CDbLiveryColorSearch *m_colorSearch = nullptr; //!< search for color
+            BlackGui::Components::CDbLiveryColorSearchDialog *m_colorSearch = nullptr; //!< search for color
         };
     } // ns
 } // ns

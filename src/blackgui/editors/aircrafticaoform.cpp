@@ -43,10 +43,11 @@ namespace BlackGui
             ui(new Ui::CAircraftIcaoForm)
         {
             ui->setupUi(this);
+            this->setFocusProxy(ui->le_Id);
             ui->lai_id->set(CIcons::appAircraftIcao16(), "Id:");
             ui->le_Updated->setReadOnly(true);
             ui->le_Id->setReadOnly(true);
-            ui->aircraft_Selector->withIcaoDescription(false);
+            ui->aircraft_Selector->displayWithIcaoDescription(false);
             connect(ui->aircraft_Selector, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CAircraftIcaoForm::setValue);
 
             // drag and drop

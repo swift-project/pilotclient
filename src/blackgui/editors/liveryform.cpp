@@ -137,6 +137,8 @@ namespace BlackGui
         void CLiveryForm::allowDrop(bool allowDrop)
         {
             ui->drop_DropData->allowDrop(allowDrop);
+            ui->comp_LiverySelector->allowDrop(allowDrop);
+            ui->editor_AirlineIcao->allowDrop(allowDrop);
         }
 
         bool CLiveryForm::isDropAllowed() const
@@ -152,6 +154,8 @@ namespace BlackGui
             ui->color_Fuselage->setReadOnly(readOnly);
             ui->color_Tail->setReadOnly(readOnly);
             ui->editor_AirlineIcao->setReadOnly(readOnly);
+            ui->pb_SearchColor->setVisible(!readOnly);
+            ui->pb_TempLivery->setVisible(!readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
         }
 
@@ -210,7 +214,7 @@ namespace BlackGui
         {
             if (!this->m_colorSearch)
             {
-                this->m_colorSearch = new CDbLiveryColorSearch(this);
+                this->m_colorSearch = new CDbLiveryColorSearchDialog(this);
                 this->m_colorSearch->setModal(true);
             }
             const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(this->m_colorSearch->exec());

@@ -68,11 +68,8 @@
       </item>
       <item row="4" column="1">
        <widget class="BlackGui::Components::CDbCountrySelectorComponent" name="country_Selector">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
@@ -243,25 +240,22 @@
        <widget class="BlackGui::Editors::CValidationIndicator" name="val_Indicator">
         <property name="minimumSize">
          <size>
-          <width>10</width>
+          <width>16</width>
           <height>100</height>
          </size>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16777215</height>
+         </size>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
        <widget class="BlackGui::Components::CDbAirlineNameSelectorComponent" name="selector_AirlineName">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
@@ -289,12 +283,6 @@
    <header>blackgui/dropsite.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CDbCountrySelectorComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/dbcountryselectorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CDbAirlineIcaoSelectorComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
@@ -306,12 +294,20 @@
    <header>blackgui/components/dbairlinenameselectorcomponent.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbCountrySelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbcountryselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>le_Id</tabstop>
   <tabstop>cb_Va</tabstop>
   <tabstop>cb_Military</tabstop>
   <tabstop>le_TelephonyDesignator</tabstop>
+  <tabstop>selector_AirlineName</tabstop>
+  <tabstop>country_Selector</tabstop>
   <tabstop>le_Updated</tabstop>
  </tabstops>
  <resources/>

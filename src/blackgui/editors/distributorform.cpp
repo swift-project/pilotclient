@@ -34,6 +34,7 @@ namespace BlackGui
             ui(new Ui::CDistributorForm)
         {
             ui->setupUi(this);
+            this->setFocusProxy(ui->distributor_Selector);
             ui->le_Updated->setReadOnly(true);
             ui->distributor_Selector->withDistributorDescription(false);
             ui->lai_Id->set(CIcons::appDistributors16(), "Id:");
