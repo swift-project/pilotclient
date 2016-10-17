@@ -32,7 +32,6 @@ namespace BlackMisc
     }
 }
 namespace Ui { class CLiveryFilterBar; }
-
 namespace BlackGui
 {
     namespace Filters
@@ -56,8 +55,11 @@ namespace BlackGui
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::Aviation::CLiveryList>> createModelFilter() const override;
 
-            //! Filter by livery as default values
+            //! Filter by livery values
             void filter(const BlackMisc::Aviation::CLivery &livery);
+
+            //! Filter by airline values
+            void filter(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
         public slots:
             //! \copydoc CFilterWidget::onRowCountChanged
@@ -77,7 +79,6 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CLiveryFilterBar> ui;
         };
-
     } // ns
 } // ns
 

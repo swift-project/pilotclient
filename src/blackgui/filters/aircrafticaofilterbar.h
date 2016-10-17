@@ -58,6 +58,9 @@ namespace BlackGui
             //! Filter by ICAO object as default values
             void filter(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
+            //! Hide the description
+            void hideDescriptionField(bool hide);
+
         public slots:
             //! \copydoc CFilterWidget::onRowCountChanged
             virtual void onRowCountChanged(int count, bool withFilter) override;

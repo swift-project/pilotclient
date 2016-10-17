@@ -74,13 +74,39 @@ namespace BlackGui
 
         void CLiveryFilterBar::filter(const CLivery &livery)
         {
+            this->clearForm();
+            bool filter = false;
             if (livery.hasCombinedCode())
             {
                 ui->le_LiveryCode->setText(livery.getCombinedCode());
+                filter = true;
             }
-            else if (livery.hasValidAirlineDesignator())
+            if (livery.hasValidAirlineDesignator())
             {
                 ui->le_AirlineIcaoCode->setText(livery.getAirlineIcaoCodeDesignator());
+                filter = true;
+            }
+            if (livery.isColorLivery())
+            {
+                ui->color_Fuselage->setColor(livery.getColorFuselage());
+                ui->color_Tail->setColor(livery.getColorTail());
+                filter = true;
+            }
+            if (filter)
+            {
+                ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+            }
+            else
+            {
+                ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter);
+            }
+        }
+
+        void CLiveryFilterBar::filter(const CAirlineIcaoCode &airlineIcao)
+        {
+            if (airlineIcao.hasValidDesignator())
+            {
+                ui->le_AirlineIcaoCode->setText(airlineIcao.getDesignator());
             }
             else
             {

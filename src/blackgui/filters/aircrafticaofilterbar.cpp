@@ -61,6 +61,7 @@ namespace BlackGui
 
         void CAircraftIcaoFilterBar::filter(const CAircraftIcaoCode &icao)
         {
+            this->clearForm();
             bool filter = false;
             if (icao.hasDesignator())
             {
@@ -74,13 +75,22 @@ namespace BlackGui
             }
             if (icao.hasModelDescription())
             {
-                ui->le_Manufacturer->setText("*" + icao.getModelDescription() + "*");
+                ui->le_Description->setText("*" + icao.getModelDescription() + "*");
                 filter = true;
             }
             if (filter)
             {
                 ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
             }
+            else
+            {
+                ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter);
+            }
+        }
+
+        void CAircraftIcaoFilterBar::hideDescriptionField(bool hide)
+        {
+            ui->le_Description->setVisible(!hide);
         }
 
         void CAircraftIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
