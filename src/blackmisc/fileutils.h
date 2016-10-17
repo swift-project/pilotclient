@@ -41,11 +41,20 @@ namespace BlackMisc
         //! Write string to text file
         static bool writeStringToFile(const QString &content, const QString &fileNameAndPath);
 
+        //! Write string to file, with a lock so two applications can't access at the same time
+        static bool writeStringToLockedFile(const QString &content, const QString &fileNameAndPath);
+
         //! Read file into string
         static QString readFileToString(const QString &fileNameAndPath);
 
+        //! Read file into string, with a lock so two applications can't access at the same time
+        static QString readLockedFileToString(const QString &fileNameAndPath);
+
         //! Read file into string
         static QString readFileToString(const QString &filePath, const QString &fileName);
+
+        //! Read file into string, with a lock so two applications can't access at the same time
+        static QString readLockedFileToString(const QString &filePath, const QString &fileName);
 
         //! Write string to text file in background
         static bool writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath);

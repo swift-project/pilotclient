@@ -17,6 +17,7 @@
 #include <QFlags>
 #include <QIODevice>
 #include <QList>
+#include <QLockFile>
 #include <QTextStream>
 #include <QtGlobal>
 #include <algorithm>
@@ -48,6 +49,13 @@ namespace BlackMisc
         return true;
     }
 
+    bool CFileUtils::writeStringToLockedFile(const QString &content, const QString &fileNameAndPath)
+    {
+        QLockFile lock(fileNameAndPath + ".lock");
+        lock.lock();
+        return writeStringToFile(content, fileNameAndPath);
+    }
+
     QString CFileUtils::readFileToString(const QString &fileNameAndPath)
     {
         QFile file(fileNameAndPath);
@@ -58,9 +66,21 @@ namespace BlackMisc
         return content;
     }
 
+    QString CFileUtils::readLockedFileToString(const QString &fileNameAndPath)
+    {
+        QLockFile lock(fileNameAndPath + ".lock");
+        lock.lock();
+        return readFileToString(fileNameAndPath);
+    }
+
     QString CFileUtils::readFileToString(const QString &filePath, const QString &fileName)
     {
         return readFileToString(appendFilePaths(filePath, fileName));
+    }
+
+    QString CFileUtils::readLockedFileToString(const QString &filePath, const QString &fileName)
+    {
+        return readLockedFileToString(appendFilePaths(filePath, fileName));
     }
 
     bool CFileUtils::writeStringToFileInBackground(const QString &content, const QString &fileNameAndPath)
