@@ -128,9 +128,9 @@ namespace BlackCore
             return this->getModels().size();
         }
 
-        QList<int> CModelDataReader::getModelDbKeys() const
+        QSet<int> CModelDataReader::getModelDbKeys() const
         {
-            return this->getModels().toDbKeyList();
+            return this->getModels().toDbKeySet();
         }
 
         QStringList CModelDataReader::getModelStringList() const

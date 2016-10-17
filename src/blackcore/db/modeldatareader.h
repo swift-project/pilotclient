@@ -105,7 +105,7 @@ namespace BlackCore
 
             //! Get model keys
             //! \threadsafe
-            QList<int> getModelDbKeys() const;
+            QSet<int> getModelDbKeys() const;
 
             //! Get model keys
             //! \threadsafe

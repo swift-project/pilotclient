@@ -67,13 +67,13 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER, typename KEYTYPE>
-        QList<KEYTYPE> IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyList() const
+        QSet<KEYTYPE> IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeySet() const
         {
-            QList<KEYTYPE> keys;
+            QSet<KEYTYPE> keys;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
                 if (!obj.hasValidDbKey()) { continue; }
-                keys.append(obj.getDbKey());
+                keys.insert(obj.getDbKey());
             }
             return keys;
         }
@@ -81,7 +81,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER, typename KEYTYPE>
         KEYTYPE IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::getMaxKey(bool *ok) const
         {
-            QList<KEYTYPE> keys(this->toDbKeyList());
+            QSet<KEYTYPE> keys(this->toDbKeySet());
             if (keys.isEmpty())
             {
                 if (ok) { *ok = false; }
@@ -93,7 +93,7 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER, typename KEYTYPE>
-        int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::removeObjectsWithKeys(const QList<KEYTYPE> &keys)
+        int IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::removeObjectsWithKeys(const QSet<KEYTYPE> &keys)
         {
             if (keys.isEmpty()) { return 0; }
             if (this->container().isEmpty()) { return 0; }
@@ -133,7 +133,7 @@ namespace BlackMisc
                 return this->container().size();
             }
             CONTAINER newValues(this->container());
-            const QList<KEYTYPE> keys(container.toDbKeyList());
+            const QSet<KEYTYPE> keys(container.toDbKeySet());
             newValues.removeObjectsWithKeys(keys);
             int removeSize = newValues.size(); // size after removing data
             newValues.push_back(container);

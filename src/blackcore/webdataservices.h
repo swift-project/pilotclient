@@ -41,6 +41,7 @@
 
 #include <QDateTime>
 #include <QList>
+#include <QSet>
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -205,7 +206,7 @@ namespace BlackCore
 
         //! Model keys
         //! \threadsafe
-        QList<int> getModelDbKeys() const;
+        QSet<int> getModelDbKeys() const;
 
         //! Model strings
         //! \threadsafe

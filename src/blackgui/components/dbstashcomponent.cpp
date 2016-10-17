@@ -131,7 +131,7 @@ namespace BlackGui
             ui->tvp_StashAircraftModels->updateContainerMaybeAsync(models);
         }
 
-        int CDbStashComponent::unstashModels(QList<int> keys)
+        int CDbStashComponent::unstashModels(QSet<int> keys)
         {
             if (keys.isEmpty()) { return 0; }
             return ui->tvp_StashAircraftModels->removeDbKeys(keys);

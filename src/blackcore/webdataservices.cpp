@@ -407,10 +407,10 @@ namespace BlackCore
         return 0;
     }
 
-    QList<int> CWebDataServices::getModelDbKeys() const
+    QSet<int> CWebDataServices::getModelDbKeys() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelDbKeys(); }
-        return QList<int>();
+        return QSet<int>();
     }
 
     QStringList CWebDataServices::getModelStrings() const

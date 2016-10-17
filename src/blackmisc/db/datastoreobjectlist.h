@@ -15,7 +15,7 @@
 #include "blackmisc/timestampobjectlist.h"
 
 #include <QJsonArray>
-#include <QList>
+#include <QSet>
 #include <QString>
 
 namespace BlackMisc
@@ -37,13 +37,13 @@ namespace BlackMisc
             void sortByKey();
 
             //! All keys as list
-            QList<KEYTYPE> toDbKeyList() const;
+            QSet<KEYTYPE> toDbKeySet() const;
 
             //! Max.key value (making sense with integer key)
             KEYTYPE getMaxKey(bool *ok = nullptr) const;
 
             //! Remove objects with key
-            int removeObjectsWithKeys(const QList<KEYTYPE> &keys);
+            int removeObjectsWithKeys(const QSet<KEYTYPE> &keys);
 
             //! Remove objects without key
             int removeObjectsWithoutDbKey();

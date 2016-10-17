@@ -74,7 +74,7 @@ namespace BlackGui
             BlackMisc::CStatusMessage validateStashModel(const BlackMisc::Simulation::CAircraftModel &model, bool allowReplace) const;
 
             //! Unstash given models with keys
-            int unstashModels(QList<int> keys);
+            int unstashModels(QSet<int> keys);
 
             //! Unstash given models by model string
             int unstashModels(QStringList modelStrings);
