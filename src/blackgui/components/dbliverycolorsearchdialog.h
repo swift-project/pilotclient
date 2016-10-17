@@ -9,14 +9,14 @@
 
 //! \file
 
-#ifndef BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCH_H
-#define BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCH_H
+#ifndef BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCHDIALOG_H
+#define BLACKGUI_COMPONENTS_DBLIVERYCOLORSEARCHDIALOG_H
 
 #include "blackmisc/aviation/livery.h"
-#include <QFrame>
+#include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui { class CDbLiveryColorSearch; }
+namespace Ui { class CDbLiveryColorSearchDialog; }
 namespace BlackGui
 {
     namespace Components
@@ -24,25 +24,28 @@ namespace BlackGui
         /*!
          * Search for best matching color livery
          */
-        class CDbLiveryColorSearch : public QFrame
+        class CDbLiveryColorSearchDialog : public QDialog
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            explicit CDbLiveryColorSearch(QWidget *parent = nullptr);
+            explicit CDbLiveryColorSearchDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbLiveryColorSearch();
+            ~CDbLiveryColorSearchDialog();
 
             //! Found livery if any, otherwise default
-            BlackMisc::Aviation::CLivery getLivery() const;
-
-            //! Preset colors
-            void presetColorLivery(const BlackMisc::Aviation::CLivery &livery);
+            const BlackMisc::Aviation::CLivery &getLivery() const;
 
         private:
-            QScopedPointer<Ui::CDbLiveryColorSearch> ui;
+            //! Dialog has been accepted
+            void ps_onAccepted();
+
+            BlackMisc::Aviation::CLivery m_foundLivery; //!< last livery found
+
+        private:
+            QScopedPointer<Ui::CDbLiveryColorSearchDialog> ui;
         };
     } // ns
 } // ns

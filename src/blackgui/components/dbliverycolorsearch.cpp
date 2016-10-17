@@ -21,33 +21,31 @@ namespace BlackGui
     namespace Components
     {
         CDbLiveryColorSearch::CDbLiveryColorSearch(QWidget *parent) :
-            QDialog(parent),
+            QFrame(parent),
             ui(new Ui::CDbLiveryColorSearch)
         {
             ui->setupUi(this);
-            connect(this, &CDbLiveryColorSearch::accepted, this, &CDbLiveryColorSearch::ps_onAccepted);
+            this->setFocusProxy(ui->comp_FuselageSelector);
         }
 
         CDbLiveryColorSearch::~CDbLiveryColorSearch()
         { }
 
-        BlackMisc::Aviation::CLivery CDbLiveryColorSearch::getLivery() const
+        CLivery CDbLiveryColorSearch::getLivery() const
         {
-            return this->m_foundLivery;
-        }
-
-        void CDbLiveryColorSearch::ps_onAccepted()
-        {
-            if (!sGui || !sGui->hasWebDataServices())
-            {
-                this->m_foundLivery = CLivery();
-                return;
-            }
-
             const CRgbColor fuselage = ui->comp_FuselageSelector->getColor();
             const CRgbColor tail = ui->comp_TailSelector->getColor();
             const CLiveryList liveries(sGui->getWebDataServices()->getLiveries());
-            this->m_foundLivery = liveries.findClosestColorLiveryOrDefault(fuselage, tail);
+            return liveries.findClosestColorLiveryOrDefault(fuselage, tail);
+        }
+
+        void CDbLiveryColorSearch::presetColorLivery(const CLivery &livery)
+        {
+            if (livery.isColorLivery())
+            {
+                ui->comp_FuselageSelector->setColor(livery.getColorFuselage());
+                ui->comp_TailSelector->setColor(livery.getColorTail());
+            }
         }
     } // ns
 } // ns
