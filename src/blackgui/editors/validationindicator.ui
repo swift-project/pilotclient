@@ -6,30 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>18</width>
+    <width>16</width>
     <height>18</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>10</width>
+    <width>16</width>
     <height>10</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>25</width>
+    <width>16</width>
     <height>16777215</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Validation Indicator</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
   </property>
   <layout class="QVBoxLayout" name="vl_ValidationIndicator">
    <property name="spacing">
@@ -47,13 +41,16 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item>
+   <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
     <widget class="QLabel" name="lbl_Icon">
      <property name="text">
       <string/>
      </property>
      <property name="pixmap">
       <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/tick.png</pixmap>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignJustify|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>

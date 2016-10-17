@@ -77,7 +77,6 @@ namespace BlackGui
             QTimer m_resetTimer { this};  //!< reset to neutral
             QString m_originalStyleSheet; //!< stored, to be able to reset
         };
-
     } // ns
 } // ns
 
