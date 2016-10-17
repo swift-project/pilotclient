@@ -76,7 +76,7 @@ BlackCore::CApplication *sApp = nullptr; // set by constructor
 
 namespace BlackCore
 {
-    CApplication::CApplication(const QString &applicationName, SwiftApplication application, bool init) :
+    CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
         m_cookieManager( {}, this), m_applicationName(applicationName), m_application(application), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
@@ -155,19 +155,19 @@ namespace BlackCore
         return s;
     }
 
-    CApplication::SwiftApplication CApplication::getSwiftApplication() const
+    CApplicationInfo::Application CApplication::getSwiftApplication() const
     {
-        if (this->isUnitTest()) { return UnitTest; }
-        if (this->m_application != Unknown) { return this->m_application; }
+        if (this->isUnitTest()) { return CApplicationInfo::UnitTest; }
+        if (this->m_application != CApplicationInfo::Unknown) { return this->m_application; }
 
         // if not set, guess
         BLACK_VERIFY_X(false, Q_FUNC_INFO, "Missing application");
         const QString a(QCoreApplication::instance()->applicationName().toLower());
-        if (a.contains("core"))     { return PilotClientCore; }
-        if (a.contains("launcher")) { return Laucher; }
-        if (a.contains("gui"))      { return PilotClientGui; }
-        if (a.contains("core"))     { return PilotClientCore; }
-        return Unknown;
+        if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
+        if (a.contains("launcher")) { return CApplicationInfo::Laucher; }
+        if (a.contains("gui"))      { return CApplicationInfo::PilotClientGui; }
+        if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
+        return CApplicationInfo::Unknown;
     }
 
     bool CApplication::isUnitTest() const

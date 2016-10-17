@@ -34,6 +34,7 @@
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/webreaderflags.h"
+#include "blackmisc/applicationinfolist.h"
 #include "blackmisc/network/url.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/slot.h"
@@ -95,17 +96,6 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        //! Shich swift application is running?
-        enum SwiftApplication
-        {
-            Unknown,
-            Laucher,
-            PilotClientCore,
-            PilotClientGui,
-            MappingTool,
-            UnitTest
-        };
-
         //! Similar to \sa QCoreApplication::instance() returns the single instance
         static CApplication *instance();
 
@@ -113,7 +103,7 @@ namespace BlackCore
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
-        CApplication(const QString &applicationName = executable(), SwiftApplication application = Unknown, bool init = true);
+        CApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, bool init = true);
 
         //! Destructor
         virtual ~CApplication();
@@ -125,7 +115,7 @@ namespace BlackCore
         const QString &getApplicationNameVersionBetaDev() const;
 
         //! swift application running
-        SwiftApplication getSwiftApplication() const;
+        BlackMisc::CApplicationInfo::Application getSwiftApplication() const;
 
         //! Unit test?
         bool isUnitTest() const;
@@ -442,7 +432,7 @@ namespace BlackCore
         QNetworkAccessManager                    m_accessManager { this }; //!< single network access manager
         CCookieManager                           m_cookieManager;          //!< single cookie manager for our access manager
         QString                                  m_applicationName;        //!< application name
-        SwiftApplication                         m_application = Unknown;  //!< Application if specified
+        BlackMisc::CApplicationInfo::Application m_application = BlackMisc::CApplicationInfo::Unknown; //!< Application if specified
         QReadWriteLock                           m_accessManagerLock;      //!< lock to make access manager access threadsafe
         CCoreFacadeConfig                        m_coreFacadeConfig;       //!< Core facade config if any
         CWebReaderFlags::WebReader               m_webReadersUsed;         //!< Readers to be used

@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
-    CGuiApplication a("swift core", CGuiApplication::PilotClientCore, CIcons::swiftCore24());
+    CGuiApplication a("swift core", CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
     a.addVatlibOptions();

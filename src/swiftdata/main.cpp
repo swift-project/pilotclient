@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa);
-    CGuiApplication a("swift mapping tool", CGuiApplication::MappingTool, CIcons::swiftDatabase48());
+    CGuiApplication a("swift mapping tool", CApplicationInfo::MappingTool, CIcons::swiftDatabase48());
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swiftDatabase256());
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forMappingTool());
