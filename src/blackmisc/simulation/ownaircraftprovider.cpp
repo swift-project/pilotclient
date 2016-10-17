@@ -17,7 +17,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         const CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
         {
             Q_ASSERT_X(this->m_ownAircraftProvider, Q_FUNC_INFO, "No object available");

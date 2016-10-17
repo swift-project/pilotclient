@@ -76,12 +76,16 @@ namespace BlackSimPlugin
 
         void CSimulatorFsCommon::setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
         {
-            if (getOwnAircraftModel() != model)
+            if (!model.hasModelString()) { return; }
+            if (this->getOwnAircraftModel() != model)
             {
                 CAircraftModel newModel(model);
                 newModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                updateOwnModel(newModel);
-                emit ownAircraftModelChanged(newModel);
+                const bool updated = this->updateOwnModel(newModel); // update in provider (normally the context)
+                if (updated)
+                {
+                    emit this->ownAircraftModelChanged(this->getOwnAircraftModel());
+                }
             }
         }
 

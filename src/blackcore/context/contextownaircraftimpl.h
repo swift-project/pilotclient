@@ -169,10 +169,10 @@ namespace BlackCore
 
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
-            bool m_automaticVoiceRoomResolution = true;  //!< automatic voice room resolution, or disable for override
-            QString m_voiceRoom1UrlOverride;             //!< overridden voice room url
-            QString m_voiceRoom2UrlOverride;             //!< overridden voice room url
-            mutable QReadWriteLock m_lockAircraft;       //!< lock aircraft
+            bool m_automaticVoiceRoomResolution = true;              //!< automatic voice room resolution, or disable for override
+            QString m_voiceRoom1UrlOverride;                         //!< overridden voice room url
+            QString m_voiceRoom2UrlOverride;                         //!< overridden voice room url
+            mutable QReadWriteLock m_lockAircraft;                   //!< lock aircraft
 
             BlackMisc::CSetting<Vatsim::TCurrentTrafficServer> m_currentNetworkServer { this };
 

@@ -190,8 +190,8 @@ namespace BlackCore
             m_maxRenderedAircraft = maxRenderedAircraft;
         }
 
-        bool r = isRenderingRestricted();
-        bool e = isRenderingEnabled();
+        const bool r = isRenderingRestricted();
+        const bool e = isRenderingEnabled();
         emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
@@ -214,8 +214,8 @@ namespace BlackCore
             m_maxRenderedDistance = distance;
         }
 
-        bool r = isRenderingRestricted();
-        bool e = isRenderingEnabled();
+        const bool r = isRenderingRestricted();
+        const bool e = isRenderingEnabled();
         emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
@@ -333,7 +333,7 @@ namespace BlackCore
             CCallsignSet callsignsToBeAdded(snapshot.getEnabledAircraftCallsignsByDistance().difference(callsignsInSimulator));
             if (!callsignsToBeRemoved.isEmpty())
             {
-                int r = this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
+                const int r = this->physicallyRemoveMultipleRemoteAircraft(callsignsToBeRemoved);
                 changed = r > 0;
             }
 
@@ -351,7 +351,7 @@ namespace BlackCore
         else
         {
             // no rendering at all, we remove everything
-            int r = this->physicallyRemoveAllRemoteAircraft();
+            const int r = this->physicallyRemoveAllRemoteAircraft();
             changed = r > 0;
         }
 

@@ -117,7 +117,7 @@ namespace BlackCore
 
             ownAircraft.initComSystems();
             ownAircraft.initTransponder();
-            CAircraftSituation situation(
+            const CAircraftSituation situation(
                 CCoordinateGeodetic(
                     CLatitude::fromWgs84("N 049° 18' 17"),
                     CLongitude::fromWgs84("E 008° 27' 05"),
@@ -130,7 +130,7 @@ namespace BlackCore
             // reverse lookup if possible
             if (!ownAircraft.getModel().isLoadedFromDb() && !ownAircraft.getModelString().isEmpty())
             {
-                ownAircraft.setModel(reverseLookupModel(ownAircraft.getModelString()));
+                ownAircraft.setModel(this->reverseLookupModel(ownAircraft.getModelString()));
             }
 
             // override empty values
@@ -187,6 +187,7 @@ namespace BlackCore
         {
             if (modelString.isEmpty()) { return CAircraftModel(); }
             if (!sApp || !sApp->hasWebDataServices()) { return CAircraftModel(); }
+            if (sApp->getWebDataServices()->getModelsCount() < 1) { return CAircraftModel(); }
             const CAircraftModel reverseLookupModel = sApp->getWebDataServices()->getModelForModelString(modelString);
             return reverseLookupModel;
         }
@@ -195,7 +196,7 @@ namespace BlackCore
         {
             // reverse lookup if not yet from DB:
             // this is the central place where we keep our own model, so we use best effort
-            // to make that model as accuarate as we can
+            // to make that model as accurate as we can
             CAircraftModel updateModel(model);
             if (!updateModel.isLoadedFromDb())
             {
@@ -209,10 +210,10 @@ namespace BlackCore
                 }
             }
 
+            updateModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             QWriteLocker l(&m_lockAircraft);
             const bool changed = (this->m_ownAircraft.getModel() != updateModel);
             if (!changed) { return false; }
-            updateModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             this->m_ownAircraft.setModel(updateModel);
             return true;
         }
@@ -296,7 +297,7 @@ namespace BlackCore
                 if (this->m_ownAircraft.getPilot() == pilot) { return false; }
                 this->m_ownAircraft.setPilot(pilot);
             }
-            emit changedPilot(pilot);
+            emit this->changedPilot(pilot);
             return true;
         }
 
@@ -307,7 +308,7 @@ namespace BlackCore
                 if (this->m_ownAircraft.getCallsign() == callsign) { return false; }
                 this->m_ownAircraft.setCallsign(callsign);
             }
-            emit changedCallsign(callsign);
+            emit this->changedCallsign(callsign);
             return true;
         }
 
@@ -317,7 +318,7 @@ namespace BlackCore
                 QWriteLocker l(&m_lockAircraft);
                 return this->m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
             }
-            emit changedAircraftIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
+            emit this->changedAircraftIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
         }
 
         bool CContextOwnAircraft::updateSelcal(const CSelcal &selcal, const CIdentifier &originator)

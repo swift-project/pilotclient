@@ -179,12 +179,10 @@ namespace BlackCore
         static QString statusToString(int status);
 
         //! Status to enum
-        //! \todo remove with Qt 5.5 when SimulatorStatus can be transferred via DBus
         static SimulatorStatus statusToEnum(int status);
 
     signals:
         //! Simulator combined status
-        //! \todo Qt5.5: Make use of QFlags
         void simulatorStatusChanged(int status);
 
         //! Emitted when own aircraft model has changed

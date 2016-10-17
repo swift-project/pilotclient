@@ -55,7 +55,6 @@ namespace BlackCore
 {
     namespace Context
     {
-
         //! Own context proxy
         //! \ingroup dbus
         class BLACKCORE_EXPORT IContextOwnAircraft : public CContext
