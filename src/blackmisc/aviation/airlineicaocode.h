@@ -68,6 +68,9 @@ namespace BlackMisc
             //! Get airline, e.g. "DLH", but "VMVA" for virtual airlines
             const QString getVDesignator() const;
 
+            //! Get VDesignator plus key
+            QString getVDesignatorDbKey() const;
+
             //! Set airline, e.g. "DLH"
             void setDesignator(const QString &icaoDesignator);
 

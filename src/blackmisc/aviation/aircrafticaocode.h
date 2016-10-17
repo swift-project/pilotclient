@@ -71,6 +71,9 @@ namespace BlackMisc
             //! Get ICAO designator, e.g. "B737"
             const QString &getDesignator() const { return m_designator; }
 
+            //! Designator and DB key
+            QString getDesignatorDbKey() const;
+
             //! Set ICAO designator, e.g. "B737"
             void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
 

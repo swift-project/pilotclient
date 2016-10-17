@@ -192,6 +192,19 @@ namespace BlackMisc
             return c.toList();
         }
 
+        QStringList CAircraftIcaoCodeList::allManufacturers(bool onlyKnownDesignators) const
+        {
+            QStringList c;
+            for (const CAircraftIcaoCode &icao : *this)
+            {
+                if (onlyKnownDesignators && !icao.hasKnownDesignator()) { continue; }
+                const QString m(icao.getManufacturer());
+                if (m.isEmpty() || c.contains(m)) { continue; }
+                c.append(m);
+            }
+            return c;
+        }
+
         CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete)
         {
             CAircraftIcaoCodeList codes;

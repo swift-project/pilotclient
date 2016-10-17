@@ -55,6 +55,18 @@ namespace BlackMisc
             if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
         }
 
+        QString CAircraftIcaoCode::getDesignatorDbKey() const
+        {
+            if (this->isLoadedFromDb())
+            {
+                return this->getDesignator() + " " + this->getDbKeyAsStringInParentheses();
+            }
+            else
+            {
+                return this->getDesignator();
+            }
+        }
+
         QString CAircraftIcaoCode::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

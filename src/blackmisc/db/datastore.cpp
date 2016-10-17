@@ -76,7 +76,7 @@ namespace BlackMisc
 
         void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
-            int dbKey = json.value(prefix + "id").toInt(-1);
+            const int dbKey = json.value(prefix + "id").toInt(-1);
             const QString timestampString(json.value(prefix + "lastupdated").toString());
             const QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
             this->setDbKey(dbKey);
@@ -85,7 +85,8 @@ namespace BlackMisc
 
         bool IDatastoreObjectWithIntegerKey::existsKey(const QJsonObject &json, const QString &prefix)
         {
-            return !json.value(prefix + "id").isNull();
+            const QJsonValue jv(json.value(prefix + "id"));
+            return !(jv.isNull() || jv.isUndefined());
         }
 
         CVariant IDatastoreObjectWithIntegerKey::propertyByIndex(const CPropertyIndex &index) const
@@ -166,7 +167,8 @@ namespace BlackMisc
 
         bool IDatastoreObjectWithStringKey::existsKey(const QJsonObject &json, const QString &prefix)
         {
-            return !json.value(prefix + "id").isNull();
+            const QJsonValue jv(json.value(prefix + "id"));
+            return !(jv.isNull() || jv.isUndefined());
         }
 
         CVariant IDatastoreObjectWithStringKey::propertyByIndex(const CPropertyIndex &index) const

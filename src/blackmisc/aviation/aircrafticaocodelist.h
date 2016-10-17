@@ -94,6 +94,9 @@ namespace BlackMisc
             //! All ICAO codes, no duplicates
             QStringList allIcaoCodes(bool noUnspecified = true) const;
 
+            //! All manufacturers
+            QStringList allManufacturers(bool onlyKnownDesignators = true) const;
+
             //! From our database JSON format
             static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);
         };

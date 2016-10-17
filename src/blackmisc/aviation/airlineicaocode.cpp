@@ -56,6 +56,18 @@ namespace BlackMisc
             return QString("V").append(this->m_designator);
         }
 
+        QString CAirlineIcaoCode::getVDesignatorDbKey() const
+        {
+            if (this->isLoadedFromDb())
+            {
+                return this->getVDesignator() + " " + this->getDbKeyAsStringInParentheses();
+            }
+            else
+            {
+                return this->getVDesignator();
+            }
+        }
+
         void CAirlineIcaoCode::setDesignator(const QString &icaoDesignator)
         {
             this->m_designator = icaoDesignator.trimmed().toUpper();
@@ -286,7 +298,7 @@ namespace BlackMisc
         bool CAirlineIcaoCode::isValidAirlineDesignator(const QString &airline)
         {
             // allow 2 chars for IATA
-            if (airline.length() < 2 || airline.length() > 5) return false;
+            if (airline.length() < 2 || airline.length() > 5) { return false; }
             auto chars = makeRange(airline.begin(), airline.end());
             if (chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); })) { return false; }
             return true;
@@ -377,11 +389,16 @@ namespace BlackMisc
         {
             if (!existsKey(json, prefix))
             {
-                // when using relationship, this can be null
+                // when using relationship, this can be null (e.g. for color liveries)
                 return CAirlineIcaoCode();
             }
 
-            const QString designator(json.value(prefix + "designator").toString());
+            QString designator(json.value(prefix + "designator").toString());
+            if (!CAirlineIcaoCode::isValidAirlineDesignator(designator))
+            {
+                designator = CAirlineIcaoCode::normalizeDesignator(designator);
+            }
+
             const QString iata(json.value(prefix + "iata").toString());
             const QString telephony(json.value(prefix + "callsign").toString());
             const QString name(json.value(prefix + "name").toString());
