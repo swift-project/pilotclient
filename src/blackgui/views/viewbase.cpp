@@ -97,11 +97,6 @@ namespace BlackGui
         CViewBaseNonTemplate::CViewBaseNonTemplate(QWidget *parent) :
             QTableView(parent)
         {
-            // this->viewport()->setAttribute(Qt::WA_Hover, true);
-            // this->viewport()->setMouseTracking(true);
-            // this->setStyle(new CViewBaseProxyStyle(this, this->style()));
-            // this->setItemDelegate(new CViewBaseItemDelegate(this));
-
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
             connect(this, &QTableView::clicked, this, &CViewBaseNonTemplate::ps_clicked);
@@ -126,7 +121,7 @@ namespace BlackGui
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
-            bool c = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
+            const bool c = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
             return c;
         }
 
@@ -142,7 +137,7 @@ namespace BlackGui
             {
                 disconnect(this->m_filterWidget);
                 this->menuRemoveItems(MenuFilter);
-                if (m_filterWidget->parent() == this) { m_filterWidget->deleteLater(); }
+                if (this->m_filterWidget->parent() == this) { m_filterWidget->deleteLater(); }
                 m_filterWidget = nullptr;
             }
 
@@ -379,8 +374,8 @@ namespace BlackGui
 
         int CViewBaseNonTemplate::getHorizontalHeaderFontHeight() const
         {
-            QFontMetrics m(this->getHorizontalHeaderFont());
-            int h = m.height();
+            const QFontMetrics m(this->getHorizontalHeaderFont());
+            const int h = m.height();
             return h;
         }
 
@@ -412,7 +407,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::init()
         {
-            int fh = qRound(1.5 * this->getHorizontalHeaderFontHeight());
+            const int fh = qRound(1.5 * this->getHorizontalHeaderFontHeight());
             this->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive); // faster mode
             this->horizontalHeader()->setStretchLastSection(true);
             this->verticalHeader()->setDefaultSectionSize(fh); // for height
@@ -738,7 +733,10 @@ namespace BlackGui
                     this->fullResizeToContents();
                 }
             }
+
+            const ContainerType selected(this->selectedObjects());
             const int c = this->m_model->update(container, sort);
+            this->reselect(selected);
 
             // resize after real update according to mode
             if (presizeThresholdReached)
@@ -792,11 +790,11 @@ namespace BlackGui
             if (container.size() > ASyncRowsCountThreshold && sort)
             {
                 // larger container with sorting
-                updateContainerAsync(container, sort, resize);
+                this->updateContainerAsync(container, sort, resize);
             }
             else
             {
-                updateContainer(container, sort, resize);
+                this->updateContainer(container, sort, resize);
             }
         }
 
@@ -864,6 +862,22 @@ namespace BlackGui
                 c.push_back(this->at(i));
             }
             return c;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        ObjectType CViewBase<ModelClass, ContainerType, ObjectType>::firstSelectedOrDefaultObject() const
+        {
+            if (this->hasSelection())
+            {
+                return this->selectedObjects().front();
+            }
+            if (this->rowCount() < 2)
+            {
+                return this->containerOrFilteredContainer().frontOrDefault();
+            }
+
+            // too many, not selected
+            return ObjectType();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1046,6 +1060,30 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order, bool reselect)
+        {
+            if (!reselect)
+            {
+                this->m_model->sortByPropertyIndex(propertyIndex, order);
+            }
+            else
+            {
+                // hack: we reselect the already selected objects
+                // as sorting takes place (sync/async) in the model, and the model does not know about the selection
+                // we do this deferred as the model sort can be asynchronously
+                const ContainerType selected(this->selectedObjects());
+                this->m_model->sortByPropertyIndex(propertyIndex, order);
+                if (!selected.isEmpty())
+                {
+                    QTimer::singleShot(2000, [ = ]()
+                    {
+                        this->reselect(selected);
+                    });
+                }
+            }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
         QJsonObject CViewBase<ModelClass, ContainerType, ObjectType>::toJson() const
         {
             Q_ASSERT(this->m_model);
@@ -1137,6 +1175,8 @@ namespace BlackGui
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 c = connect(this->m_model, &ModelClass::changed, this, &CViewBase::onModelChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+
                 Q_UNUSED(c);
             }
 
@@ -1197,6 +1237,12 @@ namespace BlackGui
         void CViewBase<ModelClass, ContainerType, ObjectType>::drawDropIndicator(bool indicator)
         {
             this->m_dropIndicator = indicator;
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::reselect(const ContainerType &selectedObjects)
+        {
+            Q_UNUSED(selectedObjects);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1275,6 +1321,13 @@ namespace BlackGui
             {
                 return CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
             }
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_selectedObjectsLoopback(const CVariant &selectedObjects)
+        {
+            const ContainerType selectedObjs = selectedObjects.value<ContainerType>();
+            this->reselect(selectedObjs);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

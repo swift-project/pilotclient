@@ -49,7 +49,7 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadableOrTechnicalAsString));
                     this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
 
-                    this->m_sortedColumn = CStatusMessage::IndexUtcTimestamp;
+                    this->m_sortColumn = CStatusMessage::IndexUtcTimestamp;
                     this->m_sortOrder = Qt::DescendingOrder;
                 }
                 break;
@@ -61,7 +61,7 @@ namespace BlackGui
                     this->m_columns.addColumn(col);
                     this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
 
-                    this->m_sortedColumn = CStatusMessage::IndexUtcTimestamp;
+                    this->m_sortColumn = CStatusMessage::IndexUtcTimestamp;
                     this->m_sortOrder = Qt::DescendingOrder;
                 }
                 break;

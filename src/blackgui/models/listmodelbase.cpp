@@ -132,9 +132,15 @@ namespace BlackGui
             return this->columnToPropertyIndex(index.column());
         }
 
+        void CListModelBaseNonTemplate::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
+        {
+            const int column = this->propertyIndexToColumn(propertyIndex);
+            this->sort(column, order);
+        }
+
         void CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex)
         {
-            this->m_sortedColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
+            this->m_sortColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
         }
 
         void CListModelBaseNonTemplate::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
@@ -146,8 +152,8 @@ namespace BlackGui
         bool CListModelBaseNonTemplate::hasValidSortColumn() const
         {
 
-            if (!(this->m_sortedColumn >= 0 && this->m_sortedColumn < this->m_columns.size())) { return false; }
-            return this->m_columns.isSortable(this->m_sortedColumn);
+            if (!(this->m_sortColumn >= 0 && this->m_sortColumn < this->m_columns.size())) { return false; }
+            return this->m_columns.isSortable(this->m_sortColumn);
         }
 
         Qt::ItemFlags CListModelBaseNonTemplate::flags(const QModelIndex &index) const
@@ -223,7 +229,7 @@ namespace BlackGui
         }
 
         CListModelBaseNonTemplate::CListModelBaseNonTemplate(const QString &translationContext, QObject *parent)
-            : QStandardItemModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
+            : QStandardItemModel(parent), m_columns(translationContext), m_sortColumn(-1), m_sortOrder(Qt::AscendingOrder)
         {
             // non unique default name, set translation context as default
             this->setObjectName(translationContext);
@@ -339,7 +345,7 @@ namespace BlackGui
                 const QModelIndex topLeft = index.sibling(index.row(), 0);
                 const QModelIndex bottomRight = index.sibling(index.row(), this->columnCount() - 1);
                 this->m_container[index.row()] = obj;
-                const CVariant co = CVariant::from(obj);
+                const CVariant co = CVariant::fromValue(obj);
                 emit objectChanged(co, propertyIndex);
                 emit this->dataChanged(topLeft, bottomRight);
                 this->updateFilteredContainer();
@@ -417,7 +423,7 @@ namespace BlackGui
             worker->thenWithResult<ContainerType>(this, [this](const ContainerType & sortedContainer)
             {
                 if (this->m_modelDestroyed) { return;  }
-                this->ps_updateContainer(CVariant::from(sortedContainer), false);
+                this->ps_updateContainer(CVariant::fromValue(sortedContainer), false);
             });
             worker->then(this, &CListModelBase::asyncUpdateFinished);
             return worker;
@@ -660,11 +666,11 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType, bool UseCompare>
         void CListModelBase<ObjectType, ContainerType, UseCompare>::sort(int column, Qt::SortOrder order)
         {
-            if (column == this->m_sortedColumn && order == this->m_sortOrder) { return; }
+            if (column == this->m_sortColumn && order == this->m_sortOrder) { return; }
 
             // new order
-            this->m_sortedColumn = column;
-            this->m_sortOrder    = order;
+            this->m_sortColumn = column;
+            this->m_sortOrder  = order;
             if (this->m_container.size() < 2)
             {
                 return; // nothing to do

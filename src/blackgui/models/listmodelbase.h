@@ -77,7 +77,10 @@ namespace BlackGui
             virtual BlackMisc::CPropertyIndex modelIndexToPropertyIndex(const QModelIndex &index) const;
 
             //! Set sort column
-            virtual void setSortColumn(int column) { this->m_sortedColumn = column; }
+            virtual void setSortColumn(int column) { this->m_sortColumn = column; }
+
+            //! Sort by index
+            void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
             //! Set column for sorting
             //! \param propertyIndex index of column to be sorted
@@ -87,7 +90,7 @@ namespace BlackGui
             virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
 
             //! Get sort column property index
-            virtual int getSortColumn() const { return this->m_sortedColumn; }
+            virtual int getSortColumn() const { return this->m_sortColumn; }
 
             //! Has valid sort column?
             virtual bool hasValidSortColumn() const;
@@ -128,6 +131,7 @@ namespace BlackGui
             void asyncUpdateFinished();
 
             //! Data changed
+            //! \remark passing back selected objects so they can be reselected
             void modelDataChanged(int count, bool withFilter);
 
             //! Data changed, digest version
@@ -164,7 +168,7 @@ namespace BlackGui
             virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) = 0;
 
             CColumns        m_columns;                         //!< columns metadata
-            int             m_sortedColumn;                    //!< currently sorted column
+            int             m_sortColumn;                    //!< currently sorted column
             bool            m_modelDestroyed = false;          //!< model is about to be destroyed
             Qt::SortOrder   m_sortOrder;                       //!< sort order (asc/desc)
             Qt::DropActions m_dropActions = Qt::IgnoreAction;  //!< drop actions
@@ -303,7 +307,7 @@ namespace BlackGui
             //! Update filtered container
             void updateFilteredContainer();
 
-            //! Row count changed
+            //! Model changed
             void emitModelDataChanged();
 
             std::unique_ptr<IModelFilter<ContainerType> > m_filter; //!< Used filter

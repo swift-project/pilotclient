@@ -27,7 +27,7 @@
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/distributorlist.h"
 
-#include <QList>
+#include <QSet>
 #include <QObject>
 #include <QString>
 #include <QtGlobal>
@@ -40,7 +40,6 @@ class QWidget;
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
-
     namespace Views
     {
         //! Base class for views with DB objects
@@ -54,11 +53,17 @@ namespace BlackGui
             //! Get oldets object
             ObjectType oldestObject() const;
 
+            //! Select given DB key
+            void selectDbKey(const KeyType &key);
+
             //! Select given DB keys
-            void selectDbKeys(const QList<KeyType> &keys);
+            void selectDbKeys(const QSet<KeyType> &keys);
+
+            //! Get selected DB keys
+            QSet<KeyType> selectedDbKeys() const;
 
             //! Remove keys
-            int removeDbKeys(const QList<KeyType> &keys);
+            int removeDbKeys(const QSet<KeyType> &keys);
 
             //! Update or insert data (based on DB key)
             int replaceOrAddObjectsByKey(const ContainerType &container);
@@ -81,6 +86,9 @@ namespace BlackGui
 
             //! \copydoc BlackGui::Views::CViewBaseNonTemplate::customMenu
             virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
+
+            //! Reselect by DB keys
+            virtual void reselect(const ContainerType &selectedObjects) override;
 
             //! Move selected items
             void moveSelectedItems(int order);

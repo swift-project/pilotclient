@@ -39,6 +39,6 @@ namespace BlackGui
             //! Constructor
             explicit CAircraftIcaoCodeView(QWidget *parent = nullptr);
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard

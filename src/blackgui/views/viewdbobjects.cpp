@@ -47,7 +47,14 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::selectDbKeys(const QList<KeyType> &keys)
+        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::selectDbKey(const KeyType &key)
+        {
+            const QSet<KeyType> set({key});
+            this->selectDbKeys(set);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::selectDbKeys(const QSet<KeyType> &keys)
         {
             if (keys.isEmpty()) { return; }
             this->clearSelection();
@@ -64,7 +71,15 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        int CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::removeDbKeys(const QList<KeyType> &keys)
+        QSet<KeyType> CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::selectedDbKeys() const
+        {
+            if (!this->hasSelection()) { return QSet<KeyType>(); }
+            const ContainerType selected(this->selectedObjects());
+            return selected.toDbKeySet();
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        int CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::removeDbKeys(const QSet<KeyType> &keys)
         {
             if (keys.isEmpty()) { return 0; }
             if (this->isEmpty()) { return 0; }
@@ -146,6 +161,15 @@ namespace BlackGui
                 this->m_menuActions[3] = menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::ps_freezeCurrentOrder });
             }
             CViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::customMenu(menuActions);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::reselect(const ContainerType &selectedObjects)
+        {
+            if (!selectedObjects.isEmpty())
+            {
+                this->selectDbKeys(selectedObjects.toDbKeySet());
+            }
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>

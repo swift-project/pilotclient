@@ -50,7 +50,6 @@ class QShowEvent;
 class QWidget;
 
 namespace BlackMisc { class CWorker; }
-
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
@@ -146,6 +145,9 @@ namespace BlackGui
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::setSorting
             virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+
+            //! Sort by index
+            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder, bool reselect = false) = 0;
 
             //! Allow to drag and/or drop value objects
             virtual void allowDragDrop(bool allowDrag, bool allowDrop) = 0;
@@ -400,6 +402,9 @@ namespace BlackGui
             //! Helper method with template free signature serving as callback from threaded worker
             int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize);
 
+            //! Helper method with template free signature to allow reselection of objects
+            virtual void ps_selectedObjectsLoopback(const BlackMisc::CVariant &selectedObjects) = 0;
+
             //! Display the filter dialog
             void ps_displayFilterDialog();
 
@@ -516,6 +521,9 @@ namespace BlackGui
             //! Selected objects
             ContainerType selectedObjects() const;
 
+            //! First selected, the only one, or default
+            ObjectType firstSelectedOrDefaultObject() const;
+
             //! Update selected objects
             int updateSelected(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
@@ -564,6 +572,7 @@ namespace BlackGui
             virtual bool isDropAllowed() const override;
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
             virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder, bool reselect = false) override;
             //! @}
 
             //! Column count
@@ -618,6 +627,10 @@ namespace BlackGui
             virtual void drawDropIndicator(bool indicator) override;
             //! @}
 
+            //! Reselect given objects
+            //! \remark override this function to select models again
+            virtual void reselect(const ContainerType &selectedObjects);
+
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
             virtual BlackMisc::CStatusMessage modifyLoadedJsonData(ContainerType &data) const;
 
@@ -640,6 +653,7 @@ namespace BlackGui
             virtual void ps_rowSelected(const QModelIndex &index) override;
             virtual BlackMisc::CStatusMessage ps_loadJson() override;
             virtual BlackMisc::CStatusMessage ps_saveJson() const override;
+            virtual void ps_selectedObjectsLoopback(const BlackMisc::CVariant &selectedObjects) override;
             //! @}
         };
     } // namespace
