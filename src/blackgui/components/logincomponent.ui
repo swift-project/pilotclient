@@ -10,14 +10,8 @@
     <height>576</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>0</width>
-    <height>0</height>
-   </size>
-  </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Login component</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -152,7 +146,11 @@
            <widget class="BlackGui::Components::CServerListSelector" name="comp_VatsimServer"/>
           </item>
           <item row="2" column="1" colspan="4">
-           <widget class="QLineEdit" name="le_VatsimRealName"/>
+           <widget class="QLineEdit" name="le_VatsimRealName">
+            <property name="placeholderText">
+             <string>e.g. Joe Doe</string>
+            </property>
+           </widget>
           </item>
           <item row="1" column="1">
            <widget class="QLineEdit" name="le_VatsimId"/>
@@ -313,30 +311,84 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <item row="4" column="0">
+      <item row="2" column="3">
        <widget class="QLabel" name="lbl_AircraftIcaoAirline">
         <property name="toolTip">
-         <string>e.g. DLH, LHA, ...</string>
+         <string>ICAO code e.g. DLH, LHA, ...</string>
         </property>
         <property name="text">
-         <string>ICAO airline</string>
+         <string>Airline</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QLineEdit" name="le_AirlineIcaoDesignator">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Callsign">
         <property name="toolTip">
-         <string>e.g. DLH</string>
+         <string>e.g. DEMBZ</string>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhUppercaseOnly</set>
         </property>
         <property name="maxLength">
-         <number>128</number>
+         <number>10</number>
         </property>
         <property name="placeholderText">
-         <string>e.g. &quot;DLH&quot;</string>
+         <string>e.g. DEMBZ</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="4">
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Callsign">
+        <property name="text">
+         <string>Callsign</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="lbl_AircraftIcaoDesignator">
+        <property name="toolTip">
+         <string>ICAO code e.g.  B737, A320, F18</string>
+        </property>
+        <property name="text">
+         <string>Aircraft</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="BlackGui::CTickLabel" name="lblp_Callsign">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcao">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Model">
+        <property name="toolTip">
+         <string>Launch </string>
+        </property>
+        <property name="text">
+         <string>Model</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_AircraftCombinedType">
+        <property name="toolTip">
+         <string>Aircraft type e.g. L2J, L1P, ....</string>
+        </property>
+        <property name="text">
+         <string>Type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
        <widget class="QLineEdit" name="le_AircraftCombinedType">
         <property name="toolTip">
          <string>e.g. L2J</string>
@@ -355,128 +407,101 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="3">
-       <widget class="QLabel" name="lbl_AircraftCombinedType">
-        <property name="toolTip">
-         <string>e.g. L2J, L1P, ....</string>
-        </property>
+      <item row="2" column="5">
+       <widget class="BlackGui::CTickLabel" name="lblp_AirlineIcao">
         <property name="text">
-         <string>Aircraft type</string>
+         <string/>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_Callsign">
+      <item row="2" column="2">
+       <widget class="BlackGui::CTickLabel" name="lblp_AircraftCombinedType">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Callsign</string>
+         <string/>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="le_Callsign">
-        <property name="toolTip">
-         <string>e.g. DEMBZ</string>
-        </property>
-        <property name="inputMethodHints">
-         <set>Qt::ImhUppercaseOnly</set>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
+      <item row="0" column="1" colspan="5">
+       <widget class="QWidget" name="wi_SimulatorModel" native="true">
+        <layout class="QHBoxLayout" name="hl_AircraftModel">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="le_SimulatorModel">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>unique model identifier</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tb_SimulatorIcaoReverseLookup">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tb_MappingWizard">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../../blackmisc/blackmisc.qrc">
+             <normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-24.png</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item row="1" column="4">
-       <widget class="QLineEdit" name="le_AircraftIcaoDesignator">
-        <property name="toolTip">
-         <string>e.g. B737</string>
+       <widget class="BlackGui::Components::CDbAircraftIcaoSelectorComponent" name="selector_AircraftIcao">
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
         </property>
-        <property name="maxLength">
-         <number>128</number>
-        </property>
-        <property name="placeholderText">
-         <string>e.g. &quot;B737&quot;</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="lbl_AircraftIcaoDesignator">
-        <property name="toolTip">
-         <string>e.g.  B737, A320, F18</string>
-        </property>
-        <property name="text">
-         <string>ICAO designator</string>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
-      <item row="1" column="5">
-       <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcaoDesignator">
-        <property name="text">
-         <string/>
+      <item row="2" column="4">
+       <widget class="BlackGui::Components::CDbAirlineIcaoSelectorComponent" name="selector_AirlineIcao">
+        <property name="minimumSize">
+         <size>
+          <width>75</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="BlackGui::CTickLabel" name="lblp_AircraftIcaoAirline">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="5">
-       <widget class="BlackGui::CTickLabel" name="lblp_AircraftCombinedType">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="BlackGui::CTickLabel" name="lblp_Callsign">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="BlackGui::CTickLabel" name="lblp_SimulatorModel">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1" colspan="4">
-       <widget class="QLineEdit" name="le_SimulatorModel">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>unique model identifier</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <layout class="QHBoxLayout" name="hl_AircraftModel">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="lbl_SimulatorModel">
-          <property name="text">
-           <string>Model</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QToolButton" name="tb_SimulatorIcaoReverseLookup">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="../../blackmisc/blackmisc.qrc">
-            <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225.png</iconset>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </item>
      </layout>
     </widget>
@@ -602,6 +627,18 @@
    <header>blackgui/editors/fsdsetupform.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbAircraftIcaoSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbaircrafticaoselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDbAirlineIcaoSelectorComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbairlineicaoselectorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>tw_Network</tabstop>
@@ -610,11 +647,10 @@
   <tabstop>le_VatsimRealName</tabstop>
   <tabstop>le_VatsimHomeAirport</tabstop>
   <tabstop>comp_VatsimServer</tabstop>
-  <tabstop>le_SimulatorModel</tabstop>
   <tabstop>le_Callsign</tabstop>
-  <tabstop>le_AircraftIcaoDesignator</tabstop>
-  <tabstop>le_AirlineIcaoDesignator</tabstop>
+  <tabstop>selector_AircraftIcao</tabstop>
   <tabstop>le_AircraftCombinedType</tabstop>
+  <tabstop>selector_AirlineIcao</tabstop>
   <tabstop>comp_OtherServers</tabstop>
   <tabstop>pb_OtherServersGotoSettings</tabstop>
  </tabstops>

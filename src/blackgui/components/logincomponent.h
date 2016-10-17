@@ -45,7 +45,11 @@ namespace BlackGui
 {
     namespace Components
     {
-        //! Login component
+        class CDbQuickMappingWizard;
+
+        /*!
+         * Login component to flight network
+         */
         class BLACKGUI_EXPORT CLoginComponent :
             public QFrame
         {
@@ -57,6 +61,9 @@ namespace BlackGui
 
             //! Constructor
             explicit CLoginComponent(QWidget *parent = nullptr);
+
+            //! Automatically popup
+            void setAutoPopupWizad(bool autoPopup);
 
             //! Destructor
             ~CLoginComponent();
@@ -91,6 +98,12 @@ namespace BlackGui
             //! Validate VATSIM credentials
             bool ps_validateVatsimValues();
 
+            //! Aircraft ICAO code has been changed
+            void ps_changedAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
+
+            //! Airline ICAO code has been changed
+            void ps_changedAirlineIcao(const BlackMisc::Aviation::CAirlineIcaoCode &icao);
+
             //! Settings have been changed
             void ps_reloadSettings();
 
@@ -98,18 +111,21 @@ namespace BlackGui
             void ps_logoffCountdown();
 
             //! Reverse lookup model
-            void ps_reverseLookupModel();
+            void ps_reverseLookupAircraftIcaoData();
 
             //! Simulator model has been changed
             void ps_simulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
+
+            //! Launch mapping wizard
+            void ps_mappingWizard();
 
         private:
             //! GUI aircraft values, formatted
             struct CGuiAircraftValues
             {
-                QString ownCallsign;
-                QString ownAircraftIcaoTypeDesignator;
-                QString ownAircraftIcaoAirline;
+                BlackMisc::Aviation::CCallsign         ownCallsign;
+                BlackMisc::Aviation::CAircraftIcaoCode ownAircraftIcao;
+                BlackMisc::Aviation::CAirlineIcaoCode  ownAirlineIcao;
                 QString ownAircraftCombinedType;
                 QString ownAircraftSimulatorModel;
             };
@@ -162,13 +178,18 @@ namespace BlackGui
             //! Completers
             void initCompleters(BlackMisc::Network::CEntityFlags::Entity entity);
 
+            //! Highlight model field according to model data
+            void highlightModelField(const BlackMisc::Simulation::CAircraftModel &model = {});
+
             QScopedPointer<Ui::CLoginComponent> ui;
+            QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
+            bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
-            const int LogoffIntervalSeconds = 10;
-            QTimer *m_logoffCountdownTimer { nullptr };
+            const int LogoffIntervalSeconds = 10; //!< time before logoff
+            QTimer *m_logoffCountdownTimer { nullptr }; //!< timer used logoff countdown
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
-            BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this };
-            BlackMisc::CData<BlackCore::Data::TVatsimCurrentServer> m_currentVatsimServer { this };
+            BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this }; //!< current settings of aircraft
+            BlackMisc::CData<BlackCore::Data::TVatsimCurrentServer> m_currentVatsimServer { this }; //!< cache for current VATSIM server
         };
     } // namespace
 } // namespace
