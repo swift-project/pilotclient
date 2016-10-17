@@ -94,7 +94,7 @@ namespace BlackGui
             ui->comp_StashAircraft->view()->setCustomMenu(new CModelStashToolsMenu(this, false));
 
             // connects
-            connect(ui->editor_Model, &CModelMappingForm::requestStash, this, &CDbMappingComponent::ps_stashCurrentModel);
+            connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::ps_stashCurrentModel);
 
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::ps_onModelRowSelected);
             connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::ps_onOwnModelsChanged);
@@ -121,9 +121,7 @@ namespace BlackGui
             this->ps_onOwnModelsChanged(ui->comp_OwnAircraftModels->view()->rowCount(), ui->comp_OwnAircraftModels->view()->hasFilter());
 
             // how to display forms
-            ui->editor_AircraftIcao->setSelectOnly();
-            ui->editor_Distributor->setSelectOnly();
-            ui->editor_Livery->setSelectOnly();
+            ui->editor_AircraftModel->setSelectOnly();
 
             ui->tw_ModelsToBeMapped->setTabIcon(TabStash, CIcons::appDbStash16());
             ui->tw_ModelsToBeMapped->setTabIcon(TabOwnModels, CIcons::appModels16());
@@ -271,7 +269,7 @@ namespace BlackGui
 
         void CDbMappingComponent::updateEditorsWhenApplicable()
         {
-            const CAircraftModel currentEditorModel(ui->editor_Model->getValue());
+            const CAircraftModel currentEditorModel(ui->editor_ModelMapping->getValue());
             if (!currentEditorModel.hasModelString()) { return; } // no related model
             const QString modelString(currentEditorModel.getModelString());
             const CAircraftModel currentStashedModel(ui->comp_StashAircraft->getStashedModel(modelString));
@@ -283,19 +281,19 @@ namespace BlackGui
             const CLivery stashedLivery(currentStashedModel.getLivery());
             if (stashedLivery.hasValidDbKey())
             {
-                if (ui->editor_Livery->setValue(stashedLivery)) { updated = true; }
+                if (ui->editor_AircraftModel->setLivery(stashedLivery)) { updated = true; }
             }
 
             const CDistributor stashedDistributor(currentStashedModel.getDistributor());
             if (stashedDistributor.hasValidDbKey())
             {
-                if (ui->editor_Distributor->setValue(stashedDistributor)) { updated = true; }
+                if (ui->editor_AircraftModel->setDistributor(stashedDistributor)) { updated = true; }
             }
 
             const CAircraftIcaoCode stashedIcaoCode(currentStashedModel.getAircraftIcaoCode());
             if (stashedIcaoCode.hasValidDbKey())
             {
-                if (ui->editor_AircraftIcao->setValue(stashedIcaoCode)) { updated = true; }
+                if (ui->editor_AircraftModel->setAircraftIcao(stashedIcaoCode)) { updated = true; }
             }
 
             if (updated)
@@ -346,12 +344,10 @@ namespace BlackGui
 
         CStatusMessageList CDbMappingComponent::validateCurrentModel(bool withNestedForms) const
         {
-            CStatusMessageList msgs(ui->editor_Model->validate(!withNestedForms));
+            CStatusMessageList msgs(ui->editor_ModelMapping->validate(!withNestedForms));
             if (withNestedForms)
             {
-                msgs.push_back(ui->editor_AircraftIcao->validate());
-                msgs.push_back(ui->editor_Livery->validate(withNestedForms));
-                msgs.push_back(ui->editor_Distributor->validate());
+                msgs.push_back(ui->editor_AircraftModel->validate(withNestedForms));
             }
             return msgs;
         }
@@ -416,42 +412,42 @@ namespace BlackGui
         void CDbMappingComponent::ps_applyFormLiveryData()
         {
             if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
-            const CStatusMessageList msgs = ui->editor_Livery->validate(true);
+            const CStatusMessageList msgs = ui->editor_AircraftModel->validateLivery(true);
             if (msgs.hasErrorMessages())
             {
                 this->showOverlayMessages(msgs);
             }
             else
             {
-                ui->comp_StashAircraft->applyToSelected(ui->editor_Livery->getValue());
+                ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getLivery());
             }
         }
 
         void CDbMappingComponent::ps_applyFormAircraftIcaoData()
         {
             if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
-            const CStatusMessageList msgs = ui->editor_AircraftIcao->validate(true);
+            const CStatusMessageList msgs = ui->editor_AircraftModel->validateAircraftIcao(true);
             if (msgs.hasErrorMessages())
             {
                 this->showOverlayMessages(msgs);
             }
             else
             {
-                ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftIcao->getValue());
+                ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getAircraftIcao());
             }
         }
 
         void CDbMappingComponent::ps_applyFormDistributorData()
         {
             if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
-            const CStatusMessageList msgs = ui->editor_Distributor->validate(true);
+            const CStatusMessageList msgs = ui->editor_AircraftModel->validateDistributor(true);
             if (msgs.hasErrorMessages())
             {
                 this->showOverlayMessages(msgs);
             }
             else
             {
-                ui->comp_StashAircraft->applyToSelected(ui->editor_Distributor->getValue());
+                ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getDistributor());
             }
         }
 
@@ -590,13 +586,13 @@ namespace BlackGui
             case CDbMappingComponent::TabOwnModelSet:
                 {
                     ui->frp_Editors->setVisible(true);
-                    ui->editor_Model->setVisible(true);
+                    ui->editor_ModelMapping->setVisible(true);
                     this->resizeForSelect();
                 }
                 break;
             case CDbMappingComponent::TabModelMatcher:
                 {
-                    ui->editor_Model->setVisible(false);
+                    ui->editor_ModelMapping->setVisible(false);
                     ui->frp_Editors->setVisible(false);
                     this->resizeForSelect();
                 }
@@ -609,7 +605,7 @@ namespace BlackGui
             default:
                 {
                     ui->frp_Editors->setVisible(true);
-                    ui->editor_Model->setVisible(true);
+                    ui->editor_ModelMapping->setVisible(true);
                 }
                 break;
             }
@@ -754,32 +750,32 @@ namespace BlackGui
             const CDistributor distributor(dbModel ? model.getDistributor() : sGui->getWebDataServices()->smartDistributorSelector(model.getDistributor()));
 
             // set model part
-            ui->editor_Model->setValue(model);
+            ui->editor_ModelMapping->setValue(model);
 
             // if found, then set in editor
             if (livery.hasValidDbKey())
             {
-                ui->editor_Livery->setValue(livery);
+                ui->editor_AircraftModel->setLivery(livery);
             }
             else
             {
-                ui->editor_Livery->clear();
+                ui->editor_AircraftModel->clearLivery();
             }
             if (aircraftIcao.hasValidDbKey())
             {
-                ui->editor_AircraftIcao->setValue(aircraftIcao);
+                ui->editor_AircraftModel->setAircraftIcao(aircraftIcao);
             }
             else
             {
-                ui->editor_AircraftIcao->clear();
+                ui->editor_AircraftModel->clearAircraftIcao();
             }
             if (distributor.hasValidDbKey())
             {
-                ui->editor_Distributor->setValue(distributor);
+                ui->editor_AircraftModel->setDistributor(distributor);
             }
             else
             {
-                ui->editor_Distributor->clear();
+                ui->editor_AircraftModel->clearDistributor();
             }
 
             // request filtering
@@ -793,10 +789,10 @@ namespace BlackGui
 
         CAircraftModel CDbMappingComponent::getEditorAircraftModel() const
         {
-            CAircraftModel model(ui->editor_Model->getValue());
-            model.setDistributor(ui->editor_Distributor->getValue());
-            model.setAircraftIcaoCode(ui->editor_AircraftIcao->getValue());
-            model.setLivery(ui->editor_Livery->getValue());
+            CAircraftModel model(ui->editor_ModelMapping->getValue());
+            model.setDistributor(ui->editor_AircraftModel->getDistributor());
+            model.setAircraftIcaoCode(ui->editor_AircraftModel->getAircraftIcao());
+            model.setLivery(ui->editor_AircraftModel->getLivery());
             return model;
         }
 
