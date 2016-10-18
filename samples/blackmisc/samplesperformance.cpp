@@ -14,14 +14,17 @@
 #include "blackcore/db/databasereader.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/testing.h"
 
@@ -336,14 +339,31 @@ namespace BlackSample
     {
         QTime timer;
         auto situations = createSituations(0, 10000, 10);
+        auto models = createModels(10000, 100);
 
         timer.start();
-        QString s = situations.toJsonString();
-        out << "Convert 100,000 aircraft situations to JSON:   " << timer.elapsed() << "ms" << endl;
+        QJsonObject json = situations.toJson();
+        out << "Convert 100,000 aircraft situations to JSON:        " << timer.elapsed() << "ms" << endl;
 
         timer.start();
-        situations.convertFromJson(s);
-        out << "Convert 100,000 aircraft situations from JSON: " << timer.elapsed() << "ms" << endl << endl;
+        situations.convertFromJson(json);
+        out << "Convert 100,000 aircraft situations from JSON:      " << timer.elapsed() << "ms" << endl << endl;
+
+        timer.start();
+        json = models.toJson();
+        out << "Convert 10,000 aircraft models to JSON (naive):     " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        models.convertFromJson(json);
+        out << "Convert 10,000 aircraft models from JSON (naive):   " << timer.elapsed() << "ms" << endl << endl;
+
+        timer.start();
+        json = models.toMemoizedJson();
+        out << "Convert 10,000 aircraft models to JSON (memoize):   " << timer.elapsed() << "ms" << endl;
+
+        timer.start();
+        models.convertFromMemoizedJson(json);
+        out << "Convert 10,000 aircraft models from JSON (memoize): " << timer.elapsed() << "ms" << endl << endl;
 
         return 0;
     }
@@ -479,6 +499,30 @@ namespace BlackSample
             }
         }
         return situations;
+    }
+
+    CAircraftModelList CSamplesPerformance::createModels(int numberOfModels, int numberOfMemoParts)
+    {
+        CAircraftIcaoCodeList aircraftIcaos;
+        CLiveryList liveries;
+        CDistributorList distributors;
+        for (int i = 0; i < numberOfMemoParts; ++i)
+        {
+            aircraftIcaos.push_back(CAircraftIcaoCode("A" + QString::number(i), "A" + QString::number(i), "L1P", "Lego", "Foo", "M", false, false, false));
+            liveries.push_back(CLivery("A" + QString::number(i), CAirlineIcaoCode("A" + QString::number(i), "Foo", CCountry("DE", "Germany"), "Foo", false, false), "Foo", "red", "blue", false));
+            distributors.push_back(CDistributor(QString::number(i), "Foo", {}, {}, CSimulatorInfo::FSX));
+        }
+
+        CAircraftModelList models;
+        for (int i = 0; i < numberOfModels; ++i)
+        {
+            const auto &aircraftIcao = aircraftIcaos[qrand() % numberOfMemoParts];
+            const auto &livery = liveries[qrand() % numberOfMemoParts];
+            const auto &distributor = distributors[qrand() % numberOfMemoParts];
+            models.push_back(CAircraftModel(QString::number(i), CAircraftModel::TypeUnknown, CSimulatorInfo::FSX, QString::number(i), QString::number(i), aircraftIcao, livery));
+            models.back().setDistributor(distributor);
+        }
+        return models;
     }
 
 } // namespace

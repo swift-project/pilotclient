@@ -14,6 +14,7 @@
 #define BLACKSAMPLE_SAMPLESPERFORMANCE_H
 
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 
 #include <QTextStream>
 #include <QtGlobal>
@@ -46,6 +47,9 @@ namespace BlackSample
 
         //! Situation values for testing
         static BlackMisc::Aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes);
+
+        //! Model values for testing
+        static BlackMisc::Simulation::CAircraftModelList createModels(int numberOfModels, int numberOfMemoParts);
 
     private:
         static const qint64 DeltaTime = 10;
