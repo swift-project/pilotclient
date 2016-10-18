@@ -30,6 +30,9 @@ namespace BlackCore
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
 
+            //! Session object
+            static constexpr bool isSession() { return true; }
+
             //! Cache lifetime
             static int timeToLive() { return 18 * 60 * 60 * 1000; }
         };
