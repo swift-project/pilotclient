@@ -438,6 +438,12 @@ namespace BlackGui
             //! Save JSON for action/menu, no return signatur
             void ps_saveJsonAction();
 
+            //! Trigger reload from backend by signal requestUpdate();
+            void ps_triggerReload();
+
+            //! Trigger reload from backend by signal requestNewBackendData()
+            void ps_triggerReloadFromBackend();
+
             // ------------ slots of CViewDbObjects ----------------
             // need to be declared here and overridden, as this is the only part with valid Q_OBJECT
 

@@ -235,8 +235,8 @@ namespace BlackGui
             CMenuActions ma;
             switch (menu)
             {
-            case MenuRefresh: { ma.addAction(BlackMisc::CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::requestUpdate }); break; }
-            case MenuBackend: { ma.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::requestNewBackendData}); break; }
+            case MenuRefresh: { ma.addAction(BlackMisc::CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReload }); break; }
+            case MenuBackend: { ma.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReloadFromBackend }); break; }
             case MenuDisplayAutomatically:
                 {
                     QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_toggleAutoDisplay });
@@ -486,6 +486,18 @@ namespace BlackGui
             if (this->isEmpty()) { return; }
             if (!this->m_menus.testFlag(MenuSave)) { return; }
             this->ps_saveJson();
+        }
+
+        void CViewBaseNonTemplate::ps_triggerReload()
+        {
+            this->showLoadIndicator();
+            emit this->requestUpdate();
+        }
+
+        void CViewBaseNonTemplate::ps_triggerReloadFromBackend()
+        {
+            this->showLoadIndicator();
+            emit this->requestNewBackendData();
         }
 
         void CViewBaseNonTemplate::onModelChanged()
