@@ -57,7 +57,7 @@ namespace BlackGui
 
         void CDbCountryComponent::ps_reload()
         {
-            if (!sGui) { return; }
+            if (!sGui || !sGui->getWebDataServices()) { return; }
             sApp->getWebDataServices()->triggerReloadFromDb(CEntityFlags::CountryEntity);
         }
     } // ns
