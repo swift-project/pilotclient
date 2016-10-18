@@ -46,12 +46,12 @@ namespace BlackMisc
                 VatsimStatusFile       = 1 << 10,          //!< the VATSIM status file (URLs for data files etc.)
                 AirportEntity          = 1 << 11,          //!< airports
                 AllEntities            = ((1 << 12) - 1),  //!< everything
-                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                         //!< all ICAO codes
-                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity      | CountryEntity,    //!< all ICAO codes and countries
-                DistributorLiveryModel = DistributorEntity  | LiveryEntity           | ModelEntity,      //!< Combinded
-                AllDbEntities                       = AllIcaoAndCountries | DistributorLiveryModel | InfoObjectEntity | AirportEntity, //!< All DB stuff
-                AllDbEntitiesNoInfoObjects          = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity,                    //!< All DB entities, no info objects
-                AllDbEntitiesNoInfoObjectsNoAirports = AllIcaoAndCountries | DistributorLiveryModel                                    //!< All DB entities, no info objects and airports
+                AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                    //!< all ICAO codes
+                AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity,    //!< all ICAO codes and countries
+                DistributorLiveryModel = DistributorEntity  | LiveryEntity      | ModelEntity,      //!< Combinded
+                AllDbEntities                        = AllIcaoAndCountries | DistributorLiveryModel | InfoObjectEntity | AirportEntity, //!< All DB stuff
+                AllDbEntitiesNoInfoObjects           = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity,                    //!< All DB entities, no info objects
+                AllDbEntitiesNoInfoObjectsNoAirports = AllIcaoAndCountries | DistributorLiveryModel                                     //!< All DB entities, no info objects and airports
             };
             Q_DECLARE_FLAGS(Entity, EntityFlag)
 

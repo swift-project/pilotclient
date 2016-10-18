@@ -21,7 +21,7 @@ namespace BlackCore
 {
     namespace Db
     {
-        CAirportDataReader::CAirportDataReader(QObject* parent, const CDatabaseReaderConfigList &config) :
+        CAirportDataReader::CAirportDataReader(QObject *parent, const CDatabaseReaderConfigList &config) :
             CDatabaseReader(parent, config, QStringLiteral("CAirportDataReader"))
         {
             // void
@@ -65,7 +65,7 @@ namespace BlackCore
 
         void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReply)
         {
-            CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply);
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply);
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -74,29 +74,26 @@ namespace BlackCore
             }
 
             CAirportList airports;
-
             if (res.isRestricted())
             {
                 airports = this->getAirports();
-                CAirportList updates;
-                updates.convertFromDatabaseJson(res);
+                CAirportList updates(CAirportList::fromDatabaseJson(res));
                 airports.replaceOrAddObjectsByKey(updates);
             }
             else
             {
-                airports.convertFromDatabaseJson(res);
+                airports = CAirportList::fromDatabaseJson(res);
             }
 
-            int size = airports.size();
-            qint64 timestamp = lastModifiedMsSinceEpoch(nwReply);
-            if (size > 0 && timestamp < 0)
+            const int size = airports.size();
+            qint64 latestTimestamp = airports.latestTimestampMsecsSinceEpoch();
+            if (size > 0 && latestTimestamp < 0)
             {
                 CLogMessage(this).error("No timestamp in airport list, setting to last modified value");
-                timestamp = lastModifiedMsSinceEpoch(nwReply);
+                latestTimestamp = lastModifiedMsSinceEpoch(nwReply);
             }
 
-            m_airportCache.set(airports, timestamp);
-
+            m_airportCache.set(airports, latestTimestamp);
             emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, airports.size());
         }
 

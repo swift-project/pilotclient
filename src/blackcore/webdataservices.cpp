@@ -756,9 +756,8 @@ namespace BlackCore
             CLogMessage(cats).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
         }
 
-        //! \todo adjust value when airports are ready
         this->m_swiftDbEntitiesRead |= entity;
-        if (((static_cast<int>(this->m_swiftDbEntitiesRead)) & static_cast<int>(CEntityFlags::AllDbEntitiesNoInfoObjectsNoAirports)) > 0)
+        if (((static_cast<int>(this->m_swiftDbEntitiesRead)) & static_cast<int>(CEntityFlags::AllDbEntities)) > 0)
         {
             emit allSwiftDbDataRead();
         }

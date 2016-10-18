@@ -45,11 +45,11 @@ namespace BlackCore
             //! \copydoc BlackCore::Db::CDatabaseReader::getCacheTimestamp()
             QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const override;
 
-            //! \copydoc BlackCore::Db::CDatabaseReader:;getCacheCount()
+            //! \copydoc BlackCore::Db::CDatabaseReader::getCacheCount()
             int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
 
         protected:
-            //! \copydoc BlackCore::Db::CDatabaseReader::syncronizeCaches()
+            //! \copydoc BlackCore::Db::CDatabaseReader::synchronizeCaches()
             void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
 
             //! \copydoc BlackCore::Db::CDatabaseReader::invalidateCaches()

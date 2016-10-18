@@ -51,45 +51,17 @@ namespace BlackMisc
             (void)QT_TRANSLATE_NOOP("Aviation", "Airport");
         }
 
-        void CAirport::convertFromDatabaseJson(const QJsonObject &json)
-        {
-            Q_ASSERT(json.value("icao").isString());
-            setIcao(json.value("icao").toString());
-
-            if (json.value("alpha3").isString() && json.value("country").isString())
-            {
-                CCountry country(json.value("alpha3").toString(), json.value("country").toString());
-                setCountry(country);
-            }
-
-            Q_ASSERT(json.value("name").isString());
-            setDescriptiveName(json.value("name").toString());
-
-            Q_ASSERT(json.value("altitude").isDouble());
-            setElevation(CLength(json.value("altitude").toInt(), CLengthUnit::ft()));
-
-            Q_ASSERT(json.value("latitude").isDouble());
-            Q_ASSERT(json.value("longitude").isDouble());
-            CCoordinateGeodetic pos(json.value("latitude").toDouble(), json.value("longitude").toDouble(), 0);
-            setPosition(pos);
-
-            setOperating(json.value("operating").toString() == QStringLiteral("Y"));
-        }
-
         CAirport CAirport::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
-            CAirport airport(json.value("icao").toString());
-            airport.setDescriptiveName(json.value("name").toString());
-            airport.setElevation(CLength(json.value("altitude").toInt(), CLengthUnit::ft()));
-            CCoordinateGeodetic pos(json.value("latitude").toDouble(), json.value("longitude").toDouble(), 0);
+            CAirport airport(json.value(prefix + "icao").toString());
+            airport.setDescriptiveName(json.value(prefix + "name").toString());
+            airport.setElevation(CLength(json.value(prefix + "altitude").toInt(), CLengthUnit::ft()));
+            const CCoordinateGeodetic pos(json.value(prefix + "latitude").toDouble(), json.value(prefix + "longitude").toDouble(), 0);
             airport.setPosition(pos);
-            airport.setOperating(json.value("operating").toString() == QStringLiteral("Y"));
+            airport.setOperating(json.value(prefix + "operating").toString() == QStringLiteral("Y"));
 
-            if (json.value("alpha3").isString() && json.value("country").isString())
-            {
-                CCountry country(json.value("alpha3").toString(), json.value("country").toString());
-                airport.setCountry(country);
-            }
+            const CCountry country = CCountry::fromDatabaseJson(json, "ctry_");
+            airport.setCountry(country);
 
             airport.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return airport;

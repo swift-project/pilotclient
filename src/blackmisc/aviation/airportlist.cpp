@@ -60,16 +60,15 @@ namespace BlackMisc
             return icaos;
         }
 
-        void CAirportList::convertFromDatabaseJson(const QJsonArray &json)
+        CAirportList CAirportList::fromDatabaseJson(const QJsonArray &array)
         {
-            clear();
-            for (const QJsonValue &value : json)
+            CAirportList airports;
+            for (const QJsonValue &value : array)
             {
-                QJsonObject object = value.toObject();
-                CAirport airport;
-                airport.convertFromDatabaseJson(object);
-                push_back(airport);
+                const CAirport airport(CAirport::fromDatabaseJson(value.toObject()));
+                airports.push_back(airport);
             }
+            return airports;
         }
     } // namespace
 } // namespace

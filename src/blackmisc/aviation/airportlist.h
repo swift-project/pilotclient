@@ -55,8 +55,8 @@ namespace BlackMisc
             //! All ICAO codes
             QStringList allIcaoCodes(bool sorted) const;
 
-            //! Reads the airport list from database JSON
-            void convertFromDatabaseJson(const QJsonArray& json);
+            //! From our DB JSON
+            static CAirportList fromDatabaseJson(const QJsonArray &array);
         };
     } //namespace
 } // namespace
