@@ -154,7 +154,7 @@ namespace BlackGui
             //! Publish response received
             void ps_publishedModelsResponse(const BlackMisc::Simulation::CAircraftModelList &publishedModels,
                                             const BlackMisc::Simulation::CAircraftModelList &skippedModels,
-                                            const BlackMisc::CStatusMessageList &msgs, bool success, bool directWrite);
+                                            const BlackMisc::CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite);
 
             //! Copy over values
             void ps_copyOverPartsToSelected();

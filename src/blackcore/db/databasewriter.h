@@ -50,7 +50,7 @@ namespace BlackCore
             void publishedModels(const BlackMisc::Simulation::CAircraftModelList &modelsPublished,
                                  const BlackMisc::Simulation::CAircraftModelList &modelsSkipped,
                                  const BlackMisc::CStatusMessageList &messages,
-                                 bool success, bool directWrite);
+                                 bool sendingSuccessful, bool directWrite);
 
         private slots:
             //! Post response

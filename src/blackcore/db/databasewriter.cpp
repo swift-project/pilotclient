@@ -122,8 +122,8 @@ namespace BlackCore
                 CAircraftModelList modelsSkipped;
                 CStatusMessageList msgs;
                 bool directWrite;
-                const bool success = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs, directWrite);
-                emit publishedModels(modelsPublished, modelsSkipped, msgs, success, directWrite);
+                const bool sendingSuccessful = CDatastoreUtility::parseSwiftPublishResponse(dataFileData, modelsPublished, modelsSkipped, msgs, directWrite);
+                emit publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
             }
             else
             {
