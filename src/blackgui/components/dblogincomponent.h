@@ -23,7 +23,6 @@
 
 namespace BlackMisc { namespace Network { class CAuthenticatedUser; } }
 namespace Ui { class CDbLoginComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -42,6 +41,12 @@ namespace BlackGui
             //! Destructor
             ~CDbLoginComponent();
 
+            //! DB user
+            BlackMisc::Network::CAuthenticatedUser getDbUser() const;
+
+            //! Is user authenticated?
+            bool isUserAuthenticated() const;
+
         private:
             QScopedPointer<Ui::CDbLoginComponent> ui;
             BlackCore::Db::CDatabaseAuthenticationService m_loginService {this};  //!< login service
@@ -52,6 +57,9 @@ namespace BlackGui
             //! Mode login
             void setModeLogin(bool modeLogin);
 
+            //! Set the user fields
+            void setUserInfo(const BlackMisc::Network::CAuthenticatedUser &user);
+
         private slots:
             //! Login
             void ps_onLoginClicked();
@@ -60,7 +68,7 @@ namespace BlackGui
             void ps_onLogoffClicked();
 
             //! User authentication completed
-            void ps_authenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &status);
+            void ps_authenticationFinished(const BlackMisc::Network::CAuthenticatedUser &user, const BlackMisc::CStatusMessageList &statusMsgs);
         };
     } // ns
 } // ns

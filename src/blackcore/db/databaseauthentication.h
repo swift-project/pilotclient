@@ -39,6 +39,12 @@ namespace BlackCore
             //! Shutdown
             void gracefulShutdown();
 
+            //! DB user
+            BlackMisc::Network::CAuthenticatedUser getDbUser() const;
+
+            //! User authenticated
+            bool isUserAuthenticated() const;
+
         public slots:
             //! Try to login to authentication web service
             BlackMisc::CStatusMessageList login(const QString &id, const QString &password);

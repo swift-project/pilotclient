@@ -50,6 +50,17 @@ namespace BlackCore
             this->logoff();
         }
 
+        CAuthenticatedUser CDatabaseAuthenticationService::getDbUser() const
+        {
+            return this->m_swiftDbUser.get();
+        }
+
+        bool CDatabaseAuthenticationService::isUserAuthenticated() const
+        {
+            const CAuthenticatedUser user(this->getDbUser());
+            return user.isAuthenticated();
+        }
+
         CStatusMessageList CDatabaseAuthenticationService::login(const QString &username, const QString &password)
         {
             CStatusMessageList msgs;

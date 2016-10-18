@@ -88,47 +88,55 @@
               <property name="spacing">
                <number>6</number>
               </property>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="le_Username">
-                <property name="maxLength">
-                 <number>40</number>
+              <item row="5" column="0" colspan="3">
+               <widget class="BlackGui::Components::CDbDebugDatabaseSetup" name="comp_DebugSetup">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>40</height>
+                 </size>
                 </property>
-                <property name="placeholderText">
-                 <string>user name or id</string>
-                </property>
-                <property name="clearButtonEnabled">
-                 <bool>true</bool>
-                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QWidget" name="wi_Button" native="true">
+                <layout class="QHBoxLayout" name="hl_LoginFrame">
+                 <property name="leftMargin">
+                  <number>2</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>2</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>2</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>2</number>
+                 </property>
+                 <item alignment="Qt::AlignRight">
+                  <widget class="QPushButton" name="pb_Login">
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>login</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QLabel" name="lbl_User">
+               <widget class="QLabel" name="lbl_Database">
                 <property name="text">
-                 <string>Name:</string>
+                 <string>Database:</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="le_Password">
-                <property name="echoMode">
-                 <enum>QLineEdit::PasswordEchoOnEdit</enum>
-                </property>
-                <property name="placeholderText">
-                 <string>password</string>
-                </property>
-                <property name="clearButtonEnabled">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QPushButton" name="pb_Login">
-                <property name="text">
-                 <string>login</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
+              <item row="3" column="0">
                <spacer name="hs_Login">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -144,24 +152,7 @@
                 </property>
                </spacer>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="lbl_Password">
-                <property name="text">
-                 <string>Password:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0" colspan="2">
-               <widget class="BlackGui::Components::CDbDebugDatabaseSetup" name="comp_DebugSetup">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
+              <item row="6" column="0">
                <spacer name="vs_FrameLogin">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -173,6 +164,53 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lbl_User">
+                <property name="text">
+                 <string>Name:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lbl_Password">
+                <property name="text">
+                 <string>Password:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLineEdit" name="le_Password">
+                <property name="echoMode">
+                 <enum>QLineEdit::PasswordEchoOnEdit</enum>
+                </property>
+                <property name="placeholderText">
+                 <string>password</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLineEdit" name="le_Username">
+                <property name="maxLength">
+                 <number>40</number>
+                </property>
+                <property name="placeholderText">
+                 <string>user name or id</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="lbl_DatabaseName">
+                <property name="text">
+                 <string>Database URL will go here</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -395,7 +433,6 @@ p, li { white-space: pre-wrap; }
  <tabstops>
   <tabstop>le_Username</tabstop>
   <tabstop>le_Password</tabstop>
-  <tabstop>pb_Login</tabstop>
   <tabstop>le_Name</tabstop>
   <tabstop>te_Roles</tabstop>
   <tabstop>le_Info</tabstop>

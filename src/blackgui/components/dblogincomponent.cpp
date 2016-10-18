@@ -42,6 +42,7 @@ namespace BlackGui
             QFrame(parent),
             ui(new Ui::CDbLoginComponent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
             ui->setupUi(this);
             this->setModeLogin(true);
             CUrl url(sGui->getGlobalSetup().getDbHomePageUrl());
@@ -54,15 +55,29 @@ namespace BlackGui
 
             const bool devEnv = sGui->isRunningInDeveloperEnvironment();
             ui->comp_DebugSetup->setVisible(devEnv);
+            ui->lbl_DatabaseName->setText(sGui->getGlobalSetup().getDbHomePageUrl().toQString());
 
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
             connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::ps_authenticationFinished);
             connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::ps_onLoginClicked);
+
+            // init GUI
+            this->setUserInfo(this->getDbUser());
         }
 
         CDbLoginComponent::~CDbLoginComponent()
         { }
+
+        CAuthenticatedUser CDbLoginComponent::getDbUser() const
+        {
+            return this->m_loginService.getDbUser();
+        }
+
+        bool CDbLoginComponent::isUserAuthenticated() const
+        {
+            return this->m_loginService.isUserAuthenticated();
+        }
 
         void CDbLoginComponent::displayOverlayMessages(const CStatusMessageList &msgs)
         {
@@ -97,10 +112,25 @@ namespace BlackGui
             this->setModeLogin(true);
         }
 
-        void CDbLoginComponent::ps_authenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &status)
+        void CDbLoginComponent::ps_authenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &statusMsgs)
         {
-            bool ok = !status.hasErrorMessages();
-            if (ok)
+            this->setUserInfo(user);
+            if (statusMsgs.hasWarningOrErrorMessages())
+            {
+                this->displayOverlayMessages(statusMsgs);
+                CLogMessage::preformatted(statusMsgs);
+                ui->le_Info->setText("Authentication failed, see hints");
+            }
+        }
+
+        void CDbLoginComponent::setModeLogin(bool modeLogin)
+        {
+            ui->sw_LoginLogoff->setCurrentIndex(modeLogin ? 0 : 1);
+        }
+
+        void CDbLoginComponent::setUserInfo(const CAuthenticatedUser &user)
+        {
+            if (user.isAuthenticated())
             {
                 CLogMessage(this).info("User authenticated: %1") << user.toQString();
                 this->setModeLogin(false);
@@ -118,15 +148,7 @@ namespace BlackGui
             else
             {
                 this->setModeLogin(true);
-                this->displayOverlayMessages(status);
-                CLogMessage::preformatted(status);
-                ui->le_Info->setText("Authentication failed, see hints");
             }
-        }
-
-        void CDbLoginComponent::setModeLogin(bool modeLogin)
-        {
-            ui->sw_LoginLogoff->setCurrentIndex(modeLogin ? 0 : 1);
         }
     } // ns
 } // ns
