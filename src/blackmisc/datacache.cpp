@@ -87,9 +87,8 @@ namespace BlackMisc
 
         if (! QFile::exists(m_revisionFileName)) { QFile(m_revisionFileName).open(QFile::WriteOnly); }
         m_watcher.addPath(m_revisionFileName);
-        m_serializer.start();
         m_serializer.loadFromStore({}, false, true); // load pinned values
-        loadFromStoreAsync();
+        QTimer::singleShot(0, this, [this] { m_serializer.start(); loadFromStoreAsync(); }); // only start the serializer if the main thread event loop runs
     }
 
     CDataCache *CDataCache::instance()
