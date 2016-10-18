@@ -286,7 +286,9 @@ namespace BlackCore
 
     CWebDataServices *CApplication::getWebDataServices() const
     {
-        Q_ASSERT_X(this->m_webDataServices, Q_FUNC_INFO, "Missing web data services");
+        // use hasWebDataServices() to test if services are available
+
+        Q_ASSERT_X(this->m_webDataServices, Q_FUNC_INFO, "Missing web data services, use hasWebDataServices to test if existing");
         return this->m_webDataServices.data();
     }
 
@@ -1017,7 +1019,6 @@ namespace BlackCore
         Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (QThread::currentThread() != this->m_accessManager.thread())
         {
-//            QTimer::singleShot(0, this, [this, request, callback, method]() { this->httpRequestImpl(request, callback, method); });
             QTimer::singleShot(0, this, std::bind(&CApplication::httpRequestImpl, this, request, callback, method));
             return nullptr; // not yet started
         }
