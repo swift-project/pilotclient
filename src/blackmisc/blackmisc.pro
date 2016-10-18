@@ -61,6 +61,9 @@ SOURCES +=  *.cpp \
 win32 {
     LIBS *= -lShell32 -lDbghelp
 }
+win32-g++ {
+    LIBS *= -lpsapi
+}
 
 DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
