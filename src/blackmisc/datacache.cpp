@@ -217,7 +217,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
         if (m_queue.isEmpty())
         {
-            QTimer::singleShot(0, this, &CDataPageQueue::setQueuedValuesFromCache);
+            singleShot(0, this, [this] { setQueuedValuesFromCache(); });
         }
         m_queue.push_back(std::make_pair(values, changedBy));
     }
