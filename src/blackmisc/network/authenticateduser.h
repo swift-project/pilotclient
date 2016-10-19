@@ -168,7 +168,7 @@ namespace BlackMisc
             static CAuthenticatedUser fromDatabaseJson(const QJsonObject &json);
 
         private:
-            int                 m_vatsimId;
+            int                 m_vatsimId = -1;
             QString             m_realname;
             QString             m_username;
             QString             m_email;
