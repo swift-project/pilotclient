@@ -28,8 +28,8 @@ namespace BlackCore
     {
         CGlobalSetup::CGlobalSetup() :
             ITimestampBased(0),
-            m_dbRootDirectoryUrl("http://ubuntu12/swiftdatastore/public"), m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
-            m_vatsimMetarsUrls( {"http://metar.vatsim.net/metar.php"}), m_vatsimStatusFileUrls({ "https://status.vatsim.net" }), m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" }), m_sharedUrls(CBuildConfig::swiftTeamDefaultServers()), m_newsUrls(QStringList({ "http://swift-project.org/" }))
+            m_dbRootDirectoryUrl("https://datastore.swift-project.org/"), m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
+            m_vatsimMetarsUrls( {"http://metar.vatsim.net/metar.php"}), m_vatsimStatusFileUrls({ "https://status.vatsim.net" }), m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" }), m_sharedUrls({"https://datastore.swift-project.org/shared", "https://vatsim-germany.org:50443/datastore/shared"}), m_newsUrls(QStringList({ "http://swift-project.org/" }))
         { }
 
         CUrl CGlobalSetup::getDbIcaoReaderUrl() const

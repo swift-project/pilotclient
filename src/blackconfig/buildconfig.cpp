@@ -117,16 +117,6 @@ namespace BlackConfig
 #endif
     }
 
-    const QStringList &CBuildConfig::swiftTeamDefaultServers()
-    {
-        static const QStringList s(
-        {
-            "https://datastore.swift-project.org/shared",
-            "http://ubuntu12/public/bootstrap/shared"
-        });
-        return s;
-    }
-
     bool CBuildConfig::isLifetimeExpired()
     {
         if (getEol().isValid())

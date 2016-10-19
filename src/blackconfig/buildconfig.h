@@ -121,9 +121,6 @@ namespace BlackConfig
         //! Executable name for swift data, no(!) appendix
         static const QString &swiftDataExecutableName();
 
-        //! swift team default servers for DB, bootstrap etc.
-        static const QStringList &swiftTeamDefaultServers();
-
         //! End of lifetime
         static const QDateTime &getEol();
 
