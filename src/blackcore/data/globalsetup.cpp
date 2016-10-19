@@ -42,6 +42,11 @@ namespace BlackCore
             return getDbRootDirectoryUrl();
         }
 
+        CUrl CGlobalSetup::getDbAirportReaderUrl() const
+        {
+            return getDbRootDirectoryUrl();
+        }
+
         CUrl CGlobalSetup::getDbInfoReaderUrl() const
         {
             return getDbRootDirectoryUrl();
@@ -50,13 +55,6 @@ namespace BlackCore
         const CUrlList &CGlobalSetup::getSwiftSharedUrls() const
         {
             return this->m_sharedUrls;
-        }
-
-        CUrlList CGlobalSetup::getSwiftAirportUrls() const
-        {
-            // currently subdir of shared, this might change
-            const CUrlList airportUrls(getSwiftSharedUrls().appendPath(versionString() + "/airports/airports.json"));
-            return airportUrls;
         }
 
         CUrl CGlobalSetup::getDbHomePageUrl() const
@@ -190,6 +188,9 @@ namespace BlackCore
             s.append("Model DB reader: ");
             s.append(getDbModelReaderUrl().toQString(i18n));
             s.append(separator);
+            s.append("Airport DB reader: ");
+            s.append(getDbAirportReaderUrl().toQString(i18n));
+            s.append(separator);
             s.append("DB home page: ");
             s.append(getDbHomePageUrl().toQString(i18n));
             s.append(separator);
@@ -198,10 +199,6 @@ namespace BlackCore
             s.append(separator);
             s.append("swift DB datafile locations: ");
             s.append(getSwiftDbDataFileLocationUrls().toQString(i18n));
-            s.append(separator);
-
-            s.append("swift airport files: ");
-            s.append(getSwiftAirportUrls().toQString(i18n));
             s.append(separator);
 
             s.append("VATSIM bookings: ");
@@ -249,8 +246,6 @@ namespace BlackCore
                 return CVariant::fromValue(this->getBootstrapFileUrls());
             case IndexSwiftDbFiles:
                 return CVariant::fromValue(this->getSwiftDbDataFileLocationUrls());
-            case IndexSwiftAirportUrls:
-                return CVariant::fromValue(this->getSwiftAirportUrls());
             case IndexShared:
                 return CVariant::fromValue(this->m_sharedUrls);
             case IndexWasLoaded:

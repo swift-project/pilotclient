@@ -48,7 +48,6 @@ namespace BlackCore
                 IndexVatsimMetars,
                 IndexVatsimData,
                 IndexSwiftDbFiles,
-                IndexSwiftAirportUrls,
                 IndexBootstrap,
                 IndexUpdateInfo,
                 IndexWasLoaded,
@@ -103,14 +102,14 @@ namespace BlackCore
             //! Model reader URL
             BlackMisc::Network::CUrl getDbModelReaderUrl() const;
 
+            //! Airport reader URL
+            BlackMisc::Network::CUrl getDbAirportReaderUrl() const;
+
             //! Info data reader URL
             BlackMisc::Network::CUrl getDbInfoReaderUrl() const;
 
             //! Shared URLs
             const BlackMisc::Network::CUrlList &getSwiftSharedUrls() const;
-
-            //! Airport URLs
-            BlackMisc::Network::CUrlList getSwiftAirportUrls() const;
 
             //! URL to read VATSIM bookings
             const BlackMisc::Network::CUrl &getVatsimBookingsUrl() const { return m_vatsimBookingsUrl; }

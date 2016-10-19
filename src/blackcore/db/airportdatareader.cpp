@@ -60,7 +60,7 @@ namespace BlackCore
 
         CUrl CAirportDataReader::getAirportsUrl() const
         {
-            return sApp->getGlobalSetup().getDbRootDirectoryUrl().withAppendedPath("service/jsonairport.php");
+            return sApp->getGlobalSetup().getDbAirportReaderUrl().withAppendedPath("service/jsonairport.php");
         }
 
         void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReply)
