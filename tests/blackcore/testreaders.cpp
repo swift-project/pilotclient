@@ -60,7 +60,8 @@ namespace BlackCoreTest
     void CTestReaders::readIcaoData()
     {
         const CUrl url(sApp->getGlobalSetup().getDbIcaoReaderUrl());
-        if (!this->pingServer(url)) { QSKIP("Server not reachable."); }
+        qDebug() << "Reader URL" << url.toQString();
+        if (!this->pingServer(url)) { QSKIP("Server not reachable."); return; }
         m_icaoReader->start();
         m_icaoReader->readInBackgroundThread(CEntityFlags::AllIcaoEntities, QDateTime());
 
@@ -92,7 +93,8 @@ namespace BlackCoreTest
     void CTestReaders::readModelData()
     {
         const CUrl url(sApp->getGlobalSetup().getDbModelReaderUrl());
-        if (!this->pingServer(url)) { QSKIP("Server not reachable."); }
+        qDebug() << "Reader URL" << url.toQString();
+        if (!this->pingServer(url)) { QSKIP("Server not reachable."); return; }
         m_modelReader->start();
         m_modelReader->readInBackgroundThread(CEntityFlags::ModelEntity, QDateTime());
 
@@ -120,8 +122,9 @@ namespace BlackCoreTest
         using namespace BlackMisc::Geo;
         using namespace BlackMisc::PhysicalQuantities;
 
-        const CUrl url(sApp->getGlobalSetup().getSwiftAirportUrls().getRandomWorkingUrl());
-        if (!this->pingServer(url)) { return; }
+        const CUrl url(sApp->getGlobalSetup().getDbAirportReaderUrl());
+        qDebug() << "Reader URL" << url.toQString();
+        if (!this->pingServer(url)) { QSKIP("Server not reachable."); return; }
         m_airportReader->start();
         m_airportReader->readInBackgroundThread(CEntityFlags::AirportEntity, QDateTime());
 
@@ -147,12 +150,16 @@ namespace BlackCoreTest
     bool CTestReaders::pingServer(const CUrl &url)
     {
         QString m;
-        if (!CNetworkUtils::canConnect(url, m, 2500))
+        if (CNetworkUtils::canConnect(url, m, 2500))
         {
-            qWarning() << "Skipping unit test as" << url.getFullUrl() << "cannot be connected";
+            qDebug() << "URL" << url.getFullUrl() << "connected";
+            return true;
+        }
+        else
+        {
+            qWarning() << "URL" << url.getFullUrl() << "cannot be connected";
             return false;
         }
-        return true;
     }
 } // ns
 
