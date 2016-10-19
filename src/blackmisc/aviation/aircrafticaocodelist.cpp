@@ -180,7 +180,7 @@ namespace BlackMisc
             return c;
         }
 
-        QStringList CAircraftIcaoCodeList::allIcaoCodes(bool onlyKnownDesignators) const
+        QSet<QString> CAircraftIcaoCodeList::allIcaoCodes(bool onlyKnownDesignators) const
         {
             QSet<QString> c;
             for (const CAircraftIcaoCode &icao : *this)
@@ -189,18 +189,18 @@ namespace BlackMisc
                 const QString d(icao.getDesignator());
                 c.insert(d);
             }
-            return c.toList();
+            return c;
         }
 
-        QStringList CAircraftIcaoCodeList::allManufacturers(bool onlyKnownDesignators) const
+        QSet<QString> CAircraftIcaoCodeList::allManufacturers(bool onlyKnownDesignators) const
         {
-            QStringList c;
+            QSet<QString> c;
             for (const CAircraftIcaoCode &icao : *this)
             {
                 if (onlyKnownDesignators && !icao.hasKnownDesignator()) { continue; }
                 const QString m(icao.getManufacturer());
-                if (m.isEmpty() || c.contains(m)) { continue; }
-                c.append(m);
+                if (m.isEmpty()) { continue; }
+                c.insert(m); // checks if already contains m
             }
             return c;
         }

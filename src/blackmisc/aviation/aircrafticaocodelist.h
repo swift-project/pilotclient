@@ -92,10 +92,10 @@ namespace BlackMisc
             QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;
 
             //! All ICAO codes, no duplicates
-            QStringList allIcaoCodes(bool noUnspecified = true) const;
+            QSet<QString> allIcaoCodes(bool noUnspecified = true) const;
 
             //! All manufacturers
-            QStringList allManufacturers(bool onlyKnownDesignators = true) const;
+            QSet<QString> allManufacturers(bool onlyKnownDesignators = true) const;
 
             //! From our database JSON format
             static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true);

@@ -143,7 +143,7 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::findWithAircraftDesignator(const QStringList &designators) const
+        CAircraftModelList CAircraftModelList::findWithAircraftDesignator(const QSet<QString> &designators) const
         {
             if (designators.isEmpty()) { return CAircraftModelList(); }
             return this->findBy([ = ](const CAircraftModel & model)

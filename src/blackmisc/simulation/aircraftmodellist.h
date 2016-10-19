@@ -103,7 +103,7 @@ namespace BlackMisc
             CAircraftModelList findWithAircraftDesignator() const;
 
             //! Models with aircraft ICAO code from list
-            CAircraftModelList findWithAircraftDesignator(const QStringList &designators) const;
+            CAircraftModelList findWithAircraftDesignator(const QSet<QString> &designators) const;
 
             //! Models with a known aircraft ICAO code set
             CAircraftModelList findWithKnownAircraftDesignator() const;
