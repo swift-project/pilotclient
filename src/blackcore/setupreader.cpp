@@ -244,8 +244,8 @@ namespace BlackCore
     CSetupReader::BootstrapMode CSetupReader::stringToEnum(const QString &s)
     {
         const QString bsm(s.toLower().trimmed());
-        if (bsm.startsWith("expl")) return Explicit;
-        if (bsm.startsWith("cache")) return CacheOnly;
+        if (bsm.startsWith("expl")) { return Explicit; }
+        if (bsm.startsWith("cache")) { return CacheOnly; }
         return Implicit;
     }
 
@@ -475,9 +475,13 @@ namespace BlackCore
         }
         else if (!available)
         {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Setup not available"));
-        }
 
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Setup not available"));
+            if (this->m_bootstrapMode == Explicit)
+            {
+                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Mode is 'explicit', likely URL '" + this->m_bootstrapUrlFileValue + "' is not reachable"));
+            }
+        }
         this->m_setupAvailable = available;
         emit setupAvailable(available);
 
