@@ -35,12 +35,13 @@ namespace BlackGui
             ui->lbl_DatabaseUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
             ui->lbl_DatabaseUrl->setOpenExternalLinks(true);
 
-            connect(ui->pb_ReloadAircraft, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
-            connect(ui->pb_ReloadAirlines, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
-            connect(ui->pb_ReloadCountries, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
-            connect(ui->pb_ReloadLiveries, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
-            connect(ui->pb_ReloadModels, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
-            connect(ui->pb_ReloadDistributors, &QPushButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(ui->tb_ReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(ui->tb_ReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(ui->tb_ReloadAirports, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(ui->tb_ReloadCountries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(ui->tb_ReloadLiveries, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(ui->tb_ReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
+            connect(ui->tb_ReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
 
             // QTimer::singleShot(2000, this, &CDbLoadOverviewComponent::ps_setValues);
@@ -65,38 +66,42 @@ namespace BlackGui
         void CDbLoadOverviewComponent::ps_setValues()
         {
             if (!sGui) { return; }
-            if (!sGui->getWebDataServices()) { return; }
-            CDbLoadOverviewComponent::syncronizeCaches();
+            if (!sGui->hasWebDataServices()) { return; }
+            CDbLoadOverviewComponent::synchronizeCaches();
 
             ui->le_AircraftIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
-            ui->le_AirlineIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirlinesIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirportEntity));
             ui->le_LiveriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::LiveryEntity));
             ui->le_ModelsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesCacheTs->setText(cacheTimestampForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsCacheTs->setText(cacheTimestampForEntity(CEntityFlags::DistributorEntity));
 
             ui->le_AircraftIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
-            ui->le_AirlineIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirlinesIcaoDbTs->setText(dbTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsDbTs->setText(dbTimestampForEntity(CEntityFlags::AirportEntity));
             ui->le_LiveriesDbTs->setText(dbTimestampForEntity(CEntityFlags::LiveryEntity));
             ui->le_ModelsDbTs->setText(dbTimestampForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesDbTs->setText(dbTimestampForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsDbTs->setText(dbTimestampForEntity(CEntityFlags::DistributorEntity));
 
             ui->le_AircraftIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AircraftIcaoEntity));
-            ui->le_AirlineIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirlinesIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsCacheCount->setText(cacheCountForEntity(CEntityFlags::AirportEntity));
             ui->le_LiveriesCacheCount->setText(cacheCountForEntity(CEntityFlags::LiveryEntity));
             ui->le_ModelsCacheCount->setText(cacheCountForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesCacheCount->setText(cacheCountForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsCacheCount->setText(cacheCountForEntity(CEntityFlags::DistributorEntity));
 
             ui->le_AircraftIcaoDbCount->setText(dbCountForEntity(CEntityFlags::AircraftIcaoEntity));
-            ui->le_AirlineIcaoDbCount->setText(dbCountForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirlinesIcaoDbCount->setText(dbCountForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsDbCount->setText(dbCountForEntity(CEntityFlags::AirportEntity));
             ui->le_LiveriesDbCount->setText(dbCountForEntity(CEntityFlags::LiveryEntity));
             ui->le_ModelsDbCount->setText(dbCountForEntity(CEntityFlags::ModelEntity));
             ui->le_CountriesDbCount->setText(dbCountForEntity(CEntityFlags::CountryEntity));
-            ui->le_DistributorsDbCount->setText(cacheCountForEntity(CEntityFlags::DistributorEntity));
+            ui->le_DistributorsDbCount->setText(dbCountForEntity(CEntityFlags::DistributorEntity));
 
-            const QString urlHtml("<a href=\"%1\">Open</a>");
+            const QString urlHtml("<a href=\"%1\">Open DB</a>");
             const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
             ui->lbl_DatabaseUrl->setText(urlHtml.arg(url));
             ui->lbl_DatabaseUrl->setToolTip(url);
@@ -149,7 +154,7 @@ namespace BlackGui
             return c < 0 ? "-" : QString::number(c);
         }
 
-        void CDbLoadOverviewComponent::syncronizeCaches()
+        void CDbLoadOverviewComponent::synchronizeCaches()
         {
             sGui->getWebDataServices()->syncronizeDbCaches(CEntityFlags::AllDbEntities);
         }

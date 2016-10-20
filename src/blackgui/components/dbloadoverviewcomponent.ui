@@ -13,12 +13,6 @@
   <property name="windowTitle">
    <string>Frame</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
   <layout class="QGridLayout" name="gl_DbLoadOverview">
    <property name="leftMargin">
     <number>2</number>
@@ -35,8 +29,38 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="7" column="7">
-    <widget class="QLineEdit" name="le_DistributorsDbTs">
+   <item row="3" column="3">
+    <widget class="QLineEdit" name="le_AirportsCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QLineEdit" name="le_AirportsDbCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="5">
+    <widget class="QLineEdit" name="le_AirportsCacheTs">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>cache ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="7">
+    <widget class="QLineEdit" name="le_AirportsDbTs">
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -45,8 +69,21 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="2">
-    <widget class="QPushButton" name="pb_ReloadDistributors">
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl_Airports">
+     <property name="text">
+      <string>Airports:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QToolButton" name="tb_ReloadModels">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -56,17 +93,106 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="3">
-    <widget class="QLineEdit" name="le_DistributorsCacheCount">
-     <property name="readOnly">
-      <bool>true</bool>
+   <item row="7" column="2">
+    <widget class="QToolButton" name="tb_ReloadCountries">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
      </property>
-     <property name="placeholderText">
-      <string>count</string>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
    </item>
-   <item row="7" column="5">
+   <item row="3" column="2">
+    <widget class="QToolButton" name="tb_ReloadAirports">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QToolButton" name="tb_ReloadLiveries">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QToolButton" name="tb_ReloadDistributors">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="tb_ReloadAircraft">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QToolButton" name="tb_ReloadAirlines">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="5">
     <widget class="QLineEdit" name="le_DistributorsCacheTs">
      <property name="readOnly">
       <bool>true</bool>
@@ -76,7 +202,27 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="4">
+   <item row="8" column="7">
+    <widget class="QLineEdit" name="le_DistributorsDbTs">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>DB ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="3">
+    <widget class="QLineEdit" name="le_DistributorsCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="4">
     <widget class="QLineEdit" name="le_DistributorsDbCount">
      <property name="readOnly">
       <bool>true</bool>
@@ -86,39 +232,20 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="pb_ReloadAircraft">
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QPushButton" name="pb_ReloadLiveries">
+   <item row="4" column="0">
+    <widget class="QLabel" name="lbl_Liveries">
      <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+      <string>Liveries:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="3">
+   <item row="5" column="3">
     <widget class="QLineEdit" name="le_ModelsCacheCount">
      <property name="readOnly">
       <bool>true</bool>
      </property>
      <property name="placeholderText">
       <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="lbl_Liveries">
-     <property name="text">
-      <string>Liveries:</string>
      </property>
     </widget>
    </item>
@@ -132,15 +259,8 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_AircraftIcao">
-     <property name="text">
-      <string>Aircraft:</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="7">
-    <widget class="QLineEdit" name="le_AirlineIcaoDbTs">
+    <widget class="QLineEdit" name="le_AirlinesIcaoDbTs">
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -169,7 +289,14 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="5">
+   <item row="1" column="0">
+    <widget class="QLabel" name="lbl_AircraftIcao">
+     <property name="text">
+      <string>Aircraft:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="5">
     <widget class="QLineEdit" name="le_CountriesCacheTs">
      <property name="readOnly">
       <bool>true</bool>
@@ -179,14 +306,21 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="7" column="0">
     <widget class="QLabel" name="lbl_Countries">
      <property name="text">
       <string>Countries:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="5">
+   <item row="5" column="0">
+    <widget class="QLabel" name="lbl_Models">
+     <property name="text">
+      <string>Models:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="5">
     <widget class="QLineEdit" name="le_ModelsCacheTs">
      <property name="readOnly">
       <bool>true</bool>
@@ -197,19 +331,12 @@
     </widget>
    </item>
    <item row="2" column="5">
-    <widget class="QLineEdit" name="le_AirlineIcaoCacheTs">
+    <widget class="QLineEdit" name="le_AirlinesIcaoCacheTs">
      <property name="readOnly">
       <bool>true</bool>
      </property>
      <property name="placeholderText">
       <string>cache ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="lbl_Models">
-     <property name="text">
-      <string>Models:</string>
      </property>
     </widget>
    </item>
@@ -220,27 +347,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="3">
-    <widget class="QLineEdit" name="le_CountriesCacheCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="5">
-    <widget class="QLineEdit" name="le_LiveriesCacheTs">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>cache ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="7">
+   <item row="7" column="7">
     <widget class="QLineEdit" name="le_CountriesDbTs">
      <property name="readOnly">
       <bool>true</bool>
@@ -250,7 +357,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3">
+   <item row="4" column="3">
     <widget class="QLineEdit" name="le_LiveriesCacheCount">
      <property name="readOnly">
       <bool>true</bool>
@@ -260,7 +367,37 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="7">
+   <item row="4" column="5">
+    <widget class="QLineEdit" name="le_LiveriesCacheTs">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>cache ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QLineEdit" name="le_CountriesCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLineEdit" name="le_AirlinesIcaoCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="7">
     <widget class="QLineEdit" name="le_LiveriesDbTs">
      <property name="readOnly">
       <bool>true</bool>
@@ -273,17 +410,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="lbl_AirlineIcao">
      <property name="text">
-      <string>Airline:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="7">
-    <widget class="QLineEdit" name="le_ModelsDbTs">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>DB ts</string>
+      <string>Airlines:</string>
      </property>
     </widget>
    </item>
@@ -294,27 +421,23 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="QLineEdit" name="le_AirlineIcaoCacheCount">
+   <item row="5" column="7">
+    <widget class="QLineEdit" name="le_ModelsDbTs">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>DB ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QLineEdit" name="le_AirlinesIcaoDbCount">
      <property name="readOnly">
       <bool>true</bool>
      </property>
      <property name="placeholderText">
       <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QLabel" name="lbl_CacheTs">
-     <property name="text">
-      <string>Cache ts:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="4">
-    <widget class="QLabel" name="lbl_DbCount">
-     <property name="text">
-      <string>DB #:</string>
      </property>
     </widget>
    </item>
@@ -328,17 +451,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="4">
-    <widget class="QLineEdit" name="le_AirlineIcaoDbCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="4">
+   <item row="5" column="4">
     <widget class="QLineEdit" name="le_ModelsDbCount">
      <property name="readOnly">
       <bool>true</bool>
@@ -348,39 +461,21 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="4">
-    <widget class="QLineEdit" name="le_CountriesDbCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="2">
-    <widget class="QPushButton" name="pb_ReloadModels">
+   <item row="0" column="4">
+    <widget class="QLabel" name="lbl_DbCount">
      <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+      <string>DB #:</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="pb_ReloadAirlines">
+   <item row="0" column="5">
+    <widget class="QLabel" name="lbl_CacheTs">
      <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+      <string>Cache ts:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="4">
+   <item row="4" column="4">
     <widget class="QLineEdit" name="le_LiveriesDbCount">
      <property name="readOnly">
       <bool>true</bool>
@@ -390,38 +485,24 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="2">
-    <widget class="QPushButton" name="pb_ReloadCountries">
-     <property name="text">
-      <string/>
+   <item row="7" column="4">
+    <widget class="QLineEdit" name="le_CountriesDbCount">
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     <property name="placeholderText">
+      <string>count</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="lbl_Distributors">
      <property name="text">
       <string>Distributors:</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="lbl_Databse">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Database:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="3" colspan="5">
+   <item row="0" column="0" colspan="3">
     <widget class="QLabel" name="lbl_DatabaseUrl">
      <property name="text">
       <string>URL will go here .....</string>
