@@ -298,7 +298,6 @@ namespace BlackMisc
 
             auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps().subtract(newValues.keys());
             if (! missingKeys.isEmpty()) { m_cache->m_revision.writeNewRevision({}, missingKeys); }
-            else if (m_cache->m_revision.isNewSession()) { m_cache->m_revision.writeNewRevision({}); }
 
             msg.setCategories(this);
             CLogMessage::preformatted(msg);
@@ -342,7 +341,7 @@ namespace BlackMisc
         bool m_isNewSession = false;
     };
 
-    CDataCacheRevision::CDataCacheRevision(const QString &basename) : m_basename(basename) {}
+    CDataCacheRevision::CDataCacheRevision(const QString &basename) : m_basename(basename), m_session(std::make_unique<Session>(m_basename + "/.session")) {}
 
     CDataCacheRevision::~CDataCacheRevision() = default;
 
@@ -363,7 +362,6 @@ namespace BlackMisc
 
         m_timestamps.clear();
         m_originalTimestamps.clear();
-        if (! m_session) { m_session = std::make_unique<Session>(m_basename + "/.session"); }
 
         QFile revisionFile(m_basename + "/.rev");
         if (revisionFile.exists())
