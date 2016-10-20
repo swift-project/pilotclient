@@ -335,10 +335,10 @@ namespace BlackMisc
     public:
         Session(const QString &filename) : m_filename(filename) {}
         void updateSession();
-        bool isNewSession() const { return m_isNewSession; }
+        const QUuid &uuid() const { return m_uuid; }
     private:
         const QString m_filename;
-        bool m_isNewSession = false;
+        QUuid m_uuid;
     };
 
     CDataCacheRevision::CDataCacheRevision(const QString &basename) : m_basename(basename), m_session(std::make_unique<Session>(m_basename + "/.session")) {}
@@ -421,9 +421,11 @@ namespace BlackMisc
                 }
 
                 m_session->updateSession();
-                if (isNewSession())
+                auto sessionIds = sessionFromJson(json.value("session").toObject());
+                for (auto it = sessionIds.cbegin(); it != sessionIds.cend(); ++it)
                 {
-                    for (const auto &key : fromJson(json.value("session").toArray())) { m_timestamps.remove(key); }
+                    m_sessionValues[it.key()] = it.value();
+                    if (it.value() != m_session->uuid()) { m_timestamps.remove(it.key()); }
                 }
             }
             else if (revisionFile.size() > 0)
@@ -460,6 +462,11 @@ namespace BlackMisc
             if (it.value()) { timestamps.insert(it.key(), it.value()); }
         }
         for (const auto &key : excludeKeys) { timestamps.remove(key); }
+
+        for (auto it = timestamps.cbegin(); it != timestamps.cend(); ++it)
+        {
+            if (m_sessionValues.contains(it.key())) { m_sessionValues[it.key()] = m_session->uuid(); }
+        }
 
         QJsonObject json;
         json.insert("uuid", m_uuid.toString());
@@ -681,16 +688,7 @@ namespace BlackMisc
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(! m_updateInProgress);
-        m_sessionValues.insert(key);
-    }
-
-    bool CDataCacheRevision::isNewSession() const
-    {
-        QMutexLocker lock(&m_mutex);
-
-        Q_ASSERT(m_updateInProgress);
-        Q_ASSERT(m_session);
-        return m_session->isNewSession();
+        m_sessionValues[key]; // insert default-constructed value, unless key already present
     }
 
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)
@@ -733,6 +731,26 @@ namespace BlackMisc
         return result;
     }
 
+    QJsonObject CDataCacheRevision::toJson(const QMap<QString, QUuid> &timestamps)
+    {
+        QJsonObject result;
+        for (auto it = timestamps.begin(); it != timestamps.end(); ++it)
+        {
+            result.insert(it.key(), it.value().toString());
+        }
+        return result;
+    }
+
+    QMap<QString, QUuid> CDataCacheRevision::sessionFromJson(const QJsonObject &session)
+    {
+        QMap<QString, QUuid> result;
+        for (auto it = session.begin(); it != session.end(); ++it)
+        {
+            result.insert(it.key(), QUuid(it.value().toString()));
+        }
+        return result;
+    }
+
     void CDataCacheRevision::Session::updateSession()
     {
         CAtomicFile file(m_filename);
@@ -740,19 +758,23 @@ namespace BlackMisc
         if (! ok)
         {
             CLogMessage(this).error("Failed to open session file %1: %2") << m_filename << file.errorString();
-            m_isNewSession = true;
             return;
         }
-        CSequence<CProcessInfo> session;
-        session.convertFromJson(file.readAll());
-        session.removeIf([](const CProcessInfo &pi) { return ! pi.exists(); });
+        auto json = QJsonDocument::fromJson(file.readAll()).object();
+        QUuid uuid(json.value("uuid").toString());
+        CSequence<CProcessInfo> apps;
+        apps.convertFromJson(json.value("apps").toObject());
+        apps.removeIf([](const CProcessInfo &pi) { return ! pi.exists(); });
 
-        m_isNewSession = session.isEmpty();
+        if (apps.isEmpty()) { uuid = CIdentifier().toUuid(); }
+        m_uuid = uuid;
 
         CProcessInfo currentProcess = CProcessInfo::currentProcess();
         Q_ASSERT(currentProcess.exists());
-        session.replaceOrAdd(currentProcess, currentProcess);
-        if (!(file.seek(0) && file.resize(0) && file.write(QJsonDocument(session.toJson()).toJson()) && file.checkedClose()))
+        apps.replaceOrAdd(currentProcess, currentProcess);
+        json.insert("apps", apps.toJson());
+        json.insert("uuid", uuid.toString());
+        if (!(file.seek(0) && file.resize(0) && file.write(QJsonDocument(json).toJson()) && file.checkedClose()))
         {
             CLogMessage(this).error("Failed to write to session file %1: %2") << m_filename << file.errorString();
         }

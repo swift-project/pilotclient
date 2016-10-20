@@ -162,9 +162,6 @@ namespace BlackMisc
         //! Set the flag which will cause a value to be reset when starting a new session.
         void sessionValue(const QString &key);
 
-        //! True if the current update is the first of a new session.
-        bool isNewSession() const;
-
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
@@ -180,7 +177,7 @@ namespace BlackMisc
         QSet<QString> m_deferredValues;
         QSet<QString> m_admittedValues;
         QSet<QString> m_admittedQueue;
-        QSet<QString> m_sessionValues;
+        QMap<QString, QUuid> m_sessionValues;
         std::vector<std::promise<void>> m_promises;
 
         class Session;
@@ -190,6 +187,8 @@ namespace BlackMisc
         static QMap<QString, qint64> fromJson(const QJsonObject &timestamps);
         static QJsonArray toJson(const QSet<QString> &pins);
         static QSet<QString> fromJson(const QJsonArray &pins);
+        static QJsonObject toJson(const QMap<QString, QUuid> &session);
+        static QMap<QString, QUuid> sessionFromJson(const QJsonObject &session);
     };
 
     /*!
