@@ -60,19 +60,18 @@ namespace BlackMisc
      */
     //! @{
     template <typename F>
-    void singleShot(int msec, QThread *target, F task)
+    void singleShot(int msec, QThread *target, F &&task)
     {
-        auto *timer = new QTimer;
+        QSharedPointer<QTimer> timer(new QTimer, [](QObject *o) { QMetaObject::invokeMethod(o, "deleteLater"); });
         timer->setSingleShot(true);
-        timer->moveToThread(target);
-        auto trace = getStackTrace();
-        QObject::connect(timer, &QTimer::timeout, [ = ]()
+        timer->moveToThread(target->thread());
+        QObject::connect(timer.data(), &QTimer::timeout, target, [trace = getStackTrace(), task = std::forward<F>(task), timer]
         {
             static_cast<void>(trace);
+            static_cast<void>(timer);
             task();
-            timer->deleteLater();
         });
-        QMetaObject::invokeMethod(timer, "start", Q_ARG(int, msec));
+        QMetaObject::invokeMethod(timer.data(), "start", Q_ARG(int, msec));
     }
     template <typename F>
     void singleShot(int msec, QThread *target, QObject *owner, F task)
