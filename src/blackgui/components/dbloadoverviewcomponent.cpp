@@ -156,7 +156,7 @@ namespace BlackGui
 
         void CDbLoadOverviewComponent::synchronizeCaches()
         {
-            sGui->getWebDataServices()->syncronizeDbCaches(CEntityFlags::AllDbEntities);
+            sGui->getWebDataServices()->synchronizeDbCaches(CEntityFlags::AllDbEntities);
         }
 
         void CDbLoadOverviewComponent::ps_reloadPressed()

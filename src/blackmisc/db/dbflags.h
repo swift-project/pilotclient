@@ -35,7 +35,8 @@ namespace BlackMisc
                 DbDirect               = 1 << 0,              //!< directly from DB
                 Shared                 = 1 << 1,              //!< shared directory
                 Cached                 = 1 << 2,              //!< from cache
-                Canceled               = 1 << 3,              //!< cancel DB reading
+                Canceled               = 1 << 3,              //!< canceled DB reading
+                Ignore                 = 1 << 4,              //!< ignore this entity
                 CacheThenDb            = DbDirect | Cached,   //!< Cache when possible, otherwise DB
                 CacheThenShared        = Shared | Cached      //!< Cache when possible, otherwise shared
 

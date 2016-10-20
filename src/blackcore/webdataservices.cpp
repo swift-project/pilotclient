@@ -170,7 +170,7 @@ namespace BlackCore
         return false;
     }
 
-    void CWebDataServices::syncronizeDbCaches(CEntityFlags::Entity entities)
+    void CWebDataServices::synchronizeDbCaches(CEntityFlags::Entity entities)
     {
         if (this->m_modelDataReader) { this->m_modelDataReader->synchronizeCaches(entities); }
         if (this->m_icaoDataReader) { this->m_icaoDataReader->synchronizeCaches(entities); }
@@ -577,6 +577,34 @@ namespace BlackCore
         if (this->m_databaseWriter)       { this->m_databaseWriter->gracefulShutdown(); }
     }
 
+    CEntityFlags::Entity CWebDataServices::allDbEntiiesUsed() const
+    {
+        // obtain entities from real readers (means when reader is really used)
+        CEntityFlags::Entity entities = CEntityFlags::NoEntity;
+        if (this->m_icaoDataReader)
+        {
+            entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::IcaoDataReader);
+        }
+        if (this->m_modelDataReader)
+        {
+            entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::ModelReader);
+        }
+        if (this->m_airportDataReader)
+        {
+            entities |=  CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::AirportReader);
+        }
+
+        // when we have a config, we ignore the ones not from cache or DB
+        if (!this->m_dbReaderConfig.isEmpty())
+        {
+            CEntityFlags::Entity configuredEntities = this->m_dbReaderConfig.getEntitesCachedOrReadFromDB();
+            entities &= configuredEntities;
+        }
+
+        entities &= CEntityFlags::AllDbEntities; // make sure to only use DB data
+        return entities;
+    }
+
     const CLogCategoryList &CWebDataServices::getLogCategories()
     {
         static const BlackMisc::CLogCategoryList cats { CLogCategory("swift.datareader"), CLogCategory::webservice() };
@@ -760,7 +788,8 @@ namespace BlackCore
         }
 
         this->m_swiftDbEntitiesRead |= entity;
-        if (((static_cast<int>(this->m_swiftDbEntitiesRead)) & static_cast<int>(CEntityFlags::AllDbEntities)) > 0)
+        const int allUsedEntities = static_cast<int>(this->allDbEntiiesUsed());
+        if (((static_cast<int>(this->m_swiftDbEntitiesRead)) & allUsedEntities) == allUsedEntities)
         {
             emit allSwiftDbDataRead();
         }
@@ -782,7 +811,7 @@ namespace BlackCore
 
     void CWebDataServices::readInBackground(CEntityFlags::Entity entities)
     {
-        m_initialRead = true; // read started
+        this->m_initialRead = true; // read started
 
         const int waitForInfoObjects = 1000; // ms
         const int maxWaitCycles = 10;

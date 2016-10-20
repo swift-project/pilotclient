@@ -32,7 +32,7 @@ namespace BlackCore
 {
     namespace Db
     {
-        //! Details how to read
+        //! Details how to read a certain entity
         class BLACKCORE_EXPORT CDatabaseReaderConfig : public BlackMisc::CValueObject<CDatabaseReaderConfig>
         {
         public:
@@ -61,6 +61,9 @@ namespace BlackCore
 
             //! Will read from swift DB
             bool possiblyReadsFromSwiftDb() const;
+
+            //! Will read from cache
+            bool possiblyReadsFromCache() const;
 
             //! Fully initialized
             bool isValid() const;
@@ -102,6 +105,9 @@ namespace BlackCore
 
             //! Will read from swift DB
             bool possiblyReadsFromSwiftDb() const;
+
+            //! Entities which will use cache or DB, so no canceled or ignored ones
+            BlackMisc::Network::CEntityFlags::Entity getEntitesCachedOrReadFromDB() const;
 
             //! Init for mapping tool
             static CDatabaseReaderConfigList forMappingTool();

@@ -24,6 +24,7 @@ namespace BlackMisc
             {
             case AircraftIcaoEntity: return "Aircraft ICAO";
             case AirlineIcaoEntity: return "Airline ICAO";
+            case AirportEntity: return "Airport";
             case AllEntities: return "All";
             case AllIcaoAndCountries: return "All ICAO + country";
             case AllIcaoEntities: return "All ICAO";
@@ -36,7 +37,6 @@ namespace BlackMisc
             case NoEntity: return "no data";
             case VatsimDataFile: return "VATSIM data file";
             case VatsimStatusFile: return "VATSIM status file";
-            case AirportEntity: return "Airport";
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
                 return "wrong flags";
@@ -48,6 +48,7 @@ namespace BlackMisc
             QStringList list;
             if (flag.testFlag(AircraftIcaoEntity)) list << "Aircraft ICAO";
             if (flag.testFlag(AirlineIcaoEntity)) list << "Airline ICAO";
+            if (flag.testFlag(AirportEntity)) list << "Airport";
             if (flag.testFlag(BookingEntity)) list << "VATSIM bookings";
             if (flag.testFlag(CountryEntity)) list << "Country";
             if (flag.testFlag(DistributorEntity)) list << "Distributor";
@@ -57,7 +58,6 @@ namespace BlackMisc
             if (flag.testFlag(NoEntity)) list << "no data";
             if (flag.testFlag(VatsimDataFile)) list << "VATSIM data file";
             if (flag.testFlag(VatsimStatusFile)) list << "VATSIM status file";
-            if (flag.testFlag(AirportEntity)) list << "Airport";
             return list.join(',');
         }
 
@@ -112,6 +112,7 @@ namespace BlackMisc
             if (entities == NoEntity || entities == InfoObjectEntity) { return NoEntity; }
             if (entities.testFlag(AircraftIcaoEntity)) { entities &= ~AircraftIcaoEntity; return AircraftIcaoEntity; }
             if (entities.testFlag(AirlineIcaoEntity))  { entities &= ~AirlineIcaoEntity; return AirlineIcaoEntity; }
+            if (entities.testFlag(AirportEntity))      { entities &= ~AirportEntity; return AirportEntity; }
             if (entities.testFlag(LiveryEntity))       { entities &= ~LiveryEntity; return LiveryEntity; }
             if (entities.testFlag(CountryEntity))      { entities &= ~CountryEntity; return CountryEntity; }
             if (entities.testFlag(ModelEntity))        { entities &= ~ModelEntity; return ModelEntity; }

@@ -48,7 +48,7 @@ namespace BlackCore
 
             // we accept cached cached data
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::InfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
-            const bool hasInfoObjects = this->hasInfoObjects(); // no info objects is no necessarily error, but indicates a) either data not available or b) only caches is used
+            const bool hasInfoObjects = this->hasInfoObjects(); // no info objects is no necessarily error, but indicates a) either data not available (DB down) or b) only caches are used
             CEntityFlags::Entity allEntities    = entities;
             CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
             CEntityFlags::Entity currentEntity  = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
@@ -56,7 +56,13 @@ namespace BlackCore
             {
                 const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
                 const QString currentEntityName = CEntityFlags::flagToString(currentEntity);
-                if (config.getRetrievalMode().testFlag(CDbFlags::Cached))
+                const CDbFlags::DataRetrievalMode rm = config.getRetrievalMode();
+                Q_ASSERT_X(!rm.testFlag(CDbFlags::Unspecified), Q_FUNC_INFO, "Missing retrieval mode");
+                if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
+                {
+                    entities &= ~currentEntity; // do not load from web database
+                }
+                else if (rm.testFlag(CDbFlags::Cached))
                 {
                     if (hasInfoObjects)
                     {
@@ -69,7 +75,7 @@ namespace BlackCore
                         if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp >= 0 && latestEntityTimestamp >= 0)
                         {
                             this->synchronizeCaches(currentEntity);
-                            entities &= ~currentEntity; // do not load from web
+                            entities &= ~currentEntity; // do not load from web database
                             cachedEntities |= currentEntity; // read from cache
                             CLogMessage(this).info("Using cache for %1 (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
                         }
@@ -91,7 +97,7 @@ namespace BlackCore
                         this->synchronizeCaches(currentEntity);
                         const int c = this->getCacheCount(currentEntity);
                         CLogMessage(this).info("No info object for %1, using cache with %2 objects") << currentEntityName << c;
-                        entities &= ~currentEntity; // do not load from web
+                        entities &= ~currentEntity; // do not load from web database
                         cachedEntities |= currentEntity; // read from cache
                     }
                 }
@@ -207,6 +213,7 @@ namespace BlackCore
 
         void CDatabaseReader::emitReadSignalPerSingleCachedEntity(CEntityFlags::Entity cachedEntities)
         {
+            if (cachedEntities == CEntityFlags::NoEntity) { return; }
             CEntityFlags::Entity cachedEntitiesToEmit = cachedEntities;
             CEntityFlags::Entity currentCachedEntity  = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
             while (currentCachedEntity)

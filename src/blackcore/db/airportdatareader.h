@@ -1,4 +1,4 @@
-/* Copyright (C) 2015
+/* Copyright (C) 2016
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -30,10 +30,6 @@ namespace BlackCore
         {
             Q_OBJECT
 
-        signals:
-            //! Emitted when data is parsed
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
         public:
             //! Constructor
             CAirportDataReader(QObject* parent, const CDatabaseReaderConfigList &config);
@@ -42,21 +38,15 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAirportList getAirports() const;
 
-            //! \copydoc BlackCore::Db::CDatabaseReader::getCacheTimestamp()
-            QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const override;
-
-            //! \copydoc BlackCore::Db::CDatabaseReader::getCacheCount()
-            int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            // base class overrides
+            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const override;
+            virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
 
         protected:
-            //! \copydoc BlackCore::Db::CDatabaseReader::synchronizeCaches()
-            void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-
-            //! \copydoc BlackCore::Db::CDatabaseReader::invalidateCaches()
-            void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
-
-            //! \copydoc BlackCore::Db::CDatabaseReader::hasChangedUrl()
-            bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            // base class overrides
+            virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+            virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+            virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
 
         private:
             //! URL for airport list
@@ -80,7 +70,6 @@ namespace BlackCore
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::ps_baseUrlCacheChanged };
-
         };
     }
 } // ns

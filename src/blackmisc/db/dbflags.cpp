@@ -27,6 +27,8 @@ namespace BlackMisc
             switch (flag)
             {
             case Unspecified: return "Unspecified";
+            case Ignore: return "Ignore";
+            case Canceled: return "Canceled";
             case DbDirect: return "Direct DB access";
             case Shared: return "Shared data";
             case Cached: return "Cached data";
@@ -40,7 +42,8 @@ namespace BlackMisc
         {
             QStringList list;
             if (mode.testFlag(Unspecified)) list << "Unspecified";
-            if (mode.testFlag(Canceled)) list << "Unspecified";
+            if (mode.testFlag(Canceled)) list << "Canceled";
+            if (mode.testFlag(Ignore)) list << "Ignore";
 
             if (mode.testFlag(DbDirect)) list << "Direct DB access";
             if (mode.testFlag(Shared)) list << "Shared data";

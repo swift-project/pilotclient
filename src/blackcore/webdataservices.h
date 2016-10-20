@@ -116,6 +116,9 @@ namespace BlackCore
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readers; }
 
+        //! All DB entities for those used and not ignored
+        BlackMisc::Network::CEntityFlags::Entity allDbEntiiesUsed() const;
+
         //! FSD servers
         //! \threadsafe
         BlackMisc::Network::CServerList getVatsimFsdServers() const;
@@ -328,8 +331,8 @@ namespace BlackCore
         //! Can connect to swift DB?
         bool canConnectSwiftDb() const;
 
-        //! Syncronize all DB caches
-        void syncronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
+        //! Synchronize all DB caches
+        void synchronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
 
         //! Write data to disk (mainly for testing scenarios)
         bool writeDbDataToDisk(const QString &dir) const;
