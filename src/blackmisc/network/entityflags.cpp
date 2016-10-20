@@ -135,6 +135,7 @@ namespace BlackMisc
         bool CEntityFlags::anySwiftDbEntity(Entity entities)
         {
             return
+                entities.testFlag(AirportEntity) ||
                 entities.testFlag(AircraftIcaoEntity) || entities.testFlag(AirlineIcaoEntity) ||
                 entities.testFlag(CountryEntity) || entities.testFlag(DistributorEntity) ||
                 entities.testFlag(ModelEntity) || entities.testFlag(LiveryEntity);
@@ -144,6 +145,7 @@ namespace BlackMisc
         {
             if (name.contains("aircraft", Qt::CaseInsensitive)) { return AircraftIcaoEntity; }
             if (name.contains("airline", Qt::CaseInsensitive)) { return AirlineIcaoEntity; }
+            if (name.contains("airport", Qt::CaseInsensitive)) { return AirportEntity; }
             if (name.contains("distributor", Qt::CaseInsensitive)) { return DistributorEntity; }
             if (name.contains("countr", Qt::CaseInsensitive)) { return CountryEntity; }
             if (name.contains("model", Qt::CaseInsensitive)) { return ModelEntity; }

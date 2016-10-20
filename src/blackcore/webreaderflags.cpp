@@ -26,6 +26,11 @@ namespace BlackCore
             f |= ModelReader;
         }
 
+        if (entity.testFlag(CEntityFlags::AirportEntity))
+        {
+            f |= AirportReader;
+        }
+
         if (entity.testFlag(CEntityFlags::InfoObjectEntity)) { f |= InfoDataReader; }
         if (entity.testFlag(CEntityFlags::BookingEntity)) { f |= VatsimBookingReader; }
         if (entity.testFlag(CEntityFlags::VatsimDataFile)) { f |= VatsimDataReader; }

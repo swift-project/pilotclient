@@ -708,6 +708,9 @@ namespace BlackCore
         {
         case CWebReaderFlags::IcaoDataReader: return this->m_icaoDataReader;
         case CWebReaderFlags::ModelReader: return this->m_modelDataReader;
+        case CWebReaderFlags::AirportReader: return this->m_airportDataReader;
+        default:
+            break;
         }
         return nullptr;
     }
