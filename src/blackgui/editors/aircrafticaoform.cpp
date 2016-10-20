@@ -161,6 +161,7 @@ namespace BlackGui
 
             ui->cb_Wtc->setEnabled(!readOnly);
             ui->cb_Rank->setEnabled(!readOnly);
+            ui->drop_DropData->setVisible(!readOnly);
             ui->combined_TypeSelector->setReadOnly(readOnly);
         }
 
@@ -168,6 +169,7 @@ namespace BlackGui
         {
             this->setReadOnly(true);
             ui->aircraft_Selector->setReadOnly(false);
+            ui->drop_DropData->setVisible(true);
         }
 
         void CAircraftIcaoForm::clear()

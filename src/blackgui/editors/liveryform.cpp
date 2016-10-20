@@ -156,6 +156,7 @@ namespace BlackGui
             ui->editor_AirlineIcao->setReadOnly(readOnly);
             ui->pb_SearchColor->setVisible(!readOnly);
             ui->pb_TempLivery->setVisible(!readOnly);
+            ui->drop_DropData->setVisible(!readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
         }
 
@@ -164,6 +165,7 @@ namespace BlackGui
             this->setReadOnly(true);
             ui->comp_LiverySelector->setReadOnly(false);
             ui->editor_AirlineIcao->setSelectOnly();
+            ui->drop_DropData->setVisible(true);
         }
 
         void CLiveryForm::clear()

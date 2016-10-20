@@ -118,6 +118,7 @@ namespace BlackGui
             ui->selector_AirlineName->setReadOnly(readOnly);
             ui->le_TelephonyDesignator->setReadOnly(readOnly);
             ui->country_Selector->setReadOnly(readOnly);
+            ui->drop_DropData->setVisible(!readOnly);
 
             CGuiUtility::checkBoxReadOnly(ui->cb_Va, readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
@@ -128,6 +129,7 @@ namespace BlackGui
             this->setReadOnly(true);
             ui->selector_AirlineDesignator->setReadOnly(false);
             ui->selector_AirlineName->setReadOnly(false);
+            ui->drop_DropData->setVisible(true);
         }
 
         void CAirlineIcaoForm::clear()

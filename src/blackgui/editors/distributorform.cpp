@@ -101,12 +101,14 @@ namespace BlackGui
             ui->le_Alias2->setReadOnly(readOnly);
             ui->le_Description->setReadOnly(readOnly);
             ui->distributor_Selector->setReadOnly(readOnly);
+            ui->drop_DropData->setVisible(!readOnly);
         }
 
         void CDistributorForm::setSelectOnly()
         {
             this->setReadOnly(true);
             ui->distributor_Selector->setReadOnly(false);
+            ui->drop_DropData->setVisible(true);
         }
 
         void CDistributorForm::clear()

@@ -34,6 +34,13 @@ namespace BlackGui
             ui->editor_Livery->setReadOnly(readOnly);
         }
 
+        void CAircraftModelForm::setSelectOnly()
+        {
+            ui->editor_AircraftIcao->setSelectOnly();
+            ui->editor_Distributor->setSelectOnly();
+            ui->editor_Livery->setSelectOnly();
+        }
+
         CStatusMessageList CAircraftModelForm::validate(bool withNestedForms) const
         {
             CStatusMessageList msgs;

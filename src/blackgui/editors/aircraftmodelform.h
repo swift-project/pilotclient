@@ -37,8 +37,11 @@ namespace BlackGui
             //! Allow to drop data
             void allowDrop(bool allowDrop);
 
-            //! Set as read only
+            //! \copydoc BlackGui::Editors::CForm::setReadOnly
             virtual void setReadOnly(bool readOnly) override;
+
+            //! \copydoc BlackGui::Editors::CForm::setSelectOnly
+            virtual void setSelectOnly() override;
 
             //! \copydoc BlackGui::Editors::CForm::validate
             virtual BlackMisc::CStatusMessageList validate(bool withNestedForms = true) const override;
