@@ -56,7 +56,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 return model.matchesModelString(modelString, sensitivity);
             });
@@ -65,7 +65,7 @@ namespace BlackMisc
         CAircraftModel CAircraftModelList::findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             if (modelString.isEmpty()) { return CAircraftModel(); }
-            return this->findFirstByOrDefault([ = ](const CAircraftModel & model)
+            return this->findFirstByOrDefault([ & ](const CAircraftModel & model)
             {
                 return model.matchesModelString(modelString, sensitivity);
             });
@@ -74,7 +74,7 @@ namespace BlackMisc
         CAircraftModel CAircraftModelList::findFirstByCallsignOrDefault(const CCallsign &callsign) const
         {
             if (callsign.isEmpty()) { return CAircraftModel(); }
-            return this->findFirstByOrDefault([ = ](const CAircraftModel & model)
+            return this->findFirstByOrDefault([ & ](const CAircraftModel & model)
             {
                 return model.getCallsign() == callsign;
             });
@@ -87,19 +87,19 @@ namespace BlackMisc
 
             if (airline.isEmpty())
             {
-                return this->findBy([ = ](const CAircraftModel & model)
+                return this->findBy([ & ](const CAircraftModel & model)
                 {
                     return model.getAircraftIcaoCode().getDesignator() == aircraft;
                 });
             }
             if (aircraft.isEmpty())
             {
-                return this->findBy([ = ](const CAircraftModel & model)
+                return this->findBy([ & ](const CAircraftModel & model)
                 {
                     return model.getAirlineIcaoCode().getDesignator() == airline;
                 });
             }
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 return model.getAirlineIcaoCode().getDesignator() == airline &&
                        model.getAircraftIcaoCode().getDesignator() == aircraft;
@@ -109,7 +109,7 @@ namespace BlackMisc
         CAircraftModelList CAircraftModelList::findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const
         {
             if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 if (!model.getAircraftIcaoCode().matchesDesignator(aircraftDesignator)) { return false; }
                 return model.getLivery().matchesCombinedCode(combinedCode);
@@ -120,7 +120,7 @@ namespace BlackMisc
         {
             if (!livery.hasCombinedCode()) { return CAircraftModelList(); }
             const QString code(livery.getCombinedCode());
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 if (!model.getLivery().hasCombinedCode()) return false;
                 return model.getLivery().getCombinedCode() == code;
@@ -129,7 +129,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findWithFileName() const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([](const CAircraftModel & model)
             {
                 return model.hasFileName();
             });
@@ -137,7 +137,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findWithAircraftDesignator() const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([](const CAircraftModel & model)
             {
                 return model.hasAircraftDesignator();
             });
@@ -146,7 +146,7 @@ namespace BlackMisc
         CAircraftModelList CAircraftModelList::findWithAircraftDesignator(const QSet<QString> &designators) const
         {
             if (designators.isEmpty()) { return CAircraftModelList(); }
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([&](const CAircraftModel & model)
             {
                 return designators.contains(model.getAircraftIcaoCodeDesignator());
             });
@@ -154,7 +154,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findWithKnownAircraftDesignator() const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([](const CAircraftModel & model)
             {
                 return model.hasKnownAircraftDesignator();
             });
@@ -164,7 +164,7 @@ namespace BlackMisc
         {
             if (manufacturer.isEmpty()) { return CAircraftModelList(); }
             const QString m(manufacturer.toUpper().trimmed());
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 return model.getAircraftIcaoCode().getManufacturer() == m;
             });
@@ -174,7 +174,7 @@ namespace BlackMisc
         {
             if (family.isEmpty()) { return CAircraftModelList(); }
             const QString f(family.toUpper().trimmed());
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
                 if (!icao.hasFamily()) { return false; }
@@ -186,7 +186,7 @@ namespace BlackMisc
         {
             const QString cc(combinedCode.trimmed().toUpper());
             if (combinedCode.length() != 3) { return CAircraftModelList(); }
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
                 return icao.matchesCombinedCode(cc);
@@ -203,7 +203,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::getAllFsFamilyModels() const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([](const CAircraftModel & model)
             {
                 return model.getSimulator().isMicrosoftOrPrepare3DSimulator();
             });
@@ -240,7 +240,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::matchesSimulator(const CSimulatorInfo &simulator) const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 return model.matchesSimulator(simulator);
             });
@@ -249,7 +249,7 @@ namespace BlackMisc
         CAircraftModelList CAircraftModelList::findByDistributors(const CDistributorList &distributors) const
         {
             if (distributors.isEmpty()) { return CAircraftModelList(); }
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 return model.matchesAnyDbDistributor(distributors);
             });
@@ -383,7 +383,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 return model.getModelString().startsWith(modelString, sensitivity);
             });
@@ -391,7 +391,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findByModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([ & ](const CAircraftModel & model)
             {
                 return modelStrings.contains(model.getModelString(), sensitivity);
             });
@@ -399,7 +399,7 @@ namespace BlackMisc
 
         CAircraftModelList CAircraftModelList::findByNotInModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const
         {
-            return this->findBy([ = ](const CAircraftModel & model)
+            return this->findBy([&](const CAircraftModel & model)
             {
                 const bool c = modelStrings.contains(model.getModelString(), sensitivity);
                 return !c;
