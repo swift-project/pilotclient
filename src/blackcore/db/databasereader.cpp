@@ -125,13 +125,12 @@ namespace BlackCore
         CDatabaseReader::JsonDatastoreResponse CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const
         {
             this->threadAssertCheck();
-            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
 
             JsonDatastoreResponse datastoreResponse;
             if (this->isAbandoned())
             {
                 nwReply->abort();
-                datastoreResponse.setMessage(CStatusMessage(cats, CStatusMessage::SeverityError, "Terminated data parsing process"));
+                datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Terminated data parsing process"));
                 return datastoreResponse; // stop, terminate straight away, ending thread
             }
 
@@ -141,35 +140,24 @@ namespace BlackCore
                 nwReply->close(); // close asap
                 if (dataFileData.isEmpty())
                 {
-                    datastoreResponse.setMessage(CStatusMessage(cats, CStatusMessage::SeverityError, "Empty response, no data"));
-                    datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
-                    return datastoreResponse;
-                }
-
-                QJsonDocument jsonResponse = QJsonDocument::fromJson(dataFileData.toUtf8());
-                if (jsonResponse.isArray())
-                {
-                    // directly an array, no further info
-                    datastoreResponse.setJsonArray(jsonResponse.array());
+                    datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Empty response, no data"));
                     datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
                 }
                 else
                 {
-                    QJsonObject responseObject(jsonResponse.object());
-                    datastoreResponse.setJsonArray(responseObject["data"].toArray());
-                    QString ts(responseObject["latest"].toString());
-                    datastoreResponse.m_updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
-                    datastoreResponse.m_restricted = responseObject["restricted"].toBool();
+                    datastoreResponse = CDatabaseReader::stringToDatastoreResponse(dataFileData);
                 }
-                return datastoreResponse;
             }
+            else
+            {
 
-            // no valid response
-            QString error(nwReply->errorString());
-            QString url(nwReply->url().toString());
-            nwReply->abort();
-            datastoreResponse.setMessage(CStatusMessage(cats, CStatusMessage::SeverityError,
-                                         QString("Reading data failed: " + error + " " + url)));
+                // no valid response
+                const QString error(nwReply->errorString());
+                const QString url(nwReply->url().toString());
+                nwReply->abort();
+                datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError,
+                                             QString("Reading data failed: " + error + " " + url)));
+            }
             return datastoreResponse;
         }
 
@@ -284,7 +272,7 @@ namespace BlackCore
         {
             static const BlackMisc::CLogCategoryList cats
             (
-                CThreadedReader::getLogCategories().join({ BlackMisc::CLogCategory::swiftDbWebservice(), BlackMisc::CLogCategory::mapping() })
+                CThreadedReader::getLogCategories().join({ BlackMisc::CLogCategory::swiftDbWebservice(), BlackMisc::CLogCategory::webservice() })
             );
             return cats;
         }
@@ -316,6 +304,34 @@ namespace BlackCore
         {
             const CUrl url(getDbUrl());
             return CNetworkUtils::canConnect(url);
+        }
+
+        CDatabaseReader::JsonDatastoreResponse CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent)
+        {
+            CDatabaseReader::JsonDatastoreResponse datastoreResponse;
+            if (jsonContent.isEmpty())
+            {
+                datastoreResponse.setMessage(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "Empty string, no data"));
+                datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
+                return datastoreResponse;
+            }
+
+            const QJsonDocument jsonResponse = QJsonDocument::fromJson(jsonContent.toUtf8());
+            if (jsonResponse.isArray())
+            {
+                // directly an array, no further info
+                datastoreResponse.setJsonArray(jsonResponse.array());
+                datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
+            }
+            else
+            {
+                const QJsonObject responseObject(jsonResponse.object());
+                datastoreResponse.setJsonArray(responseObject["data"].toArray());
+                const QString ts(responseObject["latest"].toString());
+                datastoreResponse.m_updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
+                datastoreResponse.m_restricted = responseObject["restricted"].toBool();
+            }
+            return datastoreResponse;
         }
 
         void CDatabaseReader::JsonDatastoreResponse::setJsonArray(const QJsonArray &value)

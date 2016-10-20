@@ -34,12 +34,14 @@ int main(int argc, char *argv[])
     // otherwise no QPixmap metadata (metadata sample)
     QCoreApplication qa(argc, argv);
     CApplication a;
-
+    Q_UNUSED(qa);
+    Q_UNUSED(a);
     QTextStream qtout(stdout);
     QTextStream qtin(stdin);
 
     do
     {
+        qtout << endl;
         qtout << "1 .. JSON" << endl;
         qtout << "2 .. Change object" << endl;
         qtout << "3 .. Containers" << endl;
@@ -49,7 +51,8 @@ int main(int argc, char *argv[])
         qtout << "6c .. 25/20 Performance impl. type" << endl;
         qtout << "6d .. 40/20 Interpolator scenario" << endl;
         qtout << "6e .. JSON performance" << endl;
-        qtout << "6f .. string utils vs. regex" << endl;
+        qtout << "6f .. JSON model performance (database vs. own JSON)" << endl;
+        qtout << "6g .. string utils vs.regex" << endl;
         qtout << "7 .. Algorithms" << endl;
         qtout << "-----" << endl;
         qtout << "x .. Bye" << endl;
@@ -64,7 +67,8 @@ int main(int argc, char *argv[])
         else if (s.startsWith("6c")) { CSamplesPerformance::samplesImplementationType(qtout, 25, 20); }
         else if (s.startsWith("6d")) { CSamplesPerformance::interpolatorScenario(qtout, 40, 20); }
         else if (s.startsWith("6e")) { CSamplesPerformance::samplesJson(qtout); }
-        else if (s.startsWith("6f")) { CSamplesPerformance::samplesString(qtout); }
+        else if (s.startsWith("6f")) { CSamplesPerformance::samplesJsonModel(qtout); }
+        else if (s.startsWith("6g")) { CSamplesPerformance::samplesString(qtout); }
         else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
         else if (s.startsWith("x")) { break; }
     }

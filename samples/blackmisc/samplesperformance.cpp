@@ -11,6 +11,9 @@
 //! \ingroup sampleblackmisc
 
 #include "samplesperformance.h"
+#include "blackcore/db/databasereader.h"
+#include "blackconfig/buildconfig.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
@@ -41,6 +44,9 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
+using namespace BlackConfig;
+using namespace BlackCore::Db;
 
 namespace BlackSample
 {
@@ -339,6 +345,39 @@ namespace BlackSample
         situations.convertFromJson(s);
         out << "Convert 100,000 aircraft situations from JSON: " << timer.elapsed() << "ms" << endl << endl;
 
+        return 0;
+    }
+
+    int CSamplesPerformance::samplesJsonModel(QTextStream &out)
+    {
+        const QString dir = CBuildConfig::getSwiftStaticDbFilesDir();
+        const QString file = QDir(dir).filePath("models.json");
+        QFile modelFile(file);
+        Q_ASSERT_X(modelFile.exists(), Q_FUNC_INFO, "Model file does not exist");
+
+        out << "Load DB JSON file " << modelFile.fileName() << endl;
+        const QString data = CFileUtils::readFileToString(modelFile.fileName());
+        Q_ASSERT_X(!data.isEmpty(), Q_FUNC_INFO, "Model file empty");
+
+        // DB format, all models denormalized in DB JSON format
+        CDatabaseReader::JsonDatastoreResponse response = CDatabaseReader::stringToDatastoreResponse(data);
+        QTime timer;
+        timer.start();
+        const CAircraftModelList dbModels = CAircraftModelList::fromDatabaseJson(response);
+        int ms = timer.elapsed();
+        out << "Read via DB JSON format: " << dbModels.size() << " models in " << ms << "ms" << endl;
+
+        // swift JSON format
+        const QJsonObject swiftJsonObject = dbModels.toJson();
+        out << "Converted to swift JSON" << endl;
+
+        CAircraftModelList swiftModels;
+        timer.start();
+        swiftModels.convertFromJson(swiftJsonObject);
+        ms = timer.elapsed();
+        out << "Read via swift JSON format: " << swiftModels.size() << " models in " << ms << "ms" << endl;
+
+        Q_ASSERT_X(swiftModels.size() == dbModels.size(), Q_FUNC_INFO, "Mismatching container size");
         return 0;
     }
 

@@ -38,6 +38,9 @@ namespace BlackSample
         //! JSON (de)serialization
         static int samplesJson(QTextStream &out);
 
+        //! JSON loading (database vs. own format
+        static int samplesJsonModel(QTextStream &out);
+
         //! String manipulation
         static int samplesString(QTextStream &out);
 

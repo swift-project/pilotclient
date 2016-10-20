@@ -144,6 +144,9 @@ namespace BlackCore
             //! sift DB server reachable?
             static bool canPingSwiftServer();
 
+            //! Transform JSON data to response struct
+            static JsonDatastoreResponse stringToDatastoreResponse(const QString &jsonContent);
+
         signals:
             //! Combined read signal
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
