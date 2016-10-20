@@ -213,7 +213,7 @@ namespace BlackMisc
         if (CLogHandler::instance()->thread() != QThread::currentThread())
         {
             Q_ASSERT(thread() == QThread::currentThread());
-            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { changeSubscription(pattern); });
+            singleShot(0, CLogHandler::instance(), [pattern, self = QPointer<CLogSubscriber>(this)]() { if (self) { self->changeSubscription(pattern); } });
             return;
         }
 
@@ -232,7 +232,7 @@ namespace BlackMisc
         if (CLogHandler::instance()->thread() != QThread::currentThread())
         {
             Q_ASSERT(thread() == QThread::currentThread());
-            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { unsubscribe(); });
+            singleShot(0, CLogHandler::instance(), [self = QPointer<CLogSubscriber>(this)]() { if (self) { self->unsubscribe(); } });
             return;
         }
 
@@ -248,7 +248,7 @@ namespace BlackMisc
         if (CLogHandler::instance()->thread() != QThread::currentThread())
         {
             Q_ASSERT(thread() == QThread::currentThread());
-            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { inheritConsoleOutput(); });
+            singleShot(0, CLogHandler::instance(), [self = QPointer<CLogSubscriber>(this)]() { if (self) { self->inheritConsoleOutput(); } });
             return;
         }
 
@@ -264,7 +264,7 @@ namespace BlackMisc
         if (CLogHandler::instance()->thread() != QThread::currentThread())
         {
             Q_ASSERT(thread() == QThread::currentThread());
-            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { enableConsoleOutput(enable); });
+            singleShot(0, CLogHandler::instance(), [enable, self = QPointer<CLogSubscriber>(this)]() { if (self) { self->enableConsoleOutput(enable); } });
             return;
         }
 
