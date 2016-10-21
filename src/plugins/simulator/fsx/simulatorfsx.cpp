@@ -659,7 +659,7 @@ namespace BlackSimPlugin
                 CAircraftPartsList parts;
                 if (partsStatus.supportsParts)
                 {
-                    this->m_interpolator->getPartsBeforeTime(callsign, currentTimestamp, partsStatus);
+                    parts = this->m_interpolator->getPartsBeforeTime(callsign, currentTimestamp, partsStatus);
                 }
 
                 if (interpolatorStatus.allTrue())
