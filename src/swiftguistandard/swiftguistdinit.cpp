@@ -214,6 +214,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffCancelled, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
+    connect(ui->comp_Login, &CLoginComponent::loginDataChanged, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
     connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
     connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
     {

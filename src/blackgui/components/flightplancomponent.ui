@@ -246,7 +246,7 @@
            </widget>
           </item>
           <item row="9" column="0">
-           <widget class="QLabel" name="lbl_PilotsNameAndHomebase">
+           <widget class="QLabel" name="lbl_PilotsNameAndHomeBase">
             <property name="text">
              <string>14. Pilots name / homebase</string>
             </property>
@@ -447,7 +447,7 @@
            </widget>
           </item>
           <item row="9" column="3">
-           <widget class="QLineEdit" name="le_PilotsHomebase"/>
+           <widget class="QLineEdit" name="le_PilotsHomeBase"/>
           </item>
           <item row="6" column="3">
            <widget class="QLabel" name="lbl_AlternateAirport">
@@ -1027,7 +1027,7 @@
   <tabstop>pb_RemarksGenerator</tabstop>
   <tabstop>pte_Remarks</tabstop>
   <tabstop>le_PilotsName</tabstop>
-  <tabstop>le_PilotsHomebase</tabstop>
+  <tabstop>le_PilotsHomeBase</tabstop>
   <tabstop>pb_Reset</tabstop>
   <tabstop>pb_Load</tabstop>
   <tabstop>pb_Send</tabstop>

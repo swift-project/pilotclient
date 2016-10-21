@@ -109,10 +109,13 @@ namespace BlackMisc
             void setId(const QString &id) { m_id = id.trimmed(); }
 
             //! Homebase
-            const BlackMisc::Aviation::CAirportIcaoCode &getHomebase() const { return this->m_homebase; }
+            const BlackMisc::Aviation::CAirportIcaoCode &getHomeBase() const { return this->m_homebase; }
 
             //! Set homebase
-            void setHomebase(const BlackMisc::Aviation::CAirportIcaoCode &homebase) { this->m_homebase = homebase; }
+            void setHomeBase(const BlackMisc::Aviation::CAirportIcaoCode &homebase) { this->m_homebase = homebase; }
+
+            //! Has home base?
+            bool hasHomeBase() const { return !this->m_homebase.isEmpty(); }
 
             //! Get associated callsign.
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
@@ -133,7 +136,7 @@ namespace BlackMisc
             int comparePropertyByIndex(const CPropertyIndex &index, const CUser &compareValue) const;
 
             //! This and another user exchange missing data, This user has priority and overrides first.
-            void syncronizeData(CUser &otherUser);
+            void synchronizeData(CUser &otherUser);
 
             //! Update missing parts in this object
             void updateMissingParts(const CUser &otherUser);

@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/flightplan.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -51,6 +52,9 @@ namespace BlackGui
 
             //! Prefill with aircraft data
             void prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
+
+            //! Prefill with user data
+            void prefillWithUserData(const BlackMisc::Network::CUser &user);
 
             //! Prefill with aircraft dara
             void fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);

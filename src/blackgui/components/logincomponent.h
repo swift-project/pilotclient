@@ -78,6 +78,9 @@ namespace BlackGui
             //! Request network settings
             void requestNetworkSettings();
 
+            //! Relevant login data changed
+            void loginDataChanged();
+
         public slots:
             //! Main info area chnaged
             void mainInfoAreaChanged(const QWidget *currentWidget);
@@ -181,11 +184,20 @@ namespace BlackGui
             //! Highlight model field according to model data
             void highlightModelField(const BlackMisc::Simulation::CAircraftModel &model = {});
 
+            //! Trigger the signal that data have been changed
+            void triggerDataChangedSignal(int deferTimeMs);
+
+            //! Get a prefill model
+            BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
+
+            //! Update own callsign (own aircraft from what is set in the GUI)
+            void updateOwnCallsignAndPilotFromGuiValue();
+
             QScopedPointer<Ui::CLoginComponent> ui;
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
-            const int LogoffIntervalSeconds = 10; //!< time before logoff
+            const int LogoffIntervalSeconds = 20; //!< time before logoff
             QTimer *m_logoffCountdownTimer { nullptr }; //!< timer used logoff countdown
             BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TTrafficServers> m_otherTrafficNetworkServers { this, &CLoginComponent::ps_reloadSettings };
             BlackMisc::CSetting<BlackGui::Settings::TOwnAircraftModel> m_currentAircraftModel { this }; //!< current settings of aircraft

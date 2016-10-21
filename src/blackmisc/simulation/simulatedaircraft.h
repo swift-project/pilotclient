@@ -114,7 +114,7 @@ namespace BlackMisc
             const BlackMisc::Network::CUser &getPilot() const { return m_pilot; }
 
             //! Get user's real name
-            QString getPilotRealname() const { return m_pilot.getRealName(); }
+            QString getPilotRealName() const { return m_pilot.getRealName(); }
 
             //! Get user's real id
             QString getPilotId() { return m_pilot.getId(); }

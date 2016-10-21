@@ -59,6 +59,7 @@ namespace BlackGui
             ui(new Ui::CFlightPlanComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
+            Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "missing web services");
 
             // UI
             ui->setupUi(this);
@@ -119,7 +120,10 @@ namespace BlackGui
         {
             if (this->m_flightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
             if (!sGui->getIContextOwnAircraft()) { return; }
-            this->prefillWithAircraftData(sGui->getIContextOwnAircraft()->getOwnAircraft());
+
+            const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
+            this->prefillWithAircraftData(ownAircraft);
+            this->prefillWithUserData(ownAircraft.getPilot());
         }
 
         void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
@@ -136,6 +140,18 @@ namespace BlackGui
             if (ownAircraft.hasValidRealName())
             {
                 ui->le_PilotsName->setText(ownAircraft.getPilot().getRealName());
+            }
+        }
+
+        void CFlightPlanComponent::prefillWithUserData(const Network::CUser &user)
+        {
+            if (user.hasValidRealName())
+            {
+                ui->le_PilotsName->setText(user.getRealName());
+            }
+            if (user.hasHomeBase())
+            {
+                ui->le_PilotsHomeBase->setText(user.getHomeBase().getIcaoCode());
             }
         }
 

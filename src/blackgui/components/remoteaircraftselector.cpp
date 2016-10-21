@@ -99,7 +99,7 @@ namespace BlackGui
                 if (aircraft.hasValidRealName())
                 {
                     i += " - ";
-                    i += aircraft.getPilotRealname();
+                    i += aircraft.getPilotRealName();
                 }
                 items.append(i);
             }

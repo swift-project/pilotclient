@@ -194,7 +194,7 @@ namespace BlackMisc
         {
             if (this->m_controller == otherStation.getController()) { return; }
             CUser otherController = otherStation.getController();
-            this->m_controller.syncronizeData(otherController);
+            this->m_controller.synchronizeData(otherController);
             otherStation.setController(otherController);
         }
 

@@ -248,7 +248,7 @@ namespace BlackGui
                 if (ownAircraft.getCallsign() != aircraftValues.ownCallsign)
                 {
                     ownAircraft.setCallsign(aircraftValues.ownCallsign);
-                    sGui->getIContextOwnAircraft()->updateOwnCallsign(ownAircraft.getCallsign());
+                    this->updateOwnCallsignAndPilotFromGuiValue();
                 }
 
                 if (setIcaoCodes)
@@ -354,7 +354,7 @@ namespace BlackGui
                 ui->le_Callsign->setText(lastUser.getCallsign().asString());
                 ui->le_VatsimId->setText(lastUser.getId());
                 ui->le_VatsimPassword->setText(lastUser.getPassword());
-                ui->le_VatsimHomeAirport->setText(lastUser.getHomebase().asString());
+                ui->le_VatsimHomeAirport->setText(lastUser.getHomeBase().asString());
                 ui->le_VatsimRealName->setText(lastUser.getRealName());
             }
             else
@@ -393,7 +393,7 @@ namespace BlackGui
         {
             CVatsimValues values = getVatsimValuesFromGui();
             CUser user(values.vatsimId, values.vatsimRealName, "", values.vatsimPassword, getCallsignFromGui());
-            user.setHomebase(values.vatsimHomeAirport);
+            user.setHomeBase(values.vatsimHomeAirport);
             return user;
         }
 
@@ -450,20 +450,29 @@ namespace BlackGui
             }
             else
             {
-                static const CAircraftModel defaultModel(
-                    "", CAircraftModel::TypeOwnSimulatorModel, "default model",
-                    CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
-                model = this->m_currentAircraftModel.get();
-                if (!model.hasAircraftDesignator()) { model = defaultModel; }
+                model = this->getPrefillModel();
                 ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal); //! \todo Set observer mode without simulator, currently not working in OBS mode
                 ui->le_SimulatorModel->setText("");
                 this->highlightModelField();
             }
 
-            if (model.hasAircraftDesignator())
+            // reset the model
+            if (model.isLoadedFromDb())
             {
+                // full model from DB, take all values
                 this->setGuiIcaoValues(model, false);
             }
+            else
+            {
+                if (model.hasAircraftDesignator())
+                {
+                    // typed in model, override unempty values only
+                    this->setGuiIcaoValues(model, true);
+                }
+            }
+
+            this->updateOwnCallsignAndPilotFromGuiValue();
+            this->triggerDataChangedSignal(1500);
         }
 
         void CLoginComponent::setGuiIcaoValues(const CAircraftModel &model, bool onlyIfEmpty)
@@ -491,7 +500,8 @@ namespace BlackGui
             const bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
             ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
 
-            const bool validAirlineDesignator = values.ownAirlineIcao.hasValidDesignator();
+            // airline is optional, e.g. C172 has no airline
+            const bool validAirlineDesignator = values.ownAirlineIcao.hasValidDesignator() || values.ownAirlineIcao.getDesignator().isEmpty();
             ui->lblp_AirlineIcao->setTicked(validAirlineDesignator);
 
             const bool validAircraftDesignator = values.ownAircraftIcao.hasValidDesignator();
@@ -566,6 +576,7 @@ namespace BlackGui
 
         void CLoginComponent::ps_simulatorModelChanged(const CAircraftModel &model)
         {
+            Q_ASSERT_X(sGui && sGui->getIContextNetwork(), Q_FUNC_INFO, "Missing context");
             const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
             if (isConnected) { return; }
             const QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
@@ -581,6 +592,12 @@ namespace BlackGui
             {
                 this->ps_mappingWizard();
             }
+
+            // check state of own aircraft
+            this->updateOwnCallsignAndPilotFromGuiValue();
+
+            // let others know data changed
+            this->triggerDataChangedSignal(1500);
         }
 
         void CLoginComponent::ps_mappingWizard()
@@ -646,6 +663,55 @@ namespace BlackGui
             }
             static const QString sheet("background-color: %1;");
             ui->le_SimulatorModel->setStyleSheet(sheet.arg(color));
+        }
+
+        void CLoginComponent::triggerDataChangedSignal(int deferTimeMs)
+        {
+            QTimer::singleShot(deferTimeMs, this, &CLoginComponent::loginDataChanged);
+        }
+
+        CAircraftModel CLoginComponent::getPrefillModel() const
+        {
+            // if all fails
+            static const CAircraftModel defaultModel(
+                "", CAircraftModel::TypeOwnSimulatorModel, "default model",
+                CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
+
+            CAircraftModel model = this->m_currentAircraftModel.get();
+            if (model.hasAircraftDesignator()) { return model; }
+
+            // create one from DB data
+            if (sGui && sGui->hasWebDataServices())
+            {
+                const CAircraftIcaoCode icao = sGui->getWebDataServices()->getAircraftIcaoCodeForDesignator("C172");
+                const CLivery livery = sGui->getWebDataServices()->getLiveryForCombinedCode("_CC_WHITE_WHITE");
+                model = CAircraftModel("", CAircraftModel::TypeOwnSimulatorModel);
+                model.setLivery(livery);
+                model.setAircraftIcaoCode(icao);
+                return model;
+            }
+
+            return defaultModel;
+        }
+
+        void CLoginComponent::updateOwnCallsignAndPilotFromGuiValue()
+        {
+            if (!sGui || !sGui->getIContextOwnAircraft()) { return; }
+            const CSimulatedAircraft ownAircaft(sGui->getIContextOwnAircraft()->getOwnAircraft());
+            const QString cs(ui->le_Callsign->text().trimmed().toUpper());
+            if (!cs.isEmpty() && ownAircaft.getCallsignAsString() != cs)
+            {
+                sGui->getIContextOwnAircraft()->updateOwnCallsign(CCallsign(cs));
+            }
+            CUser pilot = ownAircaft.getPilot();
+            pilot.setRealName(CUser::beautifyRealName(ui->le_VatsimRealName->text()));
+            pilot.setHomeBase(CAirportIcaoCode(ui->le_VatsimHomeAirport->text()));
+            pilot.setId(ui->le_VatsimId->text());
+            pilot.setCallsign(CCallsign(cs));
+            if (ownAircaft.getPilot() != pilot)
+            {
+                sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(pilot);
+            }
         }
     } // namespace
 } // namespace

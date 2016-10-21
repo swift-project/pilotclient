@@ -103,7 +103,7 @@ namespace BlackMisc
                     int pos = match.capturedStart(0);
                     QString icao = match.captured(0).trimmed().right(4);
                     rn = rn.left(pos).trimmed();
-                    this->setHomebase(CAirportIcaoCode(icao));
+                    this->setHomeBase(CAirportIcaoCode(icao));
                 }
             }
 
@@ -130,7 +130,7 @@ namespace BlackMisc
             if (!this->hasValidCallsign()) { this->setCallsign(otherUser.getCallsign()); }
         }
 
-        void CUser::syncronizeData(CUser &otherUser)
+        void CUser::synchronizeData(CUser &otherUser)
         {
             if (this == &otherUser) { return; }
             this->updateMissingParts(otherUser);
@@ -239,7 +239,7 @@ namespace BlackMisc
             case IndexRealName:
                 return this->m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
             case IndexHomebase:
-                return this->m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomebase());
+                return this->m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
             case IndexCallsign:
                 return this->m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
             default:

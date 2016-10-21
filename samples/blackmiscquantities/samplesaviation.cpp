@@ -86,7 +86,7 @@ namespace BlackSample
 
         // User parsing
         CUser user("12345", "Joe KING KGLC");
-        out << user.getRealName() << user.getHomebase() << endl;
+        out << user.getRealName() << user.getHomeBase() << endl;
 
         // ATC List
         CAtcStationList atcList;
