@@ -38,6 +38,11 @@ namespace BlackMisc
 {
     namespace Network
     {
+        int CNetworkUtils::getTimeoutMs()
+        {
+            return 2000;
+        }
+
         bool CNetworkUtils::hasConnectedInterface(bool withDebugOutput)
         {
             // http://stackoverflow.com/questions/2475266/verfiying-the-network-connection-using-qt-4-4

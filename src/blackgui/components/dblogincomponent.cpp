@@ -90,9 +90,9 @@ namespace BlackGui
 
         void CDbLoginComponent::ps_onLoginClicked()
         {
-            QString un(ui->le_Username->text().trimmed());
-            QString pw(ui->le_Password->text().trimmed());
-            CStatusMessageList msgs = m_loginService.login(un, pw);
+            const QString un(ui->le_Username->text().trimmed());
+            const QString pw(ui->le_Password->text().trimmed());
+            const CStatusMessageList msgs = m_loginService.login(un, pw);
 
             if (msgs.hasWarningOrErrorMessages())
             {

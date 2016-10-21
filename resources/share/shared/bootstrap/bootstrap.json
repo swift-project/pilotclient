@@ -3,8 +3,8 @@
         "url": "http://crashreports.swift-project.org/crash_upload"
     },
     "dbDebugFlag": false,
-    "dbHttpPort": 5080,
-    "dbHttpsPort": 50443,
+    "dbHttpPort": 80,
+    "dbHttpsPort": 443,
     "dbRootDirectoryUrl": {
         "url": "https://datastore.swift-project.org"
     },

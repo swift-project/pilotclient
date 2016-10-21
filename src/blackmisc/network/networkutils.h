@@ -47,6 +47,9 @@ namespace BlackMisc
                 Multipart
             };
 
+            //! Default for timeout
+            static int getTimeoutMs();
+
             //! Is a connected interface available?
             //! \param withDebugOutput enables some debugging output
             //! \return
@@ -58,29 +61,29 @@ namespace BlackMisc
             //! \param timeoutMs
             //! \param message       human readable message
             //! \return
-            static bool canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs = 1500);
+            static bool canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs = getTimeoutMs());
 
             //! Can connect to server?
             //! \param server
             //! \param message       human readable message
             //! \param timeoutMs
             //! \return
-            static bool canConnect(const BlackMisc::Network::CServer &server, QString &message, int timeoutMs = 1500);
+            static bool canConnect(const BlackMisc::Network::CServer &server, QString &message, int timeoutMs = getTimeoutMs());
 
             //! Can connect to URL?
-            static bool canConnect(const QString &url, QString &message, int timeoutMs = 1500);
+            static bool canConnect(const QString &url, QString &message, int timeoutMs = getTimeoutMs());
 
             //! Can connect to URL?
-            static bool canConnect(const QUrl &url, QString &message, int timeoutMs = 1500);
+            static bool canConnect(const QUrl &url, QString &message, int timeoutMs = getTimeoutMs());
 
             //! Can connect to URL?
-            static bool canConnect(const QUrl &url, int timeoutMs = 1500);
+            static bool canConnect(const QUrl &url, int timeoutMs = getTimeoutMs());
 
             //! Can connect to URL?
-            static bool canConnect(const BlackMisc::Network::CUrl &url, QString &message, int timeoutMs = 1500);
+            static bool canConnect(const BlackMisc::Network::CUrl &url, QString &message, int timeoutMs = getTimeoutMs());
 
             //! Can connect to URL?
-            static bool canConnect(const BlackMisc::Network::CUrl &url, int timeoutMs = 1500);
+            static bool canConnect(const BlackMisc::Network::CUrl &url, int timeoutMs = getTimeoutMs());
 
             //! Find out my IPv4 address, empty if not possible
             static QStringList getKnownIpAddresses();

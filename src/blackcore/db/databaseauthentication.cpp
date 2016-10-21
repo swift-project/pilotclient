@@ -68,8 +68,8 @@ namespace BlackCore
 
             if (this->m_shutdown) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "Shutdown in progress")); return msgs; }
 
-            QString un(username.trimmed());
-            QString pw(password.trimmed());
+            const QString un(username.trimmed());
+            const QString pw(password.trimmed());
             if (un.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No user name/id")); }
             if (pw.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, "No password")); }
             if (!msgs.isEmpty()) { return msgs; }
