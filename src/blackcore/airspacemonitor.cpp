@@ -777,7 +777,7 @@ namespace BlackCore
         const bool existsAircraft = this->isAircraftInRange(callsign);
         if (!existsAircraft)
         {
-            this->sendInitialPilotQueries(callsign);
+            this->sendInitialPilotQueries(callsign, false);
         }
         this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
         this->addReverseLookupMessages(callsign, reverseLookupMessages);
@@ -964,7 +964,7 @@ namespace BlackCore
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
             this->addNewAircraftinRange(aircraft);
-            this->sendInitialPilotQueries(callsign);
+            this->sendInitialPilotQueries(callsign, true);
 
             // new client, there is a chance it has been already created by custom packet
             const CClient c(callsign);
@@ -1149,13 +1149,17 @@ namespace BlackCore
         this->m_network->sendServerQuery(callsign);
     }
 
-    void CAirspaceMonitor::sendInitialPilotQueries(const CCallsign &callsign)
+    void CAirspaceMonitor::sendInitialPilotQueries(const CCallsign &callsign, bool withFsInn)
     {
         if (!this->isConnected()) { return; }
         this->m_network->sendFrequencyQuery(callsign);
         this->m_network->sendRealNameQuery(callsign);
         this->m_network->sendCapabilitiesQuery(callsign);
         this->m_network->sendServerQuery(callsign);
+        if (withFsInn)
+        {
+            this->m_network->sendCustomFsinnQuery(callsign);
+        }
     }
 
     bool CAirspaceMonitor::isConnected() const

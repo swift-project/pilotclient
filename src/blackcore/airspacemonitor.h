@@ -252,7 +252,7 @@ namespace BlackCore
         void sendInitialAtcQueries(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Network queries for pilots
-        void sendInitialPilotQueries(const BlackMisc::Aviation::CCallsign &callsign);
+        void sendInitialPilotQueries(const BlackMisc::Aviation::CCallsign &callsign, bool withFsInn);
 
         //! Connected with network?
         bool isConnected() const;
