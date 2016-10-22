@@ -83,7 +83,7 @@ namespace BlackGui
 
         void CModelMatcherLogComponent::ps_callsignEntered()
         {
-            if (!sGui || !ui->cb_LogReverseLookup->isChecked()) { return; }
+            if (!sGui || !sGui->getIContextNetwork()) { return; }
             static const CPropertyIndexList properties({ CPropertyIndex::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
             const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
             const CStatusMessageList msgs = sGui->getIContextNetwork()->getReverseLookupMessages(cs);
