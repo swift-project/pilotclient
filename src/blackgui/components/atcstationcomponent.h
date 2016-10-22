@@ -33,7 +33,6 @@ class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
 namespace Ui { class CAtcStationComponent; }
-
 namespace BlackGui
 {
     class CDockWidgetInfoArea;

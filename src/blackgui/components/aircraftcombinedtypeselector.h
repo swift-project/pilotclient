@@ -24,7 +24,6 @@ class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CAircraftIcaoCode; } }
 namespace Ui { class CAircraftCombinedTypeSelector; }
-
 namespace BlackGui
 {
     namespace Components

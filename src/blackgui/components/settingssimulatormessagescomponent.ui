@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>268</width>
-    <height>254</height>
+    <width>262</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,19 @@
      <property name="title">
       <string>Technical messages</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gl_TechnicalMessages">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
       <item row="0" column="1">
        <widget class="QRadioButton" name="rb_ErrorsOnly">
         <property name="text">
@@ -53,7 +65,7 @@
       <item row="1" column="0">
        <widget class="QRadioButton" name="rb_ErrorsAndWarnings">
         <property name="text">
-         <string>wanrings</string>
+         <string>warnings</string>
         </property>
        </widget>
       </item>
@@ -85,7 +97,19 @@
      <property name="title">
       <string>Message type</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gl_MessageTypes">
+      <property name="leftMargin">
+       <number>6</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>6</number>
+      </property>
+      <property name="bottomMargin">
+       <number>6</number>
+      </property>
       <item row="0" column="1">
        <widget class="QCheckBox" name="cb_PrivateMessages">
         <property name="text">

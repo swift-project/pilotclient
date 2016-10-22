@@ -44,7 +44,6 @@ namespace BlackMisc
 
 namespace BlackCore
 {
-
     //! Interface to a simulator.
     class BLACKCORE_EXPORT ISimulator :
         public QObject,

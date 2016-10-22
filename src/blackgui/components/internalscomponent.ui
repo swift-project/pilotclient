@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>277</width>
+    <width>282</width>
     <height>450</height>
    </rect>
   </property>
@@ -118,10 +118,10 @@
          </layout>
         </widget>
        </item>
-       <item>
+       <item alignment="Qt::AlignHCenter">
         <widget class="QLabel" name="lbl_Disclaimer_1">
          <property name="text">
-          <string>WORK IN PROGRES!!!!!</string>
+          <string>WORK IN PROGRESS!</string>
          </property>
         </widget>
        </item>
@@ -154,7 +154,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>WORK IN PROGRES!!!!!</string>
+        <string>WORK IN PROGRESS!</string>
        </property>
       </widget>
      </widget>
@@ -167,7 +167,7 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>4</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
@@ -176,39 +176,34 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="gb_Aircraft">
-         <property name="title">
-          <string>Aircraft</string>
-         </property>
-         <layout class="QVBoxLayout" name="vl_GroupAircraftSelector">
-          <property name="spacing">
-           <number>2</number>
-          </property>
+        <widget class="QFrame" name="fr_Aircraft">
+         <layout class="QFormLayout" name="fl_Aircraft">
           <property name="leftMargin">
-           <number>4</number>
+           <number>2</number>
           </property>
           <property name="topMargin">
-           <number>6</number>
+           <number>0</number>
           </property>
           <property name="rightMargin">
-           <number>4</number>
-          </property>
-          <property name="bottomMargin">
            <number>2</number>
           </property>
-          <item>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_Aircraft">
+            <property name="text">
+             <string>Aircraft:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
            <widget class="BlackGui::Components::CRemoteAircraftSelector" name="comp_RemoteAircraftSelector">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>25</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -256,13 +251,13 @@
              </property>
              <layout class="QVBoxLayout" name="vl_GroupParts">
               <property name="spacing">
-               <number>6</number>
+               <number>4</number>
               </property>
               <property name="leftMargin">
                <number>4</number>
               </property>
               <property name="topMargin">
-               <number>6</number>
+               <number>4</number>
               </property>
               <property name="rightMargin">
                <number>4</number>
@@ -275,17 +270,17 @@
                 <property name="spacing">
                  <number>6</number>
                 </property>
-                <item row="3" column="2">
-                 <widget class="QCheckBox" name="cb_AircraftPartsLightsLanding">
-                  <property name="text">
-                   <string>Landing</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="4" column="1">
                  <widget class="QCheckBox" name="cb_AircraftPartsLightsStrobe">
                   <property name="text">
                    <string>Strobe</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="QCheckBox" name="cb_AircraftPartsLightsLanding">
+                  <property name="text">
+                   <string>Landing</string>
                   </property>
                  </widget>
                 </item>
@@ -296,52 +291,10 @@
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1">
-                 <widget class="QCheckBox" name="cb_AircraftPartsEngine2">
-                  <property name="text">
-                   <string>2</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="5" column="0">
                  <widget class="QLabel" name="lbl_AircraftPartsEngines">
                   <property name="text">
                    <string>Engines:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="0">
-                 <widget class="QCheckBox" name="cb_AircraftPartsEngine1">
-                  <property name="text">
-                   <string>1</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="lbl_AircraftPartsFlapsPercentage">
-                  <property name="text">
-                   <string>Flaps %:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="7" column="0">
-                 <widget class="QCheckBox" name="cb_AircraftPartsEngine4">
-                  <property name="text">
-                   <string>4</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="2">
-                 <widget class="QCheckBox" name="cb_AircraftPartsEngine3">
-                  <property name="text">
-                   <string>3</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QCheckBox" name="cb_AircraftPartsSpoilers">
-                  <property name="text">
-                   <string>Spoilers</string>
                   </property>
                  </widget>
                 </item>
@@ -352,17 +305,17 @@
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QCheckBox" name="cb_AircraftPartsLightsNav">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="lbl_AircraftPartsFlapsPercentage">
                   <property name="text">
-                   <string>Nav</string>
+                   <string>Flaps %:</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="lbl_AircraftPartsLights">
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="cb_AircraftPartsSpoilers">
                   <property name="text">
-                   <string>Lights:</string>
+                   <string>Spoilers</string>
                   </property>
                  </widget>
                 </item>
@@ -373,6 +326,13 @@
                   </property>
                  </widget>
                 </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="lbl_AircraftPartsLights">
+                  <property name="text">
+                   <string>Lights:</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="4" column="2">
                  <widget class="QCheckBox" name="cb_AircraftPartsLightsLogo">
                   <property name="text">
@@ -380,10 +340,10 @@
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="1">
-                 <widget class="QCheckBox" name="cb_AircraftPartsEngine5">
+                <item row="3" column="1">
+                 <widget class="QCheckBox" name="cb_AircraftPartsLightsNav">
                   <property name="text">
-                   <string>5</string>
+                   <string>Nav</string>
                   </property>
                  </widget>
                 </item>
@@ -404,6 +364,13 @@
                   </property>
                  </widget>
                 </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pb_AircraftPartsLightsOff">
+                  <property name="text">
+                   <string>all off</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="5" column="1">
                  <widget class="QPushButton" name="pb_AircraftPartsEnginesOn">
                   <property name="text">
@@ -415,20 +382,6 @@
                  <widget class="QCheckBox" name="cb_AircraftPartsIsOnGround">
                   <property name="text">
                    <string>on ground</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="7" column="2">
-                 <widget class="QCheckBox" name="cb_AircraftPartsEngine6">
-                  <property name="text">
-                   <string>6</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QPushButton" name="pb_AircraftPartsLightsOff">
-                  <property name="text">
-                   <string>all off</string>
                   </property>
                  </widget>
                 </item>
@@ -444,6 +397,78 @@
                   <property name="text">
                    <string>to JSON</string>
                   </property>
+                 </widget>
+                </item>
+                <item row="6" column="0" colspan="3">
+                 <widget class="QFrame" name="fr_Engines">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QHBoxLayout" name="hl_Engines">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QCheckBox" name="cb_AircraftPartsEngine1">
+                     <property name="text">
+                      <string>1</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="cb_AircraftPartsEngine2">
+                     <property name="text">
+                      <string>2</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="cb_AircraftPartsEngine3">
+                     <property name="text">
+                      <string>3</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="cb_AircraftPartsEngine4">
+                     <property name="text">
+                      <string>4</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="cb_AircraftPartsEngine5">
+                     <property name="text">
+                      <string>5</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="cb_AircraftPartsEngine6">
+                     <property name="text">
+                      <string>6</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
                </layout>
