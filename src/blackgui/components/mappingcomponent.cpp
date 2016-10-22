@@ -196,21 +196,21 @@ namespace BlackGui
             const CSimulatedAircraft simAircraft = ui->tvp_SimulatedAircraft->at(index);
             ui->cb_AircraftEnabled->setChecked(simAircraft.isEnabled());
             ui->le_Callsign->setText(simAircraft.getCallsign().asString());
-            ui->le_AircraftModel->setText(simAircraft.getModel().getModelString());
+            ui->completer_ModelStrings->setModel(simAircraft.getModel());
         }
 
         void CMappingComponent::ps_onModelSelectedInView(const QModelIndex &index)
         {
             const CAircraftModel model = ui->tvp_AircraftModels->at(index);
-            ui->le_AircraftModel->setText(model.getModelString());
+            ui->completer_ModelStrings->setModel(model);
 
             if (ui->cb_AircraftIconDisplayed->isChecked())
             {
                 const int MaxHeight = 125;
                 ui->lbl_AircraftIconDisplayed->setText("");
                 ui->lbl_AircraftIconDisplayed->setToolTip(model.getDescription());
-                QString modelString(model.getModelString());
-                CPixmap pm =  sGui->getIContextSimulator()->iconForModel(modelString);
+                const QString modelString(model.getModelString());
+                CPixmap pm = sGui->getIContextSimulator()->iconForModel(modelString);
                 if (pm.isNull())
                 {
                     ui->lbl_AircraftIconDisplayed->setPixmap(CIcons::crossWhite16());
@@ -233,7 +233,7 @@ namespace BlackGui
 
         void CMappingComponent::ps_onSaveAircraft()
         {
-            QString cs = ui->le_Callsign->text().trimmed();
+            const QString cs = ui->le_Callsign->text().trimmed();
             if (!CCallsign::isValidAircraftCallsign(cs))
             {
                 CLogMessage(this).validationError("Invalid callsign for mapping");
@@ -248,7 +248,7 @@ namespace BlackGui
                 return;
             }
 
-            QString modelString = ui->le_AircraftModel->text().trimmed();
+            const QString modelString = ui->completer_ModelStrings->getModelString();
             if (modelString.isEmpty())
             {
                 CLogMessage(this).validationError("Missing model for mapping");
@@ -320,16 +320,8 @@ namespace BlackGui
 
         void CMappingComponent::ps_onModelsUpdateRequested()
         {
-            CAircraftModelList ml(sGui->getIContextSimulator()->getInstalledModels());
+            const CAircraftModelList ml(sGui->getIContextSimulator()->getInstalledModels());
             ui->tvp_AircraftModels->updateContainer(ml);
-
-            // model completer
-            this->m_modelCompleter->setModel(new QStringListModel(ml.getModelStringList(), this->m_modelCompleter));
-            this->m_modelCompleter->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-            this->m_modelCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-            this->m_modelCompleter->setWrapAround(true);
-            this->m_modelCompleter->setCompletionMode(QCompleter::InlineCompletion);
-            ui->le_AircraftModel->setCompleter(this->m_modelCompleter);
         }
 
         void CMappingComponent::ps_onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
