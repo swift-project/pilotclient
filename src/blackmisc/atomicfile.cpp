@@ -18,6 +18,7 @@
 
 #if defined(Q_OS_POSIX)
 #include <stdio.h>
+#include <errno.h>
 #elif defined(Q_OS_WIN32)
 #include <windows.h>
 #endif
@@ -90,13 +91,27 @@ namespace BlackMisc
     void CAtomicFile::replaceOriginal()
     {
         auto result = ::rename(qPrintable(fileName()), qPrintable(m_originalFilename));
-        if (result < 0) { m_renameError = true; }
+        if (result < 0)
+        {
+            m_renameError = true;
+            char s[1024] {};
+            auto x = strerror_r(errno, s, sizeof(s));
+            setErrorString(QString::fromLocal8Bit(s));
+            static_assert(std::is_same<decltype(x), int>::value, "Non-standard signature of POSIX function strerror_r, check documentation.");
+        }
     }
 #elif defined(Q_OS_WIN32)
     void CAtomicFile::replaceOriginal()
     {
         auto result = MoveFileExA(qPrintable(fileName()), qPrintable(m_originalFilename), MOVEFILE_REPLACE_EXISTING);
-        if (! result) { m_renameError = true; }
+        if (! result)
+        {
+            m_renameError = true;
+            wchar_t *s = nullptr;
+            FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, reinterpret_cast<LPWSTR>(&s), 0, nullptr);
+            setErrorString(QString::fromWCharArray(s));
+            LocalFree(reinterpret_cast<HLOCAL>(s));
+        }
     }
 #else
     void CAtomicFile::replaceOriginal()

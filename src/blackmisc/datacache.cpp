@@ -479,7 +479,7 @@ namespace BlackMisc
 
         if (! revisionFile.checkedClose())
         {
-            CLogMessage(this).error("Failed to write to %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+            CLogMessage(this).error("Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
         }
     }
 
@@ -623,7 +623,7 @@ namespace BlackMisc
 
             if (!(revisionFile.seek(0) && revisionFile.resize(0) && revisionFile.write(QJsonDocument(json).toJson()) && revisionFile.checkedClose()))
             {
-                CLogMessage(this).error("Failed to write to %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error("Failed to write to %1: %2 (%3 %4)") << revisionFile.fileName() << revisionFile.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
             }
         }
         m_lockFile.unlock();
@@ -776,7 +776,7 @@ namespace BlackMisc
         json.insert("uuid", uuid.toString());
         if (!(file.seek(0) && file.resize(0) && file.write(QJsonDocument(json).toJson()) && file.checkedClose()))
         {
-            CLogMessage(this).error("Failed to write to session file %1: %2") << m_filename << file.errorString();
+            CLogMessage(this).error("Failed to write to session file %1: %2 (%3 %4)") << m_filename << file.errorString() << QThread::currentThread()->objectName() << Q_FUNC_INFO;
         }
     }
 
