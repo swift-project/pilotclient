@@ -59,46 +59,47 @@ namespace BlackCore
                 return 0;
             }
 
-            //! \copydoc IContextSimulator::stopSimulatorPlugin()
+            //! \copydoc IContextSimulator::stopSimulatorPlugin
             virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override
             {
                 Q_UNUSED(simulatorInfo);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
-            //! \copydoc IContextSimulator::getAirportsInRange()
+            //! \copydoc IContextSimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CAirportList();
             }
 
-            //! \copydoc IContextSimulator::getInstalledModels()
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override
+            //! \copydoc IContextSimulator::getModelSet
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CAircraftModelList();
             }
 
-            //! \copydoc IContextSimulator::getInstalledModelsStartingWith
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const override
+            //! \copydoc IContextSimulator::getModelSetStrings
+            virtual QStringList getModelSetStrings() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return QStringList();
+            }
+
+            //! \copydoc IContextSimulator::getModelSetModelsStartingWith
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const override
             {
                 Q_UNUSED(modelString);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Simulation::CAircraftModelList();
             }
 
-            //! \copydoc IContextSimulator::getInstalledModelsCount
-            virtual int getInstalledModelsCount() const override
+            //! \copydoc IContextSimulator::getModelSetCount
+            virtual int getModelSetCount() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return 0;
-            }
-
-            //! \copydoc IContextSimulator::reloadInstalledModels
-            virtual void reloadInstalledModels() override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextSimulator::getSimulatorSetup
@@ -224,6 +225,28 @@ namespace BlackCore
                 Q_UNUSED(driver);
                 Q_UNUSED(interpolator);
                 logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
+            //! \copydoc IContextSimulator::getMatchingMessages
+            virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override
+            {
+                Q_UNUSED(callsign);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::CStatusMessageList();
+            }
+
+            //! \copydoc IContextSimulator::enableMatchingMessages
+            virtual void enableMatchingMessages(bool enable) override
+            {
+                Q_UNUSED(enable);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
+            //! \copydoc IContextSimulator::isMatchingMessagesEnabled
+            virtual bool isMatchingMessagesEnabled() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
             }
         };
     } // namespace

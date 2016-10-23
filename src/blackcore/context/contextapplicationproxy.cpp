@@ -62,6 +62,7 @@ namespace BlackCore
             s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                    "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, BlackMisc::CIdentifier)));
             Q_UNUSED(s);
+            this->relayBaseClassSignals(serviceName, connection, IContextApplication::ObjectPath(), IContextApplication::InterfaceName());
         }
 
         void CContextApplicationProxy::logMessage(const CStatusMessage &message, const CIdentifier &origin)

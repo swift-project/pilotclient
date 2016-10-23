@@ -14,6 +14,8 @@
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/corefacade.h"
+#include "blackcore/matchingutils.h"
+#include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/callsign.h"
@@ -50,7 +52,8 @@ namespace BlackCore
             CIdentifiable(this),
             m_plugins(new CPluginManagerSimulator(this))
         {
-            this->setObjectName("CContextSimulator");
+            setObjectName("CContextSimulator");
+            m_enableMatchingMessages = sApp->isRunningInDeveloperEnvironment();
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
             m_plugins->collectPlugins();
             restoreSimulatorPlugins();
@@ -139,29 +142,33 @@ namespace BlackCore
             return m_simulatorPlugin.second->getAirportsInRange();
         }
 
-        CAircraftModelList CContextSimulator::getInstalledModels() const
+        CAircraftModelList CContextSimulator::getModelSet() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+
             // If no ISimulator object is available, return a dummy.
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                return CAircraftModelList();
-            }
+            if (m_simulatorPlugin.first.isUnspecified()) { return CAircraftModelList(); }
 
             Q_ASSERT(m_simulatorPlugin.second);
             return m_modelMatcher.getModelSet();
         }
 
-        int CContextSimulator::getInstalledModelsCount() const
+        QStringList CContextSimulator::getModelSetStrings() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return this->getModelSet().getModelStringList(false);
+        }
+
+        int CContextSimulator::getModelSetCount() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (m_simulatorPlugin.first.isUnspecified()) { return 0; }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return getInstalledModels().size();
+            return getModelSet().size();
         }
 
-        CAircraftModelList CContextSimulator::getInstalledModelsStartingWith(const QString modelString) const
+        CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString modelString) const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
             if (m_simulatorPlugin.first.isUnspecified())
@@ -170,18 +177,7 @@ namespace BlackCore
             }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return getInstalledModels().findModelsStartingWith(modelString);
-        }
-
-        void CContextSimulator::reloadInstalledModels()
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                return;
-            }
-            Q_ASSERT(m_simulatorPlugin.second);
-            m_simulatorPlugin.second->reloadInstalledModels();
+            return getModelSet().findModelsStartingWith(modelString);
         }
 
         bool CContextSimulator::setTimeSynchronization(bool enable, const CTime &offset)
@@ -376,7 +372,7 @@ namespace BlackCore
             Q_ASSERT(c);
             Q_UNUSED(c);
 
-            // Once the simulator signaled it is ready to simulate, add all known aircrafts.
+            // Once the simulator signaled it is ready to simulate, add all known aircraft
             m_initallyAddAircrafts = true;
             // try to connect to simulator
             simulator->connectTo();
@@ -387,6 +383,7 @@ namespace BlackCore
             emit simulatorPluginChanged(simulatorPluginInfo);
             CLogMessage(this).info("Simulator plugin loaded: %1") << simulatorPluginInfo.toQString(true);
 
+            m_matchingMessages.clear();
             return true;
         }
 
@@ -442,7 +439,7 @@ namespace BlackCore
 
         void CContextSimulator::listenForAllSimulators()
         {
-            auto plugins = getAvailableSimulatorPlugins();
+            const auto plugins = getAvailableSimulatorPlugins();
             for (const CSimulatorPluginInfo &p : plugins)
             {
                 Q_ASSERT(!p.isUnspecified());
@@ -482,11 +479,15 @@ namespace BlackCore
             if (!isSimulatorSimulating()) { return; }
             Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
 
-            CCallsign callsign = remoteAircraft.getCallsign();
-            CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(remoteAircraft);
+            const CCallsign callsign = remoteAircraft.getCallsign();
+            CStatusMessageList matchingMessages;
+            CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
+            CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Matching remote Aircraft"));
+            const CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
+            addMatchingMessages(callsign, matchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
             updateAircraftModel(callsign, aircraftModel, identifier());
-            CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
+            const CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
             emit modelMatchingCompleted(remoteAircraft);
         }
@@ -597,14 +598,36 @@ namespace BlackCore
             return m_simulatorPlugin.second->enableDebugMessages(driver, interpolator);
         }
 
+        CStatusMessageList CContextSimulator::getMatchingMessages(const CCallsign &callsign) const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            return m_matchingMessages[callsign];
+        }
+
+        bool CContextSimulator::isMatchingMessagesEnabled() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_enableMatchingMessages;
+        }
+
+        void CContextSimulator::enableMatchingMessages(bool enabled)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enabled; }
+            if (m_enableMatchingMessages == enabled) { return; }
+            m_enableMatchingMessages = enabled;
+            emit CContext::changedLogOrDebugSettings();
+        }
+
         void CContextSimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << aircraftToHighlight << enableHighlight << displayTime; }
             Q_ASSERT(m_simulatorPlugin.second);
             m_simulatorPlugin.second->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
         }
 
         void CContextSimulator::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << identifier; }
             m_weatherManager.requestWeatherGrid(weatherGrid, identifier);
         }
 
@@ -620,6 +643,22 @@ namespace BlackCore
             {
                 ISimulatorListener *listener = m_plugins->getListener(info.getIdentifier());
                 if (listener) { QMetaObject::invokeMethod(listener, "stop"); }
+            }
+        }
+
+        void CContextSimulator::addMatchingMessages(const CCallsign &callsign, const CStatusMessageList &messages)
+        {
+            if (callsign.isEmpty()) { return; }
+            if (messages.isEmpty()) { return; }
+            if (!this->m_enableMatchingMessages) { return; }
+            if (this->m_matchingMessages.contains(callsign))
+            {
+                CStatusMessageList &msgs = this->m_matchingMessages[callsign];
+                msgs.push_back(messages);
+            }
+            else
+            {
+                this->m_matchingMessages.insert(callsign, messages);
             }
         }
     } // namespace

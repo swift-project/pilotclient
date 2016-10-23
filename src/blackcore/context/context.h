@@ -38,6 +38,8 @@ namespace BlackCore
         //! Base for all context classes
         class BLACKCORE_EXPORT CContext : public QObject
         {
+            Q_OBJECT
+
         public:
             //! Destructor
             virtual ~CContext() {}
@@ -83,9 +85,9 @@ namespace BlackCore
             //! Unique id
             qint64 getUniqueId() const { return this->m_contextId; }
 
-            //
+            // ---------------------------------------------------------------
             // cross context access
-            //
+            // ---------------------------------------------------------------
 
             //! Context for application
             const IContextApplication *getIContextApplication() const;
@@ -126,6 +128,10 @@ namespace BlackCore
             //! Id and path name for round trip protection
             virtual QString getPathAndContextId() const = 0;
 
+        signals:
+            //! Log or debug values changed
+            void changedLogOrDebugSettings();
+
         protected:
             CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
             qint64 m_contextId;                    //!< unique identifer, avoid redirection rountrips
@@ -141,6 +147,9 @@ namespace BlackCore
             {
                 return QString(path) + ":" + QString::number(this->getUniqueId());
             }
+
+            //! Relay signals from this class
+            void relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName);
 
             //! Empty context called
             void logEmptyContextWarning(const QString &functionName) const

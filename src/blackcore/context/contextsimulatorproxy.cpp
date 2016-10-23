@@ -63,6 +63,7 @@ namespace BlackCore
                                    "weatherGridReceived", this, SIGNAL(weatherGridReceived(BlackMisc::Weather::CWeatherGrid, BlackMisc::CIdentifier)));
             Q_ASSERT(s);
             Q_UNUSED(s);
+            this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());
         }
 
         CSimulatorPluginInfoList CContextSimulatorProxy::getAvailableSimulatorPlugins() const
@@ -80,24 +81,24 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1Literal("getAirportsInRange"));
         }
 
-        CAircraftModelList CContextSimulatorProxy::getInstalledModels() const
+        CAircraftModelList CContextSimulatorProxy::getModelSet() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getInstalledModels"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getModelSet"));
         }
 
-        CAircraftModelList CContextSimulatorProxy::getInstalledModelsStartingWith(const QString modelString) const
+        QStringList CContextSimulatorProxy::getModelSetStrings() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getInstalledModelsStartingWith"), modelString);
+            return m_dBusInterface->callDBusRet<QStringList>(QLatin1Literal("getModelSetStrings"));
         }
 
-        int CContextSimulatorProxy::getInstalledModelsCount() const
+        CAircraftModelList CContextSimulatorProxy::getModelSetModelsStartingWith(const QString modelString) const
         {
-            return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getInstalledModelsCount"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getModelSetModelsStartingWith"), modelString);
         }
 
-        void CContextSimulatorProxy::reloadInstalledModels()
+        int CContextSimulatorProxy::getModelSetCount() const
         {
-            m_dBusInterface->callDBus(QLatin1Literal("reloadInstalledModels"));
+            return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getModelSetCount"));
         }
 
         BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorPluginInfo() const
@@ -198,6 +199,21 @@ namespace BlackCore
         void CContextSimulatorProxy::enableDebugMessages(bool driver, bool interpolator)
         {
             m_dBusInterface->callDBus(QLatin1Literal("enableDebugMessages"), driver, interpolator);
+        }
+
+        CStatusMessageList CContextSimulatorProxy::getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const
+        {
+            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("getMatchingMessages"), callsign);
+        }
+
+        bool CContextSimulatorProxy::isMatchingMessagesEnabled() const
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isMatchingMessagesEnabled"));
+        }
+
+        void CContextSimulatorProxy::enableMatchingMessages(bool enabled)
+        {
+            m_dBusInterface->callDBus(QLatin1Literal("enableMatchingMessages"), enabled);
         }
     } // namespace
 } // namespace

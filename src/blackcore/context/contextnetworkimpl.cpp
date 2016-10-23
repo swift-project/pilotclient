@@ -522,7 +522,9 @@ namespace BlackCore
         void CContextNetwork::enableReverseLookupMessages(bool enabled)
         {
             if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
-            return this->m_airspace->enableReverseLookupMessages(enabled);
+            if (this->m_airspace->isReverseLookupMessagesEnabled() == enabled) { return; }
+            this->m_airspace->enableReverseLookupMessages(enabled);
+            emit CContext::changedLogOrDebugSettings();
         }
 
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const

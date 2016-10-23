@@ -263,7 +263,7 @@ namespace BlackCore
             //! Change fast position updates
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) = 0;
 
-            //! Get reverse lookup meesages
+            //! Get reverse lookup messages
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
             //! Enabled reverse lookup logging?
@@ -271,6 +271,8 @@ namespace BlackCore
 
             //! Enable reverse lookup logging
             virtual void enableReverseLookupMessages(bool enabled) = 0;
+
+            // ------------------------ testing ------------------------
 
             //! Create dummy ATC stations for performance tests etc.
             virtual void testCreateDummyOnlineAtcStations(int number) = 0;

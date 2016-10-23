@@ -142,12 +142,6 @@ namespace BlackCore
             //! \ingroup remoteaircraftprovider
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
 
-            //! \copydoc IContextNetwork::readAtcBookingsFromSource()
-            virtual void readAtcBookingsFromSource() const override;
-
-            //! \copydoc IContextNetwork::getAtcStationsOnline()
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
-
             //! \copydoc IContextNetwork::getAtcStationsBooked()
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
 
@@ -183,6 +177,26 @@ namespace BlackCore
             //! \ingroup remoteaircraftprovider
             virtual void enableReverseLookupMessages(bool enabled) override;
 
+            //! In transition state, e.g. connecting, disconnecting.
+            //! \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
+            //! \remarks Intentionally only running locally, not in interface
+            bool isPendingConnection() const;
+
+            //! \ingroup commandline
+            //! @{
+            //! <pre>
+            //! .m .msg   message text
+            //! </pre>
+            //! @}
+            //! \copydoc IContextNetwork::parseCommandLine
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+            //! \copydoc IContextNetwork::readAtcBookingsFromSource()
+            virtual void readAtcBookingsFromSource() const override;
+
+            //! \copydoc IContextNetwork::getAtcStationsOnline()
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
+
             //! \copydoc IContextNetwork::getOnlineStationForCallsign
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
 
@@ -197,20 +211,6 @@ namespace BlackCore
 
             //! \copydoc IContextNetwork::isConnected()
             virtual bool isConnected() const override;
-
-            //! In transition state, e.g. connecting, disconnecting.
-            //! \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
-            //! \remarks Intentionally only running locally, not in interface
-            bool isPendingConnection() const;
-
-            //! \ingroup commandline
-            //! @{
-            //! <pre>
-            //! .m  .msg   message text
-            //! </pre>
-            //! @}
-            //! \copydoc IContextNetwork::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc IContextNetwork::sendTextMessages()
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;

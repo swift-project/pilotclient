@@ -69,12 +69,20 @@ namespace BlackCore
 
         void CContext::setDebugEnabled(bool debug)
         {
-            this->m_debugEnabled = debug;
+            if (this->m_debugEnabled == debug) { return; }
+            emit this->changedLogOrDebugSettings();
         }
 
         bool CContext::isDebugEnabled() const
         {
             return this->m_debugEnabled;
+        }
+
+        void CContext::relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName)
+        {
+            bool s = connection.connect(serviceName, objectPath, interfaceName,
+                                        "changedLogOrDebugSettings", this, SIGNAL(changedLogOrDebugSettings()));
+            Q_ASSERT(s);
         }
 
         const IContextSimulator *CContext::getIContextSimulator() const

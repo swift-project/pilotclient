@@ -54,9 +54,9 @@ namespace BlackCore
     {
         //! Network simulator concrete implementation
         class BLACKCORE_EXPORT CContextSimulator :
-                public IContextSimulator,
-                public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
-                public BlackMisc::CIdentifiable
+            public IContextSimulator,
+            public BlackMisc::Simulation::CRemoteAircraftAware, // gain access to in memory remote aircraft data
+            public BlackMisc::CIdentifiable
         {
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
@@ -71,86 +71,39 @@ namespace BlackCore
             void gracefulShutdown();
 
         public slots:
-            //! \copydoc IContextSimulator::getSimulatorPluginInfo()
+            //! \name Interface overrides
+            //! @{
             virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
-
-            //! \copydoc IContextSimulator::getAvailableSimulatorPlugins()
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
-
-            //! \copydoc IContextSimulator::startSimulatorPlugin()
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-
-            //! \copydoc IContextSimulator::stopSimulatorPlugin()
             virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
-
-            //! \copydoc IContextSimulator::getSimulatorStatus()
             virtual int getSimulatorStatus() const override;
-
-            //! \copydoc IContextSimulator::getSimulatorSetup()
             virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
-
-            //! \copydoc IContextSimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
-
-            //! \copydoc IContextSimulator::getInstalledModels
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const override;
-
-            //! \copydoc IContextSimulator::getInstalledModelsCount
-            virtual int getInstalledModelsCount() const override;
-
-            //! \copydoc IContextSimulator::getInstalledModelsStartingWith
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const override;
-
-            //! \copydoc IContextSimulator::reloadInstalledModels
-            virtual void reloadInstalledModels() override;
-
-            //! \copydoc IContextSimulator::setTimeSynchronization
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
+            virtual QStringList getModelSetStrings() const override;
+            virtual int getModelSetCount() const override;
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
-
-            //! \copydoc IContextSimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override;
-
-            //! \copydoc IContextSimulator::getMaxRenderedAircraft
             virtual int getMaxRenderedAircraft() const override;
-
-            //! \copydoc IContextSimulator::setMaxRenderedAircraft
             virtual void setMaxRenderedAircraft(int number) override;
-
-            //! \copydoc IContextSimulator::getMaxRenderedDistance
             virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
-
-            //! \copydoc IContextSimulator::setMaxRenderedDistance
             virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
-
-            //! \copydoc IContextSimulator::getRenderRestrictionText
             virtual QString getRenderRestrictionText() const override;
-
-            //! \copydoc IContextSimulator::getRenderedDistanceBoundary
             virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
-
-            //! \copydoc IContextSimulator::setMaxRenderedDistance
             virtual void deleteAllRenderingRestrictions() override;
-
-            //! \copydoc IContextSimulator::isRenderingRestricted
             virtual bool isRenderingRestricted() const override;
-
-            //! \copydoc IContextSimulator::isRenderingEnabled
             virtual bool isRenderingEnabled() const override;
-
-            //! \copydoc IContextSimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
-
-            //! \copydoc IContextSimulator::iconForModel
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
-
-            //! \copydoc ISimulator::enableDebugMessages
-            virtual void enableDebugMessages(bool driver, bool interpolator) override;
-
-            //! \copydoc IContextSimulator::highlightAircraft
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
-
-            //! \copydoc IContextSimulator::requestWeatherGrid
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
+            virtual void enableDebugMessages(bool driver, bool interpolator) override;
+            virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const;
+            virtual bool isMatchingMessagesEnabled() const;
+            virtual void enableMatchingMessages(bool enabled);
+            //! @}
 
         protected:
             //! Constructor
@@ -207,15 +160,19 @@ namespace BlackCore
             //! Call stop() on all loaded listeners
             void stopSimulatorListeners();
 
+            //! Add to message list for matching
+            void addMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessageList &messages);
+
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, ISimulator *> m_simulatorPlugin; //!< Currently loaded simulator plugin
             CPluginManagerSimulator *m_plugins = nullptr;
-            BlackMisc::CRegularThread m_listenersThread;
+            BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
             BlackCore::CWeatherManager m_weatherManager { this };
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
-            bool m_initallyAddAircrafts = false;
-
-            BlackCore::CAircraftMatcher m_modelMatcher;              //!< Model matcher
+            BlackCore::CAircraftMatcher m_modelMatcher; //!< Model matcher
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
+            QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
+            bool m_initallyAddAircrafts = false;
+            bool m_enableMatchingMessages = true;
         };
     } // namespace
 } // namespace

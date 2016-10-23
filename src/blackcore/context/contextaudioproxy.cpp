@@ -48,6 +48,8 @@ namespace BlackCore
                                    "changedMute", this, SIGNAL(changedMute(bool)));
             Q_ASSERT(s);
             Q_UNUSED(s);
+
+            this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(), IContextAudio::InterfaceName());
         }
 
         void CContextAudioProxy::leaveAllVoiceRooms()

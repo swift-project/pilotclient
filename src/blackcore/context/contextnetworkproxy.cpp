@@ -88,6 +88,7 @@ namespace BlackCore
                                    "removedAircraft", this, SIGNAL(removedAircraft(BlackMisc::Aviation::CCallsign)));
             Q_ASSERT(s);
             Q_UNUSED(s);
+            this->relayBaseClassSignals(serviceName, connection, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName());
         }
 
         void CContextNetworkProxy::readAtcBookingsFromSource() const

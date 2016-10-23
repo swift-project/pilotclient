@@ -134,17 +134,18 @@ namespace BlackCore
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 
-            //! Reload models from disk
-            virtual void reloadInstalledModels() = 0;
-
             //! Installed models in simulator eco system
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModels() const = 0;
+            //! \note might be slow since list can be big
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const = 0;
 
             //! Number of installed models in simulator eco system
-            virtual int getInstalledModelsCount() const = 0;
+            virtual int getModelSetCount() const = 0;
 
-            //! Model for model string
-            virtual BlackMisc::Simulation::CAircraftModelList getInstalledModelsStartingWith(const QString modelString) const = 0;
+            //! Models for model string
+            virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const = 0;
+
+            //! Model strings
+            virtual QStringList getModelSetStrings() const = 0;
 
             //! Set time synchronization between simulator and user's computer time
             //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
@@ -194,6 +195,15 @@ namespace BlackCore
 
             //! Enable debugging
             virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
+
+            //! Get mapping messages
+            virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+            //! Enabled mapping logging?
+            virtual bool isMatchingMessagesEnabled() const = 0;
+
+            //! Enable mapping logging
+            virtual void enableMatchingMessages(bool enabled) = 0;
 
             //! Highlight aircraft in simulator
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
