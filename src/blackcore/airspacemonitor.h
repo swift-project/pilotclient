@@ -220,7 +220,7 @@ namespace BlackCore
         CPartsPerCallsign                 m_partsByCallsign;         //!< parts, for performance reasons per callsign, thread safe access required
         BlackMisc::Aviation::CCallsignSet m_aircraftSupportingParts; //!< aircraft supporting parts, thread safe access required
 
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan>       m_flightPlanCache;     //!< flight plan information retrieved any cached
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved any cached
 
         INetwork            *m_network                  = nullptr; //!< corresponding network interface
         CAirspaceAnalyzer   *m_analyzer                 = nullptr; //!< owned analyzer

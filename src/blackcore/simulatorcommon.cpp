@@ -241,11 +241,6 @@ namespace BlackCore
         this->m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
 
-    void CSimulatorCommon::reloadInstalledModels()
-    {
-        // currently we do nothing here
-    }
-
     CLength CSimulatorCommon::getRenderedDistanceBoundary() const
     {
         return CLength(20.0, CLengthUnit::NM());

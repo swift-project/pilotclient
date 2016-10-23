@@ -201,7 +201,7 @@ namespace BlackGui
                 return;
             }
 
-            int models = sGui->getIContextSimulator()->getInstalledModelsCount();
+            int models = sGui->getIContextSimulator()->getModelSetCount();
             bool on = (models > 0);
             ui->led_MapperReady->setOn(on);
             if (on)

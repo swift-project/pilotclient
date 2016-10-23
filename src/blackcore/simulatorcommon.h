@@ -82,7 +82,6 @@ namespace BlackCore
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
         virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
         virtual void unload() override;
-        virtual void reloadInstalledModels() override;
         virtual void deleteAllRenderingRestrictions() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         //! @}

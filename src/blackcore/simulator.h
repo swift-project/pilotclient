@@ -53,7 +53,6 @@ namespace BlackCore
 
     public:
         //! ISimulator status
-        //! \todo Qt5.5: Make use of QFlags
         enum SimulatorStatusFlag
         {
             Disconnected = 0,
@@ -113,9 +112,6 @@ namespace BlackCore
 
         //! Display a text message
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
-
-        //! Reload the installed models from disk
-        virtual void reloadInstalledModels() = 0;
 
         //! Airports in range from simulator
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
@@ -178,10 +174,12 @@ namespace BlackCore
         static QString statusToString(int status);
 
         //! Status to enum
+        //! \fixme remove with Qt 5.5 when SimulatorStatus can be transferred via DBus
         static SimulatorStatus statusToEnum(int status);
 
     signals:
         //! Simulator combined status
+        //! \fixme with Qt 5.5 make use of QFlags
         void simulatorStatusChanged(int status);
 
         //! Emitted when own aircraft model has changed

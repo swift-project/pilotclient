@@ -66,6 +66,7 @@ namespace BlackGui
             ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
             ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
             ui->tvp_AircraftModels->addFilterDialog();
+            ui->tvp_AircraftModels->menuRemoveItems(CViewBaseNonTemplate::MenuBackend);
 
             ui->tvp_SimulatedAircraft->setAircraftMode(CSimulatedAircraftListModel::ModelMode);
             ui->tvp_SimulatedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
@@ -73,7 +74,6 @@ namespace BlackGui
             connect(ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
             connect(ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
-            connect(ui->tvp_AircraftModels, &CAircraftModelView::requestNewBackendData, this, &CMappingComponent::ps_onMenuRequestModelReload);
 
             connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(ui->tvp_SimulatedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
@@ -267,7 +267,7 @@ namespace BlackGui
             bool changed = false;
             if (aircraftFromBackend.getModelString() != modelString)
             {
-                CAircraftModelList models = sGui->getIContextSimulator()->getInstalledModelsStartingWith(modelString);
+                CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
                 if (models.isEmpty())
                 {
                     CLogMessage(this).validationError("No model for title: %1") << modelString;
@@ -320,7 +320,7 @@ namespace BlackGui
 
         void CMappingComponent::ps_onModelsUpdateRequested()
         {
-            const CAircraftModelList ml(sGui->getIContextSimulator()->getInstalledModels());
+            const CAircraftModelList ml(sGui->getIContextSimulator()->getModelSet());
             ui->tvp_AircraftModels->updateContainer(ml);
         }
 
@@ -378,15 +378,6 @@ namespace BlackGui
             if (sGui->getIContextNetwork())
             {
                 sGui->getIContextNetwork()->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled());
-            }
-        }
-
-        void CMappingComponent::ps_onMenuRequestModelReload()
-        {
-            if (sGui->getIContextSimulator())
-            {
-                sGui->getIContextSimulator()->reloadInstalledModels();
-                CLogMessage(this).info("Requested to reload simulator aircraft models");
             }
         }
 

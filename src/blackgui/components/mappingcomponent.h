@@ -130,9 +130,6 @@ namespace BlackGui
             //! Enable / disable aircraft
             void ps_onMenuEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-            //! Reload models
-            void ps_onMenuRequestModelReload();
-
             //! Highlight in simulator
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 

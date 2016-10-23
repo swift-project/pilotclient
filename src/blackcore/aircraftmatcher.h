@@ -103,6 +103,7 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftModelList getModelSet() const { return m_modelSet; }
 
         //! Set the models we want to use
+        //! \note use a set from "somewhere else" so it can also be used with arbitrary sets for testing
         int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models);
 
         //! Default model

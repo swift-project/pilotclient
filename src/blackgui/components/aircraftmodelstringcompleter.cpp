@@ -103,7 +103,7 @@ namespace BlackGui
             {
                 if (!this->m_completerOwnModels)
                 {
-                    const QStringList modelStrings = sGui->getIContextSimulator()->getInstalledModels().getModelStringList();
+                    const QStringList modelStrings = sGui->getIContextSimulator()->getModelSet().getModelStringList();
                     this->m_completerModelSet = new QCompleter(modelStrings, this);
                     setCompleterParameters(this->m_completerModelSet);
                 }
@@ -113,7 +113,7 @@ namespace BlackGui
             {
                 if (!this->m_completerOwnModels)
                 {
-                    const QStringList modelStrings = sGui->getIContextSimulator()->getInstalledModels().getModelStringList();
+                    const QStringList modelStrings = sGui->getIContextSimulator()->getModelSet().getModelStringList();
                     this->m_completerOwnModels = new QCompleter(modelStrings, this);
                     setCompleterParameters(this->m_completerOwnModels);
                 }
