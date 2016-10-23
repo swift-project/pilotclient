@@ -176,7 +176,7 @@ namespace BlackGui
             }
             else
             {
-                this->setOwnModel();
+                this->setOwnModelAndIcaoValues();
                 if (this->m_visible)
                 {
                     // already visible:
@@ -434,7 +434,7 @@ namespace BlackGui
             this->m_logoffCountdownTimer->start();
         }
 
-        void CLoginComponent::setOwnModel()
+        void CLoginComponent::setOwnModelAndIcaoValues()
         {
             Q_ASSERT(sGui->getIContextOwnAircraft());
             Q_ASSERT(sGui->getIContextSimulator());
@@ -477,7 +477,6 @@ namespace BlackGui
 
         void CLoginComponent::setGuiIcaoValues(const CAircraftModel &model, bool onlyIfEmpty)
         {
-            ui->le_SimulatorModel->setText(model.getModelStringAndDbKey());
             if (!onlyIfEmpty || !ui->selector_AircraftIcao->isSet())
             {
                 ui->selector_AircraftIcao->setAircraftIcao(model.getAircraftIcaoCode());

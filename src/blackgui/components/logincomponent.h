@@ -172,8 +172,8 @@ namespace BlackGui
             //! Logoff countdown
             void startLogoffTimerCountdown();
 
-            //! Own model string
-            void setOwnModel();
+            //! Own model and ICAO data
+            void setOwnModelAndIcaoValues();
 
             //! Set ICAO values
             void setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
