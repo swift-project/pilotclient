@@ -130,6 +130,10 @@ namespace BlackCore
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
         BlackMisc::Simulation::CAircraftModel m_defaultModel;    //!< default model
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0;             //!< statistics update time
+        qint64 m_statsUpdateAircraftTimeAvgMs = 0;               //!< statistics update time
+        int    m_statsUpdateAircraftCountMs = 0;                 //!< statistics update time
+
 
     private:
         bool m_debugMessages = false;                    //!< Display debug messages

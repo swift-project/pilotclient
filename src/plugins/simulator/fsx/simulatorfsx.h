@@ -88,35 +88,19 @@ namespace BlackSimPlugin
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
-            //! \copydoc BlackCore::ISimulator::connectTo()
+            //! \name ISimulator implementations
+            //! @{
             virtual bool connectTo() override;
-
-            //! \copydoc BlackCore::ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyAddRemoteAircraft()
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRemoveRemoteAircraft()
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
             virtual int physicallyRemoveAllRemoteAircraft() override;
-
-            //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc BlackCore::ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
-
-            //! \copydoc BlackCore::ISimulator::displayTextMessage()
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
-
-            //! \copydoc BlackCore::ISimulator::isPhysicallyRenderedAircraft
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRenderedAircraft
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
+            //! @}
 
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft);
@@ -202,11 +186,6 @@ namespace BlackSimPlugin
             int  m_dispatchErrors = 0;          //!< numer of dispatched failed, \sa ps_dispatch
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
-
-            // statistics
-            qint64 m_statsUpdateAircraftTimeTotal = 0;
-            qint64 m_statsUpdateAircraftTimeAvg = 0;
-            int    m_statsUpdateAircraftCount = 0;
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
             BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::reloadWeatherSettings };
