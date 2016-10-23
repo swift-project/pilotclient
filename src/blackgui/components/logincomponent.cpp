@@ -129,7 +129,7 @@ namespace BlackGui
             connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &CLoginComponent::ps_validateAircraftValues);
             connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CLoginComponent::ps_changedAircraftIcao);
             connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CLoginComponent::ps_changedAirlineIcao);
-            connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::ps_reverseLookupAircraftIcaoData);
+            connect(ui->tb_SimulatorIcaoReverseLookup, &QToolButton::clicked, this, &CLoginComponent::ps_reverseLookupAircraftModel);
 
             if (sGui && sGui->getIContextSimulator())
             {
@@ -455,6 +455,7 @@ namespace BlackGui
                 ui->le_SimulatorModel->setText("");
                 this->highlightModelField();
             }
+            ui->le_SimulatorModel->setToolTip(model.asHtmlSummary());
 
             // reset the model
             if (model.isLoadedFromDb())
@@ -566,7 +567,7 @@ namespace BlackGui
             }
         }
 
-        void CLoginComponent::ps_reverseLookupAircraftIcaoData()
+        void CLoginComponent::ps_reverseLookupAircraftModel()
         {
             if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
             const CAircraftModel model(sGui->getIContextOwnAircraft()->getOwnAircraft().getModel());
@@ -576,15 +577,15 @@ namespace BlackGui
         void CLoginComponent::ps_simulatorModelChanged(const CAircraftModel &model)
         {
             Q_ASSERT_X(sGui && sGui->getIContextNetwork(), Q_FUNC_INFO, "Missing context");
-            const bool isConnected = sGui && sGui->getIContextNetwork()->isConnected();
-            if (isConnected) { return; }
+            const bool isNetworkConnected = sGui && sGui->getIContextNetwork()->isConnected();
+            if (isNetworkConnected) { return; }
             const QString modelStr(model.hasModelString() ? model.getModelString() : "<unknown>");
             if (!model.hasModelString())
             {
                 CLogMessage(this).validationInfo("Invalid lookup for '%1' successful: %2") << modelStr << model.toQString();
                 return;
             }
-            this->setGuiIcaoValues(model, false);
+            this->setOwnModelAndIcaoValues();
 
             // open dialog for model mapping
             if (this->m_autoPopupWizard && !model.isLoadedFromDb())

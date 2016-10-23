@@ -82,7 +82,7 @@ namespace BlackGui
             void loginDataChanged();
 
         public slots:
-            //! Main info area chnaged
+            //! Main info area changed
             void mainInfoAreaChanged(const QWidget *currentWidget);
 
         private slots:
@@ -114,7 +114,7 @@ namespace BlackGui
             void ps_logoffCountdown();
 
             //! Reverse lookup model
-            void ps_reverseLookupAircraftIcaoData();
+            void ps_reverseLookupAircraftModel();
 
             //! Simulator model has been changed
             void ps_simulatorModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
