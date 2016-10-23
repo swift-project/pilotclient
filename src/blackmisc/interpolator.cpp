@@ -33,8 +33,7 @@ namespace BlackMisc
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
 
         auto currentSituation = this->getInterpolatedSituation(this->remoteAircraftSituations(callsign), currentTimeSinceEpoc, isVtolAircraft, status);
-
-        Q_ASSERT_X(currentSituation.getCallsign() == callsign, Q_FUNC_INFO, "mismatching callsigns");
+        currentSituation.setCallsign(callsign); // make sure callsign is correct
         return currentSituation;
     }
 
