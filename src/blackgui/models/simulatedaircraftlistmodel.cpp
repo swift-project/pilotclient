@@ -67,6 +67,7 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
                     this->m_columns.addColumn(CColumn::standardString("icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryString}));
 
+                    // icon column for airline
                     CColumn col("airline", { CSimulatedAircraft::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexIcon });
                     col.setSortPropertyIndex({ CSimulatedAircraft::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator});
                     this->m_columns.addColumn(col);

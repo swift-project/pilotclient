@@ -372,5 +372,4 @@ namespace BlackCore
     {
         Q_UNUSED(callsign);
     }
-
 } // namespace

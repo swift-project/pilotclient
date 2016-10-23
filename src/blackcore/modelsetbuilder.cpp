@@ -28,14 +28,14 @@ namespace BlackCore
         // void
     }
 
-    CAircraftModelList CModelSetBuilder::buildModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &models, const CAircraftModelList &currentSet, Builder oprions, const CDistributorList &distributors) const
+    CAircraftModelList CModelSetBuilder::buildModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &models, const CAircraftModelList &currentSet, Builder options, const CDistributorList &distributors) const
     {
         if (models.isEmpty()) { return CAircraftModelList(); }
         CAircraftModelList modelSet;
 
         // Select by distributor:
         // I avoid an empty distributor set because it wipes out everything
-        if (oprions.testFlag(GivenDistributorsOnly) && !distributors.isEmpty())
+        if (options.testFlag(GivenDistributorsOnly) && !distributors.isEmpty())
         {
             modelSet = models.findByDistributors(distributors);
         }
@@ -45,11 +45,11 @@ namespace BlackCore
         }
 
         // Only DB data?
-        if (oprions.testFlag(OnlyDbData))
+        if (options.testFlag(OnlyDbData))
         {
             modelSet.removeObjectsWithoutDbKey();
         }
-        else if (oprions.testFlag(OnlyDbIcaoCodes))
+        else if (options.testFlag(OnlyDbIcaoCodes))
         {
             Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web data services");
             const QSet<QString> designators(sApp->getWebDataServices()->getAircraftIcaoCodes().allIcaoCodes());
@@ -65,7 +65,7 @@ namespace BlackCore
         modelSet = modelSet.matchesSimulator(simulator);
         modelSet.setModelMode(CAircraftModel::Include); // in sets we only include, exclude means not present in set
 
-        if (oprions.testFlag(Incremental))
+        if (options.testFlag(Incremental))
         {
             if (!currentSet.isEmpty())
             {
@@ -78,14 +78,14 @@ namespace BlackCore
 
         // sort by preferences if applicable
         modelSet.resetOrder();
-        if (oprions.testFlag(SortByDistributors))
+        if (options.testFlag(SortByDistributors))
         {
             modelSet.updateDistributorOrder(distributors);
             modelSet.sortBy(&CAircraftModel::getDistributorOrder);
         }
 
         // DB consolidation
-        if (oprions.testFlag(ConsolidateWithDb))
+        if (options.testFlag(ConsolidateWithDb))
         {
             CDatabaseUtils::consolidateModelsWithDbData(modelSet, true);
         }

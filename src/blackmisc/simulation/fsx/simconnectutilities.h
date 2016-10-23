@@ -1,5 +1,5 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -47,36 +47,28 @@ namespace BlackMisc
                 //! Path to local config file
                 static QString getLocalSimConnectCfgFilename();
 
-                /*!
-                 * Content for FSX simconnect.cfg file
-                 * \param ip IP address of FSX
-                 * \param port Port of FSX (e.g. 500)
-                 * \return content for simconnect.cfg
-                 */
+                //! Content for FSX simconnect.cfg file
+                //! \param ip IP address of FSX
+                //! \param port Port of FSX (e.g. 500)
+                //! \return content for simconnect.cfg
                 static QString simConnectCfg(const QString &ip, int port = 500);
 
-                /*!
-                 * Create a FSX simconnect.cfg file
-                 * \param fileName and path
-                 * \param ip IP address of FSX
-                 * \param port Port of FSX (e.g. 500)
-                 * \return success
-                 */
+                //! Create a FSX simconnect.cfg file
+                //! \param fileName and path
+                //! \param ip IP address of FSX
+                //! \param port Port of FSX (e.g. 500)
+                //! \return success
                 static bool writeSimConnectCfg(const QString &fileName, const QString &ip, int port = 500);
 
-                /*!
-                 * Resolve SimConnect exception (based on Qt metadata).
-                 * \param id enum element
-                 * \return enum element's name
-                 */
+                //! Resolve SimConnect exception (based on Qt metadata).
+                //! \param id enum element
+                //! \return enum element's name
                 static const QString simConnectExceptionToString(const DWORD id);
 
-                /*!
-                 * Resolve SimConnect surface (based on Qt metadata).
-                 * \param type enum element
-                 * \param beautify remove "_"
-                 * \return
-                 */
+                //! Resolve SimConnect surface (based on Qt metadata).
+                //! \param type enum element
+                //! \param beautify remove "_"
+                //! \return
                 static const QString simConnectSurfaceTypeToString(const DWORD type, bool beautify = true);
 
                 //! SimConnect surfaces.
@@ -157,12 +149,11 @@ namespace BlackMisc
                 static void registerMetadata();
 
             private:
-                /*!
-                 * Resolve enum value to its cleartext (based on Qt metadata).
-                 * \param id enum element
-                 * \param enumName name of the resolved enum
-                 * \return enum element's name
-                 */
+                //!
+                //! Resolve enum value to its cleartext (based on Qt metadata).
+                //! \param id enum element
+                //! \param enumName name of the resolved enum
+                //! \return enum element's name
                 static const QString resolveEnumToString(const DWORD id, const char *enumName);
 
                 //! Hidden constructor

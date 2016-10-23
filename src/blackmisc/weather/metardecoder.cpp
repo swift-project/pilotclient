@@ -84,7 +84,7 @@ namespace BlackMisc
                 }
                 while (isRepeatable());
 
-                if (!isValid) { CLogMessage(this).debug() << "Failed to match" << getDecoderType() << "in remaining metar:" << metarString; }
+                if (!isValid) { CLogMessage(this).debug() << "Failed to match" << getDecoderType() << "in remaining METAR:" << metarString; }
                 return isValid;
             }
         };
@@ -926,7 +926,7 @@ namespace BlackMisc
             {
                 if (!decoder->parse(metarStringCopy, metar))
                 {
-                    CLogMessage(this).debug() << "Invalid metar:" << metarString;
+                    CLogMessage(this).debug() << "Invalid METAR:" << metarString;
                     return CMetar();
                 }
             }

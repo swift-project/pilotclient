@@ -51,7 +51,7 @@ namespace BlackCore
         BlackMisc::Simulation::CAircraftModelList buildModelSet(
             const BlackMisc::Simulation::CSimulatorInfo &simulator,
             const BlackMisc::Simulation::CAircraftModelList &models,
-            const BlackMisc::Simulation::CAircraftModelList &currentSet, Builder oprions,
+            const BlackMisc::Simulation::CAircraftModelList &currentSet, Builder options,
             const BlackMisc::Simulation::CDistributorList &distributors = {}) const;
     };
 } // ns
