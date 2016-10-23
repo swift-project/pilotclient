@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>276</width>
+    <height>260</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,9 +53,6 @@
       <property name="bottomMargin">
        <number>2</number>
       </property>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="le_Callsign"/>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_Callsign">
         <property name="text">
@@ -63,13 +60,37 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="1" column="1">
        <widget class="QCheckBox" name="cb_LogReverseLookup">
         <property name="toolTip">
          <string>enable logging of reverse lookup messages</string>
         </property>
         <property name="text">
-         <string>enable rev. lookup msgs</string>
+         <string>rev. lookup msgs.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_Enable">
+        <property name="text">
+         <string>Enable:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_Callsign">
+        <property name="placeholderText">
+         <string>callsign</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="cb_LogMatchingMessages">
+        <property name="toolTip">
+         <string>enable matching messages</string>
+        </property>
+        <property name="text">
+         <string>matching msgs.</string>
         </property>
        </widget>
       </item>

@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENT_MODELMATCHERLOGCOMPONENT_H
 #define BLACKGUI_COMPONENT_MODELMATCHERLOGCOMPONENT_H
 
+#include "blackcore/network.h"
 #include <QFrame>
 #include <QTabWidget>
 #include <QTimer>
@@ -44,6 +45,12 @@ namespace BlackGui
             //! Init
             void initGui();
 
+            //! Contexts available
+            bool hasContexts() const;
+
+            //! Enabled messages
+            bool enabledMessages() const;
+
         private slots:
             //! Update the completer
             void ps_updateCallsignCompleter();
@@ -51,8 +58,14 @@ namespace BlackGui
             //! Callsign was entered
             void ps_callsignEntered();
 
+            //! When values changed elsewhere
+            void ps_valuesChanged();
+
             //! Flag changed
-            void ps_reverseLookupEnabled(bool enabled);
+            void ps_enabledCheckboxChanged(bool enabled);
+
+            //! Connection status changed
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
         };
     } // ns
 } // ns

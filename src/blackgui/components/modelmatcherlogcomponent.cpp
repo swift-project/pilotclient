@@ -13,6 +13,7 @@
 #include "blackmisc/propertyindexlist.h"
 #include "blackmisc/htmlutils.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include <QCompleter>
@@ -21,6 +22,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -37,7 +39,15 @@ namespace BlackGui
             this->initGui();
             this->m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
             connect(ui->le_Callsign, &QLineEdit::returnPressed, this, &CModelMatcherLogComponent::ps_callsignEntered);
-            connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogComponent::ps_reverseLookupEnabled);
+            connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogComponent::ps_enabledCheckboxChanged);
+            connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogComponent::ps_enabledCheckboxChanged);
+
+            if (this->hasContexts())
+            {
+                connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::ps_valuesChanged);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogComponent::ps_valuesChanged);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogComponent::ps_connectionStatusChanged);
+            }
             connect(&this->m_timer, &QTimer::timeout, this, &CModelMatcherLogComponent::ps_updateCallsignCompleter);
         }
 
@@ -46,27 +56,38 @@ namespace BlackGui
 
         void CModelMatcherLogComponent::initGui()
         {
-            bool reverseLookup = false;
-            if (sGui && sGui->getIContextNetwork())
-            {
-                reverseLookup = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
-            }
-            if (reverseLookup && !this->m_timer.isActive())
+            const bool needCallsigns = this->enabledMessages();
+            if (needCallsigns && !this->m_timer.isActive())
             {
                 this->m_timer.start();
                 this->ps_updateCallsignCompleter();
             }
-            else if (!reverseLookup)
+            else if (!needCallsigns)
             {
                 this->m_timer.stop();
             }
-            ui->cb_LogReverseLookup->setChecked(reverseLookup);
-            ui->le_Callsign->setReadOnly(!reverseLookup);
+
+            // avoid signal roundtrip
+            bool c = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
+            ui->cb_LogReverseLookup->setChecked(c);
+
+            c = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
+            ui->cb_LogMatchingMessages->setChecked(c);
+        }
+
+        bool CModelMatcherLogComponent::hasContexts() const
+        {
+            return sGui && sGui->getIContextSimulator() && sGui->getIContextNetwork();
+        }
+
+        bool CModelMatcherLogComponent::enabledMessages() const
+        {
+            return this->hasContexts() && (ui->cb_LogMatchingMessages->isChecked() || ui->cb_LogReverseLookup->isChecked());
         }
 
         void CModelMatcherLogComponent::ps_updateCallsignCompleter()
         {
-            if (!sGui || !sGui->getIContextNetwork() || sGui->getIContextNetwork()->isEmptyObject() || !sGui->getIContextNetwork()->isConnected()) { return; }
+            if (!this->hasContexts() || !sGui->getIContextNetwork()->isConnected()) { return; }
 
             const QStringList callsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns().toStringList(false);
             QCompleter *completer = ui->le_Callsign->completer();
@@ -83,20 +104,46 @@ namespace BlackGui
 
         void CModelMatcherLogComponent::ps_callsignEntered()
         {
-            if (!sGui || !sGui->getIContextNetwork()) { return; }
+            if (!this->hasContexts()) { return; }
             static const CPropertyIndexList properties({ CPropertyIndex::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
             const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
-            const CStatusMessageList msgs = sGui->getIContextNetwork()->getReverseLookupMessages(cs);
-            const QString html = msgs.toHtml(properties);
+            const CStatusMessageList reverseLookupMessages = sGui->getIContextNetwork()->getReverseLookupMessages(cs);
+            const CStatusMessageList matchingMessages = sGui->getIContextSimulator()->getMatchingMessages(cs);
+
+            CStatusMessageList allMessages(reverseLookupMessages);
+            allMessages.push_back(matchingMessages);
+
+            const QString html = allMessages.toHtml(properties);
             this->m_text.setHtml(html);
             ui->te_Messages->setDocument(&this->m_text);
         }
 
-        void CModelMatcherLogComponent::ps_reverseLookupEnabled(bool enabled)
+        void CModelMatcherLogComponent::ps_valuesChanged()
         {
-            if (!sGui || !sGui->getIContextNetwork()) { return; }
-            sGui->getIContextNetwork()->enableReverseLookupMessages(enabled);
             this->initGui();
+        }
+
+        void CModelMatcherLogComponent::ps_enabledCheckboxChanged(bool enabled)
+        {
+            if (!sGui || !sGui->getIContextNetwork() || !sGui->getIContextSimulator()) { return; }
+            const QObject *sender = QObject::sender();
+            if (sender == ui->cb_LogReverseLookup)
+            {
+                sGui->getIContextNetwork()->enableReverseLookupMessages(enabled);
+            }
+            else if (sender == ui->cb_LogMatchingMessages)
+            {
+                sGui->getIContextSimulator()->enableMatchingMessages(enabled);
+            }
+        }
+
+        void CModelMatcherLogComponent::ps_connectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+        {
+            Q_UNUSED(from);
+            if (to == INetwork::Connected || to == INetwork::Disconnected)
+            {
+                this->initGui();
+            }
         }
     } // ns
 } // ns
