@@ -377,5 +377,10 @@ namespace BlackMisc
             }
         }
 
+        QString CLivery::asHtmlSummary() const
+        {
+            return this->getCombinedCodePlusInfo();
+        }
+
     } // namespace
 } // namespace

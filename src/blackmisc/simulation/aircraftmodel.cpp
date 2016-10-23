@@ -105,6 +105,12 @@ namespace BlackMisc
             return QJsonDocument(this->toDatabaseJson()).toJson(format);
         }
 
+        QString CAircraftModel::asHtmlSummary() const
+        {
+            const QString html = "Model: %1<br>Aircraft ICAO: %2<br>Livery: %3";
+            return html.arg(this->getModelStringAndDbKey(), this->getAircraftIcaoCode().asHtmlSummary(), this->getLivery().asHtmlSummary());
+        }
+
         bool CAircraftModel::canInitializeFromFsd() const
         {
             const bool nw = this->getModelType() == CAircraftModel::TypeQueriedFromNetwork ||

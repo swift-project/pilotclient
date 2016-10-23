@@ -194,6 +194,9 @@ namespace BlackMisc
             //! Update missing parts
             void updateMissingParts(const CAirlineIcaoCode &otherIcaoCode);
 
+            //! As a brief HTML summary (e.g. used in tooltips)
+            QString asHtmlSummary () const;
+
             //! Valid designator?
             static bool isValidAirlineDesignator(const QString &airline);
 

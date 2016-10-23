@@ -103,6 +103,11 @@ namespace BlackMisc
             return msg;
         }
 
+        QString CAircraftIcaoCode::asHtmlSummary() const
+        {
+            return this->getCombinedIcaoStringWithKey();
+        }
+
         bool CAircraftIcaoCode::hasDesignator() const
         {
             return !this->m_designator.isEmpty();

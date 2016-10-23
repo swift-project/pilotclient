@@ -340,6 +340,9 @@ namespace BlackMisc
             //! To database JSON
             QString toDatabaseJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Compact) const;
 
+            //! As a brief HTML summary (e.g. used in tooltips)
+            QString asHtmlSummary () const;
+
             //! Model type
             static QString modelTypeToString(ModelType type);
 

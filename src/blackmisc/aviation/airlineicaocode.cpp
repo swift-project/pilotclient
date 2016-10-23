@@ -385,6 +385,11 @@ namespace BlackMisc
             }
         }
 
+        QString CAirlineIcaoCode::asHtmlSummary() const
+        {
+            return this->getCombinedStringWithKey();
+        }
+
         CAirlineIcaoCode CAirlineIcaoCode::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             if (!existsKey(json, prefix))

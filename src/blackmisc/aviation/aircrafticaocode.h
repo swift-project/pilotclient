@@ -246,6 +246,9 @@ namespace BlackMisc
             //! Validate data
             BlackMisc::CStatusMessageList validate() const;
 
+            //! As a brief HTML summary (e.g. used in tooltips)
+            QString asHtmlSummary () const;
+
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);
 

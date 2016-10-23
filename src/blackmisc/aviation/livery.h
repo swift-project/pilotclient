@@ -164,6 +164,9 @@ namespace BlackMisc
             //! Update missing parts
             void updateMissingParts(const CLivery &otherLivery);
 
+            //! As a brief HTML summary (e.g. used in tooltips)
+            QString asHtmlSummary () const;
+
             //! Object from JSON
             static CLivery fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("liv_"));
 
