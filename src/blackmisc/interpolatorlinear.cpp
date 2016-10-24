@@ -161,20 +161,12 @@ namespace BlackMisc
         CAngle pitchBegin = oldSituation.getPitch();
         CAngle pitchEnd = newSituation.getPitch();
         CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
-
-        // TODO: According to the specification, pitch above horizon should be negative.
-        // But somehow we get positive pitches from the network.
-        pitch *= -1;
         currentSituation.setPitch(pitch);
 
         // Interpolate bank: Bank = (BankB - BankA) * t + BankA
         CAngle bankBegin = oldSituation.getBank();
         CAngle bankEnd = newSituation.getBank();
         CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
-
-        // TODO: According to the specification, banks to the right should be negative.
-        // But somehow we get positive banks from the network.
-        bank *= -1.0;
         currentSituation.setBank(bank);
 
         currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())

@@ -86,6 +86,9 @@ namespace BlackSimPlugin
             if (bank > 180.0)
                 bank -= 360;
 
+            // MSFS has inverted pitch and bank angles
+            pitch = -pitch;
+            bank = -bank;
             situation.setPitch(CAngle(pitch, CAngleUnit::deg()));
             situation.setBank(CAngle(bank, CAngleUnit::deg()));
             situation.setHeading(CHeading(pbhstrct.hdg / CFs9Sdk::headingMultiplier(), CHeading::Magnetic, CAngleUnit::deg()));

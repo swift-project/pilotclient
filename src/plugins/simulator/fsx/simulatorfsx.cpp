@@ -378,6 +378,9 @@ namespace BlackSimPlugin
 
             BlackMisc::Aviation::CAircraftSituation aircraftSituation;
             aircraftSituation.setPosition(position);
+            // MSFS has inverted pitch and bank angles
+            simulatorOwnAircraft.pitch = -simulatorOwnAircraft.pitch;
+            simulatorOwnAircraft.bank = -simulatorOwnAircraft.bank;
             aircraftSituation.setPitch(CAngle(simulatorOwnAircraft.pitch, CAngleUnit::deg()));
             aircraftSituation.setBank(CAngle(simulatorOwnAircraft.bank, CAngleUnit::deg()));
             aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
