@@ -57,6 +57,9 @@ namespace BlackCore
             connect(&m_weatherManager, &CWeatherManager::weatherGridReceived, this, &CContextSimulator::weatherGridReceived);
             m_plugins->collectPlugins();
             restoreSimulatorPlugins();
+
+            connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CContextSimulator::ps_modelSetChanged);
+            connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::ps_modelSetChanged);
         }
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
@@ -358,17 +361,15 @@ namespace BlackCore
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::aircraftRenderingChanged, this, &IContextSimulator::aircraftRenderingChanged);
             Q_ASSERT(c);
-            c = connect(simulator, &ISimulator::installedAircraftModelsChanged, this, &IContextSimulator::installedAircraftModelsChanged);
-            Q_ASSERT(c);
             c = connect(simulator, &ISimulator::renderRestrictionsChanged, this, &IContextSimulator::renderRestrictionsChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::airspaceSnapshotHandled, this, &IContextSimulator::airspaceSnapshotHandled);
             Q_ASSERT(c);
 
             // log from context to simulator
-            c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, simulator, &ISimulator::displayStatusMessage);
+            c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CContextSimulator::ps_relayStatusMessageToSimulator);
             Q_ASSERT(c);
-            c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, simulator, &ISimulator::displayStatusMessage);
+            c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &CContextSimulator::ps_relayStatusMessageToSimulator);
             Q_ASSERT(c);
             Q_UNUSED(c);
 
@@ -525,6 +526,12 @@ namespace BlackCore
             emit simulatorStatusChanged(status);
         }
 
+        void CContextSimulator::ps_modelSetChanged(const CSimulatorInfo &simulator)
+        {
+            Q_UNUSED(simulator);
+            emit this->modelSetChanged();
+        }
+
         void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
         {
             if (!isSimulatorSimulating()) { return; }
@@ -561,6 +568,13 @@ namespace BlackCore
 
             // update
             m_simulatorPlugin.second->updateOwnSimulatorCockpit(ownAircraft, originator);
+        }
+
+        void CContextSimulator::ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
+        {
+            if (!isSimulatorSimulating()) { return; }
+            //! \todo add settings and only relay messages as set in settings
+            m_simulatorPlugin.second->displayStatusMessage(message);
         }
 
         void CContextSimulator::restoreSimulatorPlugins()

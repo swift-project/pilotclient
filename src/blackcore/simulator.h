@@ -191,9 +191,6 @@ namespace BlackCore
         //! Aircraft rendering changed
         void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-        //! Installed aircraft models ready or changed
-        void installedAircraftModelsChanged();
-
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();
 

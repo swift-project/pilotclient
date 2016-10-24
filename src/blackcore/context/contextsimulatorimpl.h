@@ -122,6 +122,9 @@ namespace BlackCore
             //! Handle new connection status of simulator
             void ps_onSimulatorStatusChanged(int status);
 
+            //! Model set from model set loader changed
+            void ps_modelSetChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
             //! Text message received
             void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
@@ -141,10 +144,13 @@ namespace BlackCore
             //! \remarks set by runtime, only to be used locally (not via DBus)
             void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
+            //! Relay status message to simulator under consideration of settings
+            void ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
+
+        private:
             //! Reads list of enabled simulators, starts listeners
             void restoreSimulatorPlugins();
 
-        private:
             //! Load plugin, if required start listeners before
             bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorPluginInfo, bool withListeners);
 

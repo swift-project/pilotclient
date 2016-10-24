@@ -51,7 +51,7 @@ namespace BlackGui
             if (sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::ps_onSimulatorStatusChanged);
-                connect(sGui->getIContextSimulator(), &IContextSimulator::installedAircraftModelsChanged, this, &CInfoBarStatusComponent::ps_onMapperReady);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CInfoBarStatusComponent::ps_onMapperReady);
 
                 // initial values
                 this->ps_onMapperReady();
