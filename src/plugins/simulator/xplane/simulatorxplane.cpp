@@ -440,9 +440,7 @@ namespace BlackSimPlugin
             //! \todo XPlane driver check if already exists, how?
             //! \todo XPlane driver set correct return value
 
-
             CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-
             QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
             m_traffic->addPlane(newRemoteAircraft.getCallsign().asString(), aircraftModel.getModelString(),
                                 newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
@@ -457,8 +455,7 @@ namespace BlackSimPlugin
             CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
             remoteAircraftCopy.setRendered(rendered);
             emit aircraftRenderingChanged(remoteAircraftCopy);
-
-            return rendered;
+            return true;
         }
 
         void CSimulatorXPlane::ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)

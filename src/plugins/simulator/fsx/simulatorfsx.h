@@ -108,8 +108,18 @@ namespace BlackSimPlugin
             //! Update from SB client area
             void updateOwnAircraftFromSimulator(DataDefinitionClientAreaSb sbDataArea);
 
-            //! Set ID of a SimConnect object
-            void setSimConnectObjectID(DWORD requestID, DWORD objectID);
+            //! An AI aircraft was added in the simulator
+            //! \remark that AI aircraft was previously request by requestID
+            bool aiAircraftWasAddedInSimulator(DWORD requestID, DWORD objectID);
+
+            //! Set ID of a SimConnect object, so far we only have an request id in the object
+            bool setSimConnectObjectID(DWORD requestID, DWORD objectID);
+
+            //! Find which callsign belongs to the object id
+            BlackMisc::Aviation::CCallsign getCallsignForObjectId(DWORD objectID) const;
+
+            //! Find which callsign belongs to the object id
+            CSimConnectObject getSimObjectForObjectId(DWORD objectID) const;
 
         protected:
             //! \copydoc BlackCore::ISimulator::isConnected()
@@ -182,7 +192,7 @@ namespace BlackSimPlugin
             int  m_skipCockpitUpdateCycles = 0; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             int  m_interpolationRequest  = 0;   //!< current interpolation request
             int  m_interpolationsSkipped = 0;   //!< number of skipped interpolation request
-            int  m_nextObjID = 1;               //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
+            int  m_requestId = 1;               //!< request id
             int  m_dispatchErrors = 0;          //!< numer of dispatched failed, \sa ps_dispatch
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;

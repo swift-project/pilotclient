@@ -52,10 +52,23 @@ namespace BlackSimPlugin
                 {
                     SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
                     QString ex;
-                    ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d",
-                               static_cast<int>(exception->dwException), static_cast<int>(exception->dwSendID),
-                               static_cast<int>(exception->dwIndex), static_cast<int>(cbData));
-                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).error("Caught FSX simConnect exception: %1 %2")
+                    const int exceptionId = static_cast<int>(exception->dwException);
+                    const int sendId = static_cast<int>(exception->dwSendID);
+                    const int index = static_cast<int>(exception->dwIndex);
+                    const int data = static_cast<int>(cbData);
+                    ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d", exceptionId, sendId, index, data);
+                    if (exceptionId == SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE)
+                    {
+                        // means we have problems with an AI aircraft
+                        //! \todo find out how to obtain the id here so I can get callsign
+                        CCallsign cs = simulatorFsx->getCallsignForObjectId(data);
+                        if (!cs.isEmpty())
+                        {
+                            ex += " callsign: ";
+                            ex += cs.toQString();
+                        }
+                    }
+                    CLogMessage(simulatorFsx).error("Caught FSX simConnect exception: %1 %2")
                             << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException)
                             << ex;
                     break;
@@ -128,7 +141,13 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
                     SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
-                    simulatorFsx->setSimConnectObjectID(event->dwRequestID, event->dwObjectID);
+                    DWORD requestID = event->dwRequestID;
+                    DWORD objectID = event->dwObjectID;
+                    const bool success = simulatorFsx->aiAircraftWasAddedInSimulator(requestID, objectID);
+                    if (!success)
+                    {
+                        CLogMessage(simulatorFsx).warning("Cannot find CSimConnectObject for request %1") << requestID;
+                    }
                     break;
                 }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
@@ -158,12 +177,12 @@ namespace BlackSimPlugin
                             DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
                             if (simulatorFsx->isTimeSynchronized())
                             {
-                                int zh = simEnv->zuluTimeSeconds / 3600;
-                                int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
-                                CTime zulu(zh, zm);
-                                int lh = simEnv->localTimeSeconds / 3600;
-                                int lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
-                                CTime local(lh, lm);
+                                const int zh = simEnv->zuluTimeSeconds / 3600;
+                                const int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
+                                const CTime zulu(zh, zm);
+                                const int lh = simEnv->localTimeSeconds / 3600;
+                                const int lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
+                                const CTime local(lh, lm);
                                 simulatorFsx->synchronizeTime(zulu, local);
                             }
                             break;
@@ -185,9 +204,9 @@ namespace BlackSimPlugin
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) { continue; } // airfield without ICAO code
                         if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in SIM
-                        CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
+                        const CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
                         CAirport airport(CAirportIcaoCode(icao), pos);
-                        CLength d = airport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
+                        const CLength d = airport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
                         if (d > maxDistance) { continue; }
                         simulatorFsx->m_airportsInRange.replaceOrAddByIcao(airport);
                     }

@@ -170,7 +170,6 @@ namespace BlackSimPlugin
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
             client->start();
 
-
             m_hashFs9Clients.insert(callsign, client);
             updateAircraftRendered(callsign, rendered);
             CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);

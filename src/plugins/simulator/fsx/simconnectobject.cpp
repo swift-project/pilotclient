@@ -15,9 +15,13 @@ namespace BlackSimPlugin
     {
         CSimConnectObject::CSimConnectObject() { }
 
-        CSimConnectObject::CSimConnectObject(const BlackMisc::Aviation::CCallsign &callsign, int requestId, int objectId, bool vtol) :
-            m_callsign(callsign), m_requestId(requestId), m_objectId(objectId), m_vtol(vtol)
+        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, int requestId) :
+            m_aircraft(aircraft), m_requestId(requestId)
         { }
 
+        bool CSimConnectObject::hasValidRequestAndObjectId() const
+        {
+            return this->m_requestId >= 0 && this->m_objectId >= 0;
+        }
     } // namespace
 } // namespace

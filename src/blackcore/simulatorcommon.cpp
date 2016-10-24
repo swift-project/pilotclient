@@ -72,7 +72,7 @@ namespace BlackCore
         if (!remoteAircraft.isEnabled()) { return false; }
 
         // if not restriced, directly change
-        if (!isRenderingRestricted()) { return this->physicallyAddRemoteAircraft(remoteAircraft); }
+        if (!isRenderingRestricted()) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
 
         // will be added with next snapshot
         return false;
@@ -81,7 +81,7 @@ namespace BlackCore
     bool CSimulatorCommon::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
         // if not restriced, directly change
-        if (!isRenderingRestricted()) { return this->physicallyRemoveRemoteAircraft(callsign); }
+        if (!isRenderingRestricted()) { this->physicallyRemoveRemoteAircraft(callsign); return true; }
 
         // will be added with next snapshot
         return false;
@@ -298,7 +298,8 @@ namespace BlackCore
         int removed = 0;
         for (const CCallsign &callsign : callsigns)
         {
-            if (physicallyRemoveRemoteAircraft(callsign)) { removed++; }
+            physicallyRemoveRemoteAircraft(callsign);
+            removed++;
         }
         return removed;
     }
@@ -338,8 +339,9 @@ namespace BlackCore
                 for (const CSimulatedAircraft &aircraft : aircraftToBeAdded)
                 {
                     Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
-                    bool a = this->physicallyAddRemoteAircraft(aircraft);
-                    changed = changed || a;
+                    Q_ASSERT_X(aircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
+                    this->physicallyAddRemoteAircraft(aircraft);
+                    changed = true;
                 }
             }
         }

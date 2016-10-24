@@ -12,7 +12,7 @@
 #ifndef BLACKSIMPLUGIN_SIMCONNECT_OBJECT_H
 #define BLACKSIMPLUGIN_SIMCONNECT_OBJECT_H
 
-#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include <QSharedPointer>
 
 namespace BlackMisc { class IInterpolator; }
@@ -25,21 +25,20 @@ namespace BlackSimPlugin
         class CSimConnectObject
         {
         public:
-
             //! Constructor
             CSimConnectObject();
 
             //! Constructor
-            CSimConnectObject(const BlackMisc::Aviation::CCallsign &callsign, int requestId, int objectId, bool vtol);
+            CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,int requestId);
 
             //! Destructor
             ~CSimConnectObject() {}
 
-            //! Set callsign
-            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
-
             //! Get Callsign
-            BlackMisc::Aviation::CCallsign getCallsign() const { return m_callsign; }
+            BlackMisc::Aviation::CCallsign getCallsign() const { return m_aircraft.getCallsign(); }
+
+            //! Simulated aircraft (as added)
+            BlackMisc::Simulation::CSimulatedAircraft getAircraft() const { return m_aircraft; }
 
             //! Set Simconnect request id
             void setRequestId(int id) { m_requestId = id; }
@@ -54,16 +53,15 @@ namespace BlackSimPlugin
             int getObjectId() const { return m_objectId; }
 
             //! VTOL?
-            bool isVtol() const { return m_vtol; }
+            bool isVtol() const { return m_aircraft.isVtol(); }
 
-            //! VTOL?
-            void setVtol(bool vtol) { m_vtol =  vtol; }
+            //! Was the object really added to SIM
+            bool hasValidRequestAndObjectId() const;
 
         private:
-            BlackMisc::Aviation::CCallsign m_callsign;
+            BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
             int m_requestId = -1;
             int m_objectId  = -1;
-            bool m_vtol = false;
         };
     } // namespace
 } // namespace
