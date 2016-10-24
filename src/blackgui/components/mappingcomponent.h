@@ -76,13 +76,7 @@ namespace BlackGui
 
         private slots:
             //! Aircraft models available
-            void ps_onAircraftModelsLoaded();
-
-            //! Model matched
-            void ps_onModelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Model matched
-            void ps_onAircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void ps_onModelSetChanged();
 
             //! Changed count
             void ps_onRowCountChanged(int count, bool withFilter);
@@ -103,26 +97,14 @@ namespace BlackGui
             //! Model preview
             void ps_onModelPreviewChanged(int state);
 
-            //! Request update for mappings from backend
-            void ps_onSimulatedAircraftUpdateRequested();
-
             //! Request update for models from backend
             void ps_onModelsUpdateRequested();
 
             //! Rendered aircraft changed in backend
             void ps_onRemoteAircraftModelChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
 
-            //! Aircraft enabled, disabled in backend
-            void ps_onChangedAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Fast position updates on/off in backend
-            void ps_onFastPositionUpdatesEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
             //! Connection status has been changed
             void ps_onConnectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
-
-            //! Simulator has handled airspace snapshot
-            void ps_onAirspaceSnapshotHandled();
 
             //! Fast position updates onf/off
             void ps_onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
@@ -133,17 +115,24 @@ namespace BlackGui
             //! Highlight in simulator
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Update with next cycle
+            void ps_markRenderedAircraftForUpdate(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! Update with next cycle
+            void ps_markRenderedViewForUpdate();
+
+
         private:
             //! Identifier for data send from this component
             BlackMisc::CIdentifier mappingIdentifier();
 
             //! Update simulated aircraft view
-            void updateSimulatedAircraftView(bool forceUpdate = false);
+            void updateRenderedAircraftView(bool forceUpdate = false);
 
             QScopedPointer<Ui::CMappingComponent> ui;
+            bool                                  m_missedRenderedAircraftUpdate = true;
             QScopedPointer<CUpdateTimer>          m_updateTimer;
             QCompleter                           *m_modelCompleter = nullptr;
-            bool                                  m_missedSimulatedAircraftUpdate = true;
             BlackGui::Views::CCheckBoxDelegate   *m_currentMappingsViewDelegate = nullptr;
             BlackMisc::CIdentifier                m_identifier;
 
