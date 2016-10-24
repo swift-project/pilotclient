@@ -30,35 +30,21 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CSimulatorFsCommon();
 
-            //! \copydoc BlackCore::ISimulator::disconnectFrom()
-            virtual bool disconnectFrom() override;
-
             //! FSUIPC connected?
             bool isFsuipcConnected() const;
 
-            //! \copydoc BlackCore::ISimulator::isPaused
+            //! \name ISimulator interface implementations
+            //! @{
+            virtual bool disconnectFrom() override;
             virtual bool isPaused() const override { return m_simPaused; }
-
-            //! \copydoc BlackCore::ISimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override { return m_simTimeSynced; }
-
-            //! \copydoc BlackCore::ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
-
-            //! \copydoc BlackCore::ISimulator::setTimeSynchronization
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
-
-            //! \copydoc BlackCore::ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
-
-            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftModel
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
-
-            //! \copydoc BlackCore::ISimulator::changeRemoteAircraftEnabled
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
-
-            //! \copydoc BlackCore::ISimulator::enableDebugMessages
             virtual void enableDebugMessages(bool driver, bool interpolator) override;
+            //! @}
 
         protected:
             //! Constructor
