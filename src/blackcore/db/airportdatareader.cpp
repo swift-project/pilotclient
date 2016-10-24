@@ -55,7 +55,7 @@ namespace BlackCore
         bool CAirportDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), this->getAirportsUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl());
         }
 
         CUrl CAirportDataReader::getAirportsUrl() const
@@ -93,8 +93,9 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply);
             }
 
-            m_airportCache.set(airports, latestTimestamp);
-            emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, airports.size());
+            this->m_airportCache.set(airports, latestTimestamp);
+            this->updateReaderUrl(getBaseUrl());
+            emit this->dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, airports.size());
         }
 
         void CAirportDataReader::ps_read(CEntityFlags::Entity entity, const QDateTime &newerThan)
@@ -131,5 +132,23 @@ namespace BlackCore
         {
             // void
         }
+
+        void CAirportDataReader::updateReaderUrl(const CUrl &url)
+        {
+            const CUrl current = this->m_readerUrlCache.get();
+            if (current == url) { return; }
+            const CStatusMessage m = this->m_readerUrlCache.set(url);
+            if (m.isFailure())
+            {
+                CLogMessage::preformatted(m);
+            }
+        }
+
+        const CUrl &CAirportDataReader::getBaseUrl()
+        {
+            static const CUrl baseUrl(sApp->getGlobalSetup().getDbAirportReaderUrl());
+            return baseUrl;
+        }
+
     } // ns
 } // ns

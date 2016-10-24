@@ -70,6 +70,13 @@ namespace BlackCore
 
             //! Reader URL (we read from where?) used to detect changes of location
             BlackMisc::CData<BlackCore::Data::TDbModelReaderBaseUrl> m_readerUrlCache {this, &CAirportDataReader::ps_baseUrlCacheChanged };
+
+            //! Update reader URL
+            void updateReaderUrl(const BlackMisc::Network::CUrl &url);
+
+            //! Base URL
+            //! \threadsafe
+            static const BlackMisc::Network::CUrl &getBaseUrl();
         };
     }
 } // ns

@@ -243,7 +243,7 @@ namespace BlackCore
             }
 
             this->m_aircraftIcaoCache.set(codes, latestTimestamp);
-            this->updateReaderUrl(this->getBaseUrl());
+            this->updateReaderUrl(getBaseUrl());
             emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AircraftIcaoEntity) << urlString;
         }
@@ -271,7 +271,7 @@ namespace BlackCore
             }
 
             this->m_airlineIcaoCache.set(codes, latestTimestamp);
-            this->updateReaderUrl(this->getBaseUrl());
+            this->updateReaderUrl(getBaseUrl());
             emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AirlineIcaoEntity) << urlString;
         }
@@ -297,7 +297,7 @@ namespace BlackCore
             }
 
             this->m_countryCache.set(countries, latestTimestamp);
-            this->updateReaderUrl(this->getBaseUrl());
+            this->updateReaderUrl(getBaseUrl());
             emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::CountryEntity) << urlString;
         }
@@ -432,7 +432,7 @@ namespace BlackCore
         bool CIcaoDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), this->getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl());
         }
 
         CUrl CIcaoDataReader::getAircraftIcaoUrl(bool shared) const

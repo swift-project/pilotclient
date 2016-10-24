@@ -282,7 +282,7 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             this->m_liveryCache.set(liveries, latestTimestamp);
-            this->updateReaderUrl(this->getBaseUrl());
+            this->updateReaderUrl(getBaseUrl());
 
             // never emit when lock is held -> deadlock
             emit dataRead(CEntityFlags::LiveryEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
@@ -325,7 +325,7 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             this->m_distributorCache.set(distributors, latestTimestamp);
-            this->updateReaderUrl(this->getBaseUrl());
+            this->updateReaderUrl(getBaseUrl());
 
             emit dataRead(CEntityFlags::DistributorEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::DistributorEntity) << urlString;
@@ -368,7 +368,7 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             this->m_modelCache.set(models, latestTimestamp);
-            this->updateReaderUrl(this->getBaseUrl());
+            this->updateReaderUrl(getBaseUrl());
 
             emit dataRead(CEntityFlags::ModelEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
@@ -505,7 +505,7 @@ namespace BlackCore
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), this->getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl());
         }
 
         const CUrl &CModelDataReader::getBaseUrl()
