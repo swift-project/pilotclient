@@ -52,6 +52,9 @@ namespace BlackCore
         CAircraftModelList matchedModels(this->m_modelSet); // Models for this matching
         const MatchingMode mode = this->m_matchingMode;
 
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Matching uses model set of " + QString::number(matchedModels.size()) + " models", getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Input model: " + remoteAircraft.toQString(), getLogCategories());
+
         // Manually set string?
         if (remoteAircraft.getModel().hasManuallySetString())
         {
