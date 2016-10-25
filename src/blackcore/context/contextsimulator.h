@@ -96,6 +96,9 @@ namespace BlackCore
             //! A single model has been matched for given aircraft
             void modelMatchingCompleted(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Adding a remote aircraft failed
+            void addingRemoteModelFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
+
             //! Aircraft rendering changed
             void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 

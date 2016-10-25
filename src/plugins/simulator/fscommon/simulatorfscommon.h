@@ -73,7 +73,6 @@ namespace BlackSimPlugin
             //! Set own model
             void setOwnAircraftModel(const QString &modelName);
         };
-
     } // namespace
 } // namespace
 

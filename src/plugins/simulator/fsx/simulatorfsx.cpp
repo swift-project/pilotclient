@@ -158,13 +158,13 @@ namespace BlackSimPlugin
             // create AI
             bool adding = false;
             const CAircraftModel aircraftModel = newRemoteAircraft.getModel();
-            CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
+            CSimulatedAircraft addedAircraft(newRemoteAircraft);
             if (isConnected())
             {
                 // initial position
-                setInitialAircraftSituation(remoteAircraftCopy); // set interpolated data/parts if available
+                setInitialAircraftSituation(addedAircraft); // set interpolated data/parts if available
 
-                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(remoteAircraftCopy.getSituation());
+                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxInitPosition(addedAircraft.getSituation());
                 const QByteArray m = aircraftModel.getModelString().toLocal8Bit();
 
                 const int requestId = m_requestId;
@@ -172,7 +172,9 @@ namespace BlackSimPlugin
                 HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, m.constData(), qPrintable(callsign.toQString().left(12)), initialPosition, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
                 if (hr != S_OK)
                 {
-                    CLogMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << aircraftModel.getModelString();
+                    const CStatusMessage msg = CStatusMessage(this).error("SimConnect, can not create AI traffic: '%1' '%2'") << callsign.toQString() << aircraftModel.getModelString();
+                    CLogMessage::preformatted(msg);
+                    emit physicallyAddingRemoteModelFailed(addedAircraft, msg);
                 }
                 else
                 {
@@ -304,7 +306,10 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFsx::physicallyRenderedAircraft() const
         {
-            return CCollection<CCallsign>(this->m_simConnectObjects.keys());
+            CCallsignSet callsigns(this->m_simConnectObjects.keys());
+            callsigns.push_back(m_aircraftToAddAgainWhenRemoved.getCallsigns()); // not really rendered right now, but very soon
+            callsigns.push_back(m_outOfRealityBubble.getCallsigns()); // not really rendered, but for the logic it should look like it is
+            return CCallsignSet(this->m_simConnectObjects.keys());
         }
 
         void CSimulatorFsx::setSimConnected()
@@ -950,6 +955,5 @@ namespace BlackSimPlugin
                 emit simulatorStarted(this->getPluginInfo());
             }
         }
-
     } // namespace
 } // namespace

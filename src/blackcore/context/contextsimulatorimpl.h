@@ -140,6 +140,9 @@ namespace BlackCore
             //! Enable / disable aircraft
             void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Failed adding remote aircraft
+            void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
+
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
             //! \remarks set by runtime, only to be used locally (not via DBus)
             void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);

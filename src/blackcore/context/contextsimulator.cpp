@@ -65,6 +65,5 @@ namespace BlackCore
             if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }
             return true;
         }
-
     } // namespace
 } // namespace

@@ -357,6 +357,8 @@ namespace BlackCore
 
             bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
             Q_ASSERT(c);
+            c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::ps_addingRemoteAircraftFailed);
+            Q_ASSERT(c);
             c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
             Q_ASSERT(c);
             c = connect(simulator, &ISimulator::aircraftRenderingChanged, this, &IContextSimulator::aircraftRenderingChanged);
@@ -483,13 +485,13 @@ namespace BlackCore
             const CCallsign callsign = remoteAircraft.getCallsign();
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
-            CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Matching remote Aircraft"));
             const CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
-            addMatchingMessages(callsign, matchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
             updateAircraftModel(callsign, aircraftModel, identifier());
             const CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
+            CMatchingUtils::addLogDetailsToList(pMatchingMessages, callsign, QString("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
+            addMatchingMessages(callsign, matchingMessages);
             emit modelMatchingCompleted(remoteAircraft);
         }
 
@@ -558,6 +560,12 @@ namespace BlackCore
         {
             if (!isSimulatorSimulating()) { return; }
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
+        }
+
+        void CContextSimulator::ps_addingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, const CStatusMessage &message)
+        {
+            if (!isSimulatorSimulating()) { return; }
+            emit addingRemoteModelFailed(remoteAircraft, message);
         }
 
         void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)

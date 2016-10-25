@@ -141,12 +141,15 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
                     SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
-                    DWORD requestID = event->dwRequestID;
-                    DWORD objectID = event->dwObjectID;
+                    const DWORD requestID = event->dwRequestID;
+                    const DWORD objectID = event->dwObjectID;
                     const bool success = simulatorFsx->aiAircraftWasAddedInSimulator(requestID, objectID);
                     if (!success)
                     {
                         CLogMessage(simulatorFsx).warning("Cannot find CSimConnectObject for request %1") << requestID;
+                        const CSimulatedAircraft remoteAircraft(simulatorFsx->getSimObjectForObjectId(objectID).getAircraft());
+                        const QString msg("Object id for request " + QString::number(requestID) + " not avialable");
+                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, CStatusMessage(simulatorFsx, CStatusMessage::SeverityError, msg));
                     }
                     break;
                 }
@@ -246,6 +249,5 @@ namespace BlackSimPlugin
 
             } // main switch
         } // method
-
     } // namespace
 } // namespace
