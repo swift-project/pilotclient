@@ -205,6 +205,48 @@ namespace BlackMisc
         }
     }
 
+    QJsonObject CVariant::toMemoizedJson() const
+    {
+        auto *meta = getValueObjectMetaInfo();
+        if (meta)
+        {
+            try
+            {
+                QJsonObject json;
+                json.insert("type", this->typeName());
+                json.insert("value", meta->toMemoizedJson(data()));
+                return json;
+            }
+            catch (const Private::CVariantException &ex)
+            {
+                CLogMessage(this).debug() << ex.what();
+                return {};
+            }
+        }
+        else
+        {
+            return toJson();
+        }
+    }
+
+    void CVariant::convertFromMemoizedJson(const QJsonObject &json)
+    {
+        QString typeName = json.value("type").toString();
+        if (typeName.isEmpty()) { m_v.clear(); return; }
+        int typeId = QMetaType::type(qPrintable(typeName));
+
+        auto *meta = Private::getValueObjectMetaInfo(typeId);
+        if (meta)
+        {
+            m_v = QVariant(typeId, nullptr);
+            meta->convertFromMemoizedJson(json.value("value").toObject(), data());
+        }
+        else
+        {
+            convertFromJson(json);
+        }
+    }
+
     uint CVariant::getValueHash() const
     {
         switch (m_v.type())

@@ -277,6 +277,12 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
         void convertFromJson(const QJsonObject &json);
 
+        //! To compact JSON format.
+        QJsonObject toMemoizedJson() const;
+
+        //! From compact JSON format.
+        void convertFromMemoizedJson(const QJsonObject &json);
+
         //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;
 

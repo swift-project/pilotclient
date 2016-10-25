@@ -54,4 +54,44 @@ namespace BlackMisc
         }
     }
 
+    QJsonObject &CVariantMap::mergeToMemoizedJson(QJsonObject &json) const
+    {
+        for (auto it = cbegin(); it != cend(); ++it)
+        {
+            json.insert(it.key(), it.value().toMemoizedJson());
+        }
+        return json;
+    }
+
+    QJsonObject CVariantMap::toMemoizedJson() const
+    {
+        QJsonObject json;
+        mergeToMemoizedJson(json);
+        return json;
+    }
+
+    void CVariantMap::convertFromMemoizedJson(const QJsonObject &json)
+    {
+        clear();
+        for (auto it = json.begin(); it != json.end(); ++it)
+        {
+            CVariant value;
+            value.convertFromMemoizedJson(it.value().toObject());
+            implementationOf(*this).insert(cend(), it.key(), value);
+        }
+    }
+
+    void CVariantMap::convertFromMemoizedJson(const QJsonObject &json, const QStringList &keys)
+    {
+        clear();
+        for (const auto &key : keys)
+        {
+            auto value = json.value(key);
+            if (value.isUndefined()) { continue; }
+            CVariant var;
+            var.convertFromMemoizedJson(value.toObject());
+            insert(key, var);
+        }
+    }
+
 }

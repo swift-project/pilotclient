@@ -68,6 +68,19 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::convertFromJson
         //! Convert only keys present in list argument.
         void convertFromJson(const QJsonObject &json, const QStringList &keys);
+
+        //! Insert values from this map into an existing compact JSON object.
+        QJsonObject &mergeToMemoizedJson(QJsonObject &json) const;
+
+        //! To compact JSON format.
+        QJsonObject toMemoizedJson() const;
+
+        //! From compact JSON format.
+        void convertFromMemoizedJson(const QJsonObject &json);
+
+        //! From compact JSON format.
+        //! Convert only keys present in list argument.
+        void convertFromMemoizedJson(const QJsonObject &json, const QStringList &keys);
     };
 
 }

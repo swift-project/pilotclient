@@ -46,6 +46,8 @@ namespace BlackMisc
             virtual QString toQString(const void *object, bool i18n) const = 0;
             virtual QJsonObject toJson(const void *object) const = 0;
             virtual void convertFromJson(const QJsonObject &json, void *object) const = 0;
+            virtual QJsonObject toMemoizedJson(const void *object) const = 0;
+            virtual void convertFromMemoizedJson(const QJsonObject &json, void *object) const = 0;
             virtual void unmarshall(const QDBusArgument &arg, void *object) const = 0;
             virtual uint getValueHash(const void *object) const = 0;
             virtual int getMetaTypeId() const = 0;
@@ -92,6 +94,16 @@ namespace BlackMisc
             static void convertFromJson(const QJsonObject &json, T &object, decltype(static_cast<void>(object.convertFromJson(json)), 0)) { object.convertFromJson(json); }
             template <typename T>
             static void convertFromJson(const QJsonObject &, T &object, ...) { throw CVariantException(object, "convertFromJson"); }
+
+            template <typename T>
+            static QJsonObject toMemoizedJson(const T &object, decltype(static_cast<void>(object.toMemoizedJson()), 0)) { return object.toMemoizedJson(); }
+            template <typename T>
+            static QJsonObject toMemoizedJson(const T &object, ...) { return toJson(object, 0); }
+
+            template <typename T>
+            static void convertFromMemoizedJson(const QJsonObject &json, T &object, decltype(static_cast<void>(object.convertFromMemoizedJson(json)), 0)) { object.convertFromMemoizedJson(json); }
+            template <typename T>
+            static void convertFromMemoizedJson(const QJsonObject &json, T &object, ...) { convertFromJson(json, object, 0); }
 
             template <typename T>
             static uint getValueHash(const T &object, decltype(static_cast<void>(qHash(object)), 0)) { return qHash(object); }
@@ -144,6 +156,14 @@ namespace BlackMisc
             virtual void convertFromJson(const QJsonObject &json, void *object) const override
             {
                 CValueObjectMetaInfoHelper::convertFromJson(json, cast(object), 0);
+            }
+            virtual QJsonObject toMemoizedJson(const void *object) const override
+            {
+                return CValueObjectMetaInfoHelper::toMemoizedJson(cast(object), 0);
+            }
+            virtual void convertFromMemoizedJson(const QJsonObject &json, void *object) const override
+            {
+                CValueObjectMetaInfoHelper::convertFromMemoizedJson(json, cast(object), 0);
             }
             virtual void unmarshall(const QDBusArgument &arg, void *object) const override
             {
