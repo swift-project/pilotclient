@@ -23,13 +23,38 @@
 #include <windows.h>
 #endif
 
+//! \var qt_ntfs_permission_lookup
+//! \see QFileDevice::Permissions
+#ifdef Q_OS_WIN
+extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+#else
+int qt_ntfs_permission_lookup = 0;
+#endif
+
 namespace BlackMisc
 {
+
+    //! \private
+    bool checkPermissions(CAtomicFile::OpenMode mode, const QFileInfo &fileInfo)
+    {
+        bool ok = true;
+        qt_ntfs_permission_lookup++;
+        if ((mode & CAtomicFile::ReadOnly) && ! fileInfo.isReadable()) { ok = false; }
+        if ((mode & CAtomicFile::WriteOnly) && ! fileInfo.isWritable()) { ok = false; }
+        qt_ntfs_permission_lookup--;
+        return ok;
+    }
 
     bool CAtomicFile::open(CAtomicFile::OpenMode mode)
     {
         m_originalFilename = fileName();
         QFileInfo fileInfo(fileName());
+        if (exists() && ! checkPermissions(mode, fileInfo))
+        {
+            m_permissionError = true;
+            setErrorString("Wrong permissions");
+            return false;
+        }
         setFileName(QFileInfo(fileInfo.dir(), ".tmp." + fileInfo.fileName() + "." + randomSuffix()).filePath());
         if (exists()) { remove(); }
 
@@ -72,12 +97,14 @@ namespace BlackMisc
     CAtomicFile::FileError CAtomicFile::error() const
     {
         if (m_renameError) { return RenameError; }
+        if (m_permissionError) { return PermissionsError; }
         return QFile::error();
     }
 
     void CAtomicFile::unsetError()
     {
         m_renameError = false;
+        m_permissionError = false;
         QFile::unsetError();
     }
 

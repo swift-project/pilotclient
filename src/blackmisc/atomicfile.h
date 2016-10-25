@@ -63,6 +63,7 @@ namespace BlackMisc
 
         QString m_originalFilename;
         bool m_renameError = false;
+        bool m_permissionError = false;
     };
 }
 
