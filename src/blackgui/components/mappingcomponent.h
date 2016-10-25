@@ -94,6 +94,9 @@ namespace BlackGui
             //! Save changed aircraft
             void ps_onSaveAircraft();
 
+            //! Reset aircraft
+            void ps_onResetAircraft();
+
             //! Model preview
             void ps_onModelPreviewChanged(int state);
 
@@ -121,6 +124,8 @@ namespace BlackGui
             //! Update with next cycle
             void ps_markRenderedViewForUpdate();
 
+            //! Adding a remote aircraft failed
+            void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
 
         private:
             //! Identifier for data send from this component
@@ -129,10 +134,12 @@ namespace BlackGui
             //! Update simulated aircraft view
             void updateRenderedAircraftView(bool forceUpdate = false);
 
+            //! Check callsign entered
+            BlackMisc::Aviation::CCallsign validateRenderedCallsign() const;
+
             QScopedPointer<Ui::CMappingComponent> ui;
             bool                                  m_missedRenderedAircraftUpdate = true;
             QScopedPointer<CUpdateTimer>          m_updateTimer;
-            QCompleter                           *m_modelCompleter = nullptr;
             BlackGui::Views::CCheckBoxDelegate   *m_currentMappingsViewDelegate = nullptr;
             BlackMisc::CIdentifier                m_identifier;
 

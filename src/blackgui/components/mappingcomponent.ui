@@ -153,26 +153,6 @@
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <item row="1" column="2">
-       <widget class="QLineEdit" name="le_Callsign">
-        <property name="maxLength">
-         <number>15</number>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>callsign</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QPushButton" name="pb_SaveAircraft">
-        <property name="text">
-         <string>save</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
         <property name="toolTip">
@@ -193,6 +173,27 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="5">
+       <widget class="QPushButton" name="pb_SaveAircraft">
+        <property name="text">
+         <string>save</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="pb_ResetAircraft">
+        <property name="text">
+         <string>reset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="2">
+       <widget class="QLabel" name="lbl_AircraftIconDisplayed">
+        <property name="text">
+         <string>icon will go here</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QCheckBox" name="cb_AircraftEnabled">
         <property name="toolTip">
@@ -210,27 +211,33 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="QPushButton" name="pb_ResetAircraft">
-        <property name="text">
-         <string>reset</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="2">
-       <widget class="QLabel" name="lbl_AircraftIconDisplayed">
-        <property name="text">
-         <string>icon will go here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="5">
+      <item row="2" column="0" colspan="6">
        <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="completer_ModelStrings">
         <property name="minimumSize">
          <size>
           <width>0</width>
           <height>20</height>
          </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pb_LoadModels">
+        <property name="text">
+         <string>load models</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" colspan="3">
+       <widget class="QLineEdit" name="le_Callsign">
+        <property name="maxLength">
+         <number>15</number>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>callsign</string>
         </property>
        </widget>
       </item>

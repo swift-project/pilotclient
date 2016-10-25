@@ -84,14 +84,19 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CMappingComponent::ps_onMenuHighlightInSimulator);
 
             connect(ui->pb_SaveAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onSaveAircraft);
+            connect(ui->pb_ResetAircraft, &QPushButton::clicked, this, &CMappingComponent::ps_onResetAircraft);
+            connect(ui->pb_LoadModels, &QPushButton::clicked, this, &CMappingComponent::ps_onModelsUpdateRequested);
 
-            this->m_modelCompleter = new QCompleter(this);
             this->m_currentMappingsViewDelegate = new CCheckBoxDelegate(":/diagona/icons/diagona/icons/tick.png", ":/diagona/icons/diagona/icons/cross.png", this);
             ui->tvp_RenderedAircraft->setItemDelegateForColumn(0, this->m_currentMappingsViewDelegate);
 
             // Aircraft previews
             connect(ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
             ui->lbl_AircraftIconDisplayed->setText("Icon displayed here");
+
+            // model string completer
+            ui->completer_ModelStrings->setSourceVisible(CAircraftModelStringCompleter::OwnModels, false);
+            ui->completer_ModelStrings->selectSource(CAircraftModelStringCompleter::ModelSet);
 
             // Updates
             ui->tvp_AircraftModels->setDisplayAutomatically(false);
@@ -101,6 +106,7 @@ namespace BlackGui
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_markRenderedAircraftForUpdate);
             connect(sGui->getIContextSimulator(), &IContextSimulator::aircraftRenderingChanged, this, &CMappingComponent::ps_markRenderedAircraftForUpdate);
             connect(sGui->getIContextSimulator(), &IContextSimulator::airspaceSnapshotHandled, this, &CMappingComponent::ps_markRenderedViewForUpdate);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::addingRemoteModelFailed, this, &CMappingComponent::ps_addingRemoteAircraftFailed);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftModel, this, &CMappingComponent::ps_onRemoteAircraftModelChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedRemoteAircraftEnabled, this, &CMappingComponent::ps_markRenderedAircraftForUpdate);
             connect(sGui->getIContextNetwork(), &IContextNetwork::changedFastPositionUpdates, this, &CMappingComponent::ps_markRenderedAircraftForUpdate);
@@ -151,9 +157,9 @@ namespace BlackGui
         {
             Q_UNUSED(count);
             Q_UNUSED(withFilter);
-            int am = ui->tw_ListViews->indexOf(ui->tb_AircraftModels);
-            int cm = ui->tw_ListViews->indexOf(ui->tb_CurrentMappings);
-            QString amf = ui->tvp_AircraftModels->derivedModel()->hasFilter() ? "F" : "";
+            const int am = ui->tw_ListViews->indexOf(ui->tb_AircraftModels);
+            const int cm = ui->tw_ListViews->indexOf(ui->tb_CurrentMappings);
+            const QString amf = ui->tvp_AircraftModels->derivedModel()->hasFilter() ? "F" : "";
             QString a = ui->tw_ListViews->tabBar()->tabText(am);
             QString c = ui->tw_ListViews->tabBar()->tabText(cm);
             a = CGuiUtility::replaceTabCountValue(a, this->countAircraftModels()) + amf;
@@ -220,23 +226,30 @@ namespace BlackGui
             }
         }
 
-        void CMappingComponent::ps_onSaveAircraft()
+        CCallsign CMappingComponent::validateRenderedCallsign() const
         {
             const QString cs = ui->le_Callsign->text().trimmed();
             if (!CCallsign::isValidAircraftCallsign(cs))
             {
                 CLogMessage(this).validationError("Invalid callsign for mapping");
-                return;
+                return CCallsign();
             }
 
             const CCallsign callsign(cs);
-            bool hasCallsign = ui->tvp_RenderedAircraft->container().containsCallsign(callsign);
+            const bool hasCallsign = ui->tvp_RenderedAircraft->container().containsCallsign(callsign);
             if (!hasCallsign)
             {
                 CLogMessage(this).validationError("Unmapped callsign %1 for mapping") << callsign.asString();
-                return;
+                return CCallsign();
             }
+            return callsign;
+        }
 
+        void CMappingComponent::ps_onSaveAircraft()
+        {
+            if (!sGui->getIContextSimulator()->isSimulatorSimulating()) { return; }
+            const CCallsign callsign(this->validateRenderedCallsign());
+            if (callsign.isEmpty()) { return; }
             const QString modelString = ui->completer_ModelStrings->getModelString();
             if (modelString.isEmpty())
             {
@@ -244,15 +257,19 @@ namespace BlackGui
                 return;
             }
 
-            bool hasModel = ui->tvp_AircraftModels->container().containsModelString(modelString);
+            const bool hasModel = ui->tvp_AircraftModels->container().containsModelString(modelString);
             if (!hasModel)
             {
-                CLogMessage(this).validationError("Invalid model for mapping");
+                CLogMessage(this).validationError("Invalid model for mapping, reload models");
+                if (ui->tvp_AircraftModels->isEmpty())
+                {
+                    this->ps_onModelsUpdateRequested();
+                }
                 return;
             }
 
-            CSimulatedAircraft aircraftFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign);
-            bool enabled = ui->cb_AircraftEnabled->isChecked();
+            const CSimulatedAircraft aircraftFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign);
+            const bool enabled = ui->cb_AircraftEnabled->isChecked();
             bool changed = false;
             if (aircraftFromBackend.getModelString() != modelString)
             {
@@ -270,19 +287,30 @@ namespace BlackGui
                 CAircraftModel model(models.front());
                 model.setModelType(CAircraftModel::TypeManuallySet);
                 CLogMessage(this).info("Requesting changes for %1") << callsign.asString();
-                sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
-                changed = true;
+                changed = sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
             }
             if (aircraftFromBackend.isEnabled() != enabled)
             {
-                sGui->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), enabled);
-                changed = true;
+                changed = sGui->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), enabled);
             }
 
             if (!changed)
             {
                 CLogMessage(this).info("Model mapping, nothing to change");
-                return;
+            }
+        }
+
+        void CMappingComponent::ps_onResetAircraft()
+        {
+            if (!sGui->getIContextSimulator()->isSimulatorSimulating()) { return; }
+            const CCallsign callsign(this->validateRenderedCallsign());
+            if (callsign.isEmpty()) { return; }
+            const CSimulatedAircraft aircraftFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign);
+            if (aircraftFromBackend.getCallsign() != callsign) { return; }
+            bool changed = sGui->getIContextNetwork()->updateAircraftModel(callsign, aircraftFromBackend.getModel(), identifier());
+            if (changed)
+            {
+                CLogMessage(this).info("Model reset for '%1'") << callsign.toQString();
             }
         }
 
@@ -349,6 +377,13 @@ namespace BlackGui
         void CMappingComponent::ps_markRenderedViewForUpdate()
         {
             m_missedRenderedAircraftUpdate = true;
+        }
+
+        void CMappingComponent::ps_addingRemoteAircraftFailed(const CSimulatedAircraft &aircraft, const CStatusMessage &message)
+        {
+            m_missedRenderedAircraftUpdate = true;
+            Q_UNUSED(aircraft);
+            Q_UNUSED(message);
         }
 
         void CMappingComponent::ps_onMenuEnableAircraft(const CSimulatedAircraft &aircraft)
