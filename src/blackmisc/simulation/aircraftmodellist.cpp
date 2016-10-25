@@ -13,7 +13,6 @@
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/range.h"
 #include "blackmisc/statusmessage.h"
 
@@ -612,6 +611,38 @@ namespace BlackMisc
                 }
             }
             return msgs;
+        }
+
+        QJsonObject CAircraftModelList::toMemoizedJson() const
+        {
+            CAircraftModel::MemoHelper::CMemoizer helper;
+            QJsonArray array;
+            for (auto it = cbegin(); it != cend(); ++it)
+            {
+                array << it->toMemoizedJson(helper);
+            }
+            QJsonObject json;
+            json.insert("containerbase", array);
+            json.insert("aircraftIcaos", helper.getTable<CAircraftIcaoCode>().toJson());
+            json.insert("liveries", helper.getTable<CLivery>().toJson());
+            json.insert("distributors", helper.getTable<CDistributor>().toJson());
+            return json;
+        }
+
+        void CAircraftModelList::convertFromMemoizedJson(const QJsonObject &json)
+        {
+            clear();
+            QJsonArray array = json.value("containerbase").toArray();
+            CAircraftModel::MemoHelper::CUnmemoizer helper;
+            helper.getTable<CAircraftIcaoCode>().convertFromJson(json.value("aircraftIcaos").toObject());
+            helper.getTable<CLivery>().convertFromJson(json.value("liveries").toObject());
+            helper.getTable<CDistributor>().convertFromJson(json.value("distributors").toObject());
+            for (auto i = array.begin(); i != array.end(); ++i)
+            {
+                CAircraftModel value;
+                value.convertFromMemoizedJson(i->toObject(), helper);
+                insert(value);
+            }
         }
 
         QJsonArray CAircraftModelList::toDatabaseJson() const

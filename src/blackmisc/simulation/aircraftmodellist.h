@@ -216,6 +216,12 @@ namespace BlackMisc
             //! Validate distributors
             CStatusMessageList validateDistributors(const BlackMisc::Simulation::CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
 
+            //! To compact JSON format
+            QJsonObject toMemoizedJson() const;
+
+            //! From compact JSON format
+            void convertFromMemoizedJson(const QJsonObject &json);
+
             //! To database JSON
             QJsonArray toDatabaseJson() const;
 

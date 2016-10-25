@@ -109,6 +109,28 @@ namespace BlackMisc
             return QJsonDocument(this->toDatabaseJson()).toJson(format);
         }
 
+        QJsonObject CAircraftModel::toMemoizedJson(MemoHelper::CMemoizer &helper) const
+        {
+            QJsonObject json;
+            auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
+            meta.forEachMemberName(*this, [ & ](const auto & member, CExplicitLatin1String name)
+            {
+                auto &&maybeMemo = helper.maybeMemoize(member);
+                json << std::make_pair(name.toJsonKey(), std::cref(maybeMemo));
+            });
+            return json;
+        }
+
+        void CAircraftModel::convertFromMemoizedJson(const QJsonObject &json, const MemoHelper::CUnmemoizer &helper)
+        {
+            auto meta = introspect<CAircraftModel>().without(MetaFlags<DisabledForJson>());
+            meta.forEachMemberName(*this, [ & ](auto & member, CExplicitLatin1String name)
+            {
+                auto it = json.find(name);
+                if (it != json.end()) { it.value() >> helper.maybeUnmemoize(member).get(); }
+            });
+        }
+
         QString CAircraftModel::asHtmlSummary() const
         {
             const QString html = "Model: %1<br>Aircraft ICAO: %2<br>Livery: %3";

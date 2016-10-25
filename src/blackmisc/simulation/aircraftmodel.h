@@ -19,6 +19,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/db/datastore.h"
 #include "blackmisc/dictionary.h"
+#include "blackmisc/memotable.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/metaclassprivate.h"
 #include "blackmisc/orderable.h"
@@ -339,6 +340,15 @@ namespace BlackMisc
 
             //! Validate
             BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
+
+            //! Helper class used by implementation.
+            using MemoHelper = CMemoHelper<Aviation::CAircraftIcaoCode, Aviation::CLivery, CDistributor>;
+
+            //! To JSON with memoized members (used by CAircraftModelList)
+            QJsonObject toMemoizedJson(MemoHelper::CMemoizer &) const;
+
+            //! From JSON with memoized members (used by CAircraftModelList)
+            void convertFromMemoizedJson(const QJsonObject &json, const MemoHelper::CUnmemoizer &);
 
             //! To database JSON
             QJsonObject toDatabaseJson() const;
