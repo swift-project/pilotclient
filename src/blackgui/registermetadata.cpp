@@ -17,7 +17,6 @@ namespace BlackGui
     void registerMetadata()
     {
         BlackGui::Settings::CDockWidgetSettings::registerMetadata();
-        BlackGui::Settings::CDockWidgetsSettings::registerMetadata();
         BlackGui::Settings::CNavigatorSettings::registerMetadata();
         BlackGui::Components::registerMetadata();
     }

@@ -149,25 +149,5 @@ namespace BlackGui
                 break;
             }
         }
-
-        CDockWidgetSettings CDockWidgetsSettings::getByNameOrInitToDefault(const QString &name)
-        {
-            if (this->contains(name)) { return this->value(name); }
-            CDockWidgetSettings s;
-
-            // default values can be set here, this could be enhanced if needed
-            // e.g. by platform dependent defaults
-            s.reset();
-            this->insert(name, s);
-            return s;
-        }
-
-        void CDockWidgetsSettings::resetToDefaults(const QString &name)
-        {
-            if (this->contains(name))
-            {
-                this->remove(name);
-            }
-        }
     } // ns
 } // ns

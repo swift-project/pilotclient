@@ -92,7 +92,7 @@ namespace BlackGui
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
-            //! To string
+            //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(const QString &separator, bool i18n = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
@@ -120,33 +120,13 @@ namespace BlackGui
             );
         };
 
-        //! Needed to compile properly with Q_DECLARE_METATYPE
-        using CDockWidgetSettingsDictionary = BlackMisc::CDictionary<QString, CDockWidgetSettings, QMap>;
-
-        //! Settings for all dock widgets
-        class BLACKGUI_EXPORT CDockWidgetsSettings :
-            public CDockWidgetSettingsDictionary,
-            public BlackMisc::Mixin::MetaType<CDockWidgetsSettings>,
-            public BlackMisc::Mixin::JsonOperators<CDockWidgetsSettings>
-        {
-        public:
-            BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CDockWidgetsSettings)
-
-            //! Default constructor.
-            CDockWidgetsSettings() {}
-
-            //! Get setting or init by estimated default values
-            CDockWidgetSettings getByNameOrInitToDefault(const QString &name);
-
-            //! Reset to defaults
-            void resetToDefaults(const QString &name);
-        };
-
         //! Trait for settings for dock widget
-        struct TDockWidgets : public BlackMisc::TSettingTrait<CDockWidgetsSettings>
+        //! \details All settings will go in one file, separated by application and object name
+        //!          (of the parent object using this setting). If the object name is not set, it will not work correctly
+        struct TDockWidget : public BlackMisc::TSettingTrait<CDockWidgetSettings>
         {
-            //! Key in data cache
-            static const char *key() { return "guidockwidget"; }
+            //! Key in data cache https://dev.vatsim-germany.org/issues/776
+            static const char *key() { return "guidockwidget/%Application%/%OwnerName%"; }
         };
     } // ns
 } // ns
@@ -154,7 +134,5 @@ namespace BlackGui
 Q_DECLARE_METATYPE(BlackGui::Settings::CDockWidgetSettings)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CDockWidgetSettings>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CDockWidgetSettings>)
-Q_DECLARE_METATYPE(BlackGui::Settings::CDockWidgetSettingsDictionary)
-Q_DECLARE_METATYPE(BlackGui::Settings::CDockWidgetsSettings)
 
 #endif // guard

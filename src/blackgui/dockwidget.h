@@ -118,7 +118,7 @@ namespace BlackGui
         bool restoreFromSettings();
 
         //! Remember widget state
-        void saveToSettings();
+        void saveCurrentStateToSettings();
 
         //! Reset margin settings
         void resetSettings();
@@ -231,11 +231,11 @@ namespace BlackGui
         QPoint m_offsetWhenFloating;                  //!< initial offset to main window when floating first time
         bool m_allowStatusBar        = true;
         bool m_windowTitleWhenDocked = true;
-        bool m_wasAlreadyFloating    = false;
+        bool m_wasAlreadyFloating    = false;         //!< flag if widget was at least once in floating state
         bool m_selected              = false;         //!< selected when tabbed
         bool m_dockWidgetVisible     = false;         //!< logical visible, not to be confused with QDockWidget::isVisible()
         bool m_wasFrameless          = false;         //!< frameless when last floating
-        BlackMisc::CSetting<BlackGui::Settings::TDockWidgets> m_settings { this, &CDockWidget::ps_settingsChanged }; //!< all docked wigets settings
+        BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::ps_settingsChanged }; //!< all docked wigets settings
 
         //! Empty widget with no size
         void initTitleBarWidgets();
@@ -246,17 +246,11 @@ namespace BlackGui
         //! Force a style sheet update
         void forceStyleSheetUpdate();
 
-        //! Init settings
-        void initSettings();
-
-        //! Name used as key for settings
-        QString getNameForSettings() const;
-
         //! This widget`s settings
         BlackGui::Settings::CDockWidgetSettings getSettings() const;
 
-        //! Save my updated settings
-        void setSettings(const BlackGui::Settings::CDockWidgetSettings &settings);
+        //! Save settings
+        void saveSettings(const BlackGui::Settings::CDockWidgetSettings &settings);
     };
 } // namespace
 

@@ -103,7 +103,7 @@ namespace BlackGui
     {
         CDockWidgetSettings s = this->getSettings();
         s.setMarginsWhenFloating(margins);
-        this->setSettings(s);
+        this->saveSettings(s);
     }
 
     void CDockWidget::setMarginsWhenFloating(int left, int top, int right, int bottom)
@@ -120,7 +120,7 @@ namespace BlackGui
     {
         CDockWidgetSettings s = this->getSettings();
         s.setMarginsWhenFramelessFloating(margins);
-        this->setSettings(s);
+        this->saveSettings(s);
     }
 
     void CDockWidget::setMarginsWhenFramelessFloating(int left, int top, int right, int bottom)
@@ -137,7 +137,7 @@ namespace BlackGui
     {
         CDockWidgetSettings s = this->getSettings();
         s.setMarginsWhenDocked(margins);
-        this->setSettings(s);
+        this->saveSettings(s);
     }
 
     void CDockWidget::setMarginsWhenDocked(int left, int top, int right, int bottom)
@@ -343,7 +343,7 @@ namespace BlackGui
 
         // State actions (windows state)
         contextMenu->addAction(BlackMisc::CIcons::load16(), "Restore", this, &CDockWidget::restoreFromSettings);
-        contextMenu->addAction(BlackMisc::CIcons::save16(), "Save state", this, &CDockWidget::saveToSettings);
+        contextMenu->addAction(BlackMisc::CIcons::save16(), "Save state", this, &CDockWidget::saveCurrentStateToSettings);
         contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Reset to defaults", this, &CDockWidget::resetSettings);
         contextMenu->addAction(BlackMisc::CIcons::refresh16(), "Reset position", this, &CDockWidget::resetPosition);
 
@@ -354,10 +354,7 @@ namespace BlackGui
 
     void CDockWidget::initialFloating()
     {
-        // settings, ii here because name now is set
-        this->initSettings();
-
-        // init status bar, as we have now all structures set
+        // init status bar, as we have now all structures set and name is known
         this->initStatusBarAndProperties();
 
         // for the first time resize
@@ -386,10 +383,10 @@ namespace BlackGui
 
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
     {
-    #ifdef Q_OS_LINUX
+#       ifdef Q_OS_LINUX
         // Give XCB platforms enough time to handle window events before adjusting it.
         QThread::msleep(100);
-    #endif
+#       endif
 
         this->setMargins();
         if (topLevel)
@@ -542,58 +539,37 @@ namespace BlackGui
         this->setStyleSheet(qss);
     }
 
-    void CDockWidget::initSettings()
-    {
-        const QString name(this->getNameForSettings());
-        CDockWidgetsSettings all = this->m_settings.get();
-        if (all.contains(name)) { return; }
-        all.getByNameOrInitToDefault(name);
-        this->m_settings.setAndSave(all);
-    }
-
-    QString CDockWidget::getNameForSettings() const
-    {
-        const QString n(this->objectName().toLower().remove(' '));
-        Q_ASSERT_X(!n.isEmpty(), Q_FUNC_INFO, "No settings name");
-        return n;
-    }
-
     CDockWidgetSettings CDockWidget::getSettings() const
     {
-        const CDockWidgetsSettings all = this->m_settings.get();
-        const QString name(this->getNameForSettings());
-        const CDockWidgetSettings s = all.value(name);
+        Q_ASSERT_X(!this->objectName().isEmpty(), Q_FUNC_INFO, "Need object name for settings %OwnerName%");
+        const CDockWidgetSettings s = this->m_settings.get();
         return s;
     }
 
-    void CDockWidget::setSettings(const CDockWidgetSettings &settings)
+    void CDockWidget::saveSettings(const CDockWidgetSettings &settings)
     {
-        const CDockWidgetSettings current = getSettings();
-        if (current == settings) { return; }
-        CDockWidgetsSettings all = this->m_settings.get();
-        const QString name(this->getNameForSettings());
-        all.insert(name, settings);
-        const CStatusMessage m = this->m_settings.set(all); // saved when shutdown
+        Q_ASSERT_X(!this->objectName().isEmpty(), Q_FUNC_INFO, "Need object name for settings %OwnerName%");
+        const CStatusMessage m = this->m_settings.setAndSave(settings);
         if (m.isFailure())
         {
             CLogMessage::preformatted(m);
         }
     }
 
-    void CDockWidget::saveToSettings()
+    void CDockWidget::saveCurrentStateToSettings()
     {
         CDockWidgetSettings s = this->getSettings();
         s.setFloating(this->isFloating());
         s.setFrameless(this->isFrameless());
         s.setGeometry(this->saveGeometry());
-        this->setSettings(s);
+        this->saveSettings(s);
     }
 
     void CDockWidget::resetSettings()
     {
         CDockWidgetSettings s = this->getSettings();
         s.reset();
-        this->setSettings(s);
+        this->saveSettings(s);
         this->restoreFromSettings();
     }
 
