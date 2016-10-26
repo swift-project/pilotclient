@@ -316,13 +316,13 @@ namespace BlackMisc
 
     QJsonObject CValueCache::saveToJson(const QString &keyPrefix) const
     {
-        return getAllValues(keyPrefix).toJson();
+        return getAllValues(keyPrefix).toMemoizedJson();
     }
 
     void CValueCache::loadFromJson(const QJsonObject &json)
     {
         CVariantMap map;
-        map.convertFromJson(json);
+        map.convertFromMemoizedJson(json);
         insertValues({ map, QDateTime::currentMSecsSinceEpoch() });
     }
 
@@ -368,7 +368,7 @@ namespace BlackMisc
                 return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
             auto object = json.object();
-            json.setObject(it->mergeToJson(object));
+            json.setObject(it->mergeToMemoizedJson(object));
 
             if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
             {
@@ -425,8 +425,8 @@ namespace BlackMisc
                 return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
             CVariantMap temp;
-            temp.convertFromJson(json.object(), it.value());
-            if (it.value().isEmpty()) { temp.convertFromJson(json.object()); }
+            temp.convertFromMemoizedJson(json.object(), it.value());
+            if (it.value().isEmpty()) { temp.convertFromMemoizedJson(json.object()); }
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
