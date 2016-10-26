@@ -130,13 +130,18 @@ namespace BlackMisc
 #elif defined(Q_OS_WIN32)
     void CAtomicFile::replaceOriginal()
     {
-        auto result = MoveFileExA(qPrintable(fileName()), qPrintable(m_originalFilename), MOVEFILE_REPLACE_EXISTING);
+        auto encode = [](const QString &s)
+        {
+            const auto prefix = "\\\\?\\"; // support long paths: https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247.aspx#maxpath
+            return (prefix + QDir::toNativeSeparators(QDir::cleanPath(QFileInfo(s).absoluteFilePath()))).toStdWString();
+        };
+        auto result = MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH);
         if (! result)
         {
             m_renameError = true;
             wchar_t *s = nullptr;
             FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, reinterpret_cast<LPWSTR>(&s), 0, nullptr);
-            setErrorString(QString::fromWCharArray(s));
+            setErrorString(QString::fromWCharArray(s).simplified());
             LocalFree(reinterpret_cast<HLOCAL>(s));
         }
     }
