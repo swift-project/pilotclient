@@ -87,6 +87,14 @@ namespace BlackCore
                 return QStringList();
             }
 
+            //! \copydoc IContextSimulator::getModelSetStrings
+            virtual QStringList getModelSetCompleterStrings(bool sorted) const override
+            {
+                Q_UNUSED(sorted);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return QStringList();
+            }
+
             //! \copydoc IContextSimulator::getModelSetModelsStartingWith
             virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const override
             {

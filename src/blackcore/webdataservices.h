@@ -215,6 +215,10 @@ namespace BlackCore
         //! \threadsafe
         QStringList getModelStrings() const;
 
+        //! Model completer string
+        //! \threadsafe
+        QStringList getModelCompleterStrings(bool sorted = true) const;
+
         //! Models for combined code and aircraft designator
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;

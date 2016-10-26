@@ -419,6 +419,12 @@ namespace BlackCore
         return QStringList();
     }
 
+    QStringList CWebDataServices::getModelCompleterStrings(bool sorted) const
+    {
+        if (m_modelDataReader) { return m_modelDataReader->getModels().toCompleterStrings(sorted); }
+        return QStringList();
+    }
+
     CAircraftModelList CWebDataServices::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator, combinedCode); }

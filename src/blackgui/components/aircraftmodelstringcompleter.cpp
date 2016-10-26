@@ -18,6 +18,8 @@
 
 using namespace BlackCore;
 using namespace BlackCore::Context;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Data;
 
 namespace BlackGui
 {
@@ -42,6 +44,15 @@ namespace BlackGui
             if (sGui->getIContextSimulator())
             {
                 connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::ps_simulatorConnected);
+                const CSimulatorInfo sim(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator());
+                if (sim.isSingleSimulator())
+                {
+                    this->m_modelCaches.setCurrentSimulator(sim);
+                }
+                else
+                {
+                    this->setSourceVisible(OwnModels, false);
+                }
             }
         }
 
@@ -95,32 +106,27 @@ namespace BlackGui
         void CAircraftModelStringCompleter::setCompleter()
         {
             QStringList modelStrings;
+            CompleterSourceFlag sourceWithData = None;
             if (ui->rb_Db->isChecked())
             {
-                modelStrings = sGui->getWebDataServices()->getModelStrings();
+                if (this->m_currentSourceWithData == DB) { return; }
+                modelStrings = sGui->getWebDataServices()->getModelCompleterStrings();
+                if (!modelStrings.isEmpty()) { sourceWithData = DB; }
             }
             else if (ui->rb_ModelSet->isChecked())
             {
-                if (!this->m_completerOwnModels)
-                {
-                    const QStringList modelStrings = sGui->getIContextSimulator()->getModelSet().getModelStringList();
-                    this->m_completerModelSet = new QCompleter(modelStrings, this);
-                    setCompleterParameters(this->m_completerModelSet);
-                }
-                ui->le_modelString->setCompleter(this->m_completerOwnModels);
+                if (this->m_currentSourceWithData == ModelSet) { return; }
+                modelStrings = sGui->getIContextSimulator()->getModelSetCompleterStrings(true);
+                if (!modelStrings.isEmpty()) { sourceWithData = ModelSet; }
             }
             else if (ui->rb_OwnModels->isChecked())
             {
-                if (!this->m_completerOwnModels)
-                {
-                    const QStringList modelStrings = sGui->getIContextSimulator()->getModelSet().getModelStringList();
-                    this->m_completerOwnModels = new QCompleter(modelStrings, this);
-                    setCompleterParameters(this->m_completerOwnModels);
-                }
-                ui->le_modelString->setCompleter(this->m_completerOwnModels);
-                modelStrings = sGui->getIContextSimulator()->getModelSet().getModelStringList();
+                if (this->m_currentSourceWithData == OwnModels) { return; }
+                modelStrings = this->m_modelCaches.getCurrentCachedModels().toCompleterStrings();
+                if (!modelStrings.isEmpty()) { sourceWithData = OwnModels; }
             }
 
+            this->m_currentSourceWithData = sourceWithData;
             ui->le_modelString->setCompleter(new QCompleter(modelStrings, this));
             ui->le_modelString->setPlaceholderText(QString("model strings (%1)").arg(modelStrings.size()));
         }

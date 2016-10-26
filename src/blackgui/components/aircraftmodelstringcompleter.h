@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPLETER_AIRCRAFTMODELSTRINGCOMPLETER_H
 #define BLACKGUI_COMPLETER_AIRCRAFTMODELSTRINGCOMPLETER_H
 
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -33,10 +34,12 @@ namespace BlackGui
         public:
 
             //! Sources for string completion
-            enum CompleterSourceFlag {
-                DB,
-                ModelSet,
-                OwnModels
+            enum CompleterSourceFlag
+            {
+                None        = 0,      //!< normally used to indicate nothing was loaded
+                DB          = 1 << 0,
+                ModelSet    = 1 << 1,
+                OwnModels   = 1 << 2
             };
             Q_DECLARE_FLAGS(CompleterSource, CompleterSourceFlag)
 
@@ -93,6 +96,8 @@ namespace BlackGui
 
         private:
             QScopedPointer <Ui::CAircraftModelStringCompleter> ui;
+            BlackMisc::Simulation::Data::CModelCaches m_modelCaches { false, this }; //!< all models, works locally only
+            CompleterSourceFlag m_currentSourceWithData = None;
         };
     } // ns
 } // ns

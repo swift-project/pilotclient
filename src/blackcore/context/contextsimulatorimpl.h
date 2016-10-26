@@ -82,6 +82,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
             virtual QStringList getModelSetStrings() const override;
+            virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
             virtual int getModelSetCount() const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;

@@ -94,6 +94,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<QStringList>(QLatin1Literal("getModelSetStrings"));
         }
 
+        QStringList CContextSimulatorProxy::getModelSetCompleterStrings(bool sorted) const
+        {
+            return m_dBusInterface->callDBusRet<QStringList>(QLatin1Literal("getModelSetCompleterStrings"), sorted);
+        }
+
         CAircraftModelList CContextSimulatorProxy::getModelSetModelsStartingWith(const QString modelString) const
         {
             return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getModelSetModelsStartingWith"), modelString);

@@ -150,6 +150,9 @@ namespace BlackCore
             //! Model strings
             virtual QStringList getModelSetStrings() const = 0;
 
+            //! Model set completer string
+            virtual QStringList getModelSetCompleterStrings(bool sorted) const = 0;
+
             //! Set time synchronization between simulator and user's computer time
             //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) = 0;

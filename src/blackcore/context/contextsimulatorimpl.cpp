@@ -162,6 +162,12 @@ namespace BlackCore
             return this->getModelSet().getModelStringList(false);
         }
 
+        QStringList CContextSimulator::getModelSetCompleterStrings(bool sorted) const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << sorted; }
+            return this->getModelSet().toCompleterStrings(sorted);
+        }
+
         int CContextSimulator::getModelSetCount() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -396,7 +402,7 @@ namespace BlackCore
             Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
             Q_ASSERT(!simulatorInfo.isUnspecified());
 
-            ISimulator::SimulatorStatus simStatus = getSimulatorStatusEnum();
+            const ISimulator::SimulatorStatus simStatus = getSimulatorStatusEnum();
             if (!m_simulatorPlugin.first.isUnspecified() &&
                     m_simulatorPlugin.first == simulatorInfo && simStatus.testFlag(ISimulator::Connected))
             {

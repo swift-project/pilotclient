@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_DATA_MODELCACHES
 #define BLACKMISC_SIMULATION_DATA_MODELCACHES
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
@@ -140,7 +141,7 @@ namespace BlackMisc
             };
 
             //! Cache for multiple simulators specified by BlackMisc::Simulation::CSimulatorInfo
-            class IMultiSimulatorModelCaches :
+            class BLACKMISC_EXPORT IMultiSimulatorModelCaches :
                 public QObject,
                 public IModelsPerSimulatorSetable
             {
@@ -224,7 +225,7 @@ namespace BlackMisc
 
             //! Bundle of caches for all simulators
             //! \remark remembers its last simulator selection
-            class CModelCaches : public IMultiSimulatorModelCaches
+            class BLACKMISC_EXPORT CModelCaches : public IMultiSimulatorModelCaches
             {
                 Q_OBJECT
 
@@ -255,7 +256,7 @@ namespace BlackMisc
 
             //! Bundle of caches for model sets of all simulators
             //! \remark remembers its last simulator selection
-            class CModelSetCaches : public IMultiSimulatorModelCaches
+            class BLACKMISC_EXPORT CModelSetCaches : public IMultiSimulatorModelCaches
             {
                 Q_OBJECT
 
