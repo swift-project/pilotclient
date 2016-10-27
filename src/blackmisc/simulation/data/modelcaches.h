@@ -148,10 +148,6 @@ namespace BlackMisc
                 Q_OBJECT
 
             public:
-                //! Construtor
-                IMultiSimulatorModelCaches(QObject *parent = nullptr) : QObject(parent)
-                { }
-
                 //! Models for simulator
                 //! \threadsafe
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
@@ -160,7 +156,6 @@ namespace BlackMisc
                 int getCachedModelsCount(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
                 //! Models
-                //! \todo is that threadsafe?
                 CAircraftModelList getSynchronizedCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Models
@@ -172,7 +167,6 @@ namespace BlackMisc
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
                 //! Timestamp
-                //! \todo is that threadsafe?
                 QDateTime getSynchronizedTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
                 //! Last selection`s timestamp
@@ -182,12 +176,19 @@ namespace BlackMisc
                 //! Set cache
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
-                //! Synchronize
-                //! \todo is that threadsafe?
+                //! Synchronize for given simulator
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
-                //! Last cache
+                //! Synchronize the current
                 bool synchronizeCurrentCache();
+
+                //! Admit the cache for given simulator
+                //! \threadsafe
+                virtual void admitCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+
+                //! Admit the current cache
+                //! \threadsafe
+                virtual bool admitCurrentCache();
 
                 //! Selected simulator
                 //! \threadsafe
@@ -210,6 +211,10 @@ namespace BlackMisc
                 void cacheChanged(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             protected:
+                //! Construtor
+                IMultiSimulatorModelCaches(QObject *parent = nullptr) : QObject(parent)
+                { }
+
                 //! \name Cache has been changed
                 //! @{
                 void changedFsx() { emitCacheChanged(BlackMisc::Simulation::CSimulatorInfo(BlackMisc::Simulation::CSimulatorInfo::FSX)); }
@@ -231,7 +236,7 @@ namespace BlackMisc
 
             public:
                 //! Construtor
-                CModelCaches(QObject *parent = nullptr);
+                CModelCaches(bool synchronizeCache, QObject *parent = nullptr);
 
                 //! \name Interface implementations
                 //! @{
@@ -239,6 +244,7 @@ namespace BlackMisc
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual void admitCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
@@ -250,8 +256,12 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheXP>  m_modelCacheXP  {this, &CModelCaches::changedXP };  //!< XP cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_currentSimulator { this };              //!< current simulator
 
-                //! Non virtaul version (used in ctor)
+                //! Non virtual version (can be used in ctor)
                 void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+                //! Non virtual version (can be used in ctor)
+                //! \threadsafe
+                void admitCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };
 
             //! Bundle of caches for model sets of all simulators
@@ -262,7 +272,7 @@ namespace BlackMisc
 
             public:
                 //! Construtor
-                CModelSetCaches(QObject *parent = nullptr);
+                CModelSetCaches(bool synchronizeCache, QObject *parent = nullptr);
 
                 //! \name Interface implementations
                 //! @{
@@ -270,6 +280,7 @@ namespace BlackMisc
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual void admitCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 //! @}
@@ -281,8 +292,12 @@ namespace BlackMisc
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP>  m_modelCacheXP  {this, &CModelSetCaches::changedXP };   //!< XP cache
                 BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_currentSimulator { this };                       //!< current simulator
 
-                //! Non virtaul version (used in ctor)
+                //! Non virtaul version (can be used in ctor)
                 void synchronizeCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
+
+                //! Non virtual version (can be used in ctor)
+                //! \threadsafe
+                void admitCacheImpl(const BlackMisc::Simulation::CSimulatorInfo &simulator);
             };
         } // ns
     } // ns

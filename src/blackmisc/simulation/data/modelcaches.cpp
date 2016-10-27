@@ -79,7 +79,16 @@ namespace BlackMisc
                 return true;
             }
 
-            CModelCaches::CModelCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
+            bool IMultiSimulatorModelCaches::admitCurrentCache()
+            {
+                const CSimulatorInfo sim(this->getCurrentSimulator());
+                BLACK_VERIFY_X(sim.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
+                if (!sim.isSingleSimulator()) { return false; }
+                this->admitCache(sim);
+                return true;
+            }
+
+            CModelCaches::CModelCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
                 CSimulatorInfo sim(this->m_currentSimulator.get());
@@ -89,9 +98,17 @@ namespace BlackMisc
                     this->m_currentSimulator.set(sim);
                     CLogMessage(this).warning("Invalid simulator, reseting");
                 }
-                this->synchronizeCacheImpl(sim);
                 const QString simStr(sim.toQString(true));
-                CLogMessage(this).info("Initialized model caches to %1") << simStr;
+                if (synchronizeCache)
+                {
+                    this->synchronizeCacheImpl(sim);
+                    CLogMessage(this).info("Initialized model caches to %1") << simStr;
+                }
+                else
+                {
+                    this->admitCacheImpl(sim);
+                    CLogMessage(this).info("Admit model caches to %1") << simStr;
+                }
             }
 
             CAircraftModelList CModelCaches::getCachedModels(const CSimulatorInfo &simulator) const
@@ -152,6 +169,11 @@ namespace BlackMisc
                 this->synchronizeCacheImpl(simulator);
             }
 
+            void CModelCaches::admitCache(const CSimulatorInfo &simulator)
+            {
+                this->admitCacheImpl(simulator);
+            }
+
             CStatusMessage CModelCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
             {
                 static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
@@ -177,7 +199,22 @@ namespace BlackMisc
                 }
             }
 
-            CModelSetCaches::CModelSetCaches(QObject *parent) : IMultiSimulatorModelCaches(parent)
+            void CModelCaches::admitCacheImpl(const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: this->m_modelCacheFs9.admit(); break;
+                case CSimulatorInfo::FSX: this->m_modelCacheFsx.admit(); break;
+                case CSimulatorInfo::P3D: this->m_modelCacheP3D.admit(); break;
+                case CSimulatorInfo::XPLANE: this->m_modelCacheXP.admit(); break;
+                default:
+                    Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
+                    break;
+                }
+            }
+
+            CModelSetCaches::CModelSetCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();
                 CSimulatorInfo sim(this->m_currentSimulator.get());
@@ -187,9 +224,18 @@ namespace BlackMisc
                     this->m_currentSimulator.set(sim);
                     CLogMessage(this).warning("Invalid simulator, reseting");
                 }
-                this->synchronizeCacheImpl(sim);
+
                 const QString simStr(sim.toQString(true));
-                CLogMessage(this).info("Initialized model caches to %1") << simStr;
+                if (synchronizeCache)
+                {
+                    this->synchronizeCacheImpl(sim);
+                    CLogMessage(this).info("Initialized model caches to %1") << simStr;
+                }
+                else
+                {
+                    this->admitCacheImpl(sim);
+                    CLogMessage(this).info("Admit model caches to %1") << simStr;
+                }
             }
 
             CAircraftModelList CModelSetCaches::getCachedModels(const CSimulatorInfo &simulator) const
@@ -252,6 +298,11 @@ namespace BlackMisc
                 this->synchronizeCacheImpl(simulator);
             }
 
+            void CModelSetCaches::admitCache(const CSimulatorInfo &simulator)
+            {
+                this->admitCacheImpl(simulator);
+            }
+
             CStatusMessage CModelSetCaches::setCurrentSimulator(const CSimulatorInfo &simulator)
             {
                 static const CStatusMessage sameSimMsg = CStatusMessage(this).info("Same simulator");
@@ -271,6 +322,21 @@ namespace BlackMisc
                 case CSimulatorInfo::FSX: this->m_modelCacheFsx.synchronize(); break;
                 case CSimulatorInfo::P3D: this->m_modelCacheP3D.synchronize(); break;
                 case CSimulatorInfo::XPLANE: this->m_modelCacheXP.synchronize(); break;
+                default:
+                    Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                    break;
+                }
+            }
+
+            void CModelSetCaches::admitCacheImpl(const CSimulatorInfo &simulator)
+            {
+                Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
+                switch (simulator.getSimulator())
+                {
+                case CSimulatorInfo::FS9: this->m_modelCacheFs9.admit(); break;
+                case CSimulatorInfo::FSX: this->m_modelCacheFsx.admit(); break;
+                case CSimulatorInfo::P3D: this->m_modelCacheP3D.admit(); break;
+                case CSimulatorInfo::XPLANE: this->m_modelCacheXP.admit(); break;
                 default:
                     Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                     break;

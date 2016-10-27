@@ -130,7 +130,7 @@ namespace BlackMisc
             //! Clear cache
             BlackMisc::CStatusMessage clearCache();
 
-            BlackMisc::Simulation::Data::CModelSetCaches m_caches { this }; //!< caches
+            BlackMisc::Simulation::Data::CModelSetCaches m_caches { true, this }; //!< caches
         };
     } // namespace
 } // namespace
