@@ -311,9 +311,10 @@ namespace BlackCore
         BlackMisc::CStatusMessageList asyncPublishModels(const BlackMisc::Simulation::CAircraftModelList &models) const;
 
         //! Trigger read of new data
+        //! \note requires info objects loaded upfront and uses the full cache logic
         BlackMisc::Network::CEntityFlags::Entity triggerRead(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
-        //! Trigger reload from DB
+        //! Trigger reload from DB, only loads the DB data and bypasses the caches checks and info objects
         BlackMisc::Network::CEntityFlags::Entity triggerReloadFromDb(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
         //! Corresponding cache timestamp if applicable

@@ -244,6 +244,15 @@ namespace BlackCore
     CEntityFlags::Entity CWebDataServices::triggerReloadFromDb(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
     {
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
+
+        if (m_infoDataReader)
+        {
+            // when possible update info objects
+            CEntityFlags::Entity infoObjectEntity = CEntityFlags::InfoObjectEntity;
+            m_infoDataReader->startReadFromDbInBackgroundThread(infoObjectEntity, newerThan);
+            triggeredRead |= infoObjectEntity;
+        }
+
         if (m_icaoDataReader)
         {
             if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
@@ -263,6 +272,17 @@ namespace BlackCore
                 triggeredRead |= modelEntities;
             }
         }
+
+        if (m_airportDataReader)
+        {
+            if (whatToRead.testFlag(CEntityFlags::AirportEntity))
+            {
+                CEntityFlags::Entity airportEntity = whatToRead & CEntityFlags::AirportEntity;
+                m_airportDataReader->startReadFromDbInBackgroundThread(airportEntity, newerThan);
+                triggeredRead |= airportEntity;
+            }
+        }
+
         return triggeredRead;
     }
 
