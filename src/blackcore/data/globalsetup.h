@@ -31,6 +31,7 @@ namespace BlackCore
     namespace Data
     {
         //! Global settings for readers, debug flags, etc.
+        //! \note also called the bootstrap file as it is needed once to get information where all the data are located
         class BLACKCORE_EXPORT CGlobalSetup :
             public BlackMisc::CValueObject<CGlobalSetup>,
             public BlackMisc::ITimestampBased

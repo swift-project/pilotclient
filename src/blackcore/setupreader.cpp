@@ -39,7 +39,7 @@ namespace BlackCore
         m_cmdBootstrapUrl
     {
         { "url", "bootstrapurl" },
-        QCoreApplication::translate("application", "bootstrap URL, e.g. datastore.swift-project.org"),
+        QCoreApplication::translate("application", "bootstrap URL, e.g. https://datastore.swift-project.org/shared"),
         "bootstrapurl", (sApp->isUnitTest()) ? unitTestBootstrapUrl() : ""
     },  m_cmdBootstrapMode
     {
@@ -75,8 +75,8 @@ namespace BlackCore
         CGlobalSetup cachedSetup = m_setup.get();
         const bool cacheAvailable = cachedSetup.wasLoaded();
         msgs.push_back(cacheAvailable ?
-                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup syncronized and contains data") :
-                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup syncronized, but no data")
+                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized and contains data") :
+                       CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized, but no data")
                       );
         if (this->m_bootstrapMode == CacheOnly)
         {

@@ -30,7 +30,6 @@
 class QNetworkReply;
 
 namespace BlackMisc { class CLogCategoryList; }
-
 namespace BlackCore
 {
     //! Read the central URLs / locations of our data / setup.
@@ -39,7 +38,9 @@ namespace BlackCore
     //!          update information.
     //!
     //! \note This class is no(!) BlackCore::CThreadedReader as it will be loaded once during startup
-    //!       and reading setup data is fast.
+    //!       and reading setup data is fast. The read file is also called "bootstrap" file as it tells
+    //!       swift which data are located where. Without that file we cannot start. Once the file is in place (ie in the cache)
+    //!       it can be automatically updated.
     //!
     //! \sa BlackCore::Data::TGlobalSetup
     //! \sa BlackCore::Data::TUpdateInfo
