@@ -47,6 +47,11 @@ namespace BlackCore
             if (entities.testFlag(CEntityFlags::AirportEntity)) { this->m_airportCache.synchronize(); }
         }
 
+        void CAirportDataReader::admitCaches(CEntityFlags::Entity entities)
+        {
+            if (entities.testFlag(CEntityFlags::AirportEntity)) { this->m_airportCache.admit(); }
+        }
+
         void CAirportDataReader::invalidateCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::AirportEntity)) { CDataCache::instance()->clearAllValues(this->m_airportCache.getKey()); }
@@ -125,7 +130,7 @@ namespace BlackCore
 
         void CAirportDataReader::ps_airportCacheChanged()
         {
-            // void
+            this->cacheHasChanged(CEntityFlags::AirportEntity);
         }
 
         void CAirportDataReader::ps_baseUrlCacheChanged()

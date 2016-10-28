@@ -42,8 +42,8 @@ namespace BlackCore
         //! Trait for DB distributor cache
         struct TDbDistributorCache : public BlackMisc::TDataTrait<BlackMisc::Simulation::CDistributorList>
         {
-            //! Defer loading (no currently small)
-            static constexpr bool isDeferred() { return false; }
+            //! First load is synchronous, distributors is a small cache
+            static constexpr bool isPinned() { return true; }
 
             //! Key in data cache
             static const char *key() { return "dbdistributorcache"; }
@@ -83,8 +83,8 @@ namespace BlackCore
         //! Trait for DB countries
         struct TDbCountryCache : public BlackMisc::TDataTrait<BlackMisc::CCountryList>
         {
-            //! Defer loading (no currently small)
-            static constexpr bool isDeferred() { return false; }
+            //! First load is synchronous, countries is a small cache
+            static constexpr bool isPinned() { return true; }
 
             //! Key in data cache
             static const char *key() { return "dbcountrycache"; }

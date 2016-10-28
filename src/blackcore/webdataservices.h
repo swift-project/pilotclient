@@ -339,6 +339,9 @@ namespace BlackCore
         //! Synchronize all DB caches
         void synchronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
 
+        //! Admit all DB caches
+        void admitDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
+
         //! Write data to disk (mainly for testing scenarios)
         bool writeDbDataToDisk(const QString &dir) const;
 

@@ -172,8 +172,18 @@ namespace BlackCore
 
     void CWebDataServices::synchronizeDbCaches(CEntityFlags::Entity entities)
     {
+        if (this->m_infoDataReader) { this->m_infoDataReader->synchronizeCaches(entities); }
         if (this->m_modelDataReader) { this->m_modelDataReader->synchronizeCaches(entities); }
         if (this->m_icaoDataReader) { this->m_icaoDataReader->synchronizeCaches(entities); }
+        if (this->m_airportDataReader) { this->m_airportDataReader->synchronizeCaches(entities); }
+    }
+
+    void CWebDataServices::admitDbCaches(CEntityFlags::Entity entities)
+    {
+        if (this->m_infoDataReader) { this->m_infoDataReader->admitCaches(entities); }
+        if (this->m_modelDataReader) { this->m_modelDataReader->admitCaches(entities); }
+        if (this->m_icaoDataReader) { this->m_icaoDataReader->admitCaches(entities); }
+        if (this->m_airportDataReader) { this->m_airportDataReader->admitCaches(entities); }
     }
 
     CEntityFlags::Entity CWebDataServices::triggerRead(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)

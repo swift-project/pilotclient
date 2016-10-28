@@ -181,17 +181,17 @@ namespace BlackCore
 
         void CIcaoDataReader::ps_aircraftIcaoCacheChanged()
         {
-            // void
+            this->cacheHasChanged(CEntityFlags::AircraftIcaoEntity);
         }
 
         void CIcaoDataReader::ps_airlineIcaoCacheChanged()
         {
-            // void
+            this->cacheHasChanged(CEntityFlags::AirlineIcaoEntity);
         }
 
         void CIcaoDataReader::ps_countryCacheChanged()
         {
-            // void
+            this->cacheHasChanged(CEntityFlags::CountryEntity);
         }
 
         void CIcaoDataReader::ps_baseUrlCacheChanged()
@@ -398,6 +398,13 @@ namespace BlackCore
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { this->m_aircraftIcaoCache.synchronize(); }
             if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { this->m_airlineIcaoCache.synchronize(); }
             if (entities.testFlag(CEntityFlags::CountryEntity)) { this->m_countryCache.synchronize(); }
+        }
+
+        void CIcaoDataReader::admitCaches(CEntityFlags::Entity entities)
+        {
+            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { this->m_aircraftIcaoCache.admit(); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { this->m_airlineIcaoCache.admit(); }
+            if (entities.testFlag(CEntityFlags::CountryEntity)) { this->m_countryCache.admit(); }
         }
 
         void CIcaoDataReader::invalidateCaches(CEntityFlags::Entity entities)

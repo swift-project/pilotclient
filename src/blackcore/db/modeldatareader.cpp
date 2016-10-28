@@ -217,17 +217,17 @@ namespace BlackCore
 
         void CModelDataReader::ps_liveryCacheChanged()
         {
-            // void
+            this->cacheHasChanged(CEntityFlags::LiveryEntity);
         }
 
         void CModelDataReader::ps_modelCacheChanged()
         {
-            // void
+            this->cacheHasChanged(CEntityFlags::ModelEntity);
         }
 
         void CModelDataReader::ps_distributorCacheChanged()
         {
-            // void
+            this->cacheHasChanged(CEntityFlags::DistributorEntity);
         }
 
         void CModelDataReader::ps_baseUrlCacheChanged()
@@ -387,7 +387,7 @@ namespace BlackCore
                 {
                     CLiveryList liveries;
                     liveries.convertFromJson(liveriesJson);
-                    int c = liveries.size();
+                    const int c = liveries.size();
                     this->m_liveryCache.set(liveries);
 
                     emit dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, c);
@@ -402,7 +402,7 @@ namespace BlackCore
                 {
                     CAircraftModelList models;
                     models.convertFromJson(Json::jsonObjectFromString(modelsJson));
-                    int c = models.size();
+                    const int c = models.size();
                     this->m_modelCache.set(models);
 
                     emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
@@ -417,7 +417,7 @@ namespace BlackCore
                 {
                     CDistributorList distributors;
                     distributors.convertFromJson(Json::jsonObjectFromString(distributorsJson));
-                    int c = distributors.size();
+                    const int c = distributors.size();
                     this->m_distributorCache.set(distributors);
 
                     emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);
@@ -471,6 +471,13 @@ namespace BlackCore
             if (entities.testFlag(CEntityFlags::LiveryEntity)) { this->m_liveryCache.synchronize(); }
             if (entities.testFlag(CEntityFlags::ModelEntity))  { this->m_modelCache.synchronize(); }
             if (entities.testFlag(CEntityFlags::DistributorEntity)) { this->m_distributorCache.synchronize(); }
+        }
+
+        void CModelDataReader::admitCaches(CEntityFlags::Entity entities)
+        {
+            if (entities.testFlag(CEntityFlags::LiveryEntity)) { this->m_liveryCache.admit(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity))  { this->m_modelCache.admit(); }
+            if (entities.testFlag(CEntityFlags::DistributorEntity)) { this->m_distributorCache.admit(); }
         }
 
         void CModelDataReader::invalidateCaches(CEntityFlags::Entity entities)

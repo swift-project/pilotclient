@@ -154,8 +154,8 @@ namespace BlackCore
         protected:
             CDatabaseReaderConfigList   m_config;                      //!< DB reder configuration
             QString                     m_statusMessage;               //!< Returned status message from watchdog
-            bool                        m_1stReplyReceived = false;    //!< Successful connection? Does not mean data / authorizations are correct
             QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
+            bool                        m_1stReplyReceived = false;    //!< Successful connection? Does not mean data / authorizations are correct
             mutable QReadWriteLock      m_statusLock;                  //!< Lock
 
             //! Constructor
@@ -172,7 +172,7 @@ namespace BlackCore
             CDatabaseReaderConfig getConfigForEntity(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
             //! Split into single entity and send dataRead signal
-            void emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities);
+            BlackMisc::Network::CEntityFlags::Entity emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities, bool onlyIfHasData);
 
             //! DB base URL
             static const BlackMisc::Network::CUrl &getDbUrl();
@@ -185,11 +185,17 @@ namespace BlackCore
             //! Synchronize caches for given entities
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
 
+            //! Admit caches for given entities
+            virtual void admitCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
+
             //! Invalidate the caches for given entities
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
 
             //! Changed URL, means the cache values have been read from elsewhere
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
+
+            //! Cache for given entity has changed
+            virtual void cacheHasChanged(BlackMisc::Network::CEntityFlags::Entity entities);
 
             //! Has URL been changed? Means we load from a differrent server
             static bool isChangedUrl(const BlackMisc::Network::CUrl &oldUrl, const BlackMisc::Network::CUrl &currentUrl);

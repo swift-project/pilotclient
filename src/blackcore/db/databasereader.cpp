@@ -74,7 +74,7 @@ namespace BlackCore
                         Q_ASSERT_X(latestEntityTimestamp >= 0, Q_FUNC_INFO, "Missing timestamp");
                         if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp >= 0 && latestEntityTimestamp >= 0)
                         {
-                            this->synchronizeCaches(currentEntity);
+                            this->admitCaches(currentEntity);
                             entities &= ~currentEntity; // do not load from web database
                             cachedEntities |= currentEntity; // read from cache
                             CLogMessage(this).info("Using cache for %1 (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
@@ -94,7 +94,7 @@ namespace BlackCore
                     else
                     {
                         // no info objects, server down
-                        this->synchronizeCaches(currentEntity);
+                        this->admitCaches(currentEntity);
                         const int c = this->getCacheCount(currentEntity);
                         CLogMessage(this).info("No info object for %1, using cache with %2 objects") << currentEntityName << c;
                         entities &= ~currentEntity; // do not load from web database
@@ -105,7 +105,7 @@ namespace BlackCore
             }
 
             // signals for the cached entities
-            this->emitReadSignalPerSingleCachedEntity(cachedEntities);
+            this->emitReadSignalPerSingleCachedEntity(cachedEntities, true);
 
             // Real read from DB
             this->startReadFromDbInBackgroundThread(entities, newerThan);
@@ -211,17 +211,23 @@ namespace BlackCore
             return this->m_config.findFirstOrDefaultForEntity(entity);
         }
 
-        void CDatabaseReader::emitReadSignalPerSingleCachedEntity(CEntityFlags::Entity cachedEntities)
+        CEntityFlags::Entity CDatabaseReader::emitReadSignalPerSingleCachedEntity(CEntityFlags::Entity cachedEntities, bool onlyIfHasData)
         {
-            if (cachedEntities == CEntityFlags::NoEntity) { return; }
+            if (cachedEntities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
+            CEntityFlags::Entity emitted = CEntityFlags::NoEntity;
             CEntityFlags::Entity cachedEntitiesToEmit = cachedEntities;
             CEntityFlags::Entity currentCachedEntity  = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
             while (currentCachedEntity)
             {
                 const int c = this->getCacheCount(currentCachedEntity);
-                emit dataRead(currentCachedEntity, CEntityFlags::ReadFinished, c);
+                if (!onlyIfHasData || c > 0)
+                {
+                    emit dataRead(currentCachedEntity, CEntityFlags::ReadFinished, c);
+                    emitted |= currentCachedEntity;
+                }
                 currentCachedEntity  = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
             }
+            return emitted;
         }
 
         bool CDatabaseReader::isChangedUrl(const CUrl &oldUrl, const CUrl &currentUrl)
@@ -305,6 +311,11 @@ namespace BlackCore
         CUrl CDatabaseReader::getWorkingSharedUrl()
         {
             return sApp->getGlobalSetup().getSwiftSharedUrls().getRandomWorkingUrl();
+        }
+
+        void CDatabaseReader::cacheHasChanged(CEntityFlags::Entity entities)
+        {
+            this->emitReadSignalPerSingleCachedEntity(entities, false);
         }
 
         bool CDatabaseReader::canPingSwiftServer()

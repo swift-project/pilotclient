@@ -56,6 +56,12 @@ namespace BlackCore
             Q_UNUSED(entities);
         }
 
+        void CInfoDataReader::admitCaches(CEntityFlags::Entity entities)
+        {
+            // no caching used here
+            Q_UNUSED(entities);
+        }
+
         void CInfoDataReader::invalidateCaches(CEntityFlags::Entity entities)
         {
             // no caching used here

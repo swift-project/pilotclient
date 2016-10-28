@@ -51,6 +51,8 @@ namespace BlackCore
             // cache handling for base class
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
+            virtual void admitCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
 
         public slots:
             //! Allow to call CInfoDataReader::ps_read directly, special for info objects
@@ -58,7 +60,6 @@ namespace BlackCore
 
         protected:
             // cache handling for base class
-            virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
 
