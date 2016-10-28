@@ -369,7 +369,7 @@ namespace BlackMisc
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
         void synchronize()
         {
-            auto *queue = this->m_page.template findChild<Private::CDataPageQueue *>();
+            auto *queue = this->m_page->template findChild<Private::CDataPageQueue *>();
             Q_ASSERT(queue);
             admit();
             CDataCache::instance()->synchronize(this->getKey());

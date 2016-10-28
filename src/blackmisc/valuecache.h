@@ -355,14 +355,14 @@ namespace BlackMisc
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
         template <typename U, typename F>
         CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner) :
-            m_page(Private::CValuePage::getPageFor(owner, cache)),
-            m_element(m_page.createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
+            m_page(&Private::CValuePage::getPageFor(owner, cache)),
+            m_element(&m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
         {
             if (isInitialized()) { cache->setHumanReadableName(getKey(), name); }
         }
 
         //! Set a callback to be called when the value is changed by another source.
-        //! \todo Qt 5.7.0: in assert use m_page.parent()->metaObject()->inherits(&U::staticMetaObject)
+        //! \todo Qt 5.7.0: in assert use m_page->parent()->metaObject()->inherits(&U::staticMetaObject)
         template <typename F>
         void setNotifySlot(F slot)
         {
@@ -372,8 +372,8 @@ namespace BlackMisc
                 return;
             }
             using U = typename Private::TClassOfPointerToMember<F>::type;
-            Q_ASSERT_X(m_page.parent()->inherits(U::staticMetaObject.className()), Q_FUNC_INFO, "Slot is member function of wrong class");
-            m_page.setNotifySlot(m_element, { [slot](QObject *obj) { Private::invokeSlot(slot, static_cast<U *>(obj)); }, makeId(slot) });
+            Q_ASSERT_X(m_page->parent()->inherits(U::staticMetaObject.className()), Q_FUNC_INFO, "Slot is member function of wrong class");
+            m_page->setNotifySlot(*m_element, { [slot](QObject *obj) { Private::invokeSlot(slot, static_cast<U *>(obj)); }, makeId(slot) });
         }
 
         //! Read the current value.
@@ -384,13 +384,13 @@ namespace BlackMisc
         T get() const { return isValid() ? getVariantCopy().template value<T>() : T{}; }
 
         //! Write a new value. Must be called from the thread in which the owner lives.
-        CStatusMessage set(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp); }
+        CStatusMessage set(const T &value, qint64 timestamp = 0) { return m_page->setValue(*m_element, CVariant::from(value), timestamp); }
 
         //! Write and save in the same step. Must be called from the thread in which the owner lives.
-        CStatusMessage setAndSave(const T &value, qint64 timestamp = 0) { return m_page.setValue(m_element, CVariant::from(value), timestamp, true); }
+        CStatusMessage setAndSave(const T &value, qint64 timestamp = 0) { return m_page->setValue(*m_element, CVariant::from(value), timestamp, true); }
 
         //! Save using the currently set value. Must be called from the thread in which the owner lives.
-        CStatusMessage save() { return m_page.setValue(m_element, {}, 0, true, true); }
+        CStatusMessage save() { return m_page->setValue(*m_element, {}, 0, true, true); }
 
         //! Write a property of the value. Must be called from the thread in which the owner lives.
         CStatusMessage setProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) { auto v = get(); v.setPropertyByIndex(index, value); return set(v, timestamp); }
@@ -399,23 +399,23 @@ namespace BlackMisc
         CStatusMessage setAndSaveProperty(const CPropertyIndex &index, const CVariant &value, qint64 timestamp = 0) { auto v = get(); v.setPropertyByIndex(index, value); return setAndSave(v, timestamp); }
 
         //! Is current thread the owner thread, so CCached::set is safe
-        bool isOwnerThread() const { return QThread::currentThread() == m_page.thread(); }
+        bool isOwnerThread() const { return QThread::currentThread() == m_page->thread(); }
 
         //! Get the key string of this value.
-        const QString &getKey() const { return m_page.getKey(m_element); }
+        const QString &getKey() const { return m_page->getKey(*m_element); }
 
         //! Return the time when this value was updated.
         //! \threadsafe with tiny risk of mismatch of value and timestamp
-        QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_page.getTimestamp(m_element)); }
+        QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_page->getTimestamp(*m_element)); }
 
         //! Return true if this value was already saved.
-        bool isSaved() const { return m_page.isSaved(m_element); }
+        bool isSaved() const { return m_page->isSaved(*m_element); }
 
         //! Return true if this value is currently saving.
-        bool isSaving() const { return m_page.isSaving(m_element); }
+        bool isSaving() const { return m_page->isSaving(*m_element); }
 
         //! Can be false if key contains %OwnerName% and owner's objectName was empty.
-        bool isInitialized() const { return m_page.isInitialized(m_element); }
+        bool isInitialized() const { return m_page->isInitialized(*m_element); }
 
         //! Deleted copy constructor.
         CCached(const CCached &) = delete;
@@ -433,24 +433,24 @@ namespace BlackMisc
         template <typename U, typename M>
         static auto makeId(M U::* slot) { return static_cast<std::tuple_element_t<1, Private::CValuePage::NotifySlot>>(slot); }
 
-        const QVariant &getVariant() const { return m_page.getValue(m_element).getQVariant(); }
-        QVariant getVariantCopy() const { return m_page.getValueCopy(m_element).getQVariant(); }
-        bool isValid() const { return m_page.isValid(m_element, qMetaTypeId<T>()); }
+        const QVariant &getVariant() const { return m_page->getValue(*m_element).getQVariant(); }
+        QVariant getVariantCopy() const { return m_page->getValueCopy(*m_element).getQVariant(); }
+        bool isValid() const { return m_page->isValid(*m_element, qMetaTypeId<T>()); }
 
     protected:
         //! \private Connect a function to be called (only once) when the owner's objectName changes.
         void onOwnerNameChanged(std::function<void()> function)
         {
             auto connection = std::make_shared<QMetaObject::Connection>();
-            *connection = QObject::connect(m_page.parent(), &QObject::objectNameChanged, [connection, function](const QString &)
+            *connection = QObject::connect(m_page->parent(), &QObject::objectNameChanged, [connection, function](const QString &)
             {
                 QObject::disconnect(*connection);
                 function();
             });
         }
 
-        Private::CValuePage &m_page; //!< \private
-        Private::CValuePage::Element &m_element; //!< \private
+        Private::CValuePage *m_page = (qFatal("Must be initialized"), nullptr); //!< \private
+        Private::CValuePage::Element *m_element = (qFatal("Must be initialized"), nullptr); //!< \private
     };
 
     /*!
