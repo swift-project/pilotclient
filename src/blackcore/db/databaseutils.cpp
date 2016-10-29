@@ -20,13 +20,32 @@ namespace BlackCore
 {
     namespace Db
     {
-        CAircraftModel CDatabaseUtils::consolidateModelWithDbData(const CAircraftModel &model, bool force)
+        CAircraftModel CDatabaseUtils::consolidateOwnAircraftModelWithDbData(const CAircraftModel &model, bool force, bool *modified)
         {
-            return CDatabaseUtils::consolidateModelWithDbData(model, force, nullptr);
+            bool myModified = false;
+            CAircraftModel ownModel = CDatabaseUtils::consolidateModelWithDbData(model, force, &myModified);
+            // special case here, as we have some specific values for a local model
+
+            if (myModified)
+            {
+                ownModel.updateMissingParts(model);
+                ownModel.setFileName(model.getFileName());
+                myModified = true;
+            }
+            if (ownModel.getModelType() != CAircraftModel::TypeOwnSimulatorModel)
+            {
+                ownModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+                myModified = true;
+            }
+            if (modified) { *modified = myModified; }
+            return ownModel;
         }
 
         CAircraftModel CDatabaseUtils::consolidateModelWithDbData(const CAircraftModel &model, bool force, bool *modified)
         {
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application object");
+            Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
+
             if (modified) { *modified = false; }
             if (!model.hasModelString()) { return model; }
             if (!force && model.hasValidDbKey()) { return model; }

@@ -27,11 +27,11 @@ namespace BlackCore
             //! No constructor
             CDatabaseUtils() = delete;
 
-            //! Consolidate model data with DB data
-            static BlackMisc::Simulation::CAircraftModel consolidateModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool force);
+            //! Consolidate own (aircraft) model data with DB data
+            static BlackMisc::Simulation::CAircraftModel consolidateOwnAircraftModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool force, bool *modified = nullptr);
 
             //! Consolidate model data with DB data
-            static BlackMisc::Simulation::CAircraftModel consolidateModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool force, bool *modified);
+            static BlackMisc::Simulation::CAircraftModel consolidateModelWithDbData(const BlackMisc::Simulation::CAircraftModel &model, bool force, bool *modified = nullptr);
 
             //! Consolidate models with DB data
             static int consolidateModelsWithDbData(BlackMisc::Simulation::CAircraftModelList &models, bool force);
