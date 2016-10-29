@@ -672,26 +672,9 @@ namespace BlackGui
 
         CAircraftModel CLoginComponent::getPrefillModel() const
         {
-            // if all fails
-            static const CAircraftModel defaultModel(
-                "", CAircraftModel::TypeOwnSimulatorModel, "default model",
-                CAircraftIcaoCode("C172", "L1P", "Cessna", "172", "L", true, false, false, 0));
-
             CAircraftModel model = this->m_currentAircraftModel.get();
             if (model.hasAircraftDesignator()) { return model; }
-
-            // create one from DB data
-            if (sGui && sGui->hasWebDataServices())
-            {
-                const CAircraftIcaoCode icao = sGui->getWebDataServices()->getAircraftIcaoCodeForDesignator("C172");
-                const CLivery livery = sGui->getWebDataServices()->getLiveryForCombinedCode("_CC_WHITE_WHITE");
-                model = CAircraftModel("", CAircraftModel::TypeOwnSimulatorModel);
-                model.setLivery(livery);
-                model.setAircraftIcaoCode(icao);
-                return model;
-            }
-
-            return defaultModel;
+            return IContextOwnAircraft::getDefaultOwnAircraftModel();
         }
 
         void CLoginComponent::updateOwnCallsignAndPilotFromGuiValue()

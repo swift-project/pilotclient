@@ -99,7 +99,7 @@ namespace BlackCore
             //! Own ICAO was changed
             void changedAircraftIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode);
 
-            //! own pilot (aka the swift user) changed
+            //! Own pilot (aka the swift user) changed
             void changedPilot(const BlackMisc::Network::CUser &pilot);
 
         public slots:
@@ -141,6 +141,14 @@ namespace BlackCore
 
             //! Parse command line
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
+
+            //! Default situation
+            //! \remark normally used when no driver is attached
+            static const BlackMisc::Aviation::CAircraftSituation &getDefaultSituation();
+
+            //! Default own aircraft
+            //! \remark normally used when no driver is attached
+            static BlackMisc::Simulation::CAircraftModel getDefaultOwnAircraftModel();
 
         protected:
             //! Constructor

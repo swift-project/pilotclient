@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/db/databaseutils.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
@@ -45,6 +46,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
+using namespace BlackCore::Db;
 
 namespace BlackCore
 {
@@ -66,14 +68,14 @@ namespace BlackCore
             this->initOwnAircraft();
         }
 
+        CContextOwnAircraft::~CContextOwnAircraft() { }
+
         CContextOwnAircraft *CContextOwnAircraft::registerWithDBus(CDBusServer *server)
         {
             if (!server || this->m_mode != CCoreFacadeConfig::LocalInDbusServer) return this;
             server->addObject(IContextOwnAircraft::ObjectPath(), this);
             return this;
         }
-
-        CContextOwnAircraft::~CContextOwnAircraft() { }
 
         CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
         {
@@ -117,34 +119,20 @@ namespace BlackCore
 
             ownAircraft.initComSystems();
             ownAircraft.initTransponder();
-            const CAircraftSituation situation(
-                CCoordinateGeodetic(
-                    CLatitude::fromWgs84("N 049° 18' 17"),
-                    CLongitude::fromWgs84("E 008° 27' 05"),
-                    CLength(0, CLengthUnit::m())),
-                CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
-            );
-            ownAircraft.setSituation(situation);
-            ownAircraft.setPilot(this->m_currentNetworkServer.getThreadLocal().getUser());
+            ownAircraft.setSituation(getDefaultSituation());
+            ownAircraft.setPilot(this->m_currentNetworkServer.get().getUser());
 
-            // reverse lookup if possible
-            if (!ownAircraft.getModel().isLoadedFromDb() && !ownAircraft.getModelString().isEmpty())
+            // If we already have a model from somehwere, keep it, otherwise init default
+            ownAircraft.setModel(this->reverseLookupModel(ownAircraft.getModel()));
+            if (!ownAircraft.getAircraftIcaoCode().hasValidDesignator())
             {
-                ownAircraft.setModel(this->reverseLookupModel(ownAircraft.getModelString()));
+                ownAircraft.setModel(getDefaultOwnAircraftModel());
             }
 
             // override empty values
             if (!ownAircraft.hasValidCallsign())
             {
                 ownAircraft.setCallsign(CCallsign("SWIFT"));
-            }
-
-            if (!ownAircraft.getAircraftIcaoCode().hasValidDesignator())
-            {
-                ownAircraft.setIcaoCodes(
-                    CAircraftIcaoCode("C172", "L1P"),
-                    CAirlineIcaoCode()
-                );
             }
 
             // update object
@@ -183,34 +171,16 @@ namespace BlackCore
             emit this->getIContextApplication()->fakedSetComVoiceRoom(rooms);
         }
 
-        CAircraftModel CContextOwnAircraft::reverseLookupModel(const QString &modelString)
+        CAircraftModel CContextOwnAircraft::reverseLookupModel(const CAircraftModel &model)
         {
-            if (modelString.isEmpty()) { return CAircraftModel(); }
-            if (!sApp || !sApp->hasWebDataServices()) { return CAircraftModel(); }
-            if (sApp->getWebDataServices()->getModelsCount() < 1) { return CAircraftModel(); }
-            const CAircraftModel reverseLookupModel = sApp->getWebDataServices()->getModelForModelString(modelString);
-            return reverseLookupModel;
+            bool modified = false;
+            CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
+            return reverseModel;
         }
 
         bool CContextOwnAircraft::updateOwnModel(const CAircraftModel &model)
         {
-            // reverse lookup if not yet from DB:
-            // this is the central place where we keep our own model, so we use best effort
-            // to make that model as accurate as we can
-            CAircraftModel updateModel(model);
-            if (!updateModel.isLoadedFromDb())
-            {
-                CAircraftModel reverseModel = reverseLookupModel(model.getModelString());
-                if (reverseModel.isLoadedFromDb())
-                {
-                    // special case here, as we have some specific values for a local model
-                    updateModel = reverseModel;
-                    updateModel.updateMissingParts(model);
-                    updateModel.setFileName(model.getFileName());
-                }
-            }
-
-            updateModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+            CAircraftModel updateModel(this->reverseLookupModel(model));
             QWriteLocker l(&m_lockAircraft);
             const bool changed = (this->m_ownAircraft.getModel() != updateModel);
             if (!changed) { return false; }

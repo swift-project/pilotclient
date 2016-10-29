@@ -182,8 +182,8 @@ namespace BlackCore
             //! Resolve voice rooms
             void resolveVoiceRooms();
 
-            //! Reverse lookup of the model
-            static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const QString &modelString);
+            //! Reverse lookup of the model against DB data
+            static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
         };
     } // ns
 } // ns
