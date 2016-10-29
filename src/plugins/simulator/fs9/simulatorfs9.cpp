@@ -320,7 +320,7 @@ namespace BlackSimPlugin
                 {
                     MPChangePlayerPlane mpChangePlayerPlane;
                     MultiPlayerPacketParser::readMessage(message, mpChangePlayerPlane);
-                    setOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
+                    reverseLookupAndUpdateOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
                     break;
                 }
             case CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY:

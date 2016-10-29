@@ -172,7 +172,7 @@ namespace BlackSimPlugin
                             CAircraftModel model;
                             model.setModelString(dataDefinitionModel->title);
                             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
-                            simulatorFsx->setOwnAircraftModel(model);
+                            simulatorFsx->reverseLookupAndUpdateOwnAircraftModel(model);
                             break;
                         }
                     case CSimConnectDefinitions::RequestSimEnvironment:

@@ -324,11 +324,8 @@ namespace BlackCore
 
         void CContextOwnAircraft::ps_allSwiftWebDataRead()
         {
-            const CAircraftModel model = this->getOwnAircraftModel();
-            if (model.isLoadedFromDb()) { return; }
-
-            // a reverse lookup of the model could make sense
-            this->updateOwnModel(model); // force reverse lookup
+            // we should already receive a reverse lookup model
+            // from the driver
         }
 
         void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)

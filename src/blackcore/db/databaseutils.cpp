@@ -47,6 +47,7 @@ namespace BlackCore
             Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
 
             if (modified) { *modified = false; }
+            if (!hasDbAircraftData()) { return model; }
             if (!model.hasModelString()) { return model; }
             if (!force && model.hasValidDbKey()) { return model; }
             const int distributorOrder = model.getDistributorOrder(); // later restore that order
@@ -212,6 +213,11 @@ namespace BlackCore
                 stashModels.push_back(dbModel);
             }
             return stashModels;
+        }
+
+        bool CDatabaseUtils::hasDbAircraftData()
+        {
+            return sApp && sApp->hasWebDataServices() && sApp->getWebDataServices()->hasDbAircraftData();
         }
     } // ns
 } // ns

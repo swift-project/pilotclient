@@ -67,27 +67,6 @@ namespace BlackSimPlugin
             return m_airportsInRange;
         }
 
-        void CSimulatorFsCommon::setOwnAircraftModel(const QString &modelName)
-        {
-            CAircraftModel model = getOwnAircraftModel();
-            model.setModelString(modelName);
-            this->setOwnAircraftModel(model);
-        }
-
-        void CSimulatorFsCommon::setOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
-        {
-            if (!model.hasModelString()) { return; }
-            if (this->getOwnAircraftModel() != model)
-            {
-                const CAircraftModel newModel = reverseLookupModel(model);
-                const bool updated = this->updateOwnModel(newModel); // update in provider (normally the context)
-                if (updated)
-                {
-                    emit this->ownAircraftModelChanged(this->getOwnAircraftModel());
-                }
-            }
-        }
-
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
         {
             // remove upfront, and then enable / disable again

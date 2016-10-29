@@ -170,6 +170,11 @@ namespace BlackCore
         return false;
     }
 
+    bool CWebDataServices::hasDbAircraftData() const
+    {
+        return (this->getModelsCount() > 0) && (this->getLiveriesCount() > 0) && (this->getDistributorsCount() > 0) && (this->getAircraftIcaoCodesCount() > 0);
+    }
+
     void CWebDataServices::synchronizeDbCaches(CEntityFlags::Entity entities)
     {
         if (this->m_infoDataReader) { this->m_infoDataReader->synchronizeCaches(entities); }

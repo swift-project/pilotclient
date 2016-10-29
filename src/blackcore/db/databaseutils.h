@@ -50,6 +50,9 @@ namespace BlackCore
 
             //! Create stash models if the DB models miss that simulator
             static BlackMisc::Simulation::CAircraftModelList updateSimulatorForFsFamily(const BlackMisc::Simulation::CAircraftModelList &ownModels, int maxToStash = -1, BlackCore::IProgressIndicator *progressIndicator = nullptr, bool processEvents = true);
+
+            //! Convenience function
+            static bool hasDbAircraftData();
         };
     } // ns
 } // ns

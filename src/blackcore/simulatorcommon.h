@@ -125,6 +125,12 @@ namespace BlackCore
         //! Override situation from current interpolator values, if any!
         bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
 
+        //! Set own model
+        void reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+        //! Set own model
+        void reverseLookupAndUpdateOwnAircraftModel(const QString &modelString);
+
     protected:
         BlackMisc::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
@@ -136,6 +142,10 @@ namespace BlackCore
 
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
+
+    private slots:
+        //! All swift data read from DB
+        void ps_allSwiftDataRead();
 
     private:
         bool m_debugMessages = false;                    //!< Display debug messages

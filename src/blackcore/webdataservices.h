@@ -336,6 +336,9 @@ namespace BlackCore
         //! Can connect to swift DB?
         bool canConnectSwiftDb() const;
 
+        //! All DB data for an aircraft entity available?
+        bool hasDbAircraftData() const;
+
         //! Synchronize all DB caches
         void synchronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
 

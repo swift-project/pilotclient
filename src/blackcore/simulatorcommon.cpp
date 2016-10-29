@@ -9,6 +9,8 @@
 
 #include "blackcore/simulatorcommon.h"
 #include "blackcore/db/databaseutils.h"
+#include "blackcore/db/databaseutils.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/interpolator.h"
@@ -31,6 +33,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
+using namespace BlackCore;
 using namespace BlackCore::Db;
 
 namespace BlackCore
@@ -62,6 +65,12 @@ namespace BlackCore
         this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
         this->m_oneSecondTimer.start(1000);
+
+        // swift data
+        if (sApp && sApp->getWebDataServices())
+        {
+            connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CSimulatorCommon::ps_allSwiftDataRead);
+        }
 
         // info
         CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
@@ -164,11 +173,51 @@ namespace BlackCore
         }
     }
 
+    void CSimulatorCommon::reverseLookupAndUpdateOwnAircraftModel(const QString &modelString)
+    {
+        CAircraftModel model = getOwnAircraftModel();
+        model.setModelString(modelString);
+        this->reverseLookupAndUpdateOwnAircraftModel(model);
+    }
+
+    void CSimulatorCommon::reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
+    {
+        Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
+        Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
+
+        if (!model.hasModelString()) { return; }
+        if (this->getOwnAircraftModel() != model)
+        {
+            if (CDatabaseUtils::hasDbAircraftData())
+            {
+                const CAircraftModel newModel = reverseLookupModel(model);
+                const bool updated = this->updateOwnModel(newModel); // update in provider (normally the context)
+                if (updated)
+                {
+                    emit this->ownAircraftModelChanged(this->getOwnAircraftModel());
+                }
+            }
+            else
+            {
+                // we wait for the data
+                connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, [ = ]
+                {
+                    this->reverseLookupAndUpdateOwnAircraftModel(model);
+                });
+            }
+        }
+    }
+
     CAircraftModel CSimulatorCommon::reverseLookupModel(const CAircraftModel &model)
     {
         bool modified = false;
         const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
         return reverseModel;
+    }
+
+    void CSimulatorCommon::ps_allSwiftDataRead()
+    {
+        // void
     }
 
     CAircraftModel CSimulatorCommon::getDefaultModel() const

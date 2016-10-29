@@ -310,9 +310,7 @@ namespace BlackSimPlugin
             model.setFileName(path + "/" + filename);
             model.setLivery(CLivery("XPLANE." + livery, airlineIcaoCode, "XP livery", "", "", false));
 
-            // updated model.
-            // Hint: will update in own model context by using reverse lookup
-            emit ownAircraftModelChanged(model);
+            this->reverseLookupAndUpdateOwnAircraftModel(model);
         }
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
