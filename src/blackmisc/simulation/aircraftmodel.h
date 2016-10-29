@@ -115,6 +115,9 @@ namespace BlackMisc
             CAircraftModel(const QString &model, ModelType type);
 
             //! Constructor.
+            CAircraftModel(const QString &model, ModelType type, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery);
+
+            //! Constructor.
             CAircraftModel(const QString &model, ModelType type, const QString &description, const BlackMisc::Aviation::CAircraftIcaoCode &icao, const BlackMisc::Aviation::CLivery &livery = BlackMisc::Aviation::CLivery());
 
             //! Constructor.
