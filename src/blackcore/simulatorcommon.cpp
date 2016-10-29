@@ -8,6 +8,7 @@
  */
 
 #include "blackcore/simulatorcommon.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/interpolator.h"
@@ -30,6 +31,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Weather;
+using namespace BlackCore::Db;
 
 namespace BlackCore
 {
@@ -160,6 +162,13 @@ namespace BlackCore
         {
             return false;
         }
+    }
+
+    CAircraftModel CSimulatorCommon::reverseLookupModel(const CAircraftModel &model)
+    {
+        bool modified = false;
+        const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
+        return reverseModel;
     }
 
     CAircraftModel CSimulatorCommon::getDefaultModel() const

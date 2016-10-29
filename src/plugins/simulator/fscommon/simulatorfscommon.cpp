@@ -79,8 +79,7 @@ namespace BlackSimPlugin
             if (!model.hasModelString()) { return; }
             if (this->getOwnAircraftModel() != model)
             {
-                CAircraftModel newModel(model);
-                newModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+                const CAircraftModel newModel = reverseLookupModel(model);
                 const bool updated = this->updateOwnModel(newModel); // update in provider (normally the context)
                 if (updated)
                 {

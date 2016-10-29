@@ -134,6 +134,8 @@ namespace BlackCore
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;               //!< statistics update time
         int    m_statsUpdateAircraftCountMs = 0;                 //!< statistics update time
 
+        //! Lookup against DB data
+        static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
 
     private:
         bool m_debugMessages = false;                    //!< Display debug messages
