@@ -78,7 +78,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>0</number>
+             <number>4</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -708,7 +708,7 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QToolButton" name="tb_SwiftData">
+               <widget class="QToolButton" name="tb_SwiftMappingTool">
                 <property name="toolTip">
                  <string>start swift data (the mapping tool)</string>
                 </property>
@@ -837,8 +837,8 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="swiftlauncher.qrc"/>
   <include location="../blackmisc/blackmisc.qrc"/>
+  <include location="swiftlauncher.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

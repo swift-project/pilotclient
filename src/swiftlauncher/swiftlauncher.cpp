@@ -42,7 +42,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     this->init();
     connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CSwiftLauncher::ps_loadSetup);
     connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
-    connect(ui->tb_SwiftData, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
+    connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
@@ -58,7 +58,13 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     // default from settings
     const QString dbus(this->m_dbusServerAddress.getThreadLocal());
     this->setDefault(dbus);
+
+    // periodically check
+    connect(&this->m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::ps_checkRunningApplications);
+    this->m_checkTimer.setInterval(5000);
+    this->m_checkTimer.start();
 }
+
 
 CSwiftLauncher::~CSwiftLauncher()
 { }
@@ -344,14 +350,18 @@ void CSwiftLauncher::ps_startButtonPressed()
             this->accept();
         }
     }
-    else if (sender == ui->tb_SwiftData)
+    else if (sender == ui->tb_SwiftMappingTool)
     {
+        ui->tb_SwiftMappingTool->setEnabled(false);
+        this->m_startMappingToolWaitCycles = 2;
         this->setSwiftDataExecutable();
         this->accept();
     }
     else if (sender == ui->tb_SwiftCore)
     {
         if (this->isStandaloneGuiSelected()) { ui->rb_SwiftCoreGuiAudio->setChecked(true); }
+        ui->tb_SwiftCore->setEnabled(false);
+        this->m_startCoreWaitCycles = 2;
         this->startSwiftCore();
     }
     else if (sender == ui->tb_Database)
@@ -417,4 +427,28 @@ void CSwiftLauncher::ps_tabChanged(int current)
 void CSwiftLauncher::ps_showLogPage()
 {
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherLog);
+}
+
+void CSwiftLauncher::ps_checkRunningApplications()
+{
+    const CApplicationInfoList runningApps = sGui->getRunningApplications();
+    if (this->m_startCoreWaitCycles > 0) { this->m_startCoreWaitCycles--; }
+    else { ui->tb_SwiftCore->setEnabled(true); }
+    if (this->m_startMappingToolWaitCycles > 0) { this->m_startMappingToolWaitCycles--; }
+    else { ui->tb_SwiftMappingTool->setEnabled(true); }
+
+    for (const CApplicationInfo &info : runningApps)
+    {
+        switch (info.application())
+        {
+        case CApplicationInfo::PilotClientCore :
+            ui->tb_SwiftCore->setEnabled(false);
+            break;
+        case CApplicationInfo::MappingTool :
+            ui->tb_SwiftMappingTool->setEnabled(false);
+            break;
+        default:
+            break;
+        }
+    }
 }

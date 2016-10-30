@@ -207,7 +207,7 @@ namespace BlackCore
         if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
         if (a.contains("launcher")) { return CApplicationInfo::Laucher; }
         if (a.contains("gui"))      { return CApplicationInfo::PilotClientGui; }
-        if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
+        if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
         return CApplicationInfo::Unknown;
     }
 

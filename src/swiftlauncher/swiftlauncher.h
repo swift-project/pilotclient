@@ -20,6 +20,7 @@
 #include "blackcore/coremodeenums.h"
 #include "blackcore/application/applicationsettings.h"
 #include <QDialog>
+#include <QTimer>
 #include <QScopedPointer>
 #include <QNetworkReply>
 
@@ -77,10 +78,13 @@ private slots:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher>             ui;
-    BlackMisc::CData<BlackCore::Data::TUpdateInfo>  m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
+    BlackMisc::CData<BlackCore::Data::TUpdateInfo> m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
     BlackMisc::CSetting<BlackCore::Application::TDBusServerAddress> m_dbusServerAddress { this };      //!< DBus address
-    QString         m_executable;
-    QStringList     m_executableArgs;
+    QString     m_executable;
+    QStringList m_executableArgs;
+    QTimer      m_checkTimer { this };
+    int         m_startCoreWaitCycles = 0;
+    int         m_startMappingToolWaitCycles = 0;
 
     //! Get core mode
     BlackCore::CoreModes::CoreMode getCoreMode() const;
@@ -166,6 +170,9 @@ private slots:
 
     //! Show the log page
     void ps_showLogPage();
+
+    //! Check if applicationas are already running
+    void ps_checkRunningApplications();
 };
 
 #endif // guard
