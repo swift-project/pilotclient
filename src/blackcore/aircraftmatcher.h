@@ -33,9 +33,8 @@ namespace BlackCore
 {
     /*!
      * Matcher for all models.
-     * \details Reads all the mapping rules and all the available flight simulator models.
-     *          Then all rules for models not existing are eliminated ( \sa synchronize ).
-     *          Thereafter all existing models and mappings can be obtained from here.
+     * \details Reads the model set (ie the models the user wants to use).
+     *          Also Allows to reverse lookup a model (from network to DB data).
      */
     class BLACKCORE_EXPORT CAircraftMatcher : public QObject
     {
@@ -66,13 +65,13 @@ namespace BlackCore
         //! Set the enabled matching modes
         void setMatchingModes(MatchingMode matchingModes);
 
-        //! Get the closest matching aircraft model.
+        //! Get the closest matching aircraft model from set.
         //! Result depends on enabled modes.
         //! \sa MatchingModeFlag
         //! \threadsafe
         BlackMisc::Simulation::CAircraftModel getClosestMatch(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
 
-        //! Try to find the corresponding data in DB and get best information for following matching
+        //! Try to find the corresponding data in DB and get best information for given data
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModel reverselLookupModel(
             const BlackMisc::Aviation::CCallsign &callsign,
@@ -141,7 +140,7 @@ namespace BlackCore
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedCode(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool relaxIfNotFound, bool &reduced, BlackMisc::CStatusMessageList *log);
 
-        //! My military flag
+        //! By military flag
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByMilitaryFlag(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool military, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
 
