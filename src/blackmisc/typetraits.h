@@ -162,6 +162,16 @@ namespace BlackMisc
     struct TIsEqualityComparable<T, U, void_t<decltype(std::declval<T>() == std::declval<U>())>> : public std::true_type {};
     //! \endcond
 
+    /*!
+     * Trait that detects if a type is QPrivateSignal.
+     */
+    template <typename T, typename = void_t<>>
+    struct TIsQPrivateSignal : public std::false_type {};
+    //! \cond
+    template <typename T>
+    struct TIsQPrivateSignal<T, void_t<typename T::QPrivateSignal>> : public std::is_same<T, typename T::QPrivateSignal> {};
+    //! \endcond
+
 }
 
 #endif
