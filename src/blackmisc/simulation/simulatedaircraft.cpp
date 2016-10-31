@@ -31,7 +31,7 @@ namespace BlackMisc
             init();
         }
 
-        CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_model(model)
+        CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_model(model), m_networkModel(model)
         {
             this->setCallsign(model.getCallsign());
             init();
@@ -146,7 +146,7 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::hasAircraftAndAirlineDesignator() const
         {
-            return this->getAircraftIcaoCode().hasDesignator() && this->m_model.getLivery().hasValidAirlineDesignator();
+            return this->getModel().hasAircraftAndAirlineDesignator();
         }
 
         const CComSystem CSimulatedAircraft::getComSystem(CComSystem::ComUnit unit) const
@@ -239,33 +239,34 @@ namespace BlackMisc
             return getAircraftIcaoCode().isVtol();
         }
 
-        QString CSimulatedAircraft::getCombinedIcaoLiveryString() const
+        QString CSimulatedAircraft::getCombinedIcaoLiveryString(bool networkModel) const
         {
-            if (this->hasAircraftAndAirlineDesignator())
+            const CAircraftModel model(networkModel ? this->getNetworkModel() : this->getModel());
+            if (model.hasAircraftAndAirlineDesignator())
             {
-                if (getLivery().hasCombinedCode())
+                if (model.getLivery().hasCombinedCode())
                 {
-                    QString s("%1 (%2 %3)");
-                    return s.arg(getAircraftIcaoCodeDesignator()).arg(getAirlineIcaoCodeDesignator()).arg(getLivery().getCombinedCode());
+                    static const QString s("%1 (%2 %3)");
+                    return s.arg(model.getAircraftIcaoCodeDesignator(), model.getAirlineIcaoCodeDesignator(), model.getLivery().getCombinedCode());
                 }
                 else
                 {
-                    QString s("%1 (%2)");
-                    return s.arg(getAircraftIcaoCodeDesignator()).arg(getAirlineIcaoCodeDesignator());
+                    static const QString s("%1 (%2)");
+                    return s.arg(model.getAircraftIcaoCodeDesignator(), model.getAirlineIcaoCodeDesignator());
                 }
             }
 
             if (!this->hasAircraftDesignator())
             {
-                return getLivery().getCombinedCode();
+                return model.getLivery().getCombinedCode();
             }
-            else if (this->getLivery().hasCombinedCode())
+            else if (model.getLivery().hasCombinedCode())
             {
-                QString s("%1 (%2)");
-                return s.arg(getAircraftIcaoCodeDesignator()).arg(getLivery().getCombinedCode());
+                static const QString s("%1 (%2)");
+                return s.arg(model.getAircraftIcaoCodeDesignator(), model.getLivery().getCombinedCode());
             }
 
-            return getAircraftIcaoCode().getDesignator();
+            return model.getAircraftIcaoCode().getDesignator();
         }
 
         CVariant CSimulatedAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -275,7 +276,9 @@ namespace BlackMisc
             switch (i)
             {
             case IndexModel:
-                return this->m_model.propertyByIndex(index.copyFrontRemoved());
+                return this->getModel().propertyByIndex(index.copyFrontRemoved());
+            case IndexNetworkModel:
+                return this->getNetworkModel().propertyByIndex(index.copyFrontRemoved());
             case IndexEnabled:
                 return CVariant::fromValue(this->isEnabled());
             case IndexRendered:
@@ -307,7 +310,9 @@ namespace BlackMisc
             case IndexIsVtol:
                 return CVariant::fromValue(this->isVtol());
             case IndexCombinedIcaoLiveryString:
-                return CVariant::fromValue(this->getCombinedIcaoLiveryString());
+                return CVariant::fromValue(this->getCombinedIcaoLiveryString(false));
+            case IndexCombinedIcaoLiveryStringNetworkModel:
+                return CVariant::fromValue(this->getCombinedIcaoLiveryString(true));
             default:
                 return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -348,6 +353,9 @@ namespace BlackMisc
             case IndexModel:
                 this->m_model.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 this->setModel(this->m_model); // sync some values
+                break;
+            case IndexNetworkModel:
+                this->m_networkModel.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexEnabled:
                 this->m_enabled = variant.toBool();
@@ -402,8 +410,8 @@ namespace BlackMisc
                 return this->m_parts.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getParts());
             case IndexModel:
                 return m_model.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
-            case IndexEnabled:
-                return Compare::compare(this->m_enabled, compareValue.isEnabled());
+            case IndexNetworkModel:
+                return m_networkModel.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
             case IndexRendered:
                 return Compare::compare(this->m_rendered, compareValue.isRendered());
             case IndexPartsSynchronized:
@@ -421,12 +429,27 @@ namespace BlackMisc
             return 0;
         }
 
+        const CAircraftModel &CSimulatedAircraft::getNetworkModelOrModel() const
+        {
+            return this->hasNetworkModel() ? this->m_networkModel : this->m_model;
+        }
+
+        bool CSimulatedAircraft::hasNetworkModel() const
+        {
+            return this->m_networkModel.hasModelString() || !this->m_networkModel.getCallsign().isEmpty();
+        }
+
         void CSimulatedAircraft::setModel(const CAircraftModel &model)
         {
             // sync the callsigns
             this->m_model = model;
             this->setCallsign(this->hasValidCallsign() ? this->getCallsign() : model.getCallsign());
             this->setIcaoCodes(model.getAircraftIcaoCode(), model.getAirlineIcaoCode());
+        }
+
+        void CSimulatedAircraft::setNetworkModel(const CAircraftModel &model)
+        {
+            this->m_networkModel = model;
         }
 
         void CSimulatedAircraft::setModelString(const QString &modelString)
@@ -438,6 +461,7 @@ namespace BlackMisc
         {
             this->m_callsign = callsign;
             this->m_model.setCallsign(callsign);
+            this->m_networkModel.setCallsign(callsign);
             this->m_pilot.setCallsign(callsign);
         }
 

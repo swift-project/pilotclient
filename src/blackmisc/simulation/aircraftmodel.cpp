@@ -332,6 +332,11 @@ namespace BlackMisc
             return this->m_livery.hasValidAirlineDesignator();
         }
 
+        bool CAircraftModel::hasAircraftAndAirlineDesignator() const
+        {
+            return this->hasAircraftDesignator() && this->hasAirlineDesignator();
+        }
+
         bool CAircraftModel::isMilitary() const
         {
             return this->getAircraftIcaoCode().isMilitary() ||

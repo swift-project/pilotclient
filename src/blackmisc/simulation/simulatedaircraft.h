@@ -79,7 +79,9 @@ namespace BlackMisc
                 IndexParts,
                 IndexIsVtol,
                 IndexCombinedIcaoLiveryString,
+                IndexCombinedIcaoLiveryStringNetworkModel,
                 IndexModel,
+                IndexNetworkModel,
                 IndexEnabled,
                 IndexRendered,
                 IndexPartsSynchronized,
@@ -325,7 +327,7 @@ namespace BlackMisc
             bool isVtol() const;
 
             //! Combined ICAO / color string
-            QString getCombinedIcaoLiveryString() const;
+            QString getCombinedIcaoLiveryString(bool networkModel = false) const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -339,17 +341,32 @@ namespace BlackMisc
             //! Get model
             const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_model; }
 
+            //! Get network model
+            const BlackMisc::Simulation::CAircraftModel &getNetworkModel() const { return m_networkModel; }
+
+            //! Get network model or (if not existing) model
+            const BlackMisc::Simulation::CAircraftModel &getNetworkModelOrModel() const;
+
+            //! Has a network model been set?
+            bool hasNetworkModel() const;
+
             //! \copydoc BlackMisc::Simulation::CAircraftModel::getIconPath
             const QString &getIconPath() const { return m_model.getIconPath(); }
 
             //! Get model string
-            QString getModelString() const { return m_model.getModelString(); }
+            const QString &getModelString() const { return m_model.getModelString(); }
+
+            //! Set model string
+            void setModelString(const QString &modelString);
+
+            //! Has model string?
+            bool hasModelString() const { return m_model.hasModelString(); }
 
             //! Set model
             void setModel(const BlackMisc::Simulation::CAircraftModel &model);
 
-            //! Set model string
-            void setModelString(const QString &modelString);
+            //! Set network model
+            void setNetworkModel(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Set callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
@@ -394,9 +411,10 @@ namespace BlackMisc
             BlackMisc::Aviation::CAircraftParts     m_parts;
             BlackMisc::Aviation::CSelcal            m_selcal;
             BlackMisc::Simulation::CAircraftModel   m_model;
+            BlackMisc::Simulation::CAircraftModel   m_networkModel; //!< model received from network
             bool m_enabled = true;              //!< to be displayed in simulator
             bool m_rendered = false;            //!< really shown in simulator
-            bool m_partsSynchronized = false;   //!< sync.parts
+            bool m_partsSynchronized = false;   //!< synchronize parts
             bool m_fastPositionUpdates = false; //!< use fast position updates
 
             //! Init, which syncronizes some denormalized values
@@ -414,6 +432,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(relativeDistance),
                 BLACK_METAMEMBER(relativeBearing),
                 BLACK_METAMEMBER(model),
+                BLACK_METAMEMBER(networkModel),
                 BLACK_METAMEMBER(enabled),
                 BLACK_METAMEMBER(rendered),
                 BLACK_METAMEMBER(partsSynchronized),

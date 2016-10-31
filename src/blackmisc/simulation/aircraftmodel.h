@@ -198,7 +198,10 @@ namespace BlackMisc
             //! Airline designator?
             bool hasAirlineDesignator() const;
 
-            //! Military modles
+            //! Designators
+            bool hasAircraftAndAirlineDesignator() const;
+
+            //! Military model?
             bool isMilitary() const;
 
             //! Get livery
