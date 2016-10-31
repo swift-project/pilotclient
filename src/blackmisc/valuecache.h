@@ -20,6 +20,7 @@
 #include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/range.h"
+#include "blackmisc/slot.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/valuecacheprivate.h"
 #include "blackmisc/variant.h"
@@ -441,12 +442,7 @@ namespace BlackMisc
         //! \private Connect a function to be called (only once) when the owner's objectName changes.
         void onOwnerNameChanged(std::function<void()> function)
         {
-            auto connection = std::make_shared<QMetaObject::Connection>();
-            *connection = QObject::connect(m_page->parent(), &QObject::objectNameChanged, [connection, function](const QString &)
-            {
-                QObject::disconnect(*connection);
-                function();
-            });
+            connectOnce(m_page->parent(), &QObject::objectNameChanged, [function](const QString &) { function(); });
         }
 
         Private::CValuePage *m_page = (qFatal("Must be initialized"), nullptr); //!< \private

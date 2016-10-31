@@ -15,10 +15,45 @@
 #include <QPointer>
 #include <QObject>
 #include <QtGlobal>
+#include <atomic>
 #include <functional>
+#include <future>
+#include <memory>
+#include "blackmisc/invoke.h"
 
 namespace BlackMisc
 {
+    /*!
+     * Wrapper around QObject::connect which disconnects after the signal has been emitted once.
+     */
+    template <typename T, typename U, typename F, typename G>
+    QMetaObject::Connection connectOnce(T *sender, F signal, U *receiver, G &&slot, Qt::ConnectionType type = Qt::AutoConnection)
+    {
+        std::promise<QMetaObject::Connection> promise;
+        auto called = std::make_shared<std::atomic_flag>();
+        called->clear();
+        auto wrapper = [receiver, called, connection = promise.get_future().share(), slot = std::forward<G>(slot)](auto &&... args)
+        {
+            if (called->test_and_set()) { return; }
+            QObject::disconnect(connection.get());
+            Private::invokeSlot(slot, receiver, std::forward<decltype(args)>(args)...);
+        };
+        auto connection = QObject::connect(sender, signal, receiver, std::move(wrapper), type);
+        promise.set_value(connection);
+        return connection;
+    }
+
+    /*!
+     * Wrapper around QObject::connect which disconnects after the signal has been emitted once.
+     * \note Slot has no context, so will always be a direct connection, slot will be called in sender's thread.
+     */
+    template <typename T, typename F, typename G>
+    QMetaObject::Connection connectOnce(T *sender, F signal, G &&slot)
+    {
+        static_assert(! std::is_member_pointer<std::decay_t<G>>::value, "If slot is a pointer to member, a receiver must be supplied");
+        return connectOnce(sender, signal, sender, std::forward<G>(slot));
+    }
+
     /*!
      * Callable wrapper for a member function with function signature F. General template, not
      * implemented; the partial specialization for function signatures is what does the actual work
