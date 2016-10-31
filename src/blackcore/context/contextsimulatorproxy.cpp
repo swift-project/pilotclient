@@ -63,7 +63,7 @@ namespace BlackCore
                                    "weatherGridReceived", this, SIGNAL(weatherGridReceived(BlackMisc::Weather::CWeatherGrid, BlackMisc::CIdentifier)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft,BlackMisc::CStatusMessage&)));
+                                   "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CStatusMessage &)));
             Q_ASSERT(s);
             Q_UNUSED(s);
             this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());
@@ -197,6 +197,11 @@ namespace BlackCore
         void CContextSimulatorProxy::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
             m_dBusInterface->callDBus(QLatin1Literal("highlightAircraft"), aircraftToHighlight, enableHighlight, displayTime);
+        }
+
+        bool CContextSimulatorProxy::resetToModelMatchingAircraft(const CCallsign &callsign)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("resetToModelMatchingAircraft"), callsign, callsign);
         }
 
         void CContextSimulatorProxy::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)

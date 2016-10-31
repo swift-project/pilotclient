@@ -128,7 +128,7 @@ namespace BlackCore
             virtual int getSimulatorStatus() const = 0;
 
             //! Get simulator status as enum
-            //! \todo To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
+            //! \fixme To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
             ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
 
             //! Simulator setup
@@ -213,6 +213,9 @@ namespace BlackCore
 
             //! Highlight aircraft in simulator
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
+
+            //! Reset model by matching it again
+            virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
             //! Request weather grid. Argument identifier is past in the signal to identify the requestor
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;

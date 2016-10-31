@@ -170,7 +170,7 @@ namespace BlackCore
                 // use readyForModelMatching instead of CAirspaceMonitor::addedAircraft, as it contains client information
                 // ready for model matching is sent delayed when all information are available
                 c = connect(this->m_contextNetwork, &IContextNetwork::readyForModelMatching,
-                            this->getCContextSimulator(), &CContextSimulator::ps_addRemoteAircraft);
+                            this->getCContextSimulator(), &CContextSimulator::ps_addedRemoteAircraft);
                 Q_ASSERT(c);
                 c = connect(this->m_contextNetwork, &IContextNetwork::removedAircraft,
                             this->getCContextSimulator(), &CContextSimulator::ps_removedRemoteAircraft);

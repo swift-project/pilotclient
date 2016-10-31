@@ -219,6 +219,13 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc IContextSimulator::resetToModelMatchingAircraft
+            virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override
+            {
+                Q_UNUSED(callsign);
+                return false;
+            }
+
             //! \copydoc IContextSimulator::requestWeatherGrid
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override
             {

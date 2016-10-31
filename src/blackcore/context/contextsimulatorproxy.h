@@ -79,11 +79,12 @@ namespace BlackCore
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
+            virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
             virtual void enableDebugMessages(bool driver, bool interpolator) override;
-            virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const;
-            virtual bool isMatchingMessagesEnabled() const;
-            virtual void enableMatchingMessages(bool enabled);
+            virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isMatchingMessagesEnabled() const override;
+            virtual void enableMatchingMessages(bool enabled) override;
             //! @}
 
         private:

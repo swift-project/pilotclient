@@ -305,12 +305,14 @@ namespace BlackGui
             if (!sGui->getIContextSimulator()->isSimulatorSimulating()) { return; }
             const CCallsign callsign(this->validateRenderedCallsign());
             if (callsign.isEmpty()) { return; }
-            const CSimulatedAircraft aircraftFromBackend = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(callsign);
-            if (aircraftFromBackend.getCallsign() != callsign) { return; }
-            bool changed = sGui->getIContextNetwork()->updateAircraftModel(callsign, aircraftFromBackend.getModel(), identifier());
-            if (changed)
+            bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
+            if (reset)
             {
                 CLogMessage(this).info("Model reset for '%1'") << callsign.toQString();
+            }
+            else
+            {
+                CLogMessage(this).info("Reset failed for '%1'") << callsign.toQString();
             }
         }
 

@@ -99,11 +99,12 @@ namespace BlackCore
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
+            virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
             virtual void enableDebugMessages(bool driver, bool interpolator) override;
-            virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const;
-            virtual bool isMatchingMessagesEnabled() const;
-            virtual void enableMatchingMessages(bool enabled);
+            virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isMatchingMessagesEnabled() const override;
+            virtual void enableMatchingMessages(bool enabled) override;
             //! @}
 
         protected:
@@ -114,11 +115,29 @@ namespace BlackCore
             CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private slots:
+
+            //
+            //  ------------ slots connected with network context and not to be used other by network contect  ---------
+            //
+            //! \ingroup crosscontextslot
+            //! @{
+
             //! Remote aircraft added
-            void ps_addRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
+            void ps_addedRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
 
             //! Remove remote aircraft
             void ps_removedRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Changed remote aircraft model
+            void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
+
+            //! Enable / disable aircraft
+            void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+
+            //! @}
+            //
+            //  ------------ slots connected with network context and not to be used other by network contect  ---------
+            //
 
             //! Handle new connection status of simulator
             void ps_onSimulatorStatusChanged(int status);
@@ -135,17 +154,11 @@ namespace BlackCore
             //! Simulator has changed cockpit
             void ps_cockpitChangedFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
-            //! Changed remote aircraft model
-            void ps_changedRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
-
-            //! Enable / disable aircraft
-            void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
             //! Failed adding remote aircraft
             void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
 
             //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
-            //! \remarks set by runtime, only to be used locally (not via DBus)
+            //! \ingroup crosscontextslot
             void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
             //! Relay status message to simulator under consideration of settings

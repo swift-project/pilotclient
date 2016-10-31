@@ -157,11 +157,11 @@ namespace BlackCore
 
         private slots:
             //! Station has been changed, needed to tune in/out voice room
-            //! \note Connected in runtime
+            //! \ingroup crosscontextslot
             void ps_changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
             //! Simulator model has been changed
-            //! \note Connected in runtime
+            //! \ingroup crosscontextslot
             void ps_changedSimulatorModel(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Web data loaded

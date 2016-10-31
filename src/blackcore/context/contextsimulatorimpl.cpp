@@ -483,7 +483,7 @@ namespace BlackCore
             }
         }
 
-        void CContextSimulator::ps_addRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
+        void CContextSimulator::ps_addedRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
             if (!isSimulatorSimulating()) { return; }
             Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
@@ -522,7 +522,7 @@ namespace BlackCore
                 for (const CSimulatedAircraft &simulatedAircraft : aircrafts)
                 {
                     Q_ASSERT(!simulatedAircraft.getCallsign().isEmpty());
-                    ps_addRemoteAircraft(simulatedAircraft);
+                    ps_addedRemoteAircraft(simulatedAircraft);
                 }
                 m_initallyAddAircrafts = false;
             }
@@ -651,6 +651,15 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << aircraftToHighlight << enableHighlight << displayTime; }
             Q_ASSERT(m_simulatorPlugin.second);
             m_simulatorPlugin.second->highlightAircraft(aircraftToHighlight, enableHighlight, displayTime);
+        }
+
+        bool CContextSimulator::resetToModelMatchingAircraft(const CCallsign &callsign)
+        {
+            CSimulatedAircraft aircraft = getAircraftInRangeForCallsign(callsign);
+            if (aircraft.getCallsign() != callsign) { return false; } // not found
+            aircraft.setModel(aircraft.getNetworkModel());
+            ps_addedRemoteAircraft(aircraft);
+            return true;
         }
 
         void CContextSimulator::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
