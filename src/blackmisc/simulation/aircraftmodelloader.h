@@ -168,7 +168,7 @@ namespace BlackMisc
 
             std::atomic<bool> m_cancelLoading { false };                        //!< flag
             std::atomic<bool> m_loadingInProgress { false };                    //!< Loading in progress
-            BlackMisc::Simulation::Data::CModelCaches m_caches { this };        //!< caches
+            BlackMisc::Simulation::Data::CModelCaches m_caches { false, this }; //!< caches
             BlackMisc::Simulation::CMultiSimulatorSettings m_settings { this }; //!< settings
             BlackMisc::CStatusMessageList m_loadingMessages;                    //!< loading messages
 
