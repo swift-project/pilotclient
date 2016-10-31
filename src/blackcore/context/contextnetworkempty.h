@@ -271,6 +271,16 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextNetwork::updateAircraftNetworkModel
+            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override
+            {
+                Q_UNUSED(callsign);
+                Q_UNUSED(model);
+                Q_UNUSED(originator);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
             //! \copydoc IContextNetwork::updateFastPositionEnabled
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositionSending) override
             {

@@ -53,72 +53,6 @@ namespace BlackMisc
             //! Constructor
             CRemoteAircraftProviderDummy(QObject *parent = nullptr);
 
-            //! IRemoteAircraftProvider::getAircraftInRange
-            virtual CSimulatedAircraftList getAircraftInRange() const override;
-
-            //! IRemoteAircraftProvider::getAircraftInRangeCount
-            virtual int getAircraftInRangeCount() const override;
-
-            //! IRemoteAircraftProvider::getAircraftInRangeCallsigns
-            virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
-
-            //! IRemoteAircraftProvider::getAircraftInRangeForCallsign
-            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
-            virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
-            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
-            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
-
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
-            virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
-            virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
-            virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-
-            //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
-            virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
-            virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
-                QObject *receiver,
-                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>    addedPartsSlot,
-                std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
-                std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
-            ) override;
-
-            //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
-
-            //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc IRemoteAircraftProvider::updateFastPositionEnabled
-            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates) override;
-
-            //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
-            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
-
-            //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            virtual void updateMarkAllAsNotRendered() override;
-
-            //! \copydoc IRemoteAircraftProvider::getReverseLookupMessages
-            virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IRemoteAircraftProvider::isReverseLookupMessagesEnabled
-            virtual bool isReverseLookupMessagesEnabled() const override;
-
-            //! \copydoc IRemoteAircraftProvider::enableReverseLookupMessages
-            virtual void enableReverseLookupMessages(bool enabled) override;
-
             //! For testing, add new situation and fire signals
             void insertNewSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
@@ -127,6 +61,37 @@ namespace BlackMisc
 
             //! Clear all data
             void clear();
+
+            //! \name Interface overrides
+            //! @{
+            virtual CSimulatedAircraftList getAircraftInRange() const override;
+            virtual int getAircraftInRangeCount() const override;
+            virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
+            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
+            virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const Aviation::CCallsign &callsign) const override;
+            virtual int remoteAircraftSituationsCount(const Aviation::CCallsign &callsign) const override;
+            virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
+            virtual bool isRemoteAircraftSupportingParts(const Aviation::CCallsign &callsign) const override;
+            virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
+                QObject *receiver,
+                std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftParts &)>    addedPartsSlot,
+                std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
+                std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
+            ) override;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates) override;
+            virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
+            virtual void updateMarkAllAsNotRendered() override;
+            virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isReverseLookupMessagesEnabled() const override;
+            virtual void enableReverseLookupMessages(bool enabled) override;
+            //! @}
 
         signals:
             //! Added situation

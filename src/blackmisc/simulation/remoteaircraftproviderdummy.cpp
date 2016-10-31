@@ -117,6 +117,14 @@ namespace BlackMisc
             return n > 0;
         }
 
+        bool CRemoteAircraftProviderDummy::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
+        {
+            Q_UNUSED(originator);
+            CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::from(model));
+            int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            return n > 0;
+        }
+
         bool CRemoteAircraftProviderDummy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionUpdates)
         {
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositionUpdates));

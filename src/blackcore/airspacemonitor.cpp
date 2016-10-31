@@ -223,6 +223,14 @@ namespace BlackCore
         return c > 0;
     }
 
+    bool CAirspaceMonitor::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
+    {
+        if (CIdentifiable::isMyIdentifier(originator)) { return false; }
+        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::from(model));
+        const int c = this->updateAircraftInRange(callsign, vm);
+        return c > 0;
+    }
+
     bool CAirspaceMonitor::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
     {
         const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositonUpdates));
@@ -928,6 +936,7 @@ namespace BlackCore
             // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to updateAircraftModel() would
             // return without doing anything.
             this->updateAircraftModel(callsign, model, CIdentifier::anonymous());
+            this->updateAircraftNetworkModel(callsign, model, CIdentifier::anonymous());
         }
         else
         {

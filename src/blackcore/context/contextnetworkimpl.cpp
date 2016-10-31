@@ -552,10 +552,10 @@ namespace BlackCore
             this->m_airspace->requestAtisUpdates();
         }
 
-        bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRedering)
+        bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
-            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRedering; }
-            bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRedering);
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRendering; }
+            bool c = this->m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
             if (c)
             {
                 CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -570,7 +570,20 @@ namespace BlackCore
             bool c = this->m_airspace->updateAircraftModel(callsign, model, originator);
             if (c)
             {
-                CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+                const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+                Q_ASSERT_X(!aircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
+                emit this->changedRemoteAircraftModel(aircraft, originator);
+            }
+            return c;
+        }
+
+        bool CContextNetwork::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
+            bool c = this->m_airspace->updateAircraftNetworkModel(callsign, model, originator);
+            if (c)
+            {
+                const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
                 emit this->changedRemoteAircraftModel(aircraft, originator);
             }
             return c;

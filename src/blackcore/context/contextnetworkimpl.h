@@ -132,11 +132,15 @@ namespace BlackCore
         public slots:
             //! \copydoc IContextNetwork::updateAircraftEnabled
             //! \ingroup remoteaircraftprovider
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering) override;
+            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
 
             //! \copydoc IContextNetwork::updateAircraftModel
             //! \ingroup remoteaircraftprovider
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+
+            //! \copydoc IContextNetwork::updateAircraftNetworkModel
+            //! \ingroup remoteaircraftprovider
+            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
 
             //! \copydoc IContextNetwork::updateFastPositionEnabled
             //! \ingroup remoteaircraftprovider

@@ -15,7 +15,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         CSimulatedAircraftList CRemoteAircraftAware::getAircraftInRange() const
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
@@ -80,6 +79,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_remoteAircraftProvider->updateAircraftModel(callsign, model, originator);
+        }
+
+        bool CRemoteAircraftAware::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
+        {
+            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_remoteAircraftProvider->updateAircraftNetworkModel(callsign, model, originator);
         }
 
         bool CRemoteAircraftAware::updateAircraftRendered(const CCallsign &callsign, bool rendered)

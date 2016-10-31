@@ -112,9 +112,13 @@ namespace BlackMisc
             //! \threadsafe
             virtual void updateMarkAllAsNotRendered() = 0;
 
-            //! Change model string
+            //! Change model
             //! \threadsafe
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
+
+            //! Change network model
+            //! \threadsafe
+            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) = 0;
 
             //! Change fast position updates
             //! \threadsafe
@@ -189,6 +193,9 @@ namespace BlackMisc
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
+
+            //! \copydoc IRemoteAircraftProvider::updateAircraftNetworkModel
+            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
