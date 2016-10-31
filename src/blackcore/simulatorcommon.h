@@ -119,8 +119,8 @@ namespace BlackCore
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();
 
-        //! Restore aircraft from backend data
-        void resetAircraftFromBacked(const BlackMisc::Aviation::CCallsign &callsign);
+        //! Restore aircraft from the provider data
+        void resetAircraftFromProvider(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Override situation from current interpolator values, if any!
         bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;

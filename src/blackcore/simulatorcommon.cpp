@@ -126,14 +126,14 @@ namespace BlackCore
                 // get the current state for this aircraft
                 // it might has been removed in the meantime
                 const CCallsign cs(aircraft.getCallsign());
-                resetAircraftFromBacked(cs);
+                resetAircraftFromProvider(cs);
             }
             m_highlightedAircraft.clear();
             m_highlightEndTimeMsEpoch = 0;
         }
     }
 
-    void CSimulatorCommon::resetAircraftFromBacked(const CCallsign &callsign)
+    void CSimulatorCommon::resetAircraftFromProvider(const CCallsign &callsign)
     {
         CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
         bool enabled = aircraft.isEnabled();
