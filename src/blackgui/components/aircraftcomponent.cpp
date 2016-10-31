@@ -47,7 +47,7 @@ namespace BlackGui
             this->tabBar()->setUsesScrollButtons(true);
             ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
 
-            ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::InfoMode);
+            ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
             ui->tvp_AircraftInRange->configureMenu(true, false, false);
 
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);

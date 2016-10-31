@@ -34,7 +34,7 @@ namespace BlackGui
     {
         CSimulatedAircraftListModel::CSimulatedAircraftListModel(QObject *parent) : CListModelBase("ModelSimulatedAircraftList", parent)
         {
-            this->setAircraftMode(InfoMode);
+            this->setAircraftMode(NetworkMode);
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "callsign");
@@ -58,18 +58,18 @@ namespace BlackGui
             switch (mode)
             {
             case NotSet:
-            case InfoMode:
+            case NetworkMode:
                 {
                     this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString));
                     this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
                     this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                     this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
                     this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
-                    this->m_columns.addColumn(CColumn::standardString("icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryString}));
+                    this->m_columns.addColumn(CColumn::standardString("icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryStringNetworkModel}));
 
                     // icon column for airline
-                    CColumn col("airline", { CSimulatedAircraft::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexIcon });
-                    col.setSortPropertyIndex({ CSimulatedAircraft::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator});
+                    CColumn col("airline", { CSimulatedAircraft::IndexNetworkModel, CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexIcon });
+                    col.setSortPropertyIndex({ CSimulatedAircraft::IndexNetworkModel, CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator});
                     this->m_columns.addColumn(col);
 
                     this->m_columns.addColumn(CColumn("frequency", { CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
@@ -83,7 +83,7 @@ namespace BlackGui
                 }
                 break;
 
-            case ModelMode:
+            case RenderedMode:
                 {
                     this->m_columns.addColumn(CColumn("e.", "enabled", CSimulatedAircraft::IndexEnabled, new CBoolIconFormatter("enabled", "disabled"), true));
                     this->m_columns.addColumn(CColumn("r.", "rendered", CSimulatedAircraft::IndexRendered, new CBoolIconFormatter("rendered", "skipped"), true));

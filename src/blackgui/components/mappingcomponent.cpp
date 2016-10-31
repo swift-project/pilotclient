@@ -68,7 +68,7 @@ namespace BlackGui
             ui->tvp_AircraftModels->addFilterDialog();
             ui->tvp_AircraftModels->menuRemoveItems(CViewBaseNonTemplate::MenuBackend);
 
-            ui->tvp_RenderedAircraft->setAircraftMode(CSimulatedAircraftListModel::ModelMode);
+            ui->tvp_RenderedAircraft->setAircraftMode(CSimulatedAircraftListModel::RenderedMode);
             ui->tvp_RenderedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
 
             connect(ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);

@@ -33,8 +33,8 @@ namespace BlackGui
             //! Model modes
             enum AircraftMode
             {
-                InfoMode,  //!< like aircraft in range
-                ModelMode, //!< focusing on used model
+                NetworkMode,  //!< like aircraft in range
+                RenderedMode, //!< focusing on used model
                 NotSet
             };
 
