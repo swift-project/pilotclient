@@ -63,6 +63,9 @@ namespace BlackGui
             //! Formatted count for entity
             static QString cacheCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 
+            //! Formatted ts for entity
+            static QString sharedFileTimestampForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
+
             //! Formatted count for entity
             static QString dbCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 

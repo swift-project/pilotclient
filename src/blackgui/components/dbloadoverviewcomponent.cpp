@@ -34,6 +34,9 @@ namespace BlackGui
             ui->lbl_DatabaseUrl->setTextFormat(Qt::RichText);
             ui->lbl_DatabaseUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
             ui->lbl_DatabaseUrl->setOpenExternalLinks(true);
+            ui->lbl_SharedUrls->setTextFormat(Qt::RichText);
+            ui->lbl_SharedUrls->setTextInteractionFlags(Qt::TextBrowserInteraction);
+            ui->lbl_SharedUrls->setOpenExternalLinks(true);
 
             connect(ui->tb_ReloadAircraft, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
             connect(ui->tb_ReloadAirlines, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
@@ -43,8 +46,6 @@ namespace BlackGui
             connect(ui->tb_ReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
             connect(ui->tb_ReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_reloadPressed);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
-
-            // QTimer::singleShot(2000, this, &CDbLoadOverviewComponent::ps_setValues);
         }
 
         CDbLoadOverviewComponent::~CDbLoadOverviewComponent()
@@ -101,10 +102,34 @@ namespace BlackGui
             ui->le_CountriesDbCount->setText(dbCountForEntity(CEntityFlags::CountryEntity));
             ui->le_DistributorsDbCount->setText(dbCountForEntity(CEntityFlags::DistributorEntity));
 
-            const QString urlHtml("<a href=\"%1\">Open DB</a>");
-            const QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
-            ui->lbl_DatabaseUrl->setText(urlHtml.arg(url));
+            ui->le_AircraftSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
+            ui->le_AirlinesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
+            ui->le_AirportsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::AirportEntity));
+            ui->le_LiveriesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::LiveryEntity));
+            ui->le_ModelsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::ModelEntity));
+            ui->le_CountriesSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::CountryEntity));
+            ui->le_DistributorsSharedFileTs->setText(sharedFileTimestampForEntity(CEntityFlags::DistributorEntity));
+
+            // DB URL
+            const QString dbUrlHtml("<a href=\"%1\">%2</a>");
+            QString url = sGui->getGlobalSetup().getDbHomePageUrl().getFullUrl();
+            ui->lbl_DatabaseUrl->setText(dbUrlHtml.arg(url, url));
             ui->lbl_DatabaseUrl->setToolTip(url);
+
+            // Shared URLs
+            const CUrlList sharedUrls(sGui->getGlobalSetup().getSwiftSharedUrls());
+            const QString sharedUrlHtml("<a href=\"%1\">%2</a>");
+
+            QString sharedUrlsHtml;
+            for (const CUrl &url : sharedUrls)
+            {
+                sharedUrlsHtml += sharedUrlHtml.arg(url.getFullUrl(), url.getHost());
+                sharedUrlsHtml += " ";
+            }
+            ui->lbl_SharedUrls->setText(sharedUrlsHtml.trimmed());
+            ui->lbl_SharedUrls->setToolTip(sharedUrls.toQString());
+
+            // Indicator
             if (this->m_loadIndicator) { this->m_loadIndicator->stopAnimation(); }
         }
 
@@ -148,6 +173,12 @@ namespace BlackGui
             return c < 0 ? "-" : QString::number(c);
         }
 
+        QString CDbLoadOverviewComponent::sharedFileTimestampForEntity(CEntityFlags::Entity entity)
+        {
+            const QDateTime ts = sGui->getWebDataServices()->getSharedFileTimestamp(entity);
+            return formattedTimestamp(ts);
+        }
+
         QString CDbLoadOverviewComponent::dbCountForEntity(CEntityFlags::Entity entity)
         {
             const int c = sGui->getWebDataServices()->getDbInfoCount(entity);
@@ -164,10 +195,15 @@ namespace BlackGui
             if (this->m_reloading) { return; }
             QObject *sender = QObject::sender();
             CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
+
+            // DB entities
             CEntityFlags::Entity triggeredEntity = sGui->getWebDataServices()->triggerReloadFromDb(entity);
             if (triggeredEntity == CEntityFlags::NoEntity) { return; }
             this->m_reloading = true;
             this->showLoading();
+
+            // shared files ts
+            sGui->getWebDataServices()->triggerLoadingOfSharedFilesHeaders(entity);
         }
 
         void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)

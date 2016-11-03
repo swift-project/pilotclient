@@ -40,6 +40,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
 {
     ui->setupUi(this);
     this->init();
+    ui->tb_Launcher->setCurrentIndex(0);
     connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CSwiftLauncher::ps_loadSetup);
     connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
