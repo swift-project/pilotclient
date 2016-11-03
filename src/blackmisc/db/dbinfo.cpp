@@ -33,15 +33,27 @@ namespace BlackMisc
         CEntityFlags::Entity CDbInfo::getEntity() const
         {
             if (this->m_entity != CEntityFlags::NoEntity) { return this->m_entity; }
-            if (this->m_tableName.isEmpty()) { return CEntityFlags::NoEntity; }
-            if (this->m_tableName.contains("airport", Qt::CaseInsensitive))       { return CEntityFlags::AirportEntity; }
-            if (this->m_tableName.contains("airlineicao", Qt::CaseInsensitive))   { return CEntityFlags::AirlineIcaoEntity; }
-            if (this->m_tableName.contains("aircrafticao", Qt::CaseInsensitive))  { return CEntityFlags::AircraftIcaoEntity; }
-            if (this->m_tableName.contains("livery", Qt::CaseInsensitive))        { return CEntityFlags::LiveryEntity; }
-            if (this->m_tableName.contains("aircraftmodel", Qt::CaseInsensitive)) { return CEntityFlags::ModelEntity; }
-            if (this->m_tableName.contains("country", Qt::CaseInsensitive))       { return CEntityFlags::CountryEntity; }
-            if (this->m_tableName.contains("distributor", Qt::CaseInsensitive))   { return CEntityFlags::DistributorEntity; }
-            return CEntityFlags::NoEntity;
+            const QString tn(this->getTableName());
+            return CEntityFlags::singleEntityByName(tn);
+        }
+
+        const QString &CDbInfo::getSharedFileName() const
+        {
+            static const QString empty;
+            CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(this->getTableName());
+            switch (entity)
+            {
+            case CEntityFlags::AircraftIcaoEntity: { return sharedFileNames().at(0); }
+            case CEntityFlags::AirlineIcaoEntity: { return sharedFileNames().at(1); }
+            case CEntityFlags::AirportEntity: { return sharedFileNames().at(2); }
+            case CEntityFlags::CountryEntity: { return sharedFileNames().at(3); }
+            case CEntityFlags::DistributorEntity: { return sharedFileNames().at(4); }
+            case CEntityFlags::LiveryEntity: { return sharedFileNames().at(5); }
+            case CEntityFlags::ModelEntity: { return sharedFileNames().at(6); }
+            default:
+                break;
+            }
+            return empty;
         }
 
         void CDbInfo::setEntity(CEntityFlags::Entity entity)
@@ -142,6 +154,29 @@ namespace BlackMisc
             dbInfo.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return dbInfo;
         }
+
+        const QStringList &CDbInfo::sharedFileNames()
+        {
+            static const QStringList names({"aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json" });
+            return names;
+        }
+
+        const QString &CDbInfo::entityToSharedFileName(CEntityFlags::Entity entity)
+        {
+            static const QString empty;
+            switch (entity)
+            {
+            case CEntityFlags::AircraftIcaoEntity: return sharedFileNames().at(0);
+            case CEntityFlags::AirlineIcaoEntity: return sharedFileNames().at(1);
+            case CEntityFlags::AirportEntity: return sharedFileNames().at(2);
+            case CEntityFlags::CountryEntity: return sharedFileNames().at(3);
+            case CEntityFlags::DistributorEntity: return sharedFileNames().at(4);
+            case CEntityFlags::LiveryEntity: return sharedFileNames().at(5);
+            case CEntityFlags::ModelEntity: return sharedFileNames().at(6);
+            default:
+                break;
+            }
+            return empty;
+        }
     } // namespace
 } // namespace
-

@@ -56,6 +56,9 @@ namespace BlackMisc
             //! Get entity (based on table name
             Network::CEntityFlags::Entity getEntity() const;
 
+            //! The shared file name such as "airports.json"
+            const QString &getSharedFileName() const;
+
             //! Set entity, should be in sync with a corresponding table name
             void setEntity(Network::CEntityFlags::Entity entity);
 
@@ -82,6 +85,12 @@ namespace BlackMisc
 
             //! From our database JSON format
             static CDbInfo fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
+
+            //! The shared file names
+            static const QStringList &sharedFileNames();
+
+            //! Get shared file name
+            static const QString &entityToSharedFileName(Network::CEntityFlags::Entity entity);
 
         private:
             QString m_tableName; //!< table name

@@ -161,6 +161,11 @@ namespace BlackMisc
             return url;
         }
 
+        bool CUrl::pathEndsWith(const QString ending, Qt::CaseSensitivity cs) const
+        {
+            return m_path.endsWith(ending, cs);
+        }
+
         CUrl CUrl::withAppendedQuery(const QString &query) const
         {
             if (query.isEmpty()) { return *this; }

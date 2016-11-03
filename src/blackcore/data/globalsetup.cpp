@@ -101,14 +101,14 @@ namespace BlackCore
 
         QString CGlobalSetup::buildBootstrapFileUrl(const QString &candidate)
         {
-            static const QString version(QString(versionString()).append("/"));
+            static const QString version(QString(CGlobalSetup::versionString()).append("/"));
             if (candidate.endsWith("bootstrap.json")) { return candidate; }
             CUrl url(candidate);
             if (candidate.contains("/bootstrap"))
             {
                 url.appendPath("bootstrap.json");
             }
-            else if (candidate.endsWith(versionString()) || candidate.endsWith(version))
+            else if (candidate.endsWith(CGlobalSetup::versionString()) || candidate.endsWith(version))
             {
                 url.appendPath("/bootstrap/bootstrap.json");
             }
@@ -121,6 +121,26 @@ namespace BlackCore
                 url.appendPath("shared/" + CGlobalSetup::versionString() + "/bootstrap/bootstrap.json");
             }
             return url.getFullUrl();
+        }
+
+        CUrl CGlobalSetup::buildDbDataDirectory(const CUrl &candidate)
+        {
+            static const QString version(QString(versionString()).append("/"));
+            if (candidate.pathEndsWith("dbdata") || candidate.pathEndsWith("dbdata/")) { return candidate; }
+            CUrl url(candidate);
+            if (candidate.pathEndsWith(versionString()) || candidate.pathEndsWith(version))
+            {
+                url.appendPath("/dbdata");
+            }
+            else if (candidate.pathEndsWith("shared") || candidate.pathEndsWith("shared/"))
+            {
+                url.appendPath(CGlobalSetup::versionString() + "/dbdata/");
+            }
+            else
+            {
+                url.appendPath("shared/" + CGlobalSetup::versionString() + "/dbdata/");
+            }
+            return url;
         }
 
         CGlobalSetup CGlobalSetup::fromJsonFile(const QString &fileNameAndPath)
@@ -213,6 +233,10 @@ namespace BlackCore
 
             s.append("FSD test servers: ");
             s.append(getFsdTestServers().toQString(i18n));
+            s.append(separator);
+
+            s.append("Crash report server: ");
+            s.append(getCrashReportServerUrl().toQString(i18n));
             return s;
         }
 
@@ -242,12 +266,14 @@ namespace BlackCore
                 return CVariant::fromValue(this->m_vatsimMetarsUrls);
             case IndexUpdateInfo:
                 return CVariant::fromValue(this->getUpdateInfoFileUrls());
-            case IndexBootstrap:
+            case IndexBootstrapFileUrls:
                 return CVariant::fromValue(this->getBootstrapFileUrls());
             case IndexSwiftDbFiles:
                 return CVariant::fromValue(this->getSwiftDbDataFileLocationUrls());
-            case IndexShared:
+            case IndexSharedUrls:
                 return CVariant::fromValue(this->m_sharedUrls);
+            case IndexCrashReportServerUrl:
+                return CVariant::fromValue(this->m_crashReportServerUrl);
             case IndexWasLoaded:
                 return CVariant::fromValue(this->m_wasLoaded);
             default:
@@ -287,8 +313,11 @@ namespace BlackCore
             case IndexVatsimMetars:
                 this->m_vatsimMetarsUrls = variant.value<CUrlList>();
                 break;
-            case IndexShared:
+            case IndexSharedUrls:
                 this->m_sharedUrls = variant.value<CUrlList>();
+                break;
+            case IndexCrashReportServerUrl:
+                this->m_crashReportServerUrl = variant.value<CUrl>();
                 break;
             case IndexWasLoaded:
                 this->m_wasLoaded = variant.toBool();

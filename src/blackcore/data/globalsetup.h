@@ -49,10 +49,11 @@ namespace BlackCore
                 IndexVatsimMetars,
                 IndexVatsimData,
                 IndexSwiftDbFiles,
-                IndexBootstrap,
+                IndexBootstrapFileUrls,
+                IndexCrashReportServerUrl,
                 IndexUpdateInfo,
                 IndexWasLoaded,
-                IndexShared
+                IndexSharedUrls
             };
 
             //! Default constructor
@@ -83,7 +84,7 @@ namespace BlackCore
             bool hasSameType(const CGlobalSetup &otherSetup) const;
 
             //! Crash report server url
-            BlackMisc::Network::CUrl getCrashreportServerUrl() const { return m_crashreportServerUrl; }
+            BlackMisc::Network::CUrl getCrashReportServerUrl() const { return m_crashReportServerUrl; }
 
             //! Home page url
             BlackMisc::Network::CUrl getDbHomePageUrl() const;
@@ -166,6 +167,9 @@ namespace BlackCore
             //! Build bootstrap file URL
             static QString buildBootstrapFileUrl(const QString &candidate);
 
+            //! Build the full dbdata directory URL
+            static BlackMisc::Network::CUrl buildDbDataDirectory(const BlackMisc::Network::CUrl &candidate);
+
             //! Object initialized by JSON file
             static CGlobalSetup fromJsonFile(const QString &fileNameAndPath);
 
@@ -174,7 +178,7 @@ namespace BlackCore
             int                             m_dbHttpPort = 80;      //!< port
             int                             m_dbHttpsPort = 443;    //!< SSL port
             bool                            m_development = false;  //!< dev. version?
-            BlackMisc::Network::CUrl        m_crashreportServerUrl; //!< crash report server
+            BlackMisc::Network::CUrl        m_crashReportServerUrl; //!< crash report server
             BlackMisc::Network::CUrl        m_dbRootDirectoryUrl;   //!< Root directory of DB
             BlackMisc::Network::CUrl        m_vatsimBookingsUrl;    //!< ATC bookings
             BlackMisc::Network::CUrlList    m_vatsimMetarsUrls;     //!< METAR data
@@ -191,7 +195,7 @@ namespace BlackCore
                 CGlobalSetup,
                 BLACK_METAMEMBER(wasLoaded),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
-                BLACK_METAMEMBER(crashreportServerUrl),
+                BLACK_METAMEMBER(crashReportServerUrl),
                 BLACK_METAMEMBER(dbRootDirectoryUrl),
                 BLACK_METAMEMBER(dbHttpPort),
                 BLACK_METAMEMBER(dbHttpsPort),

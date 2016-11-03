@@ -133,6 +133,9 @@ namespace BlackMisc
             //! Switch protocol
             CUrl withSwitchedScheme(const QString &protocol, int port) const;
 
+            //! Path ending with?
+            bool pathEndsWith(const QString ending, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
