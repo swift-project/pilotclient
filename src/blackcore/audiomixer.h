@@ -13,7 +13,6 @@
 #define BLACKCORE_AUDIOMIXER_H
 
 #include <QObject>
-
 #include "blackcore/blackcoreexport.h"
 
 namespace BlackCore
@@ -57,6 +56,6 @@ namespace BlackCore
         virtual bool hasMixerConnection(InputPort inputPort, OutputPort outputPort) = 0;
     };
 
-} // namespace BlackCore
+} // ns
 
 #endif // guard

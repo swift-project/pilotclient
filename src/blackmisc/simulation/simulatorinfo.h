@@ -33,8 +33,8 @@ namespace BlackMisc
         //! Simple hardcoded info about the corresponding simulator.
         //! * in an ideal world this class would not exist, all would depend on flexible plugins \sa CSimulatorPluginInfo
         //! * in a real world the info is needed in a couple of places to specify the simulator
-        //! ** when data from the swift data store a read, the corresponding simulator is specified
-        //! ** when model metadata are written to the swift data store the DB simulator info needs to be provided
+        //! ** when data from the swift datastore are read, the corresponding simulator is specified
+        //! ** when model metadata are written to the swift datastore the DB simulator info needs to be provided
         //! ** when models are indexed from disk it does not know the corresponding driver
         //! ** also there is no strict dependency of some functions to the driver. I might not have the XP plugin installed,
         //!    but need to handle XP data from the swift data store
