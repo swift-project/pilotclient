@@ -483,12 +483,12 @@ namespace BlackCore
         });
     }
 
-    QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const CSlot<void (QNetworkReply *)> &callback)
     {
         return httpRequestImpl(url.toNetworkRequest(), callback, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.head(request); });
     }
 
-    QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CSlot<void (QNetworkReply *)> &callback)
     {
         return httpRequestImpl(request, callback, [ ](QNetworkAccessManager & nam, const QNetworkRequest & request) { return nam.head(request); });
     }
@@ -1021,7 +1021,7 @@ namespace BlackCore
         }
 
         CUrl serverUrl;
-        serverUrl = getGlobalSetup().getCrashreportServerUrl();
+        serverUrl = getGlobalSetup().getCrashReportServerUrl();
         std::map<std::string, std::string> annotations;
 
         // Caliper (mini-breakpad-server) annotations
@@ -1063,6 +1063,7 @@ namespace BlackCore
         CNetworkUtils::ignoreSslVerification(r);
         CNetworkUtils::setSwiftUserAgent(r);
         QNetworkReply *reply = method(this->m_accessManager, r);
+        reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
         if (callback)
         {
             connect(reply, &QNetworkReply::finished, callback.object(), [ = ] { callback(reply); }, Qt::QueuedConnection);

@@ -116,8 +116,8 @@ namespace BlackCore
         //! Reader flags
         CWebReaderFlags::WebReader getReaderFlags() const { return m_readers; }
 
-        //! All DB entities for those used and not ignored
-        BlackMisc::Network::CEntityFlags::Entity allDbEntiiesUsed() const;
+        //! All DB entities for those readers used and not ignored
+        BlackMisc::Network::CEntityFlags::Entity allDbEntiiesForUsedReaders() const;
 
         //! FSD servers
         //! \threadsafe
@@ -317,6 +317,10 @@ namespace BlackCore
         //! Trigger reload from DB, only loads the DB data and bypasses the caches checks and info objects
         BlackMisc::Network::CEntityFlags::Entity triggerReloadFromDb(BlackMisc::Network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
 
+        //! Trigger loading of the HTTP headers for the shared files
+        //! \note allows to obtain the timestamps
+        bool triggerLoadingOfSharedFilesHeaders(BlackMisc::Network::CEntityFlags::Entity requestedEntities = BlackMisc::Network::CEntityFlags::AllDbEntities);
+
         //! Corresponding cache timestamp if applicable
         //! \threadsafe
         QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -324,6 +328,12 @@ namespace BlackCore
         //! Corresponding DB timestamp if applicable
         //! \threadsafe
         QDateTime getDbLatestEntityTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+        //! Corresponding shared file timestamp
+        QDateTime getSharedFileTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+        //! Request (updated) HTTP header for shared file of entity
+        bool requestHeaderOfSharedFile(BlackMisc::Network::CEntityFlags::Entity entity);
 
         //! Cache count for entity
         //! \threadsafe
@@ -358,6 +368,9 @@ namespace BlackCore
         //! All swift DB data have been read
         void allSwiftDbDataRead();
 
+        //! Header of shared file read
+        void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
+
     public slots:
         //! Call CWebDataServices::readInBackground by single shot
         void readDeferredInBackground(BlackMisc::Network::CEntityFlags::Entity entities, int delayMs);
@@ -373,13 +386,10 @@ namespace BlackCore
         void ps_receivedMetars(const BlackMisc::Weather::CMetarList &metars);
 
         //! Data file has been read
-        void ps_dataFileRead(int lines);
+        void ps_vatsimDataFileRead(int lines);
 
         //! Read finished from reader
         void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
-
-        //! Setup changed
-        void ps_setupChanged();
 
     private:
         //! Init the readers

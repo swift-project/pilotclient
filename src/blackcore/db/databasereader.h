@@ -24,6 +24,7 @@
 
 #include <QDateTime>
 #include <QJsonArray>
+#include <QMap>
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
@@ -44,21 +45,17 @@ namespace BlackCore
             Q_OBJECT
 
         public:
-            //!  Response from our database
-            struct JsonDatastoreResponse
+            //! Header response part
+            struct HeaderResponse
             {
-                QJsonArray m_jsonArray;              //!< JSON array data
-                QDateTime  m_updated;                //!< when was the latest updated?
-                int        m_arraySize  = -1;        //!< size of array, if applicable (copied to member for debugging purposes)
-                bool       m_restricted = false;     //!< restricted reponse, only changed data
-                BlackMisc::CStatusMessage m_message; //!< last error or warning
+            private:
+                QDateTime  m_updated;                  //!< when was the latest update?
+                BlackMisc::CStatusMessage m_message;   //!< last error or warning
+                BlackMisc::Network::CUrl  m_url;       //!< loaded url
+                qulonglong  m_contentLengthHeader = 0; //!< content length
+                qint64     m_loadTimeMs = -1;          //!< how long did it take to load
 
-                //! Any data?
-                bool isEmpty() const { return m_jsonArray.isEmpty(); }
-
-                //! Number of elements
-                int size() const { return m_jsonArray.size(); }
-
+            public:
                 //! Any timestamp?
                 bool hasTimestamp() const { return m_updated.isValid(); }
 
@@ -68,8 +65,17 @@ namespace BlackCore
                 //! Is response newer?
                 bool isNewer(qint64 mSecsSinceEpoch) const { return m_updated.toMSecsSinceEpoch() > mSecsSinceEpoch; }
 
-                //! Incremental data
-                bool isRestricted() const { return m_restricted; }
+                //! Get the update timestamp
+                const QDateTime &getUpdateTimestamp() const { return m_updated; }
+
+                //! Set update timestamp, default normally "last-modified"
+                void setUpdateTimestamp(const QDateTime &updated) { m_updated = updated; }
+
+                //! Header content length
+                qulonglong getContentLengthHeader() const { return m_contentLengthHeader; }
+
+                //! Set the content length
+                void setContentLengthHeader(qulonglong size) { m_contentLengthHeader = size; }
 
                 //! Error message?
                 bool hasErrorMessage() const { return m_message.getSeverity() == BlackMisc::CStatusMessage::SeverityError; }
@@ -82,6 +88,40 @@ namespace BlackCore
 
                 //! Set the error/warning message
                 void setMessage(const BlackMisc::CStatusMessage &lastErrorOrWarning) { m_message = lastErrorOrWarning; }
+
+                //! URL loaded
+                const BlackMisc::Network::CUrl &getUrl() const { return m_url; }
+
+                //! Set the loaded URL
+                void setUrl(const BlackMisc::Network::CUrl &url) { m_url = url; }
+
+                //! Load time in ms (from request to response)
+                qint64 getLoadTimeMs() const { return m_loadTimeMs; }
+
+                //! Set the load time (delta start -> response received)
+                void setLoadTimeMs(qint64 deltaTime) { m_loadTimeMs = deltaTime; }
+            };
+
+            //!  Response from our database (depneding on JSON DB backend generates)
+            struct JsonDatastoreResponse : public HeaderResponse
+            {
+            private:
+                QJsonArray m_jsonArray;              //!< JSON array data
+                int        m_arraySize  = -1;        //!< size of array, if applicable (copied to member for debugging purposes)
+                bool       m_restricted = false;     //!< restricted reponse, only changed data
+
+            public:
+                //! Any data?
+                bool isEmpty() const { return m_jsonArray.isEmpty(); }
+
+                //! Number of elements
+                int size() const { return m_jsonArray.size(); }
+
+                //! Incremental data, restricted by query?
+                bool isRestricted() const { return m_restricted; }
+
+                //! Incremental data, restricted by query
+                void setRestricted(bool restricted) { m_restricted = restricted; }
 
                 //! Get the JSON array
                 QJsonArray getJsonArray() const { return m_jsonArray; }
@@ -125,6 +165,12 @@ namespace BlackCore
             //! \sa BlackCore::Db::CInfoDataReader
             QDateTime getLatestEntityTimestampFromInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
+            //! Timestamp of shared file for entiry
+            QDateTime getSharedFileTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Request header of shared file
+            bool requestHeadersOfSharedFiles(const BlackMisc::Network::CEntityFlags::Entity &entities);
+
             //! Count from info objects
             //! \sa BlackCore::Db::CInfoDataReader
             int getCountFromInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
@@ -141,18 +187,23 @@ namespace BlackCore
             //! Name of parameter for latest id
             static const QString &parameterLatestId();
 
-            //! sift DB server reachable?
+            //! swift DB server reachable?
             static bool canPingSwiftServer();
 
-            //! Transform JSON data to response struct
-            static JsonDatastoreResponse stringToDatastoreResponse(const QString &jsonContent);
+            //! Transform JSON data to response struct data
+            //! \private used also for samples
+            static void stringToDatastoreResponse(const QString &jsonContent, CDatabaseReader::JsonDatastoreResponse &datastoreResponse);
 
         signals:
             //! Combined read signal
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
+            //! Header of shared file read
+            void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
+
         protected:
             CDatabaseReaderConfigList   m_config;                      //!< DB reder configuration
+            QMap<int, HeaderResponse>   m_sharedFileResponses;         //!< file responses of the shared files
             QString                     m_statusMessage;               //!< Returned status message from watchdog
             QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
             bool                        m_1stReplyReceived = false;    //!< Successful connection? Does not mean data / authorizations are correct
@@ -180,7 +231,7 @@ namespace BlackCore
             //! Obtain a working shared URL
             static BlackMisc::Network::CUrl getWorkingSharedUrl();
 
-            //! \name  Cache access
+            //! \name Cache access
             //! @{
             //! Synchronize caches for given entities
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) = 0;
@@ -202,8 +253,17 @@ namespace BlackCore
             //! @}
 
         private:
+            //! Received a reply of a header for a shared file
+            void receivedSharedFileHeader(QNetworkReply *nwReplyPtr);
+
             //! Check if terminated or error, otherwise split into array of objects
             JsonDatastoreResponse transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const;
+
+            //! Check if terminated or error, otherwise set header information
+            HeaderResponse transformReplyIntoHeaderResponse(QNetworkReply *nwReply) const;
+
+            //! Set the header part
+            bool setHeaderInfoPart(HeaderResponse &headerResponse, QNetworkReply *nwReply) const;
 
             //! Feedback about connection status
             //! \threadsafe

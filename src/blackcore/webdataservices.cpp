@@ -332,6 +332,27 @@ namespace BlackCore
         }
     }
 
+    QDateTime CWebDataServices::getSharedFileTimestamp(CEntityFlags::Entity entity) const
+    {
+        const CDatabaseReader *reader = this->getDbReader(entity);
+        if (reader)
+        {
+            return reader->getSharedFileTimestamp(entity);
+        }
+        else
+        {
+            return QDateTime();
+        }
+    }
+
+    bool CWebDataServices::requestHeaderOfSharedFile(CEntityFlags::Entity entity)
+    {
+        Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
+        CDatabaseReader *reader = this->getDbReader(entity);
+        if (!reader) { return false; }
+        return reader->requestHeadersOfSharedFiles(entity);
+    }
+
     int CWebDataServices::getCacheCount(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
@@ -618,7 +639,7 @@ namespace BlackCore
         if (this->m_databaseWriter)       { this->m_databaseWriter->gracefulShutdown(); }
     }
 
-    CEntityFlags::Entity CWebDataServices::allDbEntiiesUsed() const
+    CEntityFlags::Entity CWebDataServices::allDbEntiiesForUsedReaders() const
     {
         // obtain entities from real readers (means when reader is really used)
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
@@ -671,9 +692,13 @@ namespace BlackCore
             {
                 this->m_infoDataReader = new CInfoDataReader(this, dbReaderConfig);
                 c = connect(this->m_infoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
-                Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO info object signals");
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Info object connect failed");
+
+                // relay signal
                 c = connect(this->m_infoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
-                Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed info data");
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Info object connect failed");
+
+                // start reading
                 this->m_infoDataReader->start(QThread::LowPriority);
                 QTimer::singleShot(0, [this]() { this->m_infoDataReader->read(CEntityFlags::InfoObjectEntity, QDateTime()); });
             }
@@ -711,7 +736,7 @@ namespace BlackCore
         if (flags.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             this->m_vatsimDataFileReader = new CVatsimDataFileReader(this);
-            c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::ps_dataFileRead);
+            c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::ps_vatsimDataFileRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
             c = connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
@@ -738,8 +763,10 @@ namespace BlackCore
         {
             this->m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
             c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "ICAO reader signals");
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
             c = connect(this->m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
+            c = connect(this->m_icaoDataReader, &CIcaoDataReader::sharedFileHeaderRead, this, &CWebDataServices::sharedFileHeaderRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
             this->m_icaoDataReader->start(QThread::LowPriority);
         }
@@ -749,9 +776,11 @@ namespace BlackCore
         {
             this->m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
             c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Model reader signals");
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(this->m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed models");
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+            c = connect(this->m_modelDataReader, &CModelDataReader::sharedFileHeaderRead, this, &CWebDataServices::sharedFileHeaderRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             this->m_modelDataReader->start(QThread::LowPriority);
         }
 
@@ -760,11 +789,17 @@ namespace BlackCore
         {
             this->m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
             c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::ps_readFromSwiftDb);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Airport reader signals");
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             c = connect(this->m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed for airports");
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+            c = connect(this->m_airportDataReader, &CAirportDataReader::sharedFileHeaderRead, this, &CWebDataServices::sharedFileHeaderRead);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             this->m_airportDataReader->start(QThread::LowPriority);
         }
+
+        // Trigger Shared file headers loading
+        //! \todo refine, check if really needed to load the headers here
+        QTimer::singleShot(0, [this]() { this->triggerLoadingOfSharedFilesHeaders(); });
     }
 
     CDatabaseReader *CWebDataServices::getDbReader(CEntityFlags::Entity entity) const
@@ -772,7 +807,7 @@ namespace BlackCore
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
         Q_ASSERT_X(CEntityFlags::anySwiftDbEntity(entity), Q_FUNC_INFO, "No swift DB entity");
 
-        CWebReaderFlags::WebReader wr = CWebReaderFlags::entityToReader(entity);
+        const CWebReaderFlags::WebReader wr = CWebReaderFlags::entityToReader(entity);
         switch (wr)
         {
         case CWebReaderFlags::IcaoDataReader: return this->m_icaoDataReader;
@@ -801,7 +836,7 @@ namespace BlackCore
         CLogMessage(this).info("Read %1 METARs") << metars.size();
     }
 
-    void CWebDataServices::ps_dataFileRead(int lines)
+    void CWebDataServices::ps_vatsimDataFileRead(int lines)
     {
         CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
     }
@@ -829,16 +864,11 @@ namespace BlackCore
         }
 
         this->m_swiftDbEntitiesRead |= entity;
-        const int allUsedEntities = static_cast<int>(this->allDbEntiiesUsed());
+        const int allUsedEntities = static_cast<int>(this->allDbEntiiesForUsedReaders());
         if (((static_cast<int>(this->m_swiftDbEntitiesRead)) & allUsedEntities) == allUsedEntities)
         {
             emit allSwiftDbDataRead();
         }
-    }
-
-    void CWebDataServices::ps_setupChanged()
-    {
-        // void
     }
 
     void CWebDataServices::readDeferredInBackground(CEntityFlags::Entity entities, int delayMs)
@@ -959,7 +989,7 @@ namespace BlackCore
     bool CWebDataServices::readDbDataFromDisk(const QString &dir, bool inBackground)
     {
         if (dir.isEmpty()) { return false; }
-        QDir directory(dir);
+        const QDir directory(dir);
         if (!directory.exists()) { return false; }
 
         bool s = false;
@@ -976,5 +1006,38 @@ namespace BlackCore
                 this->m_modelDataReader->readFromJsonFiles(dir);
         }
         return s;
+    }
+
+    bool CWebDataServices::triggerLoadingOfSharedFilesHeaders(CEntityFlags::Entity requestedEntities)
+    {
+        CEntityFlags::Entity triggeredEntities = CEntityFlags::NoEntity;
+        if (this->m_modelDataReader)
+        {
+            const CEntityFlags::Entity entities = requestedEntities & CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::ModelReader);
+            if (entities != CEntityFlags::NoEntity)
+            {
+                triggeredEntities |= entities;
+                this->m_modelDataReader->requestHeadersOfSharedFiles(entities);
+            }
+        }
+        if (this->m_icaoDataReader)
+        {
+            const CEntityFlags::Entity entities = requestedEntities & CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::IcaoDataReader);
+            if (entities != CEntityFlags::NoEntity)
+            {
+                triggeredEntities |= entities;
+                this->m_icaoDataReader->requestHeadersOfSharedFiles(entities);
+            }
+        }
+        if (this->m_airportDataReader)
+        {
+            const CEntityFlags::Entity entities = requestedEntities & CWebReaderFlags::allEntitiesForReaders(CWebReaderFlags::AirportReader);
+            if (entities != CEntityFlags::NoEntity)
+            {
+                triggeredEntities |= entities;
+                this->m_airportDataReader->requestHeadersOfSharedFiles(entities);
+            }
+        }
+        return triggeredEntities != CEntityFlags::NoEntity;
     }
 } // ns

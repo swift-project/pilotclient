@@ -31,6 +31,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackCore;
+using namespace BlackCore::Data;
 
 namespace BlackCore
 {
@@ -130,41 +131,74 @@ namespace BlackCore
 
         CDatabaseReader::JsonDatastoreResponse CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const
         {
-            this->threadAssertCheck();
-
             JsonDatastoreResponse datastoreResponse;
-            if (this->isAbandoned())
-            {
-                nwReply->abort();
-                datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Terminated data parsing process"));
-                return datastoreResponse; // stop, terminate straight away, ending thread
-            }
-
-            if (nwReply->error() == QNetworkReply::NoError)
+            const bool ok = this->setHeaderInfoPart(datastoreResponse, nwReply);
+            if (ok)
             {
                 const QString dataFileData = nwReply->readAll().trimmed();
                 nwReply->close(); // close asap
                 if (dataFileData.isEmpty())
                 {
                     datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Empty response, no data"));
-                    datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
+                    datastoreResponse.setUpdateTimestamp(QDateTime::currentDateTimeUtc());
                 }
                 else
                 {
-                    datastoreResponse = CDatabaseReader::stringToDatastoreResponse(dataFileData);
+                    CDatabaseReader::stringToDatastoreResponse(dataFileData, datastoreResponse);
                 }
+            }
+            return datastoreResponse;
+        }
+
+        CDatabaseReader::HeaderResponse CDatabaseReader::transformReplyIntoHeaderResponse(QNetworkReply *nwReply) const
+        {
+            HeaderResponse headerResponse;
+            const bool success = this->setHeaderInfoPart(headerResponse, nwReply);
+            Q_UNUSED(success);
+            nwReply->close();
+            return headerResponse;
+        }
+
+        bool CDatabaseReader::setHeaderInfoPart(CDatabaseReader::HeaderResponse &headerResponse, QNetworkReply *nwReply) const
+        {
+            Q_ASSERT_X(nwReply, Q_FUNC_INFO, "Missing reply");
+            this->threadAssertCheck();
+            if (this->isAbandoned())
+            {
+                nwReply->abort();
+                headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Terminated data parsing process"));
+                return false; // stop, terminate straight away, ending thread
+            }
+
+            headerResponse.setUrl(nwReply->url());
+            const QVariant started = nwReply->property("started");
+            if (started.isValid() && started.canConvert<qint64>())
+            {
+                const qint64 now = QDateTime::currentMSecsSinceEpoch();
+                const qint64 start = started.value<qint64>();
+                headerResponse.setLoadTimeMs(now - start);
+            }
+
+            const QDateTime lastModified = nwReply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
+            const qulonglong size = static_cast<qlonglong>(nwReply->header(QNetworkRequest::ContentLengthHeader).toULongLong());
+            headerResponse.setUpdateTimestamp(lastModified);
+            headerResponse.setContentLengthHeader(size);
+
+            if (nwReply->error() == QNetworkReply::NoError)
+            {
+                // do not close because of obtaining data
+                return true;
             }
             else
             {
-
                 // no valid response
                 const QString error(nwReply->errorString());
                 const QString url(nwReply->url().toString());
                 nwReply->abort();
-                datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError,
-                                             QString("Reading data failed: " + error + " " + url)));
+                headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError,
+                                          QString("Reading data failed: " + error + " " + url)));
+                return false;
             }
-            return datastoreResponse;
         }
 
         CDatabaseReader::JsonDatastoreResponse CDatabaseReader::setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply)
@@ -191,9 +225,48 @@ namespace BlackCore
             static const QDateTime e;
             const CDbInfoList il(infoList());
             if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return e; }
-            CDbInfo info = il.findFirstByEntityOrDefault(entity);
+
+            // for some entities there can be more than one entry because of the
+            // raw tables (see DB view last updates)
+            const CDbInfo info = il.findFirstByEntityOrDefault(entity);
             if (!info.isValid()) { return e; }
             return info.getUtcTimestamp();
+        }
+
+        QDateTime CDatabaseReader::getSharedFileTimestamp(CEntityFlags::Entity entity) const
+        {
+            const int key = static_cast<int>(entity);
+            if (m_sharedFileResponses.contains(key))
+            {
+                return this->m_sharedFileResponses[key].getUpdateTimestamp();
+            }
+            else
+            {
+                return QDateTime();
+            }
+        }
+
+        bool CDatabaseReader::requestHeadersOfSharedFiles(const CEntityFlags::Entity &entities)
+        {
+            CEntityFlags::Entity allEntities(entities);
+            CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
+            CUrl urlDbData = CGlobalSetup::buildDbDataDirectory(getWorkingSharedUrl());
+
+            int c = 0;
+            while (currentEntity != CEntityFlags::NoEntity)
+            {
+                const QString fileName = CDbInfo::entityToSharedFileName(currentEntity);
+                Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "No file name for entity");
+                CUrl url = urlDbData;
+                url.appendPath(fileName);
+
+                const QString entityString = CEntityFlags::flagToString(currentEntity);
+                CLogMessage(this).info("Triggered read of header for shared file of %1") << entityString;
+                const QNetworkReply *reply = sApp->headerFromNetwork(url, { this, &CDatabaseReader::receivedSharedFileHeader });
+                if (reply) { c++; }
+                currentEntity = CEntityFlags::iterateDbEntities(allEntities);
+            }
+            return c > 0;
         }
 
         int CDatabaseReader::getCountFromInfoObjects(CEntityFlags::Entity entity) const
@@ -238,6 +311,22 @@ namespace BlackCore
             const QString oldS(oldUrl.getFullUrl(false));
             const QString currentS(currentUrl.getFullUrl(false));
             return oldS != currentS;
+        }
+
+        void CDatabaseReader::receivedSharedFileHeader(QNetworkReply *nwReplyPtr)
+        {
+            // wrap pointer, make sure any exit cleans up reply
+            // required to use delete later as object is created in a different thread
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            if (this->isAbandoned()) { return; }
+
+            const HeaderResponse headerResponse = this->transformReplyIntoHeaderResponse(nwReply.data());
+            const QString fileName = nwReply->url().fileName();
+            const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
+            const int key = static_cast<int>(entity);
+            this->m_sharedFileResponses[key] = headerResponse;
+
+            emit this->sharedFileHeaderRead(entity, fileName, !headerResponse.hasWarningOrAboveMessage());
         }
 
         bool CDatabaseReader::hasReceivedOkReply() const
@@ -324,14 +413,13 @@ namespace BlackCore
             return CNetworkUtils::canConnect(url);
         }
 
-        CDatabaseReader::JsonDatastoreResponse CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent)
+        void CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent, JsonDatastoreResponse &datastoreResponse)
         {
-            CDatabaseReader::JsonDatastoreResponse datastoreResponse;
             if (jsonContent.isEmpty())
             {
                 datastoreResponse.setMessage(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "Empty string, no data"));
-                datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
-                return datastoreResponse;
+                datastoreResponse.setUpdateTimestamp(QDateTime::currentDateTimeUtc());
+                return;
             }
 
             const QJsonDocument jsonResponse = QJsonDocument::fromJson(jsonContent.toUtf8());
@@ -339,17 +427,16 @@ namespace BlackCore
             {
                 // directly an array, no further info
                 datastoreResponse.setJsonArray(jsonResponse.array());
-                datastoreResponse.m_updated = QDateTime::currentDateTimeUtc();
+                datastoreResponse.setUpdateTimestamp(QDateTime::currentDateTimeUtc());
             }
             else
             {
                 const QJsonObject responseObject(jsonResponse.object());
                 datastoreResponse.setJsonArray(responseObject["data"].toArray());
                 const QString ts(responseObject["latest"].toString());
-                datastoreResponse.m_updated = ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts);
-                datastoreResponse.m_restricted = responseObject["restricted"].toBool();
+                datastoreResponse.setUpdateTimestamp(ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts));
+                datastoreResponse.setRestricted(responseObject["restricted"].toBool());
             }
-            return datastoreResponse;
         }
 
         void CDatabaseReader::JsonDatastoreResponse::setJsonArray(const QJsonArray &value)

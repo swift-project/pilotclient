@@ -360,7 +360,8 @@ namespace BlackSample
         Q_ASSERT_X(!data.isEmpty(), Q_FUNC_INFO, "Model file empty");
 
         // DB format, all models denormalized in DB JSON format
-        CDatabaseReader::JsonDatastoreResponse response = CDatabaseReader::stringToDatastoreResponse(data);
+        CDatabaseReader::JsonDatastoreResponse response;
+        CDatabaseReader::stringToDatastoreResponse(data, response);
         QTime timer;
         timer.start();
         const CAircraftModelList dbModels = CAircraftModelList::fromDatabaseJson(response);
