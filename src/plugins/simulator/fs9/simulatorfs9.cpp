@@ -78,17 +78,17 @@ namespace BlackSimPlugin
 
             FS_PBH pbhstrct;
             pbhstrct.pbh = positionVelocity.pbh;
-            double pitch = pbhstrct.pitch / CFs9Sdk::pitchMultiplier();
+            int pitch = pbhstrct.pitch / CFs9Sdk::pitchMultiplier();
             if (pitch > 180.0)
                 pitch -= 360;
 
-            double bank = pbhstrct.bank / CFs9Sdk::bankMultiplier();
+            int bank = pbhstrct.bank / CFs9Sdk::bankMultiplier();
             if (bank > 180.0)
                 bank -= 360;
 
             // MSFS has inverted pitch and bank angles
-            pitch = -pitch;
-            bank = -bank;
+            pitch = ~pitch;
+            bank = ~bank;
             situation.setPitch(CAngle(pitch, CAngleUnit::deg()));
             situation.setBank(CAngle(bank, CAngleUnit::deg()));
             situation.setHeading(CHeading(pbhstrct.hdg / CFs9Sdk::headingMultiplier(), CHeading::Magnetic, CAngleUnit::deg()));

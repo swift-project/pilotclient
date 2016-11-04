@@ -54,8 +54,8 @@ namespace BlackSimPlugin
             pbhstrct.pitch = newSituation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier();
             pbhstrct.bank = newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier();
             // MSFS has inverted pitch and bank angles
-            pbhstrct.pitch = -pbhstrct.pitch;
-            pbhstrct.bank = -pbhstrct.bank;
+            pbhstrct.pitch = ~pbhstrct.pitch;
+            pbhstrct.bank = ~pbhstrct.bank;
             positionVelocity.pbh = pbhstrct.pbh;
 
             // Ground velocity
@@ -111,8 +111,8 @@ namespace BlackSimPlugin
             pbhstrct.pitch = situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier();
             pbhstrct.bank = situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier();
             // MSFS has inverted pitch and bank angles
-            pbhstrct.pitch = -pbhstrct.pitch;
-            pbhstrct.bank = -pbhstrct.bank;
+            pbhstrct.pitch = ~pbhstrct.pitch;
+            pbhstrct.bank = ~pbhstrct.bank;
             positionSlewMode.pbh = pbhstrct.pbh;
 
             return positionSlewMode;

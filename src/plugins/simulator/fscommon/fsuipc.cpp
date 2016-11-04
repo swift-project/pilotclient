@@ -359,8 +359,8 @@ namespace BlackSimPlugin
 
                     // speeds, situation
                     // MSFS has inverted pitch and bank angles
-                    pitchRaw = -pitchRaw;
-                    bankRaw = -bankRaw;
+                    pitchRaw = ~pitchRaw;
+                    bankRaw = ~bankRaw;
                     const double angleCorrectionFactor = 360.0 / 65536.0 / 65536.0; // see FSUIPC docu
                     CAngle pitch = CAngle(pitchRaw * angleCorrectionFactor, CAngleUnit::deg());
                     CAngle bank = CAngle(bankRaw * angleCorrectionFactor, CAngleUnit::deg());
