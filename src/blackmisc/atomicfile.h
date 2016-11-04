@@ -27,6 +27,8 @@ namespace BlackMisc
      * when it is closed, so that it overwrites the target file as a single, atomic transaction.
      *
      * If the application crashes while data is still being written, the original file is unchanged.
+     *
+     * \fixme Consider using QSaveFile.
      */
     class BLACKMISC_EXPORT CAtomicFile : public QFile
     {

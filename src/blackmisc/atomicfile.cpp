@@ -21,6 +21,7 @@
 #include <errno.h>
 #elif defined(Q_OS_WIN32)
 #include <windows.h>
+#include <io.h>
 #endif
 
 //! \var qt_ntfs_permission_lookup
@@ -72,6 +73,10 @@ namespace BlackMisc
     void CAtomicFile::close()
     {
         if (! isOpen()) { return; }
+
+#if defined(Q_OS_WIN32)
+        FlushFileBuffers(reinterpret_cast<HANDLE>(_get_osfhandle(handle())));
+#endif
 
         QFile::close();
 
@@ -135,13 +140,16 @@ namespace BlackMisc
             const auto prefix = "\\\\?\\"; // support long paths: https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247.aspx#maxpath
             return (prefix + QDir::toNativeSeparators(QDir::cleanPath(QFileInfo(s).absoluteFilePath()))).toStdWString();
         };
-        auto result = MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH);
+        auto replace = exists(m_originalFilename);
+        auto result = replace
+            ? ReplaceFile(encode(m_originalFilename).c_str(), encode(fileName()).c_str(), nullptr, REPLACEFILE_IGNORE_MERGE_ERRORS, nullptr, nullptr)
+            : MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(), MOVEFILE_WRITE_THROUGH);
         if (! result)
         {
             m_renameError = true;
             wchar_t *s = nullptr;
             FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, reinterpret_cast<LPWSTR>(&s), 0, nullptr);
-            setErrorString(QString::fromWCharArray(s).simplified());
+            setErrorString((replace ? "ReplaceFile: " : "MoveFileEx: ") + QString::fromWCharArray(s).simplified());
             LocalFree(reinterpret_cast<HLOCAL>(s));
         }
     }
