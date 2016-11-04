@@ -23,7 +23,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs)
             : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
               m_bank(bank), m_groundSpeed(gs) {}
@@ -55,6 +54,10 @@ namespace BlackMisc
             {
                 return ITimestampBased::propertyByIndex(index);
             }
+            if (ICoordinateGeodetic::canHandleIndex(index))
+            {
+                return ICoordinateGeodetic::propertyByIndex(index);
+            }
 
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
@@ -73,7 +76,7 @@ namespace BlackMisc
                 return this->m_pitch.propertyByIndex(index.copyFrontRemoved());
             case IndexBank:
                 return this->m_bank.propertyByIndex(index.copyFrontRemoved());
-            case IndexGroundspeed:
+            case IndexGroundSpeed:
                 return this->m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:
                 return this->m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
@@ -106,7 +109,7 @@ namespace BlackMisc
             case IndexBank:
                 this->m_bank.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
-            case IndexGroundspeed:
+            case IndexGroundSpeed:
                 this->m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexCallsign:
@@ -116,6 +119,45 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
+        }
+
+        int CAircraftSituation::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituation &compareValue) const
+        {
+            if (ITimestampBased::canHandleIndex(index))
+            {
+                return ITimestampBased::comparePropertyByIndex(index, compareValue);
+            }
+            if (ICoordinateGeodetic::canHandleIndex(index))
+            {
+                return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue);
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexPosition:
+                return this->m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
+                break;
+            case IndexAltitude:
+                return this->m_altitude.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
+                break;
+            case IndexPitch:
+                return this->m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
+                break;
+            case IndexBank:
+                return this->m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
+                break;
+            case IndexGroundSpeed:
+                return this->m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
+                break;
+            case IndexCallsign:
+                return this->m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+                break;
+            default:
+                break;
+            }
+            const QString assertMsg("No comparison for index " + index.toQString());
+            Q_ASSERT_X(false, Q_FUNC_INFO, assertMsg.toLocal8Bit().constData());
+            return 0;
         }
 
         bool CAircraftSituation::isOnGroundGuessed() const

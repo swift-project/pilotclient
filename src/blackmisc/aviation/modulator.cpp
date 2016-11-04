@@ -25,7 +25,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         template <class AVIO>
         bool CModulator<AVIO>::isDefaultValue() const
         {

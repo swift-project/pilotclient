@@ -11,6 +11,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/metaclassprivate.h"
 #include "blackmisc/pq/constants.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/stringutils.h"
@@ -396,12 +397,13 @@ namespace BlackMisc
             case IndexPilot:
                 return this->m_pilot.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPilot());
             case IndexSituation:
+                return this->m_situation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSituation());
             case IndexRelativeDistance:
                 return this->m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
             case IndexCom1System:
-                return m_com1system.getFrequencyActive().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System().getFrequencyActive());
+                return m_com1system.getFrequencyActive().comparePropertyByIndex(CPropertyIndex(), compareValue.getCom1System().getFrequencyActive());
             case IndexCom2System:
-                return m_com2system.getFrequencyActive().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom2System().getFrequencyActive());
+                return m_com2system.getFrequencyActive().comparePropertyByIndex(CPropertyIndex(), compareValue.getCom2System().getFrequencyActive());
             case IndexTransponder:
                 return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
             case IndexLivery:
@@ -412,12 +414,22 @@ namespace BlackMisc
                 return m_model.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
             case IndexNetworkModel:
                 return m_networkModel.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
+            case IndexNetworkModelAircraftIcaoDifference:
+                return this->getNetworkModelAircraftIcaoDifference().compare(compareValue.getNetworkModelAircraftIcaoDifference());
+            case IndexNetworkModelAirlineIcaoDifference:
+                return this->getNetworkModelAirlineIcaoDifference().compare(compareValue.getNetworkModelAirlineIcaoDifference());
+            case IndexNetworkModelLiveryDifference:
+                return this->getNetworkModelLiveryDifference().compare(compareValue.getNetworkModelLiveryDifference());
             case IndexRendered:
                 return Compare::compare(this->m_rendered, compareValue.isRendered());
             case IndexPartsSynchronized:
                 return Compare::compare(this->m_partsSynchronized, compareValue.isPartsSynchronized());
             case IndexFastPositionUpdates:
                 return Compare::compare(this->m_fastPositionUpdates, compareValue.fastPositionUpdates());
+            case IndexCombinedIcaoLiveryString:
+                return this->getCombinedIcaoLiveryString(false).compare(compareValue.getCombinedIcaoLiveryString(false));
+            case IndexCombinedIcaoLiveryStringNetworkModel:
+                return this->getCombinedIcaoLiveryString(true).compare(compareValue.getCombinedIcaoLiveryString(true));
             default:
                 if (ICoordinateWithRelativePosition::canHandleIndex(index))
                 {
@@ -425,7 +437,7 @@ namespace BlackMisc
                 }
                 break;
             }
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Comapre failed");
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
             return 0;
         }
 

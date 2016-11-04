@@ -64,7 +64,7 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
                     this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                     this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
-                    this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
+                    this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, new CAircraftSpeedFormatter()));
                     this->m_columns.addColumn(CColumn::standardString("icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryStringNetworkModel}));
 
                     // icon column for airline
@@ -90,7 +90,7 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn::standardValueObject("cs.", "callsign", { CSimulatedAircraft::IndexCallsign, CCallsign::IndexCallsignString }));
                     this->m_columns.addColumn(CColumn("dist.", "distance", CSimulatedAircraft::IndexRelativeDistance, new CAirspaceDistanceFormatter()));
                     this->m_columns.addColumn(CColumn("altitude", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, new CAltitudeFormatter()));
-                    this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
+                    this->m_columns.addColumn(CColumn("gs.", { CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, new CAircraftSpeedFormatter()));
                     this->m_columns.addColumn(CColumn("p.", "parts", CSimulatedAircraft::IndexPartsSynchronized, new CBoolIconFormatter("parts", "no parts"), true));
                     this->m_columns.addColumn(CColumn("fp.", "fast position updates", CSimulatedAircraft::IndexFastPositionUpdates, new CBoolIconFormatter("enabled", "disabled"), true));
                     this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));

@@ -15,6 +15,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/pressure.h"
 #include "blackmisc/pq/frequency.h"
@@ -428,7 +429,7 @@ namespace BlackMisc
             default:
                 break;
             }
-            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
             return 0;
         }
 

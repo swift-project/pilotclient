@@ -53,7 +53,7 @@ namespace BlackMisc
                 IndexHeading,
                 IndexBank,
                 IndexPitch,
-                IndexGroundspeed,
+                IndexGroundSpeed,
                 IndexCallsign
             };
 
@@ -80,6 +80,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituation &compareValue) const;
 
             //! Get position
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return this->m_position; }
