@@ -139,7 +139,7 @@ namespace BlackSimPlugin
         //! Reduced multiplayer position packet
         struct REDUCED_LLAPBH_DATA
         {
-            qint32 pbh = 0; //!< Struct pitch/bank/heading
+            quint32 pbh = 0; //!< Struct pitch/bank/heading
             qint32 lat_i = 0; //!< Latitude value - integer part
             qint32 lon_hi = 0; //!< Longitude value - integer part
             qint32 alt_i = 0; //!< Altitude value - integer part
@@ -156,7 +156,7 @@ namespace BlackSimPlugin
             quint32 application_time = 0; //!< Application time - ignored
             quint32 packet_index = 0; //!< Packet index
             std::array<quint8, 4> reserved = std::array<quint8, 4>{{0, 0, 0, 0}}; //!< Reserved
-            qint32 pbh = 0; //!< Pitch/Bank/Heading
+            quint32 pbh = 0; //!< Pitch/Bank/Heading
             qint32 lat_i = 0; //!< Latitude - integer
             qint32 lon_hi = 0; //!< Longitude - integer
             qint32 alt_i = 0; //!< Altitude - integer
@@ -178,7 +178,7 @@ namespace BlackSimPlugin
             qint32 alt_velocity = 0; //!< Altitude velocity
             quint32 ground_velocity = 0; //!< Ground velocity
             std::array<quint8, 4> reserved = std::array<quint8, 4>{{0, 0, 0, 0}}; //!< Reserved
-            qint32 pbh = 0; //!< Pitch/Bank/Heading
+            quint32 pbh = 0; //!< Pitch/Bank/Heading
             qint32 lat_i = 0; //!< Latitude - integer
             qint32 lon_hi = 0; //!< Longitude - integer
             qint32 alt_i = 0; //!< Altitude - integer
@@ -222,8 +222,8 @@ namespace BlackSimPlugin
                 unsigned int unused   : 1; //!< unused bit
                 unsigned int onground : 1; //!< Onground flag
                 unsigned int hdg      : 10; //!< Heading
-                unsigned int bank     : 10; //!< Bank
-                unsigned int pitch    : 10; //!< Pitch
+                int bank              : 10; //!< Bank
+                int pitch             : 10; //!< Pitch
             };
         };
     }

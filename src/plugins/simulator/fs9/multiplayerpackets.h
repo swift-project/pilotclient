@@ -101,7 +101,7 @@ namespace BlackSimPlugin
              //! Return tuple of member variables
              std::tuple<quint32 &, quint32 &,
                  quint8 &, quint8 &, quint8 &, quint8 &,
-                 qint32 &, qint32 &, qint32 &, qint32 &,
+                 quint32 &, qint32 &, qint32 &, qint32 &,
                  quint16 &, quint16 &, quint16 &> getTuple()
              {
                  return std::tie(application_time, packet_index,
@@ -113,7 +113,7 @@ namespace BlackSimPlugin
              //! Return const tuple of member variables
              std::tuple<const quint32 &, const quint32 &,
              const quint8 &, const quint8 &, const quint8 &, const quint8 &,
-             const qint32 &, const qint32 &, const qint32 &, const qint32 &,
+             const quint32 &, const qint32 &, const qint32 &, const qint32 &,
              const quint16 &, const quint16 &, const quint16 &> getTuple() const
              {
                  return std::tie(application_time, packet_index,
@@ -132,7 +132,7 @@ namespace BlackSimPlugin
             //! Return tuple of member variables
             std::tuple<quint32 &, quint32 &, qint32 &, qint32 &, qint32 &,
                 quint32 &, quint8 &, quint8 &, quint8 &,
-                quint8 &, qint32 &, qint32 &, qint32 &,
+                quint8 &, quint32 &, qint32 &, qint32 &,
                 qint32 &, quint16 &, quint16 &,
                 quint16 &> getTuple()
             {
