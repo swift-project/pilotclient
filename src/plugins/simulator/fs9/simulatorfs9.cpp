@@ -79,6 +79,7 @@ namespace BlackSimPlugin
             FS_PBH pbhstrct;
             pbhstrct.pbh = positionVelocity.pbh;
             int pitch = pbhstrct.pitch / CFs9Sdk::pitchMultiplier();
+            if (pitch < -90 || pitch > 89) { CLogMessage(nullptr).warning("FS9: Pitch value out of limits: %1") << pitch; }
             int bank = pbhstrct.bank / CFs9Sdk::bankMultiplier();
 
             // MSFS has inverted pitch and bank angles

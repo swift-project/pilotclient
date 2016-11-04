@@ -381,6 +381,10 @@ namespace BlackSimPlugin
             position.setLatitude(CLatitude(simulatorOwnAircraft.latitude, CAngleUnit::deg()));
             position.setLongitude(CLongitude(simulatorOwnAircraft.longitude, CAngleUnit::deg()));
 
+            if (simulatorOwnAircraft.pitch < -90.0 || simulatorOwnAircraft.pitch >= 90.0)
+            {
+                CLogMessage(this).warning("FSX: Pitch value out of limits: %1") << simulatorOwnAircraft.pitch;
+            }
             BlackMisc::Aviation::CAircraftSituation aircraftSituation;
             aircraftSituation.setPosition(position);
             // MSFS has inverted pitch and bank angles

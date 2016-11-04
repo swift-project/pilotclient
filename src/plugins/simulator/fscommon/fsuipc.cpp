@@ -357,13 +357,18 @@ namespace BlackSimPlugin
                     position.setGeodeticHeight(groundAltitude);
                     situation.setPosition(position);
 
-                    // speeds, situation
+                    const double angleCorrectionFactor = 360.0 / 65536.0 / 65536.0; // see FSUIPC docu
+                    pitchRaw *= angleCorrectionFactor;
+                    bankRaw *= angleCorrectionFactor;
+
                     // MSFS has inverted pitch and bank angles
                     pitchRaw = ~pitchRaw;
                     bankRaw = ~bankRaw;
-                    const double angleCorrectionFactor = 360.0 / 65536.0 / 65536.0; // see FSUIPC docu
-                    CAngle pitch = CAngle(pitchRaw * angleCorrectionFactor, CAngleUnit::deg());
-                    CAngle bank = CAngle(bankRaw * angleCorrectionFactor, CAngleUnit::deg());
+                    if (pitchRaw < -90 || pitchRaw > 89) { CLogMessage(this).warning("FSUIPC: Pitch value out of limits: %1") << pitchRaw; }
+
+                    // speeds, situation
+                    CAngle pitch = CAngle(pitchRaw, CAngleUnit::deg());
+                    CAngle bank = CAngle(bankRaw, CAngleUnit::deg());
                     CHeading heading = CHeading(headingRaw * angleCorrectionFactor, CHeading::True, CAngleUnit::deg());
                     CSpeed groundspeed(groundspeedRaw / 65536.0, CSpeedUnit::m_s());
                     CAltitude altitude(altitudeRaw / (65536.0 * 65536.0), CAltitude::MeanSeaLevel, CLengthUnit::m());
