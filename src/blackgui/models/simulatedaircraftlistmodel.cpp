@@ -96,8 +96,10 @@ namespace BlackGui
                     this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CSimulatedAircraft::IndexPilot, CUser::IndexRealName }));
                     this->m_columns.addColumn(CColumn::standardString("icao", CSimulatedAircraft::IndexCombinedIcaoLiveryString));
                     this->m_columns.addColumn(CColumn::standardString("model", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelString}));
-                    this->m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
                     this->m_columns.addColumn(CColumn::standardString("type", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexModelTypeAsString}));
+                    this->m_columns.addColumn(CColumn::standardString("desc.", "description", { CSimulatedAircraft::IndexModel, CAircraftModel::IndexDescription}));
+                    this->m_columns.addColumn(CColumn::standardString("aircraft", "rendered vs. network aircraft ICAO", CSimulatedAircraft::IndexNetworkModelAircraftIcaoDifference));
+                    this->m_columns.addColumn(CColumn::standardString("livery", "rendered vs. network livery", CSimulatedAircraft::IndexNetworkModelLiveryDifference));
 
                     // default sort order
                     this->setSortColumnByPropertyIndex(CSimulatedAircraft::IndexRelativeDistance);

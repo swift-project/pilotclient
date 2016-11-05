@@ -353,6 +353,15 @@ namespace BlackMisc
             //! Has a network model been set?
             bool hasNetworkModel() const;
 
+            //! Difference of network and (rendered) aircraft ICAO code
+            QString getNetworkModelAircraftIcaoDifference() const;
+
+            //! Difference of network and (rendered) airline ICAO code
+            QString getNetworkModelAirlineIcaoDifference() const;
+
+            //! Difference of network and (rendered) livery code
+            QString getNetworkModelLiveryDifference() const;
+
             //! \copydoc BlackMisc::Simulation::CAircraftModel::getIconPath
             const QString &getIconPath() const { return m_model.getIconPath(); }
 

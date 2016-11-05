@@ -280,6 +280,12 @@ namespace BlackMisc
                 return this->getModel().propertyByIndex(index.copyFrontRemoved());
             case IndexNetworkModel:
                 return this->getNetworkModel().propertyByIndex(index.copyFrontRemoved());
+            case IndexNetworkModelAircraftIcaoDifference:
+                return this->getNetworkModelAircraftIcaoDifference();
+            case IndexNetworkModelAirlineIcaoDifference:
+                return this->getNetworkModelAirlineIcaoDifference();
+            case IndexNetworkModelLiveryDifference:
+                return this->getNetworkModelLiveryDifference();
             case IndexEnabled:
                 return CVariant::fromValue(this->isEnabled());
             case IndexRendered:
@@ -449,6 +455,33 @@ namespace BlackMisc
         bool CSimulatedAircraft::hasNetworkModel() const
         {
             return this->m_networkModel.hasModelString() || !this->m_networkModel.getCallsign().isEmpty();
+        }
+
+        QString CSimulatedAircraft::getNetworkModelAircraftIcaoDifference() const
+        {
+            const CAircraftIcaoCode icao(this->getModel().getAircraftIcaoCode());
+            const CAircraftIcaoCode icaoNw(this->getNetworkModel().getAircraftIcaoCode());
+            if (icao == icaoNw || icao.getDesignator() == icaoNw.getDesignator()) { return "[=] " + icao.getDesignator(); }
+            static const QString diff("%1 -> %2");
+            return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
+        }
+
+        QString CSimulatedAircraft::getNetworkModelAirlineIcaoDifference() const
+        {
+            const CAirlineIcaoCode icao(this->getModel().getAirlineIcaoCode());
+            const CAirlineIcaoCode icaoNw(this->getNetworkModel().getAirlineIcaoCode());
+            if (icao == icaoNw || icao.getDesignator() == icaoNw.getDesignator()) { return "[=] " + icao.getDesignator(); }
+            static const QString diff("%1 -> %2");
+            return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
+        }
+
+        QString CSimulatedAircraft::getNetworkModelLiveryDifference() const
+        {
+            const CLivery livery(this->getModel().getLivery());
+            const CLivery liveryNw(this->getNetworkModel().getLivery());
+            if (livery == liveryNw) { return "[=] " + livery.getCombinedCodePlusInfo(); }
+            static const QString diff("%1 -> %2");
+            return diff.arg(liveryNw.getCombinedCodePlusInfo(), livery.getCombinedCodePlusInfo());
         }
 
         void CSimulatedAircraft::setModel(const CAircraftModel &model)
