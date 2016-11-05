@@ -88,6 +88,7 @@ namespace BlackSimPlugin
 
             void sendMultiplayerPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
             void sendMultiplayerParamaters();
+            void sendMultiplayerChangePlayerPlane();
 
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
             BlackMisc::IInterpolator *m_interpolator = nullptr;

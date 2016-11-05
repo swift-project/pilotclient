@@ -308,15 +308,9 @@ namespace BlackSimPlugin
                 return logDirectPlayError(hr);
             }
 
-            MPChangePlayerPlane mpChangePlayerPlane;
-            mpChangePlayerPlane.engine = CFs9Sdk::ENGINE_TYPE_JET;
-            mpChangePlayerPlane.aircraft_name = m_modelName;
-            QByteArray message;
-            MultiPlayerPacketParser::writeType(message, CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE);
-            MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
-            message = MultiPlayerPacketParser::writeMessage(message, mpChangePlayerPlane);
+
             CLogMessage(this).debug() << m_callsign << " connected to session.";
-            sendMessage(message);
+            sendMultiplayerChangePlayerPlane();
 
             m_timerId = startTimer(m_updateInterval.value(CTimeUnit::ms()));
 
@@ -366,6 +360,18 @@ namespace BlackSimPlugin
             ++m_packetIndex;
             paramMessage = MultiPlayerPacketParser::writeMessage(paramMessage, param);
             sendMessage(paramMessage);
+        }
+
+        void CFs9Client::sendMultiplayerChangePlayerPlane()
+        {
+            MPChangePlayerPlane mpChangePlayerPlane;
+            mpChangePlayerPlane.engine = CFs9Sdk::ENGINE_TYPE_JET;
+            mpChangePlayerPlane.aircraft_name = m_modelName;
+            QByteArray message;
+            MultiPlayerPacketParser::writeType(message, CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE);
+            MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
+            message = MultiPlayerPacketParser::writeMessage(message, mpChangePlayerPlane);
+            sendMessage(message);
         }
     }
 }
