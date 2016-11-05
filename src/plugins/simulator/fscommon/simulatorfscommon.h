@@ -43,7 +43,6 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
-            virtual void enableDebugMessages(bool driver, bool interpolator) override;
             //! @}
 
         protected:

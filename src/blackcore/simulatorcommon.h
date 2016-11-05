@@ -19,6 +19,7 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/interpolationsetup.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/connectionguard.h"
 #include "blackmisc/pq/length.h"
@@ -75,7 +76,7 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
         virtual bool isMaxAircraftRestricted() const override;
         virtual bool isMaxDistanceRestricted() const override;
-        virtual void enableDebugMessages(bool driverMessages, bool interpolatorMessages) override;
+        virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override;
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
         virtual bool isRenderingEnabled() const override;
         virtual bool isRenderingRestricted() const override;
@@ -148,7 +149,6 @@ namespace BlackCore
         void ps_allSwiftDataRead();
 
     private:
-        bool m_debugMessages = false;                    //!< Display debug messages
         bool m_blinkCycle = false;                       //!< use for highlighting
         qint64 m_highlightEndTimeMsEpoch = 0;            //!< end highlighting
         int m_timerCounter = 0;                          //!< allows to calculate n seconds
@@ -159,6 +159,7 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;                     //!< callsigns which will be rendered
         BlackMisc::PhysicalQuantities::CLength        m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
         BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections;         //!< connected signal/slots
+
     };
 } // namespace
 

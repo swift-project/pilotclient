@@ -13,6 +13,7 @@
 #define BLACKMISC_INTERPOLATOR_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/interpolationsetup.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -68,14 +69,15 @@ namespace BlackMisc
         //! Current interpolated situation
         //! \threadsafe
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-            const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
-            bool isVtolAircraft, InterpolationStatus &status) const = 0;
-
-        //! Current interpolated situation
-        //! \threadsafe
-        virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
             const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
             bool isVtolAircraft, InterpolationStatus &status) const;
+
+        //! Current interpolated situation, to be implemented by subclass
+        //! \threadsafe
+        //! \remark public only for XP driver
+        virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+            const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
+            bool isVtolAircraft, InterpolationStatus &status) const = 0;
 
         //! Parts before given offset time (aka pending parts)
         //! \threadsafe
@@ -89,16 +91,21 @@ namespace BlackMisc
             const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
             PartsStatus &partsStatus) const;
 
-        //! Enable debug messages
-        void enableDebugMessages(bool enabled);
+        //! Enable debug messages etc.
+        //! \threadsafe
+        void setInterpolatorSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup);
 
     protected:
         //! Constructor
         IInterpolator(BlackMisc::Simulation::IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent);
 
-        bool m_withDebugMsg = false;  //!< allows to disable debug messages
-    };
+        //! Enable debug messages etc.
+        //! \threadsafe
+        BlackMisc::CInterpolationAndRenderingSetup getInterpolatorSetup() const;
 
+        BlackMisc::CInterpolationAndRenderingSetup m_setup; //!< allows to disable debug messages
+        mutable QReadWriteLock m_lock; //!< lock interpolator
+    };
 } // namespace
 
 #endif // guard

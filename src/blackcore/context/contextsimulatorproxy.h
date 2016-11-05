@@ -70,6 +70,7 @@ namespace BlackCore
             virtual int getMaxRenderedAircraft() const override;
             virtual void setMaxRenderedAircraft(int number) override;
             virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
+            virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override;
             virtual void deleteAllRenderingRestrictions() override;
             virtual bool isRenderingRestricted() const override;
             virtual bool isRenderingEnabled() const override;
@@ -81,7 +82,6 @@ namespace BlackCore
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override;
-            virtual void enableDebugMessages(bool driver, bool interpolator) override;
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;

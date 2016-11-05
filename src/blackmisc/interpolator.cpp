@@ -25,7 +25,7 @@ namespace BlackMisc
     }
 
     BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-        bool isVtolAircraft, InterpolationStatus &status) const
+            bool isVtolAircraft, InterpolationStatus &status) const
     {
         // has to be thread safe
 
@@ -56,9 +56,16 @@ namespace BlackMisc
         return this->remoteAircraftParts(callsign, cutoffTime);
     }
 
-    void IInterpolator::enableDebugMessages(bool enabled)
+    void IInterpolator::setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup)
     {
-        this->m_withDebugMsg = enabled;
+        QWriteLocker l(&m_lock);
+        m_setup = setup;
+    }
+
+    CInterpolationAndRenderingSetup IInterpolator::getInterpolatorSetup() const
+    {
+        QReadLocker l(&m_lock);
+        return m_setup;
     }
 
     bool IInterpolator::InterpolationStatus::allTrue() const
@@ -81,5 +88,4 @@ namespace BlackMisc
     {
         supportsParts = false;
     }
-
 } // namespace

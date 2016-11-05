@@ -34,12 +34,10 @@
 
 namespace BlackMisc
 {
-
     class CPropertyIndexVariantMap;
 
     namespace Mixin
     {
-
         /*!
          * CRTP class template from which a derived class can inherit property indexing functions.
          *

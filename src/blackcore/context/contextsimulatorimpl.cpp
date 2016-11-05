@@ -236,6 +236,14 @@ namespace BlackCore
             m_simulatorPlugin.second->setMaxRenderedDistance(distance);
         }
 
+        void CContextSimulator::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << setup; }
+            if (m_simulatorPlugin.first.isUnspecified()) { return; }
+            Q_ASSERT(m_simulatorPlugin.second);
+            m_simulatorPlugin.second->setInterpolationAndRenderingSetup(setup);
+        }
+
         QString CContextSimulator::getRenderRestrictionText() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -618,13 +626,6 @@ namespace BlackCore
             const CPixmap pm(model.loadIcon(msg));
             if (!msg.isEmpty()) { CLogMessage::preformatted(msg);}
             return pm;
-        }
-
-        void CContextSimulator::enableDebugMessages(bool driver, bool interpolator)
-        {
-            if (m_simulatorPlugin.first.isUnspecified()) { return; }
-            Q_ASSERT_X(m_simulatorPlugin.second, Q_FUNC_INFO, "Missing simulator");
-            return m_simulatorPlugin.second->enableDebugMessages(driver, interpolator);
         }
 
         CStatusMessageList CContextSimulator::getMatchingMessages(const CCallsign &callsign) const

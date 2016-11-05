@@ -88,14 +88,5 @@ namespace BlackSimPlugin
             }
             return true;
         }
-
-        void CSimulatorFsCommon::enableDebugMessages(bool driver, bool interpolator)
-        {
-            if (this->m_interpolator)
-            {
-                this->m_interpolator->enableDebugMessages(interpolator);
-            }
-            CSimulatorCommon::enableDebugMessages(driver, interpolator);
-        }
     } // namespace
 } // namespace

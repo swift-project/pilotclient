@@ -35,10 +35,11 @@ namespace BlackMisc
             IInterpolator(provider, "CInterpolatorLinear", parent)
         {}
 
+        // public base class signature
+        using IInterpolator::getInterpolatedSituation;
+
         //! \copydoc IInterpolator::getInterpolatedSituation
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const override;
-
-        using IInterpolator::getInterpolatedSituation;
 
         //! Log category
         static QString getLogCategory() { return "swift.interpolatorlinear"; }

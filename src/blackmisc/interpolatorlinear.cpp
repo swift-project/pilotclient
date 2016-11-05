@@ -39,7 +39,7 @@ namespace BlackMisc
     CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const
     {
         // has to be thread safe
-
+        const CInterpolationAndRenderingSetup setup = this->getInterpolatorSetup();
         status.reset();
 
         // any data at all?
@@ -107,7 +107,7 @@ namespace BlackMisc
         double simulationTimeFraction = 1 - (distanceToSplitTime / deltaTime);
         if (simulationTimeFraction > 2.0)
         {
-            if (this->m_withDebugMsg)
+            if (setup.showInterpolatorDebugMessages())
             {
                 CLogMessage(this).warning("Extrapolation, fraction > 1: %1 for callsign: %2") << simulationTimeFraction << oldSituation.getCallsign();
             }
@@ -132,7 +132,7 @@ namespace BlackMisc
                                                + oldAlt,
                                                oldAlt.getReferenceDatum()));
 
-        if (!vtolAiracraft && newVec == oldVec && oldAlt == newAlt)
+        if (!setup.forceFullInterpolation() && !vtolAiracraft && newVec == oldVec && oldAlt == newAlt)
         {
             // stop interpolation here, does not work for VTOL aircraft. We need a flag for VTOL aircraft
             return currentSituation;

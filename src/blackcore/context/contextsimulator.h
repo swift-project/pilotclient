@@ -31,6 +31,7 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/interpolationsetup.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -187,6 +188,9 @@ namespace BlackCore
             //! Rendering enabled at all
             virtual bool isRenderingEnabled() const = 0;
 
+            //! Set interpolation and rendering
+            virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) = 0;
+
             //! Time synchronization offset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
@@ -198,9 +202,6 @@ namespace BlackCore
 
             //! Icon representing the model
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const = 0;
-
-            //! Enable debugging
-            virtual void enableDebugMessages(bool driver, bool interpolator) = 0;
 
             //! Get mapping messages
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const = 0;

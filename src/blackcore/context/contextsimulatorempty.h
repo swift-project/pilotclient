@@ -154,6 +154,13 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc ISimulator::setInterpolationAndRenderingSetup
+            virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override
+            {
+                Q_UNUSED(setup);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextSimulator::setMaxRenderedDistance
             virtual void deleteAllRenderingRestrictions() override
             {
@@ -231,14 +238,6 @@ namespace BlackCore
             {
                 Q_UNUSED(weatherGrid);
                 Q_UNUSED(identifier);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc ISimulator::enableDebugMessages
-            virtual void enableDebugMessages(bool driver, bool interpolator) override
-            {
-                Q_UNUSED(driver);
-                Q_UNUSED(interpolator);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 

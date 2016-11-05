@@ -314,10 +314,10 @@ namespace BlackCore
         return !m_maxRenderedDistance.isNull();
     }
 
-    void CSimulatorCommon::enableDebugMessages(bool driverMessages, bool interpolatorMessages)
+    void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
     {
-        this->m_debugMessages = driverMessages;
-        Q_UNUSED(interpolatorMessages);
+        this->m_interpolationRenderingSetup = setup;
+        this->m_interpolator->setInterpolatorSetup(setup);
     }
 
     void CSimulatorCommon::highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime)

@@ -139,6 +139,11 @@ namespace BlackCore
             m_dBusInterface->callDBus(QLatin1Literal("setMaxRenderedDistance"), distance);
         }
 
+        void CContextSimulatorProxy::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
+        {
+            m_dBusInterface->callDBus(QLatin1Literal("setInterpolationAndRenderingSetup"), setup);
+        }
+
         void CContextSimulatorProxy::deleteAllRenderingRestrictions()
         {
             m_dBusInterface->callDBus(QLatin1Literal("deleteAllRenderingRestrictions"));
@@ -207,11 +212,6 @@ namespace BlackCore
         void CContextSimulatorProxy::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
             m_dBusInterface->callDBus(QLatin1Literal("requestWeatherGrid"), weatherGrid, identifier);
-        }
-
-        void CContextSimulatorProxy::enableDebugMessages(bool driver, bool interpolator)
-        {
-            m_dBusInterface->callDBus(QLatin1Literal("enableDebugMessages"), driver, interpolator);
         }
 
         CStatusMessageList CContextSimulatorProxy::getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const
