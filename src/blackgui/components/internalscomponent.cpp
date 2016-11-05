@@ -18,6 +18,7 @@
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/aviation/callsign.h"
+
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "ui_internalscomponent.h"
@@ -58,8 +59,11 @@ namespace BlackGui
             connect(ui->cb_DebugContextNetwork, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+
             connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugInterpolator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+            connect(ui->cb_ForceFullInterpolation, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+
             contextFlagsToGui();
         }
 
@@ -164,12 +168,13 @@ namespace BlackGui
             else if (sender == ui->cb_DebugContextNetwork)  { sGui->getIContextNetwork()->setDebugEnabled(debug);}
             else if (sender == ui->cb_DebugContextOwnAircraft)  { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
             else if (sender == ui->cb_DebugContextSimulator)  { sGui->getIContextSimulator()->setDebugEnabled(debug);}
-            else if (sender == ui->cb_DebugDriver || sender == ui->cb_DebugInterpolator)
+            else if (sender == ui->cb_DebugDriver || sender == ui->cb_DebugInterpolator || sender == ui->cb_ForceFullInterpolation)
             {
-                sGui->getIContextSimulator()->enableDebugMessages(
-                    ui->cb_DebugDriver->isChecked(),
-                    ui->cb_DebugInterpolator->isChecked()
-                );
+                CInterpolationAndRenderingSetup setup;
+                setup.setForceFullInterpolation(ui->cb_ForceFullInterpolation->isChecked());
+                setup.setDriverDebuggingMessages(ui->cb_DebugDriver->isChecked());
+                setup.setInterpolatorDebuggingMessages(ui->cb_DebugInterpolator->isChecked());
+                sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
             }
         }
 
@@ -225,7 +230,6 @@ namespace BlackGui
             ui->cb_AircraftPartsEngine4->setChecked(engines.isEngineOn(4));
             ui->cb_AircraftPartsEngine5->setChecked(engines.isEngineOn(5));
             ui->cb_AircraftPartsEngine6->setChecked(engines.isEngineOn(6));
-
         }
 
         void CInternalsComponent::contextFlagsToGui()
@@ -235,6 +239,5 @@ namespace BlackGui
             ui->cb_DebugContextOwnAircraft->setChecked(sGui->getIContextOwnAircraft()->isDebugEnabled());
             ui->cb_DebugContextSimulator->setChecked(sGui->getIContextSimulator()->isDebugEnabled());
         }
-
     } // namespace
 } // namespace

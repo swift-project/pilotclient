@@ -104,25 +104,25 @@
           <item row="0" column="0">
            <widget class="QCheckBox" name="cb_DebugDriver">
             <property name="text">
-             <string>Driver</string>
+             <string>Driver dbg. msgs.</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="cb_DebugInterpolator">
             <property name="text">
-             <string>Interpolator</string>
+             <string>Interpolator dbg. msgs.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="cb_ForceFullInterpolation">
+            <property name="text">
+             <string>force full interpolation</string>
             </property>
            </widget>
           </item>
          </layout>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignHCenter">
-        <widget class="QLabel" name="lbl_Disclaimer_1">
-         <property name="text">
-          <string>WORK IN PROGRESS!</string>
-         </property>
         </widget>
        </item>
        <item>
@@ -144,7 +144,7 @@
       <attribute name="title">
        <string>Statistics</string>
       </attribute>
-      <widget class="QLabel" name="lbl_Disclaimer_2">
+      <widget class="QLabel" name="lbl_Disclaimer">
        <property name="geometry">
         <rect>
          <x>80</x>
