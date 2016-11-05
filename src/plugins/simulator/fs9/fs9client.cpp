@@ -316,9 +316,6 @@ namespace BlackSimPlugin
             MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
             message = MultiPlayerPacketParser::writeMessage(message, mpChangePlayerPlane);
             CLogMessage(this).debug() << m_callsign << " connected to session.";
-            // Send it several times, since one got missed several times.
-            sendMessage(message);
-            sendMessage(message);
             sendMessage(message);
 
             m_timerId = startTimer(m_updateInterval.value(CTimeUnit::ms()));

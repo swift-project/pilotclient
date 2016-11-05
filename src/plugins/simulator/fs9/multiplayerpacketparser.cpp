@@ -29,7 +29,7 @@ namespace BlackSimPlugin
 
             QByteArray writeValue(QByteArray data, const QString &value)
             {
-                data.append(qPrintable(value));
+                data.append(qPrintable(value), value.size() + 1);
                 return data;
             }
 
