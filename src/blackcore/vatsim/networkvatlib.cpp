@@ -109,10 +109,17 @@ namespace BlackCore
                 clientCapabilities |= vatCapsStealth;
             }
 
-            static const QByteArray pk(this->getCmdLineFsdKey().isEmpty() ? CBuildConfig::vatsimPrivateKey().toLocal8Bit() : this->getCmdLineFsdKey().toLocal8Bit());
+            int clientId = 0;
+            QString clientKey;
+            if (!getCmdLineClientIdAndKey(clientId, clientKey))
+            {
+                clientId = CBuildConfig::vatsimClientId();
+                clientKey = CBuildConfig::vatsimPrivateKey();
+            }
+
             m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, sApp->swiftVersionChar(),
                                                  CVersion::versionMajor(), CVersion::versionMinor(),
-                                                 "None", CBuildConfig::vatsimClientId(), pk.constData(),
+                                                 "None", clientId, clientKey.toLocal8Bit().constData(),
                                                  clientCapabilities));
 
             Vat_SetStateChangeHandler(m_net.data(), onConnectionStatusChanged, this);
@@ -658,18 +665,26 @@ namespace BlackCore
             static const QList<QCommandLineOption> e;
             static const QList<QCommandLineOption> opts
             {
-                QCommandLineOption({ "key", "fsdkey" },
-                QCoreApplication::translate("application", "Key for FSD"),
-                "fsdkey")
+                QCommandLineOption({ "idAndKey", "clientIdAndKey" },
+                                   QCoreApplication::translate("application", "Client id and key pair separated by ':', e.g. <id>:<key>."),
+                                   "clientIdAndKey")
             };
 
             // only in not officially shipped versions
             return (CBuildConfig::isShippedVersion() && !CBuildConfig::isBetaTest()) ? e : opts;
         }
 
-        QString CNetworkVatlib::getCmdLineFsdKey() const
+        bool CNetworkVatlib::getCmdLineClientIdAndKey(int &id, QString &key) const
         {
-            return sApp->getParserValue("fsdkey").toLower();
+            QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
+            if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
+            auto stringList = clientIdAndKey.split(':');
+            QString clientIdAsString = stringList[0];
+            bool ok = true;
+            id = clientIdAsString.toInt(&ok, 0);
+            if (!ok) { return false; }
+            key = stringList[1];
+            return true;
         }
 
         void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)
