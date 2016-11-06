@@ -49,10 +49,10 @@ namespace BlackMisc
         QSharedPointer<QTimer> timer(new QTimer, [](QObject *o) { QMetaObject::invokeMethod(o, "deleteLater"); });
         timer->setSingleShot(true);
         timer->moveToThread(target->thread());
-        QObject::connect(timer.data(), &QTimer::timeout, target, [trace = getStackTrace(), task = std::forward<F>(task), timer]
+        QObject::connect(timer.data(), &QTimer::timeout, target, [trace = getStackTrace(), task = std::forward<F>(task), timer]() mutable
         {
             static_cast<void>(trace);
-            static_cast<void>(timer);
+            timer.clear();
             task();
         });
         QMetaObject::invokeMethod(timer.data(), "start", Q_ARG(int, msec));
