@@ -50,6 +50,9 @@ namespace BlackMisc
         //! Initializer list constructor.
         CLogCategoryList(std::initializer_list<CLogCategory> il) : CSequence<CLogCategory>(il) {}
 
+        //! Prevent accidental use of the initializer list constructor.
+        CLogCategoryList(std::nullptr_t) = delete;
+
         //! Copy assignment.
         CLogCategoryList &operator =(const CLogCategoryList &) = default;
 
