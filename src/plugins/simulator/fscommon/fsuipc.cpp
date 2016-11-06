@@ -358,8 +358,8 @@ namespace BlackSimPlugin
                     situation.setPosition(position);
 
                     const double angleCorrectionFactor = 360.0 / 65536.0 / 65536.0; // see FSUIPC docu
-                    pitchRaw *= angleCorrectionFactor;
-                    bankRaw *= angleCorrectionFactor;
+                    pitchRaw = std::floor(pitchRaw * angleCorrectionFactor);
+                    bankRaw = std::floor(bankRaw * angleCorrectionFactor);
 
                     // MSFS has inverted pitch and bank angles
                     pitchRaw = ~pitchRaw;

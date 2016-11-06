@@ -51,8 +51,8 @@ namespace BlackSimPlugin
             // Pitch, Bank and Heading
             FS_PBH pbhstrct;
             pbhstrct.hdg = newSituation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier();
-            pbhstrct.pitch = newSituation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier();
-            pbhstrct.bank = newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier();
+            pbhstrct.pitch = std::floor(newSituation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier());
+            pbhstrct.bank = std::floor(newSituation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier());
             // MSFS has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
             pbhstrct.bank = ~pbhstrct.bank;
@@ -108,8 +108,8 @@ namespace BlackSimPlugin
             // Pitch, Bank and Heading
             FS_PBH pbhstrct;
             pbhstrct.hdg = situation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier();
-            pbhstrct.pitch = situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier();
-            pbhstrct.bank = situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier();
+            pbhstrct.pitch = std::floor(situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier());
+            pbhstrct.bank = std::floor(situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier());
             // MSFS has inverted pitch and bank angles
             pbhstrct.pitch = ~pbhstrct.pitch;
             pbhstrct.bank = ~pbhstrct.bank;
