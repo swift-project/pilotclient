@@ -25,12 +25,7 @@ namespace BlackSimPlugin
         struct MPParam : public MULTIPLAYER_PACKET_PARAMS
         {
             //! Return tuple of member variables
-            std::tuple<quint32 &, quint32 &,
-                       quint8 &, quint8 &, quint8 &, quint8 &,
-                       quint8 &, quint8 &, quint8 &, quint8 &,
-                       quint8 &, quint8 &, quint8 &, quint8 &,
-                       quint8 &, quint8 &, quint8 &, quint8 &,
-                       quint8 &, quint8 &, quint8 &, quint8 &> getTuple()
+            auto getTuple()
             {
                 return std::tie(application_time, packet_index,
                                 unknown8, unknown9, flaps_left, flaps_right, unknown12, unknown13, unknown14, unknown15,
@@ -39,13 +34,7 @@ namespace BlackSimPlugin
             }
 
             //! Return const tuple of member variables
-            std::tuple<const quint32 &, const quint32 &,
-                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
-                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
-                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
-                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
-                       const quint8 &, const quint8 &, const quint8 &, const quint8 &>
-                        getTuple() const
+            auto getTuple() const
             {
                 return std::tie(application_time, packet_index,
                                 unknown8, unknown9, flaps_left, flaps_right, unknown12, unknown13, unknown14, unknown15,
@@ -99,10 +88,7 @@ namespace BlackSimPlugin
          struct MPPositionSlewMode : public MULTIPLAYER_PACKET_POSITION_SLEWMODE
          {
              //! Return tuple of member variables
-             std::tuple<quint32 &, quint32 &,
-                 quint8 &, quint8 &, quint8 &, quint8 &,
-                 quint32 &, qint32 &, qint32 &, qint32 &,
-                 quint16 &, quint16 &, quint16 &> getTuple()
+             auto getTuple()
              {
                  return std::tie(application_time, packet_index,
                                  reserved[0], reserved[1], reserved[2], reserved[3],
@@ -111,10 +97,7 @@ namespace BlackSimPlugin
              }
 
              //! Return const tuple of member variables
-             std::tuple<const quint32 &, const quint32 &,
-             const quint8 &, const quint8 &, const quint8 &, const quint8 &,
-             const quint32 &, const qint32 &, const qint32 &, const qint32 &,
-             const quint16 &, const quint16 &, const quint16 &> getTuple() const
+             auto getTuple() const
              {
                  return std::tie(application_time, packet_index,
                                  reserved[0], reserved[1], reserved[2], reserved[3],
@@ -130,11 +113,7 @@ namespace BlackSimPlugin
         struct MPPositionVelocity : public MULTIPLAYER_PACKET_POSITION_VELOCITY
         {
             //! Return tuple of member variables
-            std::tuple<quint32 &, quint32 &, qint32 &, qint32 &, qint32 &,
-                quint32 &, quint8 &, quint8 &, quint8 &,
-                quint8 &, quint32 &, qint32 &, qint32 &,
-                qint32 &, quint16 &, quint16 &,
-                quint16 &> getTuple()
+            auto getTuple()
             {
                 return std::tie(packet_index, application_time, lat_velocity,
                                 lon_velocity, alt_velocity, ground_velocity,
@@ -143,11 +122,7 @@ namespace BlackSimPlugin
             }
 
             //! Return const tuple of member variables
-            std::tuple<const quint32 &, const quint32 &, const qint32 &, const qint32 &, const qint32 &,
-            const quint32 &, const quint8 &, const quint8 &, const quint8 &,
-            const quint8 &, const qint32 &, const qint32 &, const qint32 &,
-            const qint32 &, const quint16 &, const quint16 &,
-            const quint16 &> getTuple() const
+            auto getTuple() const
             {
                 return std::tie(packet_index, application_time, lat_velocity,
                                 lon_velocity, alt_velocity, ground_velocity,
