@@ -151,8 +151,6 @@ namespace BlackSimPlugin
         //! Multiplayer position packet in slew mode
         struct MULTIPLAYER_PACKET_POSITION_SLEWMODE
         {
-            MULTIPLAYER_PACKET_POSITION_SLEWMODE() {}
-
             quint32 application_time = 0; //!< Application time - ignored
             quint32 packet_index = 0; //!< Packet index
             std::array<quint8, 4> reserved = std::array<quint8, 4>{{0, 0, 0, 0}}; //!< Reserved
@@ -169,8 +167,6 @@ namespace BlackSimPlugin
         //! Full multiplayer position and velocity packet
         struct MULTIPLAYER_PACKET_POSITION_VELOCITY
         {
-            MULTIPLAYER_PACKET_POSITION_VELOCITY() {}
-
             quint32 packet_index = 0; //!< Packet index
             quint32 application_time = 0; //!< Application time - ignored
             qint32 lat_velocity = 0; //!< Latitude velocity
