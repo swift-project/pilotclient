@@ -283,7 +283,7 @@ namespace BlackSimPlugin
                     (situationN || FSUIPC_Read(0x0020, 4, &groundAltitudeRaw, &dwResult)) &&
 
                     // model name
-                    (aircraftPartsN || FSUIPC_Read(0x3d00, 256, &modelNameRaw, &dwResult)) &&
+                    FSUIPC_Read(0x3d00, 256, &modelNameRaw, &dwResult) &&
 
                     // aircraft parts
                     (aircraftPartsN || FSUIPC_Read(0x0D0C, 2, &lightsRaw, &dwResult)) &&
@@ -381,13 +381,12 @@ namespace BlackSimPlugin
 
                 } // situation
 
+                // model
+                const QString modelName = QString(modelNameRaw); // to be used to distinguish offsets for different models
+                aircraft.setModelString(modelName);
+
                 if (aircraftParts)
                 {
-
-                    // model
-                    const QString modelName = QString(modelNameRaw); // to be used to distinguish offsets for different models
-                    aircraft.setModelString(modelName);
-
                     CAircraftLights lights(lightsRaw & (1 << 4), lightsRaw & (1 << 2), lightsRaw & (1 << 3), lightsRaw & (1 << 1),
                                            lightsRaw & (1 << 0), lightsRaw & (1 << 8));
 

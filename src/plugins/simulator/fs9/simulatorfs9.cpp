@@ -356,6 +356,7 @@ namespace BlackSimPlugin
                 simDataOwnAircraft.getCom2System(),
                 simDataOwnAircraft.getTransponder(),
                 this->identifier());
+            reverseLookupAndUpdateOwnAircraftModel(simDataOwnAircraft.getModelString());
         }
 
         void CSimulatorFs9::disconnectAllClients()
