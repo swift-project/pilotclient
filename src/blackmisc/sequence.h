@@ -180,6 +180,10 @@ namespace BlackMisc
         //! \pre The sequence must be initialized.
         void push_back(T &&value) { Q_ASSERT(pimpl()); pimpl()->push_back(std::move(value)); }
 
+        //! Move-insert as first element.
+        //! \pre The sequence must be initialized.
+        void push_front(T &&value) { insert(begin(), std::move(value)); }
+
         //! Appends all elements from another sequence at the end of this sequence.
         //! \pre This sequence must be initialized.
         void push_back(const CSequence &other) { std::copy(other.begin(), other.end(), std::back_inserter(*this)); }
@@ -227,6 +231,10 @@ namespace BlackMisc
         //! Removes an element at the end of the sequence.
         //! \pre The sequence must contain at least one element.
         void pop_back() { Q_ASSERT(!empty()); pimpl()->pop_back(); }
+
+        //! Removes an element at the end of the sequence.
+        //! \pre The sequence must contain at least one element.
+        void pop_front() { erase(begin()); }
 
         //! Remove the element pointed to by the given iterator.
         //! \return An iterator to the position of the next element after the one removed.
