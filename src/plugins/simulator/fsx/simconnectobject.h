@@ -29,16 +29,16 @@ namespace BlackSimPlugin
             CSimConnectObject();
 
             //! Constructor
-            CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,int requestId);
+            CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, int requestId);
 
             //! Destructor
             ~CSimConnectObject() {}
 
             //! Get Callsign
-            BlackMisc::Aviation::CCallsign getCallsign() const { return m_aircraft.getCallsign(); }
+            const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_aircraft.getCallsign(); }
 
             //! Simulated aircraft (as added)
-            BlackMisc::Simulation::CSimulatedAircraft getAircraft() const { return m_aircraft; }
+            const BlackMisc::Simulation::CSimulatedAircraft &getAircraft() const { return m_aircraft; }
 
             //! Set Simconnect request id
             void setRequestId(int id) { m_requestId = id; }
@@ -52,6 +52,27 @@ namespace BlackSimPlugin
             //! Set Simconnect object id
             int getObjectId() const { return m_objectId; }
 
+            //! Valid request id?
+            bool hasValidRequestId() const;
+
+            //! Valid object id?
+            bool hasValidobjectId() const;
+
+            //! Object is requested, not yet added
+            bool isPendingAdded() const;
+
+            //! Adding is confirmed
+            bool isConfirmedAdded() const;
+
+            //! Marked as confirmed
+            void setConfirmedAdded(bool confirm);
+
+            //! Removing is pending
+            bool isPendingRemoved() const { return m_pendingRemoved; }
+
+            //! Marked as confirmed
+            void setPendingRemoved(bool pending);
+
             //! VTOL?
             bool isVtol() const { return m_aircraft.isVtol(); }
 
@@ -62,7 +83,30 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
             int m_requestId = -1;
             int m_objectId  = -1;
+            bool m_confirmedAdded = false;
+            bool m_pendingRemoved = false;
         };
+
+        //! Simulator objects (aka AI aircraft
+        class CSimConnectObjects : public QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject>
+        {
+        public:
+            //! Set ID of a SimConnect object, so far we only have an request id in the object
+            bool setSimConnectObjectId(int requestID, int objectId);
+
+            //! Find which callsign belongs to the object id
+            BlackMisc::Aviation::CCallsign getCallsignForObjectId(int objectId) const;
+
+            //! Find which callsign belongs to the object id
+            CSimConnectObject getSimObjectForObjectId(int objectId) const;
+
+            //! Is the object id one of our AI objects?
+            bool isKnownSimObjectId(int objectId) const;
+
+            //! Pending add condition
+            bool containsPendingAdd() const;
+        };
+
     } // namespace
 } // namespace
 

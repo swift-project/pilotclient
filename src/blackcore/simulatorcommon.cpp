@@ -162,7 +162,7 @@ namespace BlackCore
         const qint64 time = QDateTime::currentMSecsSinceEpoch();
         IInterpolator::InterpolationStatus interpolationStatus;
         const CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), interpolationStatus));
-        if (interpolationStatus.interpolationSucceeded)
+        if (interpolationStatus.didInterpolationSucceed())
         {
             aircraft.setSituation(as);
             return true;

@@ -308,8 +308,8 @@ namespace XBus
             {
                 BlackMisc::IInterpolator::InterpolationStatus status;
                 auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, false, status);
-                if (! status.interpolationSucceeded) { return xpmpData_Unavailable; }
-                if (! status.changedPosition) { return xpmpData_Unchanged; }
+                if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
+                if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 
                 using namespace BlackMisc::PhysicalQuantities;
                 using namespace BlackMisc::Aviation;

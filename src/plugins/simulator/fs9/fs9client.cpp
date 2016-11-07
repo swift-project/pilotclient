@@ -39,7 +39,7 @@ namespace BlackSimPlugin
             positionVelocity.lat_f = qAbs((latitude - positionVelocity.lat_i) * 65536);
 
             // Longitude - integer and decimal places
-            double longitude = newSituation.getPosition().longitude().value(CAngleUnit::deg()) * ( 65536.0 * 65536.0) / 360.0;
+            double longitude = newSituation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
             positionVelocity.lon_hi = static_cast<qint32>(longitude);
             positionVelocity.lon_lo = qAbs((longitude - positionVelocity.lon_hi) * 65536);
 
@@ -96,7 +96,7 @@ namespace BlackSimPlugin
             positionSlewMode.lat_f = qAbs((latitude - positionSlewMode.lat_i) * 65536);
 
             // Longitude - integer and decimal places
-            double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * ( 65536.0 * 65536.0) / 360.0;
+            double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
             positionSlewMode.lon_hi = static_cast<qint32>(longitude);
             positionSlewMode.lon_lo = qAbs((longitude - positionSlewMode.lon_hi) * 65536);
 
@@ -119,7 +119,7 @@ namespace BlackSimPlugin
         }
 
         CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
-            BlackMisc::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
+                               BlackMisc::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
             CDirectPlayPeer(owner, callsign),
             m_updateInterval(updateInterval), m_interpolator(interpolator), m_modelName(modelName)
         {
@@ -174,7 +174,7 @@ namespace BlackSimPlugin
             CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, vtolAircraft, status);
 
             // Test only for successful interpolation. FS9 requires constant positions
-            if (!status.interpolationSucceeded) { return; }
+            if (!status.didInterpolationSucceed()) { return; }
 
             sendMultiplayerPosition(situation);
             sendMultiplayerParamaters();

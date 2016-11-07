@@ -99,8 +99,8 @@ namespace BlackCoreTest
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
                                                 (cs, currentTime, false, status)
                                                );
-            QVERIFY2(status.interpolationSucceeded, "Interpolation was not succesful");
-            QVERIFY2(status.changedPosition, "Interpolation did not changed");
+            QVERIFY2(status.didInterpolationSucceed(), "Interpolation was not succesful");
+            QVERIFY2(status.hasChangedPosition(), "Interpolation did not changed");
             double latDeg = currentSituation.getPosition().latitude().valueRounded(CAngleUnit::deg(), 5);
             double lngDeg = currentSituation.getPosition().longitude().valueRounded(CAngleUnit::deg(), 5);
             QVERIFY2(latDeg < latOld && lngDeg < lngOld, "Values shall decrease");
@@ -150,7 +150,7 @@ namespace BlackCoreTest
             IInterpolator::PartsStatus status;
             CAircraftPartsList pl(interpolator.getPartsBeforeTime(cs, ts, status));
             fetchedParts++;
-            QVERIFY2(status.supportsParts, "Parts not supported");
+            QVERIFY2(status.isSupportingParts(), "Parts not supported");
             QVERIFY2(!pl.isEmpty(), "Parts empty");
         }
         timeMs = timer.elapsed();

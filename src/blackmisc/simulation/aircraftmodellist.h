@@ -65,6 +65,12 @@ namespace BlackMisc
             //! Contains model with model string or id
             bool containsModelStringOrDbKey(const BlackMisc::Simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
+            //! Contains model for callsign
+            bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! Contains any model with aircraft and airline designator
+            bool containsModelsWithAircraftAndAirlineDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
+
             //! Find by model string
             //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used
             CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;

@@ -43,9 +43,22 @@ namespace BlackMisc
         //! Status of interpolation
         struct BLACKMISC_EXPORT InterpolationStatus
         {
+        private:
+            bool m_changedPosition = false;        //!< position was changed
+            bool m_interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
+
         public:
-            bool changedPosition = false;        //!< position was changed
-            bool interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
+            //! Did interpolation succeed?
+            bool didInterpolationSucceed() const { return m_interpolationSucceeded; }
+
+            //! Set succeeded
+            void setInterpolationSucceeded(bool succeeded) { m_interpolationSucceeded = succeeded; }
+
+            //! Changed position?
+            bool hasChangedPosition() const { return m_changedPosition; }
+
+            //! Set as changed
+            void setChangedPosition(bool changed) { m_changedPosition = changed; }
 
             //! all OK
             bool allTrue() const;
@@ -57,10 +70,18 @@ namespace BlackMisc
         //! Status regarding parts
         struct BLACKMISC_EXPORT PartsStatus
         {
-            bool supportsParts = false;   //!< supports parts for given callsign
+        private:
+            bool m_supportsParts = false;   //!< supports parts for given callsign
 
+        public:
             //! all OK
             bool allTrue() const;
+
+            //! Supporting parts
+            bool isSupportingParts() const { return m_supportsParts; }
+
+            //! Set support flag
+            void setSupportsParts(bool supports) { m_supportsParts = supports; }
 
             //! Reset to default values
             void reset();

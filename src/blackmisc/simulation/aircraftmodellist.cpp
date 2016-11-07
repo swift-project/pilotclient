@@ -54,6 +54,16 @@ namespace BlackMisc
             return false;
         }
 
+        bool CAircraftModelList::containsCallsign(const CCallsign &callsign) const
+        {
+            return this->contains(&CAircraftModel::getCallsign, callsign);
+        }
+
+        bool CAircraftModelList::containsModelsWithAircraftAndAirlineDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const
+        {
+            return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator, &CAircraftModel::getAirlineIcaoCodeDesignator, airlineDesignator);
+        }
+
         CAircraftModelList CAircraftModelList::findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->findBy([ & ](const CAircraftModel & model)

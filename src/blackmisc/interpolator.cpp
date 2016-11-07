@@ -40,7 +40,7 @@ namespace BlackMisc
     CAircraftPartsList IInterpolator::getPartsBeforeTime(const CAircraftPartsList &parts, qint64 cutoffTime, BlackMisc::IInterpolator::PartsStatus &partsStatus) const
     {
         partsStatus.reset();
-        partsStatus.supportsParts = true;
+        partsStatus.setSupportsParts(true);
 
         if (cutoffTime < 0) { return parts; }
         return parts.findBefore(cutoffTime);
@@ -51,8 +51,8 @@ namespace BlackMisc
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         partsStatus.reset();
 
-        partsStatus.supportsParts = this->isRemoteAircraftSupportingParts(callsign);
-        if (!partsStatus.supportsParts) { return {}; }
+        partsStatus.setSupportsParts(this->isRemoteAircraftSupportingParts(callsign));
+        if (!partsStatus.isSupportingParts()) { return {}; }
         return this->remoteAircraftParts(callsign, cutoffTime);
     }
 
@@ -70,22 +70,22 @@ namespace BlackMisc
 
     bool IInterpolator::InterpolationStatus::allTrue() const
     {
-        return interpolationSucceeded && changedPosition;
+        return m_interpolationSucceeded && m_changedPosition;
     }
 
     void IInterpolator::InterpolationStatus::reset()
     {
-        changedPosition = false;
-        interpolationSucceeded = false;
+        m_changedPosition = false;
+        m_interpolationSucceeded = false;
     }
 
     bool IInterpolator::PartsStatus::allTrue() const
     {
-        return supportsParts;
+        return m_supportsParts;
     }
 
     void IInterpolator::PartsStatus::reset()
     {
-        supportsParts = false;
+        m_supportsParts = false;
     }
 } // namespace

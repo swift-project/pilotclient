@@ -92,8 +92,9 @@ namespace BlackMisc
             //! Rendered?
             bool isRendered(const BlackMisc::Aviation::CCallsign &callsign) const;
 
+            //! Replace or add by callsign
+            bool replaceOrAddByCallsign(const CSimulatedAircraft &aircraft);
         };
-
     } //namespace
 } // namespace
 

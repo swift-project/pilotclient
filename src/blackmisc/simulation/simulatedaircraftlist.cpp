@@ -153,5 +153,18 @@ namespace BlackMisc
             return false;
         }
 
+        bool CSimulatedAircraftList::replaceOrAddByCallsign(const CSimulatedAircraft &aircraft)
+        {
+            const CCallsign cs(aircraft.getCallsign());
+            if (cs.isEmpty()) { return false; }
+
+            if (this->containsCallsign(cs))
+            {
+                int c = this->replaceIf(&CSimulatedAircraft::getCallsign, cs, aircraft);
+                return c > 0;
+            }
+            this->push_back(aircraft);
+            return true;
+        }
     } // namespace
 } // namespace
