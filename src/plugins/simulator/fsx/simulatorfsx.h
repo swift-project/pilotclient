@@ -102,6 +102,9 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             //! @}
 
+            //! Display receive exceptions?
+            bool stillDisplayReceiveExceptions();
+
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft);
 
@@ -109,17 +112,16 @@ namespace BlackSimPlugin
             void updateOwnAircraftFromSimulator(DataDefinitionClientAreaSb sbDataArea);
 
             //! An AI aircraft was added in the simulator
-            //! \remark that AI aircraft was previously request by requestID
-            bool aiAircraftWasAddedInSimulator(DWORD requestID, DWORD objectID);
+            bool simulatorReportedObjectAdded(DWORD objectID);
+
+            //! Simulator reported that AI aircraft was removed
+            bool simulatorReportedObjectRemoved(DWORD objectID);
 
             //! Set ID of a SimConnect object, so far we only have an request id in the object
-            bool setSimConnectObjectID(DWORD requestID, DWORD objectID);
+            bool setSimConnectObjectId(DWORD requestID, DWORD objectID);
 
-            //! Find which callsign belongs to the object id
-            BlackMisc::Aviation::CCallsign getCallsignForObjectId(DWORD objectID) const;
-
-            //! Find which callsign belongs to the object id
-            CSimConnectObject getSimObjectForObjectId(DWORD objectID) const;
+            //! The simconnect related objects
+            const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
 
         protected:
             //! \copydoc BlackCore::ISimulator::isConnected()
@@ -136,6 +138,10 @@ namespace BlackSimPlugin
             //! Dispatch SimConnect messages
             void ps_dispatch();
 
+            //! Remove aircraft not in provider anymore
+            //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
+            BlackMisc::Aviation::CCallsignSet ps_physicallyRemoveAircraftNotInProvider();
+
         private:
             //! Call this method to declare the simulator connected
             void setSimConnected();
@@ -151,9 +157,6 @@ namespace BlackSimPlugin
 
             //! Simulator is going down
             void onSimExit();
-
-            //! Remove a remote aircraft
-            bool physicallyRemoveRemoteAircraft(const CSimConnectObject &simObject);
 
             //! Init when connected
             HRESULT initWhenConnected();
@@ -172,7 +175,7 @@ namespace BlackSimPlugin
                                            BlackMisc::IInterpolator::PartsStatus partsStatus, const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, bool isOnGround) const;
 
             //! Format conversion
-            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxInitPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
+            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool guessOnGround = true);
 
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
@@ -183,9 +186,22 @@ namespace BlackSimPlugin
             //! Reload weather settings
             void reloadWeatherSettings();
 
+            //! Reset values when restarted
+            virtual void reset() override;
+
+            //! Clear all aircraft lists
+            virtual void clearAllAircraft() override;
+
+            //! FSX position as string
+            static QString fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position);
+
+            //! Get the callsigns which are no longer in the provider, but still in m_simConnectObjects
+            BlackMisc::Aviation::CCallsignSet getCallsignsMissingInProvider() const;
+
             static constexpr int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
+            static constexpr int IgnoreReceiveExceptions = 10;    //!< skip exceptions when displayed more than x times
             bool m_simConnected  = false;       //!< Is simulator connected?
-            bool m_simSimulating    = false;    //!< Simulator running?
+            bool m_simSimulating = false;       //!< Simulator running?
             bool m_useSbOffsets  = true;        //!< with SB offsets
             int  m_syncDeferredCounter =  0;    //!< Set when synchronized, used to wait some time
             int  m_simconnectTimerId   = -1;    //!< Timer identifier
@@ -193,10 +209,10 @@ namespace BlackSimPlugin
             int  m_interpolationRequest  = 0;   //!< current interpolation request
             int  m_interpolationsSkipped = 0;   //!< number of skipped interpolation request
             int  m_requestId = 1;               //!< request id
-            int  m_dispatchErrors = 0;          //!< numer of dispatched failed, \sa ps_dispatch
+            int  m_dispatchErrors = 0;          //!< number of dispatched failed, \sa ps_dispatch
+            int  m_receiveExceptionCount = 0;   //!< exceptions
             HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
-            QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
-
+            CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
             BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::reloadWeatherSettings };
         };

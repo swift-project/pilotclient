@@ -18,6 +18,7 @@
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
@@ -494,9 +495,10 @@ namespace BlackCore
         void CContextSimulator::ps_addedRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
         {
             if (!isSimulatorSimulating()) { return; }
-            Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
-
             const CCallsign callsign = remoteAircraft.getCallsign();
+            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircrft with empty callsign");
+            if (callsign.isEmpty()) { return; }
+
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
             const CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);

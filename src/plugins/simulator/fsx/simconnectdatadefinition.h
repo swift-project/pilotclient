@@ -26,7 +26,7 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        //! \brief Data struct of our own aircraft
+        //! Data struct of our own aircraft
         //! \sa SimConnect variables http://msdn.microsoft.com/en-us/library/cc526981.aspx
         //! \sa SimConnect events http://msdn.microsoft.com/en-us/library/cc526980.aspx
         struct DataDefinitionOwnAircraft
@@ -40,12 +40,12 @@ namespace BlackSimPlugin
             double velocity;        //!< Ground velocity
             double simOnGround;     //!< Is aircraft on ground?
 
-            double lightStrobe;         //!< Is strobe light on?
-            double lightLanding;        //!< Is landing light on?
-            double lightTaxi;           //!< Is taxi light on?
-            double lightBeacon;         //!< Is beacon light on?
-            double lightNav;            //!< Is nav light on?
-            double lightLogo;           //!< Is logo light on?
+            double lightStrobe;     //!< Is strobe light on?
+            double lightLanding;    //!< Is landing light on?
+            double lightTaxi;       //!< Is taxi light on?
+            double lightBeacon;     //!< Is beacon light on?
+            double lightNav;        //!< Is nav light on?
+            double lightLogo;       //!< Is logo light on?
 
             double transponderCode; //!< Transponder Code
             double com1ActiveMHz;   //!< COM1 active frequency
@@ -73,22 +73,22 @@ namespace BlackSimPlugin
         //! Data struct of remote aircraft parts
         struct DataDefinitionRemoteAircraftParts
         {
-            double lightStrobe;                 //!< Is strobe light on?
-            double lightLanding;                //!< Is landing light on?
-            // double lightTaxi;                   //!< Is taxi light on?
-            double lightBeacon;                 //!< Is beacon light on?
-            double lightNav;                    //!< Is nav light on?
-            double lightLogo;                   //!< Is logo light on?
-            double flapsLeadingEdgeLeftPercent;       //!< Leading edge left in percent
-            double flapsLeadingEdgeRightPercent;      //!< Leading edge right in percent
-            double flapsTrailingEdgeLeftPercent;      //!< Trailing edge left in percent
-            double flapsTrailingEdgeRightPercent;     //!< Trailing edge right in percent
-            double gearHandlePosition;          //!< Gear handle position
-            double spoilersHandlePosition;    //!< Spoilers out?
-            double engine1Combustion; //!< Engine 1 combustion flag
-            double engine2Combustion; //!< Engine 2 combustion flag
-            double engine3Combustion; //!< Engine 3 combustion flag
-            double engine4Combustion; //!< Engine 4 combustion flag
+            double lightStrobe;                   //!< Is strobe light on?
+            double lightLanding;                  //!< Is landing light on?
+            // double lightTaxi;                  //!< Is taxi light on?
+            double lightBeacon;                   //!< Is beacon light on?
+            double lightNav;                      //!< Is nav light on?
+            double lightLogo;                     //!< Is logo light on?
+            double flapsLeadingEdgeLeftPercent;   //!< Leading edge left in percent
+            double flapsLeadingEdgeRightPercent;  //!< Leading edge right in percent
+            double flapsTrailingEdgeLeftPercent;  //!< Trailing edge left in percent
+            double flapsTrailingEdgeRightPercent; //!< Trailing edge right in percent
+            double gearHandlePosition;            //!< Gear handle position
+            double spoilersHandlePosition;        //!< Spoilers out?
+            double engine1Combustion;             //!< Engine 1 combustion flag
+            double engine2Combustion;             //!< Engine 2 combustion flag
+            double engine3Combustion;             //!< Engine 3 combustion flag
+            double engine4Combustion;             //!< Engine 4 combustion flag
         };
 
         //! Data struct simulator environment
@@ -134,7 +134,6 @@ namespace BlackSimPlugin
         class CSimConnectDefinitions
         {
         public:
-
             //! SimConnect definiton IDs
             enum DataDefiniton
             {
@@ -168,7 +167,6 @@ namespace BlackSimPlugin
             static QString getLogCategory() { return "swift.fsx.simconnect"; }
 
         private:
-
             //! Initialize data definition for our own aircraft
             static HRESULT initOwnAircraft(const HANDLE hSimConnect);
 

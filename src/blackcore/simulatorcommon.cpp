@@ -80,12 +80,14 @@ namespace BlackCore
 
     bool CSimulatorCommon::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
+        Q_ASSERT_X(remoteAircraft.hasModelString(), Q_FUNC_INFO, "Missing model string");
+        Q_ASSERT_X(remoteAircraft.hasCallsign(), Q_FUNC_INFO, "Missing callsign");
         if (!remoteAircraft.isEnabled()) { return false; }
 
         // if not restriced, directly change
         if (!isRenderingRestricted()) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
 
-        // will be added with next snapshot
+        // will be added with next snapshot ps_recalculateRenderedAircraft
         return false;
     }
 
@@ -94,7 +96,7 @@ namespace BlackCore
         // if not restriced, directly change
         if (!isRenderingRestricted()) { this->physicallyRemoveRemoteAircraft(callsign); return true; }
 
-        // will be added with next snapshot
+        // will be added with next snapshot ps_recalculateRenderedAircraft
         return false;
     }
 
@@ -322,11 +324,11 @@ namespace BlackCore
 
     void CSimulatorCommon::highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime)
     {
-        CCallsign cs(aircraftToHighlight.getCallsign());
+        const CCallsign cs(aircraftToHighlight.getCallsign());
         this->m_highlightedAircraft.removeByCallsign(cs);
         if (enableHighlight)
         {
-            qint64 deltaT = displayTime.valueRounded(CTimeUnit::ms(), 0);
+            const qint64 deltaT = displayTime.valueRounded(CTimeUnit::ms(), 0);
             this->m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
             this->m_highlightedAircraft.push_back(aircraftToHighlight);
         }
@@ -432,4 +434,36 @@ namespace BlackCore
     {
         Q_UNUSED(callsign);
     }
+
+    void CSimulatorCommon::ps_queueForAdding(const CSimulatedAircraft &aircraft)
+    {
+        m_pendingAircraftToAdd.replaceOrAddByCallsign(aircraft);
+        QTimer::singleShot(500, this, [ = ]
+        {
+            this->physicallyAddNextQueuedAircraft();
+        });
+    }
+
+    void CSimulatorCommon::physicallyAddNextQueuedAircraft()
+    {
+        if (m_pendingAircraftToAdd.isEmpty()) { return; } // delete in meantime
+        CSimulatedAircraft nextAircraft(m_pendingAircraftToAdd.front()); // normally it should always find a value
+        m_pendingAircraftToAdd.pop_front();
+        this->physicallyAddRemoteAircraft(nextAircraft);
+    }
+
+    void CSimulatorCommon::reset()
+    {
+        m_statsUpdateAircraftCountMs = 0;
+        m_statsUpdateAircraftTimeAvgMs = 0;
+        m_statsUpdateAircraftTimeTotalMs = 0;
+        this->clearAllAircraft();
+    }
+
+    void CSimulatorCommon::clearAllAircraft()
+    {
+        m_aircraftToAddAgainWhenRemoved.clear();
+        m_pendingAircraftToAdd.clear();
+    }
+
 } // namespace

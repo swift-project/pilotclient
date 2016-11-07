@@ -50,6 +50,11 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
+                    if (!simulatorFsx->stillDisplayReceiveExceptions())
+                    {
+                        break;
+                    }
+
                     SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
                     QString ex;
                     const int exceptionId = static_cast<int>(exception->dwException);
@@ -57,17 +62,19 @@ namespace BlackSimPlugin
                     const int index = static_cast<int>(exception->dwIndex);
                     const int data = static_cast<int>(cbData);
                     ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d", exceptionId, sendId, index, data);
-                    if (exceptionId == SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE)
+
+                    switch (exceptionId)
                     {
-                        // means we have problems with an AI aircraft
-                        //! \todo find out how to obtain the id here so I can get callsign
-                        CCallsign cs = simulatorFsx->getCallsignForObjectId(data);
-                        if (!cs.isEmpty())
+                    case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE:
+                    case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID:
                         {
-                            ex += " callsign: ";
-                            ex += cs.toQString();
+                            //! \fixme do not know how to obtain the object id which failed. Can I get it?
                         }
+                        break;
+                    default:
+                        break;
                     }
+
                     CLogMessage(simulatorFsx).error("Caught FSX simConnect exception: %1 %2")
                             << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException)
                             << ex;
@@ -114,11 +121,24 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
                     SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
+                    const DWORD objectID = event->dwData;
+                    const SIMCONNECT_SIMOBJECT_TYPE objectType = event->eObjType;
+                    if (objectType != SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT && objectType != SIMCONNECT_SIMOBJECT_TYPE_HELICOPTER)
+                    {
+                        break;
+                    }
+
+                    // such an object is not necessarily one of ours
+                    // for instance, I always see object 5 when I start the simulator
+                    if (!simulatorFsx->getSimConnectObjects().isKnownSimObjectId(objectID)) break;
                     switch (event->uEventID)
                     {
                     case SystemEventObjectAdded:
+                        // added in SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
+                        // adding here cause trouble
                         break;
                     case SystemEventObjectRemoved:
+                        simulatorFsx->simulatorReportedObjectRemoved(objectID);
                         break;
                     default:
                         break;
@@ -131,6 +151,7 @@ namespace BlackSimPlugin
                     switch (event->uEventID)
                     {
                     case SystemEventFrame:
+                        // doing interpolation
                         simulatorFsx->onSimFrame();
                         break;
                     default:
@@ -143,13 +164,16 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
                     const DWORD requestID = event->dwRequestID;
                     const DWORD objectID = event->dwObjectID;
-                    const bool success = simulatorFsx->aiAircraftWasAddedInSimulator(requestID, objectID);
+                    bool success = simulatorFsx->setSimConnectObjectId(requestID, objectID);
+                    if (!success) { break; } // not an request ID of ours
+
+                    success = simulatorFsx->simulatorReportedObjectAdded(objectID);
                     if (!success)
                     {
-                        CLogMessage(simulatorFsx).warning("Cannot find CSimConnectObject for request %1") << requestID;
-                        const CSimulatedAircraft remoteAircraft(simulatorFsx->getSimObjectForObjectId(objectID).getAircraft());
-                        const QString msg("Object id for request " + QString::number(requestID) + " not avialable");
-                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, CStatusMessage(simulatorFsx, CStatusMessage::SeverityError, msg));
+                        const CSimulatedAircraft remoteAircraft(simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectID).getAircraft());
+                        const CStatusMessage msg = CStatusMessage(simulatorFsx).error("Cannot add object %1") << objectID;
+                        CLogMessage::preformatted(msg);
+                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
                     }
                     break;
                 }

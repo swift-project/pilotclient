@@ -106,7 +106,8 @@ namespace BlackSimPlugin
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
             this->m_interpolator = new BlackMisc::CInterpolatorLinear(remoteAircraftProvider, this);
-            m_defaultModel = {
+            m_defaultModel =
+            {
                 "Boeing 737-400",
                 CAircraftModel::TypeModelMatchingDefaultModel,
                 "B737-400 default model",
@@ -170,10 +171,13 @@ namespace BlackSimPlugin
             client->start();
 
             m_hashFs9Clients.insert(callsign, client);
-            updateAircraftRendered(callsign, rendered);
+            bool updated = updateAircraftRendered(callsign, rendered);
             CSimulatedAircraft remoteAircraftCopy(newRemoteAircraft);
             remoteAircraftCopy.setRendered(rendered);
-            emit aircraftRenderingChanged(remoteAircraftCopy);
+            if (updated)
+            {
+                emit aircraftRenderingChanged(remoteAircraftCopy);
+            }
             CLogMessage(this).info("FS9: Added aircraft %1") << callsign.toQString();
             return true;
         }
