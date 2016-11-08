@@ -235,7 +235,7 @@ namespace BlackMisc
         bool CCallsign::isValidAtcCallsign(const QString &callsign)
         {
             if (callsign.length() < 2 || callsign.length() > 10) { return false; }
-            return !containsChar(callsign, [](QChar c) { return !c.isUpper() && !c.isDigit(); });
+            return !containsChar(callsign, [](QChar c) { return c != '_' && !c.isUpper() && !c.isDigit(); });
         }
 
         bool CCallsign::isValidAtcCallsign(const CCallsign &callsign)
