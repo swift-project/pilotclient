@@ -29,6 +29,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Db;
 
 namespace BlackMisc
 {

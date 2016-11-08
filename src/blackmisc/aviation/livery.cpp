@@ -26,6 +26,7 @@
 #include <tuple>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc

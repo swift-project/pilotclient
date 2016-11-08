@@ -32,6 +32,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Db;
 using namespace BlackGui::Components;
 
 namespace BlackGui

@@ -34,6 +34,7 @@ using namespace BlackGui;
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 
 namespace BlackGui

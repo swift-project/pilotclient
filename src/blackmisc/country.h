@@ -24,8 +24,6 @@
 #include <QMetaType>
 #include <QString>
 
-using namespace BlackMisc::Db;
-
 namespace BlackMisc
 {
     /*!
@@ -33,7 +31,7 @@ namespace BlackMisc
      */
     class BLACKMISC_EXPORT CCountry :
         public CValueObject<CCountry>,
-        public IDatastoreObjectWithStringKey
+        public Db::IDatastoreObjectWithStringKey
     {
     public:
         //! Properties by index

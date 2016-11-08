@@ -27,6 +27,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 
 namespace BlackMisc
 {
