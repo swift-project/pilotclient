@@ -530,6 +530,7 @@ namespace BlackCore
             {
                 // we got disconnected, plugin no longer needed
                 unloadSimulatorPlugin();
+                restoreSimulatorPlugins();
             }
             emit simulatorStatusChanged(status);
         }
