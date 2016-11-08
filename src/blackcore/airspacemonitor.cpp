@@ -459,6 +459,7 @@ namespace BlackCore
     void CAirspaceMonitor::clear()
     {
         m_flightPlanCache.clear();
+        m_tempFsInnPackets.clear();
         removeAllOnlineAtcStations();
         removeAllAircraft();
         removeAllOtherClients();
@@ -628,12 +629,11 @@ namespace BlackCore
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
         emit this->readyForModelMatching(remoteAircraft);
 
-        // log message
+        // log message for matching
         {
             const QString msg = QString("Ready for matching '%1' with model type '%2'").arg(callsign.toQString()).arg(remoteAircraft.getModel().getModelTypeAsString());
             const CStatusMessage m = CMatchingUtils::logMessage(callsign, msg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
-            // CLogMessage::preformatted(m);
         }
     }
 
@@ -680,6 +680,8 @@ namespace BlackCore
             int changed = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
             if (changed > 0) { emit this->changedAtcStationsOnline(); }
         }
+
+        this->recallFsInnPacket(callsign);
     }
 
     void CAirspaceMonitor::ps_atcControllerDisconnected(const CCallsign &callsign)
@@ -756,40 +758,41 @@ namespace BlackCore
     void CAirspaceMonitor::ps_customFSInnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftIcaoDesignator, const QString &combinedAircraftType, const QString &modelString)
     {
         // it can happen this is called before any questions
-        // for ATC this can be called without position updates
+        // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
+        // 1) checking if they are already in the list checks again ATC position which is safe
+        // 2) the ATC alike callsign check is guessing
 
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "not in main thread");
         BLACK_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         if (!callsign.isValid()) { return; }
         if (!this->isConnected()) { return; }
 
+        const bool isAircraft = this->m_aircraftInRange.containsCallsign(callsign);
+        const bool isAtc = this->m_atcStationsOnline.containsCallsign(callsign);
+        if (!isAircraft && !isAtc)
+        {
+            // we have no idea what we are dealing with, so we store it
+            FsInnPacket fsInn(aircraftIcaoDesignator, airlineIcaoDesignator, combinedAircraftType, modelString);
+            m_tempFsInnPackets[callsign] = fsInn;
+            return;
+        }
+
         // Request of other client, I can get the other's model from that
         const CPropertyIndexVariantMap vm(CClient::IndexModelString, modelString);
         this->updateOrAddClient(callsign, vm);
 
-        if (callsign.isAtcAlikeCallsign())
+        if (isAircraft)
         {
-            if (!this->m_atcStationsOnline.containsCallsign(callsign))
-            {
-                this->sendInitialAtcQueries(callsign);
-            }
-            return;
-        }
+            CStatusMessageList reverseLookupMessages;
+            CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
+            CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
+                                                arg(aircraftIcaoDesignator).arg(airlineIcaoDesignator).
+                                                arg(modelString).arg(combinedAircraftType));
 
-        CStatusMessageList reverseLookupMessages;
-        CStatusMessageList *pReverseLookupMessages = this->isReverseLookupMessagesEnabled() ? &reverseLookupMessages : nullptr;
-        CMatchingUtils::addLogDetailsToList(pReverseLookupMessages, callsign, QString("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").
-                                            arg(aircraftIcaoDesignator).arg(airlineIcaoDesignator).
-                                            arg(modelString).arg(combinedAircraftType));
-
-        const bool existsAircraft = this->isAircraftInRange(callsign);
-        if (!existsAircraft)
-        {
-            this->sendInitialPilotQueries(callsign, false);
+            this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
+            this->addReverseLookupMessages(callsign, reverseLookupMessages);
+            this->ps_sendReadyForModelMatching(callsign);
         }
-        this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, "", modelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
-        this->addReverseLookupMessages(callsign, reverseLookupMessages);
-        this->ps_sendReadyForModelMatching(callsign);
     }
 
     void CAirspaceMonitor::ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
@@ -926,6 +929,14 @@ namespace BlackCore
         return c;
     }
 
+    void CAirspaceMonitor::recallFsInnPacket(const CCallsign &callsign)
+    {
+        if (!m_tempFsInnPackets.contains(callsign)) { return; }
+        const FsInnPacket packet = m_tempFsInnPackets[callsign];
+        m_tempFsInnPackets.remove(callsign);
+        this->ps_customFSInnPacketReceived(callsign, packet.airlineIcaoDesignator, packet.aircraftIcaoDesignator, packet.combinedCode, packet.modelString);
+    }
+
     CSimulatedAircraft CAirspaceMonitor::addOrUpdateAircraftInRange(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
         CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
@@ -958,7 +969,7 @@ namespace BlackCore
         Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->isConnected()) { return; }
 
-        CCallsign callsign(situation.getCallsign());
+        const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
         // store situation history
@@ -966,6 +977,8 @@ namespace BlackCore
         emit this->addedAircraftSituation(situation);
 
         const bool existsInRange = this->isAircraftInRange(callsign);
+        const bool hasFsInnPacket = this->m_tempFsInnPackets.contains(callsign);
+
         if (!existsInRange)
         {
             CSimulatedAircraft aircraft;
@@ -973,7 +986,7 @@ namespace BlackCore
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
             this->addNewAircraftinRange(aircraft);
-            this->sendInitialPilotQueries(callsign, true);
+            this->sendInitialPilotQueries(callsign, !hasFsInnPacket);
 
             // new client, there is a chance it has been already created by custom packet
             const CClient c(callsign);
@@ -989,6 +1002,8 @@ namespace BlackCore
             vm.addValue(CSimulatedAircraft::IndexRelativeBearing, this->calculateBearingToOwnAircraft(situation));
             this->updateAircraftInRange(callsign, vm);
         }
+
+        this->recallFsInnPacket(callsign);
     }
 
     void CAirspaceMonitor::ps_aircraftInterimUpdateReceived(const CAircraftSituation &situation)
@@ -1189,4 +1204,9 @@ namespace BlackCore
         angle.switchUnit(CAngleUnit::deg());
         return angle;
     }
+
+    CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) :
+        aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()), airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()), combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
+    { }
+
 } // namespace

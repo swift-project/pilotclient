@@ -210,11 +210,27 @@ namespace BlackCore
         void airspaceAircraftSnapshot(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &snapshot);
 
     private:
+        //! Used to temp store FsInn data
+        struct FsInnPacket
+        {
+            //! Default ctor
+            FsInnPacket() {}
+
+            //! Constructor
+            FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineDesignator, const QString &combinedCode, const QString &modelString);
+
+            QString aircraftIcaoDesignator;
+            QString airlineIcaoDesignator;
+            QString combinedCode;
+            QString modelString;
+        };
+
         BlackMisc::Aviation::CAtcStationList           m_atcStationsOnline;  //!< online ATC stations
         BlackMisc::Aviation::CAtcStationList           m_atcStationsBooked;  //!< booked ATC stations
         BlackMisc::Network::CClientList                m_otherClients;       //!< client informatiom, thread safe access required
         BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;    //!< aircraft, thread safe access required
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_reverseLookupMessages;
+        QMap<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
 
         // hashs, because not sorted by key but keeping order
         CSituationsPerCallsign            m_situationsByCallsign;    //!< situations, for performance reasons per callsign, thread safe access required
@@ -302,6 +318,9 @@ namespace BlackCore
 
         //! Update booked stations
         int updateBookedStations(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
+
+        //! Call ps_customFSInnPacketReceived with stored packet
+        void recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Reverse lookup messages
         //! \threadsafe
