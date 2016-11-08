@@ -67,7 +67,7 @@ namespace BlackGui
 
         private slots:
             void ps_requestTextMessage();
-            void ps_enableAircraft();
+            void ps_toogleEnabledAircraft();
             void ps_fastPositionUpdates();
             void ps_highlightInSimulator();
 

@@ -113,7 +113,7 @@ namespace BlackGui
             void ps_onMenuChangeFastPositionUpdates(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Enable / disable aircraft
-            void ps_onMenuEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+            void ps_onMenuToggleEnableAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Highlight in simulator
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);

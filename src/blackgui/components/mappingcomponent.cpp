@@ -79,7 +79,7 @@ namespace BlackGui
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::clicked, this, &CMappingComponent::ps_onAircraftSelectedInView);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestUpdate, this, &CMappingComponent::ps_markRenderedViewForUpdate);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestTextMessageWidget, this, &CMappingComponent::requestTextMessageWidget);
-            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::ps_onMenuEnableAircraft);
+            connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestEnableAircraft, this, &CMappingComponent::ps_onMenuToggleEnableAircraft);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestFastPositionUpdates, this, &CMappingComponent::ps_onMenuChangeFastPositionUpdates);
             connect(ui->tvp_RenderedAircraft, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CMappingComponent::ps_onMenuHighlightInSimulator);
 
@@ -92,7 +92,7 @@ namespace BlackGui
 
             // Aircraft previews
             connect(ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this, &CMappingComponent::ps_onModelPreviewChanged);
-            ui->lbl_AircraftIconDisplayed->setText("Icon displayed here");
+            ui->lbl_AircraftIconDisplayed->setText("[icon]");
 
             // model string completer
             ui->completer_ModelStrings->setSourceVisible(CAircraftModelStringCompleter::OwnModels, false);
@@ -279,12 +279,19 @@ namespace BlackGui
                     CLogMessage(this).validationError("No model for title: %1") << modelString;
                     return;
                 }
-                else if (models.size() > 1)
-                {
-                    CLogMessage(this).validationError("Ambigious title: %1") << modelString;
-                    return;
-                }
+
                 CAircraftModel model(models.front());
+                if (models.size() > 1)
+                {
+                    if (models.containsModelString(modelString))
+                    {
+                        model = models.findByModelString(modelString).front(); // exact match
+                    }
+                    else
+                    {
+                        CLogMessage(this).validationInfo("Ambigious title: %1, using %2") << modelString << model.getModelString();
+                    }
+                }
                 model.setModelType(CAircraftModel::TypeManuallySet);
                 CLogMessage(this).info("Requesting changes for %1") << callsign.asString();
                 changed = sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
@@ -388,7 +395,7 @@ namespace BlackGui
             Q_UNUSED(message);
         }
 
-        void CMappingComponent::ps_onMenuEnableAircraft(const CSimulatedAircraft &aircraft)
+        void CMappingComponent::ps_onMenuToggleEnableAircraft(const CSimulatedAircraft &aircraft)
         {
             if (sGui->getIContextNetwork())
             {
