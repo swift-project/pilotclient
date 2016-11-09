@@ -139,6 +139,7 @@ namespace BlackMisc
             GlobalIndexCDockWidgetSettings              = 14200,
             GlobalIndexCNavigatorSettings               = 14300,
             GlobalIndexCSettingsReaders                 = 14400,
+            GlobalIndexCViewUpdateSettings              = 14500,
             GloablIndexInterpolatorSetup                = 15000,
             GlobalIndexLineNumber                       = 20000, //!< pseudo index for line numbers
         };

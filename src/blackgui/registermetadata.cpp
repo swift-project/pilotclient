@@ -10,6 +10,7 @@
 #include "blackgui/registermetadata.h"
 #include "blackgui/settings/dockwidgetsettings.h"
 #include "blackgui/settings/navigatorsettings.h"
+#include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/components/registermetadatacomponents.h"
 
 namespace BlackGui
@@ -18,6 +19,7 @@ namespace BlackGui
     {
         BlackGui::Settings::CDockWidgetSettings::registerMetadata();
         BlackGui::Settings::CNavigatorSettings::registerMetadata();
+        BlackGui::Settings::CViewUpdateSettings::registerMetadata();
         BlackGui::Components::registerMetadata();
     }
 }

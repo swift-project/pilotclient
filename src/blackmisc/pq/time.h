@@ -73,12 +73,14 @@ namespace BlackMisc
             //! Convenience functions when used with timers etc.
             int toMs() const;
 
+            //! Convenience functions when used with timers etc.
+            int toSeconds() const;
+
             //! Formatted as hh:mm
             QString formattedHrsMin() const;
         };
-
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTime)
 

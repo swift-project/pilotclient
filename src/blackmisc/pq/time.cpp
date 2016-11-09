@@ -131,6 +131,12 @@ namespace BlackMisc
             return static_cast<int>(ms);
         }
 
+        int CTime::toSeconds() const
+        {
+            double ms = this->valueRounded(CTimeUnit::s(), 0);
+            return static_cast<int>(ms);
+        }
+
         QString CTime::formattedHrsMin() const
         {
             QList<int> parts = getHrsMinSecParts();
@@ -146,5 +152,5 @@ namespace BlackMisc
                 return fs;
             }
         }
-    }
-}
+    } // ns
+} // ns
