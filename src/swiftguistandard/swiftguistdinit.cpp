@@ -219,7 +219,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
     {
         this->ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
-        ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetworkServers);
+        ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetwork);
     });
 
     // text messages

@@ -25,7 +25,7 @@ namespace BlackGui
 {
     namespace Settings
     {
-        //! Settings for dockwidget
+        //! Settings for navigator bar
         class BLACKGUI_EXPORT CNavigatorSettings :
             public BlackMisc::CValueObject<CNavigatorSettings>
         {

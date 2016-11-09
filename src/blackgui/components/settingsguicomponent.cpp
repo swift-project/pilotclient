@@ -71,9 +71,9 @@ namespace BlackGui
 
         void CSettingsGuiComponent::ps_fontChanged()
         {
-            QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
-            QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
-            QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
+            const QString fontSize = ui->cb_SettingsGuiFontSize->currentText().append("pt");
+            const QString fontFamily = ui->cb_SettingsGuiFont->currentFont().family();
+            const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
             QString fontColor = this->m_fontColor.name();
             if (!this->m_fontColor.isValid() || this->m_fontColor.name().isEmpty())
             {

@@ -235,7 +235,7 @@ namespace BlackGui
         bool m_selected              = false;         //!< selected when tabbed
         bool m_dockWidgetVisible     = false;         //!< logical visible, not to be confused with QDockWidget::isVisible()
         bool m_wasFrameless          = false;         //!< frameless when last floating
-        BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::ps_settingsChanged }; //!< all docked wigets settings
+        BlackMisc::CSetting<BlackGui::Settings::TDockWidget> m_settings { this, &CDockWidget::ps_settingsChanged };
 
         //! Empty widget with no size
         void initTitleBarWidgets();
