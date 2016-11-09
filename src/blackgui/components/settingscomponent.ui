@@ -22,6 +22,76 @@
   <property name="currentIndex">
    <number>0</number>
   </property>
+  <widget class="QWidget" name="tb_SettingsOverview">
+   <attribute name="title">
+    <string>Overview</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QPushButton" name="pb_Servers">
+      <property name="text">
+       <string>Servers</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pb_Network">
+      <property name="text">
+       <string>Network</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="pb_Audio">
+      <property name="text">
+       <string>Audio</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="pb_Simulator">
+      <property name="text">
+       <string>Simulator</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPushButton" name="pb_SimulatorBasics">
+      <property name="text">
+       <string>Simulator (basics)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QPushButton" name="pb_SimulatorMessages">
+      <property name="text">
+       <string>Simulator (messages)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="pb_Gui">
+      <property name="text">
+       <string>GUI</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="pb_Hotkeys">
+      <property name="text">
+       <string>Hotkeys</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="pb_Advanced">
+      <property name="text">
+       <string>Advanced</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QWidget" name="tb_SettingsTrafficNetworkServers">
    <attribute name="title">
     <string>Servers</string>
@@ -168,7 +238,7 @@
   </widget>
   <widget class="QWidget" name="tb_SettingsSimulatorBasics">
    <attribute name="title">
-    <string>Simulator (Basics)</string>
+    <string>Simulator (basics)</string>
    </attribute>
    <layout class="QVBoxLayout" name="vl_SettingsSimulatorBascis">
     <property name="spacing">

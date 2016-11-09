@@ -33,15 +33,19 @@ namespace BlackGui
         public:
 
             //! Tabs
+            //! \remark needs to be in sync with tab order
             enum SettingTab
             {
-                SettingTabNetworkServers = 0,
+                SettingTabOverview = 0,
+                SettingTabServers,
                 SettingTabNetwork,
-                SettingTabAircraftAudio,
+                SettingTabAudio,
                 SettingTabSimulator,
-                SettingTabSimulatorBascis,
+                SettingTabSimulatorBasics,
+                SettingTabSimulatorMessages,
                 SettingTabGui,
-                SettingTabHotkeys
+                SettingTabHotkeys,
+                SettingTabAdvanced
             };
 
             //! Constructor
@@ -81,6 +85,10 @@ namespace BlackGui
 
             //! GUI Opacity 0-100%
             void setGuiOpacity(double value);
+
+        private slots:
+            //! An overview button was clicked
+            void ps_overviewButtonClicked();
 
         private:
             QScopedPointer<Ui::CSettingsComponent> ui;
