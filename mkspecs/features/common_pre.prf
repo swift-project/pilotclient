@@ -58,21 +58,17 @@ contains(TEMPLATE, "vc.*"): QMAKE_CXXFLAGS *= /MP
 ################################
 
 contains(BLACK_CONFIG, ProfileRelease) {
-    win32-msvc* {
+    msvc {
         QMAKE_CXXFLAGS_RELEASE *= /Zi
         QMAKE_LFLAGS_RELEASE *= /DEBUG /PROFILE /INCREMENTAL:NO /OPT:REF /OPT:ICF
     }
 }
 
-# Needed to workaround C1128 error
-# TODO check whether this is still needed after CValueObject refactoring
-win32-msvc*: QMAKE_CXXFLAGS *= /bigobj
-
 ################################
-# No incremental build
+# Workaround C1128 error
 ################################
 
-# win32-msvc*:QMAKE_LFLAGS_DEBUG *= /INCREMENTAL:NO
+msvc: QMAKE_CXXFLAGS *= /bigobj
 
 ################################
 # No gigantic MinGW obj files

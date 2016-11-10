@@ -1,5 +1,5 @@
-win32-msvc* {
-    win32:contains(QMAKE_TARGET.arch, x86_64) {
+msvc {
+    contains(QMAKE_TARGET.arch, x86_64) {
         WORD_SIZE = 64
     }
     else {

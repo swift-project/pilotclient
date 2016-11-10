@@ -44,14 +44,14 @@ HEADERS -= libxplanemp/src/PlatformUtils.h
 
 # Externals required by libxplanemp
 CONFIG += opengl
-win32-msvc* {
+msvc {
     CONFIG(debug, debug|release): LIBS += -lpngd -lzd -lopengl32 -lglu32
     CONFIG(release, debug|release): LIBS += -lpng -lz -lopengl32 -lglu32
 }
 else:win32: LIBS += -lpng -lz -lopengl32 -lglu32
 else: LIBS += -lpng -lz
 
-win32-msvc*: DEFINES += _CRT_SECURE_NO_WARNINGS
+msvc: DEFINES += _CRT_SECURE_NO_WARNINGS
 
 # Required by X-Plane SDK and libxplanemp
 win32:DEFINES += IBM=1
