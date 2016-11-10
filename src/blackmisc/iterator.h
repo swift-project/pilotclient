@@ -440,6 +440,9 @@ namespace BlackMisc
             class PimplBase
             {
             public:
+                PimplBase() {}
+                PimplBase(const PimplBase &) = default;
+                PimplBase &operator =(const PimplBase &) = delete;
                 virtual ~PimplBase() {}
                 virtual PimplBase *clone() const = 0;
                 virtual const_reference operator *() const = 0;
@@ -601,6 +604,9 @@ namespace BlackMisc
             class PimplBase
             {
             public:
+                PimplBase() {}
+                PimplBase(const PimplBase &) = default;
+                PimplBase &operator =(const PimplBase &) = delete;
                 virtual ~PimplBase() {}
                 virtual PimplBase *clone() const = 0;
                 virtual const_reference operator *() const = 0;
@@ -786,6 +792,9 @@ namespace BlackMisc
             class PimplBase
             {
             public:
+                PimplBase() {}
+                PimplBase(const PimplBase &) = default;
+                PimplBase &operator =(const PimplBase &) = delete;
                 virtual ~PimplBase() {}
                 virtual PimplBase *clone() const = 0;
                 virtual const_reference operator *() const = 0;

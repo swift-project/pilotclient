@@ -45,9 +45,6 @@ namespace BlackMisc
             //! Default constructor
             CSettings();
 
-            //! Destructor.
-            ~CSettings() {}
-
             //! Set simulator directory
             void setSimulatorDirectory(const QString &simulatorDirectory);
 
@@ -206,9 +203,6 @@ namespace BlackMisc
 
             //! Default constructor
             CSettingsSimulatorMessages();
-
-            //! Destructor.
-            ~CSettingsSimulatorMessages() {}
 
             //! Log severity
             void setTechnicalLogSeverity(BlackMisc::CStatusMessage::StatusSeverity severity);

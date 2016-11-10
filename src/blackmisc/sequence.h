@@ -538,6 +538,9 @@ namespace BlackMisc
         class PimplBase
         {
         public:
+            PimplBase() {}
+            PimplBase(const PimplBase &) = default;
+            PimplBase &operator =(const PimplBase &) = delete;
             virtual ~PimplBase() {}
             virtual PimplBase *clone() const = 0;
             virtual PimplBase *cloneEmpty() const = 0;
