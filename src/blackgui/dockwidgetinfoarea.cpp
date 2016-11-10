@@ -98,7 +98,7 @@ namespace BlackGui
     {
         CDockWidget::initialFloating(); // initial floating to init position & size
         QList<CEnableForDockWidgetInfoArea *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
-        foreach(CEnableForDockWidgetInfoArea * dwia, infoAreaDockWidgets)
+        for(CEnableForDockWidgetInfoArea *dwia : infoAreaDockWidgets)
         {
             Q_ASSERT_X(dwia, Q_FUNC_INFO, "Missing info area");
             dwia->setParentDockWidgetInfoArea(this);
@@ -109,7 +109,7 @@ namespace BlackGui
     {
         QList<QWidget *> widgets = this->findChildren<QWidget *>();
         QList<CEnableForDockWidgetInfoArea *> widgetsWithDockWidgetInfoAreaComponent;
-        foreach(QWidget * w, widgets)
+        for(QWidget *w : widgets)
         {
             Q_ASSERT(w);
             CEnableForDockWidgetInfoArea *dwc = dynamic_cast<Components::CEnableForDockWidgetInfoArea *>(w);
@@ -122,11 +122,11 @@ namespace BlackGui
         if (nestedInfoAreas.isEmpty()) return widgetsWithDockWidgetInfoAreaComponent;
 
         // we have to exclude the nested embedded areas
-        foreach(CDockWidgetInfoArea * ia, nestedInfoAreas)
+        for(CDockWidgetInfoArea *ia : nestedInfoAreas)
         {
             QList<CEnableForDockWidgetInfoArea *> nestedInfoAreaComponents = ia->findEmbeddedDockWidgetInfoAreaComponents();
             if (nestedInfoAreaComponents.isEmpty()) { continue; }
-            foreach(CEnableForDockWidgetInfoArea * iac, nestedInfoAreaComponents)
+            for(CEnableForDockWidgetInfoArea *iac : nestedInfoAreaComponents)
             {
                 bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
                 Q_ASSERT(r); // why is the nested component not in the child list?

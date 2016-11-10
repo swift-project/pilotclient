@@ -147,10 +147,10 @@ namespace BlackCoreTest
         timer.start();
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
-            IInterpolator::PartsStatus status;
-            CAircraftPartsList pl(interpolator.getPartsBeforeTime(cs, ts, status));
+            IInterpolator::PartsStatus partsStatus;
+            CAircraftPartsList pl(interpolator.getPartsBeforeTime(cs, ts, partsStatus));
             fetchedParts++;
-            QVERIFY2(status.isSupportingParts(), "Parts not supported");
+            QVERIFY2(partsStatus.isSupportingParts(), "Parts not supported");
             QVERIFY2(!pl.isEmpty(), "Parts empty");
         }
         timeMs = timer.elapsed();

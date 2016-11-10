@@ -113,9 +113,9 @@ namespace BlackGui
             const QString sharedUrlHtml("<a href=\"%1\">%2</a>");
 
             QString sharedUrlsHtml;
-            for (const CUrl &url : sharedUrls)
+            for (const CUrl &sharedUrl : sharedUrls)
             {
-                sharedUrlsHtml += sharedUrlHtml.arg(url.getFullUrl(), url.getHost());
+                sharedUrlsHtml += sharedUrlHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost());
                 sharedUrlsHtml += " ";
             }
             ui->lbl_SharedUrls->setText(sharedUrlsHtml.trimmed());

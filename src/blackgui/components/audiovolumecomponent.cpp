@@ -94,8 +94,8 @@ namespace BlackGui
 
             if (volume > 100)
             {
-                int v = volume - 100;
-                volume = 100 + v / 5;
+                int vol = volume - 100;
+                volume = 100 + vol / 5;
             }
 
             if (volume != ui->hs_Volume->value())

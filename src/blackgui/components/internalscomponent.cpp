@@ -103,13 +103,13 @@ namespace BlackGui
                     return;
                 }
                 QJsonParseError jsonError;
-                QJsonDocument json(QJsonDocument::fromJson(jsonParts.toUtf8(), &jsonError));
+                QJsonDocument jsonDoc(QJsonDocument::fromJson(jsonParts.toUtf8(), &jsonError));
                 if (jsonError.error != QJsonParseError::NoError)
                 {
                     CLogMessage(this).validationError("Parse error: %1") << jsonError.errorString();
                     return;
                 }
-                parts.convertFromJson(json.object());
+                parts.convertFromJson(jsonDoc.object());
                 partsToGui(parts);
             }
             else
