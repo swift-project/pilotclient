@@ -127,9 +127,6 @@ namespace BlackMisc
         //! Single value constructor
         CPropertyIndexVariantMap(const CPropertyIndex &index, const CVariant &value);
 
-        //! Destructor
-        virtual ~CPropertyIndexVariantMap() {}
-
         //! Add a value
         void addValue(const CPropertyIndex &index, const CVariant &value);
 
