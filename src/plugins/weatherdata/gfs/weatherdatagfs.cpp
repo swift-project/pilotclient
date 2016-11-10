@@ -319,7 +319,7 @@ namespace BlackWxPlugin
                 gbit(bufferStart,&vers,(k+7)*8,1*8);
                 if (start == 1196575042 && (vers == 1 || vers == 2))
                 {
-                    g2int lengrib;
+                    g2int lengrib = 0;
                     //  Look for '7777' at end of GRIB message
                     if (vers == 1) gbit(bufferStart,&lengrib,(k+4)*8,3*8);
                     if (vers == 2) gbit(bufferStart,&lengrib,(k+12)*8,4*8);
