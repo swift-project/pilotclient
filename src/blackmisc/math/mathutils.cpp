@@ -35,7 +35,7 @@ namespace BlackMisc
         double CMathUtils::cubicRootReal(double x)
         {
             double result;
-            result = std::pow(qAbs(x), (double)1.0 / 3.0);
+            result = std::pow(qAbs(x), 1.0 / 3.0);
             return x < 0 ? -result : result;
         }
 
@@ -47,7 +47,7 @@ namespace BlackMisc
             if (fractpart == 0) return value; // do not mess any "integers" to the worse
             double m = pow(10.0, digits);
             qint64 ri = qRound64(value * m); // do not loose any range here
-            double rv = double(ri) / m;
+            double rv = static_cast<double>(ri) / m;
             return rv;
         }
 
@@ -57,7 +57,7 @@ namespace BlackMisc
             fractpart = modf(value, &intpart);
             if (fractpart == 0) return value; // do not mess any "integers" to the worse
             qint64 ri = qRound(value / epsilon);
-            double rv = double(ri) * epsilon; // do not loose any range here
+            double rv = static_cast<double>(ri) * epsilon; // do not loose any range here
             return rv;
         }
 

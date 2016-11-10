@@ -204,10 +204,11 @@ namespace BlackWxPlugin
                 // Search next grib field
                 g2int lskip = 0;
                 g2int lgrib = 0;
-                findNextGribMessage((unsigned char*)gribData.data(), gribData.size(), iseek, &lskip, &lgrib);
+                auto constData = reinterpret_cast<unsigned char*>(const_cast<char*>(gribData.data()));
+                findNextGribMessage(constData, gribData.size(), iseek, &lskip, &lgrib);
                 if (lgrib == 0) { break; }
 
-                unsigned char *readPtr = (unsigned char*)gribData.data() + lskip;
+                unsigned char *readPtr = constData + lskip;
                 iseek=lskip + lgrib;
 
                 g2int sec0[3];
