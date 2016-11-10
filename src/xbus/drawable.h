@@ -27,7 +27,7 @@ namespace XBus
         CDrawable(XPLMDrawingPhase phase, bool before) : m_phase(phase), m_before(before) {}
 
         //! Destructor.
-        ~CDrawable() { hide(); }
+        virtual ~CDrawable() { hide(); }
 
         //! Register the draw callback.
         virtual void show()
