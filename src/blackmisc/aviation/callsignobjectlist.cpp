@@ -120,6 +120,12 @@ namespace BlackMisc
         }
 
         template <class OBJ, class CONTAINER>
+        int ICallsignObjectList<OBJ, CONTAINER>::removeByCallsigns(const CCallsignSet &callsigns)
+        {
+            return this->container().removeIf([ & ](const OBJ &obj) { return callsigns.contains(obj.getCallsign()); });
+        }
+
+        template <class OBJ, class CONTAINER>
         QMap<QString, int> ICallsignObjectList<OBJ, CONTAINER>::getSuffixes() const
         {
             QMap<QString, int> r;
@@ -209,4 +215,3 @@ namespace BlackMisc
 
     } // namespace
 } // namespace
-

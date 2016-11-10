@@ -80,6 +80,9 @@ namespace BlackMisc
             //! Remove all objects with callsign
             int removeByCallsign(const CCallsign &callsign);
 
+            //! Remove all objects with callsigns
+            int removeByCallsigns(const CCallsignSet &callsigns);
+
             //! All suffixes with their respective count
             QMap<QString, int> getSuffixes() const;
 
