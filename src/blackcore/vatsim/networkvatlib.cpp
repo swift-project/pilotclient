@@ -795,7 +795,7 @@ namespace BlackCore
             const CCallsign callsign(callsignChar, CCallsign::Aircraft);
             CAircraftSituation situation(
                 callsign,
-                CCoordinateGeodetic(position->latitude, position->longitude, 0.0),
+                CCoordinateGeodetic(position->latitude, position->longitude), // geodetic height -> null
                 CAltitude(position->altitudeTrue, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),

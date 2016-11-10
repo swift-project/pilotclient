@@ -190,12 +190,18 @@ namespace BlackMisc
             }
         }
 
-        CCoordinateGeodetic::CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
+        CCoordinateGeodetic::CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength geodeticHeight) :
             m_x(latitude.cos() * longitude.cos()),
             m_y(latitude.cos() * longitude.sin()),
             m_z(latitude.sin()),
-            m_geodeticHeight(height)
+            m_geodeticHeight(geodeticHeight)
         {}
+
+        CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees) :
+            CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() }) {}
+
+        CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
+            CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m() }) {}
 
         CLatitude CCoordinateGeodetic::latitude() const
         {

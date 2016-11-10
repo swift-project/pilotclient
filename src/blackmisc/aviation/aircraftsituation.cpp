@@ -162,7 +162,7 @@ namespace BlackMisc
 
         bool CAircraftSituation::isOnGroundGuessed() const
         {
-            CLength heightAboveGround(this->getHeightAboveGround());
+            const CLength heightAboveGround(this->getHeightAboveGround());
             if (!heightAboveGround.isNull())
             {
                 return heightAboveGround.value(CLengthUnit::m()) < 1.0;
@@ -172,7 +172,7 @@ namespace BlackMisc
             if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 10) { return false; }
             if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10)  { return false; }
 
-            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 80) { return false; }
+            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 75) { return false; }
 
             // not sure, but this is a guess
             return true;
@@ -186,9 +186,10 @@ namespace BlackMisc
                 // we have a sure value
                 return this->getAltitude();
             }
-            if (!m_position.geodeticHeight().isNull() && !m_altitude.isNull())
+            const CLength gh(geodeticHeight());
+            if (!gh.isNull() && !m_altitude.isNull())
             {
-                return m_altitude - m_position.geodeticHeight();
+                return m_altitude - gh;
             }
             return notAvialable;
         }

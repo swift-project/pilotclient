@@ -180,11 +180,13 @@ namespace BlackMisc
             CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
 
             //! Constructor by values
-            CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height);
+            CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength geodeticHeight);
+
+            //! Constructor by double values, but no geodetic height
+            CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees);
 
             //! Constructor by values
-            CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
-                CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m() }) {}
+            CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters);
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual CLatitude latitude() const override;
