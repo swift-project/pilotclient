@@ -181,7 +181,7 @@ namespace BlackMisc
                 rowHtml += "<td>" + QString::number(line++) + "</td>";
             }
 
-            for (const CPropertyIndex index : usedIndexes)
+            for (const CPropertyIndex &index : usedIndexes)
             {
                 rowHtml += "<td>" + statusMessage.propertyByIndex(index).toQString(true) + "</td>";
             }

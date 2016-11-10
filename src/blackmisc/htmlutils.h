@@ -26,7 +26,7 @@ namespace BlackMisc
         for (const Obj &obj : container)
         {
             QString rowHtml;
-            for (const CPropertyIndex index : indexes)
+            for (const CPropertyIndex &index : indexes)
             {
                 rowHtml += "<td>" + obj.propertyByIndex(index).toQString(true) + "</td>";
             }
