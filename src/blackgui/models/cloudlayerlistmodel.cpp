@@ -109,7 +109,7 @@ namespace BlackGui
             {
                 if (dataCVariant.canConvert<int>())
                 {
-                    int coverage = dataCVariant.value<double>();
+                    int coverage = dataCVariant.value<int>();
                     QString formattedString = QString::number(coverage) + " %";
                     return formattedString;
                 }

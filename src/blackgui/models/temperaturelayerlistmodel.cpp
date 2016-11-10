@@ -40,9 +40,9 @@ namespace BlackGui
             //! \copydoc CDefaultFormatter::displayRole
             virtual CVariant displayRole(const CVariant &dataCVariant) const override
             {
-                if (dataCVariant.canConvert<double>())
+                if (dataCVariant.canConvert<int>())
                 {
-                    int rh = dataCVariant.value<double>();
+                    int rh = dataCVariant.value<int>();
                     QString formattedString = QString::number(rh) + " %";
                     return formattedString;
                 }

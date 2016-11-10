@@ -180,7 +180,7 @@ namespace BlackCore
             }
 
             const QDateTime lastModified = nwReply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
-            const qulonglong size = static_cast<qlonglong>(nwReply->header(QNetworkRequest::ContentLengthHeader).toULongLong());
+            const qulonglong size = nwReply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
             headerResponse.setUpdateTimestamp(lastModified);
             headerResponse.setContentLengthHeader(size);
 
