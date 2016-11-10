@@ -250,7 +250,7 @@ namespace BlackSound
         else if (this->m_audioFormat.sampleSize() == 8 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
         {
             const qint8 value = static_cast<qint8>(amplitude * 127);
-            *reinterpret_cast<quint8 *>(bufferPointer) = value;
+            *reinterpret_cast<qint8 *>(bufferPointer) = value;
         }
         else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
         {
