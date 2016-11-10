@@ -62,7 +62,7 @@ namespace BlackSample
         qDebug() << json << l;
         qDebug() << "-------";
         QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
+        QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
         CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft()));
         CAtcStation station(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
                             CFrequency(118.7, CFrequencyUnit::MHz()), geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);

@@ -66,7 +66,7 @@ namespace BlackGui
 
         void CSettingsGuiComponent::setGuiOpacity(double value)
         {
-            ui->hs_SettingsGuiOpacity->setValue(value);
+            ui->hs_SettingsGuiOpacity->setValue(static_cast<int>(value));
         }
 
         void CSettingsGuiComponent::ps_fontChanged()

@@ -52,7 +52,7 @@ namespace BlackMisc
     {
         auto it = std::find_if(s.begin(), s.end(), predicate);
         if (it == s.end()) { return -1; }
-        return std::distance(s.begin(), it);
+        return static_cast<int>(std::distance(s.begin(), it));
     }
 
     //! Split a string into multiple strings, using a predicate function to identify the split points.

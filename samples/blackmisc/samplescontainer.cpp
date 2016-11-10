@@ -42,9 +42,9 @@ namespace BlackSample
     {
         // ATC stations
         QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
+        QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
         QDateTime dtFrom2 = dtUntil;
-        QDateTime dtUntil2 = dtUntil.addSecs(60 * 60.0);
+        QDateTime dtUntil2 = dtUntil.addSecs(60 * 60);
         CFrequency freqEddmTwr(118.7, CFrequencyUnit::MHz());
         CCallsign callsignEddmTwr("eddm_twr");
         CCoordinateGeodetic geoPos =

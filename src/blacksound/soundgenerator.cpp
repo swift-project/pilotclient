@@ -285,7 +285,7 @@ namespace BlackSound
         if (!success) return false;
 
         CombinedHeader header;
-        qint64 headerLength = sizeof(CombinedHeader);
+        constexpr auto headerLength = sizeof(CombinedHeader);
         memset(&header, 0, headerLength);
 
         // RIFF header

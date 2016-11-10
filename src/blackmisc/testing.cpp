@@ -56,7 +56,7 @@ namespace BlackMisc
             double f = 118.0 + (index % 30) * 0.25;
 
             const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-            const QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
+            const QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
             const CUser user(id, usr);
 
             CAtcStation station;

@@ -155,7 +155,7 @@ namespace BlackCore
         qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
 
         qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
-        qint64 callThresholdMs = m_timer.interval() * 1.5;
+        qint64 callThresholdMs = static_cast<int>(m_timer.interval() * 1.5);
         m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
 
         // this is a trick to not remove everything while debugging

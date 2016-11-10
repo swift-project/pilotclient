@@ -38,9 +38,9 @@ namespace BlackSample
     {
         // ATC station
         QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
+        QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
         QDateTime dtFrom2 = dtUntil;
-        QDateTime dtUntil2 = dtUntil.addSecs(60 * 60.0);
+        QDateTime dtUntil2 = dtUntil.addSecs(60 * 60);
         CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft()));
         CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
                              CFrequency(118.7, CFrequencyUnit::MHz()),

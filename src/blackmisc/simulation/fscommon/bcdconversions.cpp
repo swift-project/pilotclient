@@ -24,9 +24,9 @@ namespace BlackMisc
             quint32 CBcdConversions::comFrequencyToBcdHz(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency)
             {
                 // FSX documentation is wrong, we need to use kHz + 2 digits, not Hz
-                quint32 f = comFrequency.valueRounded(CFrequencyUnit::kHz(), 0) / 10;
-                f = dec2Bcd(f);
-                return f;
+                double f = comFrequency.valueRounded(CFrequencyUnit::kHz(), 0) / 10;
+                quint32 fInt = dec2Bcd(static_cast<quint32>(f));
+                return fInt;
             }
 
             quint32 CBcdConversions::transponderCodeToBcd(const BlackMisc::Aviation::CTransponder &transponder)

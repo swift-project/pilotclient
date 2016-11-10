@@ -555,7 +555,7 @@ namespace BlackSample
             timer.restart();
             CAircraftCfgEntriesList entriesList = testserviceInterface.getAircraftCfgEntriesList(5000);
             if (entriesList.size() != 5000) qDebug() << "wrong list size" << entriesList.size();
-            int t5000 = timer.nsecsElapsed() / 1000000; // ms
+            qint64 t5000 = timer.nsecsElapsed() / 1000000; // ms
             qDebug() << "Reading aircraft cfg entries in ms:" << t5000;
 
             // object paths

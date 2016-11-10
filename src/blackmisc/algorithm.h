@@ -40,7 +40,7 @@ namespace BlackMisc
     template <typename ForwardIt, typename OutputIt, typename Generator>
     void copyRandomElements(ForwardIt in, ForwardIt end, OutputIt out, int n, Generator &&rng)
     {
-        for (auto size = std::distance(in, end); in != end && n > 0; ++in, --size)
+        for (auto size = static_cast<int>(std::distance(in, end)); in != end && n > 0; ++in, --size)
         {
             if (std::uniform_int_distribution<>(0, size - 1)(rng) < n)
             {

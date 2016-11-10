@@ -50,7 +50,7 @@ namespace XBus
     class ArrayDataRefImpl
     {
     public:
-        ArrayDataRefImpl(char const* name, size_t size) : m_ref(XPLMFindDataRef(name)), m_size(size)
+        ArrayDataRefImpl(char const* name, int size) : m_ref(XPLMFindDataRef(name)), m_size(size)
         {
             if (! m_ref)
             {
@@ -66,14 +66,14 @@ namespace XBus
         std::vector<T> implGetAll() const;
 
         template <typename T>
-        void implSetAt(size_t index, T);
+        void implSetAt(int index, T);
 
         template <typename T>
-        T implGetAt(size_t index) const;
+        T implGetAt(int index) const;
 
     private:
         XPLMDataRef m_ref;
-        size_t const m_size;
+        int const m_size;
     };
 
     /*!
@@ -126,10 +126,10 @@ namespace XBus
         std::vector<DataRefType> getAll() const { return ArrayDataRefImpl::implGetAll<DataRefType>(); }
 
         //! Set the value of a single element (if it is writable)
-        void setAt(size_t index, DataRefType d) { ArrayDataRefImpl::implSetAt(index, d); }
+        void setAt(int index, DataRefType d) { ArrayDataRefImpl::implSetAt(index, d); }
 
         //! Get the value of a single element
-        DataRefType getAt(size_t index) const { return ArrayDataRefImpl::implGetAt<DataRefType>(index); }
+        DataRefType getAt(int index) const { return ArrayDataRefImpl::implGetAt<DataRefType>(index); }
     };
 
     /*!
@@ -183,22 +183,22 @@ namespace XBus
     inline double DataRefImpl::implGet<double>() const { return XPLMGetDatad(m_ref); }
 
     template <>
-    inline void ArrayDataRefImpl::implSetAll<int>(std::vector<int> const& v) { assert(v.size() <= m_size); XPLMSetDatavi(m_ref, const_cast<int*>(&v[0]), 0, (int)v.size()); }
+    inline void ArrayDataRefImpl::implSetAll<int>(std::vector<int> const& v) { assert((int)v.size() <= m_size); XPLMSetDatavi(m_ref, const_cast<int*>(&v[0]), 0, (int)v.size()); }
     template <>
-    inline void ArrayDataRefImpl::implSetAll<float>(std::vector<float> const& v) { assert(v.size() <= m_size); XPLMSetDatavf(m_ref, const_cast<float*>(&v[0]), 0, (int)v.size()); }
+    inline void ArrayDataRefImpl::implSetAll<float>(std::vector<float> const& v) { assert((int)v.size() <= m_size); XPLMSetDatavf(m_ref, const_cast<float*>(&v[0]), 0, (int)v.size()); }
     template <>
-    inline std::vector<int> ArrayDataRefImpl::implGetAll<int>() const { std::vector<int> v (m_size); XPLMGetDatavi(m_ref, &v[0], 0, (int)m_size); return v; }
+    inline std::vector<int> ArrayDataRefImpl::implGetAll<int>() const { std::vector<int> v (m_size); XPLMGetDatavi(m_ref, &v[0], 0, m_size); return v; }
     template <>
-    inline std::vector<float> ArrayDataRefImpl::implGetAll<float>() const { std::vector<float> v (m_size); XPLMGetDatavf(m_ref, &v[0], 0, (int)m_size); return v; }
+    inline std::vector<float> ArrayDataRefImpl::implGetAll<float>() const { std::vector<float> v (m_size); XPLMGetDatavf(m_ref, &v[0], 0, m_size); return v; }
 
     template <>
-    inline void ArrayDataRefImpl::implSetAt<int>(size_t i, int d) { assert(i <= m_size); XPLMSetDatavi(m_ref, &d, (int)i, 1); }
+    inline void ArrayDataRefImpl::implSetAt<int>(int i, int d) { assert(i <= m_size); XPLMSetDatavi(m_ref, &d, i, 1); }
     template <>
-    inline void ArrayDataRefImpl::implSetAt<float>(size_t i, float d) { assert(i <= m_size); XPLMSetDatavf(m_ref, &d, (int)i, 1); }
+    inline void ArrayDataRefImpl::implSetAt<float>(int i, float d) { assert(i <= m_size); XPLMSetDatavf(m_ref, &d, i, 1); }
     template <>
-    inline int ArrayDataRefImpl::implGetAt<int>(size_t i) const { assert(i <= m_size); int d; XPLMGetDatavi(m_ref, &d, (int)i, 1); return d; }
+    inline int ArrayDataRefImpl::implGetAt<int>(int i) const { assert(i <= m_size); int d; XPLMGetDatavi(m_ref, &d, i, 1); return d; }
     template <>
-    inline float ArrayDataRefImpl::implGetAt<float>(size_t i) const { assert(i <= m_size); float d; XPLMGetDatavf(m_ref, &d, (int)i, 1); return d; }
+    inline float ArrayDataRefImpl::implGetAt<float>(int i) const { assert(i <= m_size); float d; XPLMGetDatavf(m_ref, &d, i, 1); return d; }
 
 } // namespace
 

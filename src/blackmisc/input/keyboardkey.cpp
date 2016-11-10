@@ -55,7 +55,7 @@ namespace BlackMisc
 
             if (isModifier()) { return keyStrings.value(m_keyCode); }
 
-            QChar key = QChar::fromLatin1(m_keyCode);
+            QChar key = QChar::fromLatin1(static_cast<char>(m_keyCode));
             return key;
         }
 

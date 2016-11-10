@@ -74,7 +74,7 @@ namespace BlackMisc
 
     void CIcon::setRotation(const PhysicalQuantities::CAngle &rotate)
     {
-        this->m_rotateDegrees = rotate.valueRounded(PhysicalQuantities::CAngleUnit::deg(), 0);
+        this->m_rotateDegrees = static_cast<int>(rotate.valueRounded(PhysicalQuantities::CAngleUnit::deg(), 0));
     }
 
     QString CIcon::convertToQString(bool i18n) const
