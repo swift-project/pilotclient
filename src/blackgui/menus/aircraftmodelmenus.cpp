@@ -75,7 +75,6 @@ namespace BlackGui
                     menuActions.addMenuSimulator();
                     if (this->m_messageFrame)
                     {
-                        const CAircraftModel model(mv->selectedObject());
                         if (!model.getIconPath().isEmpty())
                         {
                             this->m_iconAction = menuActions.addAction(this->m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_displayIcon });

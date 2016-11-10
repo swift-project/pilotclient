@@ -438,9 +438,14 @@ namespace BlackGui
             if (name.isEmpty())
             {
                 // create a name
-                if (this->getDockWidgetInfoArea()) { name = this->getDockWidgetInfoArea()->windowTitle(); }
-                else if (!windowTitle().isEmpty()) { name = this->windowType(); }
-                else { name = this->metaObject()->className(); }
+                if (this->getDockWidgetInfoArea())
+                {
+                    name = this->getDockWidgetInfoArea()->windowTitle();
+                }
+                else
+                {
+                    name = this->metaObject()->className();
+                }
             }
             if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))
             {
