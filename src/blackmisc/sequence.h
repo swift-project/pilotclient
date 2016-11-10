@@ -23,6 +23,15 @@
 #include <utility>
 #include <initializer_list>
 
+// conditions matched with pop pragmas at bottom of file
+#if defined(QT_CC_CLANG)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#elif defined(Q_CC_MSVC) && defined(Q_OS_WIN64) && defined(QT_CC_WARNINGS)
+#pragma warning(push)
+#pragma warning(disable:4244)
+#endif
+
 namespace BlackMisc
 {
 
@@ -49,7 +58,7 @@ namespace BlackMisc
         typedef typename Iterators::ConstRandomAccessIterator<T> const_iterator;
         typedef typename Iterators::RandomAccessIterator<T> iterator;
         typedef ptrdiff_t difference_type;
-        typedef intptr_t size_type;
+        typedef int size_type;
         //! @}
 
         //! Default constructor.
@@ -587,7 +596,7 @@ namespace BlackMisc
             const_reference front() const override { return m_impl.front(); }
             reference back() override { return m_impl.back(); }
             const_reference back() const override { return m_impl.back(); }
-            size_type size() const override { return m_impl.size(); }
+            size_type size() const override { return static_cast<size_type>(m_impl.size()); }
             bool empty() const override { return m_impl.empty(); }
             void clear() override { m_impl.clear(); }
             iterator insert(iterator pos, const T &value) override { return iterator::fromImpl(m_impl.insert(pos.template getImpl<const typename C::iterator>(), value)); }
@@ -618,5 +627,12 @@ Q_DECLARE_METATYPE(BlackMisc::CSequence<uint>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<qlonglong>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<qulonglong>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<double>)
+
+// conditions matched with pop pragmas at bottom of file
+#if defined(QT_CC_CLANG)
+#pragma clang diagnostic pop
+#elif defined(Q_CC_MSVC) && defined(Q_OS_WIN64) && defined(QT_CC_WARNINGS)
+#pragma warning(pop)
+#endif
 
 #endif //BLACKMISC_SEQUENCE_H
