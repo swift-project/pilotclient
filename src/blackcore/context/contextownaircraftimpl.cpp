@@ -286,9 +286,10 @@ namespace BlackCore
         {
             {
                 QWriteLocker l(&m_lockAircraft);
-                return this->m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
+                if (!this->m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode)) { return false; }
             }
             emit this->changedAircraftIcaoCodes(aircraftIcaoCode, airlineIcaoCode);
+            return true;
         }
 
         bool CContextOwnAircraft::updateSelcal(const CSelcal &selcal, const CIdentifier &originator)
