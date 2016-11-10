@@ -124,7 +124,6 @@ namespace BlackGui
             case InfoAreaTextMessages:
             case InfoAreaWeather:
                 return QSize(600, 400);
-                break;
             case InfoAreaFlightPlan:
                 return QSize(625, 500);
             default:

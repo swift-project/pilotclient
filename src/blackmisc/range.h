@@ -239,7 +239,7 @@ namespace BlackMisc
         I m_begin;
         I m_end;
 
-        void check(...) {};
+        void check(...) {}
         template <class I2, class F> void check(Iterators::ConditionalIterator<I2, F> *begin, Iterators::ConditionalIterator<I2, F> *end)
         {
             begin->checkEnd(*end);

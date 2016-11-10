@@ -280,13 +280,13 @@ namespace BlackMisc
         LockFreeUniqueWriter<T> uniqueWrite()
         {
             return { Private::atomic_load(&m_ptr), &m_ptr };
-        };
+        }
 
         //! Return an object which can write a new value, even if there are other writes.
         LockFreeSharedWriter<T> sharedWrite()
         {
             return { Private::atomic_load(&m_ptr), &m_ptr };
-        };
+        }
 
         //! Pass the current value to the functor inspector, and return whatever inspector returns.
         template <typename F>
