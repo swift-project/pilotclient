@@ -203,7 +203,10 @@ namespace BlackGui
         {
             showOverlayImage(variant.value<CPixmap>(), timeOutMs);
         }
-        Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type");
+        else
+        {
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type");
+        }
     }
 
     void COverlayMessages::setModeToMessages()
