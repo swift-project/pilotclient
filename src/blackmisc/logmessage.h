@@ -25,37 +25,6 @@
 namespace BlackMisc
 {
     /*!
-     * Helper with static methods for dealing with metadata embedded in log message category strings.
-     *
-     * There are certain aspects of log messages which cannot be represented in Qt's native log message machinery.
-     * Therefore we are forced to use a special encoding of the message category string to encode these aspects.
-     *
-     * An encoded category string consists of a plain category string with zero or more flag strings appended.
-     * The plain category and the flags are all separated by forward-slash characters ('/').
-     *
-     * There are currently two flags:
-     * \li \c "debug" Qt only has 3 ordinary severities (debug, warning, critical), so we use QtMsgDebug for both
-     *                debug and info messages, and we use this flag to distinguish between them.
-     * \li \c "redundant" To avoid handling the same message twice, this flag identifies a message which has already
-     *                    been directly returned as the return value of the method which generated it.
-     */
-    class BLACKMISC_EXPORT CLogMessageHelper
-    {
-    public:
-        //! Deleted constructor.
-        CLogMessageHelper() = delete;
-
-        //! Returns an encoded category string with the debug flag appended.
-        static QString addDebugFlag(const QString &category);
-
-        //! Strips all flags from an encoded category string, returning only the plain category string.
-        static QString stripFlags(const QString &category);
-
-        //! Returns true if the given encoded category string has the debug flag.
-        static bool hasDebugFlag(const QString &category);
-    };
-
-    /*!
      * Class for emitting a log message. Works similar to the qDebug, qWarning, qCritical family of functions.
      *
      * The member functions debug, info, warning, error, and the stream operators all return a reference to <tt>*this</tt>,

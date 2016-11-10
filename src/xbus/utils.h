@@ -47,6 +47,10 @@ class QXPlaneMessageHandler
             std::sprintf(buffer, "%s:%d: Debug: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);
             break;
+        case QtInfoMsg:
+            std::sprintf(buffer, "%s:%d: Info: %s\n", file.constData(), line, localMsg.constData());
+            XPLMDebugString(buffer);
+            break;
         case QtWarningMsg:
             std::sprintf(buffer, "%s:%d: Warning: %s\n", file.constData(), line, localMsg.constData());
             XPLMDebugString(buffer);

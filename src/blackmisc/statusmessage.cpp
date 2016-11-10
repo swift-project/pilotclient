@@ -127,15 +127,16 @@ namespace BlackMisc
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
         : CStatusMessage(message.trimmed())
     {
-        bool debug = CLogMessageHelper::hasDebugFlag(context.category);
-        auto categories = CLogMessageHelper::stripFlags(context.category);
-        m_categories = CLogCategoryList::fromQString(categories);
+        m_categories = CLogCategoryList::fromQString(context.category);
 
         switch (type)
         {
         default:
         case QtDebugMsg:
-            this->m_severity = debug ? SeverityDebug : SeverityInfo;
+            this->m_severity = SeverityDebug;
+            break;
+        case QtInfoMsg:
+            this->m_severity = SeverityInfo;
             break;
         case QtWarningMsg:
             this->m_severity = SeverityWarning;
@@ -149,21 +150,17 @@ namespace BlackMisc
 
     void CStatusMessage::toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const
     {
-        auto category = m_categories.toQString();
-        if (this->m_severity == SeverityDebug && ! category.isEmpty())
-        {
-            category = CLogMessageHelper::addDebugFlag(category);
-        }
-
-        *o_category = category;
+        *o_category = this->m_categories.toQString();
         *o_message = this->getMessage();
 
         switch (this->m_severity)
         {
         default:
         case SeverityDebug:
-        case SeverityInfo:
             *o_type = QtDebugMsg;
+            break;
+        case SeverityInfo:
+            *o_type = QtInfoMsg;
             break;
         case SeverityWarning:
             *o_type = QtWarningMsg;

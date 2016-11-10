@@ -42,16 +42,7 @@ namespace BlackMisc
 
     QByteArray CLogMessage::qtCategory() const
     {
-        if (m_categories.isEmpty())
-        {
-            return {};
-        }
-        else
-        {
-            QString category = m_categories.toQString();
-            if (m_severity == CStatusMessage::SeverityDebug) { category = CLogMessageHelper::addDebugFlag(category); }
-            return category.toLatin1();
-        }
+        return m_categories.toQString().toLatin1();
     }
 
     QDebug CLogMessage::ostream(const QByteArray &category) const
@@ -62,7 +53,7 @@ namespace BlackMisc
             {
             default:
             case CStatusMessage::SeverityDebug: return m_logger.debug();
-            case CStatusMessage::SeverityInfo: return m_logger.debug();
+            case CStatusMessage::SeverityInfo: return m_logger.info();
             case CStatusMessage::SeverityWarning: return m_logger.warning();
             case CStatusMessage::SeverityError: return m_logger.critical();
             }
@@ -73,31 +64,11 @@ namespace BlackMisc
             {
             default:
             case CStatusMessage::SeverityDebug: return m_logger.debug(QLoggingCategory(category.constData()));
-            case CStatusMessage::SeverityInfo: return m_logger.debug(QLoggingCategory(category.constData()));
+            case CStatusMessage::SeverityInfo: return m_logger.info(QLoggingCategory(category.constData()));
             case CStatusMessage::SeverityWarning: return m_logger.warning(QLoggingCategory(category.constData()));
             case CStatusMessage::SeverityError: return m_logger.critical(QLoggingCategory(category.constData()));
             }
         }
-    }
-
-    //! Does category contain flag?
-    bool hasFlag(const QString &category, const QString &flag)
-    {
-        return category.section("/", 1, -1).split("/").contains(flag);
-    }
-
-    //! Add flag to category
-    QString addFlag(QString category, const QString &flag)
-    {
-        if (category.isEmpty() || hasFlag(category, flag)) return category;
-        return category + "/" + flag;
-    }
-    QString CLogMessageHelper::addDebugFlag(const QString &category) { return addFlag(category, "debug"); }
-    QString CLogMessageHelper::stripFlags(const QString &category) { return category.section("/", 0, 0); }
-    bool CLogMessageHelper::hasDebugFlag(const QString &category)
-    {
-        return hasFlag(category, "debug") || category.isEmpty()
-               || (QLoggingCategory::defaultCategory() && category == QLoggingCategory::defaultCategory()->categoryName());
     }
 
     void CLogMessage::preformatted(const CStatusMessage &statusMessage)
