@@ -69,8 +69,7 @@ namespace BlackGui
 
         bool CEnableForDockWidgetInfoArea::isVisibleWidget() const
         {
-            Q_ASSERT(this->m_parentDockableInfoArea);
-            if (!this->m_parentDockableInfoArea) { return false; }
+            if (!this->m_parentDockableInfoArea) { return false; } // can happen function is used while dock widget not yet fully initialized
             return this->m_parentDockableInfoArea->isVisibleWidget();
         }
 
