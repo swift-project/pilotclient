@@ -38,7 +38,6 @@
 class QCloseEvent;
 class QEvent;
 class QMouseEvent;
-
 class QWidget;
 
 namespace BlackGui
@@ -327,7 +326,7 @@ void SwiftGuiStd::updateGuiStatusInformation()
     }
 
     // update status fields
-    QString s = QString("network: %1").arg(network);
+    const QString s = QString("network: %1").arg(network);
     ui->comp_InfoBarStatus->setDBusTooltip(s);
 }
 

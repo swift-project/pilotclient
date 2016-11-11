@@ -141,9 +141,6 @@ void SwiftGuiStd::init()
     ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
     ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CBuildConfig::compiledWithInfo());
 
-    // update timers
-    this->startUpdateTimersWhenConnected();
-
     // do this as last statement, so it can be used as flag
     // whether init has been completed
     this->setVisible(true);
@@ -205,11 +202,6 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_onChangedWindowOpacity);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &SwiftGuiStd::ps_onStyleSheetsChanged);
 
-    // sliders
-    connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);
-    connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAircraftUpdateInterval, ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::setUpdateIntervalSeconds);
-    connect(ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
-
     // login
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffCancelled, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
@@ -244,24 +236,9 @@ void SwiftGuiStd::initialDataReads()
     CLogMessage(this).info("Initial data read");
 }
 
-void SwiftGuiStd::startUpdateTimersWhenConnected()
-{
-    ui->comp_MainInfoArea->getAtcStationComponent()->setUpdateIntervalSeconds(ui->comp_MainInfoArea->getSettingsComponent()->getAtcUpdateIntervalSeconds());
-    ui->comp_MainInfoArea->getAircraftComponent()->setUpdateIntervalSeconds(ui->comp_MainInfoArea->getSettingsComponent()->getAircraftUpdateIntervalSeconds());
-    ui->comp_MainInfoArea->getUserComponent()->setUpdateIntervalSeconds(ui->comp_MainInfoArea->getSettingsComponent()->getUsersUpdateIntervalSeconds());
-}
-
-void SwiftGuiStd::stopUpdateTimersWhenDisconnected()
-{
-    ui->comp_MainInfoArea->getAtcStationComponent()->stopTimer();
-    ui->comp_MainInfoArea->getAircraftComponent()->stopTimer();
-    ui->comp_MainInfoArea->getUserComponent()->stopTimer();
-}
-
 void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)
 {
     this->m_timerContextWatchdog->stop();
-    this->stopUpdateTimersWhenDisconnected();
     if (!disconnectSignalSlots) { return; }
     this->disconnect(this->m_timerContextWatchdog);
 }

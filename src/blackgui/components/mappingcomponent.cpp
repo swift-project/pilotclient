@@ -70,6 +70,8 @@ namespace BlackGui
             ui->tvp_RenderedAircraft->setAircraftMode(CSimulatedAircraftListModel::RenderedMode);
             ui->tvp_RenderedAircraft->setResizeMode(CAircraftModelView::ResizingOnce);
 
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMappingComponent::ps_connectionStatusChanged);
+
             connect(ui->tvp_AircraftModels, &CAircraftModelView::requestUpdate, this, &CMappingComponent::ps_onModelsUpdateRequested);
             connect(ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this, &CMappingComponent::ps_onRowCountChanged);
             connect(ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::ps_onModelSelectedInView);
@@ -386,6 +388,8 @@ namespace BlackGui
         void CMappingComponent::ps_markRenderedViewForUpdate()
         {
             m_missedRenderedAircraftUpdate = true;
+            m_updateTimer.start();
+            this->ps_backgroundUpdate();
         }
 
         void CMappingComponent::ps_addingRemoteAircraftFailed(const CSimulatedAircraft &aircraft, const CStatusMessage &message)
@@ -445,7 +449,21 @@ namespace BlackGui
         void CMappingComponent::ps_settingsChanged()
         {
             const CViewUpdateSettings settings = this->m_settings.get();
-            this->m_updateTimer.setInterval(settings.getAircraftUpdateTime().toMs());
+            this->m_updateTimer.setInterval(settings.getRenderingUpdateTime().toMs());
+        }
+
+        void CMappingComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
+        {
+            Q_UNUSED(from);
+            if (INetwork::isDisconnectedStatus(to))
+            {
+                ui->tvp_RenderedAircraft->clear();
+                this->m_updateTimer.stop();
+            }
+            else if (INetwork::isConnectedStatus(to))
+            {
+                this->m_updateTimer.start();
+            }
         }
     } // namespace
 } // namespace

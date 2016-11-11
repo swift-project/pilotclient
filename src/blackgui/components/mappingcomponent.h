@@ -148,6 +148,9 @@ namespace BlackGui
 
             //! Settings have been changed
             void ps_settingsChanged();
+
+            //! Connection status has been changed
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
         };
     } // namespace
 } // namespace

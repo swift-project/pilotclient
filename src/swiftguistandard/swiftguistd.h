@@ -105,9 +105,9 @@ private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
     // if I pass the parent, the dialog is always center over the parent
     QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{new BlackGui::Components::CNavigatorDialog()};
-    bool                                           m_init = false;
-    BlackGui::CManagedStatusBar                    m_statusBar;
-    BlackMisc::CLogSubscriber                      m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
+    bool                        m_init = false;
+    BlackGui::CManagedStatusBar m_statusBar;
+    BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
 
     // contexts
     bool m_coreAvailable           = false;
@@ -168,12 +168,6 @@ private:
     //! Is given main page selected?
     //! \param mainPage index to be checked
     bool isMainPageSelected(MainPageIndex mainPage) const;
-
-    //! Start all update timers
-    void startUpdateTimersWhenConnected();
-
-    //! Stop all update timers
-    void stopUpdateTimersWhenDisconnected();
 
     //! Stop all timers
     //! \param disconnect also disconnect signal/slots
