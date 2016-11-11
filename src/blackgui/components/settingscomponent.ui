@@ -351,138 +351,6 @@
     </property>
     <item>
      <layout class="QFormLayout" name="fl_SettingsGui">
-      <item row="1" column="0" colspan="2">
-       <widget class="QGroupBox" name="gb_ViewRefreshTimes">
-        <property name="title">
-         <string>View refresh times</string>
-        </property>
-        <layout class="QFormLayout" name="fl_ViewRefreshTimes">
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbl_SettingsGuiAircraftRefreshTime">
-           <property name="toolTip">
-            <string>Aircraft refresh time (5-30s)</string>
-           </property>
-           <property name="text">
-            <string>Aircraft rt (5-30s)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QSlider" name="hs_SettingsGuiAircraftRefreshTime">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimum">
-            <number>5</number>
-           </property>
-           <property name="maximum">
-            <number>30</number>
-           </property>
-           <property name="singleStep">
-            <number>5</number>
-           </property>
-           <property name="pageStep">
-            <number>5</number>
-           </property>
-           <property name="value">
-            <number>10</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="tickPosition">
-            <enum>QSlider::NoTicks</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lbl_SettingsGuiAtcRefreshTime">
-           <property name="toolTip">
-            <string>ATC refresh time (5-30s)</string>
-           </property>
-           <property name="text">
-            <string>ATC rt (5-30s)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QSlider" name="hs_SettingsGuiAtcRefreshTime">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimum">
-            <number>5</number>
-           </property>
-           <property name="maximum">
-            <number>30</number>
-           </property>
-           <property name="singleStep">
-            <number>5</number>
-           </property>
-           <property name="pageStep">
-            <number>5</number>
-           </property>
-           <property name="value">
-            <number>10</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lbl_SettingsGuiUserRefreshTime">
-           <property name="toolTip">
-            <string>User refresh time (5-30s)</string>
-           </property>
-           <property name="text">
-            <string>User rt (5-30s)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QSlider" name="hs_SettingsGuiUserRefreshTime">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimum">
-            <number>5</number>
-           </property>
-           <property name="maximum">
-            <number>30</number>
-           </property>
-           <property name="singleStep">
-            <number>5</number>
-           </property>
-           <property name="pageStep">
-            <number>5</number>
-           </property>
-           <property name="value">
-            <number>10</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-        <zorder>lbl_SettingsGuiUserRefreshTime</zorder>
-        <zorder>lbl_SettingsGuiAtcRefreshTime</zorder>
-        <zorder>lbl_SettingsGuiAircraftRefreshTime</zorder>
-        <zorder>hs_SettingsGuiUserRefreshTime</zorder>
-        <zorder>hs_SettingsGuiAtcRefreshTime</zorder>
-        <zorder>hs_SettingsGuiAircraftRefreshTime</zorder>
-       </widget>
-      </item>
       <item row="4" column="1">
        <widget class="QWidget" name="qw_SettingsGuiFont" native="true">
         <layout class="QHBoxLayout" name="hl_SettingsGuiFontColor">
@@ -506,6 +374,16 @@
       </item>
       <item row="0" column="0" colspan="2">
        <widget class="BlackGui::Components::CSettingsGuiComponent" name="comp_SettingsGuiGeneral">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>100</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="BlackGui::Components::CSettingsViewUpdateTimes" name="comp_SettingsGuiRefreshTimes">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -633,6 +511,12 @@
    <class>BlackGui::Components::CSettingsSimulatorMessagesComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingssimulatormessagescomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsViewUpdateTimes</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsviewupdatetimes.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

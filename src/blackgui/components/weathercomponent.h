@@ -14,7 +14,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/components/updatetimer.h"
 #include "blackcore/simulator/simulatorsettings.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/identifiable.h"

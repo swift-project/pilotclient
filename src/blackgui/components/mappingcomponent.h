@@ -15,6 +15,7 @@
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/settings/viewupdatesettings.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/propertyindex.h"
@@ -24,6 +25,7 @@
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+#include <QTimer>
 #include <QString>
 #include <Qt>
 
@@ -37,15 +39,11 @@ namespace BlackMisc
     namespace Simulation { class CSimulatedAircraft; }
 }
 namespace Ui { class CMappingComponent; }
-
 namespace BlackGui
 {
     namespace Views { class CCheckBoxDelegate; }
-
     namespace Components
     {
-        class CUpdateTimer;
-
         //! Mappings, models etc.
         class BLACKGUI_EXPORT CMappingComponent :
             public QFrame,
@@ -138,16 +136,19 @@ namespace BlackGui
             BlackMisc::Aviation::CCallsign validateRenderedCallsign() const;
 
             QScopedPointer<Ui::CMappingComponent> ui;
-            bool                                  m_missedRenderedAircraftUpdate = true;
-            QScopedPointer<CUpdateTimer>          m_updateTimer;
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::ps_settingsChanged }; //!< settings changed
+            bool                                  m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
+            QTimer                                m_updateTimer { this };
             BlackGui::Views::CCheckBoxDelegate   *m_currentMappingsViewDelegate = nullptr;
             BlackMisc::CIdentifier                m_identifier;
 
         private slots:
             //! Updated by timer
             void ps_backgroundUpdate();
-        };
 
+            //! Settings have been changed
+            void ps_settingsChanged();
+        };
     } // namespace
 } // namespace
 

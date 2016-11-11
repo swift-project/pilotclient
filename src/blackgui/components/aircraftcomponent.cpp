@@ -27,6 +27,7 @@
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
+using namespace BlackGui::Settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc::Simulation;
@@ -36,11 +37,9 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CAircraftComponent::CAircraftComponent(QWidget *parent) :
             QTabWidget(parent),
-            ui(new Ui::CAircraftComponent),
-            m_updateTimer(new CUpdateTimer("CAircraftComponent", &CAircraftComponent::update, this))
+            ui(new Ui::CAircraftComponent)
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
@@ -55,6 +54,9 @@ namespace BlackGui
             connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestHighlightInSimulator, this, &CAircraftComponent::ps_onMenuHighlightInSimulator);
             connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChanged, this, &CAircraftComponent::ps_onRowCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::ps_connectionStatusChanged);
+            connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
+
+            this->ps_settingsChanged();
         }
 
         CAircraftComponent::~CAircraftComponent()
@@ -137,6 +139,11 @@ namespace BlackGui
             if (INetwork::isDisconnectedStatus(to))
             {
                 ui->tvp_AircraftInRange->clear();
+                this->m_updateTimer.stop();
+            }
+            else if (INetwork::isConnectedStatus(to))
+            {
+                this->m_updateTimer.start();
             }
         }
 
@@ -146,6 +153,12 @@ namespace BlackGui
             {
                 sGui->getIContextSimulator()->highlightAircraft(aircraft, true, IContextSimulator::HighlightTime());
             }
+        }
+
+        void CAircraftComponent::ps_settingsChanged()
+        {
+            const CViewUpdateSettings settings = this->m_settings.get();
+            this->m_updateTimer.setInterval(settings.getAircraftUpdateTime().toMs());
         }
 
     } // namespace

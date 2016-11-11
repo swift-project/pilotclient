@@ -139,6 +139,14 @@ namespace BlackCore
                    status == DisconnectedFailed || status == DisconnectedLost;
         }
 
+        /*!
+         * Returns true if the given ConnectionStatus represents a connected state.
+         */
+        static bool isConnectedStatus(ConnectionStatus status)
+        {
+            return status == Connected;
+        }
+
         ////////////////////////////////////////////////////////////////
         //! \name Network slots
         //! @{

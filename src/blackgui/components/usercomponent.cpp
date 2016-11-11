@@ -21,6 +21,7 @@
 
 using namespace BlackGui;
 using namespace BlackGui::Views;
+using namespace BlackGui::Settings;
 using namespace BlackCore;
 using namespace BlackCore::Context;
 
@@ -31,8 +32,7 @@ namespace BlackGui
         CUserComponent::CUserComponent(QWidget *parent) :
             QTabWidget(parent),
             CEnableForDockWidgetInfoArea(),
-            ui(new Ui::CUserComponent),
-            m_updateTimer(new CUpdateTimer("CUserComponent", &CUserComponent::update, this))
+            ui(new Ui::CUserComponent)
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
@@ -40,6 +40,8 @@ namespace BlackGui
             connect(ui->tvp_AllUsers, &CUserView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
             connect(ui->tvp_Clients, &CClientView::modelDataChanged, this, &CUserComponent::ps_onCountChanged);
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CUserComponent::ps_connectionStatusChanged);
+            connect(&m_updateTimer, &QTimer::timeout, this, &CUserComponent::update);
+            this->ps_settingsChanged();
         }
 
         CUserComponent::~CUserComponent()
@@ -99,7 +101,19 @@ namespace BlackGui
             {
                 ui->tvp_AllUsers->clear();
                 ui->tvp_Clients->clear();
+                this->m_updateTimer.stop();
             }
+            else if (INetwork::isConnectedStatus(to))
+            {
+                this->m_updateTimer.start();
+            }
+        }
+
+        void CUserComponent::ps_settingsChanged()
+        {
+            const CViewUpdateSettings settings = this->m_settings.get();
+            const int ms = settings.getAtcUpdateTime().toMs();
+            this->m_updateTimer.setInterval(ms);
         }
     } // namespace
 } // namespace

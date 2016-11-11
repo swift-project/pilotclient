@@ -14,19 +14,18 @@
 
 #include <QFrame>
 #include <QObject>
+#include <QTimer>
 #include <QScopedPointer>
 
 class QWidget;
 
 namespace Ui { class CRegisterComponent; }
-
 namespace BlackGui
 {
     namespace Components
     {
-        class CUpdateTimer;
-
-        //! Register components in the GUI
+        //! Show registered applications (registered with core) in the GUI
+        //! \sa BlackCore::Context::IContextApplication::getRegisteredApplications
         class BLACKGUI_EXPORT CRegisterComponent :
             public QFrame
         {
@@ -45,7 +44,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CRegisterComponent> ui;
-            QScopedPointer<CUpdateTimer> m_updateTimer;
+            QTimer m_updateTimer;
         };
 
     } // ns

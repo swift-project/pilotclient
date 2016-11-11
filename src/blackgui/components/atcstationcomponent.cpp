@@ -38,6 +38,7 @@
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
+using namespace BlackGui::Settings;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -52,8 +53,7 @@ namespace BlackGui
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
             CIdentifiable(this),
-            ui(new Ui::CAtcStationComponent),
-            m_updateTimer(new CUpdateTimer("CAtcStationComponent", &CAtcStationComponent::update, this))
+            ui(new Ui::CAtcStationComponent)
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
@@ -90,12 +90,16 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChanged, this, &CAtcStationComponent::ps_onCountChanged);
 
             connect(ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
+            connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
             // runtime based connects
             this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::ps_changedAtcStationsOnline);
             this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::ps_changedAtcStationsBooked);
             this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
             this->connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
+
+            // settings have
+            this->ps_settingsChanged();
         }
 
         CAtcStationComponent::~CAtcStationComponent()
@@ -232,6 +236,11 @@ namespace BlackGui
             {
                 ui->tvp_AtcStationsOnline->clear();
                 this->updateTreeView();
+                this->m_updateTimer.start();
+            }
+            else if (INetwork::isConnectedStatus(to))
+            {
+                this->m_updateTimer.stop();
             }
         }
 
@@ -245,8 +254,8 @@ namespace BlackGui
 
         void CAtcStationComponent::ps_requestOnlineStationsUpdate()
         {
-            this->m_updateTimer->fireTimer();
-            this->m_timestampLastReadOnlineStations = CUpdateTimer::epoch(); // mark as outdated
+            this->m_timestampLastReadOnlineStations.setMSecsSinceEpoch(0); // mark as outdated
+            this->update();
         }
 
         void CAtcStationComponent::ps_infoAreaTabBarChanged(int index)
@@ -281,10 +290,15 @@ namespace BlackGui
             sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
         }
 
+        void CAtcStationComponent::ps_settingsChanged()
+        {
+            const CViewUpdateSettings settings = this->m_settings.get();
+            this->m_updateTimer.setInterval(settings.getAtcUpdateTime().toMs());
+        }
+
         void CAtcStationComponent::updateTreeView()
         {
-            //
-            //! \todo EXPERIMENTAL CODE: change model so we can directly use hierarchies
+            //! \fixme EXPERIMENTAL CODE: change model so we can directly use hierarchies
             QAbstractItemModel *old = (ui->tvp_AtcStationsOnlineTree->model());
             ui->tvp_AtcStationsOnlineTree->setModel(
                 ui->tvp_AtcStationsOnline->derivedModel()->toAtcGroupModel()

@@ -57,15 +57,6 @@ namespace BlackGui
             //! \copydoc CAudioSetupComponent::playNotificationSounds
             bool playNotificationSounds() const;
 
-            //! ATC refresh time
-            int getAtcUpdateIntervalSeconds() const;
-
-            //! Aircraft refresh time
-            int getAircraftUpdateIntervalSeconds() const;
-
-            //! Aircraft refresh time
-            int getUsersUpdateIntervalSeconds() const;
-
         signals:
             //! Change the windows opacity 0..100
             void changedWindowsOpacity(int opacity);

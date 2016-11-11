@@ -14,10 +14,10 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/components/updatetimer.h"
 #include "blackmisc/icons.h"
 
 #include <QObject>
+#include <QTimer>
 #include <QScopedPointer>
 #include <QString>
 #include <QTabWidget>
@@ -32,7 +32,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Simulator component
         class BLACKGUI_EXPORT CSimulatorComponent :
             public QTabWidget,
@@ -41,7 +40,6 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-
             //! Constructor
             explicit CSimulatorComponent(QWidget *parent = nullptr);
 
@@ -64,15 +62,6 @@ namespace BlackGui
             //! Update simulator
             void update();
 
-            //! \copydoc CUpdateTimer::setUpdateIntervalSeconds
-            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
-
-            //! \copydoc CUpdateTimer::setUpdateInterval
-            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
-
-            //! \copydoc CUpdateTimer::stopTimer
-            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
-
         private slots:
             //! \copydoc ISimulator::simulatorStatusChanged
             void ps_onSimulatorStatusChanged(int status);
@@ -82,7 +71,7 @@ namespace BlackGui
             int getUpdateIntervalMs() const;
 
             QScopedPointer<Ui::CSimulatorComponent> ui;
-            QScopedPointer<CUpdateTimer> m_updateTimer;
+            QTimer m_updateTimer;
         };
     }
 }

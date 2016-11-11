@@ -46,11 +46,7 @@ namespace BlackGui
             this->setCurrentIndex(0); // 1st tab
             ui->comp_DataLoadOverview->setVisibleDbRefreshButtons(false);
 
-            this->connect(ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftUpdateInterval);
-            this->connect(ui->hs_SettingsGuiAtcRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAtcStationsUpdateInterval);
-            this->connect(ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedUsersUpdateInterval);
-            this->connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);
-
+            connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);
             connect(ui->pb_Advanced, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
             connect(ui->pb_Audio, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
             connect(ui->pb_Gui, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
@@ -68,21 +64,6 @@ namespace BlackGui
         bool CSettingsComponent::playNotificationSounds() const
         {
             return ui->comp_AudioSetup->playNotificationSounds();
-        }
-
-        int CSettingsComponent::getAtcUpdateIntervalSeconds() const
-        {
-            return ui->hs_SettingsGuiAtcRefreshTime->value();
-        }
-
-        int CSettingsComponent::getAircraftUpdateIntervalSeconds() const
-        {
-            return ui->hs_SettingsGuiAircraftRefreshTime->value();
-        }
-
-        int CSettingsComponent::getUsersUpdateIntervalSeconds() const
-        {
-            return ui->hs_SettingsGuiUserRefreshTime->value();
         }
 
         void CSettingsComponent::setSettingsTab(CSettingsComponent::SettingTab tab)

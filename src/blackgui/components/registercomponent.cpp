@@ -9,7 +9,6 @@
 
 #include "blackcore/context/contextapplication.h"
 #include "blackgui/components/registercomponent.h"
-#include "blackgui/components/updatetimer.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/views/identifierview.h"
 #include "ui_registercomponent.h"
@@ -25,12 +24,15 @@ namespace BlackGui
     {
         CRegisterComponent::CRegisterComponent(QWidget *parent) :
             QFrame(parent),
-            ui(new Ui::CRegisterComponent),
-            m_updateTimer(new CUpdateTimer("CRegisterComponent", &CRegisterComponent::ps_update, this))
+            ui(new Ui::CRegisterComponent)
         {
             ui->setupUi(this);
-            m_updateTimer->setUpdateIntervalSeconds(20);
             connect(sGui->getIContextApplication(), &IContextApplication::registrationChanged, this, &CRegisterComponent::ps_update);
+
+            // timer is there just in case something goes wrong
+            connect(&m_updateTimer, &QTimer::timeout, this, &CRegisterComponent::ps_update);
+            m_updateTimer.setInterval(30 * 1000);
+            m_updateTimer.start();
         }
 
         CRegisterComponent::~CRegisterComponent()

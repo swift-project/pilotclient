@@ -14,13 +14,14 @@
 
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
+#include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/components/updatetimer.h"
 
 #include <QObject>
 #include <QScopedPointer>
 #include <QTabWidget>
 #include <QtGlobal>
+#include <QTimer>
 
 class QWidget;
 
@@ -30,11 +31,9 @@ namespace BlackMisc
     namespace Simulation { class CSimulatedAircraft; }
 }
 namespace Ui { class CAircraftComponent; }
-
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
-
     namespace Components
     {
         //! Aircraft widget
@@ -65,14 +64,8 @@ namespace BlackGui
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         public slots:
-            //! Update aircrafts
+            //! Update aircraft
             void update();
-
-            //! \copydoc CUpdateTimer::setUpdateIntervalSeconds
-            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
-
-            //! \copydoc CUpdateTimer::stopTimer
-            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
         private slots:
             //! Info area tab bar has changed
@@ -87,9 +80,13 @@ namespace BlackGui
             //! Highlight in simulator
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Settings have been changed
+            void ps_settingsChanged();
+
         private:
             QScopedPointer<Ui::CAircraftComponent> ui;
-            QScopedPointer<CUpdateTimer> m_updateTimer;
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::ps_settingsChanged }; //!< settings changed
+            QTimer m_updateTimer { this };
         };
     } // ns
 } // ns

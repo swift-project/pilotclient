@@ -15,7 +15,7 @@
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/components/updatetimer.h"
+#include "blackgui/settings/viewupdatesettings.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/identifiable.h"
@@ -28,6 +28,7 @@
 #include <QString>
 #include <QTabWidget>
 #include <QtGlobal>
+#include <QTimer>
 
 class QWidget;
 
@@ -36,7 +37,6 @@ namespace Ui { class CAtcStationComponent; }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
-
     namespace Components
     {
         //! ATC stations component
@@ -70,12 +70,6 @@ namespace BlackGui
         public slots:
             //! Update stations
             void update();
-
-            //! \copydoc CUpdateTimer::setUpdateIntervalSeconds
-            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
-
-            //! \copydoc CUpdateTimer::stopTimer
-            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
             //! Get METAR for given ICAO airport code
             void getMetar(const QString &airportIcaoCode);
@@ -123,14 +117,18 @@ namespace BlackGui
             //! Set COM frequency
             void ps_setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
+            //! Settings have been changed
+            void ps_settingsChanged();
+
         private:
             void updateTreeView();
             QScopedPointer<Ui::CAtcStationComponent> ui;
-            QScopedPointer<CUpdateTimer> m_updateTimer;
-            QDateTime m_timestampLastReadOnlineStations = CUpdateTimer::epoch();  //!< stations read
-            QDateTime m_timestampOnlineStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
-            QDateTime m_timestampLastReadBookedStations = CUpdateTimer::epoch();  //!< stations read
-            QDateTime m_timestampBookedStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
+            QTimer m_updateTimer { this };
+            QDateTime m_timestampLastReadOnlineStations; //!< stations read
+            QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed
+            QDateTime m_timestampLastReadBookedStations; //!< stations read
+            QDateTime m_timestampBookedStationsChanged;  //!< stations marked as changed
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAtcStationComponent::ps_settingsChanged };
         };
     } // namespace
 } // namespace

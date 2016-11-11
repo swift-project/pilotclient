@@ -40,8 +40,7 @@ namespace BlackGui
         CSimulatorComponent::CSimulatorComponent(QWidget *parent) :
             QTabWidget(parent),
             CEnableForDockWidgetInfoArea(),
-            ui(new Ui::CSimulatorComponent),
-            m_updateTimer(new CUpdateTimer("CSimulatorComponent", &CSimulatorComponent::update, this))
+            ui(new Ui::CSimulatorComponent)
         {
             ui->setupUi(this);
             ui->tvp_LiveData->setIconMode(true);
@@ -49,11 +48,8 @@ namespace BlackGui
             this->addOrUpdateByName("info", "no data yet", CIcons::StandardIconWarning16);
 
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
-            this->setUpdateInterval(getUpdateIntervalMs());
-            if (sGui->getIContextSimulator()->getSimulatorStatus() == 0)
-            {
-                this->stopTimer();
-            }
+            connect(&this->m_updateTimer, &QTimer::timeout, this, &CSimulatorComponent::update);
+            this->ps_onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
         }
 
         CSimulatorComponent::~CSimulatorComponent()
@@ -132,14 +128,14 @@ namespace BlackGui
         {
             if (status & ISimulator::Connected)
             {
-                int intervalMs = getUpdateIntervalMs();
-                this->m_updateTimer->startTimer(intervalMs);
+                const int intervalMs = getUpdateIntervalMs();
+                this->m_updateTimer.start(intervalMs);
             }
             else
             {
-                this->stopTimer();
-                clear();
-                update();
+                this->m_updateTimer.stop();
+                this->clear();
+                this->update();
             }
         }
 

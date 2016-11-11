@@ -14,18 +14,18 @@
 
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
+#include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackgui/components/updatetimer.h"
 
 #include <QObject>
 #include <QScopedPointer>
 #include <QTabWidget>
 #include <QtGlobal>
+#include <QTimer>
 
 class QWidget;
 
 namespace Ui { class CUserComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -54,12 +54,6 @@ namespace BlackGui
             //! Update users
             void update();
 
-            //! \copydoc CUpdateTimer::setUpdateIntervalSeconds
-            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
-
-            //! \copydoc CUpdateTimer::stopTimer
-            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
-
         private slots:
             //! Number of elements changed
             void ps_onCountChanged(int count, bool withFilter);
@@ -67,9 +61,13 @@ namespace BlackGui
             //! Connection status
             void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
+            //! Settings have been changed
+            void ps_settingsChanged();
+
         private:
             QScopedPointer<Ui::CUserComponent> ui;
-            QScopedPointer<CUpdateTimer> m_updateTimer;
+            QTimer m_updateTimer { this };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CUserComponent::ps_settingsChanged };
         };
     }
 }

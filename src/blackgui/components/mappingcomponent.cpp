@@ -11,7 +11,6 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/network.h"
 #include "blackgui/components/mappingcomponent.h"
-#include "blackgui/components/updatetimer.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/models/aircraftmodellistmodel.h"
@@ -51,6 +50,7 @@ using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
+using namespace BlackGui::Settings;
 
 namespace BlackGui
 {
@@ -59,8 +59,7 @@ namespace BlackGui
         CMappingComponent::CMappingComponent(QWidget *parent) :
             QFrame(parent),
             CIdentifiable(this),
-            ui(new Ui::CMappingComponent),
-            m_updateTimer(new CUpdateTimer("CMappingComponent", &CMappingComponent::ps_backgroundUpdate, this))
+            ui(new Ui::CMappingComponent)
         {
             ui->setupUi(this);
             ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
@@ -100,7 +99,8 @@ namespace BlackGui
 
             // Updates
             ui->tvp_AircraftModels->setDisplayAutomatically(false);
-            this->m_updateTimer->setUpdateInterval(10 * 1000);
+            this->ps_settingsChanged();
+            connect(&m_updateTimer, &QTimer::timeout, this, &CMappingComponent::ps_backgroundUpdate);
 
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CMappingComponent::ps_onModelSetChanged);
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_markRenderedAircraftForUpdate);
@@ -440,6 +440,12 @@ namespace BlackGui
                 // but we want an update from time to have some data when user switches to view
                 this->updateRenderedAircraftView(true);
             }
+        }
+
+        void CMappingComponent::ps_settingsChanged()
+        {
+            const CViewUpdateSettings settings = this->m_settings.get();
+            this->m_updateTimer.setInterval(settings.getAircraftUpdateTime().toMs());
         }
     } // namespace
 } // namespace
