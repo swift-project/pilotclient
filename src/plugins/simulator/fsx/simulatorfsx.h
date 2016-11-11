@@ -130,7 +130,7 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::isSimulating
             virtual bool isSimulating() const override;
 
-            //! Timer event (our SimConnect event loop), runs \sa ps_dispatch
+            //! Timer event (our SimConnect event loop), runs ps_dispatch
             //! \sa m_simconnectTimerId
             virtual void timerEvent(QTimerEvent *event) override;
 
@@ -141,6 +141,12 @@ namespace BlackSimPlugin
             //! Remove aircraft not in provider anymore
             //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
             BlackMisc::Aviation::CCallsignSet ps_physicallyRemoveAircraftNotInProvider();
+
+            //! Handle that an object has been added
+            bool ps_deferredSimulatorReportedObjectAdded(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Try to add the aircraft currently out of bubble
+            void ps_addAircraftCurrentlyOutOfBubble();
 
         private:
             //! Call this method to declare the simulator connected
@@ -200,21 +206,23 @@ namespace BlackSimPlugin
 
             static constexpr int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions = 10;    //!< skip exceptions when displayed more than x times
-            bool m_simConnected  = false;       //!< Is simulator connected?
-            bool m_simSimulating = false;       //!< Simulator running?
-            bool m_useSbOffsets  = true;        //!< with SB offsets
-            int  m_syncDeferredCounter =  0;    //!< Set when synchronized, used to wait some time
-            int  m_simconnectTimerId   = -1;    //!< Timer identifier
-            int  m_skipCockpitUpdateCycles = 0; //!< Skip some update cycles to allow changes in simulator cockpit to be set
-            int  m_interpolationRequest  = 0;   //!< current interpolation request
-            int  m_interpolationsSkipped = 0;   //!< number of skipped interpolation request
-            int  m_requestId = 1;               //!< request id
-            int  m_dispatchErrors = 0;          //!< number of dispatched failed, \sa ps_dispatch
-            int  m_receiveExceptionCount = 0;   //!< exceptions
-            HANDLE  m_hSimConnect = nullptr;    //!< Handle to SimConnect object
+            bool m_simConnected  = false;           //!< Is simulator connected?
+            bool m_simSimulating = false;           //!< Simulator running?
+            bool m_useSbOffsets  = true;            //!< with SB offsets
+            int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
+            int  m_simconnectTimerId   = -1;        //!< Timer identifier
+            int  m_skipCockpitUpdateCycles = 0;     //!< Skip some update cycles to allow changes in simulator cockpit to be set
+            int  m_interpolationRequest  = 0;       //!< current interpolation request
+            int  m_interpolationsSkipped = 0;       //!< number of skipped interpolation request
+            int  m_requestId = 1;                   //!< request id
+            int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa ps_dispatch
+            int  m_receiveExceptionCount = 0;       //!< exceptions
+            HANDLE m_hSimConnect = nullptr;         //!< Handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
-            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
+            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
+            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition;          //!< Own aircraft position at which weather was fetched and injected last
             BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::reloadWeatherSettings };
+            QTimer m_realityBubbleTimer { this };   //!< updating of aircraft out of reality bubble
         };
 
         //! Listener for FSX

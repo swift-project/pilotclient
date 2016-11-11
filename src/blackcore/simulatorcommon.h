@@ -89,7 +89,8 @@ namespace BlackCore
 
     protected slots:
 
-        //! \name Connected with remote aircraft provider signals {
+        //! \name Connected with remote aircraft provider signals
+        //! @{
         //! Slow timer used to highlight aircraft, can be used for other things too
         virtual void ps_oneSecondTimer();
 
@@ -105,10 +106,6 @@ namespace BlackCore
         //! Provider removed aircraft
         virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
         //! @}
-
-        //! Add when pending aircraft is added
-        //! \remark no need to use this if multiple models can be added to simulator at once
-        void ps_queueForAdding(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
     protected:
         //! Constructor
@@ -145,9 +142,6 @@ namespace BlackCore
         //! Set own model
         void reverseLookupAndUpdateOwnAircraftModel(const QString &modelString);
 
-        //! Add the next qeueud aircraft
-        void physicallyAddNextQueuedAircraft();
-
         BlackMisc::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
@@ -159,7 +153,6 @@ namespace BlackCore
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model
-        BlackMisc::Simulation::CSimulatedAircraftList m_pendingAircraftToAdd;          //!< used with qeued adding, here only one model is added add a time and only after it is confirmed by the sim. the next model is added
 
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
@@ -179,7 +172,6 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;                     //!< callsigns which will be rendered
         BlackMisc::PhysicalQuantities::CLength        m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
         BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections;         //!< connected signal/slots
-
     };
 } // namespace
 

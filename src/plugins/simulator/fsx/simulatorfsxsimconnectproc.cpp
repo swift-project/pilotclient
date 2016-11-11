@@ -50,34 +50,25 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
-                    if (!simulatorFsx->stillDisplayReceiveExceptions())
-                    {
-                        break;
-                    }
-
+                    if (!simulatorFsx->stillDisplayReceiveExceptions()) { break; }
                     SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
-                    QString ex;
                     const int exceptionId = static_cast<int>(exception->dwException);
                     const int sendId = static_cast<int>(exception->dwSendID);
                     const int index = static_cast<int>(exception->dwIndex);
                     const int data = static_cast<int>(cbData);
+                    QString ex;
                     ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d", exceptionId, sendId, index, data);
-
                     switch (exceptionId)
                     {
                     case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE:
+                        break;
                     case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID:
-                        {
-                            //! \fixme do not know how to obtain the object id which failed. Can I get it?
-                        }
                         break;
                     default:
                         break;
                     }
-
-                    CLogMessage(simulatorFsx).error("Caught FSX simConnect exception: %1 %2")
-                            << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException)
-                            << ex;
+                    CLogMessage(simulatorFsx).warning("Caught FSX simConnect exception: %1 %2")
+                            << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException) << ex;
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
@@ -135,7 +126,6 @@ namespace BlackSimPlugin
                     {
                     case SystemEventObjectAdded:
                         // added in SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID
-                        // adding here cause trouble
                         break;
                     case SystemEventObjectRemoved:
                         simulatorFsx->simulatorReportedObjectRemoved(objectID);

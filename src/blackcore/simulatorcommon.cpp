@@ -435,23 +435,6 @@ namespace BlackCore
         Q_UNUSED(callsign);
     }
 
-    void CSimulatorCommon::ps_queueForAdding(const CSimulatedAircraft &aircraft)
-    {
-        m_pendingAircraftToAdd.replaceOrAddByCallsign(aircraft);
-        QTimer::singleShot(500, this, [ = ]
-        {
-            this->physicallyAddNextQueuedAircraft();
-        });
-    }
-
-    void CSimulatorCommon::physicallyAddNextQueuedAircraft()
-    {
-        if (m_pendingAircraftToAdd.isEmpty()) { return; } // delete in meantime
-        CSimulatedAircraft nextAircraft(m_pendingAircraftToAdd.front()); // normally it should always find a value
-        m_pendingAircraftToAdd.pop_front();
-        this->physicallyAddRemoteAircraft(nextAircraft);
-    }
-
     void CSimulatorCommon::reset()
     {
         m_statsUpdateAircraftCountMs = 0;
@@ -463,7 +446,6 @@ namespace BlackCore
     void CSimulatorCommon::clearAllAircraft()
     {
         m_aircraftToAddAgainWhenRemoved.clear();
-        m_pendingAircraftToAdd.clear();
     }
 
 } // namespace
