@@ -559,6 +559,7 @@ namespace BlackCore
             if (c)
             {
                 CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+                Q_ASSERT_X(!aircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
                 emit this->changedRemoteAircraftEnabled(aircraft);
             }
             return c;
