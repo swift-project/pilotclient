@@ -12,6 +12,7 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 #define BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 
+
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextsimulator.h"
@@ -31,6 +32,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/simulation/simulationsettings.h"
 #include "blackmisc/worker.h"
 
 #include <QObject>
@@ -194,6 +196,7 @@ namespace BlackCore
             BlackCore::CAircraftMatcher m_modelMatcher; //!< Model matcher
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
         };

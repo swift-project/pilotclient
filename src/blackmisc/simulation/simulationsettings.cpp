@@ -351,7 +351,16 @@ namespace BlackMisc
             return this->getRelayedTextMessageTypes().testFlag(TextMessagesCom2);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedTextMessage(const Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const
+        bool CSettingsSimulatorMessages::relayThisStatusMessage(const CStatusMessage &message) const
+        {
+            if (message.isEmpty()) { return false; }
+            if (!this->isGloballyEnabled()) { return false; }
+            if (!this->isRelayedTechnicalMessages()) { return false; }
+            int s = static_cast<int>(message.getSeverity());
+            return (s >= this->m_technicalLogLevel);
+        }
+
+        bool CSettingsSimulatorMessages::relayThisTextMessage(const Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const
         {
             if (msg.isEmpty()) { return false; }
             if (!this->isGloballyEnabled()) { return false; }

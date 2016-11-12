@@ -554,8 +554,12 @@ namespace BlackCore
         void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
         {
             if (!isSimulatorSimulating()) { return; }
+            if (!this->getIContextOwnAircraft()) { return; }
+            const CSettingsSimulatorMessages settings = m_messageSettings.getThreadLocal();
+            const CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
             for (const auto &tm : textMessages)
             {
+                if (!settings.relayThisTextMessage(tm, ownAircraft)) { continue; }
                 m_simulatorPlugin.second->displayTextMessage(tm);
             }
         }
@@ -598,8 +602,11 @@ namespace BlackCore
         void CContextSimulator::ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
         {
             if (!isSimulatorSimulating()) { return; }
-            //! \todo add settings and only relay messages as set in settings
-            m_simulatorPlugin.second->displayStatusMessage(message);
+            const CSettingsSimulatorMessages simMsg = m_messageSettings.getThreadLocal();
+            if (simMsg.relayThisStatusMessage(message))
+            {
+                m_simulatorPlugin.second->displayStatusMessage(message);
+            }
         }
 
         void CContextSimulator::restoreSimulatorPlugins()

@@ -246,14 +246,17 @@ namespace BlackMisc
             //! Relay UNICOM messages
             bool isRelayedUnicomTextMessages() const;
 
-            //! Relay given text message
-            bool isRelayedTextMessage(const BlackMisc::Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
-
             //! Relay COM1 text message
             bool isRelayedCom1TextMessages() const;
 
             //! Relay COM2 text message
             bool isRelayedCom2TextMessages() const;
+
+            //! Relay given text message
+            bool relayThisTextMessage(const BlackMisc::Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
+
+            //! Relay this particular message
+            bool relayThisStatusMessage(const BlackMisc::CStatusMessage &message) const;
 
             //! Relayed text messages
             CSettingsSimulatorMessages::TextMessageType getRelayedTextMessageTypes() const;
