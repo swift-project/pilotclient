@@ -68,7 +68,7 @@ contains(BLACK_CONFIG, ProfileRelease) {
 # Workaround C1128 error
 ################################
 
-msvc: QMAKE_CXXFLAGS *= /bigobj
+msvc:!llvm: QMAKE_CXXFLAGS *= /bigobj
 
 ################################
 # No gigantic MinGW obj files
@@ -123,18 +123,21 @@ isEmpty(EXTERNALSROOT) {
 # Externals
 ################################
 
+clang_cl: EXTERNALS_SPEC = win32-msvc2015
+else: EXTERNALS_SPEC = $$basename(QMAKESPEC)
+
 INCLUDEPATH *= $$EXTERNALSROOT/common/include
-INCLUDEPATH *= $$EXTERNALSROOT/$$basename(QMAKESPEC)/include
+INCLUDEPATH *= $$EXTERNALSROOT/$$EXTERNALS_SPEC/include
 INCLUDEPATH *= $$EXTERNALSROOT/common/include/crashpad
 INCLUDEPATH *= $$EXTERNALSROOT/common/include/mini_chromium
 
 equals(WORD_SIZE,64) {
-    EXTERNALS_BIN_DIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/bin64
-    EXTERNALS_LIB_DIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/lib64
+    EXTERNALS_BIN_DIR = $$EXTERNALSROOT/$$EXTERNALS_SPEC/bin64
+    EXTERNALS_LIB_DIR = $$EXTERNALSROOT/$$EXTERNALS_SPEC/lib64
 }
 equals(WORD_SIZE,32) {
-    EXTERNALS_BIN_DIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/bin32
-    EXTERNALS_LIB_DIR = $$EXTERNALSROOT/$$basename(QMAKESPEC)/lib32
+    EXTERNALS_BIN_DIR = $$EXTERNALSROOT/$$EXTERNALS_SPEC/bin32
+    EXTERNALS_LIB_DIR = $$EXTERNALSROOT/$$EXTERNALS_SPEC/lib32
 }
 
 LIBS *= -L$$EXTERNALS_LIB_DIR
@@ -176,3 +179,19 @@ isEmpty(PREFIX) {
 ################################
 
 win32: CONFIG(debug, debug|release): DLL_DEBUG_SUFFIX = d
+
+################################
+# Experimental support for Clang on Windows
+################################
+
+clang_cl {
+    QMAKE_CXXFLAGS ~= s/-fms-compatibility-version=.+/
+    QMAKE_CXXFLAGS += -fms-compatibility-version=19.00.24210
+
+    # QtCreator ships with a version of clang-cl,
+    # but we want to use the one in PATH instead.
+    system($$(SYSTEMROOT)\system32\where /q clang-cl) {
+        QMAKE_CC = $$system($$(SYSTEMROOT)\system32\where clang-cl)
+        QMAKE_CXX = $$QMAKE_CC
+    }
+}
