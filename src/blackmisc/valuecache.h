@@ -41,6 +41,7 @@
 #include <QThread>
 #include <QVariant>
 #include <QtGlobal>
+#include <stdexcept>
 #include <cstddef>
 #include <tuple>
 #include <utility>
@@ -446,8 +447,8 @@ namespace BlackMisc
             connectOnce(m_page->parent(), &QObject::objectNameChanged, [function](const QString &) { function(); });
         }
 
-        Private::CValuePage *m_page = (qFatal("Must be initialized"), nullptr); //!< \private
-        Private::CValuePage::Element *m_element = (qFatal("Must be initialized"), nullptr); //!< \private
+        Private::CValuePage *m_page = (throw std::logic_error("Uninitialized member"), nullptr); //!< \private
+        Private::CValuePage::Element *m_element = (throw std::logic_error("Uninitialized member"), nullptr); //!< \private
     };
 
     /*!
