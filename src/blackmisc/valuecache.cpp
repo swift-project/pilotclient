@@ -74,6 +74,10 @@ namespace BlackMisc
     // CValueCachePacket
     ////////////////////////////////
 
+    CValueCachePacket::CValueCachePacket(bool saved, bool valuesChanged) :
+        m_saved(saved), m_valuesChanged(valuesChanged)
+    {}
+
     CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved, bool valuesChanged) :
         m_saved(saved), m_valuesChanged(valuesChanged)
     {

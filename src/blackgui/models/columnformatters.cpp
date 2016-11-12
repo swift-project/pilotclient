@@ -29,6 +29,10 @@ namespace BlackGui
 {
     namespace Models
     {
+        CDefaultFormatter::CDefaultFormatter(int alignment, bool i18n, const QList<int> &supportedRoles) :
+            m_supportedRoles(supportedRoles), m_alignment(alignment), m_useI18n(i18n)
+        {}
+
         Qt::ItemFlags CDefaultFormatter::flags(Qt::ItemFlags flags, bool editable) const
         {
             return editable ? (flags | Qt::ItemIsEditable) : (flags & ~Qt::ItemIsEditable);
