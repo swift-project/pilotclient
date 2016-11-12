@@ -125,6 +125,15 @@ namespace BlackGui
             //! Adding a remote aircraft failed
             void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
 
+            //! Updated by timer
+            void ps_backgroundUpdate();
+
+            //! Settings have been changed
+            void ps_settingsChanged();
+
+            //! Connection status has been changed
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
+
         private:
             //! Identifier for data send from this component
             BlackMisc::CIdentifier mappingIdentifier();
@@ -139,18 +148,8 @@ namespace BlackGui
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::ps_settingsChanged }; //!< settings changed
             bool                                  m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
             QTimer                                m_updateTimer { this };
-            BlackGui::Views::CCheckBoxDelegate   *m_currentMappingsViewDelegate = nullptr;
+            BlackGui::Views::CCheckBoxDelegate   *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
             BlackMisc::CIdentifier                m_identifier;
-
-        private slots:
-            //! Updated by timer
-            void ps_backgroundUpdate();
-
-            //! Settings have been changed
-            void ps_settingsChanged();
-
-            //! Connection status has been changed
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
         };
     } // namespace
 } // namespace

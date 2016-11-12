@@ -28,7 +28,6 @@ namespace BlackGui
 {
     namespace Views
     {
-
         //! CheckBox for single column
         class BLACKGUI_EXPORT CCheckBoxDelegate : public QItemDelegate
         {
@@ -60,7 +59,6 @@ namespace BlackGui
             QString m_iconCheckedUrl;
             QString m_iconUncheckedUrl;
         };
-
     } // namespace
 } // namespace
 
