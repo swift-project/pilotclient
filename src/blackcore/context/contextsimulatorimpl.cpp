@@ -611,6 +611,8 @@ namespace BlackCore
 
         void CContextSimulator::restoreSimulatorPlugins()
         {
+            //! \todo #801, this shutdown flag should not be required
+            if (this->getRuntime()->isShuttingDown()) { return; }
             stopSimulatorListeners();
 
             auto enabledSimulators = m_enabledSimulators.getThreadLocal();
