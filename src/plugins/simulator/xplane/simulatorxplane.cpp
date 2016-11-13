@@ -395,6 +395,7 @@ namespace BlackSimPlugin
             else
             {
                 Q_UNREACHABLE();
+                return QDBusConnection("NO CONNECTION");
             }
         }
 

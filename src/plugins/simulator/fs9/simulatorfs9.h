@@ -89,7 +89,7 @@ namespace BlackSimPlugin
             virtual bool isSimulating() const override { return isConnected(); }
 
             //! Timer event
-            virtual void timerEvent(QTimerEvent *event);
+            virtual void timerEvent(QTimerEvent *event) override;
 
         private slots:
 
