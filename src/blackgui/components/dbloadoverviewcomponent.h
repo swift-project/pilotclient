@@ -69,8 +69,11 @@ namespace BlackGui
             //! Formatted count for entity
             static QString dbCountForEntity(BlackMisc::Network::CEntityFlags::Entity entity);
 
-            //! Syncronize caches
+            //! Synchronize caches
             static void synchronizeCaches();
+
+            //! Admit caches
+            static void admitCaches();
 
         private slots:
             //! Reload

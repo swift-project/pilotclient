@@ -30,6 +30,7 @@ namespace BlackGui
             Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "no data services");
 
             ui->setupUi(this);
+            admitCaches(); // in background
 
             ui->lbl_DatabaseUrl->setTextFormat(Qt::RichText);
             ui->lbl_DatabaseUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -188,6 +189,11 @@ namespace BlackGui
         void CDbLoadOverviewComponent::synchronizeCaches()
         {
             sGui->getWebDataServices()->synchronizeDbCaches(CEntityFlags::AllDbEntities);
+        }
+
+        void CDbLoadOverviewComponent::admitCaches()
+        {
+            sGui->getWebDataServices()->admitDbCaches(CEntityFlags::AllDbEntities);
         }
 
         void CDbLoadOverviewComponent::ps_reloadPressed()
