@@ -386,8 +386,8 @@ namespace BlackMisc
             //! Set pilot
             void setPilot(const BlackMisc::Network::CUser &user);
 
-            //! Enabled?
-            bool isEnabled() const { return m_enabled; }
+            //! Enabled? Enable means it shall be displayed in the simulator
+            bool isEnabled() const;
 
             //! Enabled / disabled
             void setEnabled(bool enabled) { m_enabled = enabled; }

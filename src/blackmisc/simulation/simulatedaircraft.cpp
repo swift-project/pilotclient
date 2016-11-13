@@ -102,6 +102,12 @@ namespace BlackMisc
             this->m_pilot.setCallsign(this->m_callsign);
         }
 
+        bool CSimulatedAircraft::isEnabled() const
+        {
+            if (!this->hasModelString()) { return false; }
+            return m_enabled;
+        }
+
         const QString &CSimulatedAircraft::getAircraftIcaoCodeDesignator() const
         {
             return getAircraftIcaoCode().getDesignator();
