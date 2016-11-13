@@ -52,7 +52,7 @@ namespace BlackCore
 
     void CCoreFacade::init(const CCoreFacadeConfig &config)
     {
-        if (m_init) { return; }
+        if (m_initalized || m_shuttingDown) { return; }
 
         QMap<QString, int> times;
         QTime time;
@@ -116,7 +116,7 @@ namespace BlackCore
         CLogMessage(this).info("Init times: %1") << qmapToString(times);
 
         // flag
-        m_init = true;
+        m_initalized = true;
     }
 
     bool CCoreFacade::hasRemoteApplicationContext() const
@@ -227,8 +227,9 @@ namespace BlackCore
 
     void CCoreFacade::gracefulShutdown()
     {
-        if (!this->m_init) return;
-        this->m_init = false;
+        if (!this->m_initalized) { return; }
+        if (m_shuttingDown) { return; }
+        this->m_shuttingDown = true;
 
         // disable all signals towards runtime
         disconnect(this);

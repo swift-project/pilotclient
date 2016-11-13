@@ -45,9 +45,9 @@ namespace BlackCore
     }
 
     /*!
-     * The runtime class providing facades (the contexts) for all DBus relevant operations.
-     * - Initializes all contexts in correct order
-     * - Allows a ordered and correct shutdown
+     * The class providing facades (the contexts) for all DBus relevant operations.
+     * - It initializes all contexts in correct order
+     * - Allows an ordered and correct shutdown
      * - Connects all signal/slots between contexts
      *   (such cross context dependencies are not desired but sometimes required)
      * - Loads the application settings
@@ -71,6 +71,9 @@ namespace BlackCore
 
         //! Clean up (will be connected to signal QCoreApplication::aboutToQuit)
         void gracefulShutdown();
+
+        //! Facade and context shutting down
+        bool isShuttingDown() const { return m_shuttingDown; }
 
         // ------- Context as interface, normal way to access a context
 
@@ -160,7 +163,8 @@ namespace BlackCore
         bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator);
 
     private:
-        bool m_init = false; //!< flag
+        bool m_initalized = false;   //!< flag if already initialized
+        bool m_shuttingDown = false; //!< flag if shutting down
         BlackMisc::CSetting<Application::TDBusServerAddress> m_dbusServerAddress { this };
 
         // DBus
