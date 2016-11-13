@@ -383,6 +383,11 @@ void SwiftGuiStd::ps_showNormal()
     this->showNormalModeChecked();
 }
 
+void SwiftGuiStd::ps_navigatorClosed()
+{
+    this->showNormal();
+}
+
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) { return; }

@@ -193,6 +193,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->menu_WindowMinimize, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(ui->menu_WindowToggleOnTop, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
     connect(ui->menu_WindowToggleNavigator, &QAction::triggered, this->m_navigator.data(), &CNavigatorDialog::toggleNavigator);
+    connect(this->m_navigator.data(), &CNavigatorDialog::navigatorClosed, this, &SwiftGuiStd::ps_navigatorClosed);
     connect(ui->menu_InternalsPage, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages

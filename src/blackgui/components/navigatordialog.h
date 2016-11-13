@@ -55,6 +55,13 @@ namespace BlackGui
             //! Navigator
             void buildNavigator(int columns);
 
+            //! Called when dialog is closed
+            virtual void reject() override;
+
+        signals:
+            //! Navigator closed
+            void navigatorClosed();
+
         public slots:
             //! Toggle frameless mode
             void toggleFrameless();

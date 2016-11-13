@@ -93,6 +93,9 @@ namespace BlackGui
             //! Settings
             CSettingsComponent *getSettingsComponent();
 
+            //! Weather component
+            CWeatherComponent *getWeatherComponent();
+
             //! Log messages
             CLogComponent *getLogComponent();
 

@@ -106,6 +106,12 @@ namespace BlackGui
             this->adjustNavigatorSize(gridLayout);
         }
 
+        void CNavigatorDialog::reject()
+        {
+            this->hide();
+            emit navigatorClosed();
+        }
+
         void CNavigatorDialog::toggleFrameless()
         {
             this->setFrameless(!this->isFrameless());
@@ -287,7 +293,7 @@ namespace BlackGui
             a->setData("1c");
             a = contextMenu->addAction(CIcons::resize16(), "2 columns", this, &CNavigatorDialog::ps_changeLayout);
             a->setData("2c");
-            QString frameLessActionText = this->isFrameless() ? "Normal window" : "Frameless";
+            const QString frameLessActionText = this->isFrameless() ? "Normal window" : "Frameless";
             contextMenu->addAction(BlackMisc::CIcons::tableSheet16(), frameLessActionText, this, SLOT(toggleFrameless()));
             contextMenu->addAction("Adjust margins", this, &CNavigatorDialog::ps_dummy);
             contextMenu->addAction(this->m_marginMenuAction);

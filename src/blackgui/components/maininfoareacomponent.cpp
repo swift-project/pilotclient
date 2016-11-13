@@ -70,6 +70,11 @@ namespace BlackGui
             return ui->comp_Settings;
         }
 
+        CWeatherComponent *CMainInfoAreaComponent::getWeatherComponent()
+        {
+            return ui->comp_Weather;
+        }
+
         CLogComponent *CMainInfoAreaComponent::getLogComponent()
         {
             return ui->comp_Log;
@@ -117,6 +122,7 @@ namespace BlackGui
             case InfoAreaMappings:
             case InfoAreaSettings:
             case InfoAreaTextMessages:
+            case InfoAreaWeather:
                 return QSize(600, 400);
                 break;
             case InfoAreaFlightPlan:

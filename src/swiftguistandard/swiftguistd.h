@@ -76,13 +76,13 @@ public:
     static QString getLogCategory() { return "swift.gui.stdgui"; }
 
 signals:
+    //! Main info area has changed
     //! \remarks using widget pointer allows the component itself to identify if it is current
     void currentMainInfoAreaChanged(const QWidget *currentWidget);
 
 protected:
-
     //! \name QMainWindow events
-    //! @[
+    //! @{
     virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mousePressEvent(QMouseEvent *event) override;
     virtual void closeEvent(QCloseEvent *event) override;
@@ -252,6 +252,9 @@ private slots:
 
     //! Show window normal
     void ps_showNormal();
+
+    //! Navigator dialog has been closed
+    void ps_navigatorClosed();
 };
 
 #pragma pop_macro("interface")
