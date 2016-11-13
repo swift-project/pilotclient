@@ -245,15 +245,15 @@ namespace BlackMisc
         };
 
         //! \cond PRIVATE
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CLengthUnit, CLength>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CPressureUnit, CPressure>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CFrequencyUnit, CFrequency>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CMassUnit, CMass>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CTemperatureUnit, CTemperature>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CSpeedUnit, CSpeed>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CAngleUnit, CAngle>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CTimeUnit, CTime>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CLengthUnit, CLength>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CPressureUnit, CPressure>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CFrequencyUnit, CFrequency>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CMassUnit, CMass>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CTemperatureUnit, CTemperature>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CSpeedUnit, CSpeed>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CAngleUnit, CAngle>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CTimeUnit, CTime>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
         //! \endcond
 
     }

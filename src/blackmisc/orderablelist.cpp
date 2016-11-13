@@ -140,7 +140,9 @@ namespace BlackMisc
         }
     }
 
-    template class IOrderableList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
-    template class IOrderableList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
+    //! \cond PRIVATE
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IOrderableList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE IOrderableList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
+    //! \endcond
 
 } // namespace

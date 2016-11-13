@@ -79,8 +79,8 @@ namespace BlackMisc
         };
 
         //! \cond PRIVATE
-        extern template class BLACKMISC_EXPORT_TEMPLATE CEarthAngle<CLatitude>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CEarthAngle<CLongitude>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLatitude>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLongitude>;
         //! \endcond
 
     }

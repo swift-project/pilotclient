@@ -29,13 +29,23 @@
 #endif
 
 /*!
- * \def BLACKMISC_EXPORT_TEMPLATE
- * BlackMisc Template Export Macro
+ * \def BLACKMISC_EXPORT_DECLARE_TEMPLATE
+ * BlackMisc Export Explicit Template Declaration Macro
+ */
+
+/*!
+ * \def BLACKMISC_EXPORT_DEFINE_TEMPLATE
+ * BlackMisc Export Explicit Template Definition Macro
  */
 #if defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#  define BLACKMISC_EXPORT_TEMPLATE BLACKMISC_EXPORT
+#  define BLACKMISC_EXPORT_DECLARE_TEMPLATE BLACKMISC_EXPORT
+#  define BLACKMISC_EXPORT_DEFINE_TEMPLATE
+#elif defined(Q_OS_WIN) && defined(Q_CC_CLANG)
+#  define BLACKMISC_EXPORT_DECLARE_TEMPLATE
+#  define BLACKMISC_EXPORT_DEFINE_TEMPLATE BLACKMISC_EXPORT
 #else
-#  define BLACKMISC_EXPORT_TEMPLATE
+#  define BLACKMISC_EXPORT_DECLARE_TEMPLATE
+#  define BLACKMISC_EXPORT_DEFINE_TEMPLATE
 #endif
 
 #endif // guard

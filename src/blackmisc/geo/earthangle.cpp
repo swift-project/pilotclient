@@ -153,8 +153,10 @@ namespace BlackMisc
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-        template class CEarthAngle<CLatitude>;
-        template class CEarthAngle<CLongitude>;
+        //! \cond PRIVATE
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CEarthAngle<CLatitude>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CEarthAngle<CLongitude>;
+        //! \endcond
 
     } // namespace
 } // namespace

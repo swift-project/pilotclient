@@ -279,9 +279,11 @@ namespace BlackMisc
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-        template class CModulator<CComSystem>;
-        template class CModulator<CNavSystem>;
-        template class CModulator<CAdfSystem>;
+        //! \cond PRIVATE
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CModulator<CComSystem>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CModulator<CNavSystem>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CModulator<CAdfSystem>;
+        //! \endcond
 
     } // namespace
 } // namespace

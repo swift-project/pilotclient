@@ -458,15 +458,17 @@ namespace BlackMisc
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-        template class CPhysicalQuantity<CLengthUnit, CLength>;
-        template class CPhysicalQuantity<CPressureUnit, CPressure>;
-        template class CPhysicalQuantity<CFrequencyUnit, CFrequency>;
-        template class CPhysicalQuantity<CMassUnit, CMass>;
-        template class CPhysicalQuantity<CTemperatureUnit, CTemperature>;
-        template class CPhysicalQuantity<CSpeedUnit, CSpeed>;
-        template class CPhysicalQuantity<CAngleUnit, CAngle>;
-        template class CPhysicalQuantity<CTimeUnit, CTime>;
-        template class CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
+        //! \cond PRIVATE
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CLengthUnit, CLength>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CPressureUnit, CPressure>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CFrequencyUnit, CFrequency>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CMassUnit, CMass>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CTemperatureUnit, CTemperature>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CSpeedUnit, CSpeed>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CAngleUnit, CAngle>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CTimeUnit, CTime>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
+        //! \endcond
 
     } // namespace
 } // namespace

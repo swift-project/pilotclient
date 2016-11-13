@@ -67,10 +67,10 @@ namespace BlackMisc
         };
 
         //! \cond PRIVATE
-        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectList<BlackMisc::Simulation::XPlane::CNavDataReference, BlackMisc::Simulation::XPlane::CNavDataReferenceList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectList<BlackMisc::Simulation::XPlane::CNavDataReference, BlackMisc::Simulation::XPlane::CNavDataReferenceList>;
         //! \endcond
 
         //! List of objects with geo coordinates.
@@ -102,9 +102,9 @@ namespace BlackMisc
         };
 
         //! \cond PRIVATE
-        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IGeoObjectWithRelativePositionList<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList>;
         //! \endcond
 
     } //namespace

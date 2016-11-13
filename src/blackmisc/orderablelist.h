@@ -71,8 +71,8 @@ namespace BlackMisc
         class CAircraftModelList;
     }
 
-    extern template class BLACKMISC_EXPORT_TEMPLATE IOrderableList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
-    extern template class BLACKMISC_EXPORT_TEMPLATE IOrderableList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IOrderableList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
+    extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IOrderableList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;
     //! \endcond
 
 } //namespace

@@ -163,9 +163,9 @@ namespace BlackMisc
         class CNavSystem;
         class CAdfSystem;
 
-        extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CComSystem>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CNavSystem>;
-        extern template class BLACKMISC_EXPORT_TEMPLATE CModulator<CAdfSystem>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CModulator<CComSystem>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CModulator<CNavSystem>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CModulator<CAdfSystem>;
         //! \endcond
 
     } // namespace
