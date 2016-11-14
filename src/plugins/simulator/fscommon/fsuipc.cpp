@@ -65,7 +65,7 @@ namespace BlackSimPlugin
                       .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
                       .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
                       .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
-                      .arg((FSUIPC_Version & 0xffff) ? "a" + (FSUIPC_Version & 0xff) - 1 : "");
+                      .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + (FSUIPC_Version & 0xff) - 1)) : "");
                 this->m_fsuipcVersion = QString("FSUIPC %1 (%2)").arg(ver).arg(sim);
 //                CLogMessage(this).info("FSUIPC connected: %1") << this->m_fsuipcVersion;
             }
