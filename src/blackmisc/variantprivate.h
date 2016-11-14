@@ -31,23 +31,6 @@ namespace BlackMisc
     template <typename T>
     void registerMetaValueType();
 
-    //! Checked version from QVariant
-    template <class T> void setFromQVariant(T *value, const QVariant &variant)
-    {
-        if (variant.canConvert<T>())
-        {
-            (*value) = variant.value<T>();
-        }
-        else
-        {
-            const QString m = QString("Target type: %1 Variant type: %2 %3 %4").
-                              arg(qMetaTypeId<T>()).
-                              arg(static_cast<int>(variant.type())).arg(variant.userType()).arg(variant.typeName());
-            Q_ASSERT_X(false, "setFromQVariant", m.toLocal8Bit().constData());
-            Q_UNUSED(m);
-        }
-    }
-
     namespace Private
     {
         //! \private Needed so we can copy forward-declared CVariant.
@@ -237,8 +220,6 @@ namespace BlackMisc
         {
             static constexpr int maybeGetMetaTypeId() { return qMetaTypeId<T>(); }
             static void maybeRegisterMetaType() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); registerMetaValueType<T>(); }
-            static QVariant maybeToQVariant(const T &obj) { return QVariant::fromValue(obj); }
-            static void maybeConvertFromQVariant(T &obj, const QVariant &var) { BlackMisc::setFromQVariant(&obj, var); }
         };
 
         template <typename T>
@@ -246,8 +227,6 @@ namespace BlackMisc
         {
             static constexpr int maybeGetMetaTypeId() { return QMetaType::UnknownType; }
             static void maybeRegisterMetaType() {}
-            static QVariant maybeToQVariant(const T &) { return {}; }
-            static void maybeConvertFromQVariant(T &, const QVariant &) {}
         };
 
         template <typename T>
