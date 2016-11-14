@@ -59,10 +59,10 @@ namespace BlackMisc
             //! All controllers (with valid data)
             BlackMisc::Network::CUserList getControllers() const;
 
-            //! Syncronize with ATC station representing booking information.
+            //! Synchronize with ATC station representing booking information.
             //! Both sides (booking, online station) will be updated.
             //! \pre Can be used only if the stored data in this list are online ATC stations
-            int syncronizeWithBookedStation(CAtcStation &bookedAtcStation);
+            int synchronizeWithBookedStation(CAtcStation &bookedAtcStation);
         };
 
     } //namespace

@@ -143,14 +143,14 @@ namespace BlackMisc
             //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
-            //! Syncronize controller data
+            //! Synchronize controller data
             //! Updates two stations (normally a booked and online ATC station) with complementary data
-            void syncronizeControllerData(CAtcStation &otherStation);
+            void synchronizeControllerData(CAtcStation &otherStation);
 
-            //! Syncronize station data
+            //! Synchronize station data
             //! Updates the two stations (a booked and online ATC station) with complementary data
             //! \pre this object is the online station, the passed station the booked station
-            void syncronizeWithBookedStation(CAtcStation &bookedStation);
+            void synchronizeWithBookedStation(CAtcStation &bookedStation);
 
             //! Get the radius of the controller's area of visibility.
             const BlackMisc::PhysicalQuantities::CLength &getRange() const { return m_range; }

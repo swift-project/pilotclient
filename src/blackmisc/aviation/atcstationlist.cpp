@@ -57,7 +57,7 @@ namespace BlackMisc
             return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
         }
 
-        int CAtcStationList::syncronizeWithBookedStation(CAtcStation &bookedAtcStation)
+        int CAtcStationList::synchronizeWithBookedStation(CAtcStation &bookedAtcStation)
         {
             int c = 0;
             bookedAtcStation.setOnline(false); // reset
@@ -66,7 +66,7 @@ namespace BlackMisc
             for (auto i = this->begin(); i != this->end(); ++i)
             {
                 if (i->getCallsign() != bookedAtcStation.getCallsign()) { continue; }
-                i->syncronizeWithBookedStation(bookedAtcStation);
+                i->synchronizeWithBookedStation(bookedAtcStation);
                 c++;
             }
 

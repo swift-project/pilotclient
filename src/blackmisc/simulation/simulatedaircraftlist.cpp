@@ -56,7 +56,7 @@ namespace BlackMisc
             return this->findBy(&CSimulatedAircraft::isVtol, vtol);
         }
 
-        CCallsignSet CSimulatedAircraftList::getCallsignsWithSyncronizedParts() const
+        CCallsignSet CSimulatedAircraftList::getCallsignsWithSynchronizedParts() const
         {
             CCallsignSet csl;
             for (const CSimulatedAircraft &aircraft : (*this))

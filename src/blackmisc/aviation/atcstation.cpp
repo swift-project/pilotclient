@@ -190,7 +190,7 @@ namespace BlackMisc
             this->m_frequency.setUnit(CFrequencyUnit::MHz());
         }
 
-        void CAtcStation::syncronizeControllerData(CAtcStation &otherStation)
+        void CAtcStation::synchronizeControllerData(CAtcStation &otherStation)
         {
             if (this->m_controller == otherStation.getController()) { return; }
             CUser otherController = otherStation.getController();
@@ -198,7 +198,7 @@ namespace BlackMisc
             otherStation.setController(otherController);
         }
 
-        void CAtcStation::syncronizeWithBookedStation(CAtcStation &bookedStation)
+        void CAtcStation::synchronizeWithBookedStation(CAtcStation &bookedStation)
         {
             if (bookedStation.getCallsign() != this->getCallsign()) { return; }
 
@@ -261,7 +261,7 @@ namespace BlackMisc
             }
 
             // both ways
-            this->syncronizeControllerData(bookedStation);
+            this->synchronizeControllerData(bookedStation);
             if (this->hasValidRelativeDistance())
             {
                 bookedStation.setRelativeDistance(this->getRelativeDistance());

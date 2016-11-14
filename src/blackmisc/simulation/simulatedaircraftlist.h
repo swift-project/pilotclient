@@ -68,7 +68,7 @@ namespace BlackMisc
             CSimulatedAircraftList findByVtol(bool vtol) const;
 
             //! Callsigns of aircraft with synchronized parts
-            BlackMisc::Aviation::CCallsignSet getCallsignsWithSyncronizedParts() const;
+            BlackMisc::Aviation::CCallsignSet getCallsignsWithSynchronizedParts() const;
 
             //! Update aircraft with data from VATSIM data file
             //! \remarks The list used ("this") needs to contain the VATSIM data file objects

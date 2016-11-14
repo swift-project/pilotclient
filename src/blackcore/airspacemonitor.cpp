@@ -583,7 +583,7 @@ namespace BlackCore
             for (CAtcStation &bookedStation : newBookedStations)
             {
                 // exchange booking and online data, both sides are updated
-                this->m_atcStationsOnline.syncronizeWithBookedStation(bookedStation);
+                this->m_atcStationsOnline.synchronizeWithBookedStation(bookedStation);
             }
             this->m_atcStationsBooked = newBookedStations;
         }
@@ -657,7 +657,7 @@ namespace BlackCore
             if (this->m_atcStationsBooked.containsCallsign(callsign))
             {
                 CAtcStation bookedStation(this->m_atcStationsBooked.findFirstByCallsign(callsign));
-                station.syncronizeWithBookedStation(bookedStation); // both will be aligned
+                station.synchronizeWithBookedStation(bookedStation); // both will be aligned
                 this->m_atcStationsBooked.replaceIf(&CAtcStation::getCallsign, callsign, bookedStation);
             }
 

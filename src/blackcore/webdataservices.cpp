@@ -55,7 +55,7 @@ namespace BlackCore
         if (!sApp) { return; } // shutting down
 
         Q_ASSERT_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "missing SSL support");
-        Q_ASSERT_X(sApp->isSetupAvailable(), Q_FUNC_INFO, "Setup not syncronized");
+        Q_ASSERT_X(sApp->isSetupAvailable(), Q_FUNC_INFO, "Setup not synchronized");
         this->setObjectName("CWebDataReader");
 
         // check if I need info objects

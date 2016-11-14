@@ -132,7 +132,7 @@ namespace BlackMisc
             virtual void updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override  { this->replaceOrAddCachedModels(models, simulator); }
             //! @}
 
-            //! Create a loader and syncronize caches
+            //! Create a loader and synchronize caches
             static std::unique_ptr<IAircraftModelLoader> createModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         public slots:

@@ -359,7 +359,7 @@ namespace BlackCore
                 models = CAircraftModelList::fromDatabaseJson(res);
             }
 
-            // syncronized update
+            // synchronized update
             const int n = models.size();
             qint64 latestTimestamp = models.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)

@@ -140,7 +140,7 @@ namespace BlackCore
         //! Delete all cookies from cookier manager
         void deleteAllCookies();
 
-        //! Setup already syncronized
+        //! Setup already synchronized
         bool isSetupAvailable() const;
 
         //! Reload setup and version
@@ -358,7 +358,7 @@ namespace BlackCore
         void webDataServicesStarted(bool success);
 
     protected slots:
-        //! Setup read/syncronized
+        //! Setup read/synchronized
         void ps_setupAvailable(bool available);
 
         //! Startup completed

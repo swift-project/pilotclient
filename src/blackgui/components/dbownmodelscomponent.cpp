@@ -193,7 +193,7 @@ namespace BlackGui
                 this->m_modelLoader->gracefulShutdown();
             }
 
-            // create loader, also syncronizes the caches
+            // create loader, also synchronizes the caches
             this->m_modelLoader = IAircraftModelLoader::createModelLoader(simulator); // last selected simulator or explicit given
             if (!this->m_modelLoader || !this->m_modelLoader->supportsSimulator(simulator))
             {

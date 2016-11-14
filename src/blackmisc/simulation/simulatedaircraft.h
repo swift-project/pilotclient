@@ -429,7 +429,7 @@ namespace BlackMisc
             bool m_partsSynchronized = false;   //!< synchronize parts
             bool m_fastPositionUpdates = false; //!< use fast position updates
 
-            //! Init, which syncronizes some denormalized values
+            //! Init, which synchronizes some denormalized values
             void init();
 
             BLACK_METACLASS(
