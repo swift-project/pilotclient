@@ -12,6 +12,7 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
 
 #include <QtGlobal>
 
@@ -156,7 +157,7 @@ namespace BlackMisc
                 break;
             }
             const QString assertMsg("No comparison for index " + index.toQString());
-            Q_ASSERT_X(false, Q_FUNC_INFO, assertMsg.toLocal8Bit().constData());
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(assertMsg));
             return 0;
         }
 

@@ -79,8 +79,8 @@ namespace BlackCoreTest
 
         const QString m1("No aircraft ICAOs " + url.getFullUrl());
         const QString m2("No airline ICAOs " + url.getFullUrl());
-        QVERIFY2(this->m_icaoReader->getAircraftIcaoCodesCount() > 0, m1.toLocal8Bit().constData());
-        QVERIFY2(this->m_icaoReader->getAirlineIcaoCodesCount() > 0, m2.toLocal8Bit().constData());
+        QVERIFY2(this->m_icaoReader->getAircraftIcaoCodesCount() > 0, qUtf8Printable(m1));
+        QVERIFY2(this->m_icaoReader->getAirlineIcaoCodesCount() > 0, qUtf8Printable(m2));
 
         const CAircraftIcaoCode aircraftIcao(this->m_icaoReader->getAircraftIcaoCodes().frontOrDefault());
         const CAirlineIcaoCode airlineIcao(this->m_icaoReader->getAirlineIcaoCodes().frontOrDefault());
@@ -109,7 +109,7 @@ namespace BlackCoreTest
         }
 
         const QString m1("No models " + url.getFullUrl());
-        QVERIFY2(this->m_modelReader->getModelsCount() > 0, m1.toLocal8Bit().constData());
+        QVERIFY2(this->m_modelReader->getModelsCount() > 0, qUtf8Printable(m1));
 
         const CAircraftModel model(m_modelReader->getModels().frontOrDefault());
         QVERIFY2(model.getLivery().hasCompleteData(), "Missing data for livery");

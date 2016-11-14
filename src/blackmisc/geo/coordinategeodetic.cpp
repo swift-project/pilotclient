@@ -10,12 +10,11 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
 
 #include <QByteArray>
 #include <QtGlobal>
 #include <cmath>
-
-
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;
@@ -111,7 +110,7 @@ namespace BlackMisc
             }
 
             const QString m = QString("no property, index ").append(index.toQString());
-            Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
             return CVariant::fromValue(m);
         }
 
@@ -140,7 +139,7 @@ namespace BlackMisc
             }
 
             const QString m = QString("no property, index ").append(index.toQString());
-            Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
             return 0;
         }
 
@@ -281,7 +280,7 @@ namespace BlackMisc
                 }
             }
             const QString m = QString("no property, index ").append(index.toQString());
-            Q_ASSERT_X(false, "ICoordinateWithRelativePosition", m.toLocal8Bit().constData());
+            BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
             return CVariant::fromValue(m);
         }
 
@@ -301,7 +300,7 @@ namespace BlackMisc
                     break;
                 default:
                     const QString m = QString("no property, index ").append(index.toQString());
-                    Q_ASSERT_X(false, "ICoordinateWithRelativePosition", m.toLocal8Bit().constData());
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
                     break;
                 }
             }

@@ -10,6 +10,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/timestampbased.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
 
 #include <QByteArray>
 #include <QDate>
@@ -197,7 +198,7 @@ namespace BlackMisc
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
-        Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return CVariant::fromValue(m);
     }
 
@@ -220,7 +221,7 @@ namespace BlackMisc
             case IndexUtcTimestampFormattedHms:
             case IndexUtcTimestampFormattedDhms:
                 {
-                    QDateTime dt = QDateTime::fromString(variant.toQString());
+                    const QDateTime dt = QDateTime::fromString(variant.toQString());
                     this->m_timestampMSecsSinceEpoch = dt.toMSecsSinceEpoch();
                 }
             default:
@@ -228,7 +229,7 @@ namespace BlackMisc
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
-        Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
     int ITimestampBased::comparePropertyByIndex(const CPropertyIndex &index, const ITimestampBased &compareValue) const

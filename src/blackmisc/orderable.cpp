@@ -10,6 +10,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/orderable.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/verify.h"
 
 #include <QByteArray>
 #include <QtGlobal>
@@ -56,7 +57,7 @@ namespace BlackMisc
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
-        Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return CVariant::fromValue(m);
     }
 
@@ -76,7 +77,7 @@ namespace BlackMisc
             }
         }
         const QString m = QString("Cannot handle index %1").arg(index.toQString());
-        Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
+        BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
     int IOrderable::comparePropertyByIndex(const CPropertyIndex &index, const IOrderable &compareValue) const
