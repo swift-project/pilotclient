@@ -161,7 +161,7 @@ namespace BlackCore
         //! This shall only return true if the aircraft is really visible in the simulator
         virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
-        //! Physically rendered (displayed in simulator)?
+        //! Physically rendered (displayed in simulator)
         //! This shall only return aircraft really visible in the simulator
         virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const = 0;
 

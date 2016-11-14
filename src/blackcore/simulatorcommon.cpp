@@ -229,27 +229,12 @@ namespace BlackCore
 
     int CSimulatorCommon::getMaxRenderedAircraft() const
     {
-        return (m_maxRenderedAircraft <= MaxAircraftInfinite) ? m_maxRenderedAircraft : MaxAircraftInfinite;
+        return m_interpolationRenderingSetup.getMaxRenderedAircraft();
     }
 
     void CSimulatorCommon::setMaxRenderedAircraft(int maxRenderedAircraft)
     {
-        if (maxRenderedAircraft == m_maxRenderedAircraft) { return; }
-        if (maxRenderedAircraft < 1)
-        {
-            // disable, we set both values to 0
-            m_maxRenderedAircraft = 0;
-            m_maxRenderedDistance = CLength(0.0, CLengthUnit::NM());
-        }
-        else if (maxRenderedAircraft >= MaxAircraftInfinite)
-        {
-            m_maxRenderedAircraft = MaxAircraftInfinite;
-        }
-        else
-        {
-            m_maxRenderedAircraft = maxRenderedAircraft;
-        }
-
+        if (!m_interpolationRenderingSetup.setMaxRenderedAircraft(maxRenderedAircraft)) { return; }
         const bool r = isRenderingRestricted();
         const bool e = isRenderingEnabled();
         emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
@@ -257,23 +242,7 @@ namespace BlackCore
 
     void CSimulatorCommon::setMaxRenderedDistance(const CLength &distance)
     {
-        if (distance == m_maxRenderedDistance) { return; }
-        if (distance.isNull() || distance > getRenderedDistanceBoundary() || distance.isNegativeWithEpsilonConsidered())
-        {
-            m_maxRenderedDistance = CLength(0.0, CLengthUnit::nullUnit());
-        }
-        else if (distance.isZeroEpsilonConsidered())
-        {
-            // zero means disabled, we disable max aircraft too
-            this->m_maxRenderedAircraft = 0;
-            this->m_maxRenderedDistance = CLength(0.0, CLengthUnit::NM());
-        }
-        else
-        {
-            Q_ASSERT(!distance.isNegativeWithEpsilonConsidered());
-            m_maxRenderedDistance = distance;
-        }
-
+        if (!m_interpolationRenderingSetup.setMaxRenderedDistance(distance)) { return; }
         const bool r = isRenderingRestricted();
         const bool e = isRenderingEnabled();
         emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
@@ -281,8 +250,7 @@ namespace BlackCore
 
     CLength CSimulatorCommon::getMaxRenderedDistance() const
     {
-        if (m_maxRenderedDistance.isNull()) { return getRenderedDistanceBoundary(); }
-        return m_maxRenderedDistance;
+        return (m_interpolationRenderingSetup.getMaxRenderedDistance());
     }
 
     const CSimulatorPluginInfo &CSimulatorCommon::getSimulatorPluginInfo() const
@@ -308,12 +276,12 @@ namespace BlackCore
 
     bool CSimulatorCommon::isMaxAircraftRestricted() const
     {
-        return m_maxRenderedAircraft < MaxAircraftInfinite;
+        return m_interpolationRenderingSetup.isMaxAircraftRestricted();
     }
 
     bool CSimulatorCommon::isMaxDistanceRestricted() const
     {
-        return !m_maxRenderedDistance.isNull();
+        return m_interpolationRenderingSetup.isMaxDistanceRestricted();
     }
 
     void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
@@ -336,9 +304,7 @@ namespace BlackCore
 
     bool CSimulatorCommon::isRenderingEnabled() const
     {
-        if (m_maxRenderedAircraft < 1)  { return false; }
-        if (!isMaxDistanceRestricted()) { return true; }
-        return m_maxRenderedDistance.isPositiveWithEpsilonConsidered();
+        return m_interpolationRenderingSetup.isRenderingEnabled();
     }
 
     bool CSimulatorCommon::isRenderingRestricted() const
@@ -348,8 +314,7 @@ namespace BlackCore
 
     void CSimulatorCommon::deleteAllRenderingRestrictions()
     {
-        this->m_maxRenderedDistance = CLength(0, CLengthUnit::nullUnit());
-        this->m_maxRenderedAircraft = MaxAircraftInfinite;
+        m_interpolationRenderingSetup.deleteAllRenderingRestrictions();
         emit renderRestrictionsChanged(false, true, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 

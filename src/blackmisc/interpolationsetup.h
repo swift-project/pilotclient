@@ -9,9 +9,10 @@
 
 //! \file
 
-#ifndef BLACKMISC_INTERPOLATION_SETUP_H
-#define BLACKMISC_INTERPOLATION_SETUP_H
+#ifndef BLACKMISC_INTERPOLATION_RENDERING_SETUP_H
+#define BLACKMISC_INTERPOLATION_RENDERING_SETUP_H
 
+#include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
@@ -31,11 +32,16 @@ namespace BlackMisc
         {
             IndexInterpolatorDebugMessages = BlackMisc::CPropertyIndex::GloablIndexInterpolatorSetup,
             IndexSimulatorDebugMessages,
-            IndexForceFullInterpolation
+            IndexForceFullInterpolation,
+            IndexMaxRenderedAircraft,
+            IndexMaxRenderedDistance
         };
 
         //! Constructor.
         CInterpolationAndRenderingSetup();
+
+        //! Considered as "all aircraft"
+        static int InfiniteAircraft();
 
         //! Debugging messages
         bool showInterpolatorDebugMessages() const { return m_interpolatorDebugMessage; }
@@ -50,10 +56,37 @@ namespace BlackMisc
         void setDriverDebuggingMessages(bool debug) { m_simulatorDebugMessages = debug; }
 
         //! Full interpolation
-        bool forceFullInterpolation() const { return m_forceFullInterpolation; }
+        bool isForcingFullInterpolation() const { return m_forceFullInterpolation; }
 
         //! Force full interpolation
         void setForceFullInterpolation(bool force) { m_forceFullInterpolation = force; }
+
+        //! Max. number of aircraft rendered
+        int getMaxRenderedAircraft() const;
+
+        //! Max. number of aircraft rendered
+        bool setMaxRenderedAircraft(int maxRenderedAircraft);
+
+        //! Max. distance for rendering
+        bool setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
+
+        //! Disable
+        void disableMaxRenderedDistance();
+
+        //! Rendering enabled
+        bool isRenderingEnabled() const;
+
+        //! Max. distance for rendering
+        BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const { return m_maxRenderedDistance; }
+
+        //! Restricted by distance?
+        bool isMaxDistanceRestricted() const;
+
+        //! Restricted by quantity?
+        bool isMaxAircraftRestricted() const;
+
+        //! Disable all render restrictions
+        void deleteAllRenderingRestrictions();
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
@@ -68,12 +101,16 @@ namespace BlackMisc
         bool m_interpolatorDebugMessage = false;  //! Debug messages in interpolator
         bool m_simulatorDebugMessages = false;    //! Debug messages of simulator (aka plugin)
         bool m_forceFullInterpolation = false;    //! always do a full interpolation, even if aircraft is not moving
+        int  m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
+        BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
 
         BLACK_METACLASS(
             CInterpolationAndRenderingSetup,
             BLACK_METAMEMBER(interpolatorDebugMessage),
             BLACK_METAMEMBER(simulatorDebugMessages),
-            BLACK_METAMEMBER(forceFullInterpolation)
+            BLACK_METAMEMBER(forceFullInterpolation),
+            BLACK_METAMEMBER(maxRenderedAircraft),
+            BLACK_METAMEMBER(maxRenderedDistance)
         );
     };
 } // namespace

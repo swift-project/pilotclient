@@ -132,7 +132,7 @@ namespace BlackMisc
                                                + oldAlt,
                                                oldAlt.getReferenceDatum()));
 
-        if (!setup.forceFullInterpolation() && !vtolAiracraft && newVec == oldVec && oldAlt == newAlt)
+        if (!setup.isForcingFullInterpolation() && !vtolAiracraft && newVec == oldVec && oldAlt == newAlt)
         {
             // stop interpolation here, does not work for VTOL aircraft. We need a flag for VTOL aircraft
             return currentSituation;

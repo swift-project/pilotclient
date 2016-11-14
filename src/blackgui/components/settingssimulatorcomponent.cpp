@@ -169,8 +169,8 @@ namespace BlackGui
         void CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft()
         {
             // get initial aircraft to render
-            int noRequested = ui->sb_MaxAircraft->value();
-            int oldValue = sGui->getIContextSimulator()->getMaxRenderedAircraft();
+            const int noRequested = ui->sb_MaxAircraft->value();
+            const int oldValue = sGui->getIContextSimulator()->getMaxRenderedAircraft();
             if (oldValue == noRequested) { return; }
 
             // set value

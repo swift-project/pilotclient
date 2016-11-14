@@ -162,16 +162,14 @@ namespace BlackCore
         void ps_allSwiftDataRead();
 
     private:
-        bool m_blinkCycle = false;                       //!< use for highlighting
-        qint64 m_highlightEndTimeMsEpoch = 0;            //!< end highlighting
-        int m_timerCounter = 0;                          //!< allows to calculate n seconds
-        int m_maxRenderedAircraft = MaxAircraftInfinite; //!< max.rendered aircraft
-        QTimer                                        m_oneSecondTimer {this};                     //!< multi purpose timer
-        BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo;                       //!< info object
-        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;                       //!< all other aircraft are to be ignored
-        BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;                     //!< callsigns which will be rendered
-        BlackMisc::PhysicalQuantities::CLength        m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
-        BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections;         //!< connected signal/slots
+        bool m_blinkCycle = false;             //!< use for highlighting
+        qint64 m_highlightEndTimeMsEpoch = 0;  //!< end highlighting
+        int m_timerCounter = 0;                //!< allows to calculate n seconds
+        QTimer                                        m_oneSecondTimer {this};              //!< multi purpose timer
+        BlackMisc::Simulation::CSimulatorPluginInfo   m_simulatorPluginInfo;                //!< info object
+        BlackMisc::Simulation::CSimulatedAircraftList m_highlightedAircraft;                //!< all other aircraft are to be ignored
+        BlackMisc::Aviation::CCallsignSet             m_callsignsToBeRendered;              //!< callsigns which will be rendered
+        BlackMisc::CConnectionGuard                   m_remoteAircraftProviderConnections;  //!< connected signal/slots
     };
 } // namespace
 
