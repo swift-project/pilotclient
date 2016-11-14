@@ -175,16 +175,9 @@ namespace BlackCore
         return (this->getModelsCount() > 0) && (this->getLiveriesCount() > 0) && (this->getDistributorsCount() > 0) && (this->getAircraftIcaoCodesCount() > 0);
     }
 
-    void CWebDataServices::synchronizeDbCaches(CEntityFlags::Entity entities)
-    {
-        if (this->m_infoDataReader) { this->m_infoDataReader->synchronizeCaches(entities); }
-        if (this->m_modelDataReader) { this->m_modelDataReader->synchronizeCaches(entities); }
-        if (this->m_icaoDataReader) { this->m_icaoDataReader->synchronizeCaches(entities); }
-        if (this->m_airportDataReader) { this->m_airportDataReader->synchronizeCaches(entities); }
-    }
-
     void CWebDataServices::admitDbCaches(CEntityFlags::Entity entities)
     {
+        // hint: all the readers use own threads
         if (this->m_infoDataReader) { this->m_infoDataReader->admitCaches(entities); }
         if (this->m_modelDataReader) { this->m_modelDataReader->admitCaches(entities); }
         if (this->m_icaoDataReader) { this->m_icaoDataReader->admitCaches(entities); }

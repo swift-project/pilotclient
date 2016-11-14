@@ -54,22 +54,13 @@ namespace BlackGui
 
         void CDbLoadOverviewComponent::display()
         {
-            if (this->isInitialized())
-            {
-                this->ps_setValues();
-            }
-            else
-            {
-                this->showLoading();
-                QTimer::singleShot(1000, this, &CDbLoadOverviewComponent::ps_setValues);
-            }
+            this->ps_setValues();
         }
 
         void CDbLoadOverviewComponent::ps_setValues()
         {
             if (!sGui) { return; }
             if (!sGui->hasWebDataServices()) { return; }
-            CDbLoadOverviewComponent::synchronizeCaches();
 
             ui->le_AircraftIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AircraftIcaoEntity));
             ui->le_AirlinesIcaoCacheTs->setText(cacheTimestampForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -184,11 +175,6 @@ namespace BlackGui
         {
             const int c = sGui->getWebDataServices()->getDbInfoCount(entity);
             return c < 0 ? "-" : QString::number(c);
-        }
-
-        void CDbLoadOverviewComponent::synchronizeCaches()
-        {
-            sGui->getWebDataServices()->synchronizeDbCaches(CEntityFlags::AllDbEntities);
         }
 
         void CDbLoadOverviewComponent::admitCaches()

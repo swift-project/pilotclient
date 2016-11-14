@@ -349,9 +349,6 @@ namespace BlackCore
         //! All DB data for an aircraft entity available?
         bool hasDbAircraftData() const;
 
-        //! Synchronize all DB caches
-        void synchronizeDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
-
         //! Admit all DB caches
         void admitDbCaches(BlackMisc::Network::CEntityFlags::Entity entities);
 
