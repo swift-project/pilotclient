@@ -21,7 +21,7 @@
 #include "blackmisc/iconlist.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/identifierlist.h"
-#include "blackmisc/interpolationsetup.h"
+#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/input/registermetadatainput.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"

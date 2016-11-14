@@ -13,7 +13,7 @@
 #define BLACKMISC_INTERPOLATOR_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/interpolationsetup.h"
+#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"

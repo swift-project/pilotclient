@@ -18,7 +18,7 @@
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
-#include "blackmisc/interpolationsetup.h"
+#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/simulation/aircraftmodellist.h"

@@ -31,7 +31,7 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/interpolationsetup.h"
+#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"

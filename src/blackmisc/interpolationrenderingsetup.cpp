@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/interpolationsetup.h"
+#include "blackmisc/interpolationrenderingsetup.h"
 #include "stringutils.h"
 
 using namespace BlackMisc::PhysicalQuantities;

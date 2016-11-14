@@ -19,7 +19,7 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/interpolationsetup.h"
+#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/connectionguard.h"
 #include "blackmisc/pq/length.h"
