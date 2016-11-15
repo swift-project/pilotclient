@@ -69,9 +69,9 @@ namespace BlackGui
 
     void CLoadIndicator::setAnimationDelay(int delay)
     {
-        if (this->m_timerId != -1) { killTimer(this->m_timerId); }
         this->m_delayMs = delay;
-        if (this->m_timerId != -1) { this->m_timerId = startTimer(this->m_delayMs); }
+        if (this->m_timerId != -1) { killTimer(this->m_timerId); }
+        this->m_timerId = startTimer(this->m_delayMs);
     }
 
     void CLoadIndicator::setColor(const QColor &color)
