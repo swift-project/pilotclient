@@ -148,9 +148,15 @@ namespace BlackSound
         }
         else
         {
-            if (this->m_pushTimer) this->m_pushTimer->stop();
-            this->m_pushTimer->disconnect(this);
-            if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion) this->stop();
+            if (this->m_pushTimer)
+            {
+                this->m_pushTimer->stop();
+                this->m_pushTimer->disconnect(this);
+            }
+            if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
+            {
+                this->stop();
+            }
         }
     }
 

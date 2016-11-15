@@ -299,8 +299,8 @@ void SwiftGuiStd::setContextAvailability()
             sGui &&
             this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
     }
-    this->m_contextNetworkAvailable = this->m_coreAvailable || sGui->getIContextNetwork()->isUsingImplementingObject();
-    this->m_contextAudioAvailable = this->m_coreAvailable || sGui->getIContextAudio()->isUsingImplementingObject();
+    this->m_contextNetworkAvailable = this->m_coreAvailable || (sGui && sGui->getIContextNetwork()->isUsingImplementingObject());
+    this->m_contextAudioAvailable = this->m_coreAvailable || (sGui && sGui->getIContextAudio()->isUsingImplementingObject());
 
     // react to a change in core's availability
     if (this->m_coreAvailable != corePreviouslyAvailable)
