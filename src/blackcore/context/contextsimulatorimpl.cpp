@@ -484,8 +484,8 @@ namespace BlackCore
                 if (sim)
                 {
                     // disconnect signals and delete
+                    sim->disconnect(this);
                     sim->unload();
-                    this->disconnect(sim);
                     sim->deleteLater();
                     emit simulatorPluginChanged(CSimulatorPluginInfo());
                 }
@@ -611,8 +611,6 @@ namespace BlackCore
 
         void CContextSimulator::restoreSimulatorPlugins()
         {
-            //! \todo #801, this shutdown flag should not be required
-            if (this->getRuntime()->isShuttingDown()) { return; }
             stopSimulatorListeners();
 
             auto enabledSimulators = m_enabledSimulators.getThreadLocal();
