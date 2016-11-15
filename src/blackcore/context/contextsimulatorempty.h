@@ -133,25 +133,11 @@ namespace BlackCore
                 return false;
             }
 
-            //! \copydoc IContextSimulator::getMaxRenderedAircraft
-            virtual int getMaxRenderedAircraft() const override
+            //! \copydoc ISimulator::getInterpolationAndRenderingSetup
+            virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return 0;
-            }
-
-            //! \copydoc IContextSimulator::setMaxRenderedAircraft
-            virtual void setMaxRenderedAircraft(int number) override
-            {
-                Q_UNUSED(number);
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextSimulator::setMaxRenderedDistance
-            virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override
-            {
-                Q_UNUSED(distance);
-                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::CInterpolationAndRenderingSetup();
             }
 
             //! \copydoc ISimulator::setInterpolationAndRenderingSetup
@@ -159,47 +145,6 @@ namespace BlackCore
             {
                 Q_UNUSED(setup);
                 logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextSimulator::setMaxRenderedDistance
-            virtual void deleteAllRenderingRestrictions() override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
-
-            //! \copydoc IContextSimulator::isRenderingRestricted
-            virtual bool isRenderingRestricted() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return false;
-            }
-
-            //! \copydoc IContextSimulator::isRenderingEnabled
-            virtual bool isRenderingEnabled() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return false;
-            }
-
-            //! \copydoc IContextSimulator::getMaxRenderedDistance
-            virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::PhysicalQuantities::CLength();
-            }
-
-            //! \copydoc IContextSimulator::getRenderedDistanceBoundary
-            virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::PhysicalQuantities::CLength();
-            }
-
-            //! \copydoc IContextSimulator::getRenderRestrictionText
-            virtual QString getRenderRestrictionText() const override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-                return QString();
             }
 
             //! \copydoc IContextSimulator::getTimeSynchronizationOffset

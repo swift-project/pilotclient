@@ -27,7 +27,7 @@ namespace BlackMisc
         CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(
             const CSimulatedAircraftList &allAircraft,
             bool restricted, bool renderingEnabled, int maxAircraft,
-            const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary) :
+            const CLength &maxRenderedDistance) :
             m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()),
             m_restricted(restricted),
             m_renderingEnabled(renderingEnabled),
@@ -69,13 +69,11 @@ namespace BlackMisc
             int count = 0; // when max. aircraft reached?
             for (const CSimulatedAircraft &currentAircraft : aircraft)
             {
-                CCallsign cs(currentAircraft.getCallsign());
+                const CCallsign cs(currentAircraft.getCallsign());
                 if (currentAircraft.isEnabled())
                 {
                     CLength distance(currentAircraft.getRelativeDistance());
-                    if (count >= maxAircraft ||
-                            (!maxRenderedDistance.isNull() && distance >= maxRenderedBoundary) ||
-                            (!maxRenderedBoundary.isNull() && distance >= maxRenderedBoundary))
+                    if (count >= maxAircraft || (!maxRenderedDistance.isNull() && distance >= maxRenderedDistance))
                     {
                         m_disabledAircraftCallsignsByDistance.push_back(cs);
                     }

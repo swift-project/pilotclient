@@ -124,35 +124,8 @@ namespace BlackCore
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
-        //! Max. rendered aircraft
-        virtual int getMaxRenderedAircraft() const = 0;
-
-        //! Max. rendered aircraft
-        virtual void setMaxRenderedAircraft(int maxRenderedAircraft) = 0;
-
-        //! Max. distance for rendered aircraft
-        virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) = 0;
-
-        //! Max. distance for rendered aircraft
-        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const = 0;
-
-        //! Technical range until aircraft are visible
-        virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const = 0;
-
-        //! Restricted number of aircraft
-        virtual bool isMaxAircraftRestricted() const = 0;
-
-        //! Restriced distance
-        virtual bool isMaxDistanceRestricted() const = 0;
-
-        //! Is there a restriction? No rendering -> limited number of aircraft -> unlimited number of aircraft
-        virtual bool isRenderingRestricted() const = 0;
-
-        //! Is rendering enabled?
-        virtual bool isRenderingEnabled() const = 0;
-
-        //! Delete all restrictions (if any) -> unlimited number of aircraft
-        virtual void deleteAllRenderingRestrictions() = 0;
+        //! Debugging messages etc.
+        virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
 
         //! Enable debugging messages etc.
         virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) = 0;
@@ -162,7 +135,7 @@ namespace BlackCore
         virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
         //! Physically rendered (displayed in simulator)
-        //! This shall only return aircraft really visible in the simulator
+        //! This shall only return aircraft handled in the simulator
         virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const = 0;
 
         //! Highlight the aircraft for given time (or disable highlight)
@@ -187,7 +160,7 @@ namespace BlackCore
         void ownAircraftModelChanged(const BlackMisc::Simulation::CAircraftModel &model);
 
         //! Render restrictions have been changed
-        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 
         //! Aircraft rendering changed
         void aircraftRenderingChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);

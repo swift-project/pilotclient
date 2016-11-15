@@ -39,14 +39,11 @@ namespace BlackMisc
             CAirspaceAircraftSnapshot();
 
             //! Constructor
-            CAirspaceAircraftSnapshot(
-                const BlackMisc::Simulation::CSimulatedAircraftList &allAircraft,
+            CAirspaceAircraftSnapshot(const BlackMisc::Simulation::CSimulatedAircraftList &allAircraft,
                 bool restricted       = false,
                 bool renderingEnabled = true,
                 int maxAircraft       = 100,
-                const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()),
-                const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit())
-            );
+                const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance = BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()));
 
             //! Time when snapshot was taken
             const QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsSinceEpoch); }

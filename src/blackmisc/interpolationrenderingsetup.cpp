@@ -29,6 +29,11 @@ namespace BlackMisc
         return m_maxRenderedDistance.isPositiveWithEpsilonConsidered();
     }
 
+    bool CInterpolationAndRenderingSetup::isRenderingRestricted() const
+    {
+        return isRenderingEnabled() && (isMaxAircraftRestricted() || isMaxDistanceRestricted());
+    }
+
     int CInterpolationAndRenderingSetup::getMaxRenderedAircraft() const
     {
         return (m_maxRenderedAircraft <= InfiniteAircraft()) ? m_maxRenderedAircraft : InfiniteAircraft();
@@ -40,8 +45,7 @@ namespace BlackMisc
         if (maxRenderedAircraft < 1)
         {
             // disable, we set both values to 0
-            m_maxRenderedAircraft = 0;
-            m_maxRenderedDistance = CLength(0.0, CLengthUnit::NM()); // real 0
+            this->disableRendering();
         }
         else if (maxRenderedAircraft >= InfiniteAircraft())
         {
@@ -65,8 +69,7 @@ namespace BlackMisc
         else if (distance.isZeroEpsilonConsidered())
         {
             // zero means disabled, we disable max aircraft too
-            this->m_maxRenderedAircraft = 0;
-            this->m_maxRenderedDistance = CLength(0.0, CLengthUnit::NM()); // real 0
+            this->disableRendering();
         }
         else
         {
@@ -76,7 +79,7 @@ namespace BlackMisc
         return true;
     }
 
-    void CInterpolationAndRenderingSetup::disableMaxRenderedDistance()
+    void CInterpolationAndRenderingSetup::clearMaxRenderedDistance()
     {
         this->setMaxRenderedDistance(CLength(0.0, CLengthUnit::nullUnit()));
     }
@@ -86,15 +89,37 @@ namespace BlackMisc
         return m_maxRenderedAircraft < InfiniteAircraft();
     }
 
-    void CInterpolationAndRenderingSetup::deleteAllRenderingRestrictions()
+    void CInterpolationAndRenderingSetup::clearAllRenderingRestrictions()
     {
         this->m_maxRenderedDistance = CLength(0, CLengthUnit::nullUnit());
         this->m_maxRenderedAircraft = InfiniteAircraft();
     }
 
+    void CInterpolationAndRenderingSetup::disableRendering()
+    {
+        this->m_maxRenderedAircraft = 0;
+        this->m_maxRenderedDistance = CLength(0, CLengthUnit::NM()); // zero distance
+    }
+
     bool CInterpolationAndRenderingSetup::isMaxDistanceRestricted() const
     {
         return !m_maxRenderedDistance.isNull();
+    }
+
+    QString CInterpolationAndRenderingSetup::getRenderRestrictionText() const
+    {
+        if (!this->isRenderingRestricted()) { return "none"; }
+        QString rt;
+        if (this->isMaxAircraftRestricted())
+        {
+            rt.append(QString::number(this->getMaxRenderedAircraft())).append(" A/C");
+        }
+        if (this->isMaxDistanceRestricted())
+        {
+            if (!rt.isEmpty()) { rt.append(" ");}
+            rt.append(this->getMaxRenderedDistance().valueRoundedWithUnit(CLengthUnit::NM(), 0));
+        }
+        return rt;
     }
 
     QString CInterpolationAndRenderingSetup::convertToQString(bool i18n) const

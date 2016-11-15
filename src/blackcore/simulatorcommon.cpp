@@ -85,7 +85,7 @@ namespace BlackCore
         if (!remoteAircraft.isEnabled()) { return false; }
 
         // if not restriced, directly change
-        if (!isRenderingRestricted()) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
+        if (!m_interpolationRenderingSetup.isRenderingRestricted()) { this->physicallyAddRemoteAircraft(remoteAircraft); return true; }
 
         // will be added with next snapshot ps_recalculateRenderedAircraft
         return false;
@@ -94,7 +94,7 @@ namespace BlackCore
     bool CSimulatorCommon::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
         // if not restriced, directly change
-        if (!isRenderingRestricted()) { this->physicallyRemoveRemoteAircraft(callsign); return true; }
+        if (!m_interpolationRenderingSetup.isRenderingRestricted()) { this->physicallyRemoveRemoteAircraft(callsign); return true; }
 
         // will be added with next snapshot ps_recalculateRenderedAircraft
         return false;
@@ -227,32 +227,6 @@ namespace BlackCore
         return m_defaultModel;
     }
 
-    int CSimulatorCommon::getMaxRenderedAircraft() const
-    {
-        return m_interpolationRenderingSetup.getMaxRenderedAircraft();
-    }
-
-    void CSimulatorCommon::setMaxRenderedAircraft(int maxRenderedAircraft)
-    {
-        if (!m_interpolationRenderingSetup.setMaxRenderedAircraft(maxRenderedAircraft)) { return; }
-        const bool r = isRenderingRestricted();
-        const bool e = isRenderingEnabled();
-        emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
-    }
-
-    void CSimulatorCommon::setMaxRenderedDistance(const CLength &distance)
-    {
-        if (!m_interpolationRenderingSetup.setMaxRenderedDistance(distance)) { return; }
-        const bool r = isRenderingRestricted();
-        const bool e = isRenderingEnabled();
-        emit renderRestrictionsChanged(r, e, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
-    }
-
-    CLength CSimulatorCommon::getMaxRenderedDistance() const
-    {
-        return (m_interpolationRenderingSetup.getMaxRenderedDistance());
-    }
-
     const CSimulatorPluginInfo &CSimulatorCommon::getSimulatorPluginInfo() const
     {
         return m_simulatorPluginInfo;
@@ -269,25 +243,21 @@ namespace BlackCore
         this->m_remoteAircraftProviderConnections.disconnectAll(); // disconnect signals from provider
     }
 
-    CLength CSimulatorCommon::getRenderedDistanceBoundary() const
-    {
-        return CLength(20.0, CLengthUnit::NM());
-    }
-
-    bool CSimulatorCommon::isMaxAircraftRestricted() const
-    {
-        return m_interpolationRenderingSetup.isMaxAircraftRestricted();
-    }
-
-    bool CSimulatorCommon::isMaxDistanceRestricted() const
-    {
-        return m_interpolationRenderingSetup.isMaxDistanceRestricted();
-    }
-
     void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
     {
-        this->m_interpolationRenderingSetup = setup;
         this->m_interpolator->setInterpolatorSetup(setup);
+        if (this->m_interpolationRenderingSetup == setup) { return; }
+        this->m_interpolationRenderingSetup = setup;
+
+        const bool r = setup.isRenderingRestricted();
+        const bool e = setup.isRenderingEnabled();
+
+        emit renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
+    }
+
+    CInterpolationAndRenderingSetup CSimulatorCommon::getInterpolationAndRenderingSetup() const
+    {
+        return m_interpolationRenderingSetup;
     }
 
     void CSimulatorCommon::highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime)
@@ -300,22 +270,6 @@ namespace BlackCore
             this->m_highlightEndTimeMsEpoch = QDateTime::currentMSecsSinceEpoch() + deltaT;
             this->m_highlightedAircraft.push_back(aircraftToHighlight);
         }
-    }
-
-    bool CSimulatorCommon::isRenderingEnabled() const
-    {
-        return m_interpolationRenderingSetup.isRenderingEnabled();
-    }
-
-    bool CSimulatorCommon::isRenderingRestricted() const
-    {
-        return this->isMaxDistanceRestricted() || this->isMaxAircraftRestricted();
-    }
-
-    void CSimulatorCommon::deleteAllRenderingRestrictions()
-    {
-        m_interpolationRenderingSetup.deleteAllRenderingRestrictions();
-        emit renderRestrictionsChanged(false, true, getMaxRenderedAircraft(), getMaxRenderedDistance(), getRenderedDistanceBoundary());
     }
 
     int CSimulatorCommon::physicallyRemoveMultipleRemoteAircraft(const CCallsignSet &callsigns)

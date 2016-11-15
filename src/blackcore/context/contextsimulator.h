@@ -89,7 +89,7 @@ namespace BlackCore
             void simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo info);
 
             //! Render restrictions have been changed
-            void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+            void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 
             //! Model set ready or changed
             void modelSetChanged();
@@ -161,32 +161,8 @@ namespace BlackCore
             //! Is time synchronization on?
             virtual bool isTimeSynchronized() const = 0;
 
-            //! Max. number of remote aircraft rendered
-            virtual int getMaxRenderedAircraft() const = 0;
-
-            //! Max. rendered distance
-            virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const = 0;
-
-            //! Technical range until aircraft are visible
-            virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const = 0;
-
-            //! Text describing the rendering restrictions
-            virtual QString getRenderRestrictionText() const = 0;
-
-            //! Max. number of remote aircraft rendered and provide optional selection which aircraft those are
-            virtual void setMaxRenderedAircraft(int number) = 0;
-
-            //! Max. distance until we render an aircraft
-            virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) = 0;
-
-            //! Delete all restrictions (if any) -> unlimited number of aircraft
-            virtual void deleteAllRenderingRestrictions() = 0;
-
-            //! Is number of aircraft restricted ormax distance set?
-            virtual bool isRenderingRestricted() const = 0;
-
-            //! Rendering enabled at all
-            virtual bool isRenderingEnabled() const = 0;
+            //! Set interpolation and rendering
+            virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
 
             //! Set interpolation and rendering
             virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) = 0;

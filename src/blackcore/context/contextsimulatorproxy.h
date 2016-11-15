@@ -67,16 +67,8 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual bool isTimeSynchronized() const override;
-            virtual int getMaxRenderedAircraft() const override;
-            virtual void setMaxRenderedAircraft(int number) override;
-            virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
+            virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
             virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override;
-            virtual void deleteAllRenderingRestrictions() override;
-            virtual bool isRenderingRestricted() const override;
-            virtual bool isRenderingEnabled() const override;
-            virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
-            virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
-            virtual QString getRenderRestrictionText() const override;
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;

@@ -71,12 +71,15 @@ namespace BlackMisc
         bool setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
 
         //! Disable
-        void disableMaxRenderedDistance();
+        void clearMaxRenderedDistance();
 
-        //! Rendering enabled
+        //! Rendering enabled (at all)
         bool isRenderingEnabled() const;
 
-        //! Max. distance for rendering
+        //! Rendering enabled, but restricted
+        bool isRenderingRestricted() const;
+
+        //! Max.distance for rendering
         BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const { return m_maxRenderedDistance; }
 
         //! Restricted by distance?
@@ -85,8 +88,14 @@ namespace BlackMisc
         //! Restricted by quantity?
         bool isMaxAircraftRestricted() const;
 
-        //! Disable all render restrictions
-        void deleteAllRenderingRestrictions();
+        //! Remove all render restrictions
+        void clearAllRenderingRestrictions();
+
+        //! Entirely disable rendering
+        void disableRendering();
+
+        //! Text describing the restrictions
+        QString getRenderRestrictionText() const;
 
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;

@@ -309,7 +309,7 @@ namespace BlackCore
 
             //! Render restrictions have been changed, used with analyzer
             //! \sa CAirspaceAnalyzer
-            void ps_simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+            void ps_simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
         };
     } // ns
 } // ns

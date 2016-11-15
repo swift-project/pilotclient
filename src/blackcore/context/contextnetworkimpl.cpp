@@ -432,12 +432,12 @@ namespace BlackCore
             emit this->connectionStatusChanged(from, to);
         }
 
-        void CContextNetwork::ps_simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary)
+        void CContextNetwork::ps_simulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
         {
             // mainly passing changed restrictions from simulator to network
             if (!m_airspace) { return; }
             if (!m_airspace->analyzer()) { return; }
-            m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance, maxRenderedBoundary);
+            m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance);
         }
 
         void CContextNetwork::ps_updateMetars(const BlackMisc::Weather::CMetarList &metars)

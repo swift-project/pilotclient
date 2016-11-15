@@ -212,29 +212,12 @@ namespace BlackCore
             return m_simulatorPlugin.second->isTimeSynchronized();
         }
 
-        int CContextSimulator::getMaxRenderedAircraft() const
+        CInterpolationAndRenderingSetup CContextSimulator::getInterpolationAndRenderingSetup() const
         {
-            if (m_debugEnabled) {CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return 0; }
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetup(); }
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getMaxRenderedAircraft();
-        }
-
-        void CContextSimulator::setMaxRenderedAircraft(int number)
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << number; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return; }
-            Q_ASSERT(m_simulatorPlugin.second);
-            m_simulatorPlugin.second->setMaxRenderedAircraft(number);
-
-        }
-
-        void CContextSimulator::setMaxRenderedDistance(const CLength &distance)
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << distance; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return; }
-            Q_ASSERT(m_simulatorPlugin.second);
-            m_simulatorPlugin.second->setMaxRenderedDistance(distance);
+            return m_simulatorPlugin.second->getInterpolationAndRenderingSetup();
         }
 
         void CContextSimulator::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
@@ -243,71 +226,6 @@ namespace BlackCore
             if (m_simulatorPlugin.first.isUnspecified()) { return; }
             Q_ASSERT(m_simulatorPlugin.second);
             m_simulatorPlugin.second->setInterpolationAndRenderingSetup(setup);
-        }
-
-        QString CContextSimulator::getRenderRestrictionText() const
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return ""; }
-
-            Q_ASSERT(m_simulatorPlugin.second);
-            if (!m_simulatorPlugin.second->isRenderingRestricted()) { return "none"; }
-            QString rt;
-            if (m_simulatorPlugin.second->isMaxAircraftRestricted())
-            {
-                rt.append(QString::number(m_simulatorPlugin.second->getMaxRenderedAircraft())).append(" A/C");
-            }
-            if (m_simulatorPlugin.second->isMaxDistanceRestricted())
-            {
-                if (!rt.isEmpty()) { rt.append(" ");}
-                rt.append(m_simulatorPlugin.second->getMaxRenderedDistance().valueRoundedWithUnit(CLengthUnit::NM(), 0));
-            }
-            return rt;
-        }
-
-        CLength CContextSimulator::getMaxRenderedDistance() const
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return CLength(0, CLengthUnit::nullUnit()); }
-            Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getMaxRenderedDistance();
-        }
-
-        CLength CContextSimulator::getRenderedDistanceBoundary() const
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified())
-            {
-                return CLength(20.0, CLengthUnit::NM());
-            }
-            Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getRenderedDistanceBoundary();
-        }
-
-        void CContextSimulator::deleteAllRenderingRestrictions()
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (!m_simulatorPlugin.first.isUnspecified())
-            {
-                Q_ASSERT(m_simulatorPlugin.second);
-                m_simulatorPlugin.second->deleteAllRenderingRestrictions();
-            }
-        }
-
-        bool CContextSimulator::isRenderingRestricted() const
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return false; }
-            Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->isRenderingRestricted();
-        }
-
-        bool CContextSimulator::isRenderingEnabled() const
-        {
-            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            if (m_simulatorPlugin.first.isUnspecified()) { return false; }
-            Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->isRenderingEnabled();
         }
 
         CTime CContextSimulator::getTimeSynchronizationOffset() const

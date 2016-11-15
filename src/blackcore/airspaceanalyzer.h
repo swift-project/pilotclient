@@ -70,7 +70,7 @@ namespace BlackCore
         BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
 
         //! Render restrictions in simulator
-        void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance, const BlackMisc::PhysicalQuantities::CLength &maxRenderedBoundary);
+        void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const BlackMisc::PhysicalQuantities::CLength &maxRenderedDistance);
 
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
@@ -134,7 +134,6 @@ namespace BlackCore
         bool m_simulatorRenderingEnabled = true;
         int m_simulatorMaxRenderedAircraft = -1;
         BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() };
-        BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedBoundary { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() };
         mutable QReadWriteLock m_lockSnapshot;      //!< lock snapshot
         mutable QReadWriteLock m_lockRestrictions;  //!< lock simulator restrictions
     };

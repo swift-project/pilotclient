@@ -69,21 +69,12 @@ namespace BlackCore
         //! \name ISimulator implementations
         //! @{
         virtual BlackMisc::Simulation::CAircraftModel getDefaultModel() const override;
-        virtual int getMaxRenderedAircraft() const override;
-        virtual void setMaxRenderedAircraft(int maxRenderedAircraft) override;
-        virtual void setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance) override;
-        virtual BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const override;
-        virtual BlackMisc::PhysicalQuantities::CLength getRenderedDistanceBoundary() const override;
-        virtual bool isMaxAircraftRestricted() const override;
-        virtual bool isMaxDistanceRestricted() const override;
         virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override;
+        virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
-        virtual bool isRenderingEnabled() const override;
-        virtual bool isRenderingRestricted() const override;
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
         virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
         virtual void unload() override;
-        virtual void deleteAllRenderingRestrictions() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         //! @}
 

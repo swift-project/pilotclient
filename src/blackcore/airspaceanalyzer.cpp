@@ -74,14 +74,13 @@ namespace BlackCore
         return m_latestAircraftSnapshot;
     }
 
-    void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance, const CLength &maxRenderedBoundary)
+    void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
     {
         QWriteLocker l(&m_lockRestrictions);
         this->m_simulatorRenderedAircraftRestricted = restricted;
         this->m_simulatorRenderingEnabled = enabled;
         this->m_simulatorMaxRenderedAircraft = maxAircraft;
         this->m_simulatorMaxRenderedDistance = maxRenderedDistance;
-        this->m_simulatorMaxRenderedBoundary = maxRenderedBoundary;
     }
 
     void CAirspaceAnalyzer::gracefulShutdown()
@@ -190,14 +189,13 @@ namespace BlackCore
 
         bool restricted, enabled;
         int maxAircraft;
-        CLength maxRenderedDistance, maxRenderedBoundary;
+        CLength maxRenderedDistance;
         {
             QReadLocker l(&m_lockRestrictions);
             restricted = this->m_simulatorRenderedAircraftRestricted;
             enabled = this->m_simulatorRenderingEnabled,
             maxAircraft = this->m_simulatorMaxRenderedAircraft;
             maxRenderedDistance = this->m_simulatorMaxRenderedDistance;
-            maxRenderedBoundary = this->m_simulatorMaxRenderedBoundary;
         }
 
         // remark for simulation snapshot is used when there are restrictions
@@ -207,7 +205,7 @@ namespace BlackCore
         CAirspaceAircraftSnapshot snapshot(
             aircraftInRange,
             restricted, enabled,
-            maxAircraft, maxRenderedDistance, maxRenderedBoundary
+            maxAircraft, maxRenderedDistance
         );
 
         // lock block
