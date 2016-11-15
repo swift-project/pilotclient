@@ -104,7 +104,11 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::disconnectFrom()
         {
             if (!m_simConnected) { return true; }
-            if (m_simconnectTimerId) { killTimer(m_simconnectTimerId); }
+            if (m_simconnectTimerId >= 0)
+            {
+                killTimer(m_simconnectTimerId);
+                m_simconnectTimerId = -1;
+            }
             if (m_hSimConnect)
             {
                 SimConnect_Close(m_hSimConnect);
@@ -1038,7 +1042,11 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::reset()
         {
-            if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
+            if (m_simconnectTimerId >= 0)
+            {
+                killTimer(m_simconnectTimerId);
+                m_simconnectTimerId = -1;
+            }
             m_simConnected = false;
             m_simSimulating = false;
             m_syncDeferredCounter =  0;
