@@ -63,6 +63,9 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Log categories
+        static const BlackMisc::CLogCategoryList &getLogCategories();
+
         //! Destructor
         virtual ~CSimulatorCommon();
 
@@ -79,7 +82,6 @@ namespace BlackCore
         //! @}
 
     protected slots:
-
         //! \name Connected with remote aircraft provider signals
         //! @{
         //! Slow timer used to highlight aircraft, can be used for other things too

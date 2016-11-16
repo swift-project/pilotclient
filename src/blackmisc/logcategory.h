@@ -124,6 +124,20 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Driver
+        static const CLogCategory &driver()
+        {
+            static const CLogCategory cat { "swift.driver" };
+            return cat;
+        }
+
+        //! Plugin
+        static const CLogCategory &plugin()
+        {
+            static const CLogCategory cat { "swift.plugin" };
+            return cat;
+        }
+
         //! Background task
         static const CLogCategory &worker()
         {
@@ -170,10 +184,12 @@ namespace BlackMisc
                 context(),
                 contextSlot(),
                 download(),
+                driver(),
                 guiComponent(),
                 mapping(),
                 matching(),
                 network(),
+                plugin(),
                 swiftDbWebservice(),
                 services(),
                 settings(),

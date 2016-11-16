@@ -76,6 +76,12 @@ namespace BlackCore
         CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
     }
 
+    const CLogCategoryList &CSimulatorCommon::getLogCategories()
+    {
+        static const CLogCategoryList cats( { CLogCategory::driver(), CLogCategory::plugin() });
+        return cats;
+    }
+
     CSimulatorCommon::~CSimulatorCommon() { }
 
     bool CSimulatorCommon::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
