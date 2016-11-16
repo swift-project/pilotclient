@@ -14,6 +14,9 @@
 
 namespace BlackCore
 {
+    CTokenBucket::CTokenBucket(int capacity, BlackMisc::PhysicalQuantities::CTime interval, int numTokensToRefill)
+        : m_capacity(capacity), m_interval(interval), m_numTokensToRefill(numTokensToRefill) {}
+
     bool CTokenBucket::tryConsume(int numTokens)
     {
         Q_ASSERT(numTokens > 0 && numTokens < m_capacity);
@@ -33,15 +36,24 @@ namespace BlackCore
         return false;
     }
 
-    int CTokenBucket::getTokens()
+    void CTokenBucket::setNumberOfTokensToRefill(int noTokens)
     {
-        auto now = QDateTime::currentDateTime();
-        auto deltaSeconds = m_lastReplenishmentTime.secsTo(now);
-        int numberOfTokens = static_cast<int>( m_numTokensToRefill * deltaSeconds / m_interval.value(BlackMisc::PhysicalQuantities::CTimeUnit::s()));
-
-        // Update the time only when replenishment actually took place. We will end up in a infinite loop otherwise.
-        if (numberOfTokens > 0 ) m_lastReplenishmentTime = now;
-        return numberOfTokens;
+        m_numTokensToRefill = noTokens;
     }
 
+    void CTokenBucket::setCapacity(int capacity)
+    {
+        m_capacity = capacity;
+    }
+
+    int CTokenBucket::getTokens()
+    {
+        const auto now = QDateTime::currentDateTime();
+        const auto deltaSeconds = m_lastReplenishmentTime.secsTo(now);
+        const int numberOfTokens = static_cast<int>(m_numTokensToRefill * deltaSeconds / m_interval.value(BlackMisc::PhysicalQuantities::CTimeUnit::s()));
+
+        // Update the time only when replenishment actually took place. We will end up in a infinite loop otherwise.
+        if (numberOfTokens > 0) { m_lastReplenishmentTime = now; }
+        return numberOfTokens;
+    }
 } // namespace
