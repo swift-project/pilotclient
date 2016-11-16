@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_MAPPINGCOMPONENT_H
 
 #include "blackcore/network.h"
+#include "blackcore/tokenbucket.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
@@ -116,17 +117,17 @@ namespace BlackGui
             //! Highlight in simulator
             void ps_onMenuHighlightInSimulator(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
-            //! Update with next cycle
-            void ps_markRenderedAircraftForUpdate(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
-            //! Update with next cycle
-            void ps_markRenderedViewForUpdate();
-
             //! Adding a remote aircraft failed
             void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CStatusMessage &message);
 
-            //! Updated by timer
-            void ps_backgroundUpdate();
+            //! Timer update
+            void ps_timerUpdate();
+
+            //! Token bucket based update
+            void ps_tokenBucketUpdate();
+
+            //! Token bucket based update
+            void ps_tokenBucketUpdateAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
             //! Settings have been changed
             void ps_settingsChanged();
@@ -135,6 +136,9 @@ namespace BlackGui
             void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
         private:
+            //! Token bucket based update
+            void tokenBucketUpdate(bool markForUpdate);
+
             //! Identifier for data send from this component
             BlackMisc::CIdentifier mappingIdentifier();
 
@@ -146,10 +150,11 @@ namespace BlackGui
 
             QScopedPointer<Ui::CMappingComponent> ui;
             BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::ps_settingsChanged }; //!< settings changed
-            bool                                  m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
-            QTimer                                m_updateTimer { this };
-            BlackGui::Views::CCheckBoxDelegate   *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
-            BlackMisc::CIdentifier                m_identifier;
+            bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
+            QTimer m_updateTimer { this };
+            BlackCore::CTokenBucket m_bucket { 3, BlackMisc::PhysicalQuantities::CTime(5.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()), 1};
+            BlackGui::Views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
+            BlackMisc::CIdentifier m_identifier;
         };
     } // namespace
 } // namespace
