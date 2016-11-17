@@ -42,7 +42,6 @@ namespace BlackSimPlugin
             }
 
             SafeRelease(m_deviceAddress);
-
             CoUninitialize();
         }
 
@@ -50,30 +49,27 @@ namespace BlackSimPlugin
         {
             switch (messageId)
             {
-            case DPN_MSGID_CREATE_PLAYER:
+                case DPN_MSGID_CREATE_PLAYER:
                 {
                     DPNMSG_CREATE_PLAYER *pCreatePlayerMsg = static_cast<DPNMSG_CREATE_PLAYER *>(msgBuffer);
-
-                    HRESULT hr;
 
                     // Get the peer info and extract its name
                     DWORD dwSize = 0;
                     DPN_PLAYER_INFO *pdpPlayerInfo = nullptr;
-                    hr = DPNERR_CONNECTING;
+                    HRESULT hr = DPNERR_CONNECTING;
 
                     // GetPeerInfo might return DPNERR_CONNECTING when connecting,
                     // so just keep calling it if it does
                     while (hr == DPNERR_CONNECTING)
+                    {
                         hr = m_directPlayPeer->GetPeerInfo(pCreatePlayerMsg->dpnidPlayer, pdpPlayerInfo, &dwSize, 0);
+                    }
 
                     if (hr == DPNERR_BUFFERTOOSMALL)
                     {
                         QScopedArrayPointer<unsigned char> memPtr(new unsigned char[dwSize]);
                         pdpPlayerInfo = reinterpret_cast<DPN_PLAYER_INFO *>(memPtr.data());
-                        if (pdpPlayerInfo == nullptr)
-                        {
-                            break;
-                        }
+                        if (pdpPlayerInfo == nullptr) { break; }
 
                         ZeroMemory(pdpPlayerInfo, dwSize);
                         pdpPlayerInfo->dwSize = sizeof(DPN_PLAYER_INFO);
@@ -82,23 +78,20 @@ namespace BlackSimPlugin
                         if (SUCCEEDED(hr))
                         {
                             if (pdpPlayerInfo->dwPlayerFlags & DPNPLAYER_LOCAL)
+                            {
                                 m_playerLocal = pCreatePlayerMsg->dpnidPlayer;
+                            }
                             else
                             {
                                 // The first connecting player should be the user
-                                if (m_playerUser == 0)
-                                {
-                                    m_playerUser = pCreatePlayerMsg->dpnidPlayer;
-
-                                }
+                                if (m_playerUser == 0) { m_playerUser = pCreatePlayerMsg->dpnidPlayer; }
                             }
                         }
                     }
-
                     break;
                 }
 
-            case DPN_MSGID_RECEIVE:
+                case DPN_MSGID_RECEIVE:
                 {
                     PDPNMSG_RECEIVE pReceiveMsg = static_cast<PDPNMSG_RECEIVE>(msgBuffer);
 
@@ -112,7 +105,7 @@ namespace BlackSimPlugin
                     break;
                 }
 
-            case DPN_MSGID_ENUM_HOSTS_RESPONSE:
+                case DPN_MSGID_ENUM_HOSTS_RESPONSE:
                 {
                     PDPNMSG_ENUM_HOSTS_RESPONSE enumHostsResponseMsg = static_cast<PDPNMSG_ENUM_HOSTS_RESPONSE>(msgBuffer);
                     const DPN_APPLICATION_DESC *applicationDescription = enumHostsResponseMsg->pApplicationDescription;
@@ -157,7 +150,6 @@ namespace BlackSimPlugin
                     }
                     break;
                 }
-
             }
 
             // Directx9 SDK: Unless otherwise noted, this function should return S_OK.
@@ -227,10 +219,10 @@ namespace BlackSimPlugin
             }
 
             // There are no items returned so the requested SP is not available
-            if (dwItems == 0) hr = E_FAIL;
+            if (dwItems == 0) { hr = E_FAIL; }
 
-            if (SUCCEEDED(hr)) return true;
-            else return false;
+            if (SUCCEEDED(hr)) { return true; }
+            else { return false; }
         }
 
         HRESULT CDirectPlayPeer::createDeviceAddress()
@@ -270,7 +262,9 @@ namespace BlackSimPlugin
 
             // Set the SP for our Device Address
             if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
+            {
                 return logDirectPlayError(hr);
+            }
 
             return S_OK;
         }
@@ -280,7 +274,7 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
             DPN_BUFFER_DESC dpBufferDesc;
 
-            if ((dpBufferDesc.dwBufferSize = message.size()) == 0) return S_FALSE;
+            if ((dpBufferDesc.dwBufferSize = message.size()) == 0) { return S_FALSE; }
 
             dpBufferDesc.pBufferData = (BYTE *)message.data();
 
