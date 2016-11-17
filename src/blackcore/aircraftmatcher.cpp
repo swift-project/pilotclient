@@ -378,7 +378,7 @@ namespace BlackCore
         }
         if (modelsCleaned.isEmpty())
         {
-            CLogMessage(this).error("No models for matching, that will not work");
+            CLogMessage(this).error("No models for matching, swift without a model set will not work");
         }
         else
         {
