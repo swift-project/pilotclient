@@ -56,7 +56,7 @@ namespace BlackSimPlugin
                     const DWORD index = exception->dwIndex;
                     const DWORD data = cbData;
                     QString ex;
-                    ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d", exceptionId, sendId, index, data);
+                    ex.sprintf("Exception=%lu  SendID=%lu  Index=%lu  cbData=%lu", exceptionId, sendId, index, data);
                     switch (exceptionId)
                     {
                     case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE:
