@@ -155,7 +155,7 @@ namespace BlackSimPlugin
                 // initial position if interpolator has data, otherwise do nothing
                 setInitialAircraftSituation(addedAircraft); // set interpolated data/parts if available
 
-                const int requestId = m_requestId++;
+                const DWORD requestId = m_requestId++;
                 SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
                 const QString modelString(addedAircraft.getModelString());
 
@@ -504,23 +504,23 @@ namespace BlackSimPlugin
 
             Q_ASSERT_X(simObject.isPendingAdded(), Q_FUNC_INFO, "already confirmed");
             simObject.setConfirmedAdded(true);
-            DWORD objectID = static_cast<DWORD>(simObject.getObjectId());
+            const DWORD objectId = simObject.getObjectId();
 
             if (m_interpolationRenderingSetup.showSimulatorDebugMessages())
             {
-                CLogMessage(this).debug() << "Adding AI" << callsign.toQString() << "confirmed" << "id" << static_cast<int>(objectID) << "model" << simObject.getAircraftModelString();
+                CLogMessage(this).debug() << "Adding AI" << callsign.toQString() << "confirmed" << "id" << objectId << "model" << simObject.getAircraftModelString();
             }
 
             // P3D also has SimConnect_AIReleaseControlEx;
-            const int requestId = m_requestId++;
-            HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectID, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
+            DWORD requestId = m_requestId++;
+            HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
             if (hr == S_OK)
             {
-                SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeLat, 1,
+                SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLat, 1,
                                                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeAlt, 1,
+                SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1,
                                                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-                SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeAtt, 1,
+                SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1,
                                                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             }
             else
@@ -589,11 +589,11 @@ namespace BlackSimPlugin
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
                     this->m_outOfRealityBubble.push_back(simObject.getAircraft());
-                    CLogMessage(this).info("Aircraft '%1' '%2' '%3' out of reality bubble") << callsign.toQString() << simObject.getAircraftModelString() << static_cast<int>(objectID);
+                    CLogMessage(this).info("Aircraft '%1' '%2' '%3' out of reality bubble") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
                 else
                 {
-                    CLogMessage(this).warning("Removed %1 from simulator, but was not initiated by us: %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << static_cast<int>(objectID);
+                    CLogMessage(this).warning("Removed %1 from simulator, but was not initiated by us: %1 '%2' object id %3") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
             }
 
@@ -619,7 +619,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::setSimConnectObjectId(DWORD requestID, DWORD objectID)
         {
-            return this->m_simConnectObjects.setSimConnectObjectId(static_cast<int>(requestID), static_cast<int>(objectID));
+            return this->m_simConnectObjects.setSimConnectObjectIdForRequestId(requestID, objectID);
         }
 
         void CSimulatorFsx::timerEvent(QTimerEvent *event)

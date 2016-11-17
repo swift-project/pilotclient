@@ -18,19 +18,9 @@ namespace BlackSimPlugin
     {
         CSimConnectObject::CSimConnectObject() { }
 
-        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, int requestId) :
-            m_aircraft(aircraft), m_requestId(requestId)
+        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId) :
+            m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true)
         { }
-
-        bool CSimConnectObject::hasValidRequestId() const
-        {
-            return this->m_requestId >= 0;
-        }
-
-        bool CSimConnectObject::hasValidobjectId() const
-        {
-            return this->m_objectId >= 0;
-        }
 
         bool CSimConnectObject::isPendingAdded() const
         {
@@ -57,14 +47,13 @@ namespace BlackSimPlugin
 
         bool CSimConnectObject::hasValidRequestAndObjectId() const
         {
-            return this->hasValidRequestId() && this->hasValidobjectId();
+            return this->hasValidRequestId() && this->hasValidObjectId();
         }
 
-        bool CSimConnectObjects::setSimConnectObjectId(int requestID, int objectId)
+        bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId)
         {
             // First check, if this request id belongs to us
-            const int requestIntId = static_cast<int>(requestID);
-            auto it = std::find_if(this->begin(), this->end(), [requestIntId](const CSimConnectObject & obj) { return obj.getRequestId() == requestIntId; });
+            auto it = std::find_if(this->begin(), this->end(), [requestId](const CSimConnectObject & obj) { return obj.getRequestId() == requestId; });
             if (it == this->end()) { return false; }
 
             // belongs to us
@@ -72,12 +61,12 @@ namespace BlackSimPlugin
             return true;
         }
 
-        CCallsign CSimConnectObjects::getCallsignForObjectId(int objectId) const
+        CCallsign CSimConnectObjects::getCallsignForObjectId(DWORD objectId) const
         {
             return getSimObjectForObjectId(objectId).getCallsign();
         }
 
-        CSimConnectObject CSimConnectObjects::getSimObjectForObjectId(int objectId) const
+        CSimConnectObject CSimConnectObjects::getSimObjectForObjectId(DWORD objectId) const
         {
             for (const CSimConnectObject &simObject : this->values())
             {
@@ -86,7 +75,7 @@ namespace BlackSimPlugin
             return CSimConnectObject();
         }
 
-        bool CSimConnectObjects::isKnownSimObjectId(int objectId) const
+        bool CSimConnectObjects::isKnownSimObjectId(DWORD objectId) const
         {
             const CSimConnectObject simObject(getSimObjectForObjectId(objectId));
             return simObject.hasValidRequestAndObjectId() && objectId == simObject.getObjectId();

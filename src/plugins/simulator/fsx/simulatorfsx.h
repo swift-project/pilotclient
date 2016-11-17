@@ -124,7 +124,7 @@ namespace BlackSimPlugin
             const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
 
         protected:
-            //! \name Interface overrides
+            //! \name Interface implementations
             //! @{
             virtual bool isConnected() const override;
             virtual bool isSimulating() const override;
@@ -134,7 +134,7 @@ namespace BlackSimPlugin
             //! @{
             virtual void reset() override;
             virtual void clearAllAircraft() override;
-            virtual void initInternalsObject();
+            virtual void initInternalsObject() override;
             //! @}
 
             //! Timer event (our SimConnect event loop), runs ps_dispatch
@@ -216,9 +216,9 @@ namespace BlackSimPlugin
             int  m_skipCockpitUpdateCycles = 0;     //!< Skip some update cycles to allow changes in simulator cockpit to be set
             int  m_interpolationRequest  = 0;       //!< current interpolation request
             int  m_interpolationsSkipped = 0;       //!< number of skipped interpolation request
-            int  m_requestId = 1;                   //!< request id
             int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa ps_dispatch
             int  m_receiveExceptionCount = 0;       //!< exceptions
+            DWORD  m_requestId = 1;                 //!< request id
             HANDLE m_hSimConnect = nullptr;         //!< Handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
