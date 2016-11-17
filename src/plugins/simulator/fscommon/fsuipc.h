@@ -26,7 +26,6 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-
             //! Constructor
             CFsuipc();
 
@@ -51,6 +50,9 @@ namespace BlackSimPlugin
             //! Write weather grid to simulator
             bool write(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
 
+            //! Get the version
+            QString getVersion() const { return m_fsuipcVersion; }
+
             //! Read data from FSUIPC
             //! \param aircraft       object to be updated
             //! \param cockpit        update cockpit data
@@ -59,9 +61,6 @@ namespace BlackSimPlugin
             //! \return read
             //!
             bool read(BlackMisc::Simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts);
-
-            //! Find out whether we can connect to FSUIPC or not
-            static bool canConnect();
 
             //! Error messages
             static const QStringList &errorMessages()
@@ -129,7 +128,6 @@ namespace BlackSimPlugin
 
             //! Integer representing fractional
             static double intToFractional(double fractional);
-
         };
     }
 }
