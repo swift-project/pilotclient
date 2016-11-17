@@ -48,9 +48,13 @@ namespace BlackSimPlugin
 
             dLow = dLow / 65536.0;
             if (dHigh > 0)
+            {
                 dHigh = dHigh + dLow;
+            }
             else
+            {
                 dHigh = dHigh - dLow;
+            }
 
             CCoordinateGeodetic position;
             position.setLatitude(CLatitude(dHigh * 90.0 / 10001750.0, CAngleUnit::deg()));
@@ -60,9 +64,13 @@ namespace BlackSimPlugin
 
             dLow = dLow / 65536.0;
             if (dHigh > 0)
+            {
                 dHigh = dHigh + dLow;
+            }
             else
+            {
                 dHigh = dHigh - dLow;
+            }
 
             position.setLongitude(CLongitude(dHigh * 360.0 / (65536.0 * 65536.0), CAngleUnit::deg()));
 
@@ -133,6 +141,7 @@ namespace BlackSimPlugin
                 m_fsuipc->connect(); // connect FSUIPC too
             }
             reloadWeatherSettings();
+            initInternalsObject();
             m_dispatchTimerId = startTimer(50);
             return true;
         }

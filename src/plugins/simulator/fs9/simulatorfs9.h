@@ -51,48 +51,29 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CSimulatorFs9() = default;
 
-            //! \copydoc BlackCore::ISimulator::connectTo()
+            //! \name Interface implementations
+            //! \@{
             virtual bool connectTo() override;
-
-            //! \copydoc BlackCore::ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyAddRemoteAircraft()
             virtual bool physicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &newRemoteAircraft) override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRemoveRemoteAircraft()
             virtual bool physicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRemoveAllRemoteAircraft
             virtual int physicallyRemoveAllRemoteAircraft() override;
-
-            //! \copydoc BlackCore::ISimulator::physicallyRenderedAircraft
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
-
-            //! \copydoc BlackCore::ISimulator::isPhysicallyRenderedAircraft
             virtual bool isPhysicallyRenderedAircraft(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit()
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc BlackCore::ISimulator::displayStatusMessage()
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
-
-            //! \copydoc BlackCore::ISimulator::displayTextMessage()
             virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
+            //! \@}
 
         protected:
-            //! \copydoc BlackCore::ISimulator::isConnected()
+            //! \name Interface implementations
+            //! \@{
             virtual bool isConnected() const override;
-
-            //! \copydoc BlackCore::ISimulator::isSimulating
             virtual bool isSimulating() const override { return isConnected(); }
-
-            //! Timer event
             virtual void timerEvent(QTimerEvent *event) override;
+            //! \@}
 
         private slots:
-
             //! Dispatch SimConnect messages
             void ps_dispatch();
 
@@ -100,10 +81,10 @@ namespace BlackSimPlugin
             void ps_processFs9Message(const QByteArray &message);
 
         private:
-
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft);
 
+            //! Disconnect all clients
             void disconnectAllClients();
 
             //! Inject weather grid to simulator
