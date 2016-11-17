@@ -48,8 +48,6 @@ namespace BlackSimPlugin
 
         HRESULT CDirectPlayPeer::directPlayMessageHandler(DWORD messageId, void *msgBuffer)
         {
-            HRESULT hr = S_OK;
-
             switch (messageId)
             {
             case DPN_MSGID_CREATE_PLAYER:
@@ -162,7 +160,9 @@ namespace BlackSimPlugin
 
             }
 
-            return hr;
+            // Directx9 SDK: Unless otherwise noted, this function should return S_OK.
+            // http://doc.51windows.net/Directx9_SDK/play/ref/callbacks/pfndpnmessagehandler.htm
+            return S_OK;
         }
 
         HRESULT CDirectPlayPeer::initDirectPlay()

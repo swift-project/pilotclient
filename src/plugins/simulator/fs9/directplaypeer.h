@@ -28,6 +28,8 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         //! DirectPlay peer implementation
+        //! More information can be found in the DirectX9 SDK documentation
+        //! http://doc.51windows.net/Directx9_SDK/?url=/Directx9_SDK/play/dplay.htm
         class CDirectPlayPeer : public BlackMisc::CContinuousWorker
         {
             Q_OBJECT
