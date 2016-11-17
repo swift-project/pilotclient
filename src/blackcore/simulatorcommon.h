@@ -137,12 +137,12 @@ namespace BlackCore
 
         BlackMisc::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        BlackMisc::Simulation::CSimulatorInternals m_simulatorSetup; //!< setup object
-        BlackMisc::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< debug messages, rendering etc.
         BlackMisc::Simulation::CAircraftModel m_defaultModel;    //!< default model
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;             //!< statistics update time
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;               //!< statistics update time
         int    m_statsUpdateAircraftCountMs = 0;                 //!< statistics update time
+        BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals;          //!< setup object
+        BlackMisc::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< debug messages, rendering etc.
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model

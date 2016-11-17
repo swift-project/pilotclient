@@ -9,6 +9,7 @@
 
 #include "simulatorfscommon.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/stringutils.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
@@ -34,6 +35,21 @@ namespace BlackSimPlugin
         { }
 
         CSimulatorFsCommon::~CSimulatorFsCommon() { }
+
+        void CSimulatorFsCommon::initInternalsObject()
+        {
+            CSimulatorInternals s;
+            s.setSimulatorName(this->m_simulatorName);
+            s.setSimulatorVersion(this->m_simulatorVersion);
+            s.setValue("fscommon/fsuipc", boolToOnOff(m_useFsuipc));
+            if (m_fsuipc)
+            {
+                const QString v(m_fsuipc->getVersion());
+                if (!v.isEmpty()) { s.setValue("fscommon/fsuipcversion", v); }
+                s.setValue("fscommon/fsuipcconnect", boolToYesNo(m_fsuipc->isConnected()));
+            }
+            this->m_simulatorInternals = s;
+        }
 
         bool CSimulatorFsCommon::disconnectFrom()
         {

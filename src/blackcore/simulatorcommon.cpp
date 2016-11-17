@@ -240,7 +240,7 @@ namespace BlackCore
 
     const CSimulatorInternals &CSimulatorCommon::getSimulatorInternals() const
     {
-        return m_simulatorSetup;
+        return m_simulatorInternals;
     }
 
     void CSimulatorCommon::unload()
