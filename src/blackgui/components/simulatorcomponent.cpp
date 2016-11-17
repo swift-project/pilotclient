@@ -45,25 +45,26 @@ namespace BlackGui
             ui->setupUi(this);
             ui->tvp_LiveData->setIconMode(true);
             ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
-            this->addOrUpdateByName("info", "no data yet", CIcons::StandardIconWarning16);
+            this->addOrUpdateLiveDataByName("info", "no data yet", CIcons::StandardIconWarning16);
 
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CSimulatorComponent::ps_onSimulatorStatusChanged);
             connect(&this->m_updateTimer, &QTimer::timeout, this, &CSimulatorComponent::update);
+            connect(ui->pb_RefreshInternals, &QPushButton::pressed, this, &CSimulatorComponent::ps_refreshInternals);
             this->ps_onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
         }
 
         CSimulatorComponent::~CSimulatorComponent()
         { }
 
-        void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, const CIcon &icon)
+        void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, const CIcon &icon)
         {
             bool resize = this->currentWidget() == ui->tb_LiveData; // simulator live data selected?
             ui->tvp_LiveData->addOrUpdateByName(name, value, icon, resize, false);
         }
 
-        void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, CIcons::IconIndex iconIndex)
+        void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, CIcons::IconIndex iconIndex)
         {
-            this->addOrUpdateByName(name, value, CIconList::iconByIndex(iconIndex));
+            this->addOrUpdateLiveDataByName(name, value, CIconList::iconByIndex(iconIndex));
         }
 
         int CSimulatorComponent::rowCount() const
@@ -84,17 +85,17 @@ namespace BlackGui
             int simualtorStatus = sGui->getIContextSimulator()->getSimulatorStatus();
             if (simualtorStatus == 0)
             {
-                addOrUpdateByName("info", tr("No simulator available"), CIcons::StandardIconWarning16);
+                addOrUpdateLiveDataByName("info", tr("No simulator available"), CIcons::StandardIconWarning16);
                 return;
             }
 
             if (!(simualtorStatus & ISimulator::Simulating))
             {
-                this->addOrUpdateByName("info",
-                                        tr("Simulator (%1) not yet running").arg(
-                                            sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()
-                                        ),
-                                        CIcons::StandardIconWarning16);
+                this->addOrUpdateLiveDataByName("info",
+                                                tr("Simulator (%1) not yet running").arg(
+                                                    sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator()
+                                                ),
+                                                CIcons::StandardIconWarning16);
                 return;
             }
 
@@ -109,19 +110,19 @@ namespace BlackGui
             CComSystem c1 = ownAircraft.getCom1System();
             CComSystem c2 = ownAircraft.getCom2System();
 
-            this->addOrUpdateByName("latitude", s.latitude().toFormattedQString(), s.latitude().toIcon());
-            this->addOrUpdateByName("longitude", s.longitude().toFormattedQString(), s.longitude().toIcon());
-            this->addOrUpdateByName("altitude", s.getAltitude().toFormattedQString(), s.getAltitude().toIcon());
-            this->addOrUpdateByName("pitch", s.getPitch().toFormattedQString(), CIcons::AviationAttitudeIndicator);
-            this->addOrUpdateByName("bank", s.getBank().toFormattedQString(), CIcons::AviationAttitudeIndicator);
-            this->addOrUpdateByName("heading", s.getHeading().toFormattedQString(), s.getHeading().toIcon());
-            this->addOrUpdateByName("ground speed", s.getGroundSpeed().toFormattedQString(), s.getGroundSpeed().toIcon());
+            this->addOrUpdateLiveDataByName("latitude", s.latitude().toFormattedQString(), s.latitude().toIcon());
+            this->addOrUpdateLiveDataByName("longitude", s.longitude().toFormattedQString(), s.longitude().toIcon());
+            this->addOrUpdateLiveDataByName("altitude", s.getAltitude().toFormattedQString(), s.getAltitude().toIcon());
+            this->addOrUpdateLiveDataByName("pitch", s.getPitch().toFormattedQString(), CIcons::AviationAttitudeIndicator);
+            this->addOrUpdateLiveDataByName("bank", s.getBank().toFormattedQString(), CIcons::AviationAttitudeIndicator);
+            this->addOrUpdateLiveDataByName("heading", s.getHeading().toFormattedQString(), s.getHeading().toIcon());
+            this->addOrUpdateLiveDataByName("ground speed", s.getGroundSpeed().toFormattedQString(), s.getGroundSpeed().toIcon());
 
-            this->addOrUpdateByName("COM1 active", c1.getFrequencyActive().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateByName("COM2 active", c2.getFrequencyActive().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateByName("COM1 standby", c1.getFrequencyStandby().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateByName("COM2 standby", c2.getFrequencyStandby().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateByName("Transponder", ownAircraft.getTransponderCodeFormatted(), CIcons::StandardIconRadio16);
+            this->addOrUpdateLiveDataByName("COM1 active", c1.getFrequencyActive().toFormattedQString(), CIcons::StandardIconRadio16);
+            this->addOrUpdateLiveDataByName("COM2 active", c2.getFrequencyActive().toFormattedQString(), CIcons::StandardIconRadio16);
+            this->addOrUpdateLiveDataByName("COM1 standby", c1.getFrequencyStandby().toFormattedQString(), CIcons::StandardIconRadio16);
+            this->addOrUpdateLiveDataByName("COM2 standby", c2.getFrequencyStandby().toFormattedQString(), CIcons::StandardIconRadio16);
+            this->addOrUpdateLiveDataByName("Transponder", ownAircraft.getTransponderCodeFormatted(), CIcons::StandardIconRadio16);
         }
 
         void CSimulatorComponent::ps_onSimulatorStatusChanged(int status)
@@ -130,6 +131,7 @@ namespace BlackGui
             {
                 const int intervalMs = getUpdateIntervalMs();
                 this->m_updateTimer.start(intervalMs);
+                this->ps_refreshInternals();
             }
             else
             {
@@ -139,10 +141,31 @@ namespace BlackGui
             }
         }
 
+        void CSimulatorComponent::ps_refreshInternals()
+        {
+            if (!sGui->getIContextSimulator()) { return; }
+            const CSimulatorInternals internals = sGui->getIContextSimulator()->getSimulatorInternals();
+            const QStringList names(internals.getSortedNames());
+            if (names.isEmpty())
+            {
+                ui->tvp_Internals->clear();
+                return;
+            }
+
+            static const CIcon emptyIcon;
+            const bool resize = true;
+            const bool skipEqualValues = true;
+            for (const QString &name : names)
+            {
+                ui->tvp_Internals->addOrUpdateByName(name, internals.getVariantValue(name), emptyIcon, resize, skipEqualValues);
+            }
+            ui->tvp_Internals->fullResizeToContents();
+        }
+
         int CSimulatorComponent::getUpdateIntervalMs() const
         {
             // much slower updates via DBus
-            return sGui->getIContextSimulator()->isUsingImplementingObject() ? 500 : 5000;
+            return sGui->getIContextSimulator()->isUsingImplementingObject() ? 1000 : 5000;
         }
     }
 } // namespace

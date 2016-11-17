@@ -45,10 +45,41 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="tb_Information">
+  <widget class="QWidget" name="tb_Internals">
    <attribute name="title">
     <string>Information</string>
    </attribute>
+   <layout class="QVBoxLayout" name="vl_Internals">
+    <property name="spacing">
+     <number>3</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Views::CNameVariantPairView" name="tvp_Internals">
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pb_RefreshInternals">
+      <property name="text">
+       <string>refresh</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <customwidgets>

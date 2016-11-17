@@ -44,13 +44,7 @@ namespace BlackGui
             explicit CSimulatorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSimulatorComponent();
-
-            //! Simple add or update name / value pair
-            void addOrUpdateByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
-
-            //! Simple add or update name / value pair
-            void addOrUpdateByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
+            virtual ~CSimulatorComponent();
 
             //! Number of entries
             int rowCount() const;
@@ -66,14 +60,23 @@ namespace BlackGui
             //! \copydoc ISimulator::simulatorStatusChanged
             void ps_onSimulatorStatusChanged(int status);
 
+            //! Refresh the internals
+            void ps_refreshInternals();
+
         private:
             //! Update interval
             int getUpdateIntervalMs() const;
 
+            //! Simple add or update name / value pair
+            void addOrUpdateLiveDataByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
+
+            //! Simple add or update name / value pair
+            void addOrUpdateLiveDataByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
+
             QScopedPointer<Ui::CSimulatorComponent> ui;
             QTimer m_updateTimer;
         };
-    }
-}
+    } // ns
+} // ns
 
 #endif // guard

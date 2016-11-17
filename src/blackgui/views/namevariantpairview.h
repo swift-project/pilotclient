@@ -24,7 +24,6 @@
 class QWidget;
 
 namespace BlackMisc { class CNameVariantPair; }
-
 namespace BlackGui
 {
     namespace Views
@@ -32,7 +31,6 @@ namespace BlackGui
         //! User view
         class BLACKGUI_EXPORT CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList, BlackMisc::CNameVariantPair>
         {
-
         public:
             //! Constructor
             explicit CNameVariantPairView(QWidget *parent = nullptr);
@@ -48,7 +46,6 @@ namespace BlackGui
 
             //! Contains name
             bool containsName(const QString &name);
-
         };
     }
 }
