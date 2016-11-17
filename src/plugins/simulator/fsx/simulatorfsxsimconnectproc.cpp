@@ -12,7 +12,6 @@
 #include "simconnectdatadefinition.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/simulation/fsx/fsxsimulatorinternals.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"
@@ -40,10 +39,10 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_OPEN:
                 {
                     SIMCONNECT_RECV_OPEN *event = (SIMCONNECT_RECV_OPEN *)pData;
-                    simulatorFsx->simulatorDetails = QString("Open: AppName=\"%1\"  AppVersion=%2.%3.%4.%5  SimConnectVersion=%6.%7.%8.%9")
-                                                     .arg(event->szApplicationName)
-                                                     .arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor)
-                                                     .arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    simulatorFsx->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
+                    simulatorFsx->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    simulatorFsx->m_simulatorName = QString(event->szApplicationName);
+                    simulatorFsx->m_simulatorDetails = QString("Open: AppName=\"%1\" AppVersion=%2  SimConnectVersion=%3").arg(simulatorFsx->m_simulatorName, simulatorFsx->m_simulatorVersion, simulatorFsx->m_simConnectVersion);
                     CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).info("Connect to FSX: %1") << sApp->swiftVersionString();
                     simulatorFsx->setSimConnected();
                     break;
@@ -52,10 +51,10 @@ namespace BlackSimPlugin
                 {
                     if (!simulatorFsx->stillDisplayReceiveExceptions()) { break; }
                     SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
-                    const int exceptionId = static_cast<int>(exception->dwException);
-                    const int sendId = static_cast<int>(exception->dwSendID);
-                    const int index = static_cast<int>(exception->dwIndex);
-                    const int data = static_cast<int>(cbData);
+                    const DWORD exceptionId = exception->dwException;
+                    const DWORD sendId = exception->dwSendID;
+                    const DWORD index = exception->dwIndex;
+                    const DWORD data = cbData;
                     QString ex;
                     ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d", exceptionId, sendId, index, data);
                     switch (exceptionId)

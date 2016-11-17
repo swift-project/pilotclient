@@ -13,7 +13,6 @@
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/simulation/fsx/fsxsimulatorinternals.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -50,7 +49,6 @@ namespace BlackSimPlugin
             Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
-            this->m_simulatorSetup = CFsxSimulatorInternals::getInitializedInternals();
             this->m_realityBubbleTimer.setInterval(20 * 1000);
             connect(&m_realityBubbleTimer, &QTimer::timeout, this, &CSimulatorFsx::ps_addAircraftCurrentlyOutOfBubble);
 
@@ -310,7 +308,12 @@ namespace BlackSimPlugin
         void CSimulatorFsx::setSimConnected()
         {
             m_simConnected = true;
+            this->initInternalsObject();
             emitSimulatorCombinedStatus();
+
+            // Internals depends on sim data which take a while to be read
+            // this is a trich and I re-init again after a while (which is not really expensive)
+            QTimer::singleShot(1000, this, [this] { this->initInternalsObject(); });
         }
 
         void CSimulatorFsx::onSimRunning()
@@ -1035,6 +1038,18 @@ namespace BlackSimPlugin
                     injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
                 }
             }
+        }
+
+        void CSimulatorFsx::initInternalsObject()
+        {
+            CSimulatorFsCommon::initInternalsObject();
+            CSimulatorInternals s = this->m_simulatorInternals;
+            const QString fsxPath = CFsCommonUtil::fsxDirFromRegistry(); // can be empty for remote FSX
+            if (!fsxPath.isEmpty()) { s.setSimulatorInstallationDirectory(fsxPath); }
+
+            s.setValue("fsx/simConnectCfgFilename", CSimConnectUtilities::getLocalSimConnectCfgFilename());
+            s.setValue("fsx/simConnectVersion", this->m_simConnectVersion);
+            this->m_simulatorInternals = s;
         }
 
         void CSimulatorFsx::reset()

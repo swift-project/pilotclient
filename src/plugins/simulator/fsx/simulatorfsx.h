@@ -124,11 +124,18 @@ namespace BlackSimPlugin
             const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
 
         protected:
-            //! \copydoc BlackCore::ISimulator::isConnected()
+            //! \name Interface overrides
+            //! @{
             virtual bool isConnected() const override;
-
-            //! \copydoc BlackCore::ISimulator::isSimulating
             virtual bool isSimulating() const override;
+            //! @}
+
+            //! \name Base class overrides
+            //! @{
+            virtual void reset() override;
+            virtual void clearAllAircraft() override;
+            virtual void initInternalsObject();
+            //! @}
 
             //! Timer event (our SimConnect event loop), runs ps_dispatch
             //! \sa m_simconnectTimerId
@@ -192,12 +199,6 @@ namespace BlackSimPlugin
             //! Reload weather settings
             void reloadWeatherSettings();
 
-            //! Reset values when restarted
-            virtual void reset() override;
-
-            //! Clear all aircraft lists
-            virtual void clearAllAircraft() override;
-
             //! FSX position as string
             static QString fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position);
 
@@ -206,6 +207,7 @@ namespace BlackSimPlugin
 
             static constexpr int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions = 10;    //!< skip exceptions when displayed more than x times
+            QString m_simConnectVersion;            //!< SimConnect version
             bool m_simConnected  = false;           //!< Is simulator connected?
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets

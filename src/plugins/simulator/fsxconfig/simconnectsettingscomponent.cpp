@@ -14,7 +14,6 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/fsx/fsxsimulatorinternals.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include <QFileInfo>
 #include <QDesktopServices>
@@ -50,27 +49,26 @@ namespace BlackSimPlugin
 
         void CSimConnectSettingsComponent::openSimConnectCfgFile()
         {
-            QFileInfo info(CSimConnectUtilities::getLocalSimConnectCfgFilename());
-            QString path = QDir::toNativeSeparators(info.absolutePath());
+            const QFileInfo info(CSimConnectUtilities::getLocalSimConnectCfgFilename());
+            const QString path = QDir::toNativeSeparators(info.absolutePath());
             QDesktopServices::openUrl(QUrl(QStringLiteral("file:///") % path));
         }
 
         void CSimConnectSettingsComponent::deleteSimConnectCfgFile()
         {
-            QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
-            bool result = sGui->getIContextApplication()->removeFile(fileName);
+            const QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
+            const bool result = sGui->getIContextApplication()->removeFile(fileName);
             if (result)
             {
                 QMessageBox::information(qApp->activeWindow(), tr("File deleted"),
                                          tr("File %1 deleted successfully.").arg(fileName));
             }
-
             checkSimConnectCfgFile();
         }
 
         void CSimConnectSettingsComponent::checkSimConnectCfgFile()
         {
-            QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
+            const QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
             if (sGui->getIContextApplication()->existsFile(fileName))
             {
                 ui->le_SettingsFsxExistsSimconncetCfg->setText(fileName);
@@ -83,8 +81,8 @@ namespace BlackSimPlugin
 
         void CSimConnectSettingsComponent::testSimConnectConnection()
         {
-            QString address = ui->le_SettingsFsxAddress->text().trimmed();
-            QString port = ui->le_SettingsFsxPort->text().trimmed();
+            const QString address = ui->le_SettingsFsxAddress->text().trimmed();
+            const QString port = ui->le_SettingsFsxPort->text().trimmed();
 
             if (address.isEmpty() || port.isEmpty())
             {
@@ -145,7 +143,8 @@ namespace BlackSimPlugin
 
             if (sGui->getIContextSimulator())
             {
-                fileName = sGui->getIContextSimulator()->getSimulatorInternals().getStringValue(CFsxSimulatorInternals::KeyLocalSimConnectCfgFilename());
+                const BlackMisc::Simulation::CSimulatorInternals internals(sGui->getIContextSimulator()->getSimulatorInternals());
+                fileName = internals.getStringValue("fsx/simConnectCfgFilename");
             }
 
             if (fileName.isEmpty())
