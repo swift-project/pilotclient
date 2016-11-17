@@ -110,11 +110,11 @@ namespace BlackCore
                 return 0;
             }
 
-            //! \copydoc IContextSimulator::getSimulatorSetup
-            virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override
+            //! \copydoc IContextSimulator::getSimulatorInternals
+            virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::Simulation::CSimulatorSetup();
+                return BlackMisc::Simulation::CSimulatorInternals();
             }
 
             //! \copydoc IContextSimulator::setTimeSynchronization

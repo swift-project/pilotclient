@@ -31,7 +31,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/weather/weathergridprovider.h"
 
 namespace BlackMisc
@@ -76,7 +76,7 @@ namespace BlackCore
         virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
-        virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const override;
+        virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const override;
         virtual void unload() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         //! @}
@@ -137,7 +137,7 @@ namespace BlackCore
 
         BlackMisc::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        BlackMisc::Simulation::CSimulatorSetup m_simulatorSetup; //!< setup object
+        BlackMisc::Simulation::CSimulatorInternals m_simulatorSetup; //!< setup object
         BlackMisc::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< debug messages, rendering etc.
         BlackMisc::Simulation::CAircraftModel m_defaultModel;    //!< default model
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;             //!< statistics update time

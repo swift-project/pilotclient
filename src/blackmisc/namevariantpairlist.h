@@ -45,6 +45,9 @@ namespace BlackMisc
         //! Contains name
         bool containsName(const QString &name) const;
 
+        //! Get all names
+        QStringList getNames(bool sorted = true) const;
+
         //! Get value
         CNameVariantPair getValue(const QString &name) const;
 
@@ -57,7 +60,6 @@ namespace BlackMisc
         //! Add value, if name already exists replace (true)
         //! If one is sure(!) the name does not exists, \sa push_back() can be used
         bool addOrReplaceValue(const QString &name, const CVariant &value, const CIcon &icon = CIcon());
-
     };
 } //namespace
 

@@ -22,7 +22,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/simulation/simulatorinternals.h"
 
 #include <QObject>
 #include <QString>
@@ -64,7 +64,7 @@ namespace BlackCore
             virtual QStringList getModelSetCompleterStrings(bool sorted) const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSetModelsStartingWith(const QString modelString) const override;
             virtual int getModelSetCount() const override;
-            virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
+            virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual bool isTimeSynchronized() const override;
             virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;

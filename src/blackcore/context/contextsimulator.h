@@ -38,7 +38,7 @@
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/weather/weathergrid.h"
 
 #include <QObject>
@@ -133,7 +133,7 @@ namespace BlackCore
             ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
 
             //! Simulator setup
-            virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const = 0;
+            virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const = 0;
 
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;

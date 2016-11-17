@@ -12,7 +12,7 @@
 #include "simconnectdatadefinition.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
+#include "blackmisc/simulation/fsx/fsxsimulatorinternals.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/logmessage.h"

@@ -14,7 +14,7 @@
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
+#include "blackmisc/simulation/fsx/fsxsimulatorinternals.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include <QFileInfo>
 #include <QDesktopServices>
@@ -145,7 +145,7 @@ namespace BlackSimPlugin
 
             if (sGui->getIContextSimulator())
             {
-                fileName = sGui->getIContextSimulator()->getSimulatorSetup().getStringValue(CFsxSimulatorSetup::KeyLocalSimConnectCfgFilename());
+                fileName = sGui->getIContextSimulator()->getSimulatorInternals().getStringValue(CFsxSimulatorInternals::KeyLocalSimConnectCfgFilename());
             }
 
             if (fileName.isEmpty())

@@ -238,7 +238,7 @@ namespace BlackCore
         return m_simulatorPluginInfo;
     }
 
-    const CSimulatorSetup &CSimulatorCommon::getSimulatorSetup() const
+    const CSimulatorInternals &CSimulatorCommon::getSimulatorInternals() const
     {
         return m_simulatorSetup;
     }

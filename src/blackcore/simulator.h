@@ -36,7 +36,7 @@ namespace BlackMisc
     namespace Network { class CTextMessage; }
     namespace Simulation
     {
-        class CSimulatorSetup;
+        class CSimulatorInternals;
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
     }
@@ -79,7 +79,7 @@ namespace BlackCore
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const = 0;
 
         //! Get the setup (simulator environemnt)
-        virtual const BlackMisc::Simulation::CSimulatorSetup &getSimulatorSetup() const = 0;
+        virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const = 0;
 
         //! Connect to simulator
         virtual bool connectTo() = 0;

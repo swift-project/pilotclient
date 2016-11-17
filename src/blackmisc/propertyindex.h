@@ -120,7 +120,7 @@ namespace BlackMisc
             GlobalIndexCAircraftModel                   =  6800,
             GlobalIndexCSimulatedAircraft               =  6900,
             GlobalIndexCTextMessage                     =  7000,
-            GlobalIndexCSimulatorSetup                  =  7100,
+            GlobalIndexCSimulatorInternals                  =  7100,
             GlobalIndexCSimulatorSettings               =  7200,
             GlobalIndexCSimulatorMessageSettings        =  7300,
             GlobalIndexCAircraftCfgEntries              =  7400,

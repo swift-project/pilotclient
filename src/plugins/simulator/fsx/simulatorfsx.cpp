@@ -13,7 +13,7 @@
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/simulation/fsx/fsxsimulatorsetup.h"
+#include "blackmisc/simulation/fsx/fsxsimulatorinternals.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -50,7 +50,7 @@ namespace BlackSimPlugin
             Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
-            this->m_simulatorSetup = CFsxSimulatorSetup::getInitialSetup();
+            this->m_simulatorSetup = CFsxSimulatorInternals::getInitializedInternals();
             this->m_realityBubbleTimer.setInterval(20 * 1000);
             connect(&m_realityBubbleTimer, &QTimer::timeout, this, &CSimulatorFsx::ps_addAircraftCurrentlyOutOfBubble);
 

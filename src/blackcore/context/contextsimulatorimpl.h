@@ -31,7 +31,7 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
-#include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/simulation/simulationsettings.h"
 #include "blackmisc/worker.h"
 
@@ -80,7 +80,7 @@ namespace BlackCore
             virtual bool startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
             virtual void stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo) override;
             virtual int getSimulatorStatus() const override;
-            virtual BlackMisc::Simulation::CSimulatorSetup getSimulatorSetup() const override;
+            virtual BlackMisc::Simulation::CSimulatorInternals getSimulatorInternals() const override;
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const override;
             virtual QStringList getModelSetStrings() const override;

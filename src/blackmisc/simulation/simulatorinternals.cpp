@@ -8,7 +8,7 @@
  */
 
 #include "blackmisc/dbus.h"
-#include "blackmisc/simulation/simulatorsetup.h"
+#include "blackmisc/simulation/simulatorinternals.h"
 
 #include <QDBusMetaType>
 #include <QJsonObject>
@@ -17,49 +17,69 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        void CSimulatorSetup::setValue(const QString &name, const QString &value)
+        void CSimulatorInternals::setValue(const QString &name, const QString &value)
         {
             this->m_data.addOrReplaceValue(name, value);
         }
 
-        QString CSimulatorSetup::getStringValue(const QString &name) const
+        CVariant CSimulatorInternals::getVariantValue(const QString &name) const
+        {
+            return m_data.getVariantValue(name);
+        }
+
+        QString CSimulatorInternals::getStringValue(const QString &name) const
         {
             return m_data.getValueAsString(name);
         }
 
-        void CSimulatorSetup::setSimulatorVersion(const QString versionInfo)
+        QStringList CSimulatorInternals::getSortedNames() const
+        {
+            return m_data.getNames(true);
+        }
+
+        void CSimulatorInternals::setSimulatorVersion(const QString versionInfo)
         {
             this->setValue("all/versionInfo", versionInfo);
         }
 
-        void CSimulatorSetup::setSimulatorInstallationDirectory(const QString fullFilePath)
+        void CSimulatorInternals::setSimulatorInstallationDirectory(const QString fullFilePath)
         {
             this->setValue("all/installDir", fullFilePath);
         }
 
-        QString CSimulatorSetup::getSimulatorVersion() const
+        QString CSimulatorInternals::getSimulatorName() const
+        {
+            return this->getStringValue("all/simulatorName");
+        }
+
+        void CSimulatorInternals::setSimulatorName(const QString &name)
+        {
+            this->setValue("all/simulatorName", name);
+        }
+
+        QString CSimulatorInternals::getSimulatorVersion() const
         {
             return this->getStringValue("all/versionInfo");
         }
 
-        QString CSimulatorSetup::getSimulatorInstallationDirectory() const
+        QString CSimulatorInternals::getSimulatorInstallationDirectory() const
         {
             return this->getStringValue("all/installDir");
         }
 
-        void CSimulatorSetup::registerMetadata()
+        void CSimulatorInternals::registerMetadata()
         {
-            qRegisterMetaType<BlackMisc::Simulation::CSimulatorSetup>();
-            qDBusRegisterMetaType<BlackMisc::Simulation::CSimulatorSetup>();
-            registerMetaValueType<BlackMisc::Simulation::CSimulatorSetup>();
+            qRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
+            qDBusRegisterMetaType<BlackMisc::Simulation::CSimulatorInternals>();
+            registerMetaValueType<BlackMisc::Simulation::CSimulatorInternals>();
         }
 
-        QString CSimulatorSetup::convertToQString(bool i18n) const
+        QString CSimulatorInternals::convertToQString(bool i18n) const
         {
             return m_data.toQString(i18n);
         }
 
-        CVariant CSimulatorSetup::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CSimulatorInternals::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -72,9 +92,9 @@ namespace BlackMisc
             }
         }
 
-        void CSimulatorSetup::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CSimulatorInternals::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSimulatorSetup>(); return; }
+            if (index.isMyself()) { (*this) = variant.to<CSimulatorInternals>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

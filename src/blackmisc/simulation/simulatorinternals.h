@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_SIMULATORSETUP_H
-#define BLACKMISC_SIMULATION_SIMULATORSETUP_H
+#ifndef BLACKMISC_SIMULATION_SIMULATORINTERNALS_H
+#define BLACKMISC_SIMULATION_SIMULATORINTERNALS_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/containerbase.h"
@@ -30,19 +30,19 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        //! Simulator settings for flight simulators.
+        //! Simulator internals for flight simulators.
         //! Those are set up at runtime and represent information about the simulator (like a small registry)
-        class BLACKMISC_EXPORT CSimulatorSetup : public CValueObject<CSimulatorSetup>
+        class BLACKMISC_EXPORT CSimulatorInternals : public CValueObject<CSimulatorInternals>
         {
         public:
             //! Specific values
             enum ColumnIndex
             {
-                IndexData = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorSetup
+                IndexData = BlackMisc::CPropertyIndex::GlobalIndexCSimulatorInternals
             };
 
             //! Default constructor
-            CSimulatorSetup() {}
+            CSimulatorInternals() {}
 
             //! All values
             BlackMisc::CNameVariantPairList getData() const { return this->m_data;}
@@ -53,20 +53,32 @@ namespace BlackMisc
             //! Set value
             void setValue(const QString &name, const QString &value);
 
+            //! Get value
+            CVariant getVariantValue(const QString &name) const;
+
             //! Get string value
             QString getStringValue(const QString &name) const;
 
-            //! Simulator version info, something like "FSX 10.3.2"
+            //! Get sorted names
+            QStringList getSortedNames() const;
+
+            //! Get the simulator name
+            QString getSimulatorName() const;
+
+            //! Set simulator name
+            void setSimulatorName(const QString &name);
+
+            //! Simulator version info, something like "10.3.2"
+            QString getSimulatorVersion() const;
+
+            //! Simulator version info, something like "10.3.2"
             void setSimulatorVersion(const QString versionInfo);
 
             //! Path where simulator is installed
-            void setSimulatorInstallationDirectory(const QString fullFilePath);
-
-            //! Simulator version info, something like "FSX 10.3.2"
-            QString getSimulatorVersion() const;
+            QString getSimulatorInstallationDirectory() const;
 
             //! Path where simulator is installed
-            QString getSimulatorInstallationDirectory() const;
+            void setSimulatorInstallationDirectory(const QString fullFilePath);
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -84,13 +96,13 @@ namespace BlackMisc
             BlackMisc::CNameVariantPairList m_data;
 
             BLACK_METACLASS(
-                CSimulatorSetup,
+                CSimulatorInternals,
                 BLACK_METAMEMBER(data)
             );
         };
     } // namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorSetup)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorInternals)
 
 #endif // guard

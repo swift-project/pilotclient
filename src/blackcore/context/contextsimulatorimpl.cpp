@@ -121,16 +121,16 @@ namespace BlackCore
             return m_simulatorPlugin.first;
         }
 
-        CSimulatorSetup CContextSimulator::getSimulatorSetup() const
+        CSimulatorInternals CContextSimulator::getSimulatorInternals() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             if (m_simulatorPlugin.first.isUnspecified())
             {
-                return BlackMisc::Simulation::CSimulatorSetup();
+                return BlackMisc::Simulation::CSimulatorInternals();
             }
 
             Q_ASSERT(m_simulatorPlugin.second);
-            return m_simulatorPlugin.second->getSimulatorSetup();
+            return m_simulatorPlugin.second->getSimulatorInternals();
         }
 
         CAirportList CContextSimulator::getAirportsInRange() const

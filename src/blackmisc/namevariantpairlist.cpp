@@ -25,6 +25,14 @@ namespace BlackMisc
         return this->contains(&CNameVariantPair::getName, name);
     }
 
+    QStringList CNameVariantPairList::getNames(bool sorted) const
+    {
+        if (this->isEmpty()) { return QStringList(); }
+        QStringList codes = this->transform(Predicates::MemberTransform(&CNameVariantPair::getName));
+        if (sorted) { codes.sort(); }
+        return codes;
+    }
+
     CNameVariantPair CNameVariantPairList::getValue(const QString &name) const
     {
         if (name.isEmpty()) { return CNameVariantPair(); }

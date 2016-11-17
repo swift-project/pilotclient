@@ -114,9 +114,9 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorPluginInfo"));
         }
 
-        CSimulatorSetup CContextSimulatorProxy::getSimulatorSetup() const
+        CSimulatorInternals CContextSimulatorProxy::getSimulatorInternals() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorSetup>(QLatin1Literal("getSimulatorSetup"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInternals>(QLatin1Literal("getSimulatorInternals"));
         }
 
         bool CContextSimulatorProxy::setTimeSynchronization(bool enable, const CTime &offset)
