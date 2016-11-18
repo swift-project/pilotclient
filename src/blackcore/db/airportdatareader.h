@@ -38,6 +38,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAirportList getAirports() const;
 
+            //! Returns a list of all airports in the database.
+            //! \threadsafe
+            int getAirportsCount() const;
+
             // base class overrides
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;

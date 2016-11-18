@@ -571,6 +571,12 @@ namespace BlackCore
         return CAirportList();
     }
 
+    int CWebDataServices::getAirportsCount() const
+    {
+        if (m_airportDataReader) { return m_airportDataReader->getAirportsCount(); }
+        return 0;
+    }
+
     CCountry CWebDataServices::getCountryForIsoCode(const QString &iso) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getCountryForIsoCode(iso); }

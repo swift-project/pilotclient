@@ -291,6 +291,10 @@ namespace BlackCore
         //! \\threadsafe
         BlackMisc::Aviation::CAirportList getAirports() const;
 
+        //! Get airports count
+        //! \\threadsafe
+        int getAirportsCount() const;
+
         //! Get METARs
         //! \threadsafe
         BlackMisc::Weather::CMetarList getMetars() const;

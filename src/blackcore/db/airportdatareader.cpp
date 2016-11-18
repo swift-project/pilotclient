@@ -32,6 +32,11 @@ namespace BlackCore
             return m_airportCache.get();
         }
 
+        int CAirportDataReader::getAirportsCount() const
+        {
+            return this->getAirports().size();
+        }
+
         QDateTime CAirportDataReader::getCacheTimestamp(CEntityFlags::Entity entities) const
         {
             return entities == CEntityFlags::AirportEntity ? m_airportCache.getAvailableTimestamp() : QDateTime();
