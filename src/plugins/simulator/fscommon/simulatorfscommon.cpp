@@ -8,17 +8,18 @@
  */
 
 #include "simulatorfscommon.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/stringutils.h"
 
-using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Network;
 using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackCore;
 
 namespace BlackSimPlugin
 {
@@ -80,7 +81,11 @@ namespace BlackSimPlugin
 
         CAirportList CSimulatorFsCommon::getAirportsInRange() const
         {
-            return m_airportsInRange;
+            if (!m_airportsInRangeFromSimulator.isEmpty())
+            {
+                return m_airportsInRangeFromSimulator;
+            }
+            return CSimulatorCommon::getAirportsInRange();
         }
 
         bool CSimulatorFsCommon::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
@@ -103,6 +108,16 @@ namespace BlackSimPlugin
                 this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
             }
             return true;
+        }
+
+        void CSimulatorFsCommon::ps_allSwiftDataRead()
+        {
+            const CAirportList webServiceAirports = this->getWebServiceAirports();
+            if (!webServiceAirports.isEmpty())
+            {
+                this->m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports);
+            }
+            CSimulatorCommon::ps_allSwiftDataRead();
         }
     } // namespace
 } // namespace

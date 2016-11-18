@@ -28,6 +28,7 @@
 #include <functional>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Geo;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -62,8 +63,8 @@ namespace BlackCore
         );
 
         // timer
-        this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
         connect(&m_oneSecondTimer, &QTimer::timeout, this, &CSimulatorCommon::ps_oneSecondTimer);
+        this->m_oneSecondTimer.setObjectName(this->objectName().append(":m_oneSecondTimer"));
         this->m_oneSecondTimer.start(1000);
 
         // swift data
@@ -76,13 +77,13 @@ namespace BlackCore
         CLogMessage(this).info("Initialized simulator driver %1") << m_simulatorPluginInfo.toQString();
     }
 
+    CSimulatorCommon::~CSimulatorCommon() { }
+
     const CLogCategoryList &CSimulatorCommon::getLogCategories()
     {
-        static const CLogCategoryList cats( { CLogCategory::driver(), CLogCategory::plugin() });
+        static const CLogCategoryList cats({ CLogCategory::driver(), CLogCategory::plugin() });
         return cats;
     }
-
-    CSimulatorCommon::~CSimulatorCommon() { }
 
     bool CSimulatorCommon::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
@@ -104,6 +105,12 @@ namespace BlackCore
 
         // will be added with next snapshot ps_recalculateRenderedAircraft
         return false;
+    }
+
+    int CSimulatorCommon::maxAirportsInRange() const
+    {
+        // might change in future or become a setting or such
+        return 20;
     }
 
     void CSimulatorCommon::blinkHighlightedAircraft()
@@ -214,6 +221,17 @@ namespace BlackCore
                 });
             }
         }
+    }
+
+    CAirportList CSimulatorCommon::getAirportsInRange() const
+    {
+        // default implementation
+        if (!sApp->hasWebDataServices()) { return CAirportList(); }
+
+        const CAirportList airports = sApp->getWebDataServices()->getAirports();
+        if (airports.isEmpty()) { return airports; }
+        const CCoordinateGeodetic ownPosition = this->getOwnAircraftPosition();
+        return airports.findClosest(maxAirportsInRange(), ownPosition);
     }
 
     CAircraftModel CSimulatorCommon::reverseLookupModel(const CAircraftModel &model)
@@ -373,4 +391,15 @@ namespace BlackCore
         m_aircraftToAddAgainWhenRemoved.clear();
     }
 
+    CAirportList CSimulatorCommon::getWebServiceAirports() const
+    {
+        if (!sApp->hasWebDataServices()) { return CAirportList(); }
+        return sApp->getWebDataServices()->getAirports();
+    }
+
+    CAirport CSimulatorCommon::getWebServiceAirport(const CAirportIcaoCode &icao) const
+    {
+        if (!sApp->hasWebDataServices()) { return CAirport(); }
+        return sApp->getWebDataServices()->getAirports().findFirstByIcao(icao);
+    }
 } // namespace

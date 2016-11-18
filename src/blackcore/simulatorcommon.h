@@ -77,6 +77,7 @@ namespace BlackCore
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const override;
+        virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
         virtual void unload() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         //! @}
@@ -100,6 +101,9 @@ namespace BlackCore
         virtual void ps_remoteProviderRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
         //! @}
 
+        //! All swift data read from DB
+        virtual void ps_allSwiftDataRead();
+
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -108,17 +112,26 @@ namespace BlackCore
                          BlackMisc::Weather::IWeatherGridProvider *weatherGridProvider,
                          QObject *parent);
 
-        //! \copydoc ISimulator::logicallyAddRemoteAircraft
+        //! \name Interface implementations
+        //! @{
         virtual bool logicallyAddRemoteAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft) override;
-
-        //! \copydoc ISimulator::logicallyRemoveRemoteAircraft
         virtual bool logicallyRemoveRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+        //! @}
+
+        //! Max.airports in range
+        int maxAirportsInRange() const;
 
         //! Reset state
         virtual void reset();
 
         //! Clear all aircraft related data
         virtual void clearAllAircraft();
+
+        //! Airports from web services
+        BlackMisc::Aviation::CAirportList getWebServiceAirports() const;
+
+        //! Airport from web services by ICAO code
+        BlackMisc::Aviation::CAirport getWebServiceAirport(const BlackMisc::Aviation::CAirportIcaoCode &icao) const;
 
         //! Blink the highlighted aircraft
         void blinkHighlightedAircraft();
@@ -149,10 +162,6 @@ namespace BlackCore
 
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
-
-    private slots:
-        //! All swift data read from DB
-        void ps_allSwiftDataRead();
 
     private:
         bool m_blinkCycle = false;             //!< use for highlighting

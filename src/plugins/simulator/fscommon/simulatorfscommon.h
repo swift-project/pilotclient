@@ -45,6 +45,10 @@ namespace BlackSimPlugin
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             //! @}
 
+        protected slots:
+            //! \copydoc BlackCore::CSimulatorCommon::ps_allSwiftDataRead
+            virtual void ps_allSwiftDataRead() override;
+
         protected:
             //! Constructor
             CSimulatorFsCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,
@@ -64,7 +68,7 @@ namespace BlackSimPlugin
             bool m_simPaused = false;                               //!< Simulator paused?
             bool m_simTimeSynced = false;                           //!< Time synchronized?
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;  //!< time offset
-            BlackMisc::Aviation::CAirportList    m_airportsInRange; //!< airports in range of own aircraft
+            BlackMisc::Aviation::CAirportList    m_airportsInRangeFromSimulator; //!< airports in range of own aircraft
 
             // cockpit as set in SIM
             BlackMisc::Aviation::CComSystem   m_simCom1;            //!< cockpit COM1 state in simulator

@@ -114,7 +114,7 @@ namespace BlackCore
         //! Display a text message
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
 
-        //! Airports in range from simulator
+        //! Airports in range from simulator, or if not available from web service
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 
         //! Set time synchronization between simulator and user's computer time

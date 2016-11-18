@@ -210,7 +210,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_AIRPORT_LIST:
                 {
-                    const CLength maxDistance(200.0, CLengthUnit::NM());
+                    static const CLength maxDistance(200.0, CLengthUnit::NM());
                     const CCoordinateGeodetic posAircraft(simulatorFsx->getOwnAircraftPosition());
                     SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
                     for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
@@ -224,11 +224,14 @@ namespace BlackSimPlugin
                         CAirport airport(CAirportIcaoCode(icao), pos);
                         const CLength d = airport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
                         if (d > maxDistance) { continue; }
-                        simulatorFsx->m_airportsInRange.replaceOrAddByIcao(airport);
+                        airport.updateMissingParts(simulatorFsx->getWebServiceAirport(icao));
+                        simulatorFsx->m_airportsInRangeFromSimulator.replaceOrAddByIcao(airport);
                     }
-                    if (simulatorFsx->m_airportsInRange.size() > 20)
+
+                    if (simulatorFsx->m_airportsInRangeFromSimulator.size() > simulatorFsx->maxAirportsInRange())
                     {
-                        simulatorFsx->m_airportsInRange.removeIfOutsideRange(posAircraft, maxDistance, true);
+                        simulatorFsx->m_airportsInRangeFromSimulator.sortByDistanceToOwnAircraft();
+                        simulatorFsx->m_airportsInRangeFromSimulator.truncate(simulatorFsx->maxAirportsInRange());
                     }
                     break;
                 }
