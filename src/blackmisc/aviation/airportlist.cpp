@@ -32,10 +32,29 @@ namespace BlackMisc
             return this->findBy(&CAirport::getIcao, icao);
         }
 
+        bool CAirportList::containsAirportWithIcaoCode(const CAirportIcaoCode &icao) const
+        {
+            if (icao.isEmpty()) { return false; }
+            return this->contains(&CAirport::getIcao, icao);
+        }
+
         void CAirportList::replaceOrAddByIcao(const CAirport &addedOrReplacedAirport)
         {
             if (!addedOrReplacedAirport.hasValidIcaoCode()) return; // ignore invalid airport
             this->replaceOrAdd(&CAirport::getIcao, addedOrReplacedAirport.getIcao(), addedOrReplacedAirport);
+        }
+
+        void CAirportList::updateMissingParts(const CAirportList &updateFromList)
+        {
+            if (updateFromList.isEmpty()) { return; }
+            for (CAirport &airport : *this)
+            {
+                const CAirport fromAirport = updateFromList.findFirstByIcao(airport.getIcao());
+                if (fromAirport.hasValidIcaoCode())
+                {
+                    airport.updateMissingParts(fromAirport);
+                }
+            }
         }
 
         CAirport CAirportList::findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound) const

@@ -105,6 +105,9 @@ namespace BlackMisc
             //! Sets the value of \sa isOperating().
             void setOperating(bool operating) { m_operating = operating; }
 
+            //! Update the missing parts in airport
+            void updateMissingParts(const CAirport &airport);
+
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }

@@ -46,8 +46,14 @@ namespace BlackMisc
             //! Find 0..n airports by ICAO code
             CAirportList findByIcao(const CAirportIcaoCode &icao) const;
 
+            //! Containing an airport with given ICAO code?
+            bool containsAirportWithIcaoCode(const CAirportIcaoCode &icao) const;
+
             //! Replace or add based on same ICAO code
             void replaceOrAddByIcao(const CAirport &addedOrReplacedAirport);
+
+            //! Update this list from the other list
+            void updateMissingParts(const CAirportList &updateFromList);
 
             //! Find first station by callsign, if not return given value / default
             CAirport findFirstByIcao(const CAirportIcaoCode &icao, const CAirport &ifNotFound = CAirport()) const;
