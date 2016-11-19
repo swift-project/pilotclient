@@ -104,6 +104,12 @@ namespace BlackCore
         //! All swift data read from DB
         virtual void ps_allSwiftDataRead();
 
+        //! DB models read
+        virtual void ps_modelMatchingEntities();
+
+        //! DB Airports read
+        virtual void ps_airportsRead();
+
     protected:
         //! Constructor
         CSimulatorCommon(const BlackMisc::Simulation::CSimulatorPluginInfo &info,

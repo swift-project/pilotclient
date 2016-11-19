@@ -170,6 +170,11 @@ namespace BlackCore
         return false;
     }
 
+    void CWebDataServices::resetSignalFlags()
+    {
+        m_signaledEntities.clear();
+    }
+
     bool CWebDataServices::hasDbAircraftData() const
     {
         return (this->getModelsCount() > 0) && (this->getLiveriesCount() > 0) && (this->getDistributorsCount() > 0) && (this->getAircraftIcaoCodesCount() > 0);
@@ -825,6 +830,13 @@ namespace BlackCore
             this);
     }
 
+    bool CWebDataServices::signalEntitiesRead(CEntityFlags::Entity entities)
+    {
+        if (m_signaledEntities.contains(entities)) { return false; }
+        m_signaledEntities.insert(entities);
+        return true;
+    }
+
     void CWebDataServices::ps_receivedBookings(const CAtcStationList &stations)
     {
         CLogMessage(this).info("Read %1 ATC bookings from network") << stations.size();
@@ -840,7 +852,7 @@ namespace BlackCore
         CLogMessage(this).info("Read VATSIM data file, %1 lines") << lines;
     }
 
-    void CWebDataServices::ps_readFromSwiftDb(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+    void CWebDataServices::ps_readFromSwiftDb(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
     {
         static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::webservice()}));
 
@@ -850,23 +862,40 @@ namespace BlackCore
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
             if (severity == CStatusMessage::SeverityWarning)
             {
-                CLogMessage(cats).warning("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).warning("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
             }
             else
             {
-                CLogMessage(cats).error("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+                CLogMessage(cats).error("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
             }
         }
         else
         {
-            CLogMessage(cats).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entity) << number << CEntityFlags::flagToString(state);
+            CLogMessage(cats).info("Read data %1 entries: %2 state: %3") << CEntityFlags::flagToString(entities) << number << CEntityFlags::flagToString(state);
         }
 
-        this->m_swiftDbEntitiesRead |= entity;
+        this->m_swiftDbEntitiesRead |= entities;
         const int allUsedEntities = static_cast<int>(this->allDbEntiiesForUsedReaders());
         if (((static_cast<int>(this->m_swiftDbEntitiesRead)) & allUsedEntities) == allUsedEntities)
         {
             emit allSwiftDbDataRead();
+        }
+
+        // individual signals
+        if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
+        {
+            if (entities.testFlag(CEntityFlags::AirportEntity) && signalEntitiesRead(CEntityFlags::AirportEntity)) { emit swiftDbAirportsRead(); }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) && signalEntitiesRead(CEntityFlags::AirlineIcaoEntity)) { emit swiftDbAirlineIcaoRead(); }
+            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) && signalEntitiesRead(CEntityFlags::AircraftIcaoEntity)) { emit swiftDbAircraftIcaoRead(); }
+            if (entities.testFlag(CEntityFlags::ModelEntity) && signalEntitiesRead(CEntityFlags::ModelEntity)) { emit swiftDbModelsRead(); }
+            if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::AllIcaoEntities) && signalEntitiesRead(CEntityFlags::AllIcaoEntities))
+            {
+                emit swiftDbAllIcaoEntities();
+            }
+            if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::ModelMatchingEntities) && signalEntitiesRead(CEntityFlags::ModelMatchingEntities))
+            {
+                emit swiftDbModelMatchingEntities();
+            }
         }
     }
 

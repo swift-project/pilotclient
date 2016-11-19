@@ -71,6 +71,8 @@ namespace BlackCore
         if (sApp && sApp->getWebDataServices())
         {
             connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CSimulatorCommon::ps_allSwiftDataRead);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &CSimulatorCommon::ps_airportsRead);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntities, this, &CSimulatorCommon::ps_modelMatchingEntities);
         }
 
         // info
@@ -215,7 +217,7 @@ namespace BlackCore
             else
             {
                 // we wait for the data
-                connect(sApp->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, [ = ]
+                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntities, this, [ = ]
                 {
                     this->reverseLookupAndUpdateOwnAircraftModel(model);
                 });
@@ -242,6 +244,16 @@ namespace BlackCore
     }
 
     void CSimulatorCommon::ps_allSwiftDataRead()
+    {
+        // void
+    }
+
+    void CSimulatorCommon::ps_modelMatchingEntities()
+    {
+        // void
+    }
+
+    void CSimulatorCommon::ps_airportsRead()
     {
         // void
     }

@@ -49,6 +49,7 @@ namespace BlackMisc
                 AllIcaoEntities        = AircraftIcaoEntity | AirlineIcaoEntity,                    //!< all ICAO codes
                 AllIcaoAndCountries    = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity,    //!< all ICAO codes and countries
                 DistributorLiveryModel = DistributorEntity  | LiveryEntity      | ModelEntity,      //!< Combinded
+                ModelMatchingEntities  = AllIcaoEntities    | LiveryEntity      | ModelEntity,      //!< all needed for model matching
                 AllDbEntities                        = AllIcaoAndCountries | DistributorLiveryModel | InfoObjectEntity | AirportEntity, //!< All DB stuff
                 AllDbEntitiesNoInfoObjects           = AllIcaoAndCountries | DistributorLiveryModel | AirportEntity,                    //!< All DB entities, no info objects
                 AllDbEntitiesNoInfoObjectsNoAirports = AllIcaoAndCountries | DistributorLiveryModel                                     //!< All DB entities, no info objects and airports

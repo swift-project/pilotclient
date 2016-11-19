@@ -110,14 +110,14 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFsCommon::ps_allSwiftDataRead()
+        void CSimulatorFsCommon::ps_airportsRead()
         {
             const CAirportList webServiceAirports = this->getWebServiceAirports();
             if (!webServiceAirports.isEmpty())
             {
                 this->m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports);
             }
-            CSimulatorCommon::ps_allSwiftDataRead();
+            CSimulatorCommon::ps_airportsRead();
         }
     } // namespace
 } // namespace

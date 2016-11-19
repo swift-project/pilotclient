@@ -92,7 +92,7 @@ namespace BlackGui
             void ps_simulatorConnected(int status);
 
             //! All swift data have been read
-            void ps_swiftWebDataRead();
+            void ps_swiftModelDataRead();
 
         private:
             QScopedPointer <Ui::CAircraftModelStringCompleter> ui;

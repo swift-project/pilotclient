@@ -350,6 +350,9 @@ namespace BlackCore
         //! Can connect to swift DB?
         bool canConnectSwiftDb() const;
 
+        //! Reset the flags what was already signaled
+        void resetSignalFlags();
+
         //! All DB data for an aircraft entity available?
         bool hasDbAircraftData() const;
 
@@ -369,7 +372,32 @@ namespace BlackCore
         //! All swift DB data have been read
         void allSwiftDbDataRead();
 
-        //! Header of shared file read
+        // simplified signals
+        // 1) simple signature
+        // 2) fired direct after read, no need to wait for other entities
+
+        //! \name Simplified read signals
+        //! @{
+        //! All models read
+        void swiftDbModelsRead();
+
+        //! Aircraft ICAO data read
+        void swiftDbAircraftIcaoRead();
+
+        //! Airline ICAO data read
+        void swiftDbAirlineIcaoRead();
+
+        //! Airports read
+        void swiftDbAirportsRead();
+
+        //! All ICAO entities
+        void swiftDbAllIcaoEntities();
+
+        //! All entities needed for model matching
+        void swiftDbModelMatchingEntities();
+        //! @}
+
+        //! //! Header of shared file read
         void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
 
     public slots:
@@ -390,7 +418,7 @@ namespace BlackCore
         void ps_vatsimDataFileRead(int lines);
 
         //! Read finished from reader
-        void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+        void ps_readFromSwiftDb(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
     private:
         //! Init the readers
@@ -402,12 +430,16 @@ namespace BlackCore
         //! Init the writers
         void initWriters();
 
+        //! Remember this entity/those enties already have been signaled
+        bool signalEntitiesRead(BlackMisc::Network::CEntityFlags::Entity entities);
+
         CWebReaderFlags::WebReader               m_readers = CWebReaderFlags::WebReaderFlag::None;  //!< which readers are available
         BlackCore::Db::CDatabaseReaderConfigList m_dbReaderConfig;                                  //!< how to read DB data
         BlackMisc::Network::CEntityFlags::Entity m_entitiesPeriodicallyRead = BlackMisc::Network::CEntityFlags::NoEntity; //!< those entities which are permanently updated by timers
         BlackMisc::Network::CEntityFlags::Entity m_swiftDbEntitiesRead = BlackMisc::Network::CEntityFlags::NoEntity;      //!< entities read
-        bool                                     m_initialRead = false;                             //!< Initial read started
-        int                                      m_infoObjectTrials = 0;                            //!< Tried to read info objects
+        bool                                     m_initialRead = false;    //!< Initial read started
+        int                                      m_infoObjectTrials = 0;   //!< Tried to read info objects
+        QSet<BlackMisc::Network::CEntityFlags::Entity> m_signaledEntities; //!< remember signales entites
 
         // for reading XML and VATSIM data files
         Vatsim::CVatsimStatusFileReader *m_vatsimStatusReader   = nullptr;
@@ -420,7 +452,7 @@ namespace BlackCore
         Db::CAirportDataReader          *m_airportDataReader    = nullptr;
 
         // writing objects directly into DB
-        Db::CDatabaseWriter     *m_databaseWriter       = nullptr;
+        Db::CDatabaseWriter *m_databaseWriter = nullptr;
     };
 } // namespace
 

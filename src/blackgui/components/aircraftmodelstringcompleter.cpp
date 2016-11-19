@@ -36,7 +36,7 @@ namespace BlackGui
             ui->le_modelString->setValidator(new CUpperCaseValidator(ui->le_modelString));
 
             connect(ui->le_modelString, &QLineEdit::editingFinished, this, &CAircraftModelStringCompleter::ps_textChanged);
-            connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftDbDataRead, this, &CAircraftModelStringCompleter::ps_swiftWebDataRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CAircraftModelStringCompleter::ps_swiftModelDataRead);
             connect(ui->rb_Db, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::ps_initGui);
             connect(ui->rb_ModelSet, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::ps_initGui);
             connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::ps_initGui);
@@ -156,7 +156,7 @@ namespace BlackGui
             this->ps_initGui();
         }
 
-        void CAircraftModelStringCompleter::ps_swiftWebDataRead()
+        void CAircraftModelStringCompleter::ps_swiftModelDataRead()
         {
             this->ps_initGui();
         }

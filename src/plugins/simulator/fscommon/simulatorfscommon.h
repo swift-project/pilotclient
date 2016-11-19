@@ -47,7 +47,7 @@ namespace BlackSimPlugin
 
         protected slots:
             //! \copydoc BlackCore::CSimulatorCommon::ps_allSwiftDataRead
-            virtual void ps_allSwiftDataRead() override;
+            virtual void ps_airportsRead() override;
 
         protected:
             //! Constructor
