@@ -104,7 +104,7 @@ namespace BlackMisc
         // 1) values > 1 mean extrapolation
         // 2) values > 2 mean no new situations coming in
         double distanceToSplitTime = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
-        double simulationTimeFraction = 1 - (distanceToSplitTime / deltaTime);
+        double simulationTimeFraction = 1.0 - (distanceToSplitTime / deltaTime);
         if (simulationTimeFraction > 2.0)
         {
             if (setup.showInterpolatorDebugMessages())
@@ -164,9 +164,9 @@ namespace BlackMisc
         currentSituation.setPitch(pitch);
 
         // Interpolate bank: Bank = (BankB - BankA) * t + BankA
-        CAngle bankBegin = oldSituation.getBank();
-        CAngle bankEnd = newSituation.getBank();
-        CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
+        const CAngle bankBegin = oldSituation.getBank();
+        const CAngle bankEnd = newSituation.getBank();
+        const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
         currentSituation.setBank(bank);
 
         currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())

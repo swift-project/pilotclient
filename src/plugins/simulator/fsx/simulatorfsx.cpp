@@ -589,7 +589,7 @@ namespace BlackSimPlugin
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
                     this->m_outOfRealityBubble.push_back(simObject.getAircraft());
-                    CLogMessage(this).info("Aircraft '%1' '%2' '%3' out of reality bubble") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
+                    CLogMessage(this).info("Aircraft removed, '%1' '%2' object id '%3' out of reality bubble") << callsign.toQString() << simObject.getAircraftModelString() << objectID;
                 }
                 else
                 {
@@ -600,8 +600,6 @@ namespace BlackSimPlugin
             // in all cases we remove
             const int c = m_simConnectObjects.remove(callsign);
             ok = c > 0;
-            CLogMessage(this).info("FSX: Removed aircraft '%1'") << simObject.getCallsign().toQString();
-
             const bool updated = this->updateAircraftRendered(simObject.getCallsign(), false);
             if (updated)
             {

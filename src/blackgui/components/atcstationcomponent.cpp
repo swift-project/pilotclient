@@ -9,10 +9,12 @@
 
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
+#include "blackcore/webdataservices.h"
 #include "blackgui/components/atcstationcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/infoarea.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/views/atcstationview.h"
 #include "blackgui/views/viewbase.h"
@@ -34,6 +36,7 @@
 #include <QTextEdit>
 #include <QTimer>
 #include <QTreeView>
+#include <QCompleter>
 
 using namespace BlackGui;
 using namespace BlackGui::Models;
@@ -58,6 +61,8 @@ namespace BlackGui
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
+            CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_AtcStationsOnlineMetar);
+            ui->le_AtcStationsOnlineMetar->setValidator(ucv);
 
             // some icons
             ui->pb_AtcStationsAtisReload->setIcon(CIcons::atis());
@@ -93,10 +98,17 @@ namespace BlackGui
             connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
             // runtime based connects
-            this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::ps_changedAtcStationsOnline);
-            this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::ps_changedAtcStationsBooked);
-            this->connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
-            this->connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::ps_changedAtcStationsOnline);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::ps_changedAtcStationsBooked);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
+
+            // web readers
+            if (sGui->hasWebDataServices())
+            {
+                connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &CAtcStationComponent::ps_airportsRead);
+                this->ps_airportsRead();
+            }
 
             // settings have
             this->ps_settingsChanged();
@@ -172,6 +184,11 @@ namespace BlackGui
         {
             // trick here is, we want to display a station ASAP
             ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
+        }
+
+        void CAtcStationComponent::ps_getMetarAsEntered()
+        {
+            this->getMetar("");
         }
 
         void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
@@ -296,6 +313,11 @@ namespace BlackGui
             this->m_updateTimer.setInterval(settings.getAtcUpdateTime().toMs());
         }
 
+        void CAtcStationComponent::ps_airportsRead()
+        {
+            this->initCompleters();
+        }
+
         void CAtcStationComponent::updateTreeView()
         {
             //! \fixme EXPERIMENTAL CODE: change model so we can directly use hierarchies
@@ -310,6 +332,18 @@ namespace BlackGui
             for (int i = 0; i < ui->tvp_AtcStationsOnlineTree->model()->columnCount(); i++)
             {
                 ui->tvp_AtcStationsOnlineTree->resizeColumnToContents(i);
+            }
+        }
+
+        void CAtcStationComponent::initCompleters()
+        {
+            if (!sGui || !sGui->getWebDataServices()) { return; }
+            const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);
+            if (!airports.isEmpty())
+            {
+                QCompleter *airportCompleter = new QCompleter(airports, this);
+                airportCompleter->popup()->setMinimumWidth(75);
+                ui->le_AtcStationsOnlineMetar->setCompleter(airportCompleter);
             }
         }
 

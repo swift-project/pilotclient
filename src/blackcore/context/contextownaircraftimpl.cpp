@@ -325,7 +325,7 @@ namespace BlackCore
 
         void CContextOwnAircraft::ps_allSwiftWebDataRead()
         {
-            // we should already receive a reverse lookup model
+            // we should already have received a reverse lookup model
             // from the driver
         }
 

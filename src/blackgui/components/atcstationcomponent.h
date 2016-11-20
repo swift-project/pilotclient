@@ -79,7 +79,7 @@ namespace BlackGui
 
         private slots:
             //! Get all METARs
-            void ps_getMetarAsEntered() { this->getMetar(""); }
+            void ps_getMetarAsEntered();
 
             //! Request new ATIS
             void ps_requestAtis();
@@ -120,8 +120,16 @@ namespace BlackGui
             //! Settings have been changed
             void ps_settingsChanged();
 
+            //! Airports read from web readers
+            void ps_airportsRead();
+
         private:
+            //! Build a tree view for ATC stations
             void updateTreeView();
+
+            //! Init the completers
+            void initCompleters();
+
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer { this };
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
