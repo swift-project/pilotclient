@@ -117,7 +117,7 @@ namespace BlackGui
         void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) return;
-            foreach (CTextMessage message, messages)
+            for (const CTextMessage &message : messages)
             {
                 bool relevantForMe = false;
 
@@ -281,14 +281,14 @@ namespace BlackGui
         void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage)
         {
             if (!textMessage.isPrivateMessage()) { return; }
-            CCallsign cs = textMessage.wasSent() ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
+            const CCallsign cs = textMessage.wasSent() ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
             if (cs.isEmpty()) { return; }
             QWidget *tab = this->findTextMessageTabByCallsign(cs);
-            if (tab == nullptr) { tab = this->addNewTextMessageTab(cs); }
-            Q_ASSERT(tab != nullptr);
+            if (!tab) { tab = this->addNewTextMessageTab(cs); }
+            Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
             CTextMessageTextEdit *textEdit = tab->findChild<CTextMessageTextEdit *>();
-            Q_ASSERT(textEdit != nullptr);
-            if (textEdit == nullptr) { return; } // do not crash, though this situation could not happen
+            Q_ASSERT_X(textEdit, Q_FUNC_INFO, "Missing text edit");
+            if (!textEdit) { return; } // do not crash, though this situation could not happen
             textEdit->insertTextMessage(textMessage);
 
             // sound

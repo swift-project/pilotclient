@@ -32,7 +32,6 @@ namespace BlackMisc
     namespace Network { class CTextMessage; }
 }
 namespace Ui { class CTextMessageComponent; }
-
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
@@ -60,9 +59,9 @@ namespace BlackGui
             explicit CTextMessageComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CTextMessageComponent();
+            virtual ~CTextMessageComponent();
 
-            //! copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
+            //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
 
         signals:
@@ -99,7 +98,7 @@ namespace BlackGui
             QWidget *addNewTextMessageTab(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Add new text message tab
-            //! \param tabName   name of the new tab, usually the channel name
+            //! \param tabName name of the new tab, usually the channel name
             QWidget *addNewTextMessageTab(const QString &tabName);
 
             //! Find text message tab by callsign
@@ -111,7 +110,7 @@ namespace BlackGui
             //! Private channel text message
             void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage);
 
-            //! own aircraft
+            //! Own aircraft
             const BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
             //! For this text message's recepient, is the current tab selected?
@@ -136,7 +135,6 @@ namespace BlackGui
             void handleEnteredTextMessage(const QString &textMessage);
 
         private slots:
-
             //! Cockpit values changed, used to updated some components
             void ps_onChangedAircraftCockpit();
 
@@ -149,6 +147,6 @@ namespace BlackGui
             //! Command line entered
             void ps_textMessageEntered();
         };
-    }
-}
+    } // ns
+} // ns
 #endif // guard
