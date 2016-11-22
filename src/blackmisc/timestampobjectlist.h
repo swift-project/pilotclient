@@ -50,6 +50,12 @@ namespace BlackMisc
         //! Has invalid timestamp
         bool hasInvalidTimestamps() const;
 
+        //! Set all timestamps to now
+        void setCurrentUtcTime();
+
+        //! Set invalid timestamps to now
+        void setInvalidTimestampsToCurrentUtcTime();
+
         //! Latest timestamp
         QDateTime latestTimestamp() const;
 

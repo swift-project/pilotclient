@@ -105,6 +105,25 @@ namespace BlackMisc
     }
 
     template <class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::setCurrentUtcTime()
+    {
+        for (ITimestampBased &tsObj : this->container())
+        {
+            tsObj.setCurrentUtcTime();
+        }
+    }
+
+    template <class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::setInvalidTimestampsToCurrentUtcTime()
+    {
+        for (ITimestampBased &tsObj : this->container())
+        {
+            if (tsObj.hasValidTimestamp()) { continue; }
+            tsObj.setCurrentUtcTime();
+        }
+    }
+
+    template <class OBJ, class CONTAINER>
     QDateTime ITimestampObjectList<OBJ, CONTAINER>::latestTimestamp() const
     {
         if (this->container().isEmpty()) { return QDateTime(); }

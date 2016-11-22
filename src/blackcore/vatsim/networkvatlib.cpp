@@ -759,7 +759,9 @@ namespace BlackCore
 
         void CNetworkVatlib::onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar)
         {
-            BlackMisc::Network::CTextMessageList messages(cbvar_cast(cbvar)->fromFSD(msg), CCallsign(cbvar_cast(cbvar)->fromFSD(from)), CCallsign(cbvar_cast(cbvar)->fromFSD(to)));
+            CTextMessage tm(cbvar_cast(cbvar)->fromFSD(msg), CCallsign(cbvar_cast(cbvar)->fromFSD(from)), CCallsign(cbvar_cast(cbvar)->fromFSD(to)));
+            tm.setCurrentUtcTime();
+            CTextMessageList messages(tm);
             emit cbvar_cast(cbvar)->textMessagesReceived(messages);
         }
 
@@ -777,6 +779,7 @@ namespace BlackCore
             }
             if (frequencies.isEmpty()) { return; }
             BlackMisc::Network::CTextMessageList messages(cbvar_cast(cbvar)->fromFSD(msg), frequencies, CCallsign(cbvar_cast(cbvar)->fromFSD(from)));
+            messages.setCurrentUtcTime();
             emit cbvar_cast(cbvar)->textMessagesReceived(messages);
         }
 
