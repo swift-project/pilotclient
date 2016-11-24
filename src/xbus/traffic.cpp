@@ -18,7 +18,6 @@
 #include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "XPMPMultiplayer.h"
-#include "XPMPMultiplayerCSL.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
 #include <QDateTime>
