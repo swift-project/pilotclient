@@ -661,6 +661,7 @@ namespace BlackMisc
                 element.m_pendingChanges++;
                 element.m_saved = save;
 
+                element.m_timestamp = timestamp;
                 element.m_value.uniqueWrite() = value;
                 emit valuesWantToCache({ { { element.m_key, value } }, timestamp, save });
             }
