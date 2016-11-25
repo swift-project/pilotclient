@@ -54,11 +54,17 @@ namespace BlackGui
             //! Set all engines
             void ps_setAllEngines();
 
-            //! GUI to Json
+            //! GUI to JSON
             void ps_guiToJson();
 
             //! Enable / disable debugging
             void ps_enableDebug(int state);
+
+            //! Send the text message
+            void ps_sendTextMessage();
+
+            //! Send a dummy status message
+            void ps_logStatusMessage();
 
         private:
             QScopedPointer<Ui::CInternalsComponent> ui;

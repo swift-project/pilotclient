@@ -654,6 +654,15 @@ namespace BlackCore
             this->m_airspace->testAddAircraftParts(callsign, parts, incremental);
         }
 
+        void CContextNetwork::testReceivedTextMessages(const CTextMessageList &textMessages)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages.toQString(); }
+            if (this->network())
+            {
+                emit this->network()->textMessagesReceived(textMessages);
+            }
+        }
+
         CMetar CContextNetwork::getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }

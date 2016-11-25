@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>282</width>
+    <width>289</width>
     <height>450</height>
    </rect>
   </property>
@@ -56,7 +56,7 @@
          <property name="title">
           <string>Contexts</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QGridLayout" name="gl_Contexts">
           <item row="0" column="0">
            <widget class="QCheckBox" name="cb_DebugContextAudio">
             <property name="text">
@@ -100,7 +100,7 @@
          <property name="title">
           <string>Driver plugin and interpolator</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2">
+         <layout class="QGridLayout" name="gl_DriverAndInterpolator">
           <item row="0" column="0">
            <widget class="QCheckBox" name="cb_DebugDriver">
             <property name="text">
@@ -119,6 +119,126 @@
            <widget class="QCheckBox" name="cb_ForceFullInterpolation">
             <property name="text">
              <string>force full interpolation</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="wi_StatusMessage" native="true">
+         <layout class="QGridLayout" name="gl_StatusMessage">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <item row="0" column="3">
+           <widget class="QRadioButton" name="rb_StatusMessageWarning">
+            <property name="text">
+             <string>w</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QRadioButton" name="rb_StatusMessageError">
+            <property name="text">
+             <string>e</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QRadioButton" name="rb_StatusMessageInfo">
+            <property name="text">
+             <string>i</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLineEdit" name="le_StatusMessage">
+            <property name="placeholderText">
+             <string>status message</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="tb_LogStatusMessage">
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../../blackmisc/blackmisc.qrc">
+              <normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</normaloff>:/diagona/icons/diagona/icons/arrow-circle-225-left.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="wi_TextMessages" native="true">
+         <layout class="QGridLayout" name="gl_TextMessages">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>9</number>
+          </property>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="dsb_TxtMsgFrequency">
+            <property name="suffix">
+             <string>MHz</string>
+            </property>
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>117.974999999999994</double>
+            </property>
+            <property name="maximum">
+             <double>136.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.025000000000000</double>
+            </property>
+            <property name="value">
+             <double>117.974999999999994</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pb_SendTextMessage">
+            <property name="text">
+             <string>send</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lbl_TextMessages">
+            <property name="text">
+             <string>Text messages:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="le_TxtMsgFrom">
+            <property name="placeholderText">
+             <string>from</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="le_TxtMsgTo">
+            <property name="placeholderText">
+             <string>to</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="3">
+           <widget class="QPlainTextEdit" name="pte_TxtMsg">
+            <property name="placeholderText">
+             <string>Text message</string>
             </property>
            </widget>
           </item>
@@ -543,6 +663,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

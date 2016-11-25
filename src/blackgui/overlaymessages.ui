@@ -114,7 +114,7 @@
       <item>
        <widget class="QStackedWidget" name="sw_StatusMessagesComponent">
         <property name="currentIndex">
-         <number>1</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="pg_StatusMessages">
          <layout class="QVBoxLayout" name="vl_PgStatusMessages">
@@ -242,10 +242,13 @@
           </property>
           <item>
            <layout class="QGridLayout" name="gl_TextMessage">
+            <property name="spacing">
+             <number>9</number>
+            </property>
             <item row="0" column="2">
              <widget class="QLabel" name="lbl_TmTo">
               <property name="text">
-               <string>To</string>
+               <string>to</string>
               </property>
              </widget>
             </item>
@@ -280,7 +283,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1" colspan="3">
+            <item row="2" column="0" colspan="4">
              <widget class="QTextEdit" name="te_TmText"/>
             </item>
            </layout>

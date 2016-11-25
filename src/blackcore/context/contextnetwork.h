@@ -146,10 +146,10 @@ namespace BlackCore
             //! Connection status changed
             void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
-            //! Text messages received (also private chat messages, rfaio channel messages)
+            //! Text messages received (also private chat messages, radio channel messages)
             void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
-            //! A superivisor text message was received
+            //! A supervisor text message was received
             void supervisorTextMessageReceived(const BlackMisc::Network::CTextMessage &message);
 
             //! Text message sent (by me)
@@ -282,6 +282,9 @@ namespace BlackCore
 
             //! Inject aircraft parts for testing
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) = 0;
+
+            //! Inject a text message as received
+            virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
 
         protected:
             //! Constructor

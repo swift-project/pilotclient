@@ -241,6 +241,11 @@ namespace BlackCore
             this->m_dBusInterface->callDBus(QLatin1Literal("testAddAircraftParts"), callsign, parts, incremental);
         }
 
+        void CContextNetworkProxy::testReceivedTextMessages(const CTextMessageList &textMessages)
+        {
+            this->m_dBusInterface->callDBus(QLatin1Literal("testReceivedTextMessages"), textMessages);
+        }
+
         CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, INetwork::LoginMode loginMode)
         {
             return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("connectToNetwork"), server, loginMode);

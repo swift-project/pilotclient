@@ -273,6 +273,9 @@ namespace BlackCore
             //! \copydoc IContextNetwork::testAddAircraftParts
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
 
+            //! \copydoc IContextNetwork::testReceivedTextMessages
+            virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
+
             //! Gracefully shut down, e.g. for thread safety
             void gracefulShutdown();
 

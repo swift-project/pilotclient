@@ -229,6 +229,13 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc IContextNetwork::testReceivedTextMessages
+            virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override
+            {
+                Q_UNUSED(textMessages);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {

@@ -15,9 +15,11 @@
 #include "blackgui/components/internalscomponent.h"
 #include "blackgui/components/remoteaircraftselector.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/uppercasevalidator.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/network/textmessage.h"
 
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
@@ -35,6 +37,8 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackCore;
 
 namespace BlackGui
@@ -46,6 +50,11 @@ namespace BlackGui
             ui(new Ui::CInternalsComponent)
         {
             ui->setupUi(this);
+            ui->tw_Internals->setCurrentIndex(0);
+
+            ui->le_TxtMsgFrom->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
+            ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
+
             connect(ui->pb_SendAircraftPartsGui, &QPushButton::pressed, this, &CInternalsComponent::ps_sendAircraftParts);
             connect(ui->pb_SendAircraftPartsJson, &QPushButton::pressed, this, &CInternalsComponent::ps_sendAircraftParts);
             connect(ui->pb_AircraftPartsLightsOn, &QPushButton::pressed, this, &CInternalsComponent::ps_setAllLights);
@@ -63,6 +72,10 @@ namespace BlackGui
             connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugInterpolator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_ForceFullInterpolation, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+
+            connect(ui->pb_SendTextMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_sendTextMessage);
+            connect(ui->tb_LogStatusMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_logStatusMessage);
+            connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::ps_logStatusMessage);
 
             contextFlagsToGui();
         }
@@ -176,6 +189,52 @@ namespace BlackGui
                 setup.setInterpolatorDebuggingMessages(ui->cb_DebugInterpolator->isChecked());
                 sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
             }
+        }
+
+        void CInternalsComponent::ps_sendTextMessage()
+        {
+            if (ui->le_TxtMsgTo->text().isEmpty()) { return; }
+            if (ui->le_TxtMsgFrom->text().isEmpty()) { return; }
+            if (ui->pte_TxtMsg->toPlainText().isEmpty()) { return; }
+            if (!sGui->getIContextNetwork()) { return; }
+
+            const CCallsign sender(ui->le_TxtMsgFrom->text().trimmed());
+            const CCallsign recipient(ui->le_TxtMsgTo->text().trimmed());
+            const QString msgTxt(ui->pte_TxtMsg->toPlainText().trimmed());
+            const double freqMHz = ui->dsb_TxtMsgFrequency->value();
+            CTextMessage tm;
+            CFrequency f;
+            if (freqMHz >= 118.0)
+            {
+                f = CFrequency(freqMHz, CFrequencyUnit::MHz());
+                tm = CTextMessage(msgTxt, f, sender);
+            }
+            else
+            {
+                tm = CTextMessage(msgTxt, sender, recipient);
+            }
+            tm.setCurrentUtcTime();
+            sGui->getIContextNetwork()->testReceivedTextMessages(CTextMessageList({ tm }));
+        }
+
+        void CInternalsComponent::ps_logStatusMessage()
+        {
+            if (ui->le_StatusMessage->text().isEmpty()) { return; }
+            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
+            if (ui->rb_StatusMessageError->isChecked())
+            {
+                s = CStatusMessage::SeverityError;
+            }
+            else if (ui->rb_StatusMessageWarning->isChecked())
+            {
+                s = CStatusMessage::SeverityWarning;
+            }
+            else if (ui->rb_StatusMessageInfo->isChecked())
+            {
+                s = CStatusMessage::SeverityInfo;
+            }
+            const CStatusMessage sm = CStatusMessage(this, s, ui->le_StatusMessage->text().trimmed());
+            CLogMessage::preformatted(sm);
         }
 
         CAircraftParts CInternalsComponent::guiToAircraftParts() const
