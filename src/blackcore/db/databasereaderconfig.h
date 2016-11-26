@@ -50,6 +50,9 @@ namespace BlackCore
             //! Supported entities
             BlackMisc::Network::CEntityFlags::Entity getEntities() const;
 
+            //! Supports given entites?
+            bool supportsEntities(BlackMisc::Network::CEntityFlags::Entity entities) const;
+
             //! Supported modes
             BlackMisc::Db::CDbFlags::DataRetrievalMode getRetrievalMode() const;
 
@@ -62,6 +65,15 @@ namespace BlackCore
             //! Will read from swift DB
             bool possiblyReadsFromSwiftDb() const;
 
+            //! Needs the shared header
+            bool needsSharedHeader() const;
+
+            //! Needs the shared header loaded before it can be continued
+            bool needsSharedHeaderLoaded() const;
+
+            //! Will write to swift DB
+            bool possiblyWritesToSwiftDb() const;
+
             //! Will read from cache
             bool possiblyReadsFromCache() const;
 
@@ -70,7 +82,7 @@ namespace BlackCore
 
         private:
             int m_entities = BlackMisc::Network::CEntityFlags::NoEntity;  //!< BlackMisc::Network::CEntityFlags::Entity
-            int m_retrievalFlags = BlackMisc::Db::CDbFlags::DbDirect;     //!< BlackMisc::Db::CDbFlags::DataRetrievalMode
+            int m_retrievalFlags = BlackMisc::Db::CDbFlags::DbReading;     //!< BlackMisc::Db::CDbFlags::DataRetrievalMode
             BlackMisc::PhysicalQuantities::CTime m_cacheLifetime;
 
             BLACK_METACLASS(
@@ -105,6 +117,15 @@ namespace BlackCore
 
             //! Will read from swift DB
             bool possiblyReadsFromSwiftDb() const;
+
+            //! Will write to swift DB
+            bool possiblyWritesToSwiftDb() const;
+
+            //! Needs any shared header
+            bool needsSharedHeaders(BlackMisc::Network::CEntityFlags::Entity entities) const;
+
+            //! Needs any shared header loaded before continued
+            bool needsSharedHeadersLoaded(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! Entities which will use cache or DB, so no canceled or ignored ones
             BlackMisc::Network::CEntityFlags::Entity getEntitesCachedOrReadFromDB() const;

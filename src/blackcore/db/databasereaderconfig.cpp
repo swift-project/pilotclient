@@ -42,6 +42,14 @@ namespace BlackCore
             return static_cast<CEntityFlags::Entity>(this->m_entities);
         }
 
+        bool CDatabaseReaderConfig::supportsEntities(CEntityFlags::Entity entities) const
+        {
+            const int myEntities = static_cast<int>(this->getEntities());
+            const int testEnties = static_cast<int>(entities);
+            const int common = myEntities & testEnties;
+            return (common == testEnties) || (common == myEntities);
+        }
+
         CDbFlags::DataRetrievalMode CDatabaseReaderConfig::getRetrievalMode() const
         {
             return static_cast<CDbFlags::DataRetrievalMode>(this->m_retrievalFlags);
@@ -63,7 +71,28 @@ namespace BlackCore
         {
             if (!this->isValid()) { return false; }
             if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
-            return (this->getRetrievalMode().testFlag(CDbFlags::DbDirect) || this->getRetrievalMode().testFlag(CDbFlags::Shared));
+            return (this->getRetrievalMode().testFlag(CDbFlags::DbReading));
+        }
+
+        bool CDatabaseReaderConfig::needsSharedHeader() const
+        {
+            if (!this->isValid()) { return false; }
+            if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
+            return (this->getRetrievalMode().testFlag(CDbFlags::Shared) || this->getRetrievalMode().testFlag(CDbFlags::SharedHeadersOnly));
+        }
+
+        bool CDatabaseReaderConfig::needsSharedHeaderLoaded() const
+        {
+            if (!this->isValid()) { return false; }
+            if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
+            return (this->getRetrievalMode().testFlag(CDbFlags::Shared));
+        }
+
+        bool CDatabaseReaderConfig::possiblyWritesToSwiftDb() const
+        {
+            if (!this->isValid()) { return false; }
+            if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
+            return (this->getRetrievalMode().testFlag(CDbFlags::DbWriting));
         }
 
         bool CDatabaseReaderConfig::possiblyReadsFromCache() const
@@ -124,6 +153,35 @@ namespace BlackCore
             return false;
         }
 
+        bool CDatabaseReaderConfigList::possiblyWritesToSwiftDb() const
+        {
+            for (const CDatabaseReaderConfig &config : *this)
+            {
+                if (config.possiblyWritesToSwiftDb()) { return true; }
+            }
+            return false;
+        }
+
+        bool CDatabaseReaderConfigList::needsSharedHeaders(CEntityFlags::Entity entities) const
+        {
+            for (const CDatabaseReaderConfig &config : *this)
+            {
+                if (!config.supportsEntities(entities)) { continue; }
+                if (config.needsSharedHeader()) { return true; }
+            }
+            return false;
+        }
+
+        bool CDatabaseReaderConfigList::needsSharedHeadersLoaded(CEntityFlags::Entity entities) const
+        {
+            for (const CDatabaseReaderConfig &config : *this)
+            {
+                if (!config.supportsEntities(entities)) { continue; }
+                if (config.needsSharedHeaderLoaded()) { return true; }
+            }
+            return false;
+        }
+
         CEntityFlags::Entity CDatabaseReaderConfigList::getEntitesCachedOrReadFromDB() const
         {
             CEntityFlags::Entity entities = CEntityFlags::NoEntity;
@@ -139,51 +197,65 @@ namespace BlackCore
 
         CDatabaseReaderConfigList CDatabaseReaderConfigList::forMappingTool()
         {
-            const CTime timeout(5.0, CTimeUnit::min());
-            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheThenDb;
+            const CTime cacheLifetime(5.0, CTimeUnit::min());
+            CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheThenDb;
+            retrievalFlags |= CDbFlags::DbWriting;
             CDatabaseReaderConfigList l;
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore, timeout)); // not needed in mapping tool
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, timeout));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore, cacheLifetime)); // not needed in mapping tool
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
             return l;
         }
 
         CDatabaseReaderConfigList CDatabaseReaderConfigList::forPilotClient()
         {
-            const CTime timeout(24.0, CTimeUnit::h());
-            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheThenDb;
+            const CTime cacheLifetime(30.0, CTimeUnit::d());
+            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheAndSharedHeaders;
+            CDbFlags::DataRetrievalMode retrievalFlagsWriting = retrievalFlags;
+            retrievalFlagsWriting |= CDbFlags::DbWriting;
+
             CDatabaseReaderConfigList l;
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, timeout));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlagsWriting, cacheLifetime)); // for wizard
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
             return l;
         }
 
         CDatabaseReaderConfigList CDatabaseReaderConfigList::forLauncher()
         {
-            return forPilotClient();
+            const CTime cacheLifetime(30.0, CTimeUnit::d());
+            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::CacheThenShared;
+            CDatabaseReaderConfigList l;
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore, cacheLifetime)); // not needed in mapping tool
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
+            return l;
         }
 
         CDatabaseReaderConfigList CDatabaseReaderConfigList::allDirectDbAccess()
         {
-            const CTime timeout(0.0, CTimeUnit::min());
-            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::DbDirect;
+            const CTime cacheLifetime(0.0, CTimeUnit::min());
+            const CDbFlags::DataRetrievalMode retrievalFlags = CDbFlags::DbReading;
             CDatabaseReaderConfigList l;
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, timeout));
-            l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, timeout));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
+            l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
             return l;
         }
     } // ns
