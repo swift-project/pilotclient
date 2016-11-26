@@ -31,15 +31,17 @@ namespace BlackMisc
             //! Which data to read, requires corresponding readers
             enum DataRetrievalModeFlag
             {
-                Unspecified            = 0,                   //!< Unspecified
-                DbDirect               = 1 << 0,              //!< directly from DB
-                Shared                 = 1 << 1,              //!< shared directory
-                Cached                 = 1 << 2,              //!< from cache
-                Canceled               = 1 << 3,              //!< canceled DB reading
-                Ignore                 = 1 << 4,              //!< ignore this entity
-                CacheThenDb            = DbDirect | Cached,   //!< Cache when possible, otherwise DB
-                CacheThenShared        = Shared | Cached      //!< Cache when possible, otherwise shared
-
+                Unspecified            = 0,                  //!< Unspecified
+                DbReading              = 1 << 0,             //!< directly from DB
+                DbWriting              = 1 << 1,             //!< DB writing
+                Shared                 = 1 << 2,             //!< shared directory
+                SharedHeadersOnly      = 1 << 3,             //!< shared headers only
+                Cached                 = 1 << 4,             //!< from cache
+                Canceled               = 1 << 5,             //!< canceled DB reading
+                Ignore                 = 1 << 6,             //!< ignore this entity
+                CacheThenDb            = DbReading | Cached, //!< Cache where possible, otherwise DB
+                CacheThenShared        = Shared | Cached,    //!< Cache where possible, otherwise shared
+                CacheAndSharedHeaders  = SharedHeadersOnly | Cached
             };
             Q_DECLARE_FLAGS(DataRetrievalMode, DataRetrievalModeFlag)
 

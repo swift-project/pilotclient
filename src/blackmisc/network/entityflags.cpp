@@ -155,6 +155,18 @@ namespace BlackMisc
             return NoEntity;
         }
 
+        QSet<CEntityFlags::Entity> CEntityFlags::asSingleEntities(Entity entities)
+        {
+            QSet<CEntityFlags::Entity> s;
+            CEntityFlags::Entity currentEntity = iterateDbEntities(entities);
+            while (currentEntity != NoEntity)
+            {
+                s.insert(currentEntity);
+                currentEntity = iterateDbEntities(entities);
+            }
+            return s;
+        }
+
         void CEntityFlags::registerMetadata()
         {
             // this is no value class and I register enums here,

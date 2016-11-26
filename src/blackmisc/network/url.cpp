@@ -124,6 +124,11 @@ namespace BlackMisc
             setQUrl(QUrl(fullUrl));
         }
 
+        QString CUrl::getFileName() const
+        {
+            return toQUrl().fileName();
+        }
+
         QUrl CUrl::toQUrl() const
         {
             return QUrl(getFullUrl());

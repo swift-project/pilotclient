@@ -115,6 +115,9 @@ namespace BlackMisc
             //! Set full URL
             void setFullUrl(const QString &fullUrl);
 
+            //! File name
+            QString getFileName() const;
+
             //! To QUrl
             QUrl toQUrl() const;
 

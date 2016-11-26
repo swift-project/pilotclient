@@ -19,7 +19,7 @@ namespace BlackMisc
     {
         bool CDbFlags::readsFromWeb(CDbFlags::DataRetrievalMode mode)
         {
-            return mode.testFlag(DbDirect) || mode.testFlag(Shared);
+            return mode.testFlag(DbReading) || mode.testFlag(Shared);
         }
 
         QString CDbFlags::flagToString(CDbFlags::DataRetrievalModeFlag flag)
@@ -29,7 +29,7 @@ namespace BlackMisc
             case Unspecified: return "Unspecified";
             case Ignore: return "Ignore";
             case Canceled: return "Canceled";
-            case DbDirect: return "Direct DB access";
+            case DbReading: return "Direct DB access";
             case Shared: return "Shared data";
             case Cached: return "Cached data";
             default:
@@ -45,7 +45,7 @@ namespace BlackMisc
             if (mode.testFlag(Canceled)) list << "Canceled";
             if (mode.testFlag(Ignore)) list << "Ignore";
 
-            if (mode.testFlag(DbDirect)) list << "Direct DB access";
+            if (mode.testFlag(DbReading)) list << "Direct DB access";
             if (mode.testFlag(Shared)) list << "Shared data";
             if (mode.testFlag(Cached)) list << "Cached data";
             return list.join(',');
@@ -55,7 +55,7 @@ namespace BlackMisc
         {
             switch (mode)
             {
-            case DbDirect: return Canceled;
+            case DbReading: return Canceled;
             case CacheThenDb: return Cached;
             default: return mode;
             }
