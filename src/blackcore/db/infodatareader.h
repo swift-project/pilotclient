@@ -49,6 +49,7 @@ namespace BlackCore
             BlackMisc::Network::CUrl getInfoObjectsUrl() const;
 
             // cache handling for base class
+            virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
@@ -62,21 +63,20 @@ namespace BlackCore
             // cache handling for base class
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
             //! Info objects have been read
             void ps_parseInfoObjectsData(QNetworkReply *nwReply);
 
             //! Read / re-read data file
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::InfoObjectEntity, const QDateTime &newerThan = QDateTime());
+            void ps_read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::InfoObjectEntity,
+                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
 
         private:
             BlackMisc::Db::CDbInfoList m_infoObjects;
             BlackMisc::Network::CUrl   m_urlInfoObjects;
             mutable QReadWriteLock     m_lockInfoObjects;
-
-            //! Base URL
-            static const BlackMisc::Network::CUrl &getBaseUrl();
         };
     } // ns
 } // ns

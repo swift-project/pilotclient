@@ -49,27 +49,27 @@ namespace BlackCore
             struct HeaderResponse
             {
             private:
-                QDateTime  m_updated;                  //!< when was the latest update?
+                QDateTime  m_lastModified;             //!< when was the latest update?
+                qulonglong m_contentLengthHeader = 0;  //!< content length
+                qint64     m_loadTimeMs = -1;          //!< how long did it take to load
                 BlackMisc::CStatusMessage m_message;   //!< last error or warning
                 BlackMisc::Network::CUrl  m_url;       //!< loaded url
-                qulonglong  m_contentLengthHeader = 0; //!< content length
-                qint64     m_loadTimeMs = -1;          //!< how long did it take to load
 
             public:
                 //! Any timestamp?
-                bool hasTimestamp() const { return m_updated.isValid(); }
+                bool hasTimestamp() const { return m_lastModified.isValid(); }
 
                 //! Is response newer?
-                bool isNewer(const QDateTime &ts) const { return m_updated.toMSecsSinceEpoch() > ts.toMSecsSinceEpoch(); }
+                bool isNewer(const QDateTime &ts) const { return m_lastModified.toMSecsSinceEpoch() > ts.toMSecsSinceEpoch(); }
 
                 //! Is response newer?
-                bool isNewer(qint64 mSecsSinceEpoch) const { return m_updated.toMSecsSinceEpoch() > mSecsSinceEpoch; }
+                bool isNewer(qint64 mSecsSinceEpoch) const { return m_lastModified.toMSecsSinceEpoch() > mSecsSinceEpoch; }
 
-                //! Get the update timestamp
-                const QDateTime &getUpdateTimestamp() const { return m_updated; }
+                //! Get the "last-modified" timestamp
+                const QDateTime &getLastModifiedTimestamp() const { return m_lastModified; }
 
                 //! Set update timestamp, default normally "last-modified"
-                void setUpdateTimestamp(const QDateTime &updated) { m_updated = updated; }
+                void setLastModifiedTimestamp(const QDateTime &updated) { m_lastModified = updated; }
 
                 //! Header content length
                 qulonglong getContentLengthHeader() const { return m_contentLengthHeader; }
@@ -95,6 +95,9 @@ namespace BlackCore
                 //! Set the loaded URL
                 void setUrl(const BlackMisc::Network::CUrl &url) { m_url = url; }
 
+                //! Is a shared file?
+                bool isSharedFile() const;
+
                 //! Load time in ms (from request to response)
                 qint64 getLoadTimeMs() const { return m_loadTimeMs; }
 
@@ -106,9 +109,9 @@ namespace BlackCore
             struct JsonDatastoreResponse : public HeaderResponse
             {
             private:
-                QJsonArray m_jsonArray;              //!< JSON array data
-                int        m_arraySize  = -1;        //!< size of array, if applicable (copied to member for debugging purposes)
-                bool       m_restricted = false;     //!< restricted reponse, only changed data
+                QJsonArray m_jsonArray;           //!< JSON array data
+                int        m_arraySize  = -1;     //!< size of array, if applicable (copied to member for debugging purposes)
+                bool       m_restricted = false;  //!< restricted reponse, only changed data
 
             public:
                 //! Any data?
@@ -120,7 +123,7 @@ namespace BlackCore
                 //! Incremental data, restricted by query?
                 bool isRestricted() const { return m_restricted; }
 
-                //! Incremental data, restricted by query
+                //! Mark as restricted
                 void setRestricted(bool restricted) { m_restricted = restricted; }
 
                 //! Get the JSON array
@@ -134,10 +137,16 @@ namespace BlackCore
             };
 
             //! Start reading in own thread
+            //! \remark uses caches, info objects
             void readInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
-            //! Start reading in own thread (without config/caching)
-            void startReadFromDbInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
+            //! Start loading from DB in own thread
+            //! \remark bypass caches/config
+            BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
+
+            //! Start loading from shared files in own thread
+            //! \remark bypass caches/config
+            BlackMisc::Network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities, bool checkCacheTsUpfront);
 
             //! Has received Ok response from server at least once?
             //! \threadsafe
@@ -152,8 +161,17 @@ namespace BlackCore
             //! \threadsafe
             bool hasReceivedFirstReply() const;
 
+            //! Supported entities by this reader
+            virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const = 0;
+
+            //! Mask by supported entities
+            BlackMisc::Network::CEntityFlags::Entity maskBySupportedEntities(BlackMisc::Network::CEntityFlags::Entity entities) const;
+
+            //! Is any of the given entities supported here by this reader
+            bool supportsAnyOfEntities(BlackMisc::Network::CEntityFlags::Entity entities) const;
+
             //! Get cache timestamp
-            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const = 0;
+            virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
 
             //! Cache`s number of entities
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const = 0;
@@ -161,12 +179,24 @@ namespace BlackCore
             //! Info objects available?
             bool hasInfoObjects() const;
 
+            //! Header of shared file read (for single entity)?
+            bool hasSharedFileHeader(const BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Headers of shared file read (for single entity)?
+            bool hasSharedFileHeaders(const BlackMisc::Network::CEntityFlags::Entity entities) const;
+
             //! Obtain latest object timestamp from info objects
             //! \sa BlackCore::Db::CInfoDataReader
             QDateTime getLatestEntityTimestampFromInfoObjects(BlackMisc::Network::CEntityFlags::Entity entity) const;
 
-            //! Timestamp of shared file for entiry
-            QDateTime getSharedFileTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+            //! Header timestamp (last-modified) for shared file
+            QDateTime getLatestSharedFileHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Is the file timestamp neer than cache timestamp?
+            bool isSharedHeaderNewerThanCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const;
+
+            //! Those entities where the timestamp of header is newer than the cache timestamp
+            BlackMisc::Network::CEntityFlags::Entity getEntitesWithNewerHeaderTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const;
 
             //! Request header of shared file
             bool requestHeadersOfSharedFiles(const BlackMisc::Network::CEntityFlags::Entity &entities);
@@ -190,24 +220,30 @@ namespace BlackCore
             //! swift DB server reachable?
             static bool canPingSwiftServer();
 
+            //! Init the working URLs
+            static bool initWorkingUrls(bool force = false);
+
+            //! Currently used URL for shared DB data
+            static BlackMisc::Network::CUrl getCurrentSharedDbDataUrl();
+
             //! Transform JSON data to response struct data
-            //! \private used also for samples
+            //! \private used also for samples, that`s why it is declared public
             static void stringToDatastoreResponse(const QString &jsonContent, CDatabaseReader::JsonDatastoreResponse &datastoreResponse);
 
         signals:
             //! Combined read signal
-            void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void dataRead(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
             //! Header of shared file read
             void sharedFileHeaderRead(BlackMisc::Network::CEntityFlags::Entity entity, const QString &fileName, bool success);
 
         protected:
-            CDatabaseReaderConfigList   m_config;                      //!< DB reder configuration
-            QMap<int, HeaderResponse>   m_sharedFileResponses;         //!< file responses of the shared files
-            QString                     m_statusMessage;               //!< Returned status message from watchdog
-            QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
-            bool                        m_1stReplyReceived = false;    //!< Successful connection? Does not mean data / authorizations are correct
-            mutable QReadWriteLock      m_statusLock;                  //!< Lock
+            CDatabaseReaderConfigList   m_config;                    //!< DB reder configuration
+            QString                     m_statusMessage;             //!< Returned status message from watchdog
+            bool                        m_1stReplyReceived = false;  //!< Successful connection? Does not mean data / authorizations are correct
+            mutable QReadWriteLock      m_statusLock;                //!< Lock
+            QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError;     //!< Successful connection?
+            QMap<BlackMisc::Network::CEntityFlags::Entity, HeaderResponse> m_sharedFileResponses; //!< file responses of the shared files
 
             //! Constructor
             CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name);
@@ -225,11 +261,21 @@ namespace BlackCore
             //! Split into single entity and send dataRead signal
             BlackMisc::Network::CEntityFlags::Entity emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities, bool onlyIfHasData);
 
+            //! Get the service URL, individual for each reader
+            virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const = 0;
+
+            //! Base URL
+            BlackMisc::Network::CUrl getBaseUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
+
             //! DB base URL
             static const BlackMisc::Network::CUrl &getDbUrl();
 
-            //! Obtain a working shared URL
-            static BlackMisc::Network::CUrl getWorkingSharedUrl();
+            //! Get the working shared URL, initialized by CDatabaseReader::initWorkingUrls
+            //! \remark normally constant after startup phase
+            static BlackMisc::Network::CUrl getWorkingDbDataFileLocationUrl();
+
+            //! File appendix for given mode, such as ".php" or ".json"
+            static QString fileNameForMode(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode);
 
             //! \name Cache access
             //! @{
@@ -253,8 +299,17 @@ namespace BlackCore
             //! @}
 
         private:
+            static BlackMisc::Network::CUrl s_workingSharedDbData; //!< one chhosen URL for all DB reader objects
+
+            //! Start reading in own thread (without config/caching)
+            //! \remarks can handle DB or shared file reads
+            void startReadFromBackendInBackgroundThread(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan = QDateTime());
+
             //! Received a reply of a header for a shared file
             void receivedSharedFileHeader(QNetworkReply *nwReplyPtr);
+
+            //! Received a reply of a header for a shared file
+            void receivedSharedFileHeaderNonClosing(QNetworkReply *nwReply);
 
             //! Check if terminated or error, otherwise split into array of objects
             JsonDatastoreResponse transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const;

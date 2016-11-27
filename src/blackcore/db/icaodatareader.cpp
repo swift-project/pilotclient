@@ -30,6 +30,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackCore::Data;
@@ -42,7 +43,7 @@ namespace BlackCore
             CDatabaseReader(owner, confg, "CIcaoDataReader")
         {
             // init to avoid threading issues
-            getBaseUrl();
+            getBaseUrl(CDbFlags::DbReading);
         }
 
         CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodes() const
@@ -122,7 +123,7 @@ namespace BlackCore
             return this->getCountries().size();
         }
 
-        void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan)
+        void CIcaoDataReader::ps_read(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck(); // runs in background thread
             if (this->isAbandoned()) { return; }
@@ -130,7 +131,7 @@ namespace BlackCore
             CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
             {
-                CUrl url(getAircraftIcaoUrl());
+                CUrl url(getAircraftIcaoUrl(mode));
                 if (!url.isEmpty())
                 {
                     if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
@@ -145,7 +146,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
             {
-                CUrl url(getAirlineIcaoUrl());
+                CUrl url(getAirlineIcaoUrl(mode));
                 if (!url.isEmpty())
                 {
                     if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
@@ -160,7 +161,7 @@ namespace BlackCore
 
             if (entities.testFlag(CEntityFlags::CountryEntity))
             {
-                CUrl url(getCountryUrl());
+                CUrl url(getCountryUrl(mode));
                 if (!url.isEmpty())
                 {
                     if (!newerThan.isNull()) { url.appendQuery("newer=" + newerThan.toString(Qt::ISODate)); }
@@ -210,12 +211,6 @@ namespace BlackCore
             }
         }
 
-        const CUrl &CIcaoDataReader::getBaseUrl()
-        {
-            static const CUrl baseUrl(sApp->getGlobalSetup().getDbIcaoReaderUrl());
-            return baseUrl;
-        }
-
         void CIcaoDataReader::ps_parseAircraftIcaoData(QNetworkReply *nwReplyPtr)
         {
             // wrap pointer, make sure any exit cleans up reply
@@ -243,7 +238,7 @@ namespace BlackCore
             }
 
             this->m_aircraftIcaoCache.set(codes, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl());
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
             emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AircraftIcaoEntity) << urlString;
         }
@@ -271,7 +266,7 @@ namespace BlackCore
             }
 
             this->m_airlineIcaoCache.set(codes, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl());
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
             emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AirlineIcaoEntity) << urlString;
         }
@@ -297,7 +292,7 @@ namespace BlackCore
             }
 
             this->m_countryCache.set(countries, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl());
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
             emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, n);
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::CountryEntity) << urlString;
         }
@@ -393,6 +388,11 @@ namespace BlackCore
             return true;
         }
 
+        CEntityFlags::Entity CIcaoDataReader::getSupportedEntities() const
+        {
+            return CEntityFlags::AllIcaoAndCountries;
+        }
+
         void CIcaoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { this->m_aircraftIcaoCache.synchronize(); }
@@ -439,28 +439,27 @@ namespace BlackCore
         bool CIcaoDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl(CDbFlags::DbReading));
         }
 
-        CUrl CIcaoDataReader::getAircraftIcaoUrl(bool shared) const
+        CUrl CIcaoDataReader::getDbServiceBaseUrl() const
         {
-            return shared ?
-                   getWorkingSharedUrl().withAppendedPath("jsonaircrafticao.php") :
-                   getBaseUrl().withAppendedPath("service/jsonaircrafticao.php");
+            return sApp->getGlobalSetup().getDbIcaoReaderUrl();
         }
 
-        CUrl CIcaoDataReader::getAirlineIcaoUrl(bool shared) const
+        CUrl CIcaoDataReader::getAircraftIcaoUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            return shared ?
-                   getWorkingSharedUrl().withAppendedPath("jsonairlineicao.php") :
-                   getBaseUrl().withAppendedPath("service/jsonairlineicao.php");
+            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AircraftIcaoEntity, mode));
         }
 
-        CUrl CIcaoDataReader::getCountryUrl(bool shared) const
+        CUrl CIcaoDataReader::getAirlineIcaoUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            return shared ?
-                   getWorkingSharedUrl().withAppendedPath("jsoncountry.php") :
-                   getBaseUrl().withAppendedPath("service/jsoncountry.php");
+            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AirlineIcaoEntity, mode));
+        }
+
+        CUrl CIcaoDataReader::getCountryUrl(CDbFlags::DataRetrievalModeFlag mode) const
+        {
+            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::CountryEntity, mode));
         }
     } // ns
 } // ns

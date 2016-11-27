@@ -16,6 +16,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Db;
 
 namespace BlackCore
 {
@@ -35,6 +36,45 @@ namespace BlackCore
         int CAirportDataReader::getAirportsCount() const
         {
             return this->getAirports().size();
+        }
+
+        bool CAirportDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead)
+        {
+            if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
+            QTimer::singleShot(0, this, [this, dir, whatToRead]()
+            {
+                bool s = this->readFromJsonFiles(dir, whatToRead);
+                Q_UNUSED(s);
+            });
+            return true;
+        }
+
+        bool CAirportDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+        {
+            QDir directory(dir);
+            if (!directory.exists()) { return false; }
+            BlackMisc::Network::CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
+
+            if (whatToRead.testFlag(CEntityFlags::AirportEntity))
+            {
+                QString airportsJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "airports.json")));
+                if (!airportsJson.isEmpty())
+                {
+                    CAirportList airports;
+                    airports.convertFromJson(airportsJson);
+                    const int c = airports.size();
+                    this->m_airportCache.set(airports);
+
+                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c);
+                    reallyRead |= CEntityFlags::AirportEntity;
+                }
+            }
+            return (reallyRead & CEntityFlags::DistributorLiveryModel) == whatToRead;
+        }
+
+        CEntityFlags::Entity CAirportDataReader::getSupportedEntities() const
+        {
+            return CEntityFlags::AirportEntity;
         }
 
         QDateTime CAirportDataReader::getCacheTimestamp(CEntityFlags::Entity entities) const
@@ -65,12 +105,17 @@ namespace BlackCore
         bool CAirportDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl(CDbFlags::DbReading));
         }
 
-        CUrl CAirportDataReader::getAirportsUrl() const
+        CUrl CAirportDataReader::getDbServiceBaseUrl() const
         {
-            return sApp->getGlobalSetup().getDbAirportReaderUrl().withAppendedPath("service/jsonairport.php");
+            return sApp->getGlobalSetup().getDbAirportReaderUrl();
+        }
+
+        CUrl CAirportDataReader::getAirportsUrl(CDbFlags::DataRetrievalModeFlag mode) const
+        {
+            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AirportEntity, mode));
         }
 
         void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReply)
@@ -104,18 +149,18 @@ namespace BlackCore
             }
 
             this->m_airportCache.set(airports, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl());
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
             emit this->dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, airports.size());
         }
 
-        void CAirportDataReader::ps_read(CEntityFlags::Entity entity, const QDateTime &newerThan)
+        void CAirportDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
             if (this->isAbandoned()) { return; }
 
             if (entity.testFlag(CEntityFlags::AirportEntity))
             {
-                CUrl url = getAirportsUrl();
+                CUrl url = getAirportsUrl(mode);
                 if (!url.isEmpty())
                 {
                     if (!newerThan.isNull())
@@ -153,12 +198,5 @@ namespace BlackCore
                 CLogMessage::preformatted(m);
             }
         }
-
-        const CUrl &CAirportDataReader::getBaseUrl()
-        {
-            static const CUrl baseUrl(sApp->getGlobalSetup().getDbAirportReaderUrl());
-            return baseUrl;
-        }
-
     } // ns
 } // ns

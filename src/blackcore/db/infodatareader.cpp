@@ -28,10 +28,7 @@ namespace BlackCore
     {
         CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config) :
             CDatabaseReader(owner, config, "CInfoDataReader")
-        {
-            // init to avoid threading issues
-            getBaseUrl();
-        }
+        { }
 
         CDbInfoList CInfoDataReader::getDbInfoObjects() const
         {
@@ -89,13 +86,19 @@ namespace BlackCore
             return false;
         }
 
-        void CInfoDataReader::read(CEntityFlags::Entity entities, const QDateTime &newerThan)
+        CUrl CInfoDataReader::getDbServiceBaseUrl() const
         {
-            this->ps_read(entities, newerThan);
+            return sApp->getGlobalSetup().getDbInfoReaderUrl();
         }
 
-        void CInfoDataReader::ps_read(CEntityFlags::Entity entities, const QDateTime &newerThan)
+        void CInfoDataReader::read(CEntityFlags::Entity entities, const QDateTime &newerThan)
         {
+            this->ps_read(entities, CDbFlags::DbReading, newerThan);
+        }
+
+        void CInfoDataReader::ps_read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+        {
+            Q_UNUSED(mode);
             CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
             CUrl url(getInfoObjectsUrl());
             if (entities.testFlag(CEntityFlags::InfoObjectEntity))
@@ -154,15 +157,14 @@ namespace BlackCore
             CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::InfoObjectEntity) << urlString;
         }
 
-        const CUrl &CInfoDataReader::getBaseUrl()
-        {
-            static const CUrl baseUrl(sApp->getGlobalSetup().getDbInfoReaderUrl());
-            return baseUrl;
-        }
-
         CUrl CInfoDataReader::getInfoObjectsUrl() const
         {
-            return getBaseUrl().withAppendedPath("service/jsondbinfo.php");
+            return getBaseUrl(CDbFlags::DbReading).withAppendedPath("jsondbinfo.php");
+        }
+
+        CEntityFlags::Entity CInfoDataReader::getSupportedEntities() const
+        {
+            return CEntityFlags::InfoObjectEntity;
         }
     } // namespace
 } // namespace

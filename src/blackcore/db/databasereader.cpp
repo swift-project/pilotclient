@@ -37,10 +37,12 @@ namespace BlackCore
 {
     namespace Db
     {
+        CUrl CDatabaseReader::s_workingSharedDbData;
+
         CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) :
             BlackCore::CThreadedReader(owner, name), m_config(config)
         {
-            getDbUrl(); // init the cache
+            CDatabaseReader::initWorkingUrls();
         }
 
         void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
@@ -49,9 +51,10 @@ namespace BlackCore
 
             // we accept cached cached data
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::InfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
-            const bool hasInfoObjects = this->hasInfoObjects(); // no info objects is no necessarily error, but indicates a) either data not available (DB down) or b) only caches are used
+            const bool hasInfoObjects = this->hasInfoObjects(); // no info objects is not necessarily error, but indicates a) either data not available (DB down) or b) only caches are used
             CEntityFlags::Entity allEntities    = entities;
             CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
+            CEntityFlags::Entity dbEntities     = CEntityFlags::NoEntity;
             CEntityFlags::Entity currentEntity  = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
             while (currentEntity)
             {
@@ -61,7 +64,7 @@ namespace BlackCore
                 Q_ASSERT_X(!rm.testFlag(CDbFlags::Unspecified), Q_FUNC_INFO, "Missing retrieval mode");
                 if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
                 {
-                    entities &= ~currentEntity; // do not load from web database
+                    // do not load
                 }
                 else if (rm.testFlag(CDbFlags::Cached))
                 {
@@ -76,12 +79,12 @@ namespace BlackCore
                         if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp >= 0 && latestEntityTimestamp >= 0)
                         {
                             this->admitCaches(currentEntity);
-                            entities &= ~currentEntity; // do not load from web database
                             cachedEntities |= currentEntity; // read from cache
                             CLogMessage(this).info("Using cache for %1 (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
                         }
                         else
                         {
+                            dbEntities |= currentEntity;
                             if (changedUrl)
                             {
                                 CLogMessage(this).info("Data location changed, will override cache for %1") << currentEntityName;
@@ -94,11 +97,9 @@ namespace BlackCore
                     }
                     else
                     {
-                        // no info objects, server down
+                        // no info objects, server down or no info objects loaded
                         this->admitCaches(currentEntity);
-                        const int c = this->getCacheCount(currentEntity);
-                        CLogMessage(this).info("No info object for %1, using cache with %2 objects") << currentEntityName << c;
-                        entities &= ~currentEntity; // do not load from web database
+                        CLogMessage(this).info("No info object for %1, triggered reading cache") << currentEntityName;
                         cachedEntities |= currentEntity; // read from cache
                     }
                 }
@@ -109,11 +110,47 @@ namespace BlackCore
             this->emitReadSignalPerSingleCachedEntity(cachedEntities, true);
 
             // Real read from DB
-            this->startReadFromDbInBackgroundThread(entities, newerThan);
+            this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::DbReading, newerThan);
         }
 
-        void CDatabaseReader::startReadFromDbInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
+        CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromDb(CEntityFlags::Entity entities, const QDateTime &newerThan)
         {
+            this->startReadFromBackendInBackgroundThread(entities, CDbFlags::DbReading, newerThan);
+            return entities;
+        }
+
+        CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity entities, bool checkCacheTsUpfront)
+        {
+            if (entities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
+            if (checkCacheTsUpfront)
+            {
+                CEntityFlags::Entity newerHeaderEntities  = this->getEntitesWithNewerHeaderTimestamp(entities);
+                if (newerHeaderEntities != entities)
+                {
+                    const CEntityFlags::Entity validInCacheEntities = (entities ^ newerHeaderEntities) & entities;
+                    CLogMessage(this).info("Reduced '%1' to '%2' before triggering load of shared files (still in cache)") << CEntityFlags::flagToString(entities) << CEntityFlags::flagToString(newerHeaderEntities);
+
+                    // In case we have difference entities we treat them as they were loaded, they result from still being in the cache
+                    // Using timer to first finish this function, then the resulting signal
+                    if (validInCacheEntities != CEntityFlags::NoEntity)
+                    {
+                        QTimer::singleShot(10, this, [ = ]
+                        {
+                            emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0);
+                        });
+                    }
+                    if (newerHeaderEntities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
+                    entities = newerHeaderEntities;
+                }
+            }
+            this->startReadFromBackendInBackgroundThread(entities, CDbFlags::Shared);
+            return entities;
+        }
+
+        void CDatabaseReader::startReadFromBackendInBackgroundThread(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+        {
+            Q_ASSERT_X(mode == CDbFlags::DbReading || mode == CDbFlags::Shared, Q_FUNC_INFO, "Wrong mode");
+
             // ps_read is implemented in the derived classes
             if (entities == CEntityFlags::NoEntity) { return; }
             if (!this->isNetworkAvailable())
@@ -124,6 +161,7 @@ namespace BlackCore
 
             const bool s = QMetaObject::invokeMethod(this, "ps_read",
                            Q_ARG(BlackMisc::Network::CEntityFlags::Entity, entities),
+                           Q_ARG(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag, mode),
                            Q_ARG(QDateTime, newerThan));
             Q_ASSERT_X(s, Q_FUNC_INFO, "Invoke failed");
             Q_UNUSED(s);
@@ -131,6 +169,7 @@ namespace BlackCore
 
         CDatabaseReader::JsonDatastoreResponse CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const
         {
+            Q_ASSERT_X(nwReply, Q_FUNC_INFO, "missing reply");
             JsonDatastoreResponse datastoreResponse;
             const bool ok = this->setHeaderInfoPart(datastoreResponse, nwReply);
             if (ok)
@@ -140,7 +179,6 @@ namespace BlackCore
                 if (dataFileData.isEmpty())
                 {
                     datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, "Empty response, no data"));
-                    datastoreResponse.setUpdateTimestamp(QDateTime::currentDateTimeUtc());
                 }
                 else
                 {
@@ -155,7 +193,6 @@ namespace BlackCore
             HeaderResponse headerResponse;
             const bool success = this->setHeaderInfoPart(headerResponse, nwReply);
             Q_UNUSED(success);
-            nwReply->close();
             return headerResponse;
         }
 
@@ -181,7 +218,7 @@ namespace BlackCore
 
             const QDateTime lastModified = nwReply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
             const qulonglong size = nwReply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
-            headerResponse.setUpdateTimestamp(lastModified);
+            headerResponse.setLastModifiedTimestamp(lastModified);
             headerResponse.setContentLengthHeader(size);
 
             if (nwReply->error() == QNetworkReply::NoError)
@@ -204,7 +241,12 @@ namespace BlackCore
         CDatabaseReader::JsonDatastoreResponse CDatabaseReader::setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply)
         {
             this->setReplyStatus(nwReply);
-            return this->transformReplyIntoDatastoreResponse(nwReply);
+            const CDatabaseReader::JsonDatastoreResponse dsr = this->transformReplyIntoDatastoreResponse(nwReply);
+            if (dsr.isSharedFile())
+            {
+                this->receivedSharedFileHeaderNonClosing(nwReply);
+            }
+            return dsr;
         }
 
         CDbInfoList CDatabaseReader::infoList() const
@@ -220,8 +262,27 @@ namespace BlackCore
             return infoList().size() > 0;
         }
 
+        bool CDatabaseReader::hasSharedFileHeader(const CEntityFlags::Entity entity) const
+        {
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
+            return m_sharedFileResponses.contains(entity);
+        }
+
+        bool CDatabaseReader::hasSharedFileHeaders(const CEntityFlags::Entity entities) const
+        {
+            CEntityFlags::Entity myEntities = maskBySupportedEntities(entities);
+            CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(myEntities);
+            while (currentEntity != CEntityFlags::NoEntity)
+            {
+                if (!hasSharedFileHeader(currentEntity)) { return false; }
+                currentEntity = CEntityFlags::iterateDbEntities(myEntities);
+            }
+            return true;
+        }
+
         QDateTime CDatabaseReader::getLatestEntityTimestampFromInfoObjects(CEntityFlags::Entity entity) const
         {
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
             static const QDateTime e;
             const CDbInfoList il(infoList());
             if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return e; }
@@ -233,31 +294,32 @@ namespace BlackCore
             return info.getUtcTimestamp();
         }
 
-        QDateTime CDatabaseReader::getSharedFileTimestamp(CEntityFlags::Entity entity) const
+        QDateTime CDatabaseReader::getLatestSharedFileHeaderTimestamp(CEntityFlags::Entity entity) const
         {
-            const int key = static_cast<int>(entity);
-            if (m_sharedFileResponses.contains(key))
-            {
-                return this->m_sharedFileResponses[key].getUpdateTimestamp();
-            }
-            else
-            {
-                return QDateTime();
-            }
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
+            static const QDateTime e;
+            if (!this->hasSharedFileHeader(entity)) { return e; }
+            return m_sharedFileResponses[entity].getLastModifiedTimestamp();
         }
 
         bool CDatabaseReader::requestHeadersOfSharedFiles(const CEntityFlags::Entity &entities)
         {
-            CEntityFlags::Entity allEntities(entities);
+            if (!this->isNetworkAvailable())
+            {
+                CLogMessage(this).warning("No network, will not read shared file headers for %1") << CEntityFlags::flagToString(entities);
+                return false;
+            }
+
+            CEntityFlags::Entity allEntities(this->maskBySupportedEntities(entities));
             CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities);
-            CUrl urlDbData = CGlobalSetup::buildDbDataDirectory(getWorkingSharedUrl());
+            const CUrl urlSharedData = CGlobalSetup::buildDbDataDirectory(getWorkingDbDataFileLocationUrl());
 
             int c = 0;
             while (currentEntity != CEntityFlags::NoEntity)
             {
-                const QString fileName = CDbInfo::entityToSharedFileName(currentEntity);
+                const QString fileName = CDbInfo::entityToSharedName(currentEntity);
                 Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "No file name for entity");
-                CUrl url = urlDbData;
+                CUrl url = urlSharedData;
                 url.appendPath(fileName);
 
                 const QString entityString = CEntityFlags::flagToString(currentEntity);
@@ -267,6 +329,33 @@ namespace BlackCore
                 currentEntity = CEntityFlags::iterateDbEntities(allEntities);
             }
             return c > 0;
+        }
+
+        bool CDatabaseReader::isSharedHeaderNewerThanCacheTimestamp(CEntityFlags::Entity entity) const
+        {
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
+            const QDateTime cacheTs(this->getCacheTimestamp(entity));
+            if (!cacheTs.isValid()) { return true; } // we have no cache ts
+
+            const QDateTime hts(this->getLatestSharedFileHeaderTimestamp(entity));
+            if (!hts.isValid()) { return false; }
+            return hts > cacheTs;
+        }
+
+        CEntityFlags::Entity CDatabaseReader::getEntitesWithNewerHeaderTimestamp(CEntityFlags::Entity entities) const
+        {
+            entities = this->maskBySupportedEntities(entities); // handled by this reader
+            CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(entities);
+            CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
+            while (currentEntity != CEntityFlags::NoEntity)
+            {
+                if (this->isSharedHeaderNewerThanCacheTimestamp(currentEntity))
+                {
+                    newerEntities |= currentEntity;
+                }
+                currentEntity = CEntityFlags::iterateDbEntities(entities);
+            }
+            return newerEntities;
         }
 
         int CDatabaseReader::getCountFromInfoObjects(CEntityFlags::Entity entity) const
@@ -303,14 +392,31 @@ namespace BlackCore
             return emitted;
         }
 
+        CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
+        {
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing app object");
+            switch (mode)
+            {
+            case CDbFlags::DbReading:
+                return getDbServiceBaseUrl().withAppendedPath("/service");
+            case CDbFlags::SharedHeadersOnly:
+            case CDbFlags::Shared:
+                return CDatabaseReader::getWorkingDbDataFileLocationUrl();
+            default:
+                qFatal("Wrong mode");
+                break;
+            }
+            return CUrl();
+        }
+
         bool CDatabaseReader::isChangedUrl(const CUrl &oldUrl, const CUrl &currentUrl)
         {
             if (oldUrl.isEmpty()) { return true; }
             Q_ASSERT_X(!currentUrl.isEmpty(), Q_FUNC_INFO, "No base URL");
 
-            const QString oldS(oldUrl.getFullUrl(false));
-            const QString currentS(currentUrl.getFullUrl(false));
-            return oldS != currentS;
+            const QString old(oldUrl.getFullUrl(false));
+            const QString current(currentUrl.getFullUrl(false));
+            return old != current;
         }
 
         void CDatabaseReader::receivedSharedFileHeader(QNetworkReply *nwReplyPtr)
@@ -319,13 +425,20 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isAbandoned()) { return; }
+            this->receivedSharedFileHeaderNonClosing(nwReplyPtr);
+            nwReply->close();
+        }
 
-            const HeaderResponse headerResponse = this->transformReplyIntoHeaderResponse(nwReply.data());
+        void CDatabaseReader::receivedSharedFileHeaderNonClosing(QNetworkReply *nwReply)
+        {
+            if (this->isAbandoned()) { return; }
+
+            const HeaderResponse headerResponse = this->transformReplyIntoHeaderResponse(nwReply);
             const QString fileName = nwReply->url().fileName();
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
-            const int key = static_cast<int>(entity);
-            this->m_sharedFileResponses[key] = headerResponse;
+            this->m_sharedFileResponses[entity] = headerResponse;
 
+            CLogMessage(this).info("Received header for shared file of '%1' from '%2'") << fileName << headerResponse.getUrl().toQString();
             emit this->sharedFileHeaderRead(entity, fileName, !headerResponse.hasWarningOrAboveMessage());
         }
 
@@ -348,6 +461,16 @@ namespace BlackCore
             return m_1stReplyReceived;
         }
 
+        CEntityFlags::Entity CDatabaseReader::maskBySupportedEntities(CEntityFlags::Entity entities) const
+        {
+            return entities & getSupportedEntities();
+        }
+
+        bool CDatabaseReader::supportsAnyOfEntities(CEntityFlags::Entity entities) const
+        {
+            return static_cast<int>(maskBySupportedEntities(entities)) > 0;
+        }
+
         const QString &CDatabaseReader::getStatusMessage() const
         {
             return this->m_statusMessage;
@@ -367,6 +490,20 @@ namespace BlackCore
             if (nwReply && nwReply->isFinished())
             {
                 this->setReplyStatus(nwReply->error(), nwReply->errorString());
+            }
+        }
+
+        QString CDatabaseReader::fileNameForMode(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode)
+        {
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "needs single entity");
+            switch (mode)
+            {
+            case CDbFlags::Shared:
+            case CDbFlags::SharedHeadersOnly:
+                return CDbInfo::entityToSharedName(entity);
+            default:
+            case CDbFlags::DbReading:
+                return CDbInfo::entityToServiceName(entity);
             }
         }
 
@@ -397,9 +534,9 @@ namespace BlackCore
             return dbUrl;
         }
 
-        CUrl CDatabaseReader::getWorkingSharedUrl()
+        CUrl CDatabaseReader::getWorkingDbDataFileLocationUrl()
         {
-            return sApp->getGlobalSetup().getSwiftSharedUrls().getRandomWorkingUrl();
+            return CDatabaseReader::s_workingSharedDbData;
         }
 
         void CDatabaseReader::cacheHasChanged(CEntityFlags::Entity entities)
@@ -413,12 +550,23 @@ namespace BlackCore
             return CNetworkUtils::canConnect(url);
         }
 
+        bool CDatabaseReader::initWorkingUrls(bool force)
+        {
+            if (!force && !CDatabaseReader::s_workingSharedDbData.isEmpty()) { return false; }
+            CDatabaseReader::s_workingSharedDbData = sApp->getGlobalSetup().getSwiftDbDataFileLocationUrls().getRandomWorkingUrl();
+            return !CDatabaseReader::s_workingSharedDbData.isEmpty();
+        }
+
+        CUrl CDatabaseReader::getCurrentSharedDbDataUrl()
+        {
+            return CDatabaseReader::s_workingSharedDbData;
+        }
+
         void CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent, JsonDatastoreResponse &datastoreResponse)
         {
             if (jsonContent.isEmpty())
             {
                 datastoreResponse.setMessage(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "Empty string, no data"));
-                datastoreResponse.setUpdateTimestamp(QDateTime::currentDateTimeUtc());
                 return;
             }
 
@@ -427,14 +575,14 @@ namespace BlackCore
             {
                 // directly an array, no further info
                 datastoreResponse.setJsonArray(jsonResponse.array());
-                datastoreResponse.setUpdateTimestamp(QDateTime::currentDateTimeUtc());
+                datastoreResponse.setLastModifiedTimestamp(QDateTime::currentDateTimeUtc());
             }
             else
             {
                 const QJsonObject responseObject(jsonResponse.object());
                 datastoreResponse.setJsonArray(responseObject["data"].toArray());
                 const QString ts(responseObject["latest"].toString());
-                datastoreResponse.setUpdateTimestamp(ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts));
+                datastoreResponse.setLastModifiedTimestamp(ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts));
                 datastoreResponse.setRestricted(responseObject["restricted"].toBool());
             }
         }
@@ -443,6 +591,12 @@ namespace BlackCore
         {
             m_jsonArray = value;
             m_arraySize = value.size();
+        }
+
+        bool CDatabaseReader::HeaderResponse::isSharedFile() const
+        {
+            const QString fn(getUrl().getFileName());
+            return CDbInfo::sharedFileNames().contains(fn, Qt::CaseInsensitive);
         }
     } // ns
 } // ns

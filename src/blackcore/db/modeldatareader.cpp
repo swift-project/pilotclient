@@ -29,6 +29,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
@@ -42,7 +43,7 @@ namespace BlackCore
             CDatabaseReader(owner, config, "CModelDataReader")
         {
             // init to avoid threading issues
-            getBaseUrl();
+            getBaseUrl(CDbFlags::DbReading);
         }
 
         CLiveryList CModelDataReader::getLiveries() const
@@ -146,7 +147,7 @@ namespace BlackCore
                 getDistributorsCount() > 0;
         }
 
-        void CModelDataReader::ps_read(CEntityFlags::Entity entity, const QDateTime &newerThan)
+        void CModelDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
             if (this->isAbandoned()) { return; }
@@ -154,7 +155,7 @@ namespace BlackCore
             CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
             if (entity.testFlag(CEntityFlags::LiveryEntity))
             {
-                CUrl url(getLiveryUrl());
+                CUrl url(getLiveryUrl(mode));
                 if (!url.isEmpty())
                 {
                     if (!newerThan.isNull())
@@ -173,7 +174,7 @@ namespace BlackCore
 
             if (entity.testFlag(CEntityFlags::DistributorEntity))
             {
-                CUrl url(getDistributorUrl());
+                CUrl url(getDistributorUrl(mode));
                 if (!url.isEmpty())
                 {
                     if (!newerThan.isNull())
@@ -192,7 +193,7 @@ namespace BlackCore
 
             if (entity.testFlag(CEntityFlags::ModelEntity))
             {
-                CUrl url(getModelUrl());
+                CUrl url(getModelUrl(mode));
                 if (!url.isEmpty())
                 {
                     if (!newerThan.isNull())
@@ -282,11 +283,11 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             this->m_liveryCache.set(liveries, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl());
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
             // never emit when lock is held -> deadlock
             emit dataRead(CEntityFlags::LiveryEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::LiveryEntity) << urlString;
+            CLogMessage(this).info("Read '%1' '%2' from '%3'") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
         }
 
         void CModelDataReader::ps_parseDistributorData(QNetworkReply *nwReplyPtr)
@@ -295,7 +296,7 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isAbandoned()) { return; }
-            QString urlString(nwReply->url().toString());
+            const QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -325,10 +326,10 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             this->m_distributorCache.set(distributors, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl());
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
             emit dataRead(CEntityFlags::DistributorEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::DistributorEntity) << urlString;
+            CLogMessage(this).info("Read '%1' '%2' from '%3'") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
         }
 
         void CModelDataReader::ps_parseModelData(QNetworkReply *nwReplyPtr)
@@ -368,10 +369,10 @@ namespace BlackCore
                 latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
             this->m_modelCache.set(models, latestTimestamp);
-            this->updateReaderUrl(getBaseUrl());
+            this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
             emit dataRead(CEntityFlags::ModelEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
+            CLogMessage(this).info("Read '%1' '%2' from '%3'") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
         }
 
         bool CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
@@ -466,6 +467,11 @@ namespace BlackCore
             return true;
         }
 
+        CEntityFlags::Entity CModelDataReader::getSupportedEntities() const
+        {
+            return CEntityFlags::DistributorLiveryModel;
+        }
+
         void CModelDataReader::synchronizeCaches(CEntityFlags::Entity entities)
         {
             if (entities.testFlag(CEntityFlags::LiveryEntity)) { this->m_liveryCache.synchronize(); }
@@ -512,34 +518,27 @@ namespace BlackCore
         bool CModelDataReader::hasChangedUrl(CEntityFlags::Entity entity) const
         {
             Q_UNUSED(entity);
-            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl());
+            return CDatabaseReader::isChangedUrl(this->m_readerUrlCache.get(), getBaseUrl(CDbFlags::DbReading));
         }
 
-        const CUrl &CModelDataReader::getBaseUrl()
+        CUrl CModelDataReader::getDbServiceBaseUrl() const
         {
-            static const CUrl baseUrl(sApp->getGlobalSetup().getDbModelReaderUrl());
-            return baseUrl;
+            return sApp->getGlobalSetup().getDbModelReaderUrl();
         }
 
-        CUrl CModelDataReader::getLiveryUrl(bool shared) const
+        CUrl CModelDataReader::getLiveryUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            return shared ?
-                   getBaseUrl().withAppendedPath("service/jsonlivery.php") :
-                   getBaseUrl().withAppendedPath("service/jsonlivery.php");
+            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::LiveryEntity, mode));
         }
 
-        CUrl CModelDataReader::getDistributorUrl(bool shared) const
+        CUrl CModelDataReader::getDistributorUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            return shared ?
-                   getBaseUrl().withAppendedPath("service/jsondistributor.php") :
-                   getBaseUrl().withAppendedPath("service/jsondistributor.php");
+            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::DistributorEntity, mode));
         }
 
-        CUrl CModelDataReader::getModelUrl(bool shared) const
+        CUrl CModelDataReader::getModelUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            return shared ?
-                   getBaseUrl().withAppendedPath("service/jsonaircraftmodel.php") :
-                   getBaseUrl().withAppendedPath("service/jsonaircraftmodel.php");
+            return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::ModelEntity, mode));
         }
     } // ns
 } // ns

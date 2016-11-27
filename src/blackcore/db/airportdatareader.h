@@ -32,7 +32,7 @@ namespace BlackCore
 
         public:
             //! Constructor
-            CAirportDataReader(QObject* parent, const CDatabaseReaderConfigList &config);
+            CAirportDataReader(QObject *parent, const CDatabaseReaderConfigList &config);
 
             //! Returns a list of all airports in the database.
             //! \threadsafe
@@ -42,7 +42,14 @@ namespace BlackCore
             //! \threadsafe
             int getAirportsCount() const;
 
+            //! Read from static data file
+            bool readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AirportEntity);
+
+            //! Read from static data file in background
+            bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AirportEntity);
+
             // base class overrides
+            virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entities) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
@@ -52,17 +59,15 @@ namespace BlackCore
             // base class overrides
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-
-        private:
-            //! URL for airport list
-            BlackMisc::Network::CUrl getAirportsUrl() const;
+            virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
             //! Parse downloaded JSON file
             void ps_parseAirportData(QNetworkReply *nwReply);
 
             //! Read / re-read data file
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel, const QDateTime &newerThan = QDateTime());
+            void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
+                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
 
             //! Airport cache changed
             void ps_airportCacheChanged();
@@ -79,9 +84,8 @@ namespace BlackCore
             //! Update reader URL
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);
 
-            //! Base URL
-            //! \threadsafe
-            static const BlackMisc::Network::CUrl &getBaseUrl();
+            //! URL for airport list
+            BlackMisc::Network::CUrl getAirportsUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
         };
     }
 } // ns

@@ -125,6 +125,7 @@ namespace BlackCore
             bool writeToJsonFiles(const QString &dir) const;
 
             // cache handling for base class
+            virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
@@ -134,7 +135,7 @@ namespace BlackCore
             // cache handling for base class
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
-
+            virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
         private slots:
             //! Liveries have been read
             void ps_parseLiveryData(QNetworkReply *nwReply);
@@ -146,7 +147,8 @@ namespace BlackCore
             void ps_parseModelData(QNetworkReply *nwReply);
 
             //! Read / re-read data file
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel, const QDateTime &newerThan = QDateTime());
+            void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
+                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
 
             void ps_liveryCacheChanged();
             void ps_modelCacheChanged();
@@ -164,18 +166,14 @@ namespace BlackCore
             //! Update reader URL
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);
 
-            //! Base URL
-            //! \threadsafe
-            static const BlackMisc::Network::CUrl &getBaseUrl();
-
             //! URL livery web service
-            BlackMisc::Network::CUrl getLiveryUrl(bool shared = false) const;
+            BlackMisc::Network::CUrl getLiveryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
 
             //! URL distributor web service
-            BlackMisc::Network::CUrl getDistributorUrl(bool shared = false) const;
+            BlackMisc::Network::CUrl getDistributorUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
 
             //! URL model web service
-            BlackMisc::Network::CUrl getModelUrl(bool shared = false) const;
+            BlackMisc::Network::CUrl getModelUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
         };
     } // ns
 } // ns

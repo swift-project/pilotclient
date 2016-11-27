@@ -115,6 +115,7 @@ namespace BlackCore
             bool writeToJsonFiles(const QString &dir) const;
 
             // cache handling for base class
+            virtual BlackMisc::Network::CEntityFlags::Entity getSupportedEntities() const override;
             virtual QDateTime getCacheTimestamp(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual int getCacheCount(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual void synchronizeCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
@@ -124,6 +125,7 @@ namespace BlackCore
             // cache handling for base class
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
+            virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
 
         private slots:
             //! Aircraft have been read
@@ -136,7 +138,8 @@ namespace BlackCore
             void ps_parseCountryData(QNetworkReply *nwReply);
 
             //! Read / re-read data file
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entities, const QDateTime &newerThan);
+            void ps_read(BlackMisc::Network::CEntityFlags::Entity entities,
+                         BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan);
 
             void ps_aircraftIcaoCacheChanged();
             void ps_airlineIcaoCacheChanged();
@@ -154,18 +157,14 @@ namespace BlackCore
             //! Update reader URL
             void updateReaderUrl(const BlackMisc::Network::CUrl &url);
 
-            //! Base URL
-            //! \threadsafe
-            static const BlackMisc::Network::CUrl &getBaseUrl();
+            //! URL
+            BlackMisc::Network::CUrl getAircraftIcaoUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
 
             //! URL
-            BlackMisc::Network::CUrl getAircraftIcaoUrl(bool shared = false) const;
+            BlackMisc::Network::CUrl getAirlineIcaoUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
 
             //! URL
-            BlackMisc::Network::CUrl getAirlineIcaoUrl(bool shared = false) const;
-
-            //! URL
-            BlackMisc::Network::CUrl getCountryUrl(bool shared = false) const;
+            BlackMisc::Network::CUrl getCountryUrl(BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode) const;
         };
     } // ns
 } // ns
