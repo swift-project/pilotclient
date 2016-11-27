@@ -241,7 +241,7 @@ win32-g++ {
     vc_runtime_target.depends += copy_externals
     copy_externals.target = copy_externals
     source_path = $${EXTERNALS_LIB_DIR}//*.dll
-    dest_path = $${externals_target.path}
+    dest_path = $${externals_lib_target.path}
     copy_externals.commands += xcopy /Y $$shell_path($$source_path) $$shell_path($$dest_path) $$escape_expand(\n\t)
     QMAKE_EXTRA_TARGETS += copy_externals
 }
