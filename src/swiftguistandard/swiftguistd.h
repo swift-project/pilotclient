@@ -70,7 +70,7 @@ public:
     SwiftGuiStd(WindowMode windowMode, QWidget *parent = nullptr);
 
     //! Destructor
-    ~SwiftGuiStd();
+    virtual ~SwiftGuiStd();
 
     //! Log message category
     static QString getLogCategory() { return "swift.gui.stdgui"; }
@@ -103,8 +103,7 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    // if I pass the parent, the dialog is always center over the parent
-    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{new BlackGui::Components::CNavigatorDialog()};
+    QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{new BlackGui::Components::CNavigatorDialog()}; // if I pass the parent, the dialog is always centered over the parent
     bool                        m_init = false;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
@@ -115,16 +114,6 @@ private:
     bool m_contextAudioAvailable   = false;
     QTimer *m_timerContextWatchdog = nullptr;                //!< core available?
     BlackMisc::Simulation::CSimulatedAircraft m_ownAircraft; //!< own aircraft's state
-    QSize m_windowMinSizeWithMainPageShown;
-    QSize m_windowMinSizeWithMainPageHidden;
-
-    // cockpit
-    QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas
-    QWidget *m_inputFocusedWidget = nullptr; //!< currently used widget for input, mainly used with cockpit
-
-    // actions
-    BlackCore::CActionBind m_action50 { "/swiftGui/Change opacity to 50%", this, &SwiftGuiStd::ps_onChangedWindowOpacityTo50 };
-    BlackCore::CActionBind m_action100 { "/swiftGui/Change opacity to 100%", this, &SwiftGuiStd::ps_onChangedWindowOpacityTo100 };
 
     //! GUI status update
     void updateGuiStatusInformation();
@@ -255,6 +244,12 @@ private slots:
 
     //! Navigator dialog has been closed
     void ps_navigatorClosed();
+
+    //! Checks if data such as model set etc. are available
+    void ps_verifyDataAvailability();
+
+    //! The shared headers have been loaded
+    void ps_sharedFilesHeadersLoaded();
 };
 
 #pragma pop_macro("interface")

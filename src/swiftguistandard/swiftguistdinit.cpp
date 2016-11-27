@@ -8,6 +8,7 @@
  */
 
 #include "blackconfig/buildconfig.h"
+#include "blackcore/webdataservices.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackgui/components/aircraftcomponent.h"
 #include "blackgui/components/atcstationcomponent.h"
@@ -58,6 +59,8 @@ using namespace BlackGui::Components;
 void SwiftGuiStd::init()
 {
     // POST(!) GUI init
+    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+    Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "Missing web services");
 
     if (this->m_init) { return; }
 
@@ -118,6 +121,7 @@ void SwiftGuiStd::init()
     this->initGuiSignals();
 
     // signal / slots contexts / timers
+    connect(sGui->getWebDataServices(), &CWebDataServices::allSwiftSharedAllHeadersReceived, this, &SwiftGuiStd::ps_sharedFilesHeadersLoaded);
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
     connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
     connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
@@ -147,6 +151,7 @@ void SwiftGuiStd::init()
 
     sGui->startUpCompleted(true);
     this->m_init = true;
+    QTimer::singleShot(2500, this, &SwiftGuiStd::ps_verifyDataAvailability);
 
     if (!CNetworkUtils::hasConnectedInterface())
     {

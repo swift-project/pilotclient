@@ -10,7 +10,9 @@
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
+#include "blackcore/context/contextsimulator.h"
 #include "blackcore/network.h"
+#include "blackcore/webdataservices.h"
 #include "blackgui/components/infobarstatuscomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/components/settingscomponent.h"
@@ -48,6 +50,7 @@ namespace BlackGui
 namespace BlackMisc { class CIdentifiable; }
 
 using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Components;
@@ -57,6 +60,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
+using namespace BlackMisc::Simulation;
 
 /*
  * Constructor
@@ -153,7 +157,7 @@ void SwiftGuiStd::changeEvent(QEvent *event)
 
 QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
 {
-    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarMinButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarMinButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Window minimized", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_showMinimized);
     return a;
@@ -287,7 +291,6 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
 void SwiftGuiStd::setContextAvailability()
 {
     bool corePreviouslyAvailable = this->m_coreAvailable;
-
     if (sGui && sGui->getIContextApplication()->isUsingImplementingObject())
     {
         this->m_coreAvailable = true;
@@ -295,9 +298,8 @@ void SwiftGuiStd::setContextAvailability()
     else
     {
         // ping to check if core is still alive
-        this->m_coreAvailable =
-            sGui &&
-            this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
+        this->m_coreAvailable = sGui &&
+                                this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
     }
     this->m_contextNetworkAvailable = this->m_coreAvailable || (sGui && sGui->getIContextNetwork()->isUsingImplementingObject());
     this->m_contextAudioAvailable = this->m_coreAvailable || (sGui && sGui->getIContextAudio()->isUsingImplementingObject());
@@ -386,6 +388,35 @@ void SwiftGuiStd::ps_showNormal()
 void SwiftGuiStd::ps_navigatorClosed()
 {
     this->showNormal();
+}
+
+void SwiftGuiStd::ps_verifyDataAvailability()
+{
+    const CSimulatorInfo sims = sGui->getIContextSimulator()->simulatorsWithInitializedModelSet();
+    if (sims.isNoSimulator())
+    {
+        CLogMessage(this).error("No model set so far, you need at least one model set");
+    }
+}
+
+void SwiftGuiStd::ps_sharedFilesHeadersLoaded()
+{
+    Q_ASSERT_X(sGui && sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
+    const CEntityFlags::Entity newEntities = sGui->getWebDataServices()->getEntitiesWithNewerHeaderTimestamp(CEntityFlags::AllDbEntities);
+    if (newEntities == CEntityFlags::NoEntity) { return; }
+    CStatusMessage sm = CStatusMessage(this).info("New data for shared files:");
+    CStatusMessageList sms({sm});
+    const QSet<CEntityFlags::Entity> newSingleEntities = CEntityFlags::asSingleEntities(newEntities);
+    for (CEntityFlags::Entity newSingleEntity : newSingleEntities)
+    {
+        sm = CStatusMessage(this).info("Load data for '%1'?") << CEntityFlags::flagToString(newSingleEntity);
+        sms.push_back(sm);
+    }
+    auto lambda = [this, newEntities]()
+    {
+        sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(newEntities, false);
+    };
+    ui->fr_CentralFrameInside->showOverlayMessagesWithConfirmation(sms, "Load data?", lambda);
 }
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
