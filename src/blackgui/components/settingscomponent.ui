@@ -83,10 +83,17 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="3" column="1">
      <widget class="QPushButton" name="pb_Advanced">
       <property name="text">
        <string>Advanced</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="pb_DataLoadAndCaches">
+      <property name="text">
+       <string>Data load and caches</string>
       </property>
      </widget>
     </item>
@@ -406,7 +413,7 @@
    <attribute name="title">
     <string>Hotkeys</string>
    </attribute>
-   <layout class="QVBoxLayout" name="vl_SettingsMisc">
+   <layout class="QVBoxLayout" name="vl_SettingsHotkeys">
     <property name="spacing">
      <number>2</number>
     </property>
@@ -430,13 +437,79 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
      </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_DataLoad">
+   <attribute name="title">
+    <string>Data and caches</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_DataLoad">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+    <item>
+     <widget class="QScrollArea" name="sa_DataLoad">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="wi_DataLoadOverview">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>479</width>
+         <height>198</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="vl_DataLoadOverview">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="leftMargin">
+         <number>1</number>
+        </property>
+        <property name="topMargin">
+         <number>1</number>
+        </property>
+        <property name="rightMargin">
+         <number>1</number>
+        </property>
+        <property name="bottomMargin">
+         <number>1</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="comp_DataLoadOverview"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <spacer name="vs_DataLoad">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
@@ -444,7 +517,22 @@
    <attribute name="title">
     <string>Advanced</string>
    </attribute>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="vl_SettingsAdvanced">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
     <item>
      <widget class="BlackGui::Components::CSettingsAdvancedComponent" name="comp_SettingsAdvancedComponent">
       <property name="frameShape">
@@ -459,6 +547,12 @@
   </widget>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>BlackGui::Components::CDbLoadOverviewComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/dbloadoverviewcomponent.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>BlackGui::Components::CSettingsSimulatorBasicsComponent</class>
    <extends>QFrame</extends>

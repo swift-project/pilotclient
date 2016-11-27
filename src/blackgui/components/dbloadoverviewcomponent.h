@@ -40,10 +40,22 @@ namespace BlackGui
             //! Initialize
             void display();
 
+            //! Visible DB refresh buttons
+            void setVisibleDbRefreshButtons(bool visible);
+
+            //! Visible shared refresh buttons
+            void setVisibleSharedRefreshButtons(bool visible);
+
+        signals:
+            //! Trigger GUI update
+            //! \private
+            void ps_triggerDigestGuiUpdate();
+
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if needed
             bool m_reloading = false;
+            BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, &CDbLoadOverviewComponent::ps_setValues, 750, 4 };
 
             //! Show loading
             void showLoading();
@@ -73,8 +85,11 @@ namespace BlackGui
             static void admitCaches();
 
         private slots:
-            //! Reload
-            void ps_reloadPressed();
+            //! Refresh directly from DB
+            void ps_refreshDbPressed();
+
+            //! Refresh directly from DB
+            void ps_refreshSharedPressed();
 
             //! Init the value panel
             void ps_setValues();

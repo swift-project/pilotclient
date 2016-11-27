@@ -55,6 +55,7 @@ namespace BlackGui
             connect(ui->pb_Servers, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
             connect(ui->pb_Simulator, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
             connect(ui->pb_SimulatorBasics, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
+            connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
             connect(ui->pb_SimulatorMessages, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
         }
 
@@ -87,6 +88,7 @@ namespace BlackGui
             if (sender == ui->pb_Servers) { this->setCurrentIndex(SettingTabServers); return; }
             if (sender == ui->pb_Simulator) { this->setCurrentIndex(SettingTabSimulator); return; }
             if (sender == ui->pb_SimulatorBasics) { this->setCurrentIndex(SettingTabSimulatorBasics); return; }
+            if (sender == ui->pb_DataLoadAndCaches) { this->setCurrentIndex(SettingTabDataAndCaches); return; }
             if (sender == ui->pb_SimulatorMessages) { this->setCurrentIndex(SettingTabSimulatorMessages); return; }
             this->setCurrentIndex(SettingTabOverview);
         }

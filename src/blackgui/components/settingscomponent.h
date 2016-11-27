@@ -45,6 +45,7 @@ namespace BlackGui
                 SettingTabSimulatorMessages,
                 SettingTabGui,
                 SettingTabHotkeys,
+                SettingTabDataAndCaches,
                 SettingTabAdvanced
             };
 
