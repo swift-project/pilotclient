@@ -73,7 +73,7 @@ namespace BlackGui
                 CAircraftModel model(ui->tvp_AircraftModel->container().latestObject());
                 ts = model.getUtcTimestamp();
             }
-            sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::ModelEntity, ts);
+            sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity, ts);
         }
 
         void CDbModelComponent::ps_modelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
@@ -91,7 +91,7 @@ namespace BlackGui
         void CDbModelComponent::ps_reload()
         {
             if (!sGui) { return; }
-            sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::ModelEntity);
+            sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity);
         }
 
         void CDbModelComponent::ps_onStyleSheetChanged()

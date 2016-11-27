@@ -165,7 +165,7 @@ namespace BlackGui
 
         void CDataInfoAreaComponent::requestUpdateOfAllDbData()
         {
-            sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::AllDbEntitiesNoInfoObjectsNoAirports, QDateTime());
+            sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AllDbEntitiesNoInfoObjectsNoAirports, QDateTime());
         }
 
         void CDataInfoAreaComponent::requestUpdatedData(CEntityFlags::Entity entity)

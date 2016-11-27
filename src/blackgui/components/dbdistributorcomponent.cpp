@@ -60,7 +60,7 @@ namespace BlackGui
         void CDbDistributorComponent::ps_reload()
         {
             if (!sGui) { return; }
-            sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::DistributorEntity);
+            sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::DistributorEntity);
         }
     } // ns
 } // ns

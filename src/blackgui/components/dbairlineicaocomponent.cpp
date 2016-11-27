@@ -63,7 +63,7 @@ namespace BlackGui
         void CDbAirlineIcaoComponent::ps_reload()
         {
             if (!sGui || !sGui->hasWebDataServices()) { return; }
-            sGui->getWebDataServices()->triggerReloadFromDb(CEntityFlags::AirlineIcaoEntity, QDateTime());
+            sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AirlineIcaoEntity, QDateTime());
         }
     } // ns
 } // ns

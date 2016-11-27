@@ -93,7 +93,7 @@ namespace BlackCore
         // AutoConnection: this should also avoid race conditions by updating the bookings
         Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "Missing data reader");
         this->connect(sApp->getWebDataServices()->getBookingReader(), &CVatsimBookingReader::atcBookingsRead, this, &CAirspaceMonitor::ps_receivedBookings);
-        this->connect(sApp->getWebDataServices()->getDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::ps_receivedDataFile);
+        this->connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::ps_receivedDataFile);
 
         // Force snapshot in the main event loop
         this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
