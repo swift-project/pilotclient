@@ -84,6 +84,9 @@ namespace BlackMisc
             //! Is the given simulator supported?
             bool supportsSimulator(const BlackMisc::Simulation::CSimulatorInfo &info);
 
+            //! Simulators with initialized caches
+            CSimulatorInfo simulatorsWithInitializedModelSet() const;
+
             //! Shutdown
             void gracefulShutdown();
 

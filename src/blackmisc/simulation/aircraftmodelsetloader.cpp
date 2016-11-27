@@ -126,6 +126,11 @@ namespace BlackMisc
             return this->getSimulator().matchesAny(info);
         }
 
+        CSimulatorInfo CAircraftModelSetLoader::simulatorsWithInitializedModelSet() const
+        {
+            return this->m_caches.simulatorsWithInitializedCache();
+        }
+
         void CAircraftModelSetLoader::gracefulShutdown()
         {
             // void

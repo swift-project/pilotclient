@@ -88,6 +88,21 @@ namespace BlackMisc
                 return true;
             }
 
+            CSimulatorInfo IMultiSimulatorModelCaches::simulatorsWithInitializedCache() const
+            {
+                static const QDateTime outdated = QDateTime::currentDateTimeUtc().addDays(-365 * 5);
+                CSimulatorInfo withInitializedCache;
+                for (const CSimulatorInfo &simInfo : CSimulatorInfo::allSimulators().asSingleSimulatorSet())
+                {
+                    const QDateTime ts = this->getCacheTimestamp(simInfo);
+                    if (ts.isValid() && ts > outdated)
+                    {
+                        withInitializedCache.add(simInfo);
+                    }
+                }
+                return withInitializedCache;
+            }
+
             CModelCaches::CModelCaches(bool synchronizeCache, QObject *parent) : IMultiSimulatorModelCaches(parent)
             {
                 this->m_currentSimulator.synchronize();

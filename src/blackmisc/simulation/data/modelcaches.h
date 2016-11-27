@@ -166,6 +166,10 @@ namespace BlackMisc
                 //! \threadsafe
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
+                //! Initilaized caches for which simulator
+                //! \threadsafe
+                BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedCache() const;
+
                 //! Timestamp
                 QDateTime getSynchronizedTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
@@ -194,7 +198,7 @@ namespace BlackMisc
                 //! \threadsafe
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const = 0;
 
-                //!Selected simulator
+                //! Selected simulator
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
 
                 //! \copydoc IModelsPerSimulatorSetable::setModels
