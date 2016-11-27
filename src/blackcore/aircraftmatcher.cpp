@@ -367,7 +367,7 @@ namespace BlackCore
         return icao;
     }
 
-    int  CAircraftMatcher::setModelSet(const CAircraftModelList &models)
+    int CAircraftMatcher::setModelSet(const CAircraftModelList &models)
     {
         CAircraftModelList modelsCleaned(models);
         const int r1 = modelsCleaned.removeAllWithoutModelString();

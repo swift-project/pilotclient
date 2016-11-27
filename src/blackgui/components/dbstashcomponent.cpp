@@ -300,7 +300,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    QString confirm("Remove %1 published models from stash?");
+                    const QString confirm("Remove %1 published models from stash?");
                     auto lambda = [this, publishedModels]()
                     {
                         this->unstashModels(publishedModels.getModelStringList(false));

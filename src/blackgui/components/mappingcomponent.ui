@@ -223,8 +223,11 @@
       </item>
       <item row="0" column="4">
        <widget class="QPushButton" name="pb_LoadModels">
-        <property name="text">
+        <property name="toolTip">
          <string>load models</string>
+        </property>
+        <property name="text">
+         <string>load</string>
         </property>
        </widget>
       </item>
