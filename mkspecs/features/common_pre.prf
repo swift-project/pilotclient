@@ -98,7 +98,9 @@ include(warnings.pri)
 # Handle addresses larger than 2GB
 ################################
 
-win32-g++: QMAKE_LFLAGS *= -Wl,--large-address-aware
+equals(WORD_SIZE,32) {
+    win32-g++: QMAKE_LFLAGS *= -Wl,--large-address-aware
+}
 
 ################################
 # Path to external dependencies
