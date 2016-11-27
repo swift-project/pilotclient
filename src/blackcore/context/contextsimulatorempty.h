@@ -80,6 +80,13 @@ namespace BlackCore
                 return BlackMisc::Simulation::CAircraftModelList();
             }
 
+            //! \copydoc IContextSimulator::simulatorsWithInitializedModelSet
+            virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return BlackMisc::Simulation::CSimulatorInfo();
+            }
+
             //! \copydoc IContextSimulator::getModelSetStrings
             virtual QStringList getModelSetStrings() const override
             {

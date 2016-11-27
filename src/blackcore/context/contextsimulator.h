@@ -142,6 +142,9 @@ namespace BlackCore
             //! \note might be slow since list can be big
             virtual BlackMisc::Simulation::CAircraftModelList getModelSet() const = 0;
 
+            //! Simulators which have an initialized model set
+            virtual BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const = 0;
+
             //! Number of installed models in simulator eco system
             virtual int getModelSetCount() const = 0;
 

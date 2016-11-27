@@ -157,6 +157,12 @@ namespace BlackCore
             return m_modelMatcher.getModelSet();
         }
 
+        CSimulatorInfo CContextSimulator::simulatorsWithInitializedModelSet() const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return m_modelSetLoader.simulatorsWithInitializedModelSet();
+        }
+
         QStringList CContextSimulator::getModelSetStrings() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
