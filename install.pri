@@ -207,7 +207,12 @@ win32-msvc2015 {
 }
 
 win32-g++ {
-    VC_RUNTIME_LIBS *= libgcc_s_dw2-1
+    equals(WORD_SIZE,32) {
+        VC_RUNTIME_LIBS *= libgcc_s_dw2-1
+    }
+    equals(WORD_SIZE,64) {
+        VC_RUNTIME_LIBS *= libgcc_s_seh-1
+    }
     VC_RUNTIME_LIBS *= libwinpthread-1
 
     vc_runtime_target.path *= $${PREFIX}/bin

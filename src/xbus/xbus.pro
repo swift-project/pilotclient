@@ -169,7 +169,12 @@ win32 {
 }
 
 win32-g++ {
-    dep_target.files *= $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll
+    equals(WORD_SIZE,32) {
+        dep_target.files *= $$[QT_INSTALL_BINS]/libgcc_s_dw2-1.dll
+    }
+    equals(WORD_SIZE,64) {
+        dep_target.files *= $$[QT_INSTALL_BINS]/libgcc_s_seh-1.dll
+    }
     dep_target.files *= $$[QT_INSTALL_BINS]/libwinpthread-1.dll
 
     # libstdc++-6.dll needs a workaround since copy does not accept a filepath with '+' in it
