@@ -201,6 +201,7 @@ namespace BlackCore
         static QStringList arguments();
 
         //! Process all events for some time
+        //! \remark unlike QCoreApplication::processEvents this will spend at least the given time in the function, using QThread::msleep
         static void processEventsFor(int milliseconds);
 
         //! Clear the caches

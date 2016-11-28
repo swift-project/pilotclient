@@ -69,8 +69,7 @@ namespace BlackCoreTest
         // I have to run my "own event loop"
         for (int i = 0; i < 60; i++)
         {
-            CApplication::processEventsFor(500);
-            QTest::qWait(10); // process events completes if there are no events. So I need to make sure we wait properly for a response
+            CApplication::processEventsFor(500); // process events and sleep
             if (this->m_icaoReader->getAircraftIcaoCodesCount() > 0 && this->m_icaoReader->getAirlineIcaoCodesCount() > 0)
             {
                 break;
@@ -101,11 +100,7 @@ namespace BlackCoreTest
         for (int i = 0; i < 120; i++)
         {
             CApplication::processEventsFor(500);
-            QTest::qWait(10); // process events completes if there are no events. So I need to make sure we wait properly for a response
-            if (this->m_modelReader->getModelsCount() > 0)
-            {
-                break;
-            }
+            if (this->m_modelReader->getModelsCount() > 0) { break; }
         }
 
         const QString m1("No models " + url.getFullUrl());
@@ -131,8 +126,7 @@ namespace BlackCoreTest
         for (int i = 0; i < 120; ++i)
         {
             CApplication::processEventsFor(500);
-            QTest::qWait(10); // process events completes if there are no events. So I need to make sure we wait properly for a response
-            if (this->m_airportReader->getAirports().size() > 0) break;
+            if (this->m_airportReader->getAirports().size() > 0) { break; }
         }
 
         QVERIFY2(this->m_airportReader->getAirports().size() > 0, "No airports");

@@ -55,9 +55,9 @@ namespace BlackCoreTest
         void readAirportData();
 
     private:
-        BlackCore::Db::CAirportDataReader   *m_airportReader = nullptr;
-        BlackCore::Db::CIcaoDataReader      *m_icaoReader = nullptr;
-        BlackCore::Db::CModelDataReader     *m_modelReader = nullptr;
+        BlackCore::Db::CAirportDataReader *m_airportReader = nullptr;
+        BlackCore::Db::CIcaoDataReader    *m_icaoReader = nullptr;
+        BlackCore::Db::CModelDataReader   *m_modelReader = nullptr;
 
         //! Test if server is available
         static bool pingServer(const BlackMisc::Network::CUrl &url);

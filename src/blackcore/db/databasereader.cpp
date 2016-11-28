@@ -103,14 +103,28 @@ namespace BlackCore
                         cachedEntities |= currentEntity; // read from cache
                     }
                 }
+                else
+                {
+                    // cache ignored
+                    if (rm.testFlag(CDbFlags::DbReading))
+                    {
+                        dbEntities |= currentEntity;
+                    }
+                }
                 currentEntity = CEntityFlags::iterateDbEntities(allEntities);
             }
 
             // signals for the cached entities
-            this->emitReadSignalPerSingleCachedEntity(cachedEntities, true);
+            if (cachedEntities != CEntityFlags::NoEntity)
+            {
+                this->emitReadSignalPerSingleCachedEntity(cachedEntities, true);
+            }
 
             // Real read from DB
-            this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::DbReading, newerThan);
+            if (dbEntities != CEntityFlags::NoEntity)
+            {
+                this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::DbReading, newerThan);
+            }
         }
 
         CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromDb(CEntityFlags::Entity entities, const QDateTime &newerThan)
