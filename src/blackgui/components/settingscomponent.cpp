@@ -11,6 +11,7 @@
 #include "blackgui/components/settingscomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/logmessage.h"
 #include "ui_settingscomponent.h"
 
@@ -22,14 +23,15 @@
 #include <QToolButton>
 #include <QtGlobal>
 
-using namespace BlackCore;
 using namespace BlackMisc;
-using namespace BlackGui;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Input;
+using namespace BlackCore;
+using namespace BlackGui;
+using namespace BlackConfig;
 
 namespace BlackGui
 {
@@ -44,7 +46,7 @@ namespace BlackGui
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
             this->setCurrentIndex(0); // 1st tab
-            ui->comp_DataLoadOverview->setVisibleDbRefreshButtons(false);
+            ui->comp_DataLoadOverview->setVisibleDbRefreshButtons(CBuildConfig::isDebugBuild() || CBuildConfig::isBetaTest());
 
             connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);
             connect(ui->pb_Advanced, &QPushButton::released, this, &CSettingsComponent::ps_overviewButtonClicked);
