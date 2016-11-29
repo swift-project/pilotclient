@@ -72,6 +72,7 @@ namespace BlackGui
             connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugInterpolator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_ForceFullInterpolation, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
+            connect(ui->cb_EnableParts, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
 
             connect(ui->pb_SendTextMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_sendTextMessage);
             connect(ui->tb_LogStatusMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_logStatusMessage);
@@ -176,17 +177,18 @@ namespace BlackGui
             bool debug = (checkState == Qt::Checked);
             QObject *sender = QObject::sender();
 
-            if (sender == ui->cb_DebugContextApplication) { sGui->getIContextApplication()->setDebugEnabled(debug); }
-            else if (sender == ui->cb_DebugContextAudio)  { sGui->getIContextAudio()->setDebugEnabled(debug); }
-            else if (sender == ui->cb_DebugContextNetwork)  { sGui->getIContextNetwork()->setDebugEnabled(debug);}
-            else if (sender == ui->cb_DebugContextOwnAircraft)  { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
-            else if (sender == ui->cb_DebugContextSimulator)  { sGui->getIContextSimulator()->setDebugEnabled(debug);}
-            else if (sender == ui->cb_DebugDriver || sender == ui->cb_DebugInterpolator || sender == ui->cb_ForceFullInterpolation)
+            if (sender == ui->cb_DebugContextApplication)  { sGui->getIContextApplication()->setDebugEnabled(debug); }
+            else if (sender == ui->cb_DebugContextAudio)   { sGui->getIContextAudio()->setDebugEnabled(debug); }
+            else if (sender == ui->cb_DebugContextNetwork) { sGui->getIContextNetwork()->setDebugEnabled(debug);}
+            else if (sender == ui->cb_DebugContextOwnAircraft) { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
+            else if (sender == ui->cb_DebugContextSimulator)   { sGui->getIContextSimulator()->setDebugEnabled(debug);}
+            else if (sender == ui->cb_DebugDriver || sender == ui->cb_EnableParts || sender == ui->cb_DebugInterpolator || sender == ui->cb_ForceFullInterpolation)
             {
                 CInterpolationAndRenderingSetup setup;
                 setup.setForceFullInterpolation(ui->cb_ForceFullInterpolation->isChecked());
                 setup.setDriverDebuggingMessages(ui->cb_DebugDriver->isChecked());
                 setup.setInterpolatorDebuggingMessages(ui->cb_DebugInterpolator->isChecked());
+                setup.setEnabledAircraftParts(ui->cb_EnableParts->isChecked());
                 sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
             }
         }

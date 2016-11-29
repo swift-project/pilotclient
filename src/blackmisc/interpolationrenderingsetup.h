@@ -34,7 +34,8 @@ namespace BlackMisc
             IndexSimulatorDebugMessages,
             IndexForceFullInterpolation,
             IndexMaxRenderedAircraft,
-            IndexMaxRenderedDistance
+            IndexMaxRenderedDistance,
+            IndexEnabledAircraftParts
         };
 
         //! Constructor.
@@ -70,6 +71,9 @@ namespace BlackMisc
         //! Max. distance for rendering
         bool setMaxRenderedDistance(const BlackMisc::PhysicalQuantities::CLength &distance);
 
+        //! Set enabled aircraft parts
+        bool setEnabledAircraftParts(bool enabled);
+
         //! Disable
         void clearMaxRenderedDistance();
 
@@ -78,6 +82,9 @@ namespace BlackMisc
 
         //! Rendering enabled, but restricted
         bool isRenderingRestricted() const;
+
+        //! Aircraft parts enabled
+        bool isAircraftPartsEnabled() const;
 
         //! Max.distance for rendering
         BlackMisc::PhysicalQuantities::CLength getMaxRenderedDistance() const { return m_maxRenderedDistance; }
@@ -107,9 +114,10 @@ namespace BlackMisc
         void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
     private:
-        bool m_interpolatorDebugMessage = false;  //! Debug messages in interpolator
-        bool m_simulatorDebugMessages = false;    //! Debug messages of simulator (aka plugin)
-        bool m_forceFullInterpolation = false;    //! always do a full interpolation, even if aircraft is not moving
+        bool m_interpolatorDebugMessage = false; //! Debug messages in interpolator
+        bool m_simulatorDebugMessages = false;   //! Debug messages of simulator (aka plugin)
+        bool m_forceFullInterpolation = false;   //! always do a full interpolation, even if aircraft is not moving
+        bool m_enabledAircraftParts   = true;    //! Update aircraft parts
         int  m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
         BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
 
@@ -118,6 +126,7 @@ namespace BlackMisc
             BLACK_METAMEMBER(interpolatorDebugMessage),
             BLACK_METAMEMBER(simulatorDebugMessages),
             BLACK_METAMEMBER(forceFullInterpolation),
+            BLACK_METAMEMBER(enabledAircraftParts),
             BLACK_METAMEMBER(maxRenderedAircraft),
             BLACK_METAMEMBER(maxRenderedDistance)
         );

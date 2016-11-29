@@ -34,6 +34,11 @@ namespace BlackMisc
         return isRenderingEnabled() && (isMaxAircraftRestricted() || isMaxDistanceRestricted());
     }
 
+    bool CInterpolationAndRenderingSetup::isAircraftPartsEnabled() const
+    {
+        return this->m_enabledAircraftParts;
+    }
+
     int CInterpolationAndRenderingSetup::getMaxRenderedAircraft() const
     {
         return (m_maxRenderedAircraft <= InfiniteAircraft()) ? m_maxRenderedAircraft : InfiniteAircraft();
@@ -76,6 +81,13 @@ namespace BlackMisc
             Q_ASSERT(!distance.isNegativeWithEpsilonConsidered());
             m_maxRenderedDistance = distance;
         }
+        return true;
+    }
+
+    bool CInterpolationAndRenderingSetup::setEnabledAircraftParts(bool enabled)
+    {
+        if (this->m_enabledAircraftParts == enabled) { return false; }
+        m_enabledAircraftParts = enabled;
         return true;
     }
 
@@ -154,6 +166,8 @@ namespace BlackMisc
             return CVariant::fromValue(m_maxRenderedAircraft);
         case IndexMaxRenderedDistance:
             return CVariant::fromValue(m_maxRenderedDistance);
+        case IndexEnabledAircraftParts:
+            return CVariant::fromValue(m_enabledAircraftParts);
         default:
             return CValueObject::propertyByIndex(index);
         }
@@ -183,6 +197,9 @@ namespace BlackMisc
             break;
         case IndexMaxRenderedDistance:
             this->m_maxRenderedDistance = variant.value<CLength>();
+            break;
+        case IndexEnabledAircraftParts:
+            this->m_enabledAircraftParts = variant.toBool();
             break;
         default:
             CValueObject::setPropertyByIndex(index, variant);

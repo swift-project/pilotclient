@@ -74,6 +74,9 @@ namespace BlackSimPlugin
             // Position
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPosition, "Initial Position", NULL, SIMCONNECT_DATATYPE_INITPOSITION);
 
+            // Hint: "Bool" and "Percent .." are units name
+            // default data type is SIMCONNECT_DATATYPE_FLOAT64 -> double
+
             // Lights
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT STROBE", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT LANDING", "Bool");

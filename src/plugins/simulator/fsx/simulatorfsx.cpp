@@ -93,7 +93,7 @@ namespace BlackSimPlugin
             // set structures and move on
             initEvents();
             initDataDefinitionsWhenConnected();
-            m_simconnectTimerId = startTimer(10);
+            m_simConnectTimerId = startTimer(10);
             m_realityBubbleTimer.start();
             reloadWeatherSettings();
             return true;
@@ -102,8 +102,8 @@ namespace BlackSimPlugin
         bool CSimulatorFsx::disconnectFrom()
         {
             if (!m_simConnected) { return true; }
-            if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
-            m_simconnectTimerId = -1;
+            if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
+            m_simConnectTimerId = -1;
             if (m_hSimConnect)
             {
                 SimConnect_Close(m_hSimConnect);
@@ -803,8 +803,9 @@ namespace BlackSimPlugin
             const int remoteAircraftNo = this->getAircraftInRangeCount();
             if (remoteAircraftNo < 1) { m_interpolationRequest = 0;  return; }
 
-            // interpolate and send to SIM
+            // interpolate and send to simulator
             m_interpolationRequest++;
+            const bool enableAircraftParts = m_interpolationRenderingSetup.isAircraftPartsEnabled(); // allow to disable all parts updates for testing
 
             // values used for position and parts
             bool isOnGround = false;
@@ -814,7 +815,7 @@ namespace BlackSimPlugin
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
             for (const CSimConnectObject &simObj : simObjects)
             {
-                // happending if aircraft is not yet added to SIM or to be deleted
+                // happening if aircraft is not yet added to simulator or to be deleted
                 if (simObj.isPendingAdded()) { continue; }
                 if (simObj.isPendingRemoved()) { continue; }
 
@@ -828,9 +829,9 @@ namespace BlackSimPlugin
                 // having the onGround flag in parts forces me to obtain parts here
                 // which is not the smartest thing regarding performance
                 IInterpolator::PartsStatus partsStatus;
-                partsStatus.setSupportsParts(aircraftWithParts.contains(callsign));
+                partsStatus.setSupportsParts(enableAircraftParts && aircraftWithParts.contains(callsign));
                 CAircraftPartsList parts;
-                if (partsStatus.allTrue())
+                if (enableAircraftParts && partsStatus.allTrue())
                 {
                     parts = this->m_interpolator->getPartsBeforeTime(callsign, currentTimestamp, partsStatus);
                 }
@@ -841,7 +842,7 @@ namespace BlackSimPlugin
                     SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxPosition(interpolatedSituation);
 
                     //! \fixme The onGround in parts is no ideal, as already mentioned in the discussion
-                    // a) I am forced to read parts even if i just want to update position
+                    // a) I am forced to read parts even if I just want to update position
                     // b) Unlike the other values it is not a fire and forget value, as I need it again in the next cycle
                     if (partsStatus.isSupportingParts() && !parts.isEmpty())
                     {
@@ -867,9 +868,12 @@ namespace BlackSimPlugin
 
                 if (interpolatorStatus.didInterpolationSucceed())
                 {
-                    // aircraft parts
-                    // inside "interpolator if", as no parts can be sent without position
-                    updateRemoteAircraftParts(simObj, parts, partsStatus, interpolatedSituation, isOnGround); // update and retrieve parts in the same step
+                    // aircraft parts inside "interpolator if", as no parts can be set without situation
+                    // situation is used to anticipate parts if other client does not send them
+                    if (enableAircraftParts)
+                    {
+                        updateRemoteAircraftParts(simObj, parts, partsStatus, interpolatedSituation, isOnGround); // update and retrieve parts in the same step
+                    }
                 }
 
             } // all callsigns
@@ -892,17 +896,17 @@ namespace BlackSimPlugin
 
                 // we have parts
                 CAircraftParts newestParts = parts.front();
-                ddRemoteAircraftParts.lightStrobe = newestParts.getLights().isStrobeOn() ? 1.0 : 0.0;
-                ddRemoteAircraftParts.lightLanding = newestParts.getLights().isLandingOn() ? 1.0 : 0.0;
-                // ddRemoteAircraftParts.lightTaxi = newestParts.getLights().isTaxiOn() ? 1.0 : 0.0;
-                ddRemoteAircraftParts.lightBeacon = newestParts.getLights().isBeaconOn() ? 1.0 : 0.0;
-                ddRemoteAircraftParts.lightNav = newestParts.getLights().isNavOn() ? 1.0 : 0.0;
-                ddRemoteAircraftParts.lightLogo = newestParts.getLights().isLogoOn() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.lightStrobe = newestParts.getLights().isStrobeOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightLanding = newestParts.getLights().isLandingOn() ? 1 : 0;
+                // ddRemoteAircraftParts.lightTaxi = newestParts.getLights().isTaxiOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightBeacon = newestParts.getLights().isBeaconOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightNav = newestParts.getLights().isNavOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightLogo = newestParts.getLights().isLogoOn() ? 1 : 0;
                 ddRemoteAircraftParts.flapsLeadingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
                 ddRemoteAircraftParts.flapsLeadingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
                 ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
                 ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
-                ddRemoteAircraftParts.spoilersHandlePosition = newestParts.isSpoilersOut() ? 1.0 : 0.0;
+                ddRemoteAircraftParts.spoilersHandlePosition = newestParts.isSpoilersOut() ? 1 : 0;
                 ddRemoteAircraftParts.gearHandlePosition = newestParts.isGearDown() ? 1 : 0;
                 ddRemoteAircraftParts.engine1Combustion = newestParts.isEngineOn(1) ? 1 : 0;
                 ddRemoteAircraftParts.engine2Combustion = newestParts.isEngineOn(2) ? 1 : 0;
@@ -912,43 +916,43 @@ namespace BlackSimPlugin
             else
             {
                 // mode is guessing parts
-                if (this->m_interpolationRequest % 20 != 0) { return false; } // only update every 20th cycle
+                // if (this->m_interpolationRequest % 20 != 0) { return false; } // only update every 20th cycle
                 ddRemoteAircraftParts.gearHandlePosition = isOnGround ? 1 : 0;
 
                 // when first detected moving, lights on
                 if (isOnGround)
                 {
-                    // ddRemoteAircraftParts.lightTaxi = 1.0;
-                    ddRemoteAircraftParts.lightBeacon = 1.0;
-                    ddRemoteAircraftParts.lightNav = 1.0;
+                    // ddRemoteAircraftParts.lightTaxi = 1;
+                    ddRemoteAircraftParts.lightBeacon = 1;
+                    ddRemoteAircraftParts.lightNav = 1;
 
                     double gskmh = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::km_h());
                     if (gskmh > 7.5)
                     {
                         // mode taxi
-                        // ddRemoteAircraftParts.lightTaxi = 1.0;
-                        ddRemoteAircraftParts.lightLanding = 0.0;
+                        // ddRemoteAircraftParts.lightTaxi = 1;
+                        ddRemoteAircraftParts.lightLanding = 0;
                     }
                     else if (gskmh > 25)
                     {
                         // mode accelaration for takeoff
-                        // ddRemoteAircraftParts.lightTaxi = 0.0;
-                        ddRemoteAircraftParts.lightLanding = 1.0;
+                        // ddRemoteAircraftParts.lightTaxi = 0;
+                        ddRemoteAircraftParts.lightLanding = 1;
                     }
                     else
                     {
                         // slow movements or parking
-                        // ddRemoteAircraftParts.lightTaxi = 0.0;
-                        ddRemoteAircraftParts.lightLanding = 0.0;
+                        // ddRemoteAircraftParts.lightTaxi = 0;
+                        ddRemoteAircraftParts.lightLanding = 0;
                     }
                 }
                 else
                 {
-                    // ddRemoteAircraftParts.lightTaxi = 0.0;
-                    ddRemoteAircraftParts.lightBeacon = 1.0;
-                    ddRemoteAircraftParts.lightNav = 1.0;
+                    // ddRemoteAircraftParts.lightTaxi = 0;
+                    ddRemoteAircraftParts.lightBeacon = 1;
+                    ddRemoteAircraftParts.lightNav = 1;
                     // landing lights for < 10000ft (normally MSL, here ignored)
-                    ddRemoteAircraftParts.lightLanding = (interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000) ? 1.0 : 0;
+                    ddRemoteAircraftParts.lightLanding = (interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000) ? 1 : 0;
                 }
             }
 
@@ -1052,14 +1056,13 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::reset()
         {
-            if (m_simconnectTimerId >= 0) { killTimer(m_simconnectTimerId); }
-            m_simconnectTimerId   = -1;
+            if (m_simConnectTimerId >= 0) { killTimer(m_simConnectTimerId); }
+            m_simConnectTimerId   = -1;
             m_simConnected = false;
             m_simSimulating = false;
             m_syncDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
             m_interpolationRequest  = 0;
-            m_interpolationsSkipped = 0;
             m_requestId = 1;
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;

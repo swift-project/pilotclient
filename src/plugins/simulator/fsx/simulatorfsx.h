@@ -212,14 +212,13 @@ namespace BlackSimPlugin
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets
             int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
-            int  m_simconnectTimerId   = -1;        //!< Timer identifier
+            int  m_simConnectTimerId   = -1;        //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0;     //!< Skip some update cycles to allow changes in simulator cockpit to be set
             int  m_interpolationRequest  = 0;       //!< current interpolation request
-            int  m_interpolationsSkipped = 0;       //!< number of skipped interpolation request
             int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa ps_dispatch
             int  m_receiveExceptionCount = 0;       //!< exceptions
             DWORD  m_requestId = 1;                 //!< request id
-            HANDLE m_hSimConnect = nullptr;         //!< Handle to SimConnect object
+            HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition;          //!< Own aircraft position at which weather was fetched and injected last
