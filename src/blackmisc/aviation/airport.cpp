@@ -42,7 +42,6 @@ namespace BlackMisc
         {
             if (!this->m_country.hasIsoCode() && airport.getCountry().hasIsoCode()) { this->m_country = airport.getCountry(); }
             if (this->m_descriptiveName.isEmpty()) { this->m_descriptiveName = airport.getDescriptiveName(); }
-            if (this->m_descriptiveName.isEmpty()) { this->m_descriptiveName = airport.getDescriptiveName(); }
         }
 
         QString CAirport::convertToQString(bool i18n) const

@@ -291,11 +291,11 @@ namespace BlackCore
         BlackMisc::CCountry getCountryForName(const QString &name) const;
 
         //! Get airports
-        //! \\threadsafe
+        //! \threadsafe
         BlackMisc::Aviation::CAirportList getAirports() const;
 
         //! Get airports count
-        //! \\threadsafe
+        //! \threadsafe
         int getAirportsCount() const;
 
         //! Get METARs

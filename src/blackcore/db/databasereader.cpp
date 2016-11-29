@@ -148,7 +148,7 @@ namespace BlackCore
                     // Using timer to first finish this function, then the resulting signal
                     if (validInCacheEntities != CEntityFlags::NoEntity)
                     {
-                        QTimer::singleShot(10, this, [ = ]
+                        QTimer::singleShot(0, this, [ = ]
                         {
                             emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0);
                         });

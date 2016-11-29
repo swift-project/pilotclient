@@ -412,7 +412,7 @@ void SwiftGuiStd::ps_sharedFilesHeadersLoaded()
         sm = CStatusMessage(this).info("Load data for '%1'?") << CEntityFlags::flagToString(newSingleEntity);
         sms.push_back(sm);
     }
-    auto lambda = [this, newEntities]()
+    auto lambda = [newEntities]()
     {
         sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(newEntities, false);
     };

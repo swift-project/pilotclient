@@ -7,8 +7,6 @@
 * contained in the LICENSE file.
 */
 
-//! \file
-
 #include "blackmisc/applicationinfolist.h"
 
 namespace BlackMisc

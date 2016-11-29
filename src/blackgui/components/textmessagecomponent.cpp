@@ -18,6 +18,7 @@
 #include "blackgui/textmessagetextedit.h"
 #include "blackgui/views/textmessageview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/callsign.h"
@@ -287,7 +288,7 @@ namespace BlackGui
             if (!tab) { tab = this->addNewTextMessageTab(cs); }
             Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
             CTextMessageTextEdit *textEdit = tab->findChild<CTextMessageTextEdit *>();
-            Q_ASSERT_X(textEdit, Q_FUNC_INFO, "Missing text edit");
+            BLACK_VERIFY_X(textEdit, Q_FUNC_INFO, "Missing text edit");
             if (!textEdit) { return; } // do not crash, though this situation could not happen
             textEdit->insertTextMessage(textMessage);
 

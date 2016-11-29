@@ -515,12 +515,9 @@ namespace BlackCore
 
     void CApplication::processEventsFor(int milliseconds)
     {
-        const QTime end = QTime::currentTime().addMSecs(milliseconds);
-        while (QTime::currentTime() <= end)
-        {
-            QCoreApplication::processEvents();
-            QThread::msleep(100);
-        }
+        QEventLoop eventLoop;
+        QTimer::singleShot(milliseconds, &eventLoop, &QEventLoop::quit);
+        eventLoop.exec();
     }
 
     bool CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
