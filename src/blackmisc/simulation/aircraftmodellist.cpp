@@ -191,14 +191,14 @@ namespace BlackMisc
             });
         }
 
-        CAircraftModelList CAircraftModelList::findByCombinedCode(const QString &combinedCode) const
+        CAircraftModelList CAircraftModelList::findByCombinedType(const QString &combinedType) const
         {
-            const QString cc(combinedCode.trimmed().toUpper());
-            if (combinedCode.length() != 3) { return CAircraftModelList(); }
+            const QString cc(combinedType.trimmed().toUpper());
+            if (combinedType.length() != 3) { return CAircraftModelList(); }
             return this->findBy([ & ](const CAircraftModel & model)
             {
                 const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
-                return icao.matchesCombinedCode(cc);
+                return icao.matchesCombinedType(cc);
             });
         }
 

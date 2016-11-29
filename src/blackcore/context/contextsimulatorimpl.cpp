@@ -420,13 +420,13 @@ namespace BlackCore
         {
             if (!isSimulatorSimulating()) { return; }
             const CCallsign callsign = remoteAircraft.getCallsign();
-            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircrft with empty callsign");
+            BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Remote aircraft with empty callsign");
             if (callsign.isEmpty()) { return; }
 
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
             const CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
-            Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "mismatching callsigns");
+            Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
             updateAircraftModel(callsign, aircraftModel, identifier());
             const CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
             m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);

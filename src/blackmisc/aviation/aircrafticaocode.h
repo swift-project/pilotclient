@@ -139,7 +139,7 @@ namespace BlackMisc
 
             //! Matches given combined code
             //! \remark * can be used as wildcard, e.g. L*J, L**
-            bool matchesCombinedCode(const QString &combinedCode) const;
+            bool matchesCombinedType(const QString &combinedType) const;
 
             //! Designator + Manufacturer
             QString getDesignatorManufacturer() const;

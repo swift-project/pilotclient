@@ -175,17 +175,17 @@ namespace BlackMisc
             return c;
         }
 
-        bool CAircraftIcaoCode::matchesCombinedCode(const QString &combinedCode) const
+        bool CAircraftIcaoCode::matchesCombinedType(const QString &combinedType) const
         {
-            const QString cc(combinedCode.toUpper().trimmed().replace(' ', '*').replace('-', '*'));
-            if (combinedCode.length() != 3) { return false; }
+            const QString cc(combinedType.toUpper().trimmed().replace(' ', '*').replace('-', '*'));
+            if (combinedType.length() != 3) { return false; }
             if (cc == this->getCombinedType()) { return true; }
 
             const bool wildcard = cc.contains('*');
             if (!wildcard) { return false; }
-            QChar at = cc.at(0);
-            QChar c = cc.at(1);
-            QChar et = cc.at(2);
+            const QChar at = cc.at(0);
+            const QChar c = cc.at(1);
+            const QChar et = cc.at(2);
             if (at != '*')
             {
                 const QString cat = getAircraftType();

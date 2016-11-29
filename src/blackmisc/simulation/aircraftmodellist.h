@@ -121,7 +121,7 @@ namespace BlackMisc
             CAircraftModelList findByFamily(const QString &family) const;
 
             //! Find by combined code, wildcards possible e.g. L*P, *2J
-            CAircraftModelList findByCombinedCode(const QString &combinedCode) const;
+            CAircraftModelList findByCombinedType(const QString &combinedType) const;
 
             //! Find by military flag
             CAircraftModelList findByMilitaryFlag(bool military) const;
