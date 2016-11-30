@@ -64,10 +64,6 @@ namespace BlackMisc
                 virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory) override;
                 //! @}
 
-            private slots:
-                //! Cache changed
-                void ps_cacheChanged();
-
             private:
                 //! Section within file
                 enum FileSection

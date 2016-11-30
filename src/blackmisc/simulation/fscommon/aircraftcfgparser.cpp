@@ -125,14 +125,6 @@ namespace BlackMisc
                 }
             }
 
-            void CAircraftCfgParser::ps_cacheChanged()
-            {
-                if (this->hasCachedData())
-                {
-                    emit this->loadingFinished(true, this->getSimulator());
-                }
-            }
-
             bool CAircraftCfgParser::isLoadingFinished() const
             {
                 return !m_parserWorker || m_parserWorker->isFinished();

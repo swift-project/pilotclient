@@ -30,7 +30,10 @@ namespace BlackMisc
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
             this->m_caches.setCurrentSimulator(simulator);
+
+            // first connect is an internal connection to log info about load status
             connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::ps_loadFinished);
+            connect(&this->m_caches, &IMultiSimulatorModelCaches::cacheChanged, this, &IAircraftModelLoader::ps_cacheChanged);
         }
 
         IAircraftModelLoader::~IAircraftModelLoader()
@@ -49,7 +52,7 @@ namespace BlackMisc
             if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, "No data"); }
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default values
             CAircraftModelList allModels(this->m_caches.getSynchronizedCachedModels(sim));
-            int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
+            const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (c > 0)
             {
                 return this->setCachedModels(allModels, sim);
@@ -71,6 +74,11 @@ namespace BlackMisc
             {
                 CLogMessage(this).info("Loading finished, success %1") << boolToYesNo(success);
             }
+        }
+
+        void IAircraftModelLoader::ps_cacheChanged(const CSimulatorInfo &simInfo)
+        {
+            emit this->loadingFinished(true, simInfo);
         }
 
         QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
@@ -136,8 +144,9 @@ namespace BlackMisc
             }
             if (mode.testFlag(CacheOnly))
             {
-                // only cache, but we did not find any data
-                emit loadingFinished(false, this->getSimulator());
+                // only cache, but we did not find any data yet (still in progress?)
+                // here we rely on the cache load slot, no need to emit here
+                // an alternative was to sync cache here
                 return;
             }
             this->startLoadingFromDisk(mode, modelConsolidation, directory);

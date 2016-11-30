@@ -147,7 +147,7 @@ namespace BlackMisc
             BlackMisc::CStatusMessage replaceOrAddCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator = CSimulatorInfo());
 
         signals:
-            //! Parsing is finished
+            //! Parsing is finished or cache has been loaded
             void loadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         protected:
@@ -175,6 +175,9 @@ namespace BlackMisc
         protected slots:
             //! Loading finished, also logs messages
             void ps_loadFinished(bool success);
+
+            //! A cache has been changed
+            void ps_cacheChanged(const CSimulatorInfo &simInfo);
         };
     } // ns
 } // ns
