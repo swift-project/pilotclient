@@ -436,11 +436,11 @@ namespace BlackCore
         {
             if (model.hasModelString())
             {
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Found exact match for " + model.getModelString());
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Found exact match for '%1'").arg(model.getModelString()));
             }
             else
             {
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "No exact match for " + model.getModelString());
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("No exact match for '%1'").arg(remoteAircraft.getModelString()));
             }
         }
         model.setModelType(CAircraftModel::TypeModelMatching);

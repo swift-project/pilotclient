@@ -34,21 +34,15 @@
    </property>
    <item row="0" column="1">
     <widget class="BlackGui::Components::CSimulatorSelector" name="comp_SimulatorSelector">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
     </widget>
    </item>
    <item row="3" column="1">
     <widget class="BlackGui::Components::CAircraftCombinedTypeSelector" name="comp_CombinedCode">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
     </widget>
    </item>
@@ -60,11 +54,8 @@
        <height>0</height>
       </size>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
     </widget>
    </item>
@@ -102,11 +93,8 @@
    </item>
    <item row="3" column="3">
     <widget class="BlackGui::Components::CDbLiverySelectorComponent" name="comp_LiverySelector">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
     </widget>
    </item>
@@ -118,11 +106,8 @@
        <height>0</height>
       </size>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
     </widget>
    </item>
@@ -314,6 +299,22 @@
    <header>blackgui/views/statusmessageview.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comp_SimulatorSelector</tabstop>
+  <tabstop>le_ModelSetCount</tabstop>
+  <tabstop>comp_AircraftSelector</tabstop>
+  <tabstop>comp_AirlineSelector</tabstop>
+  <tabstop>comp_CombinedCode</tabstop>
+  <tabstop>comp_LiverySelector</tabstop>
+  <tabstop>le_Manufacturer</tabstop>
+  <tabstop>le_Callsign</tabstop>
+  <tabstop>le_ModelString</tabstop>
+  <tabstop>pb_ReverseLookup</tabstop>
+  <tabstop>pb_ModelMatching</tabstop>
+  <tabstop>cb_withReverseLookup</tabstop>
+  <tabstop>te_Results</tabstop>
+  <tabstop>tvp_ResultMessages</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
