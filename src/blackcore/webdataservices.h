@@ -242,6 +242,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
 
+        //! ICAO codes for designator
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
+
         //! ICAO code for id
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int id) const;

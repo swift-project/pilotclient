@@ -56,6 +56,11 @@ namespace BlackCore
             return getAircraftIcaoCodes().findFirstByDesignatorAndRank(designator);
         }
 
+        CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodesForDesignator(const QString &designator) const
+        {
+            return getAircraftIcaoCodes().findByDesignator(designator);
+        }
+
         CAircraftIcaoCode CIcaoDataReader::getAircraftIcaoCodeForDbKey(int key) const
         {
             return getAircraftIcaoCodes().findByKey(key);

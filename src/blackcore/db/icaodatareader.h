@@ -53,6 +53,10 @@ namespace BlackCore
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDesignator(const QString &designator) const;
 
+            //! Get aircraft ICAO information for designator
+            //! \threadsafe
+            BlackMisc::Aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForDesignator(const QString &designator) const;
+
             //! Get aircraft ICAO information for key
             //! \threadsafe
             BlackMisc::Aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const;
