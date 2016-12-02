@@ -48,8 +48,8 @@ namespace BlackCore
             ByIcaoData       = 1 << 1,
             ByFamily         = 1 << 2,
             ByLivery         = 1 << 3,
-            ByCombinedCode   = 1 << 4,
-            All              = ByModelString | ByIcaoData | ByFamily | ByLivery | ByCombinedCode
+            ByCombinedType   = 1 << 4,
+            All              = ByModelString | ByIcaoData | ByFamily | ByLivery | ByCombinedType
         };
         Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -112,6 +112,14 @@ namespace BlackCore
         void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
 
     private:
+        //! The search based implementation
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModel getClosestMatchSearchImplementation(MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
+
+        //! The search based implementation
+        //! \threadsafe
+        BlackMisc::Simulation::CAircraftModel getClosestMatchScoreImplementation(MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, BlackMisc::CStatusMessageList *log = nullptr) const;
+
         //! Search in models by key (aka model string)
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModel matchByExactModelString(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &models, BlackMisc::CStatusMessageList *log);
@@ -138,7 +146,7 @@ namespace BlackCore
 
         //! Installed models by combined code (ie L2J, L1P, ...)
         //! \threadsafe
-        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedCode(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool relaxIfNotFound, bool &reduced, BlackMisc::CStatusMessageList *log);
+        static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByCombinedCode(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
 
         //! By military flag
         //! \threadsafe
