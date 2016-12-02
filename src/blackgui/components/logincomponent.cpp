@@ -315,6 +315,11 @@ namespace BlackGui
             CLogMessage::preformatted(msg);
             if (msg.isSuccess())
             {
+                QString ac(ownAircraft.getCallsignAsString() + " " + ownAircraft.getAircraftIcaoCodeDesignator());
+                if (ownAircraft.hasAirlineDesignator()) { ac += " "; ac += ownAircraft.getAirlineIcaoCodeDesignator(); }
+                if (!ownAircraft.getAircraftIcaoCombinedType().isEmpty()) { ac += " "; ac += ownAircraft.getAircraftIcaoCode().getCombinedType(); }
+                ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
+                ui->le_LoginAsAircaft->setText(ac);
                 emit loginOrLogoffSuccessful();
             }
             else

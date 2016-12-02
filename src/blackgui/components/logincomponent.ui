@@ -528,7 +528,7 @@
        <number>2</number>
       </property>
       <item>
-       <widget class="QGroupBox" name="gb_CurrentServer">
+       <widget class="QGroupBox" name="gb_CurrentLogin">
         <property name="title">
          <string>Current server</string>
         </property>
@@ -559,6 +559,46 @@
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="fr_CurrentLoginAddInfo">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="lbl_LoginAsAircraft">
+              <property name="text">
+               <string>Your aircraft:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="le_LoginAsAircaft">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="lbl_LoginSince">
+              <property name="text">
+               <string>Login since:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="le_LoginSince">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
         </layout>
