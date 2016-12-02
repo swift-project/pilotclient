@@ -27,7 +27,7 @@ namespace BlackMisc
 
         CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignator(const QString &designator) const
         {
-            if (CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
+            if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
             return this->findBy([&](const CAirlineIcaoCode & code)
             {
                 return code.matchesDesignator(designator);
@@ -115,7 +115,16 @@ namespace BlackMisc
             CAirlineIcaoCodeList codesFound;
             if (patternUsed.hasValidDesignator())
             {
-                codesFound = this->findByVDesignator(patternUsed.getVDesignator());
+                if (patternUsed.isVirtualAirline())
+                {
+                    // we can tell for sure we search an VA
+                    codesFound = this->findByVDesignator(patternUsed.getVDesignator());
+                }
+                else
+                {
+                    // we do not know if we are looking for an VA
+                    codesFound = this->findByDesignator(patternUsed.getDesignator());
+                }
             }
             else
             {

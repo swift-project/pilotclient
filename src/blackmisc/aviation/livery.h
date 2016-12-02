@@ -113,6 +113,9 @@ namespace BlackMisc
             //! Tail color set?
             bool hasColorTail() const;
 
+            //! Has valid (fuselage/tail) colors?
+            bool hasValidColors() const;
+
             //! Set description
             void setDescription(const QString &description) { this->m_description = description; }
 
@@ -158,14 +161,21 @@ namespace BlackMisc
             //! Color livery
             bool isColorLivery() const;
 
-            //! Combined color distance (fuselage/tail): 0..1
+            //! Color distance 0..1 (0 is best)
+            double getColorDistance(const CLivery &otherLivery) const;
+
+            //! Combined color distance (fuselage/tail): 0..1 (0 is best)
             double getColorDistance(const BlackMisc::CRgbColor &fuselage, const BlackMisc::CRgbColor &tail) const;
 
             //! Update missing parts
             void updateMissingParts(const CLivery &otherLivery);
 
             //! As a brief HTML summary (e.g. used in tooltips)
-            QString asHtmlSummary () const;
+            QString asHtmlSummary() const;
+
+            //! Score by comparison to another livery 0..100
+            //! \remark normally used with liveries preselect by airline ICAO code
+            int calculateScore(const CLivery &otherLivery) const;
 
             //! Object from JSON
             static CLivery fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("liv_"));

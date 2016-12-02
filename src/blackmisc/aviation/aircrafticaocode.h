@@ -159,6 +159,9 @@ namespace BlackMisc
             //! Manufacturer
             bool hasManufacturer() const;
 
+            //! Matching the manufacturer?
+            bool matchesManufacturer(const QString &manufacturer) const;
+
             //! Get WTC
             const QString &getWtc() const { return m_wtc; }
 
@@ -248,6 +251,10 @@ namespace BlackMisc
 
             //! As a brief HTML summary (e.g. used in tooltips)
             QString asHtmlSummary () const;
+
+            //! Considers rank, manufacturer and family 0..90
+            //! \remark normally used with a selected set of ICAO codes or combined types
+            int calculateScore(const CAircraftIcaoCode &otherCode) const;
 
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);

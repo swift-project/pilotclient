@@ -43,6 +43,9 @@ namespace BlackMisc
 
     namespace Simulation
     {
+        //! Individual (matching) score for each model
+        using ScoredModels = QMap<int, CAircraftModel>;
+
         //! Value object encapsulating a list of aircraft models
         class BLACKMISC_EXPORT CAircraftModelList :
             public BlackMisc::CSequence<CAircraftModel>,
@@ -203,6 +206,9 @@ namespace BlackMisc
 
             //! File name normalized for DB
             void normalizeFileNamesForDb();
+
+            //! Score by aircraft ICAO code
+            ScoredModels scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores = true) const;
 
             //! Completer strings
             QStringList toCompleterStrings(bool sorted = true) const;

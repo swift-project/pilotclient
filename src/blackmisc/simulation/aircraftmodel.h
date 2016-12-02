@@ -338,6 +338,9 @@ namespace BlackMisc
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
+            //! Calculate score
+            int calculateScore(const CAircraftModel &compareModel) const;
+
             //! Validate
             BlackMisc::CStatusMessageList validate(bool withNestedObjects) const;
 
@@ -368,7 +371,7 @@ namespace BlackMisc
             //! Model mode
             static ModelMode modelModeFromString(const QString &mode);
 
-            //! Model mode-
+            //! Model mode
             static const QString &modelModeToString(ModelMode mode);
 
             //! From swift DB JSON

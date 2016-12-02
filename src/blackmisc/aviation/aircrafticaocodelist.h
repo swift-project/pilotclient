@@ -82,11 +82,17 @@ namespace BlackMisc
             //! Best selection by given pattern, also searches IATA and family information
             CAircraftIcaoCode smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const;
 
+            //! Group by designator and manufacturer
+            CAircraftIcaoCodeList groupByDesignatorAndManufacturer() const;
+
             //! Sort by rank
             void sortByRank();
 
             //! Sort by designator first, then by rank
             void sortByDesignatorAndRank();
+
+            //! Sort by designator first, then by manufacturer and rank
+            void sortByDesignatorManufacturerAndRank();
 
             //! For selection completion
             QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool sort = true) const;

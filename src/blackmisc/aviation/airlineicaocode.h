@@ -164,6 +164,9 @@ namespace BlackMisc
             //! Has (airline) name?
             bool hasName() const { return !m_name.isEmpty(); }
 
+            //! Has simplified airline name?
+            bool hasSimplifiedName() const;
+
             //! Complete data
             bool hasCompleteData() const;
 
@@ -196,6 +199,9 @@ namespace BlackMisc
 
             //! As a brief HTML summary (e.g. used in tooltips)
             QString asHtmlSummary () const;
+
+            //! Score against other code 0..100
+            int calculateScore(const CAirlineIcaoCode &otherCode) const;
 
             //! Valid designator?
             static bool isValidAirlineDesignator(const QString &airline);

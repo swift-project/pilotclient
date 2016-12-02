@@ -528,6 +528,18 @@ namespace BlackMisc
             }
         }
 
+        ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores) const
+        {
+            ScoredModels scoreMap;
+            for (const CAircraftModel &model : *this)
+            {
+                const int score = model.calculateScore(remoteModel);
+                if (ignoreZeroScores && score < 1) { continue; }
+                scoreMap.insertMulti(score, model);
+            }
+            return scoreMap;
+        }
+
         QStringList CAircraftModelList::toCompleterStrings(bool sorted) const
         {
             QStringList c;

@@ -153,6 +153,11 @@ namespace BlackMisc
             return it != simplifiedName.end();
         }
 
+        bool CAirlineIcaoCode::hasSimplifiedName() const
+        {
+            return this->hasName() && !this->getSimplifiedName().isEmpty();
+        }
+
         bool CAirlineIcaoCode::hasCompleteData() const
         {
             return this->hasValidDesignator() && this->hasValidCountry() && this->hasName();
@@ -389,6 +394,38 @@ namespace BlackMisc
         QString CAirlineIcaoCode::asHtmlSummary() const
         {
             return this->getCombinedStringWithKey();
+        }
+
+        int CAirlineIcaoCode::calculateScore(const CAirlineIcaoCode &otherCode) const
+        {
+            const bool bothFromDb = otherCode.isLoadedFromDb() && this->isLoadedFromDb();
+            if (bothFromDb && this->getDbKey() == otherCode.getDbKey())
+            {
+                return 100;
+            }
+            int score = 0;
+            if (otherCode.hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
+            {
+                score += 60;
+            }
+
+            if (bothFromDb && this->isVirtualAirline() == otherCode.isVirtualAirline())
+            {
+                score += 20;
+            }
+            if (this->hasName() && this->getName() == otherCode.getName())
+            {
+                score += 20;
+            }
+            else if (this->hasTelephonyDesignator() && this->getTelephonyDesignator() == otherCode.getTelephonyDesignator())
+            {
+                score += 15;
+            }
+            else if (this->hasSimplifiedName() && this->getSimplifiedName() == otherCode.getSimplifiedName())
+            {
+                score += 10;
+            }
+            return score;
         }
 
         CAirlineIcaoCode CAirlineIcaoCode::fromDatabaseJson(const QJsonObject &json, const QString &prefix)

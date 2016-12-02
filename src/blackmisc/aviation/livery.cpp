@@ -98,6 +98,11 @@ namespace BlackMisc
             return m_colorTail.isValid();
         }
 
+        bool CLivery::hasValidColors() const
+        {
+            return this->hasColorFuselage() && this->hasColorTail();
+        }
+
         bool CLivery::matchesCombinedCode(const QString &candidate) const
         {
             if (candidate.isEmpty() || !this->hasCombinedCode()) { return false; }
@@ -185,6 +190,11 @@ namespace BlackMisc
             return m_combinedCode.startsWith(colorLiveryMarker());
         }
 
+        double CLivery::getColorDistance(const CLivery &otherLivery) const
+        {
+            return this->getColorDistance(otherLivery.getColorFuselage(), otherLivery.getColorTail());
+        }
+
         double CLivery::getColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const
         {
             if (!fuselage.isValid() || !tail.isValid()) { return 1.0; }
@@ -256,7 +266,7 @@ namespace BlackMisc
 
         QString CLivery::getStandardCode(const CAirlineIcaoCode &airline)
         {
-            QString code(airline.getDesignator());
+            QString code(airline.getVDesignator());
             return code.isEmpty() ? "" : code.append('.').append(standardLiveryMarker());
         }
 
@@ -383,5 +393,34 @@ namespace BlackMisc
             return this->getCombinedCodePlusInfo();
         }
 
+        int CLivery::calculateScore(const CLivery &otherLivery) const
+        {
+            int score = 0;
+            if (this->isLoadedFromDb() && otherLivery.isLoadedFromDb() && (this->getCombinedCode() == otherLivery.getCombinedCode()))
+            {
+                return 100; // exact
+            }
+            else
+            {
+                score += 0.35 * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode());
+            }
+
+            // 0..50 so far
+            if (score == 0) { return 0; }
+            if (this->isAirlineStandardLivery()) { score += 10; }
+
+            // 0..60 so far
+            if (!this->hasValidColors()) { return score; }
+            const double cd = this->getColorDistance(otherLivery); // 0..1
+            if (cd == 0)
+            {
+                score += 40;
+            }
+            else
+            {
+                score += (1.0 - cd) * 25; // 0..25
+            }
+            return score;
+        }
     } // namespace
 } // namespace

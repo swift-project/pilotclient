@@ -584,6 +584,13 @@ namespace BlackMisc
                    this->m_modelString.startsWith(modelString, sensitivity);
         }
 
+        int CAircraftModel::calculateScore(const CAircraftModel &compareModel) const
+        {
+            int score = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode());
+            score += this->getLivery().calculateScore(compareModel.getLivery());
+            return 0.5 * score;
+        }
+
         CStatusMessageList CAircraftModel::validate(bool withNestedObjects) const
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));

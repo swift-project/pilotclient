@@ -146,6 +146,11 @@ namespace BlackMisc
             this->sortBy(&CAircraftIcaoCode::getDesignator, &CAircraftIcaoCode::getRank);
         }
 
+        void CAircraftIcaoCodeList::sortByDesignatorManufacturerAndRank()
+        {
+            this->sortBy(&CAircraftIcaoCode::getDesignator, &CAircraftIcaoCode::getManufacturer, &CAircraftIcaoCode::getRank);
+        }
+
         QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool sort) const
         {
             QStringList c;
@@ -230,49 +235,38 @@ namespace BlackMisc
             }
 
             // get an initial set of data we can choose from
+            const QString d(icaoPattern.getDesignator());
+            if (d.isEmpty()) { return CAircraftIcaoCode(); }
             CAircraftIcaoCodeList codes;
-
-            // try all designators, even unvalid ones
-            if (!icaoPattern.getDesignator().isEmpty())
+            do
             {
-                const QString d(icaoPattern.getDesignator());
                 codes = this->findByDesignator(d);
+                if (!codes.isEmpty()) break;
 
-                // we have one exact match
-                if (codes.size() == 1) { return codes.front(); }
+                // now we search if the ICAO designator is actually an IATA code
+                codes = this->findByIataCode(d);
+                if (!codes.isEmpty()) break;
 
-                if (codes.isEmpty())
+                if (d.length() > 4)
                 {
-                    // now we search if the ICAO designator is
-                    // actually an IATA code
-                    codes = this->findByIataCode(d);
-
-                    // we have one exact match
-                    if (codes.size() == 1) { return codes.front(); }
-
-                    if (codes.isEmpty())
-                    {
-                        // still empty, try to find by family
-                        codes = this->findByFamily(d);
-
-                        // we have one exact match
-                        if (codes.size() == 1) { return codes.front(); }
-
-                        // now try to find as ending
-                        codes = this->findEndingWith(d);
-                        if (codes.size() == 1) { return codes.front(); }
-
-                        // still empty, hopeless
-                        if (codes.isEmpty()) { return icaoPattern; }
-
-                        // continue here, we have more than one code and
-                        // will try to further reduce
-                    }
+                    codes = this->findByDesignator(d.left(4));
+                    if (!codes.isEmpty()) break;
                 }
-                codes.sortByRank();
+
+                // still empty, try to find by family
+                codes = this->findByFamily(d);
+                if (!codes.isEmpty()) break;
+
+                // now try to find as ending
+                codes = this->findEndingWith(d);
             }
+            while (false);
+
+            if (codes.isEmpty()) { return icaoPattern; }
+            if (codes.size() == 1) { return codes.front(); }
 
             // further reduce by manufacturer
+            codes.sortByRank();
             if (icaoPattern.hasManufacturer() && codes.contains(&CAircraftIcaoCode::getManufacturer, icaoPattern.getManufacturer()))
             {
                 const QString m(icaoPattern.getManufacturer());
@@ -301,6 +295,25 @@ namespace BlackMisc
                 if (cm.size() == 1) { return cm.front(); }
             }
             return codes.frontOrDefault(); // sorted by rank
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::groupByDesignatorAndManufacturer() const
+        {
+            CAircraftIcaoCodeList copy(*this);
+            copy.sortByDesignatorManufacturerAndRank();
+            CAircraftIcaoCodeList grouped;
+            QString designator;
+            QString manufacturer;
+            for (const CAircraftIcaoCode code : as_const(copy))
+            {
+                if (code.getDesignator() != designator ||  code.getManufacturer() != manufacturer)
+                {
+                    designator = code.getDesignator();
+                    manufacturer = code.getManufacturer();
+                    grouped.push_back(code);
+                }
+            }
+            return grouped;
         }
     } // namespace
 } // namespace

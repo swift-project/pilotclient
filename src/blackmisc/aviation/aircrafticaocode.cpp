@@ -108,6 +108,55 @@ namespace BlackMisc
             return this->getCombinedIcaoStringWithKey();
         }
 
+        int CAircraftIcaoCode::calculateScore(const CAircraftIcaoCode &otherCode) const
+        {
+            const bool bothFromDb = this->isLoadedFromDb() && otherCode.isLoadedFromDb();
+            if (bothFromDb && otherCode.getDbKey() == this->getDbKey()) { return 100; }
+
+            int score = 0;
+            if (this->hasValidDesignator() && this->getDesignator() == otherCode.getDesignator())
+            {
+                score += 50;
+
+                if (this->getRank() == 0) { score += 15; }
+                else if (this->getRank() == 1) { score += 12; }
+                else if (this->getRank() < 10) { score += (10 - this->getRank()); }
+            }
+            else
+            {
+                if (this->hasFamily() && this->getFamily() == otherCode.getFamily())
+                {
+                    score += 30;
+                }
+                else if (this->hasValidCombinedType() && otherCode.getCombinedType() == this->getCombinedType())
+                {
+                    score += 20;
+                }
+                else if (this->hasValidCombinedType())
+                {
+                    if (this->getEngineCount() == otherCode.getEngineCount()) { score += 2; }
+                    if (this->getEngineType() == otherCode.getEngineType()) { score += 2; }
+                    if (this->getAircraftType() == otherCode.getAircraftType()) { score += 2; }
+                }
+            }
+
+            // score needs to higher than ranking
+            if (this->hasManufacturer() && otherCode.hasManufacturer())
+            {
+                if (this->matchesManufacturer(otherCode.getManufacturer()))
+                {
+                    score += 20;
+                }
+                else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
+                {
+                    score += 15;
+                }
+            }
+
+            // 0..85
+            return score;
+        }
+
         bool CAircraftIcaoCode::hasDesignator() const
         {
             return !this->m_designator.isEmpty();
@@ -153,7 +202,7 @@ namespace BlackMisc
         int CAircraftIcaoCode::getEngineCount() const
         {
             if (this->m_combinedType.length() < 2) { return -1; }
-            QString c(this->m_combinedType.mid(1, 1));
+            const QString c(this->m_combinedType.mid(1, 1));
             if (c == "-") { return -1; }
             bool ok;
             int ec = c.toInt(&ok);
@@ -210,6 +259,12 @@ namespace BlackMisc
         bool CAircraftIcaoCode::hasManufacturer() const
         {
             return !m_manufacturer.isEmpty();
+        }
+
+        bool CAircraftIcaoCode::matchesManufacturer(const QString &manufacturer) const
+        {
+            if (manufacturer.isEmpty()) { return false; }
+            return (manufacturer.length() == this->m_manufacturer.length() && this->m_manufacturer.startsWith(manufacturer, Qt::CaseInsensitive));
         }
 
         bool CAircraftIcaoCode::isVtol() const
