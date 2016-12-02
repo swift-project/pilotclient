@@ -136,7 +136,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
                 {
-                    SIMCONNECT_RECV_EVENT_FRAME  *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
+                    SIMCONNECT_RECV_EVENT_FRAME *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
                     switch (event->uEventID)
                     {
                     case SystemEventFrame:

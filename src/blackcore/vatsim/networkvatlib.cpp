@@ -93,7 +93,7 @@ namespace BlackCore
             connect(&m_processingTimer, &QTimer::timeout, this, &CNetworkVatlib::process);
             connect(&m_positionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendPositionUpdate);
             connect(&m_interimPositionUpdateTimer, &QTimer::timeout, this, &CNetworkVatlib::sendInterimPositions);
-            connect(&this->m_scheduledConfigUpdate, &QTimer::timeout, this, &CNetworkVatlib::sendIncrementalAircraftConfig);
+            connect(&m_scheduledConfigUpdate, &QTimer::timeout, this, &CNetworkVatlib::sendIncrementalAircraftConfig);
             m_scheduledConfigUpdate.setSingleShot(true);
 
             m_processingTimer.start(c_processingIntervalMsec);

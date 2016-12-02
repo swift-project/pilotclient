@@ -77,7 +77,7 @@ namespace BlackMisc
         {
             if (!this->isValid()) return "Invalid";
             QString s = this->getVoiceRoomUrl(false);
-            s.append(this ->isConnected() ? " connected" : " unconnected");
+            s.append(this->isConnected() ? " connected" : " unconnected");
             if (this->m_audioPlaying) s.append(" playing");
             return s;
         }

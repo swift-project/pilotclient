@@ -70,6 +70,7 @@ void CSwiftData::closeEvent(QCloseEvent *event)
 
 void CSwiftData::ps_appendLogMessage(const CStatusMessage &message)
 {
+    if (!ui->comp_MainInfoArea) { return; } // not initialized yet
     CLogComponent *logComponent = ui->comp_MainInfoArea->getLogComponent();
     Q_ASSERT_X(logComponent, Q_FUNC_INFO, "missing log component");
     logComponent->appendStatusMessageToList(message);
