@@ -666,8 +666,8 @@ namespace BlackCore
             static const QList<QCommandLineOption> opts
             {
                 QCommandLineOption({ "idAndKey", "clientIdAndKey" },
-                                   QCoreApplication::translate("application", "Client id and key pair separated by ':', e.g. <id>:<key>."),
-                                   "clientIdAndKey")
+                QCoreApplication::translate("application", "Client id and key pair separated by ':', e.g. <id>:<key>."),
+                "clientIdAndKey")
             };
 
             // only in not officially shipped versions
@@ -796,10 +796,12 @@ namespace BlackCore
         void CNetworkVatlib::onPilotPositionUpdate(VatSessionID, const char *callsignChar , const VatPilotPosition *position, void *cbvar)
         {
             const CCallsign callsign(callsignChar, CCallsign::Aircraft);
+            // \todo as of 821 using position->altitudePressure instead of position->altitudeTrue
+            // if altered in underlying classes, this change needs to be reverted
             CAircraftSituation situation(
                 callsign,
                 CCoordinateGeodetic(position->latitude, position->longitude), // geodetic height -> null
-                CAltitude(position->altitudeTrue, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+                CAltitude(position->altitudePressure, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
