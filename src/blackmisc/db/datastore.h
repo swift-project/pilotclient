@@ -31,9 +31,9 @@ namespace BlackMisc
         enum DbKeyState
         {
             Undefined = 0,
-            Valid   = 1 << 0,
-            Invalid = 1 << 1,
-            All      = Valid | Invalid
+            Valid     = 1 << 0,
+            Invalid   = 1 << 1,
+            All       = Valid | Invalid
         };
 
         //! Supposed to be used only in filter operations

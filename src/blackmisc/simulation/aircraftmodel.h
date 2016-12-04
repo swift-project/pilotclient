@@ -96,6 +96,8 @@ namespace BlackMisc
                 IndexLivery,
                 IndexDistributor,
                 IndexFileName,
+                IndexFileTimestamp,
+                IndexFileTimestampFormattedYmdhms,
                 IndexIconPath,
                 IndexModelType,
                 IndexModelTypeAsString,
@@ -301,6 +303,21 @@ namespace BlackMisc
             //! File representing model
             void setIconPath(const QString &iconFile) { m_iconPath = iconFile; }
 
+            //! Get timestamp
+            QDateTime getFileTimestamp() const;
+
+            //! File timestamp
+            QString getFormattedFileTimestampYmdhms() const;
+
+            //! Valid file timestamp?
+            bool hasValidFileTimestamp() const;
+
+            //! Set file timestamp
+            void setFileTimestamp(const QDateTime &timestampUtc);
+
+            //! Set file timestamp
+            void setFileTimestamp(qint64 timestamp);
+
             //! Load icon from disk
             CPixmap loadIcon(CStatusMessage &success) const;
 
@@ -332,7 +349,7 @@ namespace BlackMisc
             //! File path for DB (absolute paths make no sense in DB)
             void normalizeFileNameForDb();
 
-            //! If we have local file names, we use those
+            //! If we have local file names, we use those namesx
             void updateLocalFileNames(const CAircraftModel &model);
 
             //! Matches model string?
@@ -360,7 +377,7 @@ namespace BlackMisc
             QString toDatabaseJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Compact) const;
 
             //! As a brief HTML summary (e.g. used in tooltips)
-            QString asHtmlSummary () const;
+            QString asHtmlSummary() const;
 
             //! Model type
             static QString modelTypeToString(ModelType type);
@@ -396,6 +413,7 @@ namespace BlackMisc
             QString        m_description;                          //!< descriptive text
             QString        m_fileName;                             //!< file name
             QString        m_iconPath;                             //!< a file representing the aircraft as icon
+            qint64         m_fileTimestamp = -1;                   //!< file timestamp of originating file (if applicable)
             ModelType      m_modelType = TypeUnknown;              //!< model string is coming representing ...?
             ModelMode      m_modelMode = Include;                  //!< model mode (include / exclude)
 
@@ -414,6 +432,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(description, 0, DisabledForComparison),
                 BLACK_METAMEMBER(fileName, 0, DisabledForComparison),
                 BLACK_METAMEMBER(iconPath, 0, DisabledForComparison),
+                BLACK_METAMEMBER(fileTimestamp, 0, DisabledForComparison),
                 BLACK_METAMEMBER(modelType),
                 BLACK_METAMEMBER(modelMode)
             );

@@ -170,8 +170,8 @@ namespace BlackMisc
     bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern, Qt::CaseSensitivity cs)
     {
         if (directoryPath.isEmpty() || excludePattern.isEmpty()) { return false; }
-        const QString ed(normalizeFilePathToQtStandard(excludePattern));
-        return directoryPath.contains(ed, cs);
+        const QString normalizedExcludePattern(normalizeFilePathToQtStandard(excludePattern));
+        return directoryPath.contains(normalizedExcludePattern, cs);
     }
 
     bool CFileUtils::isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories, Qt::CaseSensitivity cs)
