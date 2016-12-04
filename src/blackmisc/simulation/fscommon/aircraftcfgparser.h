@@ -91,8 +91,8 @@ namespace BlackMisc
                 //! Files to be used
                 static const QString &fileFilter();
 
-                CAircraftCfgEntriesList       m_parsedCfgEntriesList; //!< parsed entries
-                QPointer<BlackMisc::CWorker>  m_parserWorker;         //!< worker will destroy itself, so weak pointer
+                CAircraftCfgEntriesList      m_parsedCfgEntriesList; //!< parsed entries
+                QPointer<BlackMisc::CWorker> m_parserWorker;         //!< worker will destroy itself, so weak pointer
             };
         } // ns
     } // ns

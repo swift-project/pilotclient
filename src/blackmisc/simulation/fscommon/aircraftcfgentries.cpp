@@ -39,8 +39,9 @@ namespace BlackMisc
             QString CAircraftCfgEntries::convertToQString(bool) const
             {
                 QString s = "{%1, %2, %3, %4, %5, %6}";
-                s = s.arg(this->m_fileName).arg(this->m_index).arg(this->m_title)
-                    .arg(this->m_atcModel).arg(this->m_atcType).arg(this->m_atcParkingCode);
+                s = s.
+                    arg(this->m_fileName).arg(this->m_index).
+                    arg(this->m_title, this->m_atcModel, this->m_atcType, this->m_atcParkingCode);
                 return s;
             }
 
@@ -51,8 +52,8 @@ namespace BlackMisc
             QString CAircraftCfgEntries::getFileDirectory() const
             {
                 if (this->m_fileName.isEmpty()) { return ""; }
-                QFileInfo fi(this->m_fileName);
-                return fi.absolutePath();
+                const QFileInfo fileInfo(this->m_fileName);
+                return fileInfo.absolutePath();
             }
 
             QString CAircraftCfgEntries::getUiCombinedDescription() const
@@ -133,7 +134,9 @@ namespace BlackMisc
                 model.setDescription(this->getUiCombinedDescription()); // Manufacturer, variation, type
                 model.setFileName(this->getFileName());
                 model.setName(this->getSimName());
-                model.setUtcTimestamp(this->getUtcTimestamp()); // aircraft.cfg file last modified
+                Q_ASSERT_X(this->m_timestampMSecsSinceEpoch >= 0, Q_FUNC_INFO, "Missing file timestamp");
+                model.setMSecsSinceEpoch(this->m_timestampMSecsSinceEpoch); // aircraft.cfg file timestamp
+                model.setFileTimestamp(this->m_timestampMSecsSinceEpoch);
                 model.setIconPath(this->getThumbnailFileNameChecked());
 
                 const QString designator(CAircraftIcaoCode::normalizeDesignator(this->getAtcModel()));

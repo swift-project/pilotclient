@@ -165,17 +165,20 @@ namespace BlackMisc
                 CAircraftModelList installedModels;
                 while (aircraftIt.hasNext())
                 {
-                    //! \todo KB I would consider exclude dirs here CFileUtils::matchesExcludeDirectory()
                     aircraftIt.next();
+                    if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
 
                     // <dirname> <filename> for the default model and <dirname> <filename> <texturedir> for the liveries
-                    QString modelString = QString("%1 %2").arg(aircraftIt.fileInfo().dir().dirName(), aircraftIt.fileInfo().baseName());
+                    const QString dirName(aircraftIt.fileInfo().dir().dirName());
+                    const QString modelString = QString("%1 %2").arg(dirName, aircraftIt.fileInfo().baseName());
 
                     CAircraftModel model;
                     model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
                     model.setSimulator(this->getSimulator());
                     model.setFileName(aircraftIt.filePath());
-                    model.setUtcTimestamp(aircraftIt.fileInfo().lastModified());
+                    const QDateTime lastModifiedTs(aircraftIt.fileInfo().lastModified());
+                    model.setUtcTimestamp(lastModifiedTs);
+                    model.setFileTimestamp(lastModifiedTs);
                     model.setModelString(modelString);
 
                     QFile file(aircraftIt.filePath());

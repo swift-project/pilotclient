@@ -143,7 +143,7 @@ namespace BlackMisc
             CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, CStatusMessageList &messages, bool *ok)
             {
                 //
-                // function has to be thread safe
+                // function has to be threadsafe
                 //
 
                 *ok = false;
@@ -323,7 +323,13 @@ namespace BlackMisc
                         file.close();
 
                         // store all entries
-                        for (const CAircraftCfgEntries &e : tempEntries)
+                        QDateTime fileTimestamp(fileInfo.lastModified());
+                        if (!fileTimestamp.isValid() || fileInfo.created() > fileTimestamp)
+                        {
+                            fileTimestamp = fileInfo.created();
+                        }
+                        Q_ASSERT_X(fileTimestamp.isValid(), Q_FUNC_INFO, "Missing file timestamp");
+                        for (const CAircraftCfgEntries &e : as_const(tempEntries))
                         {
                             if (e.getTitle().isEmpty())
                             {
@@ -333,7 +339,7 @@ namespace BlackMisc
                             CAircraftCfgEntries newEntries(e);
                             newEntries.setAtcModel(atcModel);
                             newEntries.setAtcType(atcType);
-                            newEntries.setUtcTimestamp(fileInfo.lastModified());
+                            newEntries.setUtcTimestamp(fileTimestamp);
                             result.push_back(newEntries);
                         }
                         *ok = true;
