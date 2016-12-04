@@ -72,7 +72,7 @@
                     <origin>../../dist/lib/libopus.0.dylib</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libportaudio.2.dylib</origin>
+                    <origin>../../dist/lib/libportaudio.dylib</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libspeexdsp.1.dylib</origin>

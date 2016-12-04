@@ -58,7 +58,7 @@
 #include <type_traits>
 
 static_assert(! std::is_abstract<BlackCore::Vatsim::CNetworkVatlib>::value, "Must implement all pure virtuals");
-static_assert(VAT_LIBVATLIB_VERSION == 905, "Wrong vatlib header installed");
+static_assert(VAT_LIBVATLIB_VERSION == 906, "Wrong vatlib header installed");
 
 using namespace BlackConfig;
 using namespace BlackMisc;
@@ -103,7 +103,7 @@ namespace BlackCore
         {
             Q_ASSERT_X(isDisconnected(), Q_FUNC_INFO, "attempted to reinitialize session while still connected");
 
-            int clientCapabilities = vatCapsModelDesc | vatCapsInterminPos | vatCapsAtcInfo | vatCapsAircraftConfig;
+            int clientCapabilities = vatCapsAircraftInfo | vatCapsFastPos | vatCapsAtcInfo | vatCapsAircraftConfig;
             if (m_loginMode == LoginStealth)
             {
                 clientCapabilities |= vatCapsStealth;
@@ -629,7 +629,7 @@ namespace BlackCore
             const QByteArray liverybytes = toFSD(m_ownLiveryDescription);
 
             VatAircraftInfo aircraftInfo {acTypeICAObytes, airlineICAObytes, liverybytes};
-            Vat_SendModernPlaneInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
+            Vat_SendAircraftInfo(m_net.data(), toFSD(callsign), &aircraftInfo);
         }
 
         void CNetworkVatlib::sendIncrementalAircraftConfig()
@@ -805,11 +805,9 @@ namespace BlackCore
         void CNetworkVatlib::onPilotPositionUpdate(VatSessionID, const char *callsignChar , const VatPilotPosition *position, void *cbvar)
         {
             const CCallsign callsign(callsignChar, CCallsign::Aircraft);
-            // \todo as of 821 using position->altitudePressure instead of position->altitudeTrue
-            // if altered in underlying classes, this change needs to be reverted
             CAircraftSituation situation(
                 callsign,
-                CCoordinateGeodetic(position->latitude, position->longitude, position->altitudePressure),
+                CCoordinateGeodetic(position->latitude, position->longitude, position->altitudeTrue),
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
@@ -998,8 +996,8 @@ namespace BlackCore
         {
             int flags = 0;
             if (capabilityFlags & vatCapsAtcInfo) { flags |= AcceptsAtisResponses; }
-            if (capabilityFlags & vatCapsInterminPos) { flags |= SupportsInterimPosUpdates; }
-            if (capabilityFlags & vatCapsModelDesc) { flags |= SupportsIcaoCodes; }
+            if (capabilityFlags & vatCapsFastPos) { flags |= SupportsInterimPosUpdates; }
+            if (capabilityFlags & vatCapsAircraftInfo) { flags |= SupportsIcaoCodes; }
             if (capabilityFlags & vatCapsAircraftConfig) { flags |= SupportsAircraftConfigs; }
             emit cbvar_cast(cbvar)->capabilitiesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), flags);
         }
