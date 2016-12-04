@@ -62,7 +62,7 @@ namespace BlackGui
             ui(new Ui::CMappingComponent)
         {
             ui->setupUi(this);
-            ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModel);
+            ui->tvp_AircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnAircraftModelClient);
             ui->tvp_AircraftModels->setResizeMode(CAircraftModelView::ResizingOff);
             ui->tvp_AircraftModels->addFilterDialog();
             ui->tvp_AircraftModels->menuRemoveItems(CViewBaseNonTemplate::MenuBackend);

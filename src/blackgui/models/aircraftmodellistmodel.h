@@ -40,12 +40,12 @@ namespace BlackGui
             enum AircraftModelMode
             {
                 NotSet,
-                OwnSimulatorModel,         //!< models existing for my simulator
-                OwnModelSet,               //!< own model set
-                OwnSimulatorModelMapping,  //!< models of my simulator, but in mapping mode
-                Database,                  //!< Database entry
-                VPilotRuleModel,           //!< vPilot rule turned into model
-                StashModel                 //!< stashed models
+                OwnAircraftModelClient,      //!< models existing for my simulator
+                OwnAircraftModelMappingTool, //!< models of my simulator, but in mapping mode
+                OwnModelSet,                 //!< own model set
+                StashModel,                  //!< stashed models
+                Database,                    //!< Database entry
+                VPilotRuleModel              //!< vPilot rule turned into model
             };
 
             //! Constructor

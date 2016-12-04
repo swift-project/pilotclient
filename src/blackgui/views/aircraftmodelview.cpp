@@ -48,7 +48,7 @@ namespace BlackGui
         CAircraftModelView::CAircraftModelView(QWidget *parent) : COrderableViewWithDbObjects(parent)
         {
             // default
-            this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnSimulatorModel, this));
+            this->standardInit(new CAircraftModelListModel(CAircraftModelListModel::OwnAircraftModelClient, this));
 
             // shortcut
             new QShortcut(CShortcut::keyStash(), this, SLOT(ps_requestStash()), nullptr, Qt::WidgetShortcut);
@@ -75,10 +75,10 @@ namespace BlackGui
             case CAircraftModelListModel::VPilotRuleModel:
                 this->m_menus = MenuDefaultNoClear | MenuStashing;
                 break;
-            case CAircraftModelListModel::OwnSimulatorModelMapping:
+            case CAircraftModelListModel::OwnAircraftModelMappingTool:
                 this->m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave;
                 break;
-            case CAircraftModelListModel::OwnSimulatorModel:
+            case CAircraftModelListModel::OwnAircraftModelClient:
             default:
                 this->m_menus = MenuDefaultNoClear | MenuBackend;
                 break;

@@ -50,8 +50,7 @@ namespace BlackGui
             switch (mode)
             {
             case NotSet:
-            case OwnSimulatorModel:
-            case StashModel:
+            case OwnAircraftModelClient:
                 this->m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString}));
                 this->m_columns.addColumn(CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
                 this->m_columns.addColumn(CColumn::standardString("DB", "parts from DB", { CAircraftModel::IndexMembersDbStatus}));
@@ -77,11 +76,15 @@ namespace BlackGui
                 // intentional fall thru
                 this->m_columns.addColumn(CColumn::orderColumn());
 
-            case OwnSimulatorModelMapping:
+            case OwnAircraftModelMappingTool:
+            case StashModel:
                 this->m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
                 this->m_columns.addColumn(CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
+                if (mode == StashModel)
+                {
+                    this->m_columns.addColumn(CColumn::standardString("flags", "parts from DB", { CAircraftModel::IndexMembersDbStatus}));
+                }
                 this->m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
-                // this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraftModel::IndexCallsign));
                 this->m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey}));
                 if (mode == OwnModelSet)
                 {
@@ -89,9 +92,11 @@ namespace BlackGui
                 }
                 this->m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator}));
                 this->m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily}));
+                this->m_columns.addColumn(CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode}));
                 this->m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator}));
                 this->m_columns.addColumn(CColumn::standardString("description",  CAircraftModel::IndexDescription));
                 this->m_columns.addColumn(CColumn::standardString("filename",  CAircraftModel::IndexFileName));
+                this->m_columns.addColumn(CColumn::standardString("file ts.", "file timestamp", CAircraftModel::IndexFileTimestampFormattedYmdhms));
                 this->m_columns.addColumn(CColumn::standardString("icon",  CAircraftModel::IndexIconPath));
                 this->m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
 

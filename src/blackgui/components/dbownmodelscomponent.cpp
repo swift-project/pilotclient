@@ -43,7 +43,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
-            ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnSimulatorModelMapping);
+            ui->tvp_OwnAircraftModels->setAircraftModelMode(CAircraftModelListModel::OwnAircraftModelMappingTool);
             ui->tvp_OwnAircraftModels->addFilterDialog();
             ui->tvp_OwnAircraftModels->setDisplayAutomatically(true);
             ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this, true));
