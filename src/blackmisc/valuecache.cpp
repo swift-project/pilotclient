@@ -165,7 +165,9 @@ namespace BlackMisc
     }
 
     CValueCache::CValueCache(QObject *parent) : QObject(parent)
-    {}
+    {
+        Q_ASSERT_X(QThread::currentThread() == qApp->thread(), Q_FUNC_INFO, "Cache constructed in wrong thread");
+    }
 
     struct CValueCache::Element
     {
