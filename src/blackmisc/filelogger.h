@@ -70,6 +70,7 @@ namespace BlackMisc
         QTextStream m_stream;
         QString m_applicationName;
         QString m_logPath; //!< Empty by default. Hence the working directory "." is used
+        QString m_previousCategories;
     };
 }
 

@@ -30,8 +30,9 @@ namespace BlackMisc
         //! Metar Decoder
         class BLACKMISC_EXPORT CMetarDecoder : public QObject
         {
-        public:
+            Q_OBJECT
 
+        public:
             //! Default constructor
             CMetarDecoder();
 
@@ -44,7 +45,6 @@ namespace BlackMisc
         private:
             void allocateDecoders();
             std::vector<std::unique_ptr<IMetarDecoderPart>> m_decoders;
-
         };
 
     } // namespace

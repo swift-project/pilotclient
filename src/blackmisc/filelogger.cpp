@@ -69,13 +69,16 @@ namespace BlackMisc
         if (statusMessage.isEmpty()) { return; }
         if (!m_logFile.isOpen()) { return; }
         if (! m_logPattern.match(statusMessage)) { return; }
+        const QString categories = statusMessage.getCategoriesAsString();
+        if (categories != m_previousCategories)
+        {
+            writeContentToFile(QStringLiteral("\n[") % categories % QStringLiteral("]"));
+            m_previousCategories = categories;
+        }
         const QString finalContent(QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss "))
                                    % statusMessage.getSeverityAsString()
                                    % ": "
-                                   % statusMessage.getMessage()
-                                   % " cat: "
-                                   % statusMessage.getCategoriesAsString()
-                                  );
+                                   % statusMessage.getMessage());
 
         writeContentToFile(finalContent);
     }

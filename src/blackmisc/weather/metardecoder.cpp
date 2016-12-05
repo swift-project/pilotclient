@@ -84,7 +84,10 @@ namespace BlackMisc
                 }
                 while (isRepeatable());
 
-                if (!isValid) { CLogMessage(this).debug() << "Failed to match" << getDecoderType() << "in remaining METAR:" << metarString; }
+                if (!isValid)
+                {
+                    CLogMessage(static_cast<CMetarDecoder*>(nullptr)).debug() << "Failed to match" << getDecoderType() << "in remaining METAR:" << metarString;
+                }
                 return isValid;
             }
         };
