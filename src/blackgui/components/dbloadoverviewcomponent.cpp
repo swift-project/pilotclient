@@ -57,6 +57,7 @@ namespace BlackGui
             connect(ui->tb_SharedReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
+            connect(this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, this, &CDbLoadOverviewComponent::ps_setValues);
         }
 
         CDbLoadOverviewComponent::~CDbLoadOverviewComponent()
@@ -255,14 +256,15 @@ namespace BlackGui
             sGui->getWebDataServices()->triggerReadOfInfoObjects();
         }
 
-        void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number)
+        void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity singleEntity, CEntityFlags::ReadState state, int number)
         {
             Q_UNUSED(number);
-            if (!CEntityFlags::anySwiftDbEntity(entity)) { return; }
+            Q_ASSERT_X(CEntityFlags::isSingleEntity(singleEntity), Q_FUNC_INFO, "need single entity");
+            if (!singleEntity.testFlag(CEntityFlags::InfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(singleEntity)) { return; }
             if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
             {
                 this->m_reloading = false;
-                this->ps_setValues();
+                emit this->ps_triggerDigestGuiUpdate();
             }
         }
     } // ns

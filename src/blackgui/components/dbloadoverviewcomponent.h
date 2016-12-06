@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/loadindicator.h"
+#include "blackmisc/digestsignal.h"
 #include "blackmisc/network/entityflags.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -95,7 +96,7 @@ namespace BlackGui
             void ps_setValues();
 
             //! Data have been loaded
-            void ps_dataLoaded(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void ps_dataLoaded(BlackMisc::Network::CEntityFlags::Entity singleEntity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
         };
     } // ns
 } // ns
