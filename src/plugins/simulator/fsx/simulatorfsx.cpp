@@ -907,7 +907,7 @@ namespace BlackSimPlugin
                 ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
                 ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
                 ddRemoteAircraftParts.spoilersHandlePosition = newestParts.isSpoilersOut() ? 1 : 0;
-                ddRemoteAircraftParts.gearHandlePosition = newestParts.isGearDown() ? 1 : 0;
+                ddRemoteAircraftParts.gearHandlePosition = isOnGround || newestParts.isGearDown() ? 1 : 0; // on ground we always show gear
                 ddRemoteAircraftParts.engine1Combustion = newestParts.isEngineOn(1) ? 1 : 0;
                 ddRemoteAircraftParts.engine2Combustion = newestParts.isEngineOn(2) ? 1 : 0;
                 ddRemoteAircraftParts.engine3Combustion = newestParts.isEngineOn(3) ? 1 : 0;
