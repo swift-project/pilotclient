@@ -21,6 +21,7 @@
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/weather/weathergrid.h"
 #include "blackmisc/settingscache.h"
@@ -134,6 +135,9 @@ namespace BlackSimPlugin
             void ps_installedModelsUpdated(const QStringList &modelStrings, const QStringList &icaos, const QStringList &airlines, const QStringList &liveries);
 
         private:
+            void loadCslPackages();
+            QString findCslPackage(const QString &modelFileName);
+
             //! Inject weather grid to simulator
             void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
             void reloadWeatherSettings();
@@ -147,6 +151,7 @@ namespace BlackSimPlugin
             QTimer *m_slowTimer { nullptr };
             BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
             BlackMisc::Simulation::CAircraftModelList m_installedModels; //!< \todo Do we still need this, as we now focus on model set
+            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
             BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::reloadWeatherSettings };

@@ -254,6 +254,7 @@ namespace BlackSimPlugin
                 m_traffic->updateInstalledModels();
                 m_watcher->setConnection(m_conn);
                 reloadWeatherSettings();
+                loadCslPackages();
                 emitSimulatorCombinedStatus();
                 return true;
             }
@@ -432,6 +433,49 @@ namespace BlackSimPlugin
                 return true;
             }
             return false;
+        }
+
+        void CSimulatorXPlane::loadCslPackages()
+        {
+            struct Prefix { QString s; };
+            struct PrefixComparator
+            {
+                bool operator()(const Prefix &a, const QString &b) const { return QStringRef(&a.s) < b.leftRef(a.s.size()); }
+                bool operator()(const QString &a, const Prefix &b) const { return a.leftRef(b.s.size()) < QStringRef(&b.s); }
+            };
+            QList<Prefix> packages;
+
+            Q_ASSERT(isConnected());
+            for (const auto &model : m_modelSet.getThreadLocal())
+            {
+                const QString &modelFile = model.getFileName();
+                if (modelFile.isEmpty() || ! QFile::exists(modelFile)) { continue; }
+                auto it = std::lower_bound(packages.begin(), packages.end(), modelFile, PrefixComparator());
+                if (it != packages.end() && modelFile.startsWith(it->s)) { continue; }
+                QString package = findCslPackage(modelFile);
+                if (package.isEmpty()) { continue; }
+                packages.insert(it, { package.append('/') });
+            }
+            for (auto package : packages)
+            {
+                Q_ASSERT(package.s.endsWith('/'));
+                package.s.chop(1);
+                m_traffic->loadPlanesPackage(package.s);
+            }
+        }
+
+        QString CSimulatorXPlane::findCslPackage(const QString &modelFile)
+        {
+            QDir dir = QFileInfo(modelFile).dir();
+            do
+            {
+                if (dir.exists(QStringLiteral("xsb_aircraft.txt")))
+                {
+                    if (dir.cdUp()) { return dir.path(); }
+                }
+            } while(dir.cdUp());
+            CLogMessage(this).warning("Failed to find CSL package for %1") << modelFile;
+            return {};
         }
 
         bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
