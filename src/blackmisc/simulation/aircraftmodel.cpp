@@ -629,10 +629,10 @@ namespace BlackMisc
                    this->m_modelString.startsWith(modelString, sensitivity);
         }
 
-        int CAircraftModel::calculateScore(const CAircraftModel &compareModel) const
+        int CAircraftModel::calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries) const
         {
             int score = this->getAircraftIcaoCode().calculateScore(compareModel.getAircraftIcaoCode());
-            score += this->getLivery().calculateScore(compareModel.getLivery());
+            score += this->getLivery().calculateScore(compareModel.getLivery(), preferColorLiveries);
             return 0.5 * score;
         }
 

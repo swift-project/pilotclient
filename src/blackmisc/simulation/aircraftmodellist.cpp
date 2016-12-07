@@ -58,6 +58,16 @@ namespace BlackMisc
             return this->contains(&CAircraftModel::getCallsign, callsign);
         }
 
+        bool CAircraftModelList::containsCombinedType(const QString &combinedType) const
+        {
+            if (combinedType.isEmpty()) { return false; }
+            const QString ct(combinedType.toUpper().trimmed());
+            return this->containsBy([ & ](const CAircraftModel & model)
+            {
+                return model.getAircraftIcaoCode().getCombinedType() == ct;
+            });
+        }
+
         bool CAircraftModelList::containsModelsWithAircraftAndAirlineDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const
         {
             return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator, &CAircraftModel::getAirlineIcaoCodeDesignator, airlineDesignator);
@@ -531,9 +541,12 @@ namespace BlackMisc
         ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores) const
         {
             ScoredModels scoreMap;
+            // prefer colors if there is no airline
+            const bool hasAirlineDesignator = remoteModel.hasAirlineDesignator() && this->contains(&CAircraftModel::getAirlineIcaoCodeDesignator, remoteModel.getAirlineIcaoCodeDesignator());
+            const bool preferColorLiveries = !hasAirlineDesignator;
             for (const CAircraftModel &model : *this)
             {
-                const int score = model.calculateScore(remoteModel);
+                const int score = model.calculateScore(remoteModel, preferColorLiveries);
                 if (ignoreZeroScores && score < 1) { continue; }
                 scoreMap.insertMulti(score, model);
             }

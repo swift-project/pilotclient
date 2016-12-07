@@ -71,6 +71,9 @@ namespace BlackMisc
             //! Contains model for callsign
             bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
+            //! Contains given combined type
+            bool containsCombinedType(const QString &combinedType) const;
+
             //! Contains any model with aircraft and airline designator
             bool containsModelsWithAircraftAndAirlineDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
 

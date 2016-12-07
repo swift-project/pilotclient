@@ -393,7 +393,7 @@ namespace BlackMisc
             return this->getCombinedCodePlusInfo();
         }
 
-        int CLivery::calculateScore(const CLivery &otherLivery) const
+        int CLivery::calculateScore(const CLivery &otherLivery, bool preferColorLiveries) const
         {
             int score = 0;
             if (this->isLoadedFromDb() && otherLivery.isLoadedFromDb() && (this->getCombinedCode() == otherLivery.getCombinedCode()))
@@ -402,14 +402,24 @@ namespace BlackMisc
             }
             else
             {
-                score += 0.35 * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode());
+                const double multiplier = preferColorLiveries ? 0.10 : 0.35;
+                score += multiplier * this->getAirlineIcaoCode().calculateScore(otherLivery.getAirlineIcaoCode());
             }
 
-            // 0..50 so far
+            // max. 0..35 so far
             if (score == 0) { return 0; }
-            if (this->isAirlineStandardLivery()) { score += 10; }
+            if (this->isAirlineStandardLivery() && !preferColorLiveries) { score += 10; }
 
-            // 0..60 so far
+            // overrate non airline liveries
+            if (preferColorLiveries)
+            {
+                if (this->isColorLivery() || !this->hasValidAirlineDesignator())
+                {
+                    score += 20;
+                }
+            }
+
+            // 0..45 so far
             if (!this->hasValidColors()) { return score; }
             const double cd = this->getColorDistance(otherLivery); // 0..1
             if (cd == 0)
