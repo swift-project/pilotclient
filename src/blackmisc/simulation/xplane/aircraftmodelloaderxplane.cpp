@@ -620,6 +620,7 @@ namespace BlackMisc
                 {
                     ++lineNum;
                     QString line = in.readLine();
+                    if (line.isEmpty() || line[0] == '#') continue;
                     auto tokens = splitString(line, [](QChar c) { return c.isSpace(); });
                     if (!tokens.empty())
                     {
