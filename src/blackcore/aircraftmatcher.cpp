@@ -52,8 +52,8 @@ namespace BlackCore
         const CAircraftModelList modelSet(this->m_modelSet); // Models for this matching
         const MatchingMode mode = this->m_matchingMode;
 
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Matching uses model set of " + QString::number(modelSet.size()) + " models", getLogCategories());
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, "Input model: " + remoteAircraft.getModel().toQString(), getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models").arg(modelSet.size()), getLogCategories());
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()), getLogCategories());
 
         // Before I really search I check some special conditions
         // 1) Manually set model (by user)
@@ -491,13 +491,19 @@ namespace BlackCore
         if (remoteAircraft.hasAircraftAndAirlineDesignator() && modelSet.containsModelsWithAircraftAndAirlineDesignator(remoteAircraft.getAircraftIcaoCodeDesignator(), remoteAircraft.getAirlineIcaoCodeDesignator()))
         {
             const CAircraftModelList byAircraftAndAirline(modelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft/airline ICAO for scoring").arg(byAircraftAndAirline.size()), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft/airline ICAOs '%2'/'%3' for scoring").arg(byAircraftAndAirline.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey()), getLogCategories());
             map = byAircraftAndAirline.scoreFull(remoteAircraft.getModel());
         }
         else if (remoteAircraft.hasAircraftDesignator() && modelSet.contains(&CAircraftModel::getAircraftIcaoCodeDesignator, remoteAircraft.getAircraftIcaoCodeDesignator()))
         {
             const CAircraftModelList byAircraft(modelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode()));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO for scoring").arg(byAircraft.size()), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
+            map = byAircraft.scoreFull(remoteAircraft.getModel());
+        }
+        else if (remoteAircraft.getAircraftIcaoCode().hasValidCombinedType() && modelSet.containsCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()))
+        {
+            const CAircraftModelList byAircraft(modelSet.findByCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()));
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by combined type '%2' for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getCombinedType()), getLogCategories());
             map = byAircraft.scoreFull(remoteAircraft.getModel());
         }
         else
@@ -514,9 +520,16 @@ namespace BlackCore
         }
         else
         {
-            matchedModel = map.last();
-            const int score = map.lastKey();
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Scoring with score %1 out of %2 models: %3").arg(score).arg(map.size()).arg(matchedModel.toQString()), getLogCategories());
+            const int maxScore = map.lastKey();
+            const CAircraftModelList maxScoreAircraft(map.values(maxScore));
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Scores:<br>%1").arg(scoresToString(map).replace("\n", "<br>")), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Scoring with score %1 out of %2 models yielded %3 models").arg(maxScore).arg(map.size()).arg(maxScoreAircraft.size()), getLogCategories());
+
+            const CAircraftModel pickedModel = (maxScoreAircraft.size() > 1) ?
+                                               maxScoreAircraft.randomElements(1).front() :
+                                               maxScoreAircraft.front();
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Picked with score %1: %2").arg(maxScore).arg(pickedModel.toQString()), getLogCategories());
+            return pickedModel;
         }
         return matchedModel;
     }
@@ -754,5 +767,34 @@ namespace BlackCore
             }
         }
         return byMilitaryFlag;
+    }
+
+    QString CAircraftMatcher::scoresToString(const ScoredModels &scores, int lastElements)
+    {
+        if (scores.isEmpty()) { return ""; }
+        QMapIterator<int, CAircraftModel> i(scores);
+        i.toBack();
+        int c = 0;
+        QString str;
+        while (i.hasPrevious() && c++ < lastElements)
+        {
+            i.previous();
+            const CAircraftModel m(i.value());
+            if (!str.isEmpty())
+            {
+                str += '\n';
+            }
+            str += QString::number(c);
+            str += ": score: ";
+            str += QString::number(i.key());
+            str += " model: '";
+            str += m.getModelString();
+            str += "' aircraft: '";
+            str += m.getAircraftIcaoCodeDesignator();
+            str += "' livery: '";
+            str += m.getLivery().getCombinedCodePlusInfo();
+            str += "'";
+        }
+        return str;
     }
 } // namespace

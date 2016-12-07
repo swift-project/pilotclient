@@ -152,6 +152,9 @@ namespace BlackCore
         //! \threadsafe
         static BlackMisc::Simulation::CAircraftModelList ifPossibleReduceByMilitaryFlag(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, bool military, const BlackMisc::Simulation::CAircraftModelList &inList, bool &reduced, BlackMisc::CStatusMessageList *log);
 
+        //! Scores to string for debugging
+        static QString scoresToString(const BlackMisc::Simulation::ScoredModels &scores, int lastElements = 5);
+
         MatchingMode                              m_matchingMode = All;
         BlackMisc::Simulation::CAircraftModel     m_defaultModel;         //!< model to be used as default model
         BlackMisc::Simulation::CAircraftModelList m_modelSet;             //!< models used for model matching
