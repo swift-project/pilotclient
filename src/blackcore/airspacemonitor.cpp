@@ -614,7 +614,7 @@ namespace BlackCore
         if (!this->isConnected()) { return; }
 
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
-        bool complete = remoteAircraft.getModel().hasModelString() || remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData;
+        const bool complete = (remoteAircraft.hasValidCallsign() && remoteAircraft.getModel().hasModelString()) || (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData);
 
         if (trial < 2 && !complete)
         {
@@ -627,12 +627,16 @@ namespace BlackCore
         }
 
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
-        emit this->readyForModelMatching(remoteAircraft);
-
-        // log message for matching
+        if (this->isConnected() && remoteAircraft.hasValidCallsign())
         {
-            const QString msg = QString("Ready for matching '%1' with model type '%2'").arg(callsign.toQString()).arg(remoteAircraft.getModel().getModelTypeAsString());
+            const QString msg = QString("Ready for matching '%1' with model type '%2'").arg(callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString());
             const CStatusMessage m = CMatchingUtils::logMessage(callsign, msg, getLogCategories());
+            this->addReverseLookupMessage(callsign, m);
+            emit this->readyForModelMatching(remoteAircraft);
+        }
+        else
+        {
+            const CStatusMessage m = CMatchingUtils::logMessage(callsign, "Ignoring this aircraft, not found in range list", getLogCategories());
             this->addReverseLookupMessage(callsign, m);
         }
     }
