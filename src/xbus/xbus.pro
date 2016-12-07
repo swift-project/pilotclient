@@ -34,10 +34,6 @@ SOURCES += $$files(libxplanemp/src/*.cpp)
 HEADERS += $$files(libxplanemp/src/*.h) $$files(libxplanemp/include/*.h)
 INCLUDEPATH += ./libxplanemp ./libxplanemp/include ./libxplanemp/src
 
-# CSLLoaderThread not used, see libxplanemp/README.markdown
-SOURCES -= libxplanemp/src/CSLLoaderThread.cpp
-HEADERS -= libxplanemp/src/CSLLoaderThread.h
-
 # PlatformUtils also not used
 SOURCES -= $$files(libxplanemp/src/PlatformUtils.*.cpp)
 HEADERS -= libxplanemp/src/PlatformUtils.h
