@@ -48,13 +48,13 @@ namespace BlackGui
             explicit CAircraftComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftComponent();
+            virtual ~CAircraftComponent();
 
             //! Aircraft in range
-            int countAircraft() const;
+            int countAircraftInView() const;
 
             //! Airports in range
-            int countAirportsInRange() const;
+            int countAirportsInRangeInView() const;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
@@ -64,7 +64,7 @@ namespace BlackGui
             void requestTextMessageWidget(const BlackMisc::Aviation::CCallsign &callsign);
 
         public slots:
-            //! Update aircraft
+            //! Update aircraft/airport view
             void update();
 
         private slots:
