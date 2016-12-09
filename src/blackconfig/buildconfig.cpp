@@ -10,7 +10,6 @@
 //! \cond PRIVATE
 
 #include "blackconfig/buildconfig.h"
-
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
@@ -196,7 +195,7 @@ namespace BlackConfig
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -211,7 +210,7 @@ namespace BlackConfig
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -226,7 +225,7 @@ namespace BlackConfig
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
         if (d.isEmpty()) { return ""; }
-        QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -240,7 +239,7 @@ namespace BlackConfig
     QString getImagesDirImpl()
     {
         const QString d(CBuildConfig::getSwiftResourceDir());
-        QDir dir(QDir::cleanPath(d + QDir::separator() + "images"));
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "images"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
     }
@@ -248,6 +247,26 @@ namespace BlackConfig
     const QString &CBuildConfig::getImagesDir()
     {
         static const QString s(getImagesDirImpl());
+        return s;
+    }
+
+    QString getHtmlDirImpl()
+    {
+        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "html"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CBuildConfig::getHtmlDir()
+    {
+        static const QString s(getHtmlDirImpl());
+        return s;
+    }
+
+    const QString &CBuildConfig::getHtmlTemplateFileName()
+    {
+        static const QString s(getHtmlDir() + QDir::separator() + "swifttemplate.html");
         return s;
     }
 

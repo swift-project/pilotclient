@@ -106,6 +106,12 @@ namespace BlackConfig
         //! Where images are located
         static const QString &getImagesDir();
 
+        //! Where HTML files are located
+        static const QString &getHtmlDir();
+
+        //! Where HTML files are located
+        static const QString &getHtmlTemplateFileName();
+
         //! Directory where data can be stored
         static const QString &getDocumentationDirectory();
 
