@@ -132,10 +132,12 @@ namespace BlackMisc
             });
         }
 
-        QString CAircraftModel::asHtmlSummary() const
+        QString CAircraftModel::asHtmlSummary(const QString &separator) const
         {
-            const QString html = "Model: %1<br>Aircraft ICAO: %2<br>Livery: %3";
-            return html.arg(this->getModelStringAndDbKey(), this->getAircraftIcaoCode().asHtmlSummary(), this->getLivery().asHtmlSummary());
+            const QString html = "Model: %1%2Aircraft ICAO: %3%4Livery: %5";
+            return html.arg(this->getModelStringAndDbKey(), separator,
+                            this->getAircraftIcaoCode().asHtmlSummary(), separator,
+                            this->getLivery().asHtmlSummary());
         }
 
         bool CAircraftModel::canInitializeFromFsd() const

@@ -180,6 +180,9 @@ namespace BlackMisc
             //! Airline ICAO code designator
             const QString &getAirlineIcaoCodeDesignator() const { return this->m_livery.getAirlineIcaoCode().getDesignator(); }
 
+            //! Airline ICAO code designator
+            const QString getAirlineIcaoCodeVDesignator() const { return this->m_livery.getAirlineIcaoCode().getVDesignator(); }
+
             //! Set aircraft ICAO code
             bool setAircraftIcaoCode(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode);
 
@@ -377,7 +380,7 @@ namespace BlackMisc
             QString toDatabaseJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Compact) const;
 
             //! As a brief HTML summary (e.g. used in tooltips)
-            QString asHtmlSummary() const;
+            QString asHtmlSummary(const QString &separator = "<br>") const;
 
             //! Model type
             static QString modelTypeToString(ModelType type);

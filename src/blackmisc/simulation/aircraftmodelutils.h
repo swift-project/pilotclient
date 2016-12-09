@@ -28,6 +28,13 @@ namespace BlackMisc
 
             //! Merge with vPilot data if possible
             static bool mergeWithVPilotData(BlackMisc::Simulation::CAircraftModelList &modelToBeModified, const BlackMisc::Simulation::CAircraftModelList &vPilotModels, bool force = false);
+
+            //! Matrix airlines/aircraft ICAOs
+            static QString createIcaoAirlineAircraftHtmlMatrix(const BlackMisc::Simulation::CAircraftModelList &models);
+
+            //! Matrix airlines/aircraft ICAOs
+            static QString createIcaoAirlineAircraftHtmlMatrixFile(const BlackMisc::Simulation::CAircraftModelList &models, const QString &tempDir);
+
         };
     } //namespace
 } // namespace

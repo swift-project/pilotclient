@@ -503,6 +503,39 @@ namespace BlackMisc
             return distributors;
         }
 
+        QSet<QString> CAircraftModelList::getAircraftDesignators() const
+        {
+            QSet<QString> designators;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.hasAircraftDesignator()) { continue; }
+                designators.insert(model.getAircraftIcaoCodeDesignator());
+            }
+            return designators;
+        }
+
+        QSet<QString> CAircraftModelList::getAirlineDesignators() const
+        {
+            QSet<QString> designators;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.hasAirlineDesignator()) { continue; }
+                designators.insert(model.getAirlineIcaoCodeDesignator());
+            }
+            return designators;
+        }
+
+        QSet<QString> CAircraftModelList::getAirlineVDesignators() const
+        {
+            QSet<QString> designators;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!model.hasAirlineDesignator()) { continue; }
+                designators.insert(model.getAirlineIcaoCodeVDesignator());
+            }
+            return designators;
+        }
+
         void CAircraftModelList::updateAircraftIcao(const CAircraftIcaoCode &icao)
         {
             for (CAircraftModel &model : *this)
@@ -686,6 +719,18 @@ namespace BlackMisc
         QString CAircraftModelList::toDatabaseJsonString(QJsonDocument::JsonFormat format) const
         {
             return QJsonDocument(toDatabaseJson()).toJson(format);
+        }
+
+        QString CAircraftModelList::asHtmlSummary() const
+        {
+            if (this->isEmpty()) { return ""; }
+            QString html;
+            for (const CAircraftModel &model : *this)
+            {
+                if (!html.isEmpty()) { html += "<br>"; }
+                html += model.asHtmlSummary(" ");
+            }
+            return html;
         }
     } // namespace
 } // namespace

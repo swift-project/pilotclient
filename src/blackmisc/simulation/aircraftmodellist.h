@@ -198,6 +198,15 @@ namespace BlackMisc
             //! All distributors used with models of this list
             CDistributorList getDistributors(bool onlyDbDistributors = true) const;
 
+            //! Aircraft designators
+            QSet<QString> getAircraftDesignators() const;
+
+            //! Airline designators
+            QSet<QString> getAirlineDesignators() const;
+
+            //! Airline virtual designators
+            QSet<QString> getAirlineVDesignators() const;
+
             //! Update aircraft ICAO
             void updateAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
@@ -236,6 +245,9 @@ namespace BlackMisc
 
             //! To database JSON
             QString toDatabaseJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Compact) const;
+
+            //! As HTML summary
+            QString asHtmlSummary() const;
         };
     } // ns
 } // ns
