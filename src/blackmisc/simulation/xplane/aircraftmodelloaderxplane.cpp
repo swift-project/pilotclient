@@ -180,6 +180,7 @@ namespace BlackMisc
                     model.setUtcTimestamp(lastModifiedTs);
                     model.setFileTimestamp(lastModifiedTs);
                     model.setModelString(modelString);
+                    model.setModelMode(CAircraftModel::Exclude);
 
                     QFile file(aircraftIt.filePath());
                     file.open(QIODevice::ReadOnly | QIODevice::Text);
