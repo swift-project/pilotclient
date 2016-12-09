@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackgui/guiapplication.h"
 #include "blackgui/components/dbmappingcomponent.h"
 #include "blackgui/components/dbownmodelsetcomponent.h"
 #include "blackgui/components/dbownmodelsetdialog.h"
@@ -19,7 +20,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/orderable.h"
-#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodelutils.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/distributorlistpreferences.h"
@@ -35,6 +36,7 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+#include <QDesktopServices>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -69,6 +71,7 @@ namespace BlackGui
             connect(ui->pb_CreateNewSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_LoadExistingSet, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->pb_SaveAsSetForSimulator, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
+            connect(ui->pb_ShowMatrix, &QPushButton::clicked, this, &CDbOwnModelSetComponent::ps_buttonClicked);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(&this->m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CDbOwnModelSetComponent::ps_onSimulatorChanged);
             connect(ui->tvp_OwnModelSet, &CAircraftModelView::modelDataChanged, this, &CDbOwnModelSetComponent::ps_onRowCountChanged);
@@ -198,31 +201,7 @@ namespace BlackGui
             const QObject *sender = QObject::sender();
             if (sender == ui->pb_CreateNewSet)
             {
-                // make sure both tabs display the same simulator
-                Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
-                const CSimulatorInfo sim(this->getModelSetSimulator());
-                this->getMappingComponent()->setOwnModelsSimulator(sim);
-                if (!this->m_modelSetDialog)
-                {
-                    this->m_modelSetDialog.reset(new CDbOwnModelSetDialog(this));
-                    this->m_modelSetDialog->setMappingComponent(this->getMappingComponent());
-                }
-
-                if (this->getMappingComponent()->getOwnModelsCount() > 0)
-                {
-                    this->m_modelSetDialog->setModal(true);
-                    this->m_modelSetDialog->reloadData();
-                    QDialog::DialogCode rc = static_cast<QDialog::DialogCode>(this->m_modelSetDialog->exec());
-                    if (rc == QDialog::Accepted)
-                    {
-                        this->setModelSet(this->m_modelSetDialog->getModelSet(), this->m_modelSetDialog->getSimulatorInfo());
-                    }
-                }
-                else
-                {
-                    static const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << sim.toQString(true);
-                    this->getMappingComponent()->showOverlayMessage(m);
-                }
+                this->createNewSet();
             }
             else if (sender == ui->pb_LoadExistingSet)
             {
@@ -236,6 +215,10 @@ namespace BlackGui
                     const CStatusMessage m = this->m_modelSetLoader.setCachedModels(ml);
                     CLogMessage::preformatted(m);
                 }
+            }
+            else if (sender == ui->pb_ShowMatrix)
+            {
+                this->showAirlineAircraftMatrix();
             }
         }
 
@@ -307,6 +290,43 @@ namespace BlackGui
         {
             const CAircraftModelList models(this->m_modelSetLoader.getAircraftModels());
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(models);
+        }
+
+        void CDbOwnModelSetComponent::createNewSet()
+        {
+            // make sure both tabs display the same simulator
+            Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
+            const CSimulatorInfo sim(this->getModelSetSimulator());
+            this->getMappingComponent()->setOwnModelsSimulator(sim);
+            if (!this->m_modelSetDialog)
+            {
+                this->m_modelSetDialog.reset(new CDbOwnModelSetDialog(this));
+                this->m_modelSetDialog->setMappingComponent(this->getMappingComponent());
+            }
+
+            if (this->getMappingComponent()->getOwnModelsCount() > 0)
+            {
+                this->m_modelSetDialog->setModal(true);
+                this->m_modelSetDialog->reloadData();
+                QDialog::DialogCode rc = static_cast<QDialog::DialogCode>(this->m_modelSetDialog->exec());
+                if (rc == QDialog::Accepted)
+                {
+                    this->setModelSet(this->m_modelSetDialog->getModelSet(), this->m_modelSetDialog->getSimulatorInfo());
+                }
+            }
+            else
+            {
+                static const CStatusMessage m = CStatusMessage(this).error("No model data for %1") << sim.toQString(true);
+                this->getMappingComponent()->showOverlayMessage(m);
+            }
+        }
+
+        void CDbOwnModelSetComponent::showAirlineAircraftMatrix() const
+        {
+            const CAircraftModelList set(this->getModelSet());
+            const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(set, sGui->getTemporaryDirectory());
+            if (file.isEmpty()) { return; }
+            QDesktopServices::openUrl(QUrl::fromLocalFile(file));
         }
 
         void CDbOwnModelSetComponent::setModelSetSimulator(const CSimulatorInfo &simulator)

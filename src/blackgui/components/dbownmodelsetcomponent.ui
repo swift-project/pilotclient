@@ -110,6 +110,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_ShowMatrix">
+        <property name="text">
+         <string>matrix</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pb_CreateNewSet">
         <property name="minimumSize">
          <size>

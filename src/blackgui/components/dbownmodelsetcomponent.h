@@ -133,6 +133,12 @@ namespace BlackGui
             //! Update view to current models
             void updateViewToCurrentModels();
 
+            //! Create new set
+            void createNewSet();
+
+            //! Show the airline/aircraft matrix
+            void showAirlineAircraftMatrix() const;
+
             //! Update distributor order
             void updateDistributorOrder(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
