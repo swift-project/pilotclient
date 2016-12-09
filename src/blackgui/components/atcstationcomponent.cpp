@@ -310,7 +310,8 @@ namespace BlackGui
         void CAtcStationComponent::ps_settingsChanged()
         {
             const CViewUpdateSettings settings = this->m_settings.get();
-            this->m_updateTimer.setInterval(settings.getAtcUpdateTime().toMs());
+            const int ms = settings.getAtcUpdateTime().toMs();
+            this->m_updateTimer.setInterval(ms);
         }
 
         void CAtcStationComponent::ps_airportsRead()

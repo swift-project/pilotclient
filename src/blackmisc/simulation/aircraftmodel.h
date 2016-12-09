@@ -71,7 +71,8 @@ namespace BlackMisc
                 TypeVPilotRuleBased            //!< based on a vPilot rule
             };
 
-            //! Mode
+            //! Mode, decides if a model is supposed to be used in the model set for model matching
+            //! or not. The combined type "All" is meant for search operations.
             enum ModelMode
             {
                 Undefined = 0,

@@ -159,7 +159,8 @@ namespace BlackGui
         void CAircraftComponent::ps_settingsChanged()
         {
             const CViewUpdateSettings settings = this->m_settings.get();
-            this->m_updateTimer.setInterval(settings.getAircraftUpdateTime().toMs());
+            const int ms = settings.getAircraftUpdateTime().toMs();
+            this->m_updateTimer.setInterval(ms);
         }
     } // namespace
 } // namespace

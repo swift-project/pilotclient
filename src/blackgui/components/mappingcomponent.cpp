@@ -454,7 +454,8 @@ namespace BlackGui
         void CMappingComponent::ps_settingsChanged()
         {
             const CViewUpdateSettings settings = this->m_settings.get();
-            this->m_updateTimer.setInterval(settings.getRenderingUpdateTime().toMs());
+            const int ms = settings.getRenderingUpdateTime().toMs();
+            this->m_updateTimer.setInterval(ms);
         }
 
         void CMappingComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)

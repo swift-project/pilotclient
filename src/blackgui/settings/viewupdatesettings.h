@@ -83,10 +83,10 @@ namespace BlackGui
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
         private:
-            BlackMisc::PhysicalQuantities::CTime m_updateAtc;
-            BlackMisc::PhysicalQuantities::CTime m_updateAircraft;
-            BlackMisc::PhysicalQuantities::CTime m_updateRendering;
-            BlackMisc::PhysicalQuantities::CTime m_updateUser;
+            BlackMisc::PhysicalQuantities::CTime m_updateAtc {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
+            BlackMisc::PhysicalQuantities::CTime m_updateAircraft {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
+            BlackMisc::PhysicalQuantities::CTime m_updateRendering {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
+            BlackMisc::PhysicalQuantities::CTime m_updateUser {10.0, BlackMisc::PhysicalQuantities::CTimeUnit::s()};
 
             BLACK_METACLASS(
                 CViewUpdateSettings,

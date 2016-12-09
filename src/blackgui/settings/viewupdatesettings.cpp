@@ -25,10 +25,10 @@ namespace BlackGui
 
         void CViewUpdateSettings::reset()
         {
-            this->m_updateAircraft = CTime(5.0, CTimeUnit::s());
-            this->m_updateAtc = CTime(5.0, CTimeUnit::s());
-            this->m_updateRendering = CTime(5.0, CTimeUnit::s());
-            this->m_updateUser = CTime(5.0, CTimeUnit::s());
+            this->m_updateAircraft = CTime(10.0, CTimeUnit::s());
+            this->m_updateAtc = CTime(10.0, CTimeUnit::s());
+            this->m_updateRendering = CTime(10.0, CTimeUnit::s());
+            this->m_updateUser = CTime(10.0, CTimeUnit::s());
         }
 
         bool CViewUpdateSettings::isValid() const
