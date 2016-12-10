@@ -17,28 +17,80 @@
 #include "blackmisc/simulation/aircraftmodel.h"
 
 #include <QString>
+#include <QAbstractItemView>
 
 namespace BlackGui
 {
     namespace Settings
     {
+        //! General GUI settings
+        class BLACKGUI_EXPORT CGeneralGuiSettings :
+            public BlackMisc::CValueObject<CGeneralGuiSettings>
+        {
+        public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexWidgetStyle = BlackMisc::CPropertyIndex::GlobalIndexCGeneralGuiSettings,
+                IndexPreferredSelection
+            };
+
+            //! Default constructor
+            CGeneralGuiSettings();
+
+            //! Widget style
+            const QString &getWidgetStyle() const { return m_widgetStyle; }
+
+            //! Widget style
+            void setWidgetStyle(const QString &widgetStyle);
+
+            //! Has changed widget style
+            bool isDifferentValidWidgetStyle(const QString &style) const;
+
+            //! Preferred selection
+            QAbstractItemView::SelectionMode getPreferredSelection() const;
+
+            //! Preferred selection
+            void setPreferredSelection(QAbstractItemView::SelectionMode selection);
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
+
+        private:
+            QString m_widgetStyle { "Fusion" };
+            int     m_preferredSelection = static_cast<int>(QAbstractItemView::ExtendedSelection);
+
+            BLACK_METACLASS(
+                CGeneralGuiSettings,
+                BLACK_METAMEMBER(widgetStyle),
+                BLACK_METAMEMBER(preferredSelection)
+            );
+        };
+
+        //! General GUI settings
+        struct TGeneralGui : public BlackMisc::TSettingTrait<CGeneralGuiSettings>
+        {
+            //! \copydoc BlackCore::TSettingTrait::key
+            static const char *key() { return "guigeneral"; }
+        };
+
         //! Settings for last manual entries of own aircraft mode
         struct TOwnAircraftModel : public BlackMisc::TSettingTrait<BlackMisc::Simulation::CAircraftModel>
         {
             //! Key in data cache
             static const char *key() { return "guinownaircraftmodel"; }
         };
-
-        //! Widget Style
-        struct TWidgetStyle : public BlackMisc::TSettingTrait<QString>
-        {
-            //! \copydoc BlackCore::TSettingTrait::key
-            static const char *key() { return "application/widgetstyle"; }
-
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
-            static QString defaultValue() { return QStringLiteral("Fusion"); }
-        };
     } // ns
 } // ns
+
+Q_DECLARE_METATYPE(BlackGui::Settings::CGeneralGuiSettings)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackGui::Settings::CGeneralGuiSettings>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackGui::Settings::CGeneralGuiSettings>)
 
 #endif // guard
