@@ -56,13 +56,19 @@ namespace BlackGui
             //! Reset font
             void ps_resetFont();
 
+            //! Selection radio buttons changed
+            void ps_selectionChanged();
+
         private:
+            //! GUI settings changed
+            void guiSettingsChanged();
+
+            //! Widget style has changed
+            void widgetStyleChanged(const QString &widgetStyle);
+
             QScopedPointer<Ui::CSettingsGuiComponent> ui;
             QColor m_fontColor;
-
-            void reloadWidgetStyleFromSettings();
-            void widgetStyleChanged(const QString &widgetStyle);
-            BlackMisc::CSetting<BlackGui::Settings::TWidgetStyle> m_settingsWidgetStyle { this, &CSettingsGuiComponent::reloadWidgetStyleFromSettings };
+            BlackMisc::CSetting<BlackGui::Settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
         };
     } // ns
 } // ns

@@ -196,14 +196,13 @@ namespace BlackGui
         bool m_uiSetupCompleted = false;                          //!< ui setup completed
         QScopedPointer<QSplashScreen> m_splashScreen;             //!< splash screen
         BlackGui::Components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
-
-        BlackMisc::CSettingReadOnly<BlackGui::Settings::TWidgetStyle> m_settingsWidgetStyle{ this, &CGuiApplication::reloadWidgetStyleFromSettings };
+        BlackMisc::CSettingReadOnly<BlackGui::Settings::TGeneralGui> m_guiSettings{ this, &CGuiApplication::settingsChanged };
 
         //! Qt help message to formatted HTML
         static QString beautifyHelpMessage(const QString &helpText);
 
         //! Reload widget style from settings
-        void reloadWidgetStyleFromSettings();
+        void settingsChanged();
     };
 } // ns
 

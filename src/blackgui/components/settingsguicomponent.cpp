@@ -17,6 +17,7 @@
 #include <QStyleFactory>
 
 using namespace BlackMisc;
+using namespace BlackGui::Settings;
 
 namespace BlackGui
 {
@@ -38,21 +39,27 @@ namespace BlackGui
             ui->cb_SettingsGuiFont->setCurrentFont(font);
             ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
             ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
+
+            connect(ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsGuiComponent::ps_fontColorDialog);
             bool connected = this->connect(ui->cb_SettingsGuiFont, SIGNAL(currentFontChanged(QFont)), this, SLOT(ps_fontChanged()));
             Q_ASSERT(connected);
-            this->connect(ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsGuiComponent::ps_fontColorDialog);
-            connected = this->connect(ui->cb_SettingsGuiFontSize, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
+            connected = connect(ui->cb_SettingsGuiFontSize, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
             Q_ASSERT(connected);
-            connected = this->connect(ui->cb_SettingsGuiFontStyle, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
+            connected = connect(ui->cb_SettingsGuiFontStyle, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
             Q_ASSERT(connected);
 
             // Widget style and rest
-            this->connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
-            this->connect(ui->cb_SettingsGuiWidgetStyle, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
-                          this, &CSettingsGuiComponent::widgetStyleChanged);
-            this->connect(ui->tb_ResetFont, &QToolButton::pressed, this, &CSettingsGuiComponent::ps_resetFont);
+            connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
+            connect(ui->cb_SettingsGuiWidgetStyle, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+                    this, &CSettingsGuiComponent::widgetStyleChanged);
+            connect(ui->tb_ResetFont, &QToolButton::pressed, this, &CSettingsGuiComponent::ps_resetFont);
+
+            // selection
+            connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this, &CSettingsGuiComponent::ps_selectionChanged);
+            connect(ui->rb_PreferMultiSelection, &QRadioButton::released, this, &CSettingsGuiComponent::ps_selectionChanged);
+
+            this->guiSettingsChanged();
             Q_UNUSED(connected);
-            this->reloadWidgetStyleFromSettings();
         }
 
         CSettingsGuiComponent::~CSettingsGuiComponent()
@@ -80,7 +87,7 @@ namespace BlackGui
                 fontColor = sGui->getStyleSheetUtility().fontColor();
             }
             ui->le_SettingsGuiFontColor->setText(fontColor);
-            bool ok = sGui->updateFont(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
+            const bool ok = sGui->updateFont(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
             if (ok)
             {
                 CLogMessage(this).info("Updated font style");
@@ -105,20 +112,45 @@ namespace BlackGui
             sGui->resetFont();
         }
 
-        void CSettingsGuiComponent::reloadWidgetStyleFromSettings()
+        void CSettingsGuiComponent::ps_selectionChanged()
         {
-            int index = ui->cb_SettingsGuiWidgetStyle->findText(m_settingsWidgetStyle.get());
-            ui->cb_SettingsGuiWidgetStyle->setCurrentIndex(index);
+            QAbstractItemView::SelectionMode sm = QAbstractItemView::NoSelection;
+            if (ui->rb_PreferExtendedSelection->isChecked())
+            {
+                sm = QAbstractItemView::ExtendedSelection;
+            }
+            else if (ui->rb_PreferMultiSelection->isChecked())
+            {
+                sm = QAbstractItemView::MultiSelection;
+            }
+            if (sm == this->m_guiSettings.get().getPreferredSelection()) { return; }
+            const CStatusMessage m = this->m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexPreferredSelection, CVariant::fromValue(sm));
+            CLogMessage::preformatted(m);
+        }
+
+        void CSettingsGuiComponent::guiSettingsChanged()
+        {
+            const CGeneralGuiSettings settings(m_guiSettings.getThreadLocal());
+            const int index = ui->cb_SettingsGuiWidgetStyle->findText(settings.getWidgetStyle());
+            if (index != ui->cb_SettingsGuiWidgetStyle->currentIndex())
+            {
+                ui->cb_SettingsGuiWidgetStyle->setCurrentIndex(index);
+            }
+
+            switch (settings.getPreferredSelection())
+            {
+            case QAbstractItemView::ExtendedSelection: ui->rb_PreferExtendedSelection->setChecked(true); break;
+            case QAbstractItemView::MultiSelection: ui->rb_PreferMultiSelection->setChecked(true); break;
+            default: break;
+            }
         }
 
         void CSettingsGuiComponent::widgetStyleChanged(const QString &widgetStyle)
         {
-            if (widgetStyle == m_settingsWidgetStyle.get()) { return; }
-            auto availableStyles = QStyleFactory::keys();
-            if (availableStyles.contains(widgetStyle))
-            {
-                m_settingsWidgetStyle.set(widgetStyle);
-            }
+            const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
+            if (!settings.isDifferentValidWidgetStyle(widgetStyle)) { return; }
+            const CStatusMessage m = this->m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexWidgetStyle, widgetStyle);
+            CLogMessage::preformatted(m);
         }
     } // ns
 } // ns

@@ -499,7 +499,7 @@ namespace BlackGui
 
     QDialog::DialogCode CGuiApplication::showCloseDialog(QMainWindow *mainWindow, QCloseEvent *closeEvent)
     {
-        bool needsDialog = this->hasUnsavedSettings();
+        const bool needsDialog = this->hasUnsavedSettings();
         if (!needsDialog) { return QDialog::Accepted; }
         if (!this->m_closeDialog)
         {
@@ -550,13 +550,18 @@ namespace BlackGui
         return true;
     }
 
-    void CGuiApplication::reloadWidgetStyleFromSettings()
+    void CGuiApplication::settingsChanged()
     {
-        auto widgetStyle = m_settingsWidgetStyle.get();
-        auto availableStyles = QStyleFactory::keys();
-        if (availableStyles.contains(widgetStyle))
+        // changing widget style is slow, so I try to prevent setting it when nothing changed
+        const QString widgetStyle = m_guiSettings.get().getWidgetStyle();
+        const QString currentWidgetStyle(QApplication::style()->metaObject()->className());
+        if (!currentWidgetStyle.contains(widgetStyle, Qt::CaseInsensitive))
         {
-            QApplication::setStyle(QStyleFactory::create(widgetStyle));
+            const auto availableStyles = QStyleFactory::keys();
+            if (availableStyles.contains(widgetStyle))
+            {
+                QApplication::setStyle(QStyleFactory::create(widgetStyle));
+            }
         }
     }
 } // ns

@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>223</width>
-    <height>245</height>
+    <width>233</width>
+    <height>248</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>GUI general settings</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -210,10 +210,25 @@
       <string>General</string>
      </property>
      <layout class="QFormLayout" name="fl_GuiGeneral">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_SettingsGuiOpacity">
+        <property name="toolTip">
+         <string>0-100%</string>
+        </property>
         <property name="text">
-         <string>Opacity (0-100%)</string>
+         <string>Opacity</string>
         </property>
        </widget>
       </item>
@@ -224,6 +239,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>0-100%</string>
         </property>
         <property name="maximum">
          <number>100</number>
@@ -242,12 +260,54 @@
       <item row="2" column="0">
        <widget class="QLabel" name="lbl_SettingsGuiWidgetStyle">
         <property name="text">
-         <string>Widget Style</string>
+         <string>Widget style</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="cb_SettingsGuiWidgetStyle"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_PreferredMultiSelect">
+        <property name="text">
+         <string>Selection</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QWidget" name="wi_PreferredSelection" native="true">
+        <layout class="QHBoxLayout" name="hl_PreferredMultiSelect">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="rb_PreferExtendedSelection">
+           <property name="text">
+            <string>Extended</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_PreferMultiSelection">
+           <property name="text">
+            <string>Multi</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </widget>
