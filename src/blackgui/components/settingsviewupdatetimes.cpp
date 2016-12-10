@@ -26,6 +26,8 @@ namespace BlackGui
             connect(ui->hs_AircraftUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
             connect(ui->hs_AtcUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
             connect(ui->hs_UserUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
+            connect(ui->tb_ResetUser, &QToolButton::clicked, this, &CSettingsViewUpdateTimes::ps_resetUpdateTimes);
+
             this->ps_settingsChanged();
         }
 
@@ -49,6 +51,13 @@ namespace BlackGui
             ui->hs_AtcUpdateTime->setValue(settings.getAtcUpdateTime().toSeconds());
             ui->hs_RenderingUpdateTime->setValue(settings.getRenderingUpdateTime().toSeconds());
             ui->hs_UserUpdateTime->setValue(settings.getUserUpdateTime().toSeconds());
+        }
+
+        void CSettingsViewUpdateTimes::ps_resetUpdateTimes()
+        {
+            CViewUpdateSettings settings;
+            m_settings.setAndSave(settings);
+            this->ps_settingsChanged();
         }
     } // ns
 } // ns

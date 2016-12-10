@@ -32,7 +32,7 @@ namespace BlackGui
             explicit CSettingsViewUpdateTimes(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsViewUpdateTimes();
+            virtual ~CSettingsViewUpdateTimes();
 
         private slots:
             //! Slider changed
@@ -40,6 +40,9 @@ namespace BlackGui
 
             //! Settings have been changed
             void ps_settingsChanged();
+
+            //! Reset all update times
+            void ps_resetUpdateTimes();
 
         private:
             QScopedPointer<Ui::CSettingsViewUpdateTimes> ui;

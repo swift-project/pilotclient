@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>168</width>
-    <height>123</height>
+    <width>282</width>
+    <height>100</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,84 @@
      <property name="title">
       <string>View update times</string>
      </property>
-     <layout class="QFormLayout" name="fl_ViewRefreshTimes">
+     <layout class="QGridLayout" name="gl_ViewUpdateTimes">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>10</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item row="0" column="3">
+       <widget class="QSlider" name="hs_AtcUpdateTime">
+        <property name="minimum">
+         <number>5</number>
+        </property>
+        <property name="maximum">
+         <number>30</number>
+        </property>
+        <property name="singleStep">
+         <number>5</number>
+        </property>
+        <property name="pageStep">
+         <number>5</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QToolButton" name="tb_ResetUser">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/arrow-refresh-small.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh-small.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="lbl_UserUpdateTime">
+        <property name="toolTip">
+         <string>User update time (5-30s)</string>
+        </property>
+        <property name="text">
+         <string>User</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QSlider" name="hs_UserUpdateTime">
+        <property name="minimum">
+         <number>5</number>
+        </property>
+        <property name="maximum">
+         <number>30</number>
+        </property>
+        <property name="singleStep">
+         <number>5</number>
+        </property>
+        <property name="pageStep">
+         <number>5</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_AircraftUpdateTime">
         <property name="toolTip">
@@ -50,12 +127,6 @@
       </item>
       <item row="0" column="1">
        <widget class="QSlider" name="hs_AircraftUpdateTime">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="minimum">
          <number>5</number>
         </property>
@@ -76,62 +147,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_AtcUpdateTime">
-        <property name="toolTip">
-         <string>ATC update time (5-30s)</string>
-        </property>
-        <property name="text">
-         <string>ATC</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSlider" name="hs_AtcUpdateTime">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimum">
-         <number>5</number>
-        </property>
-        <property name="maximum">
-         <number>30</number>
-        </property>
-        <property name="singleStep">
-         <number>5</number>
-        </property>
-        <property name="pageStep">
-         <number>5</number>
-        </property>
-        <property name="value">
-         <number>10</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_UserUpdateTime">
-        <property name="toolTip">
-         <string>User update time (5-30s)</string>
-        </property>
-        <property name="text">
-         <string>User</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QSlider" name="hs_UserUpdateTime">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
+      <item row="1" column="1">
+       <widget class="QSlider" name="hs_RenderingUpdateTime">
         <property name="minimum">
          <number>5</number>
         </property>
@@ -162,47 +179,32 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QSlider" name="hs_RenderingUpdateTime">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+      <item row="0" column="2">
+       <widget class="QLabel" name="lbl_AtcUpdateTime">
+        <property name="toolTip">
+         <string>ATC update time (5-30s)</string>
         </property>
-        <property name="minimum">
-         <number>5</number>
-        </property>
-        <property name="maximum">
-         <number>30</number>
-        </property>
-        <property name="singleStep">
-         <number>5</number>
-        </property>
-        <property name="pageStep">
-         <number>5</number>
-        </property>
-        <property name="value">
-         <number>10</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+        <property name="text">
+         <string>ATC</string>
         </property>
        </widget>
       </item>
      </layout>
-     <zorder>lbl_UserUpdateTime</zorder>
-     <zorder>lbl_AtcUpdateTime</zorder>
      <zorder>lbl_AircraftUpdateTime</zorder>
-     <zorder>hs_UserUpdateTime</zorder>
-     <zorder>hs_AtcUpdateTime</zorder>
      <zorder>hs_AircraftUpdateTime</zorder>
      <zorder>lbl_RenderingUpdateTime</zorder>
      <zorder>hs_RenderingUpdateTime</zorder>
+     <zorder>lbl_AtcUpdateTime</zorder>
+     <zorder>hs_AtcUpdateTime</zorder>
+     <zorder>lbl_UserUpdateTime</zorder>
+     <zorder>hs_UserUpdateTime</zorder>
+     <zorder>tb_ResetUser</zorder>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>
