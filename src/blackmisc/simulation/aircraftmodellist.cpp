@@ -228,6 +228,14 @@ namespace BlackMisc
             });
         }
 
+        CAircraftModelList CAircraftModelList::getAllIncludedModels() const
+        {
+            return this->findBy([](const CAircraftModel & model)
+            {
+                return model.getModelMode() == CAircraftModel::Include;
+            });
+        }
+
         QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const
         {
             if (modelString.isEmpty()) { return ""; }

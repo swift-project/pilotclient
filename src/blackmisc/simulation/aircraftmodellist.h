@@ -132,14 +132,17 @@ namespace BlackMisc
             //! Find by military flag
             CAircraftModelList findByMilitaryFlag(bool military) const;
 
-            //! All models of the FS (FSX, P3D, FS9) family
-            CAircraftModelList getAllFsFamilyModels() const;
-
             //! Model icon path
             QString findModelIconPathByModelString(const QString &modelString) const;
 
             //! Model icon path
             QString findModelIconPathByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! All models of the FS (FSX, P3D, FS9) family
+            CAircraftModelList getAllFsFamilyModels() const;
+
+            //! All included models
+            CAircraftModelList getAllIncludedModels() const;
 
             //! Take a designator and find its family
             QString designatorToFamily(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) const;
