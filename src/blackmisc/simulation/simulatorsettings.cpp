@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "simulationsettings.h"
+#include "simulatorsettings.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/xplane/xplaneutil.h"
@@ -22,57 +22,57 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CSettings::CSettings()
+        CSimulatorSettings::CSimulatorSettings()
         { }
 
-        void CSettings::setSimulatorDirectory(const QString &simulatorDirectory)
+        void CSimulatorSettings::setSimulatorDirectory(const QString &simulatorDirectory)
         {
             this->m_simulatorDirectory = simulatorDirectory.trimmed();
         }
 
-        const QString &CSettings::getSimulatorDirectory() const
+        const QString &CSimulatorSettings::getSimulatorDirectory() const
         {
             return this->m_simulatorDirectory;
         }
 
-        void CSettings::setModelDirectories(const QStringList &modelDirectories)
+        void CSimulatorSettings::setModelDirectories(const QStringList &modelDirectories)
         {
             this->m_modelDirectories = modelDirectories;
         }
 
-        void CSettings::setModelDirectory(const QString &modelDirectory)
+        void CSimulatorSettings::setModelDirectory(const QString &modelDirectory)
         {
             this->m_modelDirectories = QStringList({ modelDirectory });
         }
 
-        const QStringList &CSettings::getModelDirectories() const
+        const QStringList &CSimulatorSettings::getModelDirectories() const
         {
             return this->m_modelDirectories;
         }
 
-        void CSettings::setModelExcludeDirectories(const QStringList &excludeDirectories)
+        void CSimulatorSettings::setModelExcludeDirectories(const QStringList &excludeDirectories)
         {
             this->m_excludeDirectoryPatterns = excludeDirectories;
         }
 
-        const QStringList &CSettings::getModelExcludeDirectoryPatterns() const
+        const QStringList &CSimulatorSettings::getModelExcludeDirectoryPatterns() const
         {
             return m_excludeDirectoryPatterns;
         }
 
-        void CSettings::resetPaths()
+        void CSimulatorSettings::resetPaths()
         {
             this->m_excludeDirectoryPatterns.clear();
             this->m_modelDirectories.clear();
             this->m_simulatorDirectory.clear();
         }
 
-        QString CSettings::convertToQString(bool i18n) const
+        QString CSimulatorSettings::convertToQString(bool i18n) const
         {
             return convertToQString(", ", i18n);
         }
 
-        QString CSettings::convertToQString(const QString &separator, bool i18n) const
+        QString CSimulatorSettings::convertToQString(const QString &separator, bool i18n) const
         {
             Q_UNUSED(i18n);
             QString s("model directories: ");
@@ -83,10 +83,10 @@ namespace BlackMisc
             return s;
         }
 
-        CVariant CSettings::propertyByIndex(const CPropertyIndex &index) const
+        CVariant CSimulatorSettings::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexSimulatorDirectory:
@@ -100,11 +100,10 @@ namespace BlackMisc
             }
         }
 
-        void CSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CSimulatorSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSettings>(); return; }
-
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            if (index.isMyself()) { (*this) = variant.to<CSimulatorSettings>(); return; }
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexSimulatorDirectory:
@@ -127,7 +126,7 @@ namespace BlackMisc
             // void
         }
 
-        CSettings CMultiSimulatorSettings::getSettings(const CSimulatorInfo &simulator) const
+        CSimulatorSettings CMultiSimulatorSettings::getSettings(const CSimulatorInfo &simulator) const
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
             switch (simulator.getSimulator())
@@ -140,10 +139,10 @@ namespace BlackMisc
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
                 break;
             }
-            return CSettings();
+            return CSimulatorSettings();
         }
 
-        CStatusMessage CMultiSimulatorSettings::setSettings(const CSettings &settings, const CSimulatorInfo &simulator)
+        CStatusMessage CMultiSimulatorSettings::setSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
             switch (simulator.getSimulator())
@@ -159,7 +158,7 @@ namespace BlackMisc
             return CStatusMessage({ CLogCategory::settings() }, CStatusMessage::SeverityError, "wrong simulator");
         }
 
-        CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSettings &settings, const CSimulatorInfo &simulator)
+        CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
             switch (simulator.getSimulator())
@@ -193,7 +192,7 @@ namespace BlackMisc
 
         QString CMultiSimulatorSettings::getSimulatorDirectoryOrDefault(const CSimulatorInfo &simulator) const
         {
-            const CSettings s = this->getSettings(simulator);
+            const CSimulatorSettings s = this->getSettings(simulator);
             if (s.getSimulatorDirectory().isEmpty())
             {
                 return this->getDefaultSimulatorDirectory(simulator);
@@ -219,7 +218,7 @@ namespace BlackMisc
 
         QStringList CMultiSimulatorSettings::getModelDirectoriesOrDefault(const CSimulatorInfo &simulator) const
         {
-            const CSettings s = this->getSettings(simulator);
+            const CSimulatorSettings s = this->getSettings(simulator);
             if (s.getModelDirectories().isEmpty())
             {
                 return this->getDefaultModelDirectories(simulator);
@@ -253,7 +252,7 @@ namespace BlackMisc
 
         QStringList CMultiSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator) const
         {
-            const CSettings s = this->getSettings(simulator);
+            const CSimulatorSettings s = this->getSettings(simulator);
             QStringList exclude(s.getModelExcludeDirectoryPatterns());
             if (!exclude.isEmpty()) { return exclude; }
             exclude = this->getDefaultModelExcludeDirectoryPatterns(simulator);
@@ -278,80 +277,80 @@ namespace BlackMisc
 
         void CMultiSimulatorSettings::resetToDefaults(const CSimulatorInfo &simulator)
         {
-            CSettings s = this->getSettings(simulator);
+            CSimulatorSettings s = this->getSettings(simulator);
             s.resetPaths();
             this->setAndSaveSettings(s, simulator);
         }
 
-        CSettingsSimulatorMessages::CSettingsSimulatorMessages()
+        CSimulatorMessagesSettings::CSimulatorMessagesSettings()
         {
             // void
         }
 
-        void CSettingsSimulatorMessages::setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity)
+        void CSimulatorMessagesSettings::setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity)
         {
             this->m_technicalLogLevel = static_cast<int>(severity);
         }
 
-        void CSettingsSimulatorMessages::disableTechnicalMessages()
+        void CSimulatorMessagesSettings::disableTechnicalMessages()
         {
             this->m_technicalLogLevel = -1;
         }
 
-        bool CSettingsSimulatorMessages::isRelayedErrorsMessages() const
+        bool CSimulatorMessagesSettings::isRelayedErrorsMessages() const
         {
             if (this->m_technicalLogLevel < 0) { return false; }
             return (this->m_technicalLogLevel <= CStatusMessage::SeverityError);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedWarningMessages() const
+        bool CSimulatorMessagesSettings::isRelayedWarningMessages() const
         {
             if (this->m_technicalLogLevel < 0) { return false; }
             return (this->m_technicalLogLevel <= CStatusMessage::SeverityWarning);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedInfoMessages() const
+        bool CSimulatorMessagesSettings::isRelayedInfoMessages() const
         {
             if (this->m_technicalLogLevel < 0) { return false; }
             return (this->m_technicalLogLevel <= CStatusMessage::SeverityInfo);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedTechnicalMessages() const
+        bool CSimulatorMessagesSettings::isRelayedTechnicalMessages() const
         {
             return (this->m_technicalLogLevel >= 0);
         }
 
-        void CSettingsSimulatorMessages::setRelayedTextMessages(CSettingsSimulatorMessages::TextMessageType messageType)
+        void CSimulatorMessagesSettings::setRelayedTextMessages(CSimulatorMessagesSettings::TextMessageType messageType)
         {
             this->m_messageType = static_cast<int>(messageType);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedSupervisorTextMessages() const
+        bool CSimulatorMessagesSettings::isRelayedSupervisorTextMessages() const
         {
             return this->getRelayedTextMessageTypes().testFlag(TextMessageSupervisor);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedPrivateTextMessages() const
+        bool CSimulatorMessagesSettings::isRelayedPrivateTextMessages() const
         {
             return this->getRelayedTextMessageTypes().testFlag(TextMessagePrivate);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedUnicomTextMessages() const
+        bool CSimulatorMessagesSettings::isRelayedUnicomTextMessages() const
         {
             return this->getRelayedTextMessageTypes().testFlag(TextMessagesUnicom);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedCom1TextMessages() const
+        bool CSimulatorMessagesSettings::isRelayedCom1TextMessages() const
         {
             return this->getRelayedTextMessageTypes().testFlag(TextMessagesCom1);
         }
 
-        bool CSettingsSimulatorMessages::isRelayedCom2TextMessages() const
+        bool CSimulatorMessagesSettings::isRelayedCom2TextMessages() const
         {
             return this->getRelayedTextMessageTypes().testFlag(TextMessagesCom2);
         }
 
-        bool CSettingsSimulatorMessages::relayThisStatusMessage(const CStatusMessage &message) const
+        bool CSimulatorMessagesSettings::relayThisStatusMessage(const CStatusMessage &message) const
         {
             if (message.isEmpty()) { return false; }
             if (!this->isGloballyEnabled()) { return false; }
@@ -360,7 +359,7 @@ namespace BlackMisc
             return (s >= this->m_technicalLogLevel);
         }
 
-        bool CSettingsSimulatorMessages::relayThisTextMessage(const Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const
+        bool CSimulatorMessagesSettings::relayThisTextMessage(const Network::CTextMessage &msg, const BlackMisc::Simulation::CSimulatedAircraft &aircraft) const
         {
             if (msg.isEmpty()) { return false; }
             if (!this->isGloballyEnabled()) { return false; }
@@ -386,12 +385,12 @@ namespace BlackMisc
             return false;
         }
 
-        CSettingsSimulatorMessages::TextMessageType CSettingsSimulatorMessages::getRelayedTextMessageTypes() const
+        CSimulatorMessagesSettings::TextMessageType CSimulatorMessagesSettings::getRelayedTextMessageTypes() const
         {
-            return static_cast<CSettingsSimulatorMessages::TextMessageType>(this->m_messageType);
+            return static_cast<CSimulatorMessagesSettings::TextMessageType>(this->m_messageType);
         }
 
-        QString CSettingsSimulatorMessages::convertToQString(bool i18n) const
+        QString CSimulatorMessagesSettings::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
             QString s("Enabled %1, text messages: %2, severity: %3");
@@ -407,7 +406,7 @@ namespace BlackMisc
             return s.arg(boolToOnOff(this->m_globallyEnabled)).arg(this->m_messageType).arg(severity);
         }
 
-        CVariant CSettingsSimulatorMessages::propertyByIndex(const CPropertyIndex &index) const
+        CVariant CSimulatorMessagesSettings::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -424,9 +423,9 @@ namespace BlackMisc
             }
         }
 
-        void CSettingsSimulatorMessages::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
+        void CSimulatorMessagesSettings::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
-            if (index.isMyself()) { (*this) = variant.to<CSettingsSimulatorMessages>(); return; }
+            if (index.isMyself()) { (*this) = variant.to<CSimulatorMessagesSettings>(); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -434,7 +433,7 @@ namespace BlackMisc
                 this->setTechnicalLogSeverity(static_cast<CStatusMessage::StatusSeverity>(variant.toInt()));
                 break;
             case IndexTextMessageRelay:
-                this->setRelayedTextMessages(static_cast<CSettingsSimulatorMessages::TextMessageType>(variant.toInt()));
+                this->setRelayedTextMessages(static_cast<CSimulatorMessagesSettings::TextMessageType>(variant.toInt()));
                 break;
             case IndexGloballyEnabled:
                 this->setGloballyEnabled(variant.toBool());

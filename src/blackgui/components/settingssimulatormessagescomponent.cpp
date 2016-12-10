@@ -9,7 +9,7 @@
 
 #include "settingssimulatormessagescomponent.h"
 #include "ui_settingssimulatormessagescomponent.h"
-#include "blackmisc/simulation/simulationsettings.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -34,7 +34,7 @@ namespace BlackGui
 
         void CSettingsSimulatorMessagesComponent::ps_save()
         {
-            CSettingsSimulatorMessages settings;
+            CSimulatorMessagesSettings settings;
             settings.setGloballyEnabled(ui->cb_Messages->isChecked());
             if (ui->rb_NoTechnicalMessages->isChecked())
             {
@@ -53,11 +53,11 @@ namespace BlackGui
                 settings.setTechnicalLogSeverity(CStatusMessage::SeverityInfo);
             }
 
-            CSettingsSimulatorMessages::TextMessageType mt = CSettingsSimulatorMessages::NoTextMessages;
-            if (ui->cb_PrivateMessages->isChecked()) { mt |= CSettingsSimulatorMessages::TextMessagePrivate; }
-            if (ui->cb_SupervisorMessages->isChecked()) { mt |= CSettingsSimulatorMessages::TextMessageSupervisor; }
-            if (ui->cb_Com1->isChecked()) { mt |= CSettingsSimulatorMessages::TextMessagesCom1; }
-            if (ui->cb_Com2->isChecked()) { mt |= CSettingsSimulatorMessages::TextMessagesCom2; };
+            CSimulatorMessagesSettings::TextMessageType mt = CSimulatorMessagesSettings::NoTextMessages;
+            if (ui->cb_PrivateMessages->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagePrivate; }
+            if (ui->cb_SupervisorMessages->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessageSupervisor; }
+            if (ui->cb_Com1->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagesCom1; }
+            if (ui->cb_Com2->isChecked()) { mt |= CSimulatorMessagesSettings::TextMessagesCom2; };
             settings.setRelayedTextMessages(mt);
 
             // save
@@ -66,7 +66,7 @@ namespace BlackGui
 
         void CSettingsSimulatorMessagesComponent::ps_load()
         {
-            const CSettingsSimulatorMessages settings(this->m_settings.get());
+            const CSimulatorMessagesSettings settings(this->m_settings.get());
             ui->cb_Messages->setChecked(settings.isGloballyEnabled());
             if (settings.isRelayedInfoMessages())
             {

@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSSIMULATORMESSAGESCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORMESSAGESCOMPONENT_H
 
-#include "blackmisc/simulation/simulationsettings.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 

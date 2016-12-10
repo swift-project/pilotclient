@@ -16,7 +16,7 @@
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/data/modelcaches.h"
-#include "blackmisc/simulation/simulationsettings.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
 

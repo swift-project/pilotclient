@@ -14,10 +14,10 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackcore/simulator/simulatorsettings.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/identifiable.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/weather/weatherscenario.h"
+#include "blackmisc/identifiable.h"
 
 #include <QDateTime>
 #include <QModelIndex>
@@ -34,7 +34,6 @@ namespace Ui { class CWeatherComponent; }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
-
     namespace Components
     {
         //! Weather component
@@ -76,7 +75,7 @@ namespace BlackGui
             QVector<BlackMisc::Weather::CWeatherScenario> m_weatherScenarios;
             QTimer m_weatherUpdateTimer { this };
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
-            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
+            BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
         };
     } // namespace
 } // namespace

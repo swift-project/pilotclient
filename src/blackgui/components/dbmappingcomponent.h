@@ -12,21 +12,20 @@
 #ifndef BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 
-#include "blackcore/data/authenticateduser.h"
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/enableforviewbasedindicator.h"
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
+#include "blackgui/blackguiexport.h"
+#include "blackcore/data/authenticateduser.h"
 #include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/datacache.h"
-#include "blackmisc/digestsignal.h"
 #include "blackmisc/network/entityflags.h"
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/distributor.h"
 #include "blackmisc/simulation/fscommon/vpilotrulesreader.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/datacache.h"
+#include "blackmisc/digestsignal.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 
@@ -307,8 +306,8 @@ namespace BlackGui
             QScopedPointer<CDbAutoSimulatorStashingComponent>       m_autoSimulatorDialog; //!< dialog auto simulator update
             QScopedPointer<CDbModelMappingModifyComponent>          m_modelModifyDialog;   //!< dialog when modifying models
             BlackMisc::Simulation::FsCommon::CVPilotRulesReader     m_vPilotReader;        //!< read vPilot rules
-            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this };
             BlackMisc::CDigestSignal                                m_dsStashedModelsChanged { this, &CDbMappingComponent::ps_digestStashedModelsChanged, &CDbMappingComponent::ps_onStashedModelsChangedDigest, 750, 25 };
+            BlackMisc::CData<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser { this };
             const bool vPilotSupport   = true;   //!< vPilot support
             bool m_vPilot1stInit       = true;   //!< vPilot extensions initaliazed?
             bool m_vPilotEnabled       = false;  //!< use vPilot extensions

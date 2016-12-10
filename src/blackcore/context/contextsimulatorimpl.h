@@ -32,7 +32,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
-#include "blackmisc/simulation/simulationsettings.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/worker.h"
 
 #include <QObject>

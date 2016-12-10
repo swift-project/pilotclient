@@ -12,10 +12,9 @@
 #ifndef BLACKGUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 
-#include "blackcore/simulator/simulatorsettings.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
-#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/simulation/modelsettings.h"
 #include "blackmisc/simulation/simulatorinfo.h"
 
 #include <QFrame>
@@ -25,7 +24,6 @@
 class QWidget;
 
 namespace Ui { class CDistributorPreferencesComponent; }
-
 namespace BlackGui
 {
     class COverlayMessagesFrame;
@@ -72,7 +70,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDistributorPreferencesComponent> ui;
             BlackGui::COverlayMessagesFrame *m_overlayMessageFrame = nullptr;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSetting<BlackCore::Simulator::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };
+            BlackMisc::CSetting<BlackMisc::Simulation::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::ps_preferencesChanged };
 
             //! Update
             void updateContainerMaybeAsync(const BlackMisc::Simulation::CDistributorList &models, bool sortByOrder = true);

@@ -9,11 +9,12 @@
 
 //! \file
 
-#ifndef BLACKMISC_SIMULATION_SETTINGS_H
-#define BLACKMISC_SIMULATION_SETTINGS_H
+#ifndef BLACKMISC_SIMULATION_SIMULATORSETTINGS_H
+#define BLACKMISC_SIMULATION_SIMULATORSETTINGS_H
 
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/network/textmessage.h"
+#include "blackmisc/weather/weatherscenario.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/blackmiscexport.h"
@@ -30,8 +31,8 @@ namespace BlackMisc
 
         //! Settings for simulator
         //! Driver independent part also used in loaders (such as directories)
-        class BLACKMISC_EXPORT CSettings :
-            public BlackMisc::CValueObject<CSettings>
+        class BLACKMISC_EXPORT CSimulatorSettings :
+            public BlackMisc::CValueObject<CSimulatorSettings>
         {
         public:
             //! Properties by index
@@ -43,7 +44,7 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CSettings();
+            CSimulatorSettings();
 
             //! Set simulator directory
             void setSimulatorDirectory(const QString &simulatorDirectory);
@@ -82,12 +83,12 @@ namespace BlackMisc
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const BlackMisc::CVariant &variant);
 
         private:
-            QString     m_simulatorDirectory;       //! Simulator directory
-            QStringList m_modelDirectories;         //!< Model directory
-            QStringList m_excludeDirectoryPatterns; //!< Exclude model directory
+            QString     m_simulatorDirectory;         //! Simulator directory
+            QStringList m_modelDirectories;           //!< Model directory
+            QStringList m_excludeDirectoryPatterns;   //!< Exclude model directory
 
             BLACK_METACLASS(
-                CSettings,
+                CSimulatorSettings,
                 BLACK_METAMEMBER(simulatorDirectory),
                 BLACK_METAMEMBER(modelDirectories),
                 BLACK_METAMEMBER(excludeDirectoryPatterns)
@@ -95,28 +96,28 @@ namespace BlackMisc
         };
 
         //! Trait for simulator settings
-        struct TSimulatorFsx : public BlackMisc::TSettingTrait<CSettings>
+        struct TSimulatorFsx : public BlackMisc::TSettingTrait<CSimulatorSettings>
         {
             //! Key in data cache
             static const char *key() { return "settingssimulatorfsx"; }
         };
 
         //! Trait for simulator settings
-        struct TSimulatorFs9 : public BlackMisc::TSettingTrait<CSettings>
+        struct TSimulatorFs9 : public BlackMisc::TSettingTrait<CSimulatorSettings>
         {
             //! Key in data cache
             static const char *key() { return "settingssimulatorfs9"; }
         };
 
         //! Trait for simulator settings
-        struct TSimulatorP3D : public BlackMisc::TSettingTrait<CSettings>
+        struct TSimulatorP3D : public BlackMisc::TSettingTrait<CSimulatorSettings>
         {
             //! Key in data cache
             static const char *key() { return "settingssimulatorp3d"; }
         };
 
         //! Trait for simulator settings
-        struct TSimulatorXP : public BlackMisc::TSettingTrait<CSettings>
+        struct TSimulatorXP : public BlackMisc::TSettingTrait<CSimulatorSettings>
         {
             //! Key in data cache
             static const char *key() { return "settingssimulatorxplane"; }
@@ -132,13 +133,13 @@ namespace BlackMisc
             CMultiSimulatorSettings(QObject *parent = nullptr);
 
             //! Settings per simulator
-            CSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            CSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Set settings per simulator
-            BlackMisc::CStatusMessage setSettings(const BlackMisc::Simulation::CSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            BlackMisc::CStatusMessage setSettings(const BlackMisc::Simulation::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Set settings per simulator
-            BlackMisc::CStatusMessage setAndSaveSettings(const BlackMisc::Simulation::CSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            BlackMisc::CStatusMessage setAndSaveSettings(const BlackMisc::Simulation::CSimulatorSettings &settings, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
             //! Set settings per simulator
             BlackMisc::CStatusMessage saveSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator);
@@ -176,8 +177,8 @@ namespace BlackMisc
 
         //! Settings regarding message handling.
         //! Driver independent part, related to network
-        class BLACKMISC_EXPORT CSettingsSimulatorMessages :
-            public BlackMisc::CValueObject<CSettingsSimulatorMessages>
+        class BLACKMISC_EXPORT CSimulatorMessagesSettings :
+            public BlackMisc::CValueObject<CSimulatorMessagesSettings>
         {
         public:
             //! Properties by index
@@ -197,12 +198,12 @@ namespace BlackMisc
                 TextMessagesCom2      = 1 << 2,
                 TextMessagePrivate    = 1 << 3,
                 TextMessageSupervisor = 1 << 4,
-                TextMessagesAll  = TextMessagesUnicom | TextMessagesCom1 | TextMessagesCom2 | TextMessagePrivate
+                TextMessagesAll       = TextMessagesUnicom | TextMessagesCom1 | TextMessagesCom2 | TextMessagePrivate
             };
             Q_DECLARE_FLAGS(TextMessageType, TextMessageTypeFlag)
 
             //! Default constructor
-            CSettingsSimulatorMessages();
+            CSimulatorMessagesSettings();
 
             //! Log severity
             void setTechnicalLogSeverity(BlackMisc::CStatusMessage::StatusSeverity severity);
@@ -229,7 +230,7 @@ namespace BlackMisc
             bool isRelayedTechnicalMessages() const;
 
             //! Relay the following message types
-            void setRelayedTextMessages(BlackMisc::Simulation::CSettingsSimulatorMessages::TextMessageType messageType);
+            void setRelayedTextMessages(BlackMisc::Simulation::CSimulatorMessagesSettings::TextMessageType messageType);
 
             //! Relay supervisor messages
             bool isRelayedSupervisorTextMessages() const;
@@ -253,7 +254,7 @@ namespace BlackMisc
             bool relayThisStatusMessage(const BlackMisc::CStatusMessage &message) const;
 
             //! Relayed text messages
-            CSettingsSimulatorMessages::TextMessageType getRelayedTextMessageTypes() const;
+            CSimulatorMessagesSettings::TextMessageType getRelayedTextMessageTypes() const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -270,29 +271,43 @@ namespace BlackMisc
             bool m_globallyEnabled = true; //!< messsage relay enabled to simulator
 
             BLACK_METACLASS(
-                CSettingsSimulatorMessages,
+                CSimulatorMessagesSettings,
                 BLACK_METAMEMBER(technicalLogLevel),
                 BLACK_METAMEMBER(messageType)
             );
         };
 
         //! Trait for simulator message settings
-        struct TSimulatorMessages : public BlackMisc::TSettingTrait<CSettingsSimulatorMessages>
+        struct TSimulatorMessages : public BlackMisc::TSettingTrait<CSimulatorMessagesSettings>
         {
             //! Key in data cache
             static const char *key() { return "settingssimulatormessages"; }
         };
+
+        //! Selected weather scenario
+        struct TSelectedWeatherScenario : public BlackMisc::TSettingTrait<BlackMisc::Weather::CWeatherScenario>
+        {
+            //! \copydoc BlackMisc::TSettingTrait::key
+            static const char *key() { return "simulator/selectedweatherscenario"; }
+
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
+            static const BlackMisc::Weather::CWeatherScenario &defaultValue()
+            {
+                static const BlackMisc::Weather::CWeatherScenario scenario {};
+                return scenario;
+            }
+        };
     } // ns
 } // ns
 
-Q_DECLARE_METATYPE(BlackMisc::Simulation::CSettings)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSettings>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CSettings>)
-Q_DECLARE_METATYPE(BlackMisc::Simulation::CSettingsSimulatorMessages)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSettingsSimulatorMessages>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CSettingsSimulatorMessages>)
-Q_DECLARE_METATYPE(BlackMisc::Simulation::CSettingsSimulatorMessages::TextMessageTypeFlag)
-Q_DECLARE_METATYPE(BlackMisc::Simulation::CSettingsSimulatorMessages::TextMessageType)
-Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CSettingsSimulatorMessages::TextMessageType)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorSettings)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSimulatorSettings>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CSimulatorSettings>)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorMessagesSettings)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Simulation::CSimulatorMessagesSettings>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Simulation::CSimulatorMessagesSettings>)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorMessagesSettings::TextMessageTypeFlag)
+Q_DECLARE_METATYPE(BlackMisc::Simulation::CSimulatorMessagesSettings::TextMessageType)
+Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Simulation::CSimulatorMessagesSettings::TextMessageType)
 
 #endif // guard

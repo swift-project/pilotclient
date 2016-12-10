@@ -33,7 +33,7 @@ namespace BlackGui
             explicit CSettingsGuiComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsGuiComponent();
+            virtual ~CSettingsGuiComponent();
 
             //! Hide opacity elements
             void hideOpacity(bool hide);

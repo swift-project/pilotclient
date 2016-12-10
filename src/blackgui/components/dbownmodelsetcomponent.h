@@ -12,10 +12,9 @@
 #ifndef BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 #define BLACKGUI_COMPONENTS_DBOWNMODELSETCOMPONENT_H
 
-#include "blackcore/simulator/simulatorsettings.h"
 #include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackgui/menus/menudelegate.h"
-#include "blackmisc/settingscache.h"
+#include "blackmisc/simulation/modelsettings.h"
 #include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
@@ -145,7 +144,7 @@ namespace BlackGui
             QScopedPointer<Ui::CDbOwnModelSetComponent>    ui;
             QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSetting<BlackCore::Simulator::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged };
+            BlackMisc::CSetting<BlackMisc::Simulation::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged };
 
             // -------------------------- custom menus -----------------------------------
 

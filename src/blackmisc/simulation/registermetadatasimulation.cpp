@@ -9,7 +9,8 @@
 
 #include "registermetadatasimulation.h"
 #include "simulation.h"
-#include "blackmisc/simulation/simulationsettings.h"
+#include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/modelsettings.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
@@ -41,8 +42,8 @@ namespace BlackMisc
             CSimulatorInternals::registerMetadata();
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
-            CSettings::registerMetadata();
-            CSettingsSimulatorMessages::registerMetadata();
+            CSimulatorSettings::registerMetadata();
+            CSimulatorMessagesSettings::registerMetadata();
         }
     } // ns
 } // ns

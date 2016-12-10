@@ -15,10 +15,10 @@
 #include "simconnectdatadefinition.h"
 #include "simconnectobject.h"
 #include "../fscommon/simulatorfscommon.h"
-#include "blackcore/simulator/simulatorsettings.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -222,7 +222,7 @@ namespace BlackSimPlugin
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition;          //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::reloadWeatherSettings };
+            BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::reloadWeatherSettings };
             QTimer m_realityBubbleTimer { this };   //!< updating of aircraft out of reality bubble
         };
 

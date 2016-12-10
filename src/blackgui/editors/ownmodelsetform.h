@@ -13,9 +13,7 @@
 #define BLACKGUI_EDITORS_OWNMODELSETFORM_H
 
 #include "form.h"
-#include "blackcore/simulator/simulatorsettings.h"
-#include "blackmisc/simulation/distributorlist.h"
-
+#include "blackmisc/simulation/modelsettings.h"
 #include <QObject>
 #include <QScopedPointer>
 
@@ -111,7 +109,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::COwnModelSetForm>  ui;
             BlackMisc::Simulation::CSimulatorInfo m_simulator;
-            BlackMisc::CSetting<BlackCore::Simulator::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::ps_preferencesChanged };
+            BlackMisc::CSetting<BlackMisc::Simulation::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::ps_preferencesChanged };
         };
     } // ns
 } // ns

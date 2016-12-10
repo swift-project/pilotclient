@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 
-#include "blackmisc/simulation/simulationsettings.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include <QFrame>
 #include <QFileDialog>
 
@@ -73,7 +73,7 @@ namespace BlackGui
             void displayModelDirectories(const QStringList &dirs);
 
             //! Current settings
-            BlackMisc::Simulation::CSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+            BlackMisc::Simulation::CSimulatorSettings getSettings(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
             //! Display simulator`s settings
             void displaySettings(const BlackMisc::Simulation::CSimulatorInfo &simulator);

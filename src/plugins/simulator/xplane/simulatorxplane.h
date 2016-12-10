@@ -14,20 +14,20 @@
 
 #include "blackcore/simulator.h"
 #include "blackcore/simulatorcommon.h"
-#include "blackcore/simulator/simulatorsettings.h"
+#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/pixmap.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/sequence.h"
-#include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/weather/weathergrid.h"
-#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/pixmap.h"
+#include "blackmisc/sequence.h"
 
 #include <QDBusConnection>
 #include <QList>
@@ -149,7 +149,7 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CAircraftModelList m_installedModels; //!< \todo Do we still need this, as we now focus on model set
 
             BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackCore::Simulator::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::reloadWeatherSettings };
+            BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::reloadWeatherSettings };
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks

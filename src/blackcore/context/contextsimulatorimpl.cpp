@@ -479,7 +479,7 @@ namespace BlackCore
         {
             if (!isSimulatorSimulating()) { return; }
             if (!this->getIContextOwnAircraft()) { return; }
-            const CSettingsSimulatorMessages settings = m_messageSettings.getThreadLocal();
+            const CSimulatorMessagesSettings settings = m_messageSettings.getThreadLocal();
             const CSimulatedAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
             for (const auto &tm : textMessages)
             {
@@ -526,7 +526,7 @@ namespace BlackCore
         void CContextSimulator::ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
         {
             if (!isSimulatorSimulating()) { return; }
-            const CSettingsSimulatorMessages simMsg = m_messageSettings.getThreadLocal();
+            const CSimulatorMessagesSettings simMsg = m_messageSettings.getThreadLocal();
             if (simMsg.relayThisStatusMessage(message))
             {
                 m_simulatorPlugin.second->displayStatusMessage(message);
