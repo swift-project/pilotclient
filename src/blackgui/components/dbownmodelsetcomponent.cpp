@@ -168,10 +168,13 @@ namespace BlackGui
                 return CStatusMessage(this, CStatusMessage::SeverityError,
                                       "Cannot add data for " + simulator.toQString(true) + " to " + this->getModelSetSimulator().toQString(true), true);
             }
+
+            const bool allowExcludedModels = this->m_modelSettings.get().getAllowExcludedModels();
             CAircraftModelList updateModels(this->getModelSet());
-            const int d = updateModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
+            int d = updateModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
             if (d > 0)
             {
+                if (!allowExcludedModels) { updateModels.removeIfExcluded(); }
                 updateModels.resetOrder();
                 ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
                 return CStatusMessage(this, CStatusMessage::SeverityInfo, "Modified " + QString::number(d) + " entries in model set " + this->getModelSetSimulator().toQString(true), true);
@@ -272,6 +275,11 @@ namespace BlackGui
             {
                 this->updateDistributorOrder(simuulator);
             }
+        }
+
+        void CDbOwnModelSetComponent::ps_modelSettingsChanged()
+        {
+            // void
         }
 
         void CDbOwnModelSetComponent::ps_viewModelChanged()

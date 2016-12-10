@@ -29,8 +29,8 @@
 class QAction;
 class QWidget;
 
-namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace Ui { class CDbOwnModelSetComponent; }
+namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
@@ -122,6 +122,9 @@ namespace BlackGui
             //! Preferences changed
             void ps_distributorPreferencesChanged();
 
+            //! Model settings changed
+            void ps_modelSettingsChanged();
+
             //! Model (of view) has been changed
             void ps_viewModelChanged();
 
@@ -144,7 +147,8 @@ namespace BlackGui
             QScopedPointer<Ui::CDbOwnModelSetComponent>    ui;
             QScopedPointer<CDbOwnModelSetDialog>           m_modelSetDialog;
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this };
-            BlackMisc::CSetting<BlackMisc::Simulation::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged };
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::ps_distributorPreferencesChanged }; //!< distributor preferences
+            BlackMisc::CSettingReadOnly<BlackMisc::Simulation::TModel> m_modelSettings { this, &CDbOwnModelSetComponent::ps_modelSettingsChanged }; //!< settings for models
 
             // -------------------------- custom menus -----------------------------------
 
