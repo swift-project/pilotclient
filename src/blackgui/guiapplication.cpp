@@ -75,9 +75,9 @@ namespace BlackGui
             CGuiApplication::registerMetadata();
             CApplication::init(false); // base class without metadata
             this->setWindowIcon(icon);
+            this->settingsChanged();
             sGui = this;
             connect(&this->m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::styleSheetsChanged);
-            reloadWidgetStyleFromSettings();
         }
     }
 

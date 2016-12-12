@@ -89,6 +89,7 @@ using namespace BlackGui;
 using namespace BlackGui::Menus;
 using namespace BlackGui::Models;
 using namespace BlackGui::Filters;
+using namespace BlackGui::Settings;
 
 namespace BlackGui
 {
@@ -262,6 +263,19 @@ namespace BlackGui
             return ma;
         }
 
+        void CViewBaseNonTemplate::settingsChanged()
+        {
+            if (this->allowsMultipleSelectedRows())
+            {
+                const CGeneralGuiSettings settings = this->m_guiSettings.getThreadLocal();
+                this->m_originalSelectionMode = settings.getPreferredSelection();
+                if (this->isCurrentlyAllowingMultipleRowSelections())
+                {
+                    this->setSelectionMode(settings.getPreferredSelection());
+                }
+            }
+        }
+
         void CViewBaseNonTemplate::customMenu(CMenuActions &menuActions)
         {
             // delegate?
@@ -405,6 +419,17 @@ namespace BlackGui
             return this->selectedRowCount() > 1;
         }
 
+        bool CViewBaseNonTemplate::allowsMultipleSelectedRows() const
+        {
+            return this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection;
+        }
+
+        bool CViewBaseNonTemplate::isCurrentlyAllowingMultipleRowSelections() const
+        {
+            QAbstractItemView::SelectionMode m = this->selectionMode();
+            return m == QAbstractItemView::MultiSelection || m == QAbstractItemView::ExtendedSelection;
+        }
+
         void CViewBaseNonTemplate::init()
         {
             const int fh = qRound(1.5 * this->getHorizontalHeaderFontHeight());
@@ -421,6 +446,8 @@ namespace BlackGui
                 Q_ASSERT_X(false, Q_FUNC_INFO, "wrong resize mode");
                 break;
             }
+
+            this->settingsChanged();
         }
 
         QString CViewBaseNonTemplate::getDefaultFilename(bool load) const
@@ -652,7 +679,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_setSingleSelection()
         {
-            if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
+            if (this->allowsMultipleSelectedRows())
             {
                 this->setSelectionMode(SingleSelection);
             }
@@ -660,7 +687,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_setExtendedSelection()
         {
-            if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
+            if (this->allowsMultipleSelectedRows())
             {
                 this->setSelectionMode(ExtendedSelection);
             }
@@ -668,7 +695,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_setMultiSelection()
         {
-            if (this->m_originalSelectionMode == ExtendedSelection || this->m_originalSelectionMode == MultiSelection)
+            if (this->allowsMultipleSelectedRows())
             {
                 this->setSelectionMode(MultiSelection);
             }

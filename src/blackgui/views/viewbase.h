@@ -12,11 +12,11 @@
 #ifndef BLACKGUI_VIEWBASE_H
 #define BLACKGUI_VIEWBASE_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/modelfilter.h"
-#include "blackmisc/namevariantpair.h"
+#include "blackgui/settings/guisettings.h"
+#include "blackgui/blackguiexport.h"
 #include "blackmisc/namevariantpairlist.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/propertyindexvariantmap.h"
@@ -197,6 +197,12 @@ namespace BlackGui
             //! Multiple selected rows
             bool hasMultipleSelectedRows() const;
 
+            //! Allows to select multiple rows
+            bool allowsMultipleSelectedRows() const;
+
+            //! Is the current selection mode allow multiple selection
+            bool isCurrentlyAllowingMultipleRowSelections() const;
+
             //! Filter dialog
             void setFilterDialog(BlackGui::Filters::CFilterDialog *filterDialog);
 
@@ -376,6 +382,9 @@ namespace BlackGui
             //! Draw drop indicator
             virtual void drawDropIndicator(bool indicator) = 0;
 
+            //! Settings have been changed
+            void settingsChanged();
+
             QString        m_saveFileName;                                     //!< save file name (JSON)
             ResizeMode     m_resizeMode               = PresizeSubset;         //!< mode
             RowsResizeMode m_rowResizeMode            = Interactive;           //!< row resize mode for row height
@@ -397,6 +406,7 @@ namespace BlackGui
             BlackGui::Menus::IMenuDelegate *m_menu    = nullptr;               //!< custom menu if any
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr;               //!< load indicator if needed
             QMap<MenuFlag, BlackGui::Menus::CMenuActions> m_menuFlagActions;   //!< initialized actions
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
