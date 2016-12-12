@@ -135,6 +135,9 @@ namespace BlackGui
         //! Style sheet handling
         const CStyleSheetUtility &getStyleSheetUtility() const;
 
+        //! Current widget style
+        QString getWidgetStyle() const;
+
         //! Reload style sheets
         bool reloadStyleSheets();
 

@@ -8,6 +8,7 @@
  */
 
 #include "blackconfig/buildconfig.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackgui/components/applicationclosedialog.h"
@@ -482,6 +483,13 @@ namespace BlackGui
         return this->m_styleSheetUtility;
     }
 
+    QString CGuiApplication::getWidgetStyle() const
+    {
+        QString currentWidgetStyle(QApplication::style()->metaObject()->className());
+        if (currentWidgetStyle.startsWith('Q')) { currentWidgetStyle.remove(0, 1); }
+        return currentWidgetStyle.replace("Style", "");
+    }
+
     bool CGuiApplication::reloadStyleSheets()
     {
         return m_styleSheetUtility.read();
@@ -554,13 +562,21 @@ namespace BlackGui
     {
         // changing widget style is slow, so I try to prevent setting it when nothing changed
         const QString widgetStyle = m_guiSettings.get().getWidgetStyle();
-        const QString currentWidgetStyle(QApplication::style()->metaObject()->className());
-        if (!currentWidgetStyle.contains(widgetStyle, Qt::CaseInsensitive))
+        const QString currentWidgetStyle(this->getWidgetStyle());
+        if (!(currentWidgetStyle.length() == widgetStyle.length() && currentWidgetStyle.startsWith(widgetStyle, Qt::CaseInsensitive)))
         {
             const auto availableStyles = QStyleFactory::keys();
             if (availableStyles.contains(widgetStyle))
             {
-                QApplication::setStyle(QStyleFactory::create(widgetStyle));
+                // changing style freezes the application, so it must not be done in flight mode
+                if (this->getIContextNetwork() && this->getIContextNetwork()->isConnected())
+                {
+                    CLogMessage(this).validationError("Cannot change style while connected to network");
+                }
+                else
+                {
+                    QApplication::setStyle(QStyleFactory::create(widgetStyle));
+                }
             }
         }
     }
