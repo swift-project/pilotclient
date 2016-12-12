@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>487</width>
-    <height>431</height>
+    <width>236</width>
+    <height>297</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,7 +26,16 @@
    <attribute name="title">
     <string>Overview</string>
    </attribute>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gl_Overview">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="horizontalSpacing">
+     <number>10</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>20</number>
+    </property>
     <item row="0" column="0">
      <widget class="QPushButton" name="pb_Servers">
       <property name="text">
@@ -62,13 +71,6 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
-     <widget class="QPushButton" name="pb_SimulatorMessages">
-      <property name="text">
-       <string>Simulator (messages)</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QPushButton" name="pb_Gui">
       <property name="text">
@@ -96,6 +98,26 @@
        <string>Data load and caches</string>
       </property>
      </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="pb_SimulatorMessages">
+      <property name="text">
+       <string>Simulator (messages)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="2">
+     <spacer name="vs_Overview">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
@@ -332,7 +354,7 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>25</height>
+        <height>35</height>
        </size>
       </property>
      </spacer>
@@ -357,49 +379,31 @@
      <number>1</number>
     </property>
     <item>
-     <layout class="QFormLayout" name="fl_SettingsGui">
-      <item row="4" column="1">
-       <widget class="QWidget" name="qw_SettingsGuiFont" native="true">
-        <layout class="QHBoxLayout" name="hl_SettingsGuiFontColor">
-         <property name="spacing">
-          <number>3</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-        </layout>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="BlackGui::Components::CSettingsGuiComponent" name="comp_SettingsGuiGeneral">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>100</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="BlackGui::Components::CSettingsViewUpdateTimes" name="comp_SettingsGuiRefreshTimes">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>100</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="BlackGui::Components::CSettingsGuiComponent" name="comp_SettingsGuiGeneral"/>
+    </item>
+    <item>
+     <widget class="BlackGui::Components::CSettingsViewUpdateTimes" name="comp_SettingsGuiRefreshTimes"/>
+    </item>
+    <item>
+     <widget class="QWidget" name="qw_SettingsGuiFont" native="true">
+      <layout class="QHBoxLayout" name="hl_SettingsGuiFontColor">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -471,8 +475,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>479</width>
-         <height>198</height>
+         <width>228</width>
+         <height>131</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="vl_DataLoadOverview">

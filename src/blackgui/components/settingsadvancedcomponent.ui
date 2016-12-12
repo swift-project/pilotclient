@@ -13,22 +13,7 @@
   <property name="windowTitle">
    <string>sample_hotkeys</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>1</number>
-   </property>
-   <property name="topMargin">
-    <number>1</number>
-   </property>
-   <property name="rightMargin">
-    <number>1</number>
-   </property>
+  <layout class="QGridLayout" name="gl_SettingsAdvanced">
    <item row="0" column="0">
     <widget class="QCheckBox" name="m_crashDumpsUpload">
      <property name="text">
@@ -37,7 +22,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <spacer name="verticalSpacer">
+    <spacer name="vs_SettingsAdvanced">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

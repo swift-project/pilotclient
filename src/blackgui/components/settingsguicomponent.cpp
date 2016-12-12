@@ -8,6 +8,7 @@
  */
 
 #include "settingsguicomponent.h"
+#include "blackcore/context/contextnetwork.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/logmessage.h"
 #include "ui_settingsguicomponent.h"
@@ -18,6 +19,7 @@
 
 using namespace BlackMisc;
 using namespace BlackGui::Settings;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -149,6 +151,13 @@ namespace BlackGui
         {
             const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
             if (!settings.isDifferentValidWidgetStyle(widgetStyle)) { return; }
+            if (sGui->getIContextNetwork() && sGui->getIContextNetwork()->isConnected())
+            {
+                // Style changes freeze the GUI, must not be done in flight mode
+                CLogMessage(this).validationError("Cannot change style while connected to network");
+                ui->cb_SettingsGuiWidgetStyle->setCurrentText(settings.getWidgetStyle());
+                return;
+            }
             const CStatusMessage m = this->m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexWidgetStyle, widgetStyle);
             CLogMessage::preformatted(m);
         }
