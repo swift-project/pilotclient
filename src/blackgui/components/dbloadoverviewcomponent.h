@@ -96,7 +96,7 @@ namespace BlackGui
             void ps_setValues();
 
             //! Data have been loaded
-            void ps_dataLoaded(BlackMisc::Network::CEntityFlags::Entity singleEntity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
+            void ps_dataLoaded(BlackMisc::Network::CEntityFlags::Entity entities, BlackMisc::Network::CEntityFlags::ReadState state, int number);
         };
     } // ns
 } // ns

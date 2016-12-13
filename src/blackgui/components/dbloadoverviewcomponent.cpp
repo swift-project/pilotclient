@@ -256,11 +256,10 @@ namespace BlackGui
             sGui->getWebDataServices()->triggerReadOfInfoObjects();
         }
 
-        void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity singleEntity, CEntityFlags::ReadState state, int number)
+        void CDbLoadOverviewComponent::ps_dataLoaded(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number)
         {
             Q_UNUSED(number);
-            Q_ASSERT_X(CEntityFlags::isSingleEntity(singleEntity), Q_FUNC_INFO, "need single entity");
-            if (!singleEntity.testFlag(CEntityFlags::InfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(singleEntity)) { return; }
+            if (!entities.testFlag(CEntityFlags::InfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
             if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
             {
                 this->m_reloading = false;
