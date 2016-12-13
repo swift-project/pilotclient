@@ -50,7 +50,7 @@ namespace BlackGui
         explicit COverlayMessages(const QString &headerText, int w, int h, QWidget *parent);
 
         //! Destructor
-        ~COverlayMessages();
+        virtual ~COverlayMessages();
 
         //! Messages mode
         void setModeToMessages();
@@ -75,15 +75,11 @@ namespace BlackGui
 
         //! Show multiple messages with confirmation bar
         void showOverlayMessagesWithConfirmation(const BlackMisc::CStatusMessageList &messages,
-                                          const QString &confirmationMessage,
-                                          std::function<void()> okLambda,
-                                          int defaultButton = QMessageBox::Cancel,
-                                          int timeOutMs = -1);
+                const QString &confirmationMessage,
+                std::function<void()> okLambda,
+                int defaultButton = QMessageBox::Cancel,
+                int timeOutMs = -1);
 
-        //! Set the default confirmation button
-        void setDefaultConfirmationButton(int button = QMessageBox::Cancel);
-
-    public slots:
         //! Show multiple messages
         void showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs = -1);
 
@@ -104,6 +100,16 @@ namespace BlackGui
 
         //! Close button clicked
         void close();
+
+        //! Set the default confirmation button
+        void setDefaultConfirmationButton(int button = QMessageBox::Cancel);
+
+        //! Is awaiting a conformation
+        bool hasPendingConfirmation() const;
+
+    signals:
+        //! Confirmation completed
+        void confirmationCompleted();
 
     protected:
         //! Show message
@@ -126,8 +132,10 @@ namespace BlackGui
         QScopedPointer<Ui::COverlayMessages> ui;
         QString                              m_header;
         int                                  m_lastConfirmation = QMessageBox::Cancel;
+        bool                                 m_awaitingConfirmation = false;
         std::function<void()>                m_okLambda;
         QTimer                               m_autoCloseTimer { this };
+        QList<std::function<void()>> m_pendingMessageCalls;
 
         //! Init widget
         void init(int w, int h);

@@ -39,7 +39,7 @@ namespace BlackGui
             explicit CStatusMessageForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CStatusMessageForm();
+            virtual ~CStatusMessageForm();
 
         public slots:
             //! Set message

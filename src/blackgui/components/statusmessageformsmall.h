@@ -23,7 +23,6 @@
 class QWidget;
 
 namespace Ui { class CStatusMessageFormSmall; }
-
 namespace BlackGui
 {
     namespace Components
@@ -40,7 +39,7 @@ namespace BlackGui
             explicit CStatusMessageFormSmall(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CStatusMessageFormSmall();
+            virtual ~CStatusMessageFormSmall();
 
         public slots:
             //! Set message

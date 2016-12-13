@@ -64,11 +64,11 @@ namespace BlackGui
     void COverlayMessages::init(int w, int h)
     {
         ui->setupUi(this);
-        resize(w, h);
+        this->resize(w, h);
         this->setAutoFillBackground(true);
         ui->tvp_StatusMessages->setMode(CStatusMessageListModel::Simplified);
         connect(ui->tb_Close, &QToolButton::released, this, &COverlayMessages::close);
-        m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
+        this->m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
         connect(&m_autoCloseTimer, &QTimer::timeout, this, &COverlayMessages::close);
     }
 
@@ -116,6 +116,16 @@ namespace BlackGui
     void COverlayMessages::showOverlayMessages(const BlackMisc::CStatusMessageList &messages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
+        if (this->hasPendingConfirmation())
+        {
+            // defer message
+            this->m_pendingMessageCalls.push_back([ = ]()
+            {
+                this->showOverlayMessages(messages, timeOutMs);
+            });
+            return;
+        }
+
         this->setModeToMessages();
         ui->tvp_StatusMessages->updateContainer(messages);
         this->display(timeOutMs);
@@ -124,6 +134,16 @@ namespace BlackGui
     void COverlayMessages::showOverlayMessage(const BlackMisc::CStatusMessage &message, int timeOutMs)
     {
         if (message.isEmpty()) { return; }
+        if (this->hasPendingConfirmation())
+        {
+            // defer message
+            this->m_pendingMessageCalls.push_back([ = ]()
+            {
+                this->showOverlayMessage(message, timeOutMs);
+            });
+            return;
+        }
+
         if (this->useSmall())
         {
             this->setModeToMessageSmall();
@@ -140,6 +160,16 @@ namespace BlackGui
     void COverlayMessages::showOverlayTextMessage(const CTextMessage &textMessage, int timeOutMs)
     {
         if (textMessage.isEmpty()) { return; }
+        if (this->hasPendingConfirmation())
+        {
+            // defer message
+            this->m_pendingMessageCalls.push_back([ = ]()
+            {
+                this->showOverlayTextMessage(textMessage, timeOutMs);
+            });
+            return;
+        }
+
         this->setModeToTextMessage();
 
         // message and display
@@ -158,6 +188,16 @@ namespace BlackGui
 
     void COverlayMessages::showOverlayImage(const QPixmap &image, int timeOutMs)
     {
+        if (this->hasPendingConfirmation())
+        {
+            // defer message
+            this->m_pendingMessageCalls.push_back([ = ]()
+            {
+                this->showOverlayImage(image, timeOutMs);
+            });
+            return;
+        }
+
         this->setModeToImage();
         QSize sizeAvailable = ui->fr_StatusMessagesComponentsInner->size();
         if (sizeAvailable.width() < 300)
@@ -254,8 +294,18 @@ namespace BlackGui
 
     void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, const QString &confirmationMessage, std::function<void ()> okLambda, int defaultButton, int timeOutMs)
     {
+        if (this->hasPendingConfirmation())
+        {
+            // defer message
+            this->m_pendingMessageCalls.push_back([ = ]()
+            {
+                this->showOverlayMessagesWithConfirmation(messages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+            });
+            return;
+        }
         this->setConfirmationMessage(confirmationMessage);
         this->showOverlayMessages(messages, timeOutMs);
+        this->m_awaitingConfirmation = true; // needs to be after showOverlayMessages
         this->m_okLambda = okLambda;
         this->setDefaultConfirmationButton(defaultButton);
     }
@@ -285,6 +335,11 @@ namespace BlackGui
         }
     }
 
+    bool COverlayMessages::hasPendingConfirmation() const
+    {
+        return this->m_awaitingConfirmation;
+    }
+
     void COverlayMessages::keyPressEvent(QKeyEvent *event)
     {
         if (!this->isVisible()) { QFrame::keyPressEvent(event); }
@@ -304,8 +359,23 @@ namespace BlackGui
         this->hide();
         this->setEnabled(false);
         ui->fr_Confirmation->setVisible(false);
-        this->m_lastConfirmation = QMessageBox::Cancel;
+        if (this->m_awaitingConfirmation)
+        {
+            emit confirmationCompleted();
+        }
+        else
+        {
+            this->m_lastConfirmation = QMessageBox::Cancel;
+        }
+        this->m_awaitingConfirmation = false;
         this->m_okLambda = nullptr;
+
+        if (!this->m_pendingMessageCalls.isEmpty())
+        {
+            std::function<void()> f = this->m_pendingMessageCalls.front();
+            this->m_pendingMessageCalls.removeFirst();
+            QTimer::singleShot(500, this, f);
+        }
     }
 
     void COverlayMessages::display(int timeOutMs)
