@@ -69,7 +69,7 @@ namespace BlackCoreTest
             CAircraftSituation s(getTestSituation(cs, i, ts, deltaT, offset));
 
             // check height above ground
-            CLength hag = (s.getAltitude() - s.geodeticHeight());
+            CLength hag = (s.getAltitude() - s.getGroundElevation());
             QVERIFY2(s.getHeightAboveGround() == hag, "Wrong elevation");
             provider->insertNewSituation(s);
         }
@@ -162,13 +162,13 @@ namespace BlackCoreTest
         CAltitude a(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
         CLatitude lat(number, CAngleUnit::deg());
         CLongitude lng(180.0 + number, CAngleUnit::deg());
-        CLength height(0, CLengthUnit::m());
         CHeading heading(number * 10, CHeading::True, CAngleUnit::deg());
         CAngle bank(number, CAngleUnit::deg());
         CAngle pitch(number, CAngleUnit::deg());
         CSpeed gs(number * 10, CSpeedUnit::km_h());
-        CCoordinateGeodetic c(lat, lng, height);
-        CAircraftSituation s(callsign, c, a, heading, pitch, bank, gs);
+        CAltitude gndElev({ 0, CLengthUnit::m() }, CAltitude::MeanSeaLevel);
+        CCoordinateGeodetic c(lat, lng, {});
+        CAircraftSituation s(callsign, c, a, heading, pitch, bank, gs, gndElev);
         s.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         s.setTimeOffsetMs(offset);
         return s;

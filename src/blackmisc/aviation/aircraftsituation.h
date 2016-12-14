@@ -58,14 +58,15 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CAircraftSituation() {}
+            CAircraftSituation();
 
             //! Comprehensive constructor
             CAircraftSituation(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude,
                                const BlackMisc::Aviation::CHeading &heading = {},
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
-                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {});
+                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {},
+                               const BlackMisc::Aviation::CAltitude &groundElevation = { { 0, nullptr }, BlackMisc::Aviation::CAltitude::MeanSeaLevel });
 
             //! Comprehensive constructor
             CAircraftSituation(const BlackMisc::Aviation::CCallsign &correspondingCallsign,
@@ -73,7 +74,8 @@ namespace BlackMisc
                                const BlackMisc::Aviation::CHeading &heading = {},
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
-                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {});
+                               const BlackMisc::PhysicalQuantities::CSpeed &gs = {},
+                               const BlackMisc::Aviation::CAltitude &groundElevation = { { 0, nullptr }, BlackMisc::Aviation::CAltitude::MeanSeaLevel });
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
@@ -100,8 +102,11 @@ namespace BlackMisc
             virtual bool isOnGroundGuessed() const;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
-            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
-            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
+            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override
+            {
+                static const BlackMisc::PhysicalQuantities::CLength gh { 0, nullptr };
+                return gh;
+            }
 
             //! \copydoc Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override { return this->m_position.normalVector(); }
@@ -109,16 +114,13 @@ namespace BlackMisc
             //! \copydoc Geo::ICoordinateGeodetic::normalVectorDouble
             virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
 
-            //! Elevation
-            //! \sa geodeticHeight
-            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->geodeticHeight(); }
+            //! Elevation of the ground directly beneath
+            const BlackMisc::Aviation::CAltitude &getGroundElevation() const { return this->m_groundElevation; }
 
-            //! Elevation
-            //! \sa setGeodeticHeight
-            void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_position.setGeodeticHeight(elevation); }
+            //! Elevation of the ground directly beneath
+            void setGroundElevation(const BlackMisc::Aviation::CAltitude &elevation) { this->m_groundElevation = elevation; }
 
             //! Height above ground.
-            //! Do not confuse with elevation (=geodeticHeight) as in \sa geodeticHeight() / \sa getElevation()
             BlackMisc::PhysicalQuantities::CLength getHeightAboveGround() const;
 
             //! Get heading
@@ -183,6 +185,7 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_pitch;
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundSpeed;
+            BlackMisc::Aviation::CAltitude m_groundElevation;
             qint64 m_timeOffsetMs = 0;
             bool m_isInterim = false;
 
@@ -195,6 +198,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(pitch),
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
+                BLACK_METAMEMBER(groundElevation),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(timeOffsetMs),
                 BLACK_METAMEMBER(isInterim)

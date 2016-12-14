@@ -800,12 +800,13 @@ namespace BlackCore
             // if altered in underlying classes, this change needs to be reverted
             CAircraftSituation situation(
                 callsign,
-                CCoordinateGeodetic(position->latitude, position->longitude), // geodetic height -> null
+                CCoordinateGeodetic(position->latitude, position->longitude),
                 CAltitude(position->altitudePressure, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
-                CSpeed(position->groundSpeed, CSpeedUnit::kts())
+                CSpeed(position->groundSpeed, CSpeedUnit::kts()),
+                CAltitude({ 0, nullptr }, CAltitude::MeanSeaLevel)
             );
             situation.setCurrentUtcTime();
             situation.setTimeOffsetMs(6000);
@@ -882,8 +883,8 @@ namespace BlackCore
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
-                // There is no speed information in a interim packet
-                CSpeed(0.0, CSpeedUnit::kts())
+                CSpeed(0.0, nullptr), // There is no speed information in a interim packet
+                CAltitude({ 0, nullptr }, CAltitude::MeanSeaLevel)
             );
             situation.setCurrentUtcTime();
             situation.setTimeOffsetMs(2000);

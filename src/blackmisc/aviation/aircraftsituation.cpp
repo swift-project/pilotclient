@@ -24,14 +24,17 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs)
-            : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
-              m_bank(bank), m_groundSpeed(gs) {}
+        CAircraftSituation::CAircraftSituation()
+            : m_groundElevation({ 0, nullptr }, CAltitude::MeanSeaLevel) {}
 
-        CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs)
+        CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
+            : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
+              m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation) {}
+
+        CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
             : m_correspondingCallsign(correspondingCallsign),
               m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
-              m_bank(bank), m_groundSpeed(gs)
+              m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation)
         {
             m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
         }
@@ -43,6 +46,7 @@ namespace BlackMisc
             s.append(" bank: ").append(this->m_bank.toQString(i18n));
             s.append(" pitch: ").append(this->m_pitch.toQString(i18n));
             s.append(" gs: ").append(this->m_groundSpeed.toQString(i18n));
+            s.append(" elevation: ").append(this->m_groundElevation.toQString(i18n));
             s.append(" heading: ").append(this->m_heading.toQString(i18n));
             s.append(" timestamp: ").append(this->getFormattedUtcTimestampDhms());
             return s;
@@ -181,18 +185,17 @@ namespace BlackMisc
 
         CLength CAircraftSituation::getHeightAboveGround() const
         {
-            static const CLength notAvialable(0, CLengthUnit::nullUnit());
             if (this->m_altitude.getReferenceDatum() == CAltitude::AboveGround)
             {
                 // we have a sure value
                 return this->getAltitude();
             }
-            const CLength gh(geodeticHeight());
+            const CLength gh(getGroundElevation());
             if (!gh.isNull() && !m_altitude.isNull())
             {
                 return m_altitude - gh;
             }
-            return notAvialable;
+            return { 0, nullptr };
         }
 
         void CAircraftSituation::setCallsign(const CCallsign &callsign)

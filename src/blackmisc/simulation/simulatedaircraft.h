@@ -195,7 +195,6 @@ namespace BlackMisc
             virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_situation.longitude(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::geodeticHeight
-            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_situation.geodeticHeight(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::normalVector
@@ -205,12 +204,10 @@ namespace BlackMisc
             virtual std::array<double, 3> normalVectorDouble() const override { return this->m_situation.normalVectorDouble(); }
 
             //! Elevation
-            //! \sa geodeticHeight
-            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->geodeticHeight(); }
+            const BlackMisc::Aviation::CAltitude &getGroundElevation() const { return this->m_situation.getGroundElevation(); }
 
             //! Elevation
-            //! \sa setGeodeticHeight
-            void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_situation.setElevation(elevation); }
+            void setGroundElevation(const BlackMisc::Aviation::CAltitude &elevation) { return this->m_situation.setGroundElevation(elevation); }
 
             //! Get heading
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_situation.getHeading(); }
