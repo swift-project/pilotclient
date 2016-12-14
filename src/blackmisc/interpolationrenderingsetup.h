@@ -119,7 +119,7 @@ namespace BlackMisc
         bool m_forceFullInterpolation = false;   //! always do a full interpolation, even if aircraft is not moving
         bool m_enabledAircraftParts   = true;    //! Update aircraft parts
         int  m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
-        BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< max.distance for rendering
+        BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0, nullptr }; //!< max.distance for rendering
 
         BLACK_METACLASS(
             CInterpolationAndRenderingSetup,

@@ -69,7 +69,7 @@ namespace BlackMisc
         if (distance == m_maxRenderedDistance) { return false; }
         if (distance.isNull() || distance.isNegativeWithEpsilonConsidered())
         {
-            m_maxRenderedDistance = CLength(0.0, CLengthUnit::nullUnit());
+            m_maxRenderedDistance = CLength(0.0, nullptr);
         }
         else if (distance.isZeroEpsilonConsidered())
         {
@@ -93,7 +93,7 @@ namespace BlackMisc
 
     void CInterpolationAndRenderingSetup::clearMaxRenderedDistance()
     {
-        this->setMaxRenderedDistance(CLength(0.0, CLengthUnit::nullUnit()));
+        this->setMaxRenderedDistance(CLength(0.0, nullptr));
     }
 
     bool CInterpolationAndRenderingSetup::isMaxAircraftRestricted() const
@@ -103,7 +103,7 @@ namespace BlackMisc
 
     void CInterpolationAndRenderingSetup::clearAllRenderingRestrictions()
     {
-        this->m_maxRenderedDistance = CLength(0, CLengthUnit::nullUnit());
+        this->m_maxRenderedDistance = CLength(0, nullptr);
         this->m_maxRenderedAircraft = InfiniteAircraft();
     }
 

@@ -308,7 +308,7 @@ namespace BlackMisc
 
         CTime CAtcStation::bookedWhen() const
         {
-            if (!this->hasValidBookingTimes()) { return CTime(0, CTimeUnit::nullUnit()); }
+            if (!this->hasValidBookingTimes()) { return CTime(0, nullptr); }
             QDateTime now = QDateTime::currentDateTimeUtc();
             qint64 diffMs;
             if (this->m_bookedFromUtc > now)

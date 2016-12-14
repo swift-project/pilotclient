@@ -79,7 +79,7 @@ namespace BlackMisc
                 bool ok = false;
                 double dv = v.toDouble(&ok) * 100.0;
                 CAltitude a(ok ? dv : 0.0, FlightLevel,
-                            ok ? CLengthUnit::ft() : CLengthUnit::nullUnit());
+                            ok ? CLengthUnit::ft() : nullptr);
                 *this = a;
                 return;
             }

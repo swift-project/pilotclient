@@ -61,7 +61,7 @@ namespace BlackMisc
 
             //! Constructor, private message
             CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()) {}
+                : m_message(message), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr) {}
 
             //! Get callsign (from)
             const BlackMisc::Aviation::CCallsign &getSenderCallsign() const { return m_senderCallsign; }
@@ -174,7 +174,7 @@ namespace BlackMisc
             QString m_message;
             BlackMisc::Aviation::CCallsign m_senderCallsign;
             BlackMisc::Aviation::CCallsign m_recipientCallsign;
-            BlackMisc::PhysicalQuantities::CFrequency m_frequency {0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()};
+            BlackMisc::PhysicalQuantities::CFrequency m_frequency { 0, nullptr };
             bool m_wasSent = false;
 
             BLACK_METACLASS(

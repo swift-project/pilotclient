@@ -59,8 +59,8 @@ namespace BlackMiscTest
                              geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
 
         // compare
-        CLength l1(0, CLengthUnit::nullUnit());
-        CLength l2(0, CLengthUnit::nullUnit());
+        CLength l1(0, nullptr);
+        CLength l2(0, nullptr);
         QVERIFY2(l1 == l2, "Null lengths should be equal");
 
         CLength l3(0, CLengthUnit::m());

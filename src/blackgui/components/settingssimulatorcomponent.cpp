@@ -201,7 +201,7 @@ namespace BlackGui
         {
             // get initial aircraft to render
             CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
-            CLength newDistance(0, CLengthUnit::nullUnit());
+            CLength newDistance(0, nullptr);
             if (!ui->le_MaxDistance->text().isEmpty())
             {
                 newDistance = CLength(ui->le_MaxDistance->text().toInt(), CLengthUnit::NM());

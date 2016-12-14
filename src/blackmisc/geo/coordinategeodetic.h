@@ -164,8 +164,8 @@ namespace BlackMisc
             //! Can given index be handled?
             static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
 
-            BlackMisc::PhysicalQuantities::CAngle  m_relativeBearing  {0.0, BlackMisc::PhysicalQuantities::CAngleUnit::nullUnit()};  //!< temporary stored value
-            BlackMisc::PhysicalQuantities::CLength m_relativeDistance {0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()}; //!< temporary stored value
+            BlackMisc::PhysicalQuantities::CAngle  m_relativeBearing  { 0, nullptr }; //!< temporary stored value
+            BlackMisc::PhysicalQuantities::CLength m_relativeDistance { 0, nullptr }; //!< temporary stored value
         };
 
         //! Geodetic coordinate
@@ -240,7 +240,7 @@ namespace BlackMisc
             double m_x = 0; //!< normal vector
             double m_y = 0; //!< normal vector
             double m_z = 0; //!< normal vector
-            BlackMisc::PhysicalQuantities::CLength m_geodeticHeight { 0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() }; //!< height, ellipsoidal or geodetic height
+            BlackMisc::PhysicalQuantities::CLength m_geodeticHeight { 0, nullptr }; //!< height, ellipsoidal or geodetic height
 
             BLACK_METACLASS(
                 CCoordinateGeodetic,

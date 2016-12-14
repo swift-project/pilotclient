@@ -197,7 +197,7 @@ namespace BlackMisc
         {}
 
         CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees) :
-            CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() }) {}
+            CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { 0, nullptr }) {}
 
         CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
             CCoordinateGeodetic( { latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg() }, { heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m() }) {}

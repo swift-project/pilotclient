@@ -277,7 +277,7 @@ namespace BlackSample
         TestServiceInterface testserviceInterface(Testservice::InterfaceName, Testservice::ObjectPath, connection);
 
         CSpeed speed(200, CSpeedUnit::km_h());
-        CSpeed speedNull(0, CSpeedUnit::nullUnit());
+        CSpeed speedNull(0, nullptr);
         CAltitude al(1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
         QTextStream qtin(stdin);
         QString line;

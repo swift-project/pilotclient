@@ -133,7 +133,7 @@ namespace BlackCore
         bool m_simulatorRenderedAircraftRestricted = false;
         bool m_simulatorRenderingEnabled = true;
         int m_simulatorMaxRenderedAircraft = -1;
-        BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedDistance { 0.0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit() };
+        BlackMisc::PhysicalQuantities::CLength m_simulatorMaxRenderedDistance { 0.0, nullptr };
         mutable QReadWriteLock m_lockSnapshot;      //!< lock snapshot
         mutable QReadWriteLock m_lockRestrictions;  //!< lock simulator restrictions
     };
