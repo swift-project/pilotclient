@@ -53,7 +53,6 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
-            //! null constructor
             CLengthUnit(const QString &name, const QString &symbol, std::nullptr_t) :
                 CMeasurementUnit(name, symbol, nullptr)
             {}
@@ -72,6 +71,9 @@ namespace BlackMisc
 
             //! Default constructor, required for Qt Metasystem
             CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            //! Null constructor
+            CLengthUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
             static const CLengthUnit &defaultUnit() { return m(); }
@@ -188,6 +190,9 @@ namespace BlackMisc
             //!  Default constructor, required for Qt Metasystem
             CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
 
+            //! Null constructor
+            CAngleUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
             //! Default unit
             static const CAngleUnit &defaultUnit() { return deg(); }
 
@@ -286,6 +291,9 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
 
+            //! Null constructor
+            CFrequencyUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
             //! Default unit
             static const CFrequencyUnit &defaultUnit() { return Hz(); }
 
@@ -376,6 +384,9 @@ namespace BlackMisc
 
             //! Default constructor, required for Qt Metasystem
             CMassUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            //! Null constructor
+            CMassUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
             static const CMassUnit &defaultUnit() { return kg(); }
@@ -477,6 +488,9 @@ namespace BlackMisc
 
             //! Default constructor, required for Qt Metasystem
             CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            //! Null constructor
+            CPressureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
             static const CPressureUnit &defaultUnit() { return hPa(); }
@@ -600,6 +614,9 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
 
+            //! Null constructor
+            CTemperatureUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
+
             //! Default unit
             static const CTemperatureUnit &defaultUnit() { return C(); }
 
@@ -684,6 +701,9 @@ namespace BlackMisc
 
             //! Default constructor, required for Qt Metasystem
             CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            //! Null constructor
+            CSpeedUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
             static const CSpeedUnit &defaultUnit() { return m_s(); }
@@ -793,6 +813,9 @@ namespace BlackMisc
 
             //! Default constructor, required for Qt Metasystem
             CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            //! Null constructor
+            CTimeUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
             static const CTimeUnit &defaultUnit() { return s(); }
@@ -923,6 +946,9 @@ namespace BlackMisc
 
             //! Default constructor, required for Qt Metasystem
             CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            //! Null constructor
+            CAccelerationUnit(std::nullptr_t) : CMeasurementUnit(nullUnit()) {}
 
             //! Default unit
             static const CAccelerationUnit &defaultUnit() { return m_s2(); }
