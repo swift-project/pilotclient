@@ -62,7 +62,7 @@ namespace BlackGui
             explicit CDbOwnModelsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbOwnModelsComponent();
+            virtual ~CDbOwnModelsComponent();
 
             //! Own (installed) model for given model string
             BlackMisc::Simulation::CAircraftModel getOwnModelForModelString(const QString &modelString) const;
@@ -132,8 +132,8 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
-            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader>            m_modelLoader;                //!< read own aircraft models
-            BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection {this }; //!< last selection
+            std::unique_ptr<BlackMisc::Simulation::IAircraftModelLoader> m_modelLoader; //!< read own aircraft models
+            BlackMisc::CDataReadOnly<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_simulatorSelection {this }; //!< last selection
 
             //! Init or change model loader
             bool initModelLoader(const BlackMisc::Simulation::CSimulatorInfo &simulator);

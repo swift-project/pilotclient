@@ -69,15 +69,11 @@ namespace BlackMisc
             //! Last selection
             struct TModelCacheLastSelection : public BlackMisc::TDataTrait<BlackMisc::Simulation::CSimulatorInfo>
             {
-                //! Default value
-                static const BlackMisc::Simulation::CSimulatorInfo &defaultValue()
-                {
-                    static const BlackMisc::Simulation::CSimulatorInfo s(BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator());
-                    return s;
-                }
-
                 //! First load is synchronous
                 static constexpr bool isPinned() { return true; }
+
+                //! Default simulator
+                static const BlackMisc::Simulation::CSimulatorInfo &defaultValue() { return CSimulatorInfo::guessDefaultSimulator(); }
 
                 //! Key
                 static const char *key() { return "modelcachelastselection"; }
@@ -118,15 +114,11 @@ namespace BlackMisc
             //! Last selection
             struct TModelSetLastSelection : public BlackMisc::TDataTrait<BlackMisc::Simulation::CSimulatorInfo>
             {
-                //! Default value
-                static const BlackMisc::Simulation::CSimulatorInfo &defaultValue()
-                {
-                    static const BlackMisc::Simulation::CSimulatorInfo s(BlackMisc::Simulation::CSimulatorInfo::guessDefaultSimulator());
-                    return s;
-                }
-
                 //! First load is synchronous
                 static constexpr bool isPinned() { return true; }
+
+                //! Default simulator
+                static const BlackMisc::Simulation::CSimulatorInfo &defaultValue() { return CSimulatorInfo::guessDefaultSimulator(); }
 
                 //! Key
                 static const char *key() { return "modelsetlastselection"; }

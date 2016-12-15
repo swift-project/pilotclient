@@ -50,11 +50,11 @@ namespace BlackGui
 
             connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::ps_requestOwnModelsUpdate);
 
-            // should be single simulator or no simulator (default)
-            this->m_simulatorSelection.synchronize();
+            // Last selection isPinned -> no sync needed
             const CSimulatorInfo simulator(this->m_simulatorSelection.get());
-            const bool succes = this->initModelLoader(!simulator.isSingleSimulator() ? CSimulatorInfo(CSimulatorInfo::FSX) : simulator);
-            if (succes)
+            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            const bool success = this->initModelLoader(simulator);
+            if (success)
             {
                 this->m_modelLoader->startLoading(IAircraftModelLoader::CacheOnly);
             }
@@ -427,7 +427,7 @@ namespace BlackGui
                 return;
             }
 
-            if (!this->m_modelLoader->isLoadingFinished())
+            if (this->m_modelLoader->isLoadingInProgress())
             {
                 CLogMessage(this).info("Loading for %1 already in progress") << simulator.toQString();
                 return;

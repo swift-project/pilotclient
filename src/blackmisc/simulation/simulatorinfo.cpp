@@ -230,9 +230,10 @@ namespace BlackMisc
             return sim;
         }
 
-        const CSimulatorInfo CSimulatorInfo::guessDefaultSimulator()
+        //! \cond PRIVATE
+        CSimulatorInfo guessDefaultSimulatorImpl()
         {
-            CSimulatorInfo locallyInstalled(getLocallyInstalledSimulators());
+            static const CSimulatorInfo locallyInstalled(CSimulatorInfo::getLocallyInstalledSimulators());
             if (CBuildConfig::isRunningOnLinuxPlatform())
             {
                 return CSimulatorInfo("XPLANE");
@@ -242,8 +243,16 @@ namespace BlackMisc
             if (locallyInstalled.fs9()) { return CSimulatorInfo("FS9"); }
 
             // fallback
-            return CSimulatorInfo("FSX");
+            return CSimulatorInfo("P3D");
         }
+        //! \endcond
+
+        const CSimulatorInfo &CSimulatorInfo::guessDefaultSimulator()
+        {
+            static const CSimulatorInfo sim(guessDefaultSimulatorImpl());
+            return sim;
+        }
+
 
         CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString prefix)
         {

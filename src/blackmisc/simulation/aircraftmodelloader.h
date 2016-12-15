@@ -80,6 +80,10 @@ namespace BlackMisc
             //! Loading finished?
             virtual bool isLoadingFinished() const = 0;
 
+            //! Loading in progress
+            //! \threadsafe
+            bool isLoadingInProgress() const { return m_loadingInProgress; }
+
             //! Get the loaded models
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getAircraftModels() const;
@@ -166,7 +170,7 @@ namespace BlackMisc
             //! Start the loading process from disk
             virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory) = 0;
 
-            std::atomic<bool> m_cancelLoading { false };                        //!< flag
+            std::atomic<bool> m_cancelLoading { false };                        //!< flag, requesting to cancel loading
             std::atomic<bool> m_loadingInProgress { false };                    //!< Loading in progress
             BlackMisc::Simulation::Data::CModelCaches m_caches { false, this }; //!< caches
             BlackMisc::Simulation::CMultiSimulatorSettings m_settings { this }; //!< settings
