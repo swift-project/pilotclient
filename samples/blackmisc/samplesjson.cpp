@@ -77,8 +77,7 @@ namespace BlackSample
         qDebug() << "------- Enter -----";
         cin.readLine();
 
-        CAircraftSituation situation(geoPos, CAltitude(1000, CAltitude::AboveGround, CLengthUnit::ft()),
-                                     CHeading(10, CHeading::True, CAngleUnit::deg()),
+        CAircraftSituation situation(geoPos, CHeading(10, CHeading::True, CAngleUnit::deg()),
                                      CAngle(12, CAngleUnit::deg()), CAngle(5, CAngleUnit::deg()),
                                      CSpeed(111, CSpeedUnit::km_h()));
         CSimulatedAircraft aircraft(CCallsign("DAMBZ"), CUser("123456", "Joe Pilot"), situation);

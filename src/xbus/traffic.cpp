@@ -238,8 +238,7 @@ namespace XBus
             plane->situations.push_frontMaxElements(
             {
                 callsign,
-                BlackMisc::Geo::CCoordinateGeodetic(latitude, longitude, 0),
-                CAltitude(altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+                BlackMisc::Geo::CCoordinateGeodetic(latitude, longitude, altitude),
                 CHeading(heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(pitch, CAngleUnit::deg()),
                 CAngle(roll, CAngleUnit::deg()),

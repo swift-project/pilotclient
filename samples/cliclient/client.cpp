@@ -355,8 +355,7 @@ namespace BlackSample
         QString xpdrMode;
         args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs >> com1 >> com2 >> xpdrCode >> xpdrMode;
         BlackMisc::Simulation::CSimulatedAircraft aircraft("", BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
-                BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-                BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+                BlackMisc::Geo::CCoordinateGeodetic(lat, lon, alt),
                 BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
                 BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
                 BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
@@ -393,8 +392,7 @@ namespace BlackSample
         double gs;
         args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs;
         updateOwnSituation(BlackMisc::Aviation::CAircraftSituation(
-                               BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-                               BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+                               BlackMisc::Geo::CCoordinateGeodetic(lat, lon, alt),
                                BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
                                BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
                                BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),

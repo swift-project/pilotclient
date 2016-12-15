@@ -289,7 +289,7 @@ namespace BlackCore
                             const double lng = clientPartsMap["longitude"].toDouble();
                             const double alt = clientPartsMap["altitude"].toDouble();
                             const CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
-                            CCoordinateGeodetic position(lat, lng, -1);
+                            CCoordinateGeodetic position(lat, lng, alt);
                             CAltitude altitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
                             QString flightPlanRemarks = clientPartsMap["planned_remarks"];
 
@@ -308,7 +308,7 @@ namespace BlackCore
                             {
                                 // Pilot section
                                 const double groundspeed = clientPartsMap["groundspeed"].toDouble();
-                                CAircraftSituation situation(position, altitude);
+                                CAircraftSituation situation(position);
                                 situation.setGroundSpeed(CSpeed(groundspeed, CSpeedUnit::kts()));
                                 CSimulatedAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
 

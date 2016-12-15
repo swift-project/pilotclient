@@ -490,10 +490,9 @@ namespace BlackSample
         {
             CCallsign callsign("CS" + QString::number(cs));
             CCoordinateGeodetic coordinate(cs, cs, cs);
-            CAltitude alt(cs, CAltitude::MeanSeaLevel, CLengthUnit::m());
             for (int t = 0; t < numberOfTimes; t++)
             {
-                CAircraftSituation s(callsign, coordinate, alt);
+                CAircraftSituation s(callsign, coordinate);
                 s.setMSecsSinceEpoch(baseTimeEpoch + DeltaTime * t);
                 situations.push_back(s);
             }

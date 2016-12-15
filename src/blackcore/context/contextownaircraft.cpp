@@ -46,8 +46,8 @@ namespace BlackCore
                 CCoordinateGeodetic(
                     CLatitude::fromWgs84("N 049° 18' 17"),
                     CLongitude::fromWgs84("E 008° 27' 05"),
-                    CLength(0, CLengthUnit::m())),
-                CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
+                    CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
+                )
             );
             return situation;
         }

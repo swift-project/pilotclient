@@ -159,7 +159,7 @@ namespace BlackCoreTest
 
     CAircraftSituation CTestInterpolator::getTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset)
     {
-        CAltitude a(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
+        CAltitude alt(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
         CLatitude lat(number, CAngleUnit::deg());
         CLongitude lng(180.0 + number, CAngleUnit::deg());
         CHeading heading(number * 10, CHeading::True, CAngleUnit::deg());
@@ -167,8 +167,8 @@ namespace BlackCoreTest
         CAngle pitch(number, CAngleUnit::deg());
         CSpeed gs(number * 10, CSpeedUnit::km_h());
         CAltitude gndElev({ 0, CLengthUnit::m() }, CAltitude::MeanSeaLevel);
-        CCoordinateGeodetic c(lat, lng, {});
-        CAircraftSituation s(callsign, c, a, heading, pitch, bank, gs, gndElev);
+        CCoordinateGeodetic c(lat, lng, alt);
+        CAircraftSituation s(callsign, c, heading, pitch, bank, gs, gndElev);
         s.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         s.setTimeOffsetMs(offset);
         return s;

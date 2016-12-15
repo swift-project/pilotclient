@@ -800,8 +800,7 @@ namespace BlackCore
             // if altered in underlying classes, this change needs to be reverted
             CAircraftSituation situation(
                 callsign,
-                CCoordinateGeodetic(position->latitude, position->longitude),
-                CAltitude(position->altitudePressure, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+                CCoordinateGeodetic(position->latitude, position->longitude, position->altitudePressure),
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),
@@ -878,8 +877,7 @@ namespace BlackCore
         {
             CAircraftSituation situation(
                 CCallsign(sender),
-                CCoordinateGeodetic(position->latitude, position->longitude, 0.0),
-                CAltitude(position->altitudeTrue, CAltitude::MeanSeaLevel, CLengthUnit::ft()),
+                CCoordinateGeodetic(position->latitude, position->longitude, position->altitudeTrue),
                 CHeading(position->heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(position->pitch, CAngleUnit::deg()),
                 CAngle(position->bank, CAngleUnit::deg()),

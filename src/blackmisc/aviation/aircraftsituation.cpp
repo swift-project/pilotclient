@@ -27,13 +27,13 @@ namespace BlackMisc
         CAircraftSituation::CAircraftSituation()
             : m_groundElevation({ 0, nullptr }, CAltitude::MeanSeaLevel) {}
 
-        CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
-            : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
+        CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
+            : m_position(position), m_heading(heading), m_pitch(pitch),
               m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation) {}
 
-        CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CAltitude &altitude, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
+        CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign, const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
             : m_correspondingCallsign(correspondingCallsign),
-              m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
+              m_position(position), m_heading(heading), m_pitch(pitch),
               m_bank(bank), m_groundSpeed(gs), m_groundElevation(groundElevation)
         {
             m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
@@ -42,7 +42,6 @@ namespace BlackMisc
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
             QString s(this->m_position.toQString(i18n));
-            s.append(" altitude: ").append(this->m_altitude.toQString(i18n));
             s.append(" bank: ").append(this->m_bank.toQString(i18n));
             s.append(" pitch: ").append(this->m_pitch.toQString(i18n));
             s.append(" gs: ").append(this->m_groundSpeed.toQString(i18n));
@@ -74,7 +73,7 @@ namespace BlackMisc
             case IndexLongitude:
                 return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexAltitude:
-                return this->m_altitude.propertyByIndex(index.copyFrontRemoved());
+                return this->getAltitude().propertyByIndex(index.copyFrontRemoved());
             case IndexHeading:
                 return this->m_heading.propertyByIndex(index.copyFrontRemoved());
             case IndexPitch:
@@ -104,9 +103,6 @@ namespace BlackMisc
             {
             case IndexPosition:
                 this->m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                break;
-            case IndexAltitude:
-                this->m_altitude.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexPitch:
                 this->m_pitch.setPropertyByIndex(index.copyFrontRemoved(), variant);
@@ -143,7 +139,7 @@ namespace BlackMisc
                 return this->m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
                 break;
             case IndexAltitude:
-                return this->m_altitude.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
+                return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
                 break;
             case IndexPitch:
                 return this->m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
@@ -185,15 +181,15 @@ namespace BlackMisc
 
         CLength CAircraftSituation::getHeightAboveGround() const
         {
-            if (this->m_altitude.getReferenceDatum() == CAltitude::AboveGround)
+            if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
             {
                 // we have a sure value
                 return this->getAltitude();
             }
             const CLength gh(getGroundElevation());
-            if (!gh.isNull() && !m_altitude.isNull())
+            if (!gh.isNull() && !getAltitude().isNull())
             {
-                return m_altitude - gh;
+                return getAltitude() - gh;
             }
             return { 0, nullptr };
         }

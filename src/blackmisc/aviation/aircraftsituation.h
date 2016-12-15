@@ -61,7 +61,7 @@ namespace BlackMisc
             CAircraftSituation();
 
             //! Comprehensive constructor
-            CAircraftSituation(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude,
+            CAircraftSituation(const BlackMisc::Geo::CCoordinateGeodetic &position,
                                const BlackMisc::Aviation::CHeading &heading = {},
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
@@ -70,7 +70,7 @@ namespace BlackMisc
 
             //! Comprehensive constructor
             CAircraftSituation(const BlackMisc::Aviation::CCallsign &correspondingCallsign,
-                               const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude,
+                               const BlackMisc::Geo::CCoordinateGeodetic &position,
                                const BlackMisc::Aviation::CHeading &heading = {},
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
@@ -102,11 +102,7 @@ namespace BlackMisc
             virtual bool isOnGroundGuessed() const;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
-            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override
-            {
-                static const BlackMisc::PhysicalQuantities::CLength gh { 0, nullptr };
-                return gh;
-            }
+            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
 
             //! \copydoc Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override { return this->m_position.normalVector(); }
@@ -130,10 +126,10 @@ namespace BlackMisc
             void setHeading(const BlackMisc::Aviation::CHeading &heading) { this->m_heading = heading; }
 
             //! Get altitude (true)
-            const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_altitude; }
+            const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_position.geodeticHeight(); }
 
             //! Set altitude
-            void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_altitude = altitude; }
+            void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_position.setGeodeticHeight(altitude); }
 
             //! Get pitch
             const BlackMisc::PhysicalQuantities::CAngle &getPitch() const { return this->m_pitch; }
@@ -180,7 +176,6 @@ namespace BlackMisc
         private:
             CCallsign m_correspondingCallsign;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
-            BlackMisc::Aviation::CAltitude m_altitude;
             BlackMisc::Aviation::CHeading  m_heading;
             BlackMisc::PhysicalQuantities::CAngle m_pitch;
             BlackMisc::PhysicalQuantities::CAngle m_bank;
@@ -193,7 +188,6 @@ namespace BlackMisc
                 CAircraftSituation,
                 BLACK_METAMEMBER(correspondingCallsign),
                 BLACK_METAMEMBER(position),
-                BLACK_METAMEMBER(altitude),
                 BLACK_METAMEMBER(heading),
                 BLACK_METAMEMBER(pitch),
                 BLACK_METAMEMBER(bank),
