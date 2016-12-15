@@ -66,7 +66,7 @@ namespace BlackMisc
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
                                const BlackMisc::PhysicalQuantities::CSpeed &gs = {},
-                               const BlackMisc::Aviation::CAltitude &groundElevation = { { 0, nullptr }, BlackMisc::Aviation::CAltitude::MeanSeaLevel });
+                               const BlackMisc::Aviation::CAltitude &groundElevation = { 0, nullptr });
 
             //! Comprehensive constructor
             CAircraftSituation(const BlackMisc::Aviation::CCallsign &correspondingCallsign,
@@ -75,7 +75,7 @@ namespace BlackMisc
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = {},
                                const BlackMisc::PhysicalQuantities::CAngle &bank = {},
                                const BlackMisc::PhysicalQuantities::CSpeed &gs = {},
-                               const BlackMisc::Aviation::CAltitude &groundElevation = { { 0, nullptr }, BlackMisc::Aviation::CAltitude::MeanSeaLevel });
+                               const BlackMisc::Aviation::CAltitude &groundElevation = { 0, nullptr });
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;

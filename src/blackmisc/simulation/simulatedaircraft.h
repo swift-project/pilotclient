@@ -195,7 +195,7 @@ namespace BlackMisc
             virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_situation.longitude(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::geodeticHeight
-            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_situation.geodeticHeight(); }
+            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_situation.geodeticHeight(); }
 
             //! \copydoc BlackMisc::Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override { return this->m_situation.normalVector(); }

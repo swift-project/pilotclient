@@ -16,6 +16,7 @@
 #include <QtGlobal>
 #include <cmath>
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Math;
 
@@ -29,7 +30,7 @@ namespace BlackMisc
             return s.arg(this->latitude().valueRoundedWithUnit(6, i18n)).arg(this->longitude().valueRoundedWithUnit(6, i18n)).arg(this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
         }
 
-        CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength &geodeticHeight)
+        CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)
         {
             CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
             CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
@@ -189,7 +190,7 @@ namespace BlackMisc
             }
         }
 
-        CCoordinateGeodetic::CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength geodeticHeight) :
+        CCoordinateGeodetic::CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, CAltitude geodeticHeight) :
             m_x(latitude.cos() * longitude.cos()),
             m_y(latitude.cos() * longitude.sin()),
             m_z(latitude.sin()),

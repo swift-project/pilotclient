@@ -360,7 +360,7 @@ namespace BlackSample
             testserviceInterface.receiveCallsign(callsign);
             qDebug() << "Send callsign via interface" << callsign;
 
-            CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft())); // Munich
+            CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() }); // Munich
             CAtcStation station(CCallsign("eddm_twr"), CUser("123456", "Joe Controller"),
                                 CFrequency(118.7, CFrequencyUnit::MHz()),
                                 geoPos, CLength(50, CLengthUnit::km()));
@@ -370,7 +370,7 @@ namespace BlackSample
 
             // Geo
             // EDDF: 50° 2′ 0″ N, 8° 34′ 14″ E, 100m MSL
-            geoPos = CCoordinateGeodetic::fromWgs84("50° 2′ 1″ 23 N", "8° 34′ 14″ E", CLength(111, CLengthUnit::m()));
+            geoPos = CCoordinateGeodetic::fromWgs84("50° 2′ 1″ 23 N", "8° 34′ 14″ E", { 111, CLengthUnit::m() });
             testserviceInterface.receiveGeoPosition(geoPos);
             qDebug() << "Send geo position" << geoPos;
 

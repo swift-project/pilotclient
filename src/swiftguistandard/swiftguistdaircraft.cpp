@@ -58,7 +58,7 @@ void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgs
     CCoordinateGeodetic coordinate(
         CLatitude::fromWgs84(wgsLatitude),
         CLongitude::fromWgs84(wgsLongitude),
-        CLength(0, CLengthUnit::m()));
+        CAltitude(0, CLengthUnit::m()));
 
     this->m_ownAircraft.setPosition(coordinate);
     this->m_ownAircraft.setAltitude(altitude);

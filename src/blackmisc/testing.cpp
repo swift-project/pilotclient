@@ -27,6 +27,7 @@
 #include <tuple>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
@@ -49,7 +50,7 @@ namespace BlackMisc
         {
             // from WGS is slow, so static const (only 1 time init)
             // https://dev.vatsim-germany.org/issues/322#note-2
-            static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(index, CLengthUnit::ft()));
+            static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CAltitude(index, CLengthUnit::ft()));
             QString cs = QString("%1_TWR").arg(index);
             QString usr = QString("Joe %1").arg(index);
             QString id = QString("00000%1").arg(index).right(6);
@@ -164,11 +165,11 @@ namespace BlackMisc
             );
 
             CCoordinateGeodetic c;
-            const CLength h(333, CLengthUnit::m());
+            const CAltitude a(333, CLengthUnit::m());
             for (int i = 0; i < times; i++)
             {
                 int idx = (i % 5) * 2;
-                c = CCoordinateGeodetic::fromWgs84(wgsLatLng.at(idx), wgsLatLng.at(idx + 1), h);
+                c = CCoordinateGeodetic::fromWgs84(wgsLatLng.at(idx), wgsLatLng.at(idx + 1), a);
             }
         }
     } // namespace

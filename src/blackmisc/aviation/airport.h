@@ -93,11 +93,11 @@ namespace BlackMisc
 
             //! Elevation
             //! \sa geodeticHeight
-            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->geodeticHeight(); }
+            const BlackMisc::Aviation::CAltitude &getElevation() const { return this->geodeticHeight(); }
 
             //! Elevation
             //! \sa setGeodeticHeight
-            void setElevation(const BlackMisc::PhysicalQuantities::CLength &elevation) { return this->m_position.setGeodeticHeight(elevation); }
+            void setElevation(const BlackMisc::Aviation::CAltitude &elevation) { return this->m_position.setGeodeticHeight(elevation); }
 
             //! Is the airport still active?
             bool isOperating() const { return m_operating; }
@@ -109,8 +109,7 @@ namespace BlackMisc
             void updateMissingParts(const CAirport &airport);
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
-            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
-            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
+            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
 
             //! Valid ICAO code
             bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }

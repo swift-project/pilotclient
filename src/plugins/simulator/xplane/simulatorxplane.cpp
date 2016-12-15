@@ -364,7 +364,7 @@ namespace BlackSimPlugin
                 using namespace BlackMisc::PhysicalQuantities;
                 using namespace BlackMisc::Geo;
 
-                m_airportsInRange.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CLength(*altIt, CLengthUnit::ft()) }, *nameIt });
+                m_airportsInRange.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CAltitude(*altIt, CLengthUnit::ft()) }, *nameIt });
             }
         }
 

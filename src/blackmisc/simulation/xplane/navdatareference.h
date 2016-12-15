@@ -57,7 +57,7 @@ namespace BlackMisc
 
                 virtual Geo::CLatitude latitude() const override { return m_position.latitude(); }
                 virtual Geo::CLongitude longitude() const override { return m_position.longitude(); }
-                virtual const PhysicalQuantities::CLength &geodeticHeight() const override { return m_position.geodeticHeight(); }
+                virtual const Aviation::CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
                 virtual QVector3D normalVector() const override { return m_position.normalVector(); }
                 virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
 

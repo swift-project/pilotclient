@@ -340,7 +340,7 @@ namespace BlackMisc
             return this->getPosition().longitude();
         }
 
-        const CLength &CAtcStation::geodeticHeight() const
+        const CAltitude &CAtcStation::geodeticHeight() const
         {
             return this->m_position.geodeticHeight();
         }

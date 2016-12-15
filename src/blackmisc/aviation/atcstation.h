@@ -236,8 +236,7 @@ namespace BlackMisc
             virtual BlackMisc::Geo::CLongitude longitude() const override;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
-            //! \remarks this should be used for elevation as depicted here: http://en.wikipedia.org/wiki/Altitude#mediaviewer/File:Vertical_distances.svg
-            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const override;
+            const BlackMisc::Aviation::CAltitude &geodeticHeight() const override;
 
             //! \copydoc Geo::ICoordinateGeodetic::normalVector
             virtual QVector3D normalVector() const override;

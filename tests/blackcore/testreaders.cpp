@@ -135,7 +135,7 @@ namespace BlackCoreTest
         QVERIFY2(heathrow[0].isOperating(), "Wrong airport data");
 
         auto airports = m_airportReader->getAirports();
-        airports.sortByRange(CCoordinateGeodetic(CLatitude(51.5085300, CAngleUnit::deg()), CLongitude(-0.1257400, CAngleUnit::deg()), CLength()), true);
+        airports.sortByRange(CCoordinateGeodetic(CLatitude(51.5085300, CAngleUnit::deg()), CLongitude(-0.1257400, CAngleUnit::deg()), CAltitude()), true);
         QVERIFY2(airports[0].getIcao() == CAirportIcaoCode("EGLW"), "Wrong airport data");
 
         CApplication::processEventsFor(2500); // make sure events are processed

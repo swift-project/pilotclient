@@ -61,7 +61,7 @@ namespace BlackMisc
         {
             CAirport airport(json.value(prefix + "icao").toString());
             airport.setDescriptiveName(json.value(prefix + "name").toString());
-            airport.setElevation(CLength(json.value(prefix + "altitude").toInt(), CLengthUnit::ft()));
+            airport.setElevation(CAltitude(json.value(prefix + "altitude").toInt(), CLengthUnit::ft()));
             const CCoordinateGeodetic pos(json.value(prefix + "latitude").toDouble(), json.value(prefix + "longitude").toDouble(), 0);
             airport.setPosition(pos);
             airport.setOperating(json.value(prefix + "operating").toString() == QStringLiteral("Y"));
