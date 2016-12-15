@@ -7,8 +7,9 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/network/networkutils.h"
 #include "blackcore/threadedreader.h"
+#include "blackcore/application.h"
+#include "blackmisc/network/networkutils.h"
 #include "blackmisc/threadutils.h"
 
 #include <QCoreApplication>
@@ -77,6 +78,7 @@ namespace BlackCore
     void CThreadedReader::gracefulShutdown()
     {
         // if not in main thread stop, otherwise it makes no sense to abandon
+        this->m_shutdown = true;
         if (!CThreadUtils::isCurrentThreadObjectThread(this))
         {
             this->abandonAndWait();
@@ -86,12 +88,20 @@ namespace BlackCore
     void CThreadedReader::startReader()
     {
         Q_ASSERT(m_initialTime > 0);
-        QTimer::singleShot(m_initialTime, this, [=] { this->doWork(); });
+        QTimer::singleShot(m_initialTime, this, [ = ] { this->doWork(); });
     }
 
     void CThreadedReader::pauseReader()
     {
         QTimer::singleShot(0, m_updateTimer, &QTimer::stop);
+    }
+
+    bool CThreadedReader::isShuttingDown() const
+    {
+        if (this->m_shutdown) { return true; }
+        if (this->isAbandoned()) { return true; }
+        if (!sApp) { return true; } // sApp object is gone, whole system shutdown
+        return false;
     }
 
     bool CThreadedReader::didContentChange(const QString &content, int startPosition)

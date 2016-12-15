@@ -150,7 +150,7 @@ namespace BlackCore
         void CModelDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
-            if (this->isAbandoned()) { return; }
+            if (this->isShuttingDown()) { return; }
 
             CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
             if (entity.testFlag(CEntityFlags::LiveryEntity))
@@ -252,7 +252,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isAbandoned()) { return; }
+            if (this->isShuttingDown()) { return; }
             QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
@@ -295,7 +295,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isAbandoned()) { return; }
+            if (this->isShuttingDown()) { return; }
             const QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
@@ -337,8 +337,8 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isAbandoned()) { return; }
-            QString urlString(nwReply->url().toString());
+            if (this->isShuttingDown()) { return; }
+            const QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {

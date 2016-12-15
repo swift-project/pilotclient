@@ -156,7 +156,7 @@ namespace BlackCore
         void CAirportDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
-            if (this->isAbandoned()) { return; }
+            if (this->isShuttingDown()) { return; }
 
             if (entity.testFlag(CEntityFlags::AirportEntity))
             {

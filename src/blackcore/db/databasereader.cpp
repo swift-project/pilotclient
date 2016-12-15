@@ -47,7 +47,7 @@ namespace BlackCore
 
         void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
         {
-            if (isAbandoned()) { return; }
+            if (this->isShuttingDown()) { return; }
 
             // we accept cached cached data
             Q_ASSERT_X(!entities.testFlag(CEntityFlags::InfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");

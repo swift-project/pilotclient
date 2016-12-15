@@ -71,7 +71,10 @@ namespace BlackCore
         //! \threadsafe
         void pauseReader();
 
-    public slots:
+        //! Is shutting down?
+        //! \threadsafe
+        bool isShuttingDown() const;
+
         //! Graceful shutdown
         //! \threadsafe
         void gracefulShutdown();
@@ -106,6 +109,7 @@ namespace BlackCore
         QDateTime               m_updateTimestamp;          //!< when file/resource was read
         uint                    m_contentHash = 0;          //!< has of the content given
         std::atomic<bool>       m_markedAsFailed { false }; //!< marker if reading failed
+        std::atomic<bool>       m_shutdown { false };       //!< marker it is shutting down
         QTimer                  *m_updateTimer = nullptr;
     };
 } // namespace
