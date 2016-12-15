@@ -21,17 +21,11 @@ Simple sample programs demonstrating swift library usage
 Unit and integration tests
 \endif
 
-- \ref license <br>
+- \ref license "swift license"<br>
 \a swift is licenced under the GPLv3 with exceptions.
 
 \section resources Resources
 
 - <a href="http://www.swift-project.org">swift website</a>
-
-- <a href="http://build.swift-project.org:8080">Jenkins Continous Integration</a><br>
-
-- <a href="https://dev.vatsim-germany.org/projects/vatpilotclient">swift Development</a>
-
-- Add other links here
 
 */
