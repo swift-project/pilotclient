@@ -145,10 +145,13 @@ namespace BlackMisc
             if (mode.testFlag(CacheOnly))
             {
                 // only cache, but we did not find any data yet (still in progress?)
-                // here we rely on the cache load slot, no need to emit here
-                // an alternative was to sync cache here
+                // here we rely on the cache load slot, no need to emit here, will
+                // be done later in ps_cacheChanged. An alternative was to sync cache here
+                this->m_loadingInProgress = false;
                 return;
             }
+
+            // really load from disk
             this->startLoadingFromDisk(mode, modelConsolidation, directory);
         }
 
