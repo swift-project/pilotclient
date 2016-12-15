@@ -28,7 +28,6 @@ HEADERS += $$PWD/audio/*.h
 HEADERS += $$PWD/context/*.h
 HEADERS += $$PWD/data/*.h
 HEADERS += $$PWD/db/*.h
-HEADERS += $$PWD/simulator/*.h
 HEADERS += $$PWD/vatsim/*.h
 
 SOURCES += *.cpp
