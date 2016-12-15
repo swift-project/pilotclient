@@ -194,7 +194,7 @@ namespace BlackMisc
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees);
 
             //! Constructor by values
-            CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters);
+            CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet);
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual CLatitude latitude() const override;
