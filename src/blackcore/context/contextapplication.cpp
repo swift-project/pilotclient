@@ -149,11 +149,6 @@ namespace BlackCore
             Q_UNUSED(argument);
             Q_UNUSED(origin);
         }
-
-        void IContextApplication::changeSettings(uint typeValue)
-        {
-            Q_UNUSED(typeValue);
-        }
     } // ns
 } // ns
 

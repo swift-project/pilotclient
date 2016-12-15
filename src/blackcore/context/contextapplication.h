@@ -205,11 +205,6 @@ namespace BlackCore
 
             //!  Remote enabled version of file exists
             virtual bool existsFile(const QString &fileName) const = 0;
-
-            //! Change settings
-            //! \todo Remove with old settings
-            void changeSettings(uint typeValue);
-
         };
     } // ns
 } // ns
