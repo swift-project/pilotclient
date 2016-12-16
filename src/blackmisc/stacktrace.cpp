@@ -118,6 +118,7 @@ namespace BlackMisc
         return result;
     }
 #else
+    // cppcheck-suppress unusedFunction
     QStringList getStackTrace()
     {
         return { "No stack trace on this platform" };

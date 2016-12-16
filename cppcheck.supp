@@ -1,0 +1,32 @@
+// cppcheck suppression file for swift.
+//
+// In order to suppress a false positive add a line using one of the following templates:
+// [Explaining reason - comments]
+// [error id]:[filename2]
+// [error id]
+
+// False positive caused by missing support for C++11 feature
+unusedPrivateFunction:src/blackmisc/lockfree.h
+
+// Ignore noExplicitConstructor for now.
+noExplicitConstructor
+
+// Ignore style issues in g2clib
+variableScope:src/plugins/weatherdata/gfs/g2clib/*.c
+
+// std::initializer_list should always be passed by value
+passedByValue:src/blackmisc/input/actionhotkeylist.h
+passedByValue:src/blackmisc/logcategorylist.h
+
+// Shared pointers should be passed by value
+passedByValue:src/blackmisc/lockfree.h
+
+// False positive caused by cppcheck getting confused with preprocessor defines
+ConfigurationNotChecked:src/xbus/libxplanemp/src/XObjReadWrite.cpp
+
+// Passing std::function by value is acceptable
+passedByValue:src/xbus/libxplanemp/src/ResourceManager.h
+passedByValue:src/xbus/command.h
+
+// Unique pointers should be passed by value
+passedByValue:src/xbus/menus.h

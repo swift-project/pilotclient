@@ -27,6 +27,7 @@ namespace BlackMisc
 {
     namespace Private
     {
+        // cppcheck-suppress unusedFunction
         void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message)
         {
             Q_UNUSED(condition);
