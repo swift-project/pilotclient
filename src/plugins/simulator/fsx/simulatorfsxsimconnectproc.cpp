@@ -173,15 +173,14 @@ namespace BlackSimPlugin
                     {
                     case CSimConnectDefinitions::RequestOwnAircraft:
                         {
-                            static_assert(sizeof(DataDefinitionOwnAircraft) == 27 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
-                            DataDefinitionOwnAircraft *ownAircaft;
-                            ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
+                            static_assert(sizeof(DataDefinitionOwnAircraft) == 28 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
+                            const DataDefinitionOwnAircraft *ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
                             simulatorFsx->updateOwnAircraftFromSimulator(*ownAircaft);
                             break;
                         }
                     case CSimConnectDefinitions::RequestOwnAircraftTitle:
                         {
-                            DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
+                            const DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
                             CAircraftModel model;
                             model.setModelString(dataDefinitionModel->title);
                             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
@@ -190,7 +189,7 @@ namespace BlackSimPlugin
                         }
                     case CSimConnectDefinitions::RequestSimEnvironment:
                         {
-                            DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
+                            const DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
                             if (simulatorFsx->isTimeSynchronized())
                             {
                                 const int zh = simEnv->zuluTimeSeconds / 3600;

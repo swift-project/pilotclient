@@ -31,13 +31,14 @@ namespace BlackSimPlugin
         //! \sa SimConnect events http://msdn.microsoft.com/en-us/library/cc526980.aspx
         struct DataDefinitionOwnAircraft
         {
-            double latitude;        //!< Latitude
-            double longitude;       //!< Longitude
-            double altitude;        //!< Altitude
-            double trueHeading;     //!< True heading
-            double pitch;           //!< Pitch
-            double bank;            //!< Bank
+            double latitude;        //!< Latitude (deg)
+            double longitude;       //!< Longitude (deg)
+            double altitude;        //!< Altitude (ft)
+            double trueHeading;     //!< True heading (deg)
+            double pitch;           //!< Pitch (deg)
+            double bank;            //!< Bank (deg)
             double velocity;        //!< Ground velocity
+            double elevation;       //!< Elevation (m)
             double simOnGround;     //!< Is aircraft on ground?
 
             double lightStrobe;     //!< Is strobe light on?
@@ -154,7 +155,7 @@ namespace BlackSimPlugin
                 RequestRemoveAircraft,
                 RequestOwnAircraftTitle,
                 RequestSimEnvironment,
-                RequestSbData,  // SB client area / XPDR mode ..
+                RequestSbData, //!< SB client area / XPDR mode
             };
 
             //! Constructor

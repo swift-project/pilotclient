@@ -106,10 +106,10 @@ namespace BlackSimPlugin
             bool stillDisplayReceiveExceptions();
 
             //! Called when data about our own aircraft are received
-            void updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft);
+            void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
             //! Update from SB client area
-            void updateOwnAircraftFromSimulator(DataDefinitionClientAreaSb sbDataArea);
+            void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
 
             //! An AI aircraft was added in the simulator
             bool simulatorReportedObjectAdded(DWORD objectID);

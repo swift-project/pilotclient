@@ -372,7 +372,7 @@ namespace BlackSimPlugin
             disconnectFrom();
         }
 
-        void CSimulatorFsx::updateOwnAircraftFromSimulator(DataDefinitionOwnAircraft simulatorOwnAircraft)
+        void CSimulatorFsx::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
         {
             CSimulatedAircraft myAircraft(getOwnAircraft());
             BlackMisc::Geo::CCoordinateGeodetic position;
@@ -386,12 +386,11 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAircraftSituation aircraftSituation;
             aircraftSituation.setPosition(position);
             // MSFS has inverted pitch and bank angles
-            simulatorOwnAircraft.pitch = -simulatorOwnAircraft.pitch;
-            simulatorOwnAircraft.bank = -simulatorOwnAircraft.bank;
-            aircraftSituation.setPitch(CAngle(simulatorOwnAircraft.pitch, CAngleUnit::deg()));
-            aircraftSituation.setBank(CAngle(simulatorOwnAircraft.bank, CAngleUnit::deg()));
+            aircraftSituation.setPitch(CAngle(-simulatorOwnAircraft.pitch, CAngleUnit::deg()));
+            aircraftSituation.setBank(CAngle(-simulatorOwnAircraft.bank, CAngleUnit::deg()));
             aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
             aircraftSituation.setGroundSpeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
+            aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevation, CAltitude::MeanSeaLevel, CLengthUnit::m()));
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
 
             CAircraftLights lights(simulatorOwnAircraft.lightStrobe,
@@ -464,7 +463,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFsx::updateOwnAircraftFromSimulator(DataDefinitionClientAreaSb sbDataArea)
+        void CSimulatorFsx::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
         {
             CTransponder::TransponderMode newMode;
             if (sbDataArea.isIdent())
@@ -673,7 +672,7 @@ namespace BlackSimPlugin
             if (simObject.isPendingAdded())
             {
                 // problem: we try to delete an aircraft just requested to be added
-                return false; //! \fixme improve
+                return false; //! \fixme improve, since this scenario is not really covered
             }
 
             simObject.setPendingRemoved(true);
