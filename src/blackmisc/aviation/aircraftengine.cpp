@@ -32,7 +32,8 @@ namespace BlackMisc
         QString CAircraftEngine::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s(m_number);
+            QString s = QString::number(m_number);
+            s += " ";
             s += BlackMisc::boolToOnOff(m_on);
             return s;
         }
