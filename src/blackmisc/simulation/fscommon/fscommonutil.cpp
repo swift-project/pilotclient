@@ -94,7 +94,7 @@ namespace BlackMisc
 
             const QString &CFsCommonUtil::fsxSimObjectsDirFromRegistry()
             {
-                static const QString fsxPath(fsxDirFromRegistry());
+                static const QString fsxPath(fsxSimObjectsDirFromRegistryImpl());
                 return fsxPath;
             }
 
@@ -179,7 +179,7 @@ namespace BlackMisc
 
             const QString &CFsCommonUtil::p3dSimObjectsDirFromRegistry()
             {
-                static const QString p3dPath(p3dDirFromRegistry());
+                static const QString p3dPath(p3dSimObjectsDirFromRegistryImpl());
                 return p3dPath;
             }
 
