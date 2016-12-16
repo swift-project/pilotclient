@@ -29,6 +29,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 using namespace BlackCore::Context;
@@ -105,24 +106,32 @@ namespace BlackGui
                 this->clear();
             }
 
-            CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-            CAircraftSituation s = ownAircraft.getSituation();
-            CComSystem c1 = ownAircraft.getCom1System();
-            CComSystem c2 = ownAircraft.getCom2System();
+            const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+            const CAircraftSituation s = ownAircraft.getSituation();
+            const CComSystem c1 = ownAircraft.getCom1System();
+            const CComSystem c2 = ownAircraft.getCom2System();
+            static const CIcon iconAlt(s.getAltitude().toIcon()); // minor performance improvement
+            static const CIcon iconLatLng(s.latitude().toIcon());
+            static const CIcon iconRadio(CIconList::iconByIndex(CIcons::StandardIconRadio16));
+            static const CIcon iconAttitude(CIconList::iconByIndex(CIcons::AviationAttitudeIndicator));
 
-            this->addOrUpdateLiveDataByName("latitude", s.latitude().toFormattedQString(), s.latitude().toIcon());
-            this->addOrUpdateLiveDataByName("longitude", s.longitude().toFormattedQString(), s.longitude().toIcon());
-            this->addOrUpdateLiveDataByName("altitude", s.getAltitude().toFormattedQString(), s.getAltitude().toIcon());
-            this->addOrUpdateLiveDataByName("pitch", s.getPitch().toFormattedQString(), CIcons::AviationAttitudeIndicator);
-            this->addOrUpdateLiveDataByName("bank", s.getBank().toFormattedQString(), CIcons::AviationAttitudeIndicator);
+            this->addOrUpdateLiveDataByName("latitude", s.latitude().toFormattedQString(), iconLatLng);
+            this->addOrUpdateLiveDataByName("longitude", s.longitude().toFormattedQString(), iconLatLng);
+            this->addOrUpdateLiveDataByName("altitude", s.getAltitude().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
+            if (s.hasGroundElevation())
+            {
+                this->addOrUpdateLiveDataByName("elevation", s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::ft(), 2), iconAlt);
+            }
+            this->addOrUpdateLiveDataByName("pitch", s.getPitch().toFormattedQString(), iconAttitude);
+            this->addOrUpdateLiveDataByName("bank", s.getBank().toFormattedQString(), iconAttitude);
             this->addOrUpdateLiveDataByName("heading", s.getHeading().toFormattedQString(), s.getHeading().toIcon());
             this->addOrUpdateLiveDataByName("ground speed", s.getGroundSpeed().toFormattedQString(), s.getGroundSpeed().toIcon());
 
-            this->addOrUpdateLiveDataByName("COM1 active", c1.getFrequencyActive().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateLiveDataByName("COM2 active", c2.getFrequencyActive().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateLiveDataByName("COM1 standby", c1.getFrequencyStandby().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateLiveDataByName("COM2 standby", c2.getFrequencyStandby().toFormattedQString(), CIcons::StandardIconRadio16);
-            this->addOrUpdateLiveDataByName("Transponder", ownAircraft.getTransponderCodeFormatted(), CIcons::StandardIconRadio16);
+            this->addOrUpdateLiveDataByName("COM1 active", c1.getFrequencyActive().toFormattedQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("COM2 active", c2.getFrequencyActive().toFormattedQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("COM1 standby", c1.getFrequencyStandby().toFormattedQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("COM2 standby", c2.getFrequencyStandby().toFormattedQString(), iconRadio);
+            this->addOrUpdateLiveDataByName("Transponder", ownAircraft.getTransponderCodeFormatted(), iconRadio);
         }
 
         void CSimulatorComponent::ps_onSimulatorStatusChanged(int status)

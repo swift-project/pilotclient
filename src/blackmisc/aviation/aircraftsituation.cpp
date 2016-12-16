@@ -25,7 +25,7 @@ namespace BlackMisc
     namespace Aviation
     {
         CAircraftSituation::CAircraftSituation()
-            : m_groundElevation({ 0, nullptr }, CAltitude::MeanSeaLevel) {}
+            : m_groundElevation( { 0, nullptr }, CAltitude::MeanSeaLevel) {}
 
         CAircraftSituation::CAircraftSituation(const CCoordinateGeodetic &position, const CHeading &heading, const CAngle &pitch, const CAngle &bank, const CSpeed &gs, const CAltitude &groundElevation)
             : m_position(position), m_heading(heading), m_pitch(pitch),
@@ -177,6 +177,11 @@ namespace BlackMisc
 
             // not sure, but this is a guess
             return true;
+        }
+
+        bool CAircraftSituation::hasGroundElevation() const
+        {
+            return !this->getGroundElevation().isNull();
         }
 
         CLength CAircraftSituation::getHeightAboveGround() const

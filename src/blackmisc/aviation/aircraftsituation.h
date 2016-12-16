@@ -113,6 +113,9 @@ namespace BlackMisc
             //! Elevation of the ground directly beneath
             const BlackMisc::Aviation::CAltitude &getGroundElevation() const { return this->m_groundElevation; }
 
+            //! Is ground elevation value available
+            bool hasGroundElevation() const;
+
             //! Elevation of the ground directly beneath
             void setGroundElevation(const BlackMisc::Aviation::CAltitude &elevation) { this->m_groundElevation = elevation; }
 
