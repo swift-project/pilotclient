@@ -277,14 +277,32 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     QMAKE_EXTRA_TARGETS += create_updater
 
     create_installer.depends = create_updater
-    win32: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} windows \
-                                        --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
-                                        project.installerFilename=swift-installer-$${BLACK_VERSION}-win-$${WORD_SIZE}.exe
-    else:macx: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} osx \
-                                        --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
-                                        project.installerFilename=swift-installer-$${BLACK_VERSION}-osx-$${WORD_SIZE}.app
-    else:unix: create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} linux-x$${WORD_SIZE} \
-                                        --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
-                                        project.installerFilename=swift-installer-$${BLACK_VERSION}-linux-$${WORD_SIZE}.run
+    win32 {
+        INSTALLER_PLATFORM = windows
+        INSTALLER_BASENAME = swift-installer-$${BLACK_VERSION}-win-$${WORD_SIZE}
+        INSTALLER_EXT = exe
+    }
+    else:macx {
+        INSTALLER_PLATFORM = osx
+        INSTALLER_BASENAME = swift-installer-$${BLACK_VERSION}-osx-$${WORD_SIZE}
+        INSTALLER_EXT = app
+    }
+    else:unix {
+        INSTALLER_PLATFORM = linux-x$${WORD_SIZE}
+        INSTALLER_BASENAME = swift-installer-$${BLACK_VERSION}-linux-$${WORD_SIZE}
+        INSTALLER_EXT = run
+    }
+    create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} $${INSTALLER_PLATFORM} \
+                                    --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
+                                    project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT}
     QMAKE_EXTRA_TARGETS += create_installer
+}
+
+############### Publish Jenkins build artifact ###############
+
+unix:!isEmpty(create_installer.commands) {
+    PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date --utc '+%F_%H-%M-%S').$${INSTALLER_EXT}
+    publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
+    publish_installer.depends = create_installer
+    QMAKE_EXTRA_TARGETS += publish_installer
 }
