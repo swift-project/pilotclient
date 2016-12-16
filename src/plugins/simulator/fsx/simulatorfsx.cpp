@@ -832,7 +832,7 @@ namespace BlackSimPlugin
                 CAircraftPartsList parts;
                 if (enableAircraftParts && partsStatus.allTrue())
                 {
-                    parts = this->m_interpolator->getPartsBeforeTime(callsign, currentTimestamp, partsStatus);
+                    parts = this->m_interpolator->getPartsBeforeTime(callsign, interpolatedSituation.getMSecsSinceEpoch(), partsStatus);
                 }
 
                 if (interpolatorStatus.allTrue())
