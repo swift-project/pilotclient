@@ -99,7 +99,7 @@ namespace BlackMisc
             virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_position.longitude(); }
 
             //! Guess if aircraft is "on ground"
-            virtual bool isOnGroundGuessed() const;
+            bool isOnGroundGuessed() const;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }

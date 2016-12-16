@@ -846,7 +846,13 @@ namespace BlackSimPlugin
                     if (partsStatus.isSupportingParts() && !parts.isEmpty())
                     {
                         // we have parts, and use the closest ground
-                        isOnGround = parts.front().isOnGround();
+
+                        // \fixme onGround flag is not synchronized with positions and causes jumps during takeoff/landing.
+                        // We need to find a better way to synchronize both. Until then, use it for a very small speed range only.
+                        // This covers taxiing aircraft as well as a hovering helicopter.
+                        double groundSpeedKnots = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts());
+                        if (groundSpeedKnots < 50) { isOnGround = parts.front().isOnGround(); }
+                        else { isOnGround = interpolatedSituation.isOnGroundGuessed(); }
                     }
                     else
                     {
