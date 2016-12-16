@@ -181,6 +181,22 @@ namespace BlackCore
             //! \ingroup remoteaircraftprovider
             virtual void enableReverseLookupMessages(bool enabled) override;
 
+            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftPartsHistory
+            //! \ingroup remoteaircraftprovider
+            virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftParts
+            //! \ingroup remoteaircraftprovider
+            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const override;
+
+            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isAircraftPartsHistoryEnabled
+            //! \ingroup remoteaircraftprovider
+            virtual bool isAircraftPartsHistoryEnabled() const override;
+
+            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::enableAircraftPartsHistory
+            //! \ingroup remoteaircraftprovider
+            virtual void enableAircraftPartsHistory(bool enabled) override;
+
             //! In transition state, e.g. connecting, disconnecting.
             //! \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
             //! \remarks Intentionally only running locally, not in interface

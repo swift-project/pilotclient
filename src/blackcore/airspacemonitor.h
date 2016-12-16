@@ -104,6 +104,9 @@ namespace BlackCore
         virtual void enableReverseLookupMessages(bool enabled) override;
         virtual bool isReverseLookupMessagesEnabled() const override;
         virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
+        virtual bool isAircraftPartsHistoryEnabled() const override;
+        virtual void enableAircraftPartsHistory(bool enabled) override;
         //! @}
 
         //! Returns the list of users we know about
@@ -230,6 +233,7 @@ namespace BlackCore
         BlackMisc::Network::CClientList                m_otherClients;       //!< client informatiom, thread safe access required
         BlackMisc::Simulation::CSimulatedAircraftList  m_aircraftInRange;    //!< aircraft, thread safe access required
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_reverseLookupMessages;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_aircraftPartsHistory;
         QMap<BlackMisc::Aviation::CCallsign, FsInnPacket> m_tempFsInnPackets;
 
         // hashs, because not sorted by key but keeping order
@@ -242,6 +246,7 @@ namespace BlackCore
         INetwork            *m_network                  = nullptr; //!< corresponding network interface
         CAirspaceAnalyzer   *m_analyzer                 = nullptr; //!< owned analyzer
         bool                 m_enableReverseLookupMsgs  = false;   //!< shall we log. information about the matching process
+        bool                 m_enableAircraftPartsHistory  = true;   //!< shall we keep a history of aircraft parts
 
         // locks
         mutable QReadWriteLock m_lockSituations; //!< lock for situations: m_situationsByCallsign
@@ -249,6 +254,7 @@ namespace BlackCore
         mutable QReadWriteLock m_lockAircraft;   //!< lock aircraft: m_aircraftInRange
         mutable QReadWriteLock m_lockClient;     //!< lock clients: m_otherClients
         mutable QReadWriteLock m_lockMessages;   //!< lock for messages
+        mutable QReadWriteLock m_lockPartsHistory;   //!< lock for aircraft parts
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();

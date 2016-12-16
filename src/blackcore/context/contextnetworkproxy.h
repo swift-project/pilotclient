@@ -109,6 +109,10 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isReverseLookupMessagesEnabled() const override;
             virtual void enableReverseLookupMessages(bool enabled) override;
+            virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const override;
+            virtual bool isAircraftPartsHistoryEnabled() const override;
+            virtual void enableAircraftPartsHistory(bool enabled) override;
             virtual void testCreateDummyOnlineAtcStations(int number) override;
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;

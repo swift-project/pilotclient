@@ -527,6 +527,31 @@ namespace BlackCore
             emit CContext::changedLogOrDebugSettings();
         }
 
+        CStatusMessageList CContextNetwork::getAircraftPartsHistory(const CCallsign &callsign) const
+        {
+            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            return this->m_airspace->getAircraftPartsHistory(callsign);
+        }
+
+        CAircraftPartsList CContextNetwork::getRemoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
+        {
+            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            return this->m_airspace->remoteAircraftParts(callsign, cutoffTimeValuesBefore);
+        }
+
+        bool CContextNetwork::isAircraftPartsHistoryEnabled() const
+        {
+            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            return this->m_airspace->isAircraftPartsHistoryEnabled();
+        }
+
+        void CContextNetwork::enableAircraftPartsHistory(bool enabled)
+        {
+            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
+            this->m_airspace->enableAircraftPartsHistory(enabled);
+            emit CContext::changedLogOrDebugSettings();
+        }
+
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
         {
             if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }

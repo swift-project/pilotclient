@@ -21,6 +21,7 @@
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/network.h"
 #include "blackmisc/audio/voiceroomlist.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/airporticaocode.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
@@ -274,6 +275,18 @@ namespace BlackCore
 
             //! Enable reverse lookup logging
             virtual void enableReverseLookupMessages(bool enabled) = 0;
+
+            //! Get aircraft parts history
+            virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+            //! Get remote aircraft parts
+            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const = 0;
+
+            //! Is storing the aircraft parts history enabled?
+            virtual bool isAircraftPartsHistoryEnabled() const = 0;
+
+            //! Enable storing of aircraft parts
+            virtual void enableAircraftPartsHistory(bool enabled) = 0;
 
             // ------------------------ testing ------------------------
 

@@ -416,6 +416,24 @@ namespace BlackCore
         return this->m_reverseLookupMessages.value(callsign);
     }
 
+    CStatusMessageList CAirspaceMonitor::getAircraftPartsHistory(const CCallsign &callsign) const
+    {
+        QReadLocker l(&m_lockPartsHistory);
+        return this->m_aircraftPartsHistory.value(callsign);
+    }
+
+    bool CAirspaceMonitor::isAircraftPartsHistoryEnabled() const
+    {
+        QReadLocker l(&m_lockPartsHistory);
+        return this->m_enableAircraftPartsHistory;
+    }
+
+    void CAirspaceMonitor::enableAircraftPartsHistory(bool enabled)
+    {
+        QWriteLocker l(&m_lockPartsHistory);
+        m_enableAircraftPartsHistory = enabled;
+    }
+
     void CAirspaceMonitor::requestDataUpdates()
     {
         if (!this->isConnected()) { return; }
@@ -1074,7 +1092,8 @@ namespace BlackCore
 
         { QWriteLocker l1(&m_lockParts); m_partsByCallsign.remove(callsign); m_aircraftSupportingParts.remove(callsign); }
         { QWriteLocker l2(&m_lockSituations); m_situationsByCallsign.remove(callsign); }
-        { QWriteLocker l(&m_lockClient); m_otherClients.removeByCallsign(callsign); }
+        { QWriteLocker l3(&m_lockClient); m_otherClients.removeByCallsign(callsign); }
+        { QWriteLocker l4(&m_lockPartsHistory); m_aircraftPartsHistory.remove(callsign); }
 
         bool removedCallsign = false;
         {
@@ -1122,6 +1141,22 @@ namespace BlackCore
         // store part history (parts always absolute)
         this->storeAircraftParts(callsign, parts);
         emit this->addedAircraftParts(callsign, parts);
+
+        if (m_enableAircraftPartsHistory)
+        {
+            QJsonDocument doc(jsonObject);
+            QString partsAsString = doc.toJson(QJsonDocument::Compact);
+            CStatusMessage message(getLogCategories(), BlackMisc::CStatusMessage::SeverityInfo, callsign.isEmpty() ? callsign.toQString() + ": " + partsAsString.trimmed() : partsAsString.trimmed());
+            if (this->m_aircraftPartsHistory.contains(callsign))
+            {
+                CStatusMessageList &msgs = this->m_aircraftPartsHistory[callsign];
+                msgs.push_back(message);
+            }
+            else
+            {
+                this->m_aircraftPartsHistory.insert(callsign, message);
+            }
+        }
 
         // here I expect always a changed value
         QWriteLocker l(&m_lockAircraft);

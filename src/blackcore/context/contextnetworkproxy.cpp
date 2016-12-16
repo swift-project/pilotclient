@@ -231,6 +231,26 @@ namespace BlackCore
             this->m_dBusInterface->callDBus(QLatin1Literal("enableReverseLookupLogging"), enabled);
         }
 
+        CStatusMessageList CContextNetworkProxy::getAircraftPartsHistory(const CCallsign &callsign) const
+        {
+            return this->m_dBusInterface->callDBusRet<CStatusMessageList>(QLatin1Literal("getAircraftPartsHistory"), callsign);
+        }
+
+        CAircraftPartsList CContextNetworkProxy::getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
+        {
+            return this->m_dBusInterface->callDBusRet<CAircraftPartsList>(QLatin1Literal("getRemoteAircraftParts"), callsign, cutoffTimeValuesBefore);
+        }
+
+        bool CContextNetworkProxy::isAircraftPartsHistoryEnabled() const
+        {
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isAircraftPartsHistoryEnabled"));
+        }
+
+        void CContextNetworkProxy::enableAircraftPartsHistory(bool enabled)
+        {
+            this->m_dBusInterface->callDBus(QLatin1Literal("enableAircraftPartsHistory"), enabled);
+        }
+
         void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
         {
             this->m_dBusInterface->callDBus(QLatin1Literal("testCreateDummyOnlineAtcStations"), number);

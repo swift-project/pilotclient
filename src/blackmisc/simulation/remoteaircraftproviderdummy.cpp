@@ -160,6 +160,22 @@ namespace BlackMisc
             Q_UNUSED(enabled);
         }
 
+        CStatusMessageList CRemoteAircraftProviderDummy::getAircraftPartsHistory(const CCallsign &callsign) const
+        {
+            Q_UNUSED(callsign);
+            return CStatusMessageList();
+        }
+
+        bool CRemoteAircraftProviderDummy::isAircraftPartsHistoryEnabled() const
+        {
+            return false;
+        }
+
+        void CRemoteAircraftProviderDummy::enableAircraftPartsHistory(bool enabled)
+        {
+            Q_UNUSED(enabled);
+        }
+
         void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
         {
             this->m_situations.push_front(situation);

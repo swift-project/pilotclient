@@ -91,6 +91,9 @@ namespace BlackMisc
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isReverseLookupMessagesEnabled() const override;
             virtual void enableReverseLookupMessages(bool enabled) override;
+            virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
+            virtual bool isAircraftPartsHistoryEnabled() const override;
+            virtual void enableAircraftPartsHistory(bool enabled) override;
             //! @}
 
         signals:

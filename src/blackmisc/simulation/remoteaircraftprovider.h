@@ -136,6 +136,18 @@ namespace BlackMisc
             //! \threadsafe
             virtual void enableReverseLookupMessages(bool enabled) = 0;
 
+            //! Get aircraft parts history
+            //! \threadsafe
+            virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
+            //! Is storing aircraft parts history enabled?
+            //! \threadsafe
+            virtual bool isAircraftPartsHistoryEnabled() const = 0;
+
+            //! Enable storing of aircraft parts history
+            //! \threadsafe
+            virtual void enableAircraftPartsHistory(bool enabled) = 0;
+
             //! Destructor
             virtual ~IRemoteAircraftProvider() {}
 

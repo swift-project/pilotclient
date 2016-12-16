@@ -332,6 +332,37 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
                 Q_UNUSED(enabled);
             }
+
+            //! \copydoc IContextNetwork::getAircraftPartsHistory
+            virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(callsign);
+                return BlackMisc::CStatusMessageList();
+            }
+
+            //! \copydoc IContextNetwork::getRemoteAircraftParts
+            virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(callsign);
+                Q_UNUSED(cutoffTimeValuesBefore);
+                return BlackMisc::Aviation::CAircraftPartsList();
+            }
+
+            //! \copydoc IContextNetwork::isAircraftPartsHistoryEnabled
+            virtual bool isAircraftPartsHistoryEnabled() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
+
+            //! \copydoc IContextNetwork::enableAircraftPartsHistory
+            virtual void enableAircraftPartsHistory(bool enabled) override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                Q_UNUSED(enabled);
+            }
         };
     } // namespace
 } // namespace
