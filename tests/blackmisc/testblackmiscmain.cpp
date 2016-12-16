@@ -20,6 +20,7 @@
 #include "testgeo.h"
 #include "testidentifier.h"
 #include "testinput.h"
+#include "testinterpolator.h"
 #include "testlibrarypath.h"
 #include "testmath.h"
 #include "testphysicalquantities.h"
@@ -91,6 +92,10 @@ namespace BlackMiscTest
         {
             CTestMath mathTests;
             status |= test.exec(&mathTests, "blackmisc_math");
+        }
+        {
+            CTestInterpolator interpolatorTests;
+            status |= test.exec(&interpolatorTests, "blackmisc_interpolator");
         }
         {
             CTestLibraryPath libraryPathTests;

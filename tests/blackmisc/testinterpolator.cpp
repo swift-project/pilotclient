@@ -11,7 +11,7 @@
 
 /*!
  * \file
- * \ingroup testblackcore
+ * \ingroup testblackmisc
  */
 
 #include "testinterpolator.h"
@@ -51,7 +51,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 
-namespace BlackCoreTest
+namespace BlackMiscTest
 {
 
     void CTestInterpolator::linearInterpolator()

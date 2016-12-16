@@ -15,7 +15,6 @@
  */
 
 #include "testblackcoremain.h"
-#include "testinterpolator.h"
 #include "testnetwork.h"
 #include "testreaders.h"
 #include "blackmisc/test.h"
@@ -30,10 +29,6 @@ namespace BlackCoreTest
         BlackMisc::CTest test(argc, argv);
 
         int status = 0;
-        {
-            CTestInterpolator interpolatorTests;
-            status |= test.exec(&interpolatorTests, "blackcore_interpolator");
-        }
         {
             CTestReaders readersTests;
             status |= test.exec(&readersTests, "blackcore_readers");

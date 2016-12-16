@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKCORETEST_TESTINTERPOLATOR_H
-#define BLACKCORETEST_TESTINTERPOLATOR_H
+#ifndef BLACKMISCTEST_TESTINTERPOLATOR_H
+#define BLACKMISCTEST_TESTINTERPOLATOR_H
 
 //! \cond PRIVATE_TESTS
 
 /*!
  * \file
- * \ingroup testblackcore
+ * \ingroup testblackmisc
  */
 
 #include "blackmisc/aviation/aircraftparts.h"
@@ -25,7 +25,7 @@
 
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
 
-namespace BlackCoreTest
+namespace BlackMiscTest
 {
 
     /*!
