@@ -34,6 +34,9 @@ namespace BlackMiscTest
     private slots:
         //! Basic unit tests for geo classes
         void geoBasics();
+
+        //! CCoordinateGeodetic unit tests
+        void coordinateGeodetic();
     };
 
 } // namespace
