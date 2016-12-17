@@ -223,11 +223,6 @@ namespace BlackGui
             emit this->dataChanged(topLeft, bottomRight);
         }
 
-        int CListModelBaseNonTemplate::ps_updateContainer(const CVariant &variant, bool sort)
-        {
-            return this->performUpdateContainer(variant, sort);
-        }
-
         CListModelBaseNonTemplate::CListModelBaseNonTemplate(const QString &translationContext, QObject *parent)
             : QStandardItemModel(parent), m_columns(translationContext), m_sortColumn(-1), m_sortOrder(Qt::AscendingOrder)
         {
@@ -371,11 +366,16 @@ namespace BlackGui
 
             // Keep sorting out of begin/end reset model
             ContainerType sortedContainer;
-            int oldSize = this->m_container.size();
-            bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
+            ContainerType selection;
+            if (this->m_selectionModel)
+            {
+                selection = this->m_selectionModel->selectedObjects();
+            }
+            const int oldSize = this->m_container.size();
+            const bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
             if (performSort)
             {
-                int sortColumn = this->getSortColumn();
+                const int sortColumn = this->getSortColumn();
                 sortedContainer = this->sortContainerByColumn(container, sortColumn, this->m_sortOrder);
             }
 
@@ -384,7 +384,12 @@ namespace BlackGui
             this->updateFilteredContainer();
             this->endResetModel();
 
-            int newSize = this->m_container.size();
+            if (!selection.isEmpty())
+            {
+                this->m_selectionModel->selectObjects(selection);
+            }
+
+            const int newSize = this->m_container.size();
             Q_UNUSED(oldSize);
             // I have to update even with same size because I cannot tell what/if data are changed
             this->emitModelDataChanged();
@@ -423,7 +428,7 @@ namespace BlackGui
             worker->thenWithResult<ContainerType>(this, [this](const ContainerType & sortedContainer)
             {
                 if (this->m_modelDestroyed) { return;  }
-                this->ps_updateContainer(CVariant::fromValue(sortedContainer), false);
+                this->update(sortedContainer, false);
             });
             worker->then(this, &CListModelBase::asyncUpdateFinished);
             return worker;
@@ -601,13 +606,6 @@ namespace BlackGui
         bool CListModelBase<ObjectType, ContainerType, UseCompare>::isEmpty() const
         {
             return this->m_container.isEmpty();
-        }
-
-        template <typename ObjectType, typename ContainerType, bool UseCompare>
-        int CListModelBase<ObjectType, ContainerType, UseCompare>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort)
-        {
-            ContainerType c(variant.to<ContainerType>());
-            return this->update(c, sort);
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
