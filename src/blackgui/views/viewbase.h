@@ -15,6 +15,7 @@
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/models/modelfilter.h"
+#include "blackgui/models/selectionmodel.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/namevariantpairlist.h"
@@ -147,7 +148,7 @@ namespace BlackGui
             virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! Sort by index
-            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder, bool reselect = false) = 0;
+            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! Allow to drag and/or drop value objects
             virtual void allowDragDrop(bool allowDrag, bool allowDrop) = 0;
@@ -187,6 +188,9 @@ namespace BlackGui
 
             //! Selected rows if any
             QModelIndexList selectedRows() const;
+
+            //! Select given rows
+            void selectRows(const QSet<int> &rows);
 
             //! Number of selected rows
             int selectedRowCount() const;
@@ -412,9 +416,6 @@ namespace BlackGui
             //! Helper method with template free signature serving as callback from threaded worker
             int ps_updateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize);
 
-            //! Helper method with template free signature to allow reselection of objects
-            virtual void ps_selectedObjectsLoopback(const BlackMisc::CVariant &selectedObjects) = 0;
-
             //! Display the filter dialog
             void ps_displayFilterDialog();
 
@@ -494,7 +495,9 @@ namespace BlackGui
         Q_DECLARE_OPERATORS_FOR_FLAGS(BlackGui::Views::CViewBaseNonTemplate::Menu)
 
         //! Base class for views
-        template <class ModelClass, class ContainerType, class ObjectType> class CViewBase : public CViewBaseNonTemplate
+        template <class ModelClass, class ContainerType, class ObjectType> class CViewBase :
+            public CViewBaseNonTemplate,
+            public BlackGui::Models::ISelectionModel<ContainerType>
         {
             // I cannot use Q_OBJECT here, because of error: Template classes not supported by Q_OBJECT
             // Cannot declare slots as SLOT because I have no Q_OBJECT macro
@@ -534,8 +537,11 @@ namespace BlackGui
             //! \copydoc BlackGui::Models::CListModelBase::containerOrFilteredContainer
             const ContainerType &containerOrFilteredContainer() const;
 
-            //! Selected objects
-            ContainerType selectedObjects() const;
+            //! \name Selection model interface
+            //! @{
+            virtual void selectObjects(const ContainerType &selectedObjects) override;
+            virtual ContainerType selectedObjects() const override;
+            //! @}
 
             //! First selected, the only one, or default
             ObjectType firstSelectedOrDefaultObject() const;
@@ -588,7 +594,7 @@ namespace BlackGui
             virtual bool isDropAllowed() const override;
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
             virtual void setSorting(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
-            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder, bool reselect = false) override;
+            virtual void sortByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
             //! @}
 
             //! Column count
@@ -643,10 +649,6 @@ namespace BlackGui
             virtual void drawDropIndicator(bool indicator) override;
             //! @}
 
-            //! Reselect given objects
-            //! \remark override this function to select models again
-            virtual void reselect(const ContainerType &selectedObjects);
-
             //! Modify JSON data loaded in BlackGui::Views::CViewBaseNonTemplate::ps_loadJson
             virtual BlackMisc::CStatusMessage modifyLoadedJsonData(ContainerType &data) const;
 
@@ -669,7 +671,6 @@ namespace BlackGui
             virtual void ps_rowSelected(const QModelIndex &index) override;
             virtual BlackMisc::CStatusMessage ps_loadJson() override;
             virtual BlackMisc::CStatusMessage ps_saveJson() const override;
-            virtual void ps_selectedObjectsLoopback(const BlackMisc::CVariant &selectedObjects) override;
             //! @}
         };
     } // namespace

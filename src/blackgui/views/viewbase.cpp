@@ -403,6 +403,19 @@ namespace BlackGui
             return this->selectionModel()->selectedRows();
         }
 
+        void CViewBaseNonTemplate::selectRows(const QSet<int> &rows)
+        {
+            // Multi row selection only work in MultiSelection
+            this->clearSelection();
+            const SelectionMode m = this->selectionMode();
+            this->setSelectionMode(MultiSelection);
+            for (int r : rows)
+            {
+                this->selectRow(r);
+            }
+            this->setSelectionMode(m);
+        }
+
         int CViewBaseNonTemplate::selectedRowCount() const
         {
             if (!this->hasSelection()) { return 0;}
@@ -778,9 +791,7 @@ namespace BlackGui
                 }
             }
 
-            const ContainerType selected(this->selectedObjects());
             const int c = this->m_model->update(container, sort);
-            this->reselect(selected);
 
             // resize after real update according to mode
             if (presizeThresholdReached)
@@ -1104,27 +1115,9 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order, bool reselect)
+        void CViewBase<ModelClass, ContainerType, ObjectType>::sortByPropertyIndex(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
         {
-            if (!reselect)
-            {
-                this->m_model->sortByPropertyIndex(propertyIndex, order);
-            }
-            else
-            {
-                // hack: we reselect the already selected objects
-                // as sorting takes place (sync/async) in the model, and the model does not know about the selection
-                // we do this deferred as the model sort can be asynchronously
-                const ContainerType selected(this->selectedObjects());
-                this->m_model->sortByPropertyIndex(propertyIndex, order);
-                if (!selected.isEmpty())
-                {
-                    QTimer::singleShot(2000, [ = ]()
-                    {
-                        this->reselect(selected);
-                    });
-                }
-            }
+            this->m_model->sortByPropertyIndex(propertyIndex, order);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
@@ -1211,6 +1204,7 @@ namespace BlackGui
                 }
 
                 this->m_model = model;
+                this->m_model->setSelectionModel(this);
                 bool c = connect(this->m_model, &ModelClass::modelDataChanged, this, &CViewBase::modelDataChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 c = connect(this->m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
@@ -1219,8 +1213,6 @@ namespace BlackGui
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 c = connect(this->m_model, &ModelClass::changed, this, &CViewBase::onModelChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-
-
                 Q_UNUSED(c);
             }
 
@@ -1284,7 +1276,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::reselect(const ContainerType &selectedObjects)
+        void CViewBase<ModelClass, ContainerType, ObjectType>::selectObjects(const ContainerType &selectedObjects)
         {
             Q_UNUSED(selectedObjects);
         }
@@ -1365,13 +1357,6 @@ namespace BlackGui
             {
                 return CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
             }
-        }
-
-        template <class ModelClass, class ContainerType, class ObjectType>
-        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_selectedObjectsLoopback(const CVariant &selectedObjects)
-        {
-            const ContainerType selectedObjs = selectedObjects.value<ContainerType>();
-            this->reselect(selectedObjs);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

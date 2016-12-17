@@ -59,15 +59,17 @@ namespace BlackGui
             if (keys.isEmpty()) { return; }
             this->clearSelection();
             int r = -1;
+            QSet<int> rows;
             for (const ObjectType &obj : CViewBase<ModelClass, ContainerType, ObjectType>::containerOrFilteredContainer())
             {
                 r++;
                 if (!obj.hasValidDbKey()) { continue; }
                 if (keys.contains(obj.getDbKey()))
                 {
-                    this->selectRow(r);
+                    rows.insert(r);
                 }
             }
+            this->selectRows(rows);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
@@ -164,7 +166,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType, class KeyType>
-        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::reselect(const ContainerType &selectedObjects)
+        void COrderableViewWithDbObjects<ModelClass, ContainerType, ObjectType, KeyType>::selectObjects(const ContainerType &selectedObjects)
         {
             if (!selectedObjects.isEmpty())
             {

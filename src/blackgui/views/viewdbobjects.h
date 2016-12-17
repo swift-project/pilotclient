@@ -88,7 +88,7 @@ namespace BlackGui
             virtual void customMenu(BlackGui::Menus::CMenuActions &menuActions) override;
 
             //! Reselect by DB keys
-            virtual void reselect(const ContainerType &selectedObjects) override;
+            virtual void selectObjects(const ContainerType &selectedObjects) override;
 
             //! Move selected items
             void moveSelectedItems(int order);
