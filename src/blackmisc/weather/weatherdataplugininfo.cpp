@@ -26,7 +26,10 @@ namespace BlackMisc
         {
             if (json.contains("IID"))   // comes from the plugin
             {
+                if (! json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
+
                 // json data is already validated by CPluginManagerWeatherData
+                CJsonScope scope("MetaData");
                 CValueObject::convertFromJson(json["MetaData"].toObject());
                 m_valid = true;
             }

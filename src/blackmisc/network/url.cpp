@@ -194,8 +194,9 @@ namespace BlackMisc
 
         void CUrl::convertFromJson(const QJsonObject &json)
         {
-            QString url(json.value("url").toString());
-            this->setFullUrl(url);
+            const QJsonValue value = json.value("url");
+            if (value.isUndefined()) { throw CJsonException("Missing 'url'"); }
+            this->setFullUrl(value.toString());
         }
 
         int CUrl::protocolToDefaultPort(const QString &protocol)

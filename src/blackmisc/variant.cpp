@@ -156,38 +156,43 @@ namespace BlackMisc
     {
         // Remark: Names "type" and "value" are also used for drag and drop
         // Changing the names here requires the change for drag and drop too
-        QString typeName = json.value("type").toString();
+        QJsonValue typeValue = json.value("type");
+        if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
+        QString typeName = typeValue.toString();
         if (typeName.isEmpty()) { m_v.clear(); return; }
         int typeId = QMetaType::type(qPrintable(typeName));
 
+        QJsonValue value = json.value("value");
+        if (value.isUndefined() && typeId != QVariant::Invalid) { throw CJsonException("Missing 'value'"); }
         switch (typeId)
         {
         case QVariant::Invalid:     CLogMessage(this).warning("Invalid type for fromJson: %1") << typeName; m_v.clear(); break;
-        case QVariant::Int:         m_v.setValue(json.value("value").toInt()); break;
-        case QVariant::UInt:        m_v.setValue<uint>(json.value("value").toInt()); break;
-        case QVariant::Bool:        m_v.setValue(json.value("value").toBool()); break;
-        case QVariant::Double:      m_v.setValue(json.value("value").toDouble()); break;
-        case QVariant::LongLong:    m_v.setValue<qlonglong>(json.value("value").toInt()); break; // QJsonValue has no toLongLong() method???
-        case QVariant::ULongLong:   m_v.setValue<qulonglong>(json.value("value").toInt()); break;
-        case QVariant::String:      m_v.setValue(json.value("value").toString()); break;
-        case QVariant::Char:        m_v.setValue(json.value("value").toString().size() > 0 ? json.value("value").toString().at(0) : '\0'); break;
-        case QVariant::ByteArray:   m_v.setValue(json.value("value").toString().toLatin1()); break;
-        case QVariant::DateTime:    m_v.setValue(QDateTime::fromString(json.value("value").toString(), Qt::ISODate)); break;
-        case QVariant::Date:        m_v.setValue(QDate::fromString(json.value("value").toString(), Qt::ISODate)); break;
-        case QVariant::Time:        m_v.setValue(QTime::fromString(json.value("value").toString(), Qt::ISODate)); break;
-        case QVariant::StringList:  m_v.setValue(QVariant(json.value("value").toArray().toVariantList()).toStringList()); break;
+        case QVariant::Int:         m_v.setValue(value.toInt()); break;
+        case QVariant::UInt:        m_v.setValue<uint>(value.toInt()); break;
+        case QVariant::Bool:        m_v.setValue(value.toBool()); break;
+        case QVariant::Double:      m_v.setValue(value.toDouble()); break;
+        case QVariant::LongLong:    m_v.setValue<qlonglong>(value.toInt()); break; // QJsonValue has no toLongLong() method???
+        case QVariant::ULongLong:   m_v.setValue<qulonglong>(value.toInt()); break;
+        case QVariant::String:      m_v.setValue(value.toString()); break;
+        case QVariant::Char:        m_v.setValue(value.toString().size() > 0 ? value.toString().at(0) : '\0'); break;
+        case QVariant::ByteArray:   m_v.setValue(value.toString().toLatin1()); break;
+        case QVariant::DateTime:    m_v.setValue(QDateTime::fromString(value.toString(), Qt::ISODate)); break;
+        case QVariant::Date:        m_v.setValue(QDate::fromString(value.toString(), Qt::ISODate)); break;
+        case QVariant::Time:        m_v.setValue(QTime::fromString(value.toString(), Qt::ISODate)); break;
+        case QVariant::StringList:  m_v.setValue(QVariant(value.toArray().toVariantList()).toStringList()); break;
         default:
             try
             {
                 auto *meta = Private::getValueObjectMetaInfo(typeId);
                 if (meta)
                 {
+                    CJsonScope scope("value");
                     m_v = QVariant(typeId, nullptr);
-                    meta->convertFromJson(json.value("value").toObject(), data());
+                    meta->convertFromJson(value.toObject(), data());
                 }
                 else if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<QString>(), typeId))
                 {
-                    m_v.setValue(json.value("value").toString());
+                    m_v.setValue(value.toString());
                     if (! m_v.convert(typeId))
                     {
                         CLogMessage(this).warning("Failed to convert from JSON string");
@@ -231,15 +236,21 @@ namespace BlackMisc
 
     void CVariant::convertFromMemoizedJson(const QJsonObject &json)
     {
-        QString typeName = json.value("type").toString();
+        QJsonValue typeValue = json.value("type");
+        if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
+        QString typeName = typeValue.toString();
         if (typeName.isEmpty()) { m_v.clear(); return; }
         int typeId = QMetaType::type(qPrintable(typeName));
 
         auto *meta = Private::getValueObjectMetaInfo(typeId);
         if (meta)
         {
+            QJsonValue value = json.value("value");
+            if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
+
+            CJsonScope scope("value");
             m_v = QVariant(typeId, nullptr);
-            meta->convertFromMemoizedJson(json.value("value").toObject(), data());
+            meta->convertFromMemoizedJson(value.toObject(), data());
         }
         else
         {

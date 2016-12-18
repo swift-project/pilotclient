@@ -16,6 +16,7 @@
 #include "blackmisc/fileutils.h"
 #include "blackmisc/inheritancetraits.h"
 #include "blackmisc/metaclass.h"
+#include "blackmisc/jsonexception.h"
 
 #include <QByteArray>
 #include <QJsonArray>
@@ -375,8 +376,17 @@ namespace BlackMisc
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
                 meta.forEachMemberName(*derived(), [ & ](auto & member, CExplicitLatin1String name)
                 {
-                    auto it = json.find(name);
-                    if (it != json.end()) { it.value() >> member; }
+                    const auto value = json.value(name);
+                    if (value.isUndefined())
+                    {
+                        constexpr bool required = false; // \todo add RequiredForJson flag in metaclass system
+                        if (required) { throw CJsonException(QStringLiteral("Missing required member '%1'").arg(name.m_latin1)); }
+                    }
+                    else
+                    {
+                        CJsonScope scope(name.m_latin1);
+                        value >> member;
+                    }
                 });
             }
 

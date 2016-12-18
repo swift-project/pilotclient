@@ -348,9 +348,13 @@ namespace BlackMisc
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::convertFromJson(const QJsonObject &json)
         {
-            const QString unitSymbol = json.value("unit").toString();
-            this->setUnitBySymbol(unitSymbol);
-            this->m_value = json.value("value").toDouble();
+            const QJsonValue unit = json.value("unit");
+            const QJsonValue value = json.value("value");
+            if (unit.isUndefined()) { throw CJsonException("Missing 'unit'"); }
+            if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
+
+            this->setUnitBySymbol(unit.toString());
+            this->m_value = value.toDouble();
         }
 
         template <class MU, class PQ>

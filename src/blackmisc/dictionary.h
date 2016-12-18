@@ -257,7 +257,10 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
         void convertFromJson(const QJsonObject &json)
         {
-            QJsonArray array = json.value("associativecontainerbase").toArray();
+            QJsonValue value = json.value("associativecontainerbase");
+            if (value.isUndefined()) { throw CJsonException("Missing 'associativecontainerbase'"); }
+            QJsonArray array = value.toArray();
+            int index = 0;
             for (auto it = array.begin(); it != array.end(); ++it)
             {
                 QJsonValueRef jsonKey = (*it);
@@ -265,10 +268,16 @@ namespace BlackMisc
                 if (it == array.end()) { qWarning("Odd number of elements in CDictionary::convertFromJson"); return; }
                 QJsonValueRef jsonValue = (*it);
                 Key key;
-                Value value;
-                jsonKey >> key;
-                jsonValue >> value;
-                m_impl.insert(key, value);
+                Value val;
+                {
+                    CJsonScope scope("associativecontainerbase", 2 * index);
+                    jsonKey >> key;
+                }
+                {
+                    CJsonScope scope("associativecontainerbase", 2 * index++ + 1);
+                    jsonValue >> val;
+                }
+                m_impl.insert(std::move(key), std::move(val));
             }
         }
 

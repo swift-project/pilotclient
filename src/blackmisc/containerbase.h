@@ -122,13 +122,17 @@ namespace BlackMisc
         void convertFromJson(const QJsonObject &json)
         {
             derived().clear();
-            QJsonArray array = json.value("containerbase").toArray();
+            QJsonValue value = json.value("containerbase");
+            if (value.isUndefined()) { throw CJsonException("Missing 'containerbase'"); }
+            QJsonArray array = value.toArray();
+            int index = 0;
             for (auto i = array.begin(); i != array.end(); ++i)
             {
+                CJsonScope scope("containerbase", index++);
                 QJsonValueRef ref = (*i);
-                T value;
-                ref >> value;
-                derived().insert(value);
+                T val;
+                ref >> val;
+                derived().insert(std::move(val));
             }
         }
 

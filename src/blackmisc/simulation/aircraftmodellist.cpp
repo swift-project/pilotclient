@@ -698,13 +698,34 @@ namespace BlackMisc
         void CAircraftModelList::convertFromMemoizedJson(const QJsonObject &json)
         {
             clear();
-            QJsonArray array = json.value("containerbase").toArray();
+            QJsonValue value = json.value("containerbase");
+            if (value.isUndefined()) { throw CJsonException("Missing 'containerbase'"); }
+            QJsonArray array = value.toArray();
+
             CAircraftModel::MemoHelper::CUnmemoizer helper;
-            helper.getTable<CAircraftIcaoCode>().convertFromJson(json.value("aircraftIcaos").toObject());
-            helper.getTable<CLivery>().convertFromJson(json.value("liveries").toObject());
-            helper.getTable<CDistributor>().convertFromJson(json.value("distributors").toObject());
+            QJsonValue aircraftIcaos = json.value("aircraftIcaos");
+            QJsonValue liveries = json.value("liveries");
+            QJsonValue distributors = json.value("distributors");
+            if (aircraftIcaos.isUndefined()) { throw CJsonException("Missing 'aircraftIcaos'"); }
+            if (liveries.isUndefined()) { throw CJsonException("Missing 'liveries'"); }
+            if (distributors.isUndefined()) { throw CJsonException("Missing 'distributors'"); }
+            {
+                CJsonScope scope("aircraftIcaos");
+                helper.getTable<CAircraftIcaoCode>().convertFromJson(aircraftIcaos.toObject());
+            }
+            {
+                CJsonScope scope("liveries");
+                helper.getTable<CLivery>().convertFromJson(liveries.toObject());
+            }
+            {
+                CJsonScope scope("distributors");
+                helper.getTable<CDistributor>().convertFromJson(distributors.toObject());
+            }
+
+            int index = 0;
             for (auto i = array.begin(); i != array.end(); ++i)
             {
+                CJsonScope scope("containerbase", index++);
                 CAircraftModel value;
                 value.convertFromMemoizedJson(i->toObject(), helper);
                 insert(value);

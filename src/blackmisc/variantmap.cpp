@@ -35,9 +35,11 @@ namespace BlackMisc
         clear();
         for (auto it = json.begin(); it != json.end(); ++it)
         {
+            const QString key = it.key();
+            CJsonScope scope(key);
             CVariant value;
             value.convertFromJson(it.value().toObject());
-            implementationOf(*this).insert(cend(), it.key(), value);
+            implementationOf(*this).insert(cend(), key, value);
         }
     }
 
@@ -48,6 +50,7 @@ namespace BlackMisc
         {
             auto value = json.value(key);
             if (value.isUndefined()) { continue; }
+            CJsonScope scope(key);
             CVariant var;
             var.convertFromJson(value.toObject());
             insert(key, var);
@@ -75,9 +78,11 @@ namespace BlackMisc
         clear();
         for (auto it = json.begin(); it != json.end(); ++it)
         {
+            const QString key = it.key();
+            CJsonScope scope(key);
             CVariant value;
             value.convertFromMemoizedJson(it.value().toObject());
-            implementationOf(*this).insert(cend(), it.key(), value);
+            implementationOf(*this).insert(cend(), key, value);
         }
     }
 
@@ -88,6 +93,7 @@ namespace BlackMisc
         {
             auto value = json.value(key);
             if (value.isUndefined()) { continue; }
+            CJsonScope scope(key);
             CVariant var;
             var.convertFromMemoizedJson(value.toObject());
             insert(key, var);
