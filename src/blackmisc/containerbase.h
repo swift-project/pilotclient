@@ -142,6 +142,12 @@ namespace BlackMisc
             this->convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
         }
 
+        //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
+        CStatusMessage convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix); // implemented in statusmessage.h
+
+        //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
+        CStatusMessage convertFromJsonNoThrow(const QString &jsonString, const CLogCategoryList &categories, const QString &prefix); // implemented in statusmessage.h
+
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const
         {

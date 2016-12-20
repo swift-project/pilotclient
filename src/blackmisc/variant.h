@@ -277,11 +277,17 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
         void convertFromJson(const QJsonObject &json);
 
+        //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
+        CStatusMessage convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+
         //! To compact JSON format.
         QJsonObject toMemoizedJson() const;
 
         //! From compact JSON format.
         void convertFromMemoizedJson(const QJsonObject &json);
+
+        //! Call convertFromMemoizedJson, catch any CJsonException that is thrown and return it as CStatusMessage.
+        CStatusMessage convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
 
         //! \copydoc BlackMisc::Mixin::DBusByMetaClass::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;

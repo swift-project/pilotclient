@@ -336,8 +336,37 @@ namespace BlackMisc
             BLACK_METAMEMBER(timestampMSecsSinceEpoch)
         );
     };
-} // namespace
 
+    // CContainerBase methods implemented out-of-line to avoid circular include
+    template <template <class> class C, class T, class CIt>
+    CStatusMessage CContainerBase<C, T, CIt>::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    {
+        try
+        {
+            convertFromJson(json);
+        }
+        catch (const CJsonException &ex)
+        {
+            return ex.toStatusMessage(categories, prefix);
+        }
+        return {};
+    }
+
+    //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
+    template <template <class> class C, class T, class CIt>
+    CStatusMessage CContainerBase<C, T, CIt>::convertFromJsonNoThrow(const QString &jsonString, const CLogCategoryList &categories, const QString &prefix)
+    {
+        try
+        {
+            convertFromJson(jsonString);
+        }
+        catch (const CJsonException &ex)
+        {
+            return ex.toStatusMessage(categories, prefix);
+        }
+        return {};
+    }
+} // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage::StatusSeverity)

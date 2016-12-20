@@ -26,6 +26,8 @@
 namespace BlackMisc
 {
 
+    class CStatusMessageList;
+
     /*!
      * Map of { QString, CVariant } pairs.
      *
@@ -69,6 +71,12 @@ namespace BlackMisc
         //! Convert only keys present in list argument.
         void convertFromJson(const QJsonObject &json, const QStringList &keys);
 
+        //! Call convertFromJson, catch any CJsonException that are thrown and return them as CStatusMessage.
+        CStatusMessageList convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+
+        //! Call convertFromJson, catch any CJsonException that are thrown and return them as CStatusMessage.
+        CStatusMessageList convertFromJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix);
+
         //! Insert values from this map into an existing compact JSON object.
         QJsonObject &mergeToMemoizedJson(QJsonObject &json) const;
 
@@ -81,6 +89,12 @@ namespace BlackMisc
         //! From compact JSON format.
         //! Convert only keys present in list argument.
         void convertFromMemoizedJson(const QJsonObject &json, const QStringList &keys);
+
+        //! Call convertFromMemoizedJson, catch any CJsonException that are thrown and return them as CStatusMessage.
+        CStatusMessageList convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+
+        //! Call convertFromMemoizedJson, catch any CJsonException that are thrown and return them as CStatusMessage.
+        CStatusMessageList convertFromMemoizedJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix);
     };
 
 }

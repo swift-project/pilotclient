@@ -210,6 +210,19 @@ namespace BlackMisc
         }
     }
 
+    CStatusMessage CVariant::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    {
+        try
+        {
+            convertFromJson(json);
+        }
+        catch (const CJsonException &ex)
+        {
+            return ex.toStatusMessage(categories, prefix);
+        }
+        return {};
+    }
+
     QJsonObject CVariant::toMemoizedJson() const
     {
         auto *meta = getValueObjectMetaInfo();
@@ -256,6 +269,19 @@ namespace BlackMisc
         {
             convertFromJson(json);
         }
+    }
+
+    CStatusMessage CVariant::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    {
+        try
+        {
+            convertFromMemoizedJson(json);
+        }
+        catch (const CJsonException &ex)
+        {
+            return ex.toStatusMessage(categories, prefix);
+        }
+        return {};
     }
 
     uint CVariant::getValueHash() const

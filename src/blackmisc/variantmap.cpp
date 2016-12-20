@@ -8,6 +8,8 @@
  */
 
 #include "blackmisc/variantmap.h"
+#include "blackmisc/jsonexception.h"
+#include "blackmisc/statusmessagelist.h"
 
 #include <QJsonValue>
 
@@ -100,4 +102,69 @@ namespace BlackMisc
         }
     }
 
+    CStatusMessageList CVariantMap::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    {
+        CStatusMessageList messages;
+        clear();
+        for (auto it = json.begin(); it != json.end(); ++it)
+        {
+            const QString key = it.key();
+            CJsonScope scope(key);
+            CVariant value;
+            auto message = value.convertFromJsonNoThrow(it.value().toObject(), categories, prefix);
+            if (message.isSuccess()) { implementationOf(*this).insert(cend(), key, value); }
+            else { messages.push_back(message); }
+        }
+        return messages;
+    }
+
+    CStatusMessageList CVariantMap::convertFromJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix)
+    {
+        CStatusMessageList messages;
+        clear();
+        for (const auto &key : keys)
+        {
+            auto value = json.value(key);
+            if (value.isUndefined()) { continue; }
+            CJsonScope scope(key);
+            CVariant var;
+            auto message = var.convertFromJsonNoThrow(value.toObject(), categories, prefix);
+            if (message.isSuccess()) { insert(key, var); }
+            else { messages.push_back(message); }
+        }
+        return messages;
+    }
+
+    CStatusMessageList CVariantMap::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    {
+        CStatusMessageList messages;
+        clear();
+        for (auto it = json.begin(); it != json.end(); ++it)
+        {
+            const QString key = it.key();
+            CJsonScope scope(key);
+            CVariant value;
+            auto message = value.convertFromMemoizedJsonNoThrow(it.value().toObject(), categories, prefix);
+            if (message.isSuccess()) { implementationOf(*this).insert(cend(), key, value); }
+            else { messages.push_back(message); }
+        }
+        return messages;
+    }
+
+    CStatusMessageList CVariantMap::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix)
+    {
+        CStatusMessageList messages;
+        clear();
+        for (const auto &key : keys)
+        {
+            auto value = json.value(key);
+            if (value.isUndefined()) { continue; }
+            CJsonScope scope(key);
+            CVariant var;
+            auto message = var.convertFromMemoizedJsonNoThrow(value.toObject(), categories, prefix);
+            if (message.isSuccess()) { insert(key, var); }
+            else { messages.push_back(message); }
+        }
+        return messages;
+    }
 }
