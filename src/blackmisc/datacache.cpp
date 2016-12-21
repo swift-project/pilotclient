@@ -763,7 +763,7 @@ namespace BlackMisc
         auto json = QJsonDocument::fromJson(file.readAll()).object();
         QUuid uuid(json.value("uuid").toString());
         CSequence<CProcessInfo> apps;
-        apps.convertFromJson(json.value("apps").toObject());
+        auto status = apps.convertFromJsonNoThrow(json.value("apps").toObject(), this, QStringLiteral("Error in %1 apps object").arg(m_filename));
         apps.removeIf([](const CProcessInfo &pi) { return ! pi.exists(); });
 
         if (apps.isEmpty()) { uuid = CIdentifier().toUuid(); }

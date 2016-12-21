@@ -21,7 +21,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/range.h"
 #include "blackmisc/slot.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/valuecacheprivate.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/variantmap.h"
@@ -193,8 +193,13 @@ namespace BlackMisc
 
         //! Load all values in Json format.
         //! Values already in the cache will remain in the cache unless they are overwritten.
+        //! \throws BlackMisc::CJsonException if JSON schema validation fails.
         //! \threadsafe
         void loadFromJson(const QJsonObject &json);
+
+        //! Call loadFromJson, catch any CJsonException that are thrown and return them as CStatusMessage.
+        //! \threadsafe
+        CStatusMessageList loadFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
 
         //! Save values to Json files in a given directory.
         //! If prefix is provided then only those values whose keys start with that prefix.

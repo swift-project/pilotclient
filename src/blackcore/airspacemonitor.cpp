@@ -1148,16 +1148,25 @@ namespace BlackCore
         if (!simAircraft.isPartsSynchronized() && !isFull) { return; }
 
         CAircraftParts parts;
-        if (isFull)
+        try
         {
-            parts.convertFromJson(jsonObject);
+            if (isFull)
+            {
+                parts.convertFromJson(jsonObject);
+            }
+            else
+            {
+                // incremental update
+                parts = this->remoteAircraftParts(callsign).frontOrDefault();
+                QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
+                parts.convertFromJson(config);
+            }
         }
-        else
+        catch (const CJsonException &ex)
         {
-            // incremental update
-            parts = this->remoteAircraftParts(callsign).frontOrDefault();
-            QJsonObject config = applyIncrementalObject(parts.toJson(), jsonObject);
-            parts.convertFromJson(config);
+            CStatusMessage message = ex.toStatusMessage(this, "Invalid parts packet");
+            message.setSeverity(CStatusMessage::SeverityDebug);
+            CLogMessage::preformatted(message);
         }
 
         // make sure in any case right time

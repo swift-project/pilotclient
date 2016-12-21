@@ -329,7 +329,15 @@ namespace BlackMisc
     {
         CVariantMap map;
         map.convertFromMemoizedJson(json);
-        insertValues({ map, QDateTime::currentMSecsSinceEpoch() });
+        if (! map.isEmpty()) { insertValues({ map, QDateTime::currentMSecsSinceEpoch() }); }
+    }
+
+    CStatusMessageList CValueCache::loadFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    {
+        CVariantMap map;
+        auto messages = map.convertFromMemoizedJsonNoThrow(json, categories, prefix);
+        if (! map.isEmpty()) { insertValues({ map, QDateTime::currentMSecsSinceEpoch() }); }
+        return messages;
     }
 
     CStatusMessage CValueCache::saveToFiles(const QString &dir, const QString &keyPrefix)
@@ -418,6 +426,7 @@ namespace BlackMisc
                 keysInFiles.insert(filename.completeBaseName(), {});
             }
         }
+        bool ok = true;
         for (auto it = keysInFiles.cbegin(); it != keysInFiles.cend(); ++it)
         {
             QFile file(dir + "/" + it.key() + ".json");
@@ -435,13 +444,19 @@ namespace BlackMisc
                 return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
             CVariantMap temp;
-            temp.convertFromMemoizedJson(json.object(), it.value());
-            if (it.value().isEmpty()) { temp.convertFromMemoizedJson(json.object()); }
+            const QString messagePrefix = QStringLiteral("Parsing %1.json").arg(it.key());
+            auto messages = temp.convertFromMemoizedJsonNoThrow(json.object(), it.value(), this, messagePrefix);
+            if (it.value().isEmpty()) { messages.push_back(temp.convertFromMemoizedJsonNoThrow(json.object(), this, messagePrefix)); }
+            if (! messages.isEmpty())
+            {
+                ok = false;
+                CLogMessage::preformatted(messages);
+            }
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return CStatusMessage(this).info("Loaded cache values %1 from %2") <<
-            (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir;
+        return CStatusMessage(this).info("Loaded cache values %1 from %2 %3") <<
+            (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir << (ok ? "successfully" : "with errors");
     }
 
     void CValueCache::markAllAsSaved(const QString &keyPrefix)

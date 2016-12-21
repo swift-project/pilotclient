@@ -175,7 +175,7 @@ namespace BlackCore
     CApplicationInfoList CApplication::getRunningApplications()
     {
         CApplicationInfoList apps;
-        apps.convertFromJson(CFileUtils::readLockedFileToString(swiftDataRoot() + "apps.json"));
+        apps.convertFromJsonNoThrow(CFileUtils::readLockedFileToString(swiftDataRoot() + "apps.json"), {}, {});
         apps.removeIf([](const CApplicationInfo &info) { return !info.processInfo().exists(); });
         return apps;
     }

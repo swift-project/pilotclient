@@ -413,7 +413,15 @@ namespace BlackGui
                 }
 
                 CFlightPlan fp;
-                fp.convertFromJson(json);
+                try
+                {
+                    fp.convertFromJson(json);
+                }
+                catch (const CJsonException &ex)
+                {
+                    m = ex.toStatusMessage(this, "Parse error in " + fileName);
+                    break;
+                }
                 this->fillWithFlightPlanData(fp);
             }
             while (false);

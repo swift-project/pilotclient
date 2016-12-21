@@ -124,7 +124,16 @@ namespace BlackGui
                     CLogMessage(this).validationError("Parse error: %1") << jsonError.errorString();
                     return;
                 }
-                parts.convertFromJson(jsonDoc.object());
+
+                try
+                {
+                    parts.convertFromJson(jsonDoc.object());
+                }
+                catch (const CJsonException &ex)
+                {
+                    ex.toLogMessage(this, "Parse error");
+                    return;
+                }
                 partsToGui(parts);
             }
             else

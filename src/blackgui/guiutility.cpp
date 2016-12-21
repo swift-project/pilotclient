@@ -149,7 +149,8 @@ namespace BlackGui
         if (typeName.isEmpty() || typeId == QMetaType::UnknownType) { return CVariant(); }
 
         CVariant valueVariant;
-        valueVariant.convertFromJson(jsonObj);
+        const CStatusMessage status = valueVariant.convertFromJsonNoThrow(jsonObj, {}, {});
+        if (status.isFailure()) { return CVariant(); }
         return valueVariant;
     }
 
