@@ -451,10 +451,12 @@ namespace BlackCore
             const QStringList clientParts = currentLine.split(':');
             for (int i = 0; i < clientSectionAttributes.size(); i++)
             {
-                BLACK_VERIFY_X(i < clientSectionAttributes.size(), Q_FUNC_INFO, "Wrong section attribute size");
+                // section attributes are the column names
+                // more column names than parts
+                const QString attribute(clientSectionAttributes.at(i).toLower());
                 BLACK_VERIFY_X(i < clientParts.size(), Q_FUNC_INFO, "Wrong parts size");
                 if (i < clientSectionAttributes.size() || i < clientParts.size()) { continue; }
-                parts.insert(clientSectionAttributes.at(i).toLower(), clientParts.at(i));
+                parts.insert(attribute, clientParts.at(i));
             }
             return parts;
         }
