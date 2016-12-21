@@ -160,7 +160,7 @@ namespace BlackMisc
         void CCoordinateGeodetic::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CCoordinateGeodetic>(); return; }
-            ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
+            const ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
             switch (i)
             {
             case IndexGeodeticHeight:
@@ -190,7 +190,7 @@ namespace BlackMisc
             }
         }
 
-        CCoordinateGeodetic::CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, CAltitude geodeticHeight) :
+        CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const CAltitude &geodeticHeight) :
             m_x(latitude.cos() * longitude.cos()),
             m_y(latitude.cos() * longitude.sin()),
             m_z(latitude.sin()),

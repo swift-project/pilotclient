@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKMISC_COORDINATEGEODETIC_H
-#define BLACKMISC_COORDINATEGEODETIC_H
+#ifndef BLACKMISC_GEO_COORDINATEGEODETIC_H
+#define BLACKMISC_GEO_COORDINATEGEODETIC_H
 
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/altitude.h"
@@ -188,7 +188,7 @@ namespace BlackMisc
             CCoordinateGeodetic(const QVector3D &normal) : m_x(normal.x()), m_y(normal.y()), m_z(normal.z()) {}
 
             //! Constructor by values
-            CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::Aviation::CAltitude geodeticHeight);
+            CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const BlackMisc::Aviation::CAltitude &geodeticHeight);
 
             //! Constructor by double values, but no geodetic height
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees);

@@ -54,6 +54,7 @@ namespace BlackMisc
                 IndexBank,
                 IndexPitch,
                 IndexGroundSpeed,
+                IndexGroundElevation,
                 IndexCallsign
             };
 
@@ -99,7 +100,7 @@ namespace BlackMisc
             virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_position.longitude(); }
 
             //! Guess if aircraft is "on ground"
-            bool isOnGroundGuessed() const;
+            bool isOnGroundGuessed(const BlackMisc::PhysicalQuantities::CLength &cgAboveGround = { 0, nullptr }) const;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
@@ -128,8 +129,11 @@ namespace BlackMisc
             //! Set heading
             void setHeading(const BlackMisc::Aviation::CHeading &heading) { this->m_heading = heading; }
 
-            //! Get altitude (true)
+            //! Get altitude
             const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_position.geodeticHeight(); }
+
+            //! Get altitude under consideration of ground elevation and CG (if available)
+            BlackMisc::Aviation::CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &cgAboveGround = { 0, nullptr }) const;
 
             //! Set altitude
             void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_position.setGeodeticHeight(altitude); }

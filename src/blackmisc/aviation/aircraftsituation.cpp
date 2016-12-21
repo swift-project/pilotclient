@@ -54,16 +54,10 @@ namespace BlackMisc
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            if (ITimestampBased::canHandleIndex(index))
-            {
-                return ITimestampBased::propertyByIndex(index);
-            }
-            if (ICoordinateGeodetic::canHandleIndex(index))
-            {
-                return ICoordinateGeodetic::propertyByIndex(index);
-            }
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+            if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexPosition:
@@ -82,6 +76,8 @@ namespace BlackMisc
                 return this->m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundSpeed:
                 return this->m_groundSpeed.propertyByIndex(index.copyFrontRemoved());
+            case IndexGroundElevation:
+                return this->m_groundElevation.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:
                 return this->m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
             default:
@@ -98,7 +94,7 @@ namespace BlackMisc
                 return;
             }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexPosition:
@@ -113,6 +109,9 @@ namespace BlackMisc
             case IndexGroundSpeed:
                 this->m_groundSpeed.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
+            case IndexGroundElevation:
+                this->m_groundElevation.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                break;
             case IndexCallsign:
                 this->m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
@@ -124,15 +123,9 @@ namespace BlackMisc
 
         int CAircraftSituation::comparePropertyByIndex(const CPropertyIndex &index, const CAircraftSituation &compareValue) const
         {
-            if (ITimestampBased::canHandleIndex(index))
-            {
-                return ITimestampBased::comparePropertyByIndex(index, compareValue);
-            }
-            if (ICoordinateGeodetic::canHandleIndex(index))
-            {
-                return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue);
-            }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+            if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue); }
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexPosition:
@@ -150,6 +143,9 @@ namespace BlackMisc
             case IndexGroundSpeed:
                 return this->m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
                 break;
+            case IndexGroundElevation:
+                return this->m_groundElevation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundElevation());
+                break;
             case IndexCallsign:
                 return this->m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
                 break;
@@ -161,19 +157,26 @@ namespace BlackMisc
             return 0;
         }
 
-        bool CAircraftSituation::isOnGroundGuessed() const
+        bool CAircraftSituation::isOnGroundGuessed(const CLength &cgAboveGround) const
         {
             const CLength heightAboveGround(this->getHeightAboveGround());
             if (!heightAboveGround.isNull())
             {
-                return heightAboveGround.value(CLengthUnit::m()) < 1.0;
+                if (cgAboveGround.isNull())
+                {
+                    return heightAboveGround.value(CLengthUnit::m()) < 1.0;
+                }
+                else
+                {
+                    return heightAboveGround <= cgAboveGround;
+                }
             }
 
-            // we guess on pitch an bank
+            // we guess on pitch and bank
             if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 10) { return false; }
             if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10)  { return false; }
 
-            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 75) { return false; }
+            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 50) { return false; }
 
             // not sure, but this is a guess
             return true;
@@ -188,15 +191,24 @@ namespace BlackMisc
         {
             if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
             {
-                // we have a sure value
+                // we have a sure value explicitly set
                 return this->getAltitude();
             }
-            const CLength gh(getGroundElevation());
+            const CLength gh(this->getGroundElevation());
             if (!gh.isNull() && !getAltitude().isNull())
             {
-                return getAltitude() - gh;
+                return this->getAltitude() - gh;
             }
             return { 0, nullptr };
+        }
+
+        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &cgAboveGround) const
+        {
+            if (!this->hasGroundElevation()) { return this->getAltitude(); }
+            const CAltitude groundElevation(cgAboveGround.isNull() ?
+                                            this->getGroundElevation() :
+                                            CAltitude(this->getGroundElevation() + cgAboveGround, CAltitude::MeanSeaLevel));
+            return (groundElevation <= this->getAltitude()) ? this->getAltitude() : groundElevation;
         }
 
         void CAircraftSituation::setCallsign(const CCallsign &callsign)
@@ -204,6 +216,5 @@ namespace BlackMisc
             this->m_correspondingCallsign = callsign;
             this->m_correspondingCallsign.setTypeHint(CCallsign::Aircraft);
         }
-
     } // namespace
 } // namespace

@@ -19,7 +19,6 @@
 
 namespace BlackMisc
 {
-
     namespace Aviation
     {
         class CAircraftSituation;

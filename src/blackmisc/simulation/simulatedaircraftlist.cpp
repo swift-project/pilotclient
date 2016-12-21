@@ -96,7 +96,7 @@ namespace BlackMisc
             }
         }
 
-        int CSimulatedAircraftList::setRendered(const CCallsign &callsign, bool rendered)
+        int CSimulatedAircraftList::setRendered(const CCallsign &callsign, bool rendered, bool onlyFirst)
         {
             int c = 0;
             for (CSimulatedAircraft &aircraft : (*this))
@@ -104,11 +104,12 @@ namespace BlackMisc
                 if (aircraft.getCallsign() != callsign) { continue; }
                 aircraft.setRendered(rendered);
                 c++;
+                if (onlyFirst) break;
             }
             return c;
         }
 
-        int CSimulatedAircraftList::setAircraftModel(const CCallsign &callsign, const CAircraftModel &model)
+        int CSimulatedAircraftList::setAircraftModel(const CCallsign &callsign, const CAircraftModel &model, bool onlyFirst)
         {
             int c = 0;
             for (CSimulatedAircraft &aircraft : (*this))
@@ -116,11 +117,12 @@ namespace BlackMisc
                 if (aircraft.getCallsign() != callsign) { continue; }
                 aircraft.setModel(model);
                 c++;
+                if (onlyFirst) break;
             }
             return c;
         }
 
-        int CSimulatedAircraftList::setAircraftParts(const CCallsign &callsign, const CAircraftParts &parts)
+        int CSimulatedAircraftList::setAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool onlyFirst)
         {
             int c = 0;
             for (CSimulatedAircraft &aircraft : (*this))
@@ -129,6 +131,20 @@ namespace BlackMisc
                 aircraft.setParts(parts);
                 aircraft.setPartsSynchronized(true);
                 c++;
+                if (onlyFirst) break;
+            }
+            return c;
+        }
+
+        int CSimulatedAircraftList::setGroundElevation(const CCallsign &callsign, const CAltitude &elevation, bool onlyFirst)
+        {
+            int c = 0;
+            for (CSimulatedAircraft &aircraft : (*this))
+            {
+                if (aircraft.getCallsign() != callsign) { continue; }
+                aircraft.setGroundElevation(elevation);
+                c++;
+                if (onlyFirst) break;
             }
             return c;
         }

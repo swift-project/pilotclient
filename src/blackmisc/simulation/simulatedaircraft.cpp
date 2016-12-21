@@ -243,7 +243,7 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::isVtol() const
         {
-            return getAircraftIcaoCode().isVtol();
+            return getModel().isVtol();
         }
 
         QString CSimulatedAircraft::getCombinedIcaoLiveryString(bool networkModel) const

@@ -167,6 +167,11 @@ namespace BlackMisc
             }
         }
 
+        bool CAircraftModel::isVtol() const
+        {
+            return this->getAircraftIcaoCode().isVtol();
+        }
+
         CVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }

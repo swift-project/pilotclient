@@ -175,6 +175,9 @@ namespace BlackMisc
             //! Aircraft ICAO code designator
             const QString &getAircraftIcaoCodeDesignator() const { return this->m_aircraftIcao.getDesignator(); }
 
+            //! VTOL aircraft?
+            bool isVtol() const;
+
             //! Airline ICAO code
             const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const { return this->m_livery.getAirlineIcaoCode(); }
 

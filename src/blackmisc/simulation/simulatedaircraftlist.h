@@ -78,13 +78,16 @@ namespace BlackMisc
             void markAllAsNotRendered();
 
             //! Mark given callsign as rendered
-            int setRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
+            int setRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered, bool onlyFirst = true);
 
             //! Set model
-            int setAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftModel &model);
+            int setAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftModel &model, bool onlyFirst = true);
 
             //! Set aircraft parts
-            int setAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts);
+            int setAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool onlyFirst = true);
+
+            //! Set ground elevation
+            int setGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAltitude &elevation, bool onlyFirst = true);
 
             //! Enabled?
             bool isEnabled(const BlackMisc::Aviation::CCallsign &callsign) const;
