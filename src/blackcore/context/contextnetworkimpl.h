@@ -84,28 +84,13 @@ namespace BlackCore
             //! Destructor
             virtual ~CContextNetwork();
 
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituations
             //! \ingroup remoteaircraftprovider
+            //! @{
             virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSituationsCount
-            //! \ingroup remoteaircraftprovider
             virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftParts
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore = -1) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isRemoteAircraftSupportingParts
-            //! \ingroup remoteaircraftprovider
             virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftSupportingParts
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
-            //! \ingroup remoteaircraftprovider
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const BlackMisc::Aviation::CAircraftSituation &)>          addedSituationSlot,
@@ -113,89 +98,36 @@ namespace BlackCore
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot
             ) override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateAircraftRendered
-            //! \ingroup remoteaircraftprovider
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            //! \ingroup remoteaircraftprovider
+            virtual bool updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) override;
             virtual void updateMarkAllAsNotRendered() override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+            //! @}
 
             //! Network library
             INetwork *network() const { return m_network; }
 
         public slots:
-            //! \copydoc IContextNetwork::updateAircraftEnabled
+            // from context and provider interface
             //! \ingroup remoteaircraftprovider
+            //! @{
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
-
-            //! \copydoc IContextNetwork::updateAircraftModel
-            //! \ingroup remoteaircraftprovider
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc IContextNetwork::updateAircraftNetworkModel
-            //! \ingroup remoteaircraftprovider
             virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
-
-            //! \copydoc IContextNetwork::updateFastPositionEnabled
-            //! \ingroup remoteaircraftprovider
             virtual bool updateFastPositionEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
-
-            //! \copydoc IContextNetwork::getAtcStationsBooked()
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRange
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeCallsigns
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeCount
-            //! \ingroup remoteaircraftprovider
             virtual int getAircraftInRangeCount() const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeForCallsign
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getReverseLookupMessages
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isReverseLookupMessagesEnabled
-            //! \ingroup remoteaircraftprovider
             virtual bool isReverseLookupMessagesEnabled() const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::enableReverseLookupMessages
-            //! \ingroup remoteaircraftprovider
             virtual void enableReverseLookupMessages(bool enabled) override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::getAircraftPartsHistory
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::remoteAircraftParts
-            //! \ingroup remoteaircraftprovider
             virtual BlackMisc::Aviation::CAircraftPartsList getRemoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeValuesBefore) const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::isAircraftPartsHistoryEnabled
-            //! \ingroup remoteaircraftprovider
             virtual bool isAircraftPartsHistoryEnabled() const override;
-
-            //! \copydoc BlackMisc::Simulation::IRemoteAircraftProvider::enableAircraftPartsHistory
-            //! \ingroup remoteaircraftprovider
             virtual void enableAircraftPartsHistory(bool enabled) override;
+            //! @}
 
             //! In transition state, e.g. connecting, disconnecting.
             //! \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
@@ -210,6 +142,9 @@ namespace BlackCore
             //! @}
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+            //! \copydoc IContextNetwork::getAtcStationsBooked()
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
 
             //! \copydoc IContextNetwork::readAtcBookingsFromSource()
             virtual void readAtcBookingsFromSource() const override;

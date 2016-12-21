@@ -52,6 +52,8 @@ namespace BlackCore
         const CAircraftModelList modelSet(this->m_modelSet); // Models for this matching
         const MatchingMode mode = this->m_matchingMode;
 
+        static const QString format("hh:mm:ss.zzz");
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching: %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models").arg(modelSet.size()), getLogCategories());
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()), getLogCategories());
 
@@ -108,6 +110,7 @@ namespace BlackCore
         Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
         Q_ASSERT_X(matchedModel.getModelType() != CAircraftModel::TypeUnknown, Q_FUNC_INFO, "Missing model type");
 
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching end: %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
         return matchedModel;
     }
 
@@ -482,34 +485,46 @@ namespace BlackCore
         return matchedModel;
     }
 
-    CAircraftModel CAircraftMatcher::getClosestMatchScoreImplementation(MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
+    CAircraftModel CAircraftMatcher::getClosestMatchScoreImplementation(MatchingMode mode, const CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
     {
         Q_UNUSED(mode);
+        CAircraftModelList usedModelSet;
+
+        // VTOL
+        ScoredModels map;
+        if (remoteAircraft.isVtol() && modelSet.contains(&CAircraftModel::isVtol, true))
+        {
+            usedModelSet = modelSet.findBy(&CAircraftModel::isVtol, true);
+        }
+        else
+        {
+            usedModelSet = modelSet;
+        }
+
 
         // first decide what set to use for scoring, it should not be too large
-        ScoredModels map;
-        if (remoteAircraft.hasAircraftAndAirlineDesignator() && modelSet.containsModelsWithAircraftAndAirlineDesignator(remoteAircraft.getAircraftIcaoCodeDesignator(), remoteAircraft.getAirlineIcaoCodeDesignator()))
+        if (remoteAircraft.hasAircraftAndAirlineDesignator() && usedModelSet.containsModelsWithAircraftAndAirlineDesignator(remoteAircraft.getAircraftIcaoCodeDesignator(), remoteAircraft.getAirlineIcaoCodeDesignator()))
         {
-            const CAircraftModelList byAircraftAndAirline(modelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
+            const CAircraftModelList byAircraftAndAirline(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft/airline ICAOs '%2'/'%3' for scoring").arg(byAircraftAndAirline.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey()), getLogCategories());
             map = byAircraftAndAirline.scoreFull(remoteAircraft.getModel());
         }
-        else if (remoteAircraft.hasAircraftDesignator() && modelSet.contains(&CAircraftModel::getAircraftIcaoCodeDesignator, remoteAircraft.getAircraftIcaoCodeDesignator()))
+        else if (remoteAircraft.hasAircraftDesignator() && usedModelSet.contains(&CAircraftModel::getAircraftIcaoCodeDesignator, remoteAircraft.getAircraftIcaoCodeDesignator()))
         {
-            const CAircraftModelList byAircraft(modelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode()));
+            const CAircraftModelList byAircraft(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
             map = byAircraft.scoreFull(remoteAircraft.getModel());
         }
-        else if (remoteAircraft.getAircraftIcaoCode().hasValidCombinedType() && modelSet.containsCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()))
+        else if (remoteAircraft.getAircraftIcaoCode().hasValidCombinedType() && usedModelSet.containsCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()))
         {
-            const CAircraftModelList byAircraft(modelSet.findByCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()));
+            const CAircraftModelList byAircraft(usedModelSet.findByCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by combined type '%2' for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getCombinedType()), getLogCategories());
             map = byAircraft.scoreFull(remoteAircraft.getModel());
         }
         else
         {
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using full set with %1 models").arg(modelSet.size()), getLogCategories());
-            map = modelSet.scoreFull(remoteAircraft.getModel());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using set with %1 models").arg(usedModelSet.size()), getLogCategories());
+            map = usedModelSet.scoreFull(remoteAircraft.getModel());
         }
 
         CAircraftModel matchedModel;

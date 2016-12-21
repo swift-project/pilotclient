@@ -637,14 +637,17 @@ namespace BlackCore
 
         bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
-            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << rendered; }
             bool c = this->m_airspace->updateAircraftRendered(callsign, rendered);
             return c;
         }
 
+        bool CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        {
+            return this->m_airspace->updateAircraftGroundElevation(callsign, elevation);
+        }
+
         void CContextNetwork::updateMarkAllAsNotRendered()
         {
-            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             this->m_airspace->updateMarkAllAsNotRendered();
         }
 

@@ -21,13 +21,14 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/modulator.h"
 #include "blackmisc/aviation/transponder.h"
+#include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/network/user.h"
+#include "blackmisc/network/voicecapabilities.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/network/user.h"
-#include "blackmisc/network/voicecapabilities.h"
-#include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/range.h"
 #include "blackmisc/sequence.h"
@@ -195,15 +196,15 @@ namespace BlackCore
         Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
 
         // bind does not allow to define connection type, so we use receiver as workaround
-        QMetaObject::Connection c1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, receiver, situationSlot);
+        const QMetaObject::Connection c1 = connect(this, &CAirspaceMonitor::addedAircraftSituation, receiver, situationSlot);
         Q_ASSERT_X(c1, Q_FUNC_INFO, "connect failed");
-        QMetaObject::Connection c2 = connect(this, &CAirspaceMonitor::addedAircraftParts, receiver, partsSlot);
+        const QMetaObject::Connection c2 = connect(this, &CAirspaceMonitor::addedAircraftParts, receiver, partsSlot);
         Q_ASSERT_X(c2, Q_FUNC_INFO, "connect failed");
-        QMetaObject::Connection c3 = connect(this, &CAirspaceMonitor::removedAircraft, receiver, removedAircraftSlot);
+        const QMetaObject::Connection c3 = connect(this, &CAirspaceMonitor::removedAircraft, receiver, removedAircraftSlot);
         Q_ASSERT_X(c3, Q_FUNC_INFO, "connect failed");
         // trick is to use the Queued signal here
         // analyzer (own thread) -> airspaceAircraftSnapshot -> AirspaceMonitor -> airspaceAircraftSnapshot queued in main thread
-        QMetaObject::Connection c4 = this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot, Qt::QueuedConnection);
+        const QMetaObject::Connection c4 = this->connect(this->m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, receiver, aircraftSnapshotSlot, Qt::QueuedConnection);
         Q_ASSERT_X(c4, Q_FUNC_INFO, "connect failed");
         return QList<QMetaObject::Connection>({ c1, c2, c3, c4});
     }
@@ -247,6 +248,13 @@ namespace BlackCore
     {
         const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexRendered, CVariant::fromValue(rendered));
         const int c = this->updateAircraftInRange(callsign, vm);
+        return c > 0;
+    }
+
+    bool CAirspaceMonitor::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+    {
+        QWriteLocker l(&m_lockAircraft);
+        const int c = m_aircraftInRange.setGroundElevation(callsign, elevation.geodeticHeight());
         return c > 0;
     }
 
@@ -307,7 +315,7 @@ namespace BlackCore
         CCallsignSet searchList(callsigns);
 
         // myself, which is not in the lists below
-        CSimulatedAircraft myAircraft(getOwnAircraft());
+        const CSimulatedAircraft myAircraft(getOwnAircraft());
         if (!myAircraft.getCallsign().isEmpty() && searchList.contains(myAircraft.getCallsign()))
         {
             searchList.remove(myAircraft.getCallsign());
@@ -343,7 +351,7 @@ namespace BlackCore
         // those are the ones not in range
         for (const CCallsign &callsign : searchList)
         {
-            CUserList usersByCallsign = sApp->getWebDataServices()->getUsersForCallsign(callsign);
+            const CUserList usersByCallsign = sApp->getWebDataServices()->getUsersForCallsign(callsign);
             if (usersByCallsign.isEmpty())
             {
                 CUser user;
@@ -663,7 +671,7 @@ namespace BlackCore
     {
         Q_ASSERT(CThreadUtils::isCurrentThreadObjectThread(this));
         if (!this->isConnected()) { return; }
-        CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
+        const CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
             // new station, init with data from data file
@@ -699,7 +707,7 @@ namespace BlackCore
             vm.addValue(CAtcStation::IndexFrequency, frequency);
             vm.addValue(CAtcStation::IndexPosition, position);
             vm.addValue(CAtcStation::IndexRange, range);
-            int changed = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
+            const int changed = this->m_atcStationsOnline.applyIfCallsign(callsign, vm, true);
             if (changed > 0) { emit this->changedAtcStationsOnline(); }
         }
 
@@ -713,7 +721,7 @@ namespace BlackCore
         this->m_otherClients.removeByCallsign(callsign);
         if (this->m_atcStationsOnline.containsCallsign(callsign))
         {
-            CAtcStation removedStation = this->m_atcStationsOnline.findFirstByCallsign(callsign);
+            const CAtcStation removedStation = this->m_atcStationsOnline.findFirstByCallsign(callsign);
             this->m_atcStationsOnline.removeByCallsign(callsign);
             emit this->changedAtcStationsOnline();
             emit this->changedAtcStationOnlineConnectionStatus(removedStation, false);
@@ -933,7 +941,7 @@ namespace BlackCore
 
     int CAirspaceMonitor::updateOnlineStations(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues, bool sendSignal)
     {
-        const int c = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, skipEqualValues);
+        const int c = this->m_atcStationsOnline.applyIfCallsign(callsign, vm, skipEqualValues);
         if (c > 0 && sendSignal)
         {
             emit this->changedAtcStationsOnline();
@@ -943,7 +951,8 @@ namespace BlackCore
 
     int CAirspaceMonitor::updateBookedStations(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues, bool sendSignal)
     {
-        const int c = this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm, skipEqualValues);
+        // do not used applyFirst here, more stations wit callsign at a time
+        const int c = this->m_atcStationsBooked.applyIfCallsign(callsign, vm, skipEqualValues);
         if (c > 0 && sendSignal)
         {
             emit this->changedAtcStationsBooked();

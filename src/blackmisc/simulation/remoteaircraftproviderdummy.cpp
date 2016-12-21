@@ -8,17 +8,19 @@
  */
 
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/geo/elevationplane.h"
+#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dictionary.h"
 #include "blackmisc/metaclassprivate.h"
 #include "blackmisc/propertyindexvariantmap.h"
-#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "blackmisc/variant.h"
 
 #include <QHash>
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
 
 namespace BlackMisc
 {
@@ -105,7 +107,7 @@ namespace BlackMisc
         bool CRemoteAircraftProviderDummy::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
         {
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexEnabled, CVariant::fromValue(enabledForRendering));
-            int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
@@ -113,7 +115,7 @@ namespace BlackMisc
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
-            int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
@@ -121,22 +123,29 @@ namespace BlackMisc
         {
             Q_UNUSED(originator);
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::from(model));
-            int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
         bool CRemoteAircraftProviderDummy::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositionUpdates)
         {
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexFastPositionUpdates, CVariant::fromValue(enableFastPositionUpdates));
-            int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
         }
 
         bool CRemoteAircraftProviderDummy::updateAircraftRendered(const CCallsign &callsign, bool rendered)
         {
             CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexRendered, CVariant::fromValue(rendered));
-            int n = this->m_aircraft.applyIfCallsign(callsign, vm);
+            const int n = this->m_aircraft.applyIfCallsign(callsign, vm);
             return n > 0;
+        }
+
+        bool CRemoteAircraftProviderDummy::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        {
+            CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexSituation, CAircraftSituation::IndexGroundSpeed }, CVariant::fromValue(elevation));
+            const int c = this->m_aircraft.applyIfCallsign(callsign, vm);
+            return c > 0;
         }
 
         void CRemoteAircraftProviderDummy::updateMarkAllAsNotRendered()

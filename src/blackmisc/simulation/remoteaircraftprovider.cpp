@@ -10,6 +10,7 @@
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
 
 namespace BlackMisc
 {
@@ -91,6 +92,12 @@ namespace BlackMisc
         {
             Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
             return this->m_remoteAircraftProvider->updateAircraftRendered(callsign, rendered);
+        }
+
+        bool CRemoteAircraftAware::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation)
+        {
+            Q_ASSERT_X(this->m_remoteAircraftProvider, Q_FUNC_INFO, "No object available");
+            return this->m_remoteAircraftProvider->updateAircraftGroundElevation(callsign, elevation);
         }
 
         void CRemoteAircraftAware::updateMarkAllAsNotRendered()

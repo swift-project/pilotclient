@@ -62,8 +62,7 @@ namespace BlackMisc
             //! Clear all data
             void clear();
 
-            //! \name Interface overrides
-            //! @{
+            // Interface overrides
             virtual CSimulatedAircraftList getAircraftInRange() const override;
             virtual int getAircraftInRangeCount() const override;
             virtual Aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
@@ -84,9 +83,10 @@ namespace BlackMisc
             ) override;
             virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRendering) override;
             virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
-            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
+            virtual bool updateAircraftNetworkModel(const Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator) override;
             virtual bool updateFastPositionEnabled(const Aviation::CCallsign &callsign, bool enableFastPositionUpdates) override;
             virtual bool updateAircraftRendered(const Aviation::CCallsign &callsign, bool rendered) override;
+            virtual bool updateAircraftGroundElevation(const Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) override;
             virtual void updateMarkAllAsNotRendered() override;
             virtual BlackMisc::CStatusMessageList getReverseLookupMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isReverseLookupMessagesEnabled() const override;
@@ -94,7 +94,6 @@ namespace BlackMisc
             virtual BlackMisc::CStatusMessageList getAircraftPartsHistory(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isAircraftPartsHistoryEnabled() const override;
             virtual void enableAircraftPartsHistory(bool enabled) override;
-            //! @}
 
         signals:
             //! Added situation

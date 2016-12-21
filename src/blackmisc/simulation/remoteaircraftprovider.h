@@ -37,7 +37,7 @@ namespace BlackMisc
         class CAircraftSituation;
         class CCallsign;
     }
-
+    namespace Geo { class CElevationPlane; }
     namespace Simulation
     {
         //! Direct thread safe in memory access to remote aircraft
@@ -108,6 +108,10 @@ namespace BlackMisc
             //! \threadsafe
             virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered) = 0;
 
+            //! Ground elevation of aircraft
+            //! \threadsafe
+            virtual bool updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation) = 0;
+
             //! Mark all as not rendered
             //! \threadsafe
             virtual void updateMarkAllAsNotRendered() = 0;
@@ -168,7 +172,7 @@ namespace BlackMisc
         {
         public:
             //! \copydoc IRemoteAircraftProvider::getAircraftInRange
-            virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const;
+            BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const;
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeCount
             int getAircraftInRangeCount() const;
@@ -177,46 +181,46 @@ namespace BlackMisc
             BlackMisc::Aviation::CCallsignSet getAircraftInRangeCallsigns() const;
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeForCallsign
-            virtual BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;
+            BlackMisc::Simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
-            virtual BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            BlackMisc::Simulation::CAircraftModel getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::getLatestAirspaceAircraftSnapshot
-            virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
+            BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSituations
-            virtual BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const;
+            BlackMisc::Aviation::CAircraftSituationList remoteAircraftSituations(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftParts
-            virtual BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const;
+            BlackMisc::Aviation::CAircraftPartsList remoteAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTimeBefore) const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSupportingParts
-            virtual BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const;
+            BlackMisc::Aviation::CCallsignSet remoteAircraftSupportingParts() const;
 
             //! \copydoc IRemoteAircraftProvider::remoteAircraftSituationsCount
-            virtual int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const;
+            int remoteAircraftSituationsCount(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::isRemoteAircraftSupportingParts
-            virtual bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
+            bool isRemoteAircraftSupportingParts(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering);
+            bool updateAircraftEnabled(const BlackMisc::Aviation::CCallsign &callsign, bool enabledForRedering);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
+            bool updateAircraftModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftNetworkModel
-            virtual bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
+            bool updateAircraftNetworkModel(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::CIdentifier &originator);
 
             //! \copydoc IRemoteAircraftProvider::updateAircraftRendered
-            virtual bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
+            bool updateAircraftRendered(const BlackMisc::Aviation::CCallsign &callsign, bool rendered);
+
+            //! \copydoc IRemoteAircraftProvider::updateAircraftGroundElevation
+            bool updateAircraftGroundElevation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Geo::CElevationPlane &elevation);
 
             //! \copydoc IRemoteAircraftProvider::updateMarkAllAsNotRendered
-            virtual void updateMarkAllAsNotRendered();
-
-            //! Destructor
-            virtual ~CRemoteAircraftAware() {}
+            void updateMarkAllAsNotRendered();
 
             //! Set remote aircraft provider
             void setRemoteAircraftProvider(IRemoteAircraftProvider *remoteAircraftProvider) { m_remoteAircraftProvider = remoteAircraftProvider; }
