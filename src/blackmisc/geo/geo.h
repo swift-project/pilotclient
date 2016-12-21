@@ -19,5 +19,6 @@
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
 #include "blackmisc/geo/coordinategeodetic.h"
+#include "blackmisc/geo/elevationplane.h"
 
 #endif // guard

@@ -19,6 +19,7 @@ namespace BlackMisc
             CCoordinateGeodetic::registerMetadata();
             CLatitude::registerMetadata();
             CLongitude::registerMetadata();
+            CElevationPlane::registerMetadata();
         }
     } // ns
 } // ns
