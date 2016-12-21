@@ -9,13 +9,15 @@
 
 #include "simulatorfsx.h"
 #include "blackcore/application.h"
-#include "blackmisc/interpolatorlinear.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
@@ -49,11 +51,11 @@ namespace BlackSimPlugin
             Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(remoteAircraftProvider, Q_FUNC_INFO, "Missing provider");
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
-            this->m_realityBubbleTimer.setInterval(20 * 1000);
+            m_realityBubbleTimer.setInterval(20 * 1000);
             connect(&m_realityBubbleTimer, &QTimer::timeout, this, &CSimulatorFsx::ps_addAircraftCurrentlyOutOfBubble);
 
             m_useFsuipc = true; // Temporarily enabled until Simconnect Weather is implemented.
-            this->m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
+            m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             m_defaultModel =
             {
                 "Boeing 737-800 Paint1",
@@ -155,8 +157,8 @@ namespace BlackSimPlugin
                 // initial position if interpolator has data, otherwise do nothing
                 setInitialAircraftSituation(addedAircraft); // set interpolated data/parts if available
 
-                const DWORD requestId = m_requestId++;
-                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
+                const DWORD requestId = obtainRequestId();
+                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation(), CInterpolationHints());
                 const QString modelString(addedAircraft.getModelString());
 
                 if (m_interpolationRenderingSetup.showSimulatorDebugMessages())
@@ -195,9 +197,9 @@ namespace BlackSimPlugin
             if (!this->isSimulating()) { return false; }
 
             // actually those data should be the same as ownAircraft
-            CComSystem newCom1 = ownAircraft.getCom1System();
-            CComSystem newCom2 = ownAircraft.getCom2System();
-            CTransponder newTransponder = ownAircraft.getTransponder();
+            const CComSystem newCom1 = ownAircraft.getCom1System();
+            const CComSystem newCom2 = ownAircraft.getCom2System();
+            const CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
             if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
@@ -356,7 +358,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimStopped()
         {
-            int oldStatus = getSimulatorStatus();
+            const int oldStatus = getSimulatorStatus();
             m_simSimulating = false;
             emitSimulatorCombinedStatus(oldStatus);
         }
@@ -370,6 +372,18 @@ namespace BlackSimPlugin
         {
             // reset complete state, we are going down
             disconnectFrom();
+        }
+
+        DWORD CSimulatorFsx::obtainRequestId()
+        {
+            DWORD id = m_requestId++;
+            if (id < FirstRequestId)
+            {
+                // overflow, restart
+                id = FirstRequestId;
+                m_requestId = FirstRequestId + 1;
+            }
+            return id;
         }
 
         void CSimulatorFsx::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
@@ -390,30 +404,33 @@ namespace BlackSimPlugin
             aircraftSituation.setBank(CAngle(-simulatorOwnAircraft.bank, CAngleUnit::deg()));
             aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
             aircraftSituation.setGroundSpeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
-            aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevation, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+            aircraftSituation.setGroundElevation(CAltitude(simulatorOwnAircraft.elevation, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
             aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
 
-            CAircraftLights lights(simulatorOwnAircraft.lightStrobe,
-                                   simulatorOwnAircraft.lightLanding,
-                                   simulatorOwnAircraft.lightTaxi,
-                                   simulatorOwnAircraft.lightBeacon,
-                                   simulatorOwnAircraft.lightNav,
-                                   simulatorOwnAircraft.lightLogo);
-
-            QList<bool> helperList {simulatorOwnAircraft.engine1Combustion != 0, simulatorOwnAircraft.engine2Combustion != 0,
-                                    simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0 };
+            const CAircraftLights lights(simulatorOwnAircraft.lightStrobe,
+                                         simulatorOwnAircraft.lightLanding,
+                                         simulatorOwnAircraft.lightTaxi,
+                                         simulatorOwnAircraft.lightBeacon,
+                                         simulatorOwnAircraft.lightNav,
+                                         simulatorOwnAircraft.lightLogo);
 
             CAircraftEngineList engines;
+            const QList<bool> helperList
+            {
+                simulatorOwnAircraft.engine1Combustion != 0, simulatorOwnAircraft.engine2Combustion != 0,
+                simulatorOwnAircraft.engine3Combustion != 0, simulatorOwnAircraft.engine4Combustion != 0
+            };
+
             for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
             {
                 engines.push_back(CAircraftEngine(index + 1, helperList.at(index)));
             }
 
-            CAircraftParts parts(lights, simulatorOwnAircraft.gearHandlePosition,
-                                 simulatorOwnAircraft.flapsHandlePosition * 100,
-                                 simulatorOwnAircraft.spoilersHandlePosition,
-                                 engines,
-                                 simulatorOwnAircraft.simOnGround);
+            const CAircraftParts parts(lights, simulatorOwnAircraft.gearHandlePosition,
+                                       simulatorOwnAircraft.flapsHandlePosition * 100,
+                                       simulatorOwnAircraft.spoilersHandlePosition,
+                                       engines,
+                                       simulatorOwnAircraft.simOnGround);
 
             // set values
             updateOwnSituation(aircraftSituation);
@@ -463,6 +480,39 @@ namespace BlackSimPlugin
             }
         }
 
+        void CSimulatorFsx::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
+        {
+            CInterpolationHints &hints = m_hints[simObject.getCallsign()];
+
+            // we only need elevation near ground, in other cases we ignore it
+            if (remoteAircraftData.aboveGround() <= 100.0)
+            {
+                CElevationPlane elevation(remoteAircraftData.latitude, remoteAircraftData.longitude, remoteAircraftData.elevation);
+                elevation.setSinglePointRadius();
+
+                // const QString debug(hints.debugInfo(elevation));
+                hints.setElevation(elevation); // update elevation
+                hints.setCGAboveGround({ remoteAircraftData.cgToGround, CLengthUnit::ft() });
+
+                // set it in the remote aircraft provider
+                this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
+                // switch to fast updates
+                if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_VISUAL_FRAME)
+                {
+                    this->requestDataForSimObject(simObject, SIMCONNECT_PERIOD_VISUAL_FRAME);
+                }
+            }
+            else
+            {
+                hints.resetElevation();
+                // switch to slow updates
+                if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_SECOND)
+                {
+                    this->requestDataForSimObject(simObject, SIMCONNECT_PERIOD_SECOND);
+                }
+            }
+        }
+
         void CSimulatorFsx::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
         {
             CTransponder::TransponderMode newMode;
@@ -475,7 +525,7 @@ namespace BlackSimPlugin
                 newMode = sbDataArea.isStandby() ? CTransponder::StateStandby : CTransponder::ModeC;
             }
             const CSimulatedAircraft myAircraft(this->getOwnAircraft());
-            bool changed = (myAircraft.getTransponderMode() != newMode);
+            const bool changed = (myAircraft.getTransponderMode() != newMode);
             if (!changed) { return; }
             CTransponder xpdr = myAircraft.getTransponder();
             xpdr.setTransponderMode(newMode);
@@ -511,7 +561,7 @@ namespace BlackSimPlugin
             }
 
             // P3D also has SimConnect_AIReleaseControlEx;
-            DWORD requestId = m_requestId++;
+            const DWORD requestId = obtainRequestId();
             HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
             if (hr == S_OK)
             {
@@ -683,6 +733,7 @@ namespace BlackSimPlugin
 
             // call in SIM
             SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestId++));
+            m_hints.remove(simObject.getCallsign());
 
             // mark in provider
             bool updated = updateAircraftRendered(callsign, false);
@@ -809,7 +860,6 @@ namespace BlackSimPlugin
             // values used for position and parts
             bool isOnGround = false;
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
-            const CCallsignSet aircraftWithParts(this->remoteAircraftSupportingParts()); // optimization, fetch all parts supporting aircraft in one step (one lock)
 
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
             for (const CSimConnectObject &simObj : simObjects)
@@ -823,43 +873,13 @@ namespace BlackSimPlugin
                 Q_ASSERT_X(simObj.hasValidRequestAndObjectId(), Q_FUNC_INFO, "Missing ids");
 
                 IInterpolator::InterpolationStatus interpolatorStatus;
-                const CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, simObj.isVtol(), interpolatorStatus);
-
-                // having the onGround flag in parts forces me to obtain parts here
-                // which is not the smartest thing regarding performance
-                IInterpolator::PartsStatus partsStatus;
-                partsStatus.setSupportsParts(enableAircraftParts && aircraftWithParts.contains(callsign));
-                CAircraftPartsList parts;
-                if (enableAircraftParts && partsStatus.allTrue())
-                {
-                    parts = this->m_interpolator->getPartsBeforeTime(callsign, interpolatedSituation.getMSecsSinceEpoch(), partsStatus);
-                }
+                const CInterpolationHints hints(m_hints[simObj.getCallsign()]);
+                const CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, hints, interpolatorStatus);
 
                 if (interpolatorStatus.allTrue())
                 {
                     // update situation
-                    SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxPosition(interpolatedSituation);
-
-                    //! \fixme The onGround in parts is no ideal, as already mentioned in the discussion
-                    // a) I am forced to read parts even if I just want to update position
-                    // b) Unlike the other values it is not a fire and forget value, as I need it again in the next cycle
-                    if (partsStatus.isSupportingParts() && !parts.isEmpty())
-                    {
-                        // we have parts, and use the closest ground
-
-                        // \fixme onGround flag is not synchronized with positions and causes jumps during takeoff/landing.
-                        // We need to find a better way to synchronize both. Until then, use it for a very small speed range only.
-                        // This covers taxiing aircraft as well as a hovering helicopter.
-                        double groundSpeedKnots = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts());
-                        if (groundSpeedKnots < 50) { isOnGround = parts.front().isOnGround(); }
-                        else { isOnGround = interpolatedSituation.isOnGroundGuessed(); }
-                    }
-                    else
-                    {
-                        isOnGround = interpolatedSituation.isOnGroundGuessed();
-                    }
-
-                    position.OnGround = isOnGround ? 1U : 0U;
+                    SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxPosition(interpolatedSituation, hints);
                     HRESULT hr = S_OK;
                     hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPosition,
                                                         static_cast<SIMCONNECT_OBJECT_ID>(simObj.getObjectId()), 0, 0,
@@ -873,10 +893,16 @@ namespace BlackSimPlugin
 
                 if (interpolatorStatus.didInterpolationSucceed())
                 {
+                    const CCallsignSet aircraftWithParts(this->remoteAircraftSupportingParts()); // optimization, fetch all parts supporting aircraft in one step (one lock)
+                    IInterpolator::PartsStatus partsStatus;
+                    partsStatus.setSupportsParts(enableAircraftParts && aircraftWithParts.contains(callsign));
+
                     // aircraft parts inside "interpolator if", as no parts can be set without situation
                     // situation is used to anticipate parts if other client does not send them
                     if (enableAircraftParts)
                     {
+                        CAircraftPartsList parts;
+                        parts = this->m_interpolator->getPartsBeforeTime(callsign, interpolatedSituation.getMSecsSinceEpoch(), partsStatus);
                         updateRemoteAircraftParts(simObj, parts, partsStatus, interpolatedSituation, isOnGround); // update and retrieve parts in the same step
                     }
                 }
@@ -971,22 +997,20 @@ namespace BlackSimPlugin
             return hr == S_OK;
         }
 
-        SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxPosition(const CAircraftSituation &situation, bool guessOnGround)
+        SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxPosition(const CAircraftSituation &situation, const CInterpolationHints &hints)
         {
             SIMCONNECT_DATA_INITPOSITION position;
             position.Latitude = situation.latitude().value(CAngleUnit::deg());
             position.Longitude = situation.longitude().value(CAngleUnit::deg());
-            position.Altitude = situation.getAltitude().value(CLengthUnit::ft());
+            position.Altitude = situation.getCorrectedAltitude(hints.getCGAboveGround()).value(CLengthUnit::ft());
+            position.Heading = situation.getHeading().value(CAngleUnit::deg());
+            position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
+
             // MSFS has inverted pitch and bank angles
             position.Pitch = -situation.getPitch().value(CAngleUnit::deg());
             position.Bank = -situation.getBank().value(CAngleUnit::deg());
-            position.Heading = situation.getHeading().value(CAngleUnit::deg());
-            position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
-            bool onGround = false;
-            if (guessOnGround)
-            {
-                onGround = situation.isOnGroundGuessed();
-            }
+
+            const bool onGround = situation.isOnGroundGuessed(hints.getCGAboveGround());
             position.OnGround = onGround ? 1U : 0U;
             return position;
         }
@@ -1047,6 +1071,21 @@ namespace BlackSimPlugin
             }
         }
 
+        bool CSimulatorFsx::requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
+        {
+            if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            if (simObject.getSimDataPeriod() == period) { return true; } // already queried like this
+
+            const HRESULT result = SimConnect_RequestDataOnSimObject(m_hSimConnect, simObject.getRequestId(), CSimConnectDefinitions::DataRemoteAircraftSimData, simObject.getObjectId(), period, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED);
+            if (result == S_OK)
+            {
+                m_simConnectObjects[simObject.getCallsign()].setSimDataPeriod(period);
+                return true;
+            }
+            CLogMessage(this).error("Cannot request data on object '%1'") << simObject.getObjectId();
+            return false;
+        }
+
         void CSimulatorFsx::initInternalsObject()
         {
             CSimulatorFsCommon::initInternalsObject();
@@ -1068,7 +1107,7 @@ namespace BlackSimPlugin
             m_syncDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
             m_interpolationRequest  = 0;
-            m_requestId = 1;
+            m_requestId = FirstRequestId;
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
             CSimulatorFsCommon::reset();

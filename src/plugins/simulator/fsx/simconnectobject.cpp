@@ -75,6 +75,15 @@ namespace BlackSimPlugin
             return CSimConnectObject();
         }
 
+        CSimConnectObject CSimConnectObjects::getSimObjectForRequestId(DWORD requestId) const
+        {
+            for (const CSimConnectObject &simObject : this->values())
+            {
+                if (simObject.getRequestId() == requestId) { return simObject; }
+            }
+            return CSimConnectObject();
+        }
+
         bool CSimConnectObjects::isKnownSimObjectId(DWORD objectId) const
         {
             const CSimConnectObject simObject(getSimObjectForObjectId(objectId));

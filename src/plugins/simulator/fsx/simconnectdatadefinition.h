@@ -38,7 +38,7 @@ namespace BlackSimPlugin
             double pitch;           //!< Pitch (deg)
             double bank;            //!< Bank (deg)
             double velocity;        //!< Ground velocity
-            double elevation;       //!< Elevation (m)
+            double elevation;       //!< Elevation (ft)
             double simOnGround;     //!< Is aircraft on ground?
 
             double lightStrobe;     //!< Is strobe light on?
@@ -92,6 +92,19 @@ namespace BlackSimPlugin
             double engine4Combustion;             //!< Engine 4 combustion flag
         };
 
+        //! Data for AI object sent back from simulator
+        struct DataDefinitionRemoteAircraftSimData
+        {
+            double latitude;   //!< Latitude (deg)
+            double longitude;  //!< Longitude (deg)
+            double altitude;   //!< Altitude (ft)
+            double elevation;  //!< Elevation (ft)
+            double cgToGround; //!< CG to ground (ft)
+
+            //! Above ground ft
+            double aboveGround() const { return altitude - elevation; }
+        };
+
         //! Data struct simulator environment
         struct DataDefinitionSimEnvironment
         {
@@ -142,6 +155,7 @@ namespace BlackSimPlugin
                 DataOwnAircraftTitle,
                 DataRemoteAircraftParts,
                 DataRemoteAircraftPosition,
+                DataRemoteAircraftSimData,
                 DataSimEnvironment,
                 DataClientAreaSb,       //!< whole SB area
                 DataClientAreaSbIdent,  //!< ident single value
@@ -155,7 +169,8 @@ namespace BlackSimPlugin
                 RequestRemoveAircraft,
                 RequestOwnAircraftTitle,
                 RequestSimEnvironment,
-                RequestSbData, //!< SB client area / XPDR mode
+                RequestSbData,   //!< SB client area / XPDR mode
+                RequestEndMarker //!< free request ids can start here
             };
 
             //! Constructor
@@ -171,8 +186,11 @@ namespace BlackSimPlugin
             //! Initialize data definition for our own aircraft
             static HRESULT initOwnAircraft(const HANDLE hSimConnect);
 
-            //! Initialize data definition for remote aircrafts
+            //! Initialize data definition for remote aircraft
             static HRESULT initRemoteAircraft(const HANDLE hSimConnect);
+
+            //! Initialize data for remote aircraft queried from simulator
+            static HRESULT initRemoteAircraftSimData(const HANDLE hSimConnect);
 
             //! Initialize data definition for Simulator environment
             static HRESULT initSimulatorEnvironment(const HANDLE hSimConnect);

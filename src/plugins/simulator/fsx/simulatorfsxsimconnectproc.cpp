@@ -82,7 +82,7 @@ namespace BlackSimPlugin
                     {
                     case SystemEventSimStatus:
                         {
-                            bool running = event->dwData ? true : false;
+                            const bool running = event->dwData ? true : false;
                             if (running)
                             {
                                 simulatorFsx->onSimRunning();
@@ -95,7 +95,7 @@ namespace BlackSimPlugin
                         }
                     case SystemEventPause:
                         {
-                            bool p = event->dwData ? true : false;
+                            const bool p = event->dwData ? true : false;
                             if (simulatorFsx->m_simPaused != p)
                             {
                                 simulatorFsx->m_simPaused = p;
@@ -110,7 +110,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
-                    SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
+                    const SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
                     const DWORD objectID = event->dwData;
                     const SIMCONNECT_SIMOBJECT_TYPE objectType = event->eObjType;
                     if (objectType != SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT && objectType != SIMCONNECT_SIMOBJECT_TYPE_HELICOPTER)
@@ -151,25 +151,37 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
                     SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
-                    const DWORD requestID = event->dwRequestID;
-                    const DWORD objectID = event->dwObjectID;
-                    bool success = simulatorFsx->setSimConnectObjectId(requestID, objectID);
+                    const DWORD requestId = event->dwRequestID;
+                    const DWORD objectId = event->dwObjectID;
+                    bool success = simulatorFsx->setSimConnectObjectId(requestId, objectId);
                     if (!success) { break; } // not an request ID of ours
 
-                    success = simulatorFsx->simulatorReportedObjectAdded(objectID);
-                    if (!success)
+                    success = simulatorFsx->simulatorReportedObjectAdded(objectId);
+                    if (success)
                     {
-                        const CSimulatedAircraft remoteAircraft(simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectID).getAircraft());
-                        const CStatusMessage msg = CStatusMessage(simulatorFsx).error("Cannot add object %1") << objectID;
-                        CLogMessage::preformatted(msg);
-                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, msg);
+                        const CSimConnectObject simObject = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
+                        HRESULT result = simulatorFsx->requestDataForSimObject(simObject);
+                        Q_UNUSED(result);
                     }
+                    else
+                    {
+                        const CSimulatedAircraft remoteAircraft(simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId).getAircraft());
+                        const CStatusMessage msgAdd = CStatusMessage(simulatorFsx).error("Cannot add object %1") << objectId;
+                        CLogMessage::preformatted(msgAdd);
+                        emit simulatorFsx->physicallyAddingRemoteModelFailed(remoteAircraft, msgAdd);
+                    }
+                    break;
+                }
+            case SIMCONNECT_RECV_ID_SIMOBJECT_DATA_BYTYPE:
+                {
+                    // SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE *)pData;
                     break;
                 }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
                 {
                     SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
-                    switch (pObjData->dwRequestID)
+                    const DWORD requestId = pObjData->dwRequestID;
+                    switch (requestId)
                     {
                     case CSimConnectDefinitions::RequestOwnAircraft:
                         {
@@ -203,6 +215,21 @@ namespace BlackSimPlugin
                             break;
                         }
                     default:
+                        {
+                            static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
+                            const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForRequestId(requestId);
+                            if (simObj.hasValidRequestAndObjectId())
+                            {
+                                const DWORD objectId = pObjData->dwObjectID;
+                                const DataDefinitionRemoteAircraftSimData *remoteAircraftSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
+                                // extra check, but ids should be the same
+                                if (objectId == simObj.getObjectId())
+                                {
+                                    simulatorFsx->updateRemoteAircraftFromSimulator(simObj, *remoteAircraftSimData);
+                                }
+                            }
+                            break;
+                        }
                         break;
                     }
                     break;

@@ -16,8 +16,7 @@
 #include "simconnect/SimConnect.h"
 #include <QSharedPointer>
 
-namespace BlackMisc { class IInterpolator; }
-
+namespace BlackMisc { namespace Simulation { class IInterpolator; } }
 namespace BlackSimPlugin
 {
     namespace Fsx
@@ -43,6 +42,12 @@ namespace BlackSimPlugin
 
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
+
+            //! How often do we request data from simulator for this remote aircraft
+            SIMCONNECT_PERIOD getSimDataPeriod() const { return m_requestSimDataPeriod; }
+
+            //! How often do we request data from simulator for this remote aircraft
+            void setSimDataPeriod(SIMCONNECT_PERIOD period) { m_requestSimDataPeriod = period; }
 
             //! Set Simconnect request id
             void setRequestId(DWORD id) { m_requestId = id; m_validRequestId = true; }
@@ -87,6 +92,7 @@ namespace BlackSimPlugin
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft;
             DWORD m_requestId = 0;
             DWORD m_objectId  = 0;
+            SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER; //!< how often do we query ground elevation
             bool m_validRequestId = false;
             bool m_validObjectId = false;
             bool m_confirmedAdded = false;
@@ -103,8 +109,11 @@ namespace BlackSimPlugin
             //! Find which callsign belongs to the object id
             BlackMisc::Aviation::CCallsign getCallsignForObjectId(DWORD objectId) const;
 
-            //! Find which callsign belongs to the object id
+            //! Get object per object id
             CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
+
+            //! Get object per request id
+            CSimConnectObject getSimObjectForRequestId(DWORD requestId) const;
 
             //! Is the object id one of our AI objects?
             bool isKnownSimObjectId(DWORD objectId) const;

@@ -16,7 +16,7 @@
 #include "simconnectobject.h"
 #include "../fscommon/simulatorfscommon.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/simulation/aircraftmodel.h"
@@ -102,27 +102,6 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CCallsignSet physicallyRenderedAircraft() const override;
             //! @}
 
-            //! Display receive exceptions?
-            bool stillDisplayReceiveExceptions();
-
-            //! Called when data about our own aircraft are received
-            void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
-
-            //! Update from SB client area
-            void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
-
-            //! An AI aircraft was added in the simulator
-            bool simulatorReportedObjectAdded(DWORD objectID);
-
-            //! Simulator reported that AI aircraft was removed
-            bool simulatorReportedObjectRemoved(DWORD objectID);
-
-            //! Set ID of a SimConnect object, so far we only have an request id in the object
-            bool setSimConnectObjectId(DWORD requestID, DWORD objectID);
-
-            //! The simconnect related objects
-            const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
-
         protected:
             //! \name Interface implementations
             //! @{
@@ -149,7 +128,8 @@ namespace BlackSimPlugin
             //! \remark kind of cleanup function, in an ideal this should never need to cleanup something
             BlackMisc::Aviation::CCallsignSet ps_physicallyRemoveAircraftNotInProvider();
 
-            //! Handle that an object has been added
+            //! Handle that an object has been added in simulator
+            //! \remark checks if the object was really added after an add request and not directly removed again
             bool ps_deferredSimulatorReportedObjectAdded(const BlackMisc::Aviation::CCallsign &callsign);
 
             //! Try to add the aircraft currently out of bubble
@@ -171,6 +151,9 @@ namespace BlackSimPlugin
             //! Simulator is going down
             void onSimExit();
 
+            //! Get new request id, overflow safe
+            DWORD obtainRequestId();
+
             //! Init when connected
             HRESULT initWhenConnected();
 
@@ -185,10 +168,34 @@ namespace BlackSimPlugin
 
             //! Update remote airacraft parts (send to FSX)
             bool updateRemoteAircraftParts(const CSimConnectObject &simObj, const BlackMisc::Aviation::CAircraftPartsList &parts,
-                                           BlackMisc::IInterpolator::PartsStatus partsStatus, const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, bool isOnGround) const;
+                                           BlackMisc::Simulation::IInterpolator::PartsStatus partsStatus, const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, bool isOnGround) const;
+
+            //! Called when data about our own aircraft are received
+            void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
+
+            //! Remote aircraft data sent from simulator
+            void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData);
+
+            //! Update from SB client area
+            void updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea);
+
+            //! An AI aircraft was added in the simulator
+            bool simulatorReportedObjectAdded(DWORD objectID);
+
+            //! Simulator reported that AI aircraft was removed
+            bool simulatorReportedObjectRemoved(DWORD objectID);
+
+            //! Set ID of a SimConnect object, so far we only have an request id in the object
+            bool setSimConnectObjectId(DWORD requestID, DWORD objectID);
+
+            //! Display receive exceptions?
+            bool stillDisplayReceiveExceptions();
+
+            //! The simconnect related objects
+            const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
 
             //! Format conversion
-            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, bool guessOnGround = true);
+            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Simulation::CInterpolationHints &hints);
 
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
@@ -199,6 +206,9 @@ namespace BlackSimPlugin
             //! Reload weather settings
             void reloadWeatherSettings();
 
+            //! Request data for a simObject (aka remote aircraft)
+            bool requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
+
             //! FSX position as string
             static QString fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position);
 
@@ -207,17 +217,19 @@ namespace BlackSimPlugin
 
             static constexpr int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             static constexpr int IgnoreReceiveExceptions = 10;    //!< skip exceptions when displayed more than x times
+            static constexpr int FirstRequestId = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
+
             QString m_simConnectVersion;            //!< SimConnect version
             bool m_simConnected  = false;           //!< Is simulator connected?
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets
             int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
             int  m_simConnectTimerId   = -1;        //!< Timer identifier
-            int  m_skipCockpitUpdateCycles = 0;     //!< Skip some update cycles to allow changes in simulator cockpit to be set
+            int  m_skipCockpitUpdateCycles = 0;     //!< skip some update cycles to allow changes in simulator cockpit to be set
             int  m_interpolationRequest  = 0;       //!< current interpolation request
             int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa ps_dispatch
             int  m_receiveExceptionCount = 0;       //!< exceptions
-            DWORD  m_requestId = 1;                 //!< request id
+            DWORD  m_requestId = FirstRequestId;    //!< request id, use obtainRequestId() to get id
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble

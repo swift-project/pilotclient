@@ -16,7 +16,6 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-
         CSimConnectDefinitions::CSimConnectDefinitions() {  }
 
         HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect)
@@ -24,6 +23,7 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
             hr += initOwnAircraft(hSimConnect);
             hr += initRemoteAircraft(hSimConnect);
+            hr += initRemoteAircraftSimData(hSimConnect);
             hr += initSimulatorEnvironment(hSimConnect);
             hr += initSbDataArea(hSimConnect);
             return hr;
@@ -32,14 +32,14 @@ namespace BlackSimPlugin
         HRESULT CSimConnectDefinitions::initOwnAircraft(const HANDLE hSimConnect)
         {
             HRESULT hr = S_OK;
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "Plane Latitude", "Degrees");
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "Plane Longitude", "Degrees");
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "Plane Altitude", "Feet");
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "Plane Heading Degrees True", "Degrees");
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "Plane Pitch Degrees", "Degrees");
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "Plane Bank Degrees", "Degrees");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LATITUDE", "Degrees");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LONGITUDE", "Degrees");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALTITUDE", "Feet");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE HEADING DEGREES TRUE", "Degrees");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE PITCH DEGREES", "Degrees");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE BANK DEGREES", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GROUND VELOCITY", "Knots");
-            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GROUND ALTITUDE", "Meters");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "GROUND ALTITUDE", "Feet");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SIM ON GROUND", "Bool");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT STROBE", "Bool");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LANDING", "Bool");
@@ -106,7 +106,21 @@ namespace BlackSimPlugin
             {
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSituation %1") << hr;
             }
+            return hr;
+        }
 
+        HRESULT CSimConnectDefinitions::initRemoteAircraftSimData(const HANDLE hSimConnect)
+        {
+            HRESULT hr = S_OK;
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "PLANE LATITUDE", "degrees");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "PLANE LONGITUDE", "degrees");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "PLANE ALTITUDE", "Feet");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "GROUND ALTITUDE", "Feet");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSimData, "STATIC CG TO GROUND", "Feet");
+            if (hr != S_OK)
+            {
+                CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: initRemoteAircraftSimData %1") << hr;
+            }
             return hr;
         }
 
@@ -162,6 +176,5 @@ namespace BlackSimPlugin
             }
             return hr;
         }
-
     } // namespace
 } // namespace
