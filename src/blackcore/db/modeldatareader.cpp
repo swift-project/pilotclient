@@ -387,7 +387,7 @@ namespace BlackCore
                 if (!liveriesJson.isEmpty())
                 {
                     CLiveryList liveries;
-                    liveries.convertFromJson(liveriesJson);
+                    liveries.convertFromJson(liveriesJson); //! \todo catch CJsonException or use convertFromJsonNoThrow
                     const int c = liveries.size();
                     this->m_liveryCache.set(liveries);
 
@@ -402,7 +402,7 @@ namespace BlackCore
                 if (!modelsJson.isEmpty())
                 {
                     CAircraftModelList models;
-                    models.convertFromJson(Json::jsonObjectFromString(modelsJson));
+                    models.convertFromJson(Json::jsonObjectFromString(modelsJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
                     const int c = models.size();
                     this->m_modelCache.set(models);
 
@@ -417,7 +417,7 @@ namespace BlackCore
                 if (!distributorsJson.isEmpty())
                 {
                     CDistributorList distributors;
-                    distributors.convertFromJson(Json::jsonObjectFromString(distributorsJson));
+                    distributors.convertFromJson(Json::jsonObjectFromString(distributorsJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
                     const int c = distributors.size();
                     this->m_distributorCache.set(distributors);
 

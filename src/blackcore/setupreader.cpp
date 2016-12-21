@@ -280,7 +280,7 @@ namespace BlackCore
         QString content(CFileUtils::readFileToString(fn));
         if (content.isEmpty()) { return false; }
         CGlobalSetup s;
-        s.convertFromJson(content);
+        s.convertFromJson(content); //! \todo catch CJsonException or use convertFromJsonNoThrow
         s.setDevelopment(true);
         m_setup.set(s);
         return true;
@@ -311,7 +311,7 @@ namespace BlackCore
             {
                 const CGlobalSetup currentSetup = m_setup.get();
                 CGlobalSetup loadedSetup;
-                loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
+                loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
                 loadedSetup.markAsLoaded(true);
                 if (lastModified > 0 && lastModified > loadedSetup.getMSecsSinceEpoch()) { loadedSetup.setMSecsSinceEpoch(lastModified); }
                 bool sameVersionLoaded = (loadedSetup == currentSetup);
@@ -384,7 +384,7 @@ namespace BlackCore
             {
                 CUpdateInfo currentUpdateInfo(m_updateInfo.get()); // from cache
                 CUpdateInfo loadedUpdateInfo;
-                loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson));
+                loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
                 if (lastModified > 0 && lastModified > loadedUpdateInfo.getMSecsSinceEpoch()) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
                 const bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
                 if (sameVersionLoaded)

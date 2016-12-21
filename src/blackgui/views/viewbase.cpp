@@ -1327,7 +1327,7 @@ namespace BlackGui
                     break;
                 }
                 ContainerType container;
-                container.convertFromJson(json);
+                container.convertFromJson(json); //! \todo catch CJsonException or use convertFromJsonNoThrow
                 m = this->modifyLoadedJsonData(container);
                 if (m.isFailure()) { break; } // modification error
                 m = this->validateLoadedJsonData(container);

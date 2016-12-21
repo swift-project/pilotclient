@@ -314,7 +314,7 @@ namespace BlackCore
                 if (!countriesJson.isEmpty())
                 {
                     CCountryList countries;
-                    countries.convertFromJson(Json::jsonObjectFromString(countriesJson));
+                    countries.convertFromJson(Json::jsonObjectFromString(countriesJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
                     const int c = countries.size();
                     this->m_countryCache.set(countries);
 
@@ -330,7 +330,7 @@ namespace BlackCore
                 if (!aircraftJson.isEmpty())
                 {
                     CAircraftIcaoCodeList aircraftIcaos;
-                    aircraftIcaos.convertFromJson(Json::jsonObjectFromString(aircraftJson));
+                    aircraftIcaos.convertFromJson(Json::jsonObjectFromString(aircraftJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
                     const int c = aircraftIcaos.size();
                     this->m_aircraftIcaoCache.set(aircraftIcaos);
 
@@ -345,7 +345,7 @@ namespace BlackCore
                 if (!airlineJson.isEmpty())
                 {
                     CAirlineIcaoCodeList airlineIcaos;
-                    airlineIcaos.convertFromJson(Json::jsonObjectFromString(airlineJson));
+                    airlineIcaos.convertFromJson(Json::jsonObjectFromString(airlineJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
                     const int c = airlineIcaos.size();
                     this->m_airlineIcaoCache.set(airlineIcaos);
                     reallyRead |= CEntityFlags::AirlineIcaoEntity;

@@ -61,7 +61,7 @@ namespace BlackCore
                 if (!airportsJson.isEmpty())
                 {
                     CAirportList airports;
-                    airports.convertFromJson(airportsJson);
+                    airports.convertFromJson(airportsJson); //! \todo catch CJsonException or use convertFromJsonNoThrow
                     const int c = airports.size();
                     this->m_airportCache.set(airports);
 
