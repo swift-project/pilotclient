@@ -13,10 +13,10 @@
 #define BLACKGUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/settings/textmessagesettings.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/identifier.h"
 #include "blackmisc/variant.h"
 
 #include <QFrame>
@@ -26,16 +26,10 @@
 
 class QWidget;
 
-namespace BlackMisc
-{
-    namespace Aviation { class CCallsign; }
-    namespace Network { class CTextMessage; }
-}
 namespace Ui { class CTextMessageComponent; }
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
-
     namespace Components
     {
         //! Text message widget
@@ -87,6 +81,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
             BlackMisc::CIdentifier m_identifier;
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TextMessageSettings> m_messageSettings { this };
 
             //! Enum to widget
             QWidget *getTabWidget(Tab tab) const;
@@ -111,7 +106,7 @@ namespace BlackGui
             void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage);
 
             //! Own aircraft
-            const BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
+            BlackMisc::Simulation::CSimulatedAircraft getOwnAircraft() const;
 
             //! For this text message's recepient, is the current tab selected?
             bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;

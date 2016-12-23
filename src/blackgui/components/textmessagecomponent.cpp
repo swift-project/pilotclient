@@ -47,6 +47,7 @@ using namespace BlackCore;
 using namespace BlackCore::Context;
 using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackGui::Settings;
 using namespace BlackGui::Views;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Audio;
@@ -118,19 +119,23 @@ namespace BlackGui
         void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
         {
             if (messages.isEmpty()) return;
+            const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
+            const CTextMessageSettings msgSettings(this->m_messageSettings.getThreadLocal());
+
             for (const CTextMessage &message : messages)
             {
                 bool relevantForMe = false;
 
                 // SELCAL
-                if (message.isSelcalMessage() && getOwnAircraft().isSelcalSelected(message.getSelcalCode()))
+                if (message.isSelcalMessage() && ownAircraft.isSelcalSelected(message.getSelcalCode()))
                 {
                     // this is SELCAL for me
                     if (sGui->getIContextAudio())
                     {
                         sGui->getIContextAudio()->playSelcalTone(message.getSelcalCode());
                     }
-                    else
+
+                    if (msgSettings.popupSelcalMessages())
                     {
                         emit this->displayInInfoWindow(CLogMessage(this).info("SELCAL received"), 3 * 1000);
                     }
@@ -148,12 +153,12 @@ namespace BlackGui
                 if (message.isRadioMessage())
                 {
                     // check for own COM frequencies
-                    if (message.isSendToFrequency(this->getOwnAircraft().getCom1System().getFrequencyActive()))
+                    if (message.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
                     {
                         ui->tep_TextMessagesCOM1->insertTextMessage(message);
                         relevantForMe = true;
                     }
-                    if (message.isSendToFrequency(this->getOwnAircraft().getCom2System().getFrequencyActive()))
+                    if (message.isSendToFrequency(ownAircraft.getCom2System().getFrequencyActive()))
                     {
                         ui->tep_TextMessagesCOM2->insertTextMessage(message);
                         relevantForMe = true;
@@ -179,7 +184,10 @@ namespace BlackGui
                     // if the channel is selected, do nothing
                     if (!this->isCorrespondingTextMessageTabSelected(message))
                     {
-                        emit this->displayInInfoWindow(CVariant::from(message), 5 * 1000);
+                        if (msgSettings.popup(message, ownAircraft))
+                        {
+                            emit this->displayInInfoWindow(CVariant::from(message), 5 * 1000);
+                        }
                     }
                 }
             }
@@ -215,7 +223,7 @@ namespace BlackGui
             else
             {
                 // frequency message
-                const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
+                const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
                 if (ui->tw_TextMessages->currentWidget() == ui->tb_TextMessagesAll) { return true; }
                 if (textMessage.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
                 {
@@ -299,7 +307,7 @@ namespace BlackGui
             }
         }
 
-        const CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
+        CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
         {
             Q_ASSERT(sGui->getIContextOwnAircraft());
             return sGui->getIContextOwnAircraft()->getOwnAircraft();
@@ -315,11 +323,12 @@ namespace BlackGui
             CAtcStation station(sGui->getIContextNetwork()->getOnlineStationForCallsign(callsign));
             if (!station.getCallsign().isEmpty())
             {
-                if (this->getOwnAircraft().getCom1System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
+                const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
+                if (ownAircraft.getCom1System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
                 {
                     return getTabWidget(TextMessagesCom1);
                 }
-                else if (this->getOwnAircraft().getCom2System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
+                else if (ownAircraft.getCom2System().isActiveFrequencyWithin25kHzChannel(station.getFrequency()))
                 {
                     return getTabWidget(TextMessagesCom2);
                 }
@@ -421,9 +430,9 @@ namespace BlackGui
                 else
                 {
                     // not a standard channel
-                    QString selectedTabText = ui->tw_TextMessages->tabText(index).trimmed();
                     bool isNumber;
-                    double frequency = selectedTabText.toDouble(&isNumber);
+                    const QString selectedTabText = ui->tw_TextMessages->tabText(index).trimmed();
+                    const double frequency = selectedTabText.toDouble(&isNumber);
                     if (isNumber)
                     {
                         CFrequency radioFrequency = CFrequency(frequency, CFrequencyUnit::MHz());
