@@ -38,7 +38,7 @@ namespace BlackGui
             explicit CInternalsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CInternalsComponent();
+            virtual ~CInternalsComponent();
 
         protected:
             //! \copydoc QWidget::showEvent

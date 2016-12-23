@@ -16,17 +16,20 @@
  */
 
 #include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
-#include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/distributorlistpreferences.h"
-#include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/simulation/modelsettings.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorinfolist.h"
-#include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/fscommon/vpilotmodelruleset.h"
+#include "blackmisc/simulation/fsx/simconnectutilities.h"
 
 #endif // guard

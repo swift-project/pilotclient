@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/interpolator.h"
+#include "interpolator.h"
 #include "blackmisc/aviation/callsign.h"
 
 using namespace BlackMisc::Aviation;
@@ -15,7 +15,6 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
-
     IInterpolator::IInterpolator(IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent) :
         QObject(parent),
         CRemoteAircraftAware(provider)
@@ -24,7 +23,7 @@ namespace BlackMisc
         this->setObjectName(objectName);
     }
 
-    BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
+    BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeSinceEpoc,
             bool isVtolAircraft, InterpolationStatus &status) const
     {
         // has to be thread safe
@@ -37,7 +36,7 @@ namespace BlackMisc
         return currentSituation;
     }
 
-    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CAircraftPartsList &parts, qint64 cutoffTime, BlackMisc::IInterpolator::PartsStatus &partsStatus) const
+    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CAircraftPartsList &parts, qint64 cutoffTime, IInterpolator::PartsStatus &partsStatus) const
     {
         partsStatus.reset();
         partsStatus.setSupportsParts(true);
@@ -46,7 +45,7 @@ namespace BlackMisc
         return parts.findBefore(cutoffTime);
     }
 
-    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, BlackMisc::IInterpolator::PartsStatus &partsStatus) const
+    CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, IInterpolator::PartsStatus &partsStatus) const
     {
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         partsStatus.reset();

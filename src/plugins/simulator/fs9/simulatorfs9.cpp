@@ -26,7 +26,6 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Simulation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Simulation;
@@ -81,7 +80,7 @@ namespace BlackSimPlugin
 
             situation.setPosition(position);
             situation.setAltitude(CAltitude(dHigh + dLow, CAltitude::MeanSeaLevel, CLengthUnit::m()));
-            double groundSpeed = positionVelocity.ground_velocity / 65536.0;
+            const double groundSpeed = positionVelocity.ground_velocity / 65536.0;
             situation.setGroundSpeed(CSpeed(groundSpeed, CSpeedUnit::m_s()));
 
             FS_PBH pbhstrct;
@@ -113,7 +112,7 @@ namespace BlackSimPlugin
             m_lobbyClient(lobbyClient)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
-            this->m_interpolator = new BlackMisc::CInterpolatorLinear(remoteAircraftProvider, this);
+            m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             m_defaultModel =
             {
                 "Boeing 737-400",
@@ -205,7 +204,7 @@ namespace BlackSimPlugin
 
         int CSimulatorFs9::physicallyRemoveAllRemoteAircraft()
         {
-            if (this->m_hashFs9Clients.isEmpty()) { return 0; }
+            if (m_hashFs9Clients.isEmpty()) { return 0; }
             QList<CCallsign> callsigns(this->m_hashFs9Clients.keys());
             int r = 0;
             for (const CCallsign &cs : callsigns)
@@ -218,7 +217,7 @@ namespace BlackSimPlugin
 
         CCallsignSet CSimulatorFs9::physicallyRenderedAircraft() const
         {
-            return CCollection<CCallsign>(this->m_hashFs9Clients.keys());
+            return CCollection<CCallsign>(m_hashFs9Clients.keys());
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
@@ -227,9 +226,9 @@ namespace BlackSimPlugin
             if (!this->isSimulating()) { return false; }
 
             // actually those data should be the same as ownAircraft
-            CComSystem newCom1 = ownAircraft.getCom1System();
-            CComSystem newCom2 = ownAircraft.getCom2System();
-            CTransponder newTransponder = ownAircraft.getTransponder();
+            const CComSystem newCom1 = ownAircraft.getCom1System();
+            const CComSystem newCom2 = ownAircraft.getCom2System();
+            const CTransponder newTransponder = ownAircraft.getTransponder();
 
             bool changed = false;
             if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
@@ -274,7 +273,9 @@ namespace BlackSimPlugin
         {
             /* Avoid errors from CDirectPlayPeer as it may end in infinite loop */
             if (message.getSeverity() == BlackMisc::CStatusMessage::SeverityError && message.isFromClass<CDirectPlayPeer>())
+            {
                 return;
+            }
 
             if (message.getSeverity() != BlackMisc::CStatusMessage::SeverityDebug)
             {
@@ -303,7 +304,7 @@ namespace BlackSimPlugin
             if (m_useFsuipc && m_fsuipc)
             {
                 CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
-                bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
+                const bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
                 if (ok)
                 {
                     updateOwnAircraftFromSimulator(fsuipcAircraft);
@@ -375,7 +376,8 @@ namespace BlackSimPlugin
         void CSimulatorFs9::disconnectAllClients()
         {
             // Stop all FS9 client tasks
-            for (auto fs9Client : m_hashFs9Clients.keys())
+            const QList<CCallsign> callsigns(m_hashFs9Clients.keys());
+            for (auto fs9Client : callsigns)
             {
                 physicallyRemoveRemoteAircraft(fs9Client);
             }

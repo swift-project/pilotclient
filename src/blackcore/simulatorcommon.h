@@ -21,10 +21,6 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/connectionguard.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
-#include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -33,6 +29,10 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorinternals.h"
 #include "blackmisc/weather/weathergridprovider.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
+#include "blackmisc/pq/units.h"
+#include "blackmisc/connectionguard.h"
 
 namespace BlackMisc
 {

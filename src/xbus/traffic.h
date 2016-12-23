@@ -43,7 +43,7 @@ namespace XBus
         CTraffic(QObject *parent);
 
         //! Destructor
-        ~CTraffic();
+        virtual ~CTraffic();
 
         //! DBus interface name
         static const QString &InterfaceName()

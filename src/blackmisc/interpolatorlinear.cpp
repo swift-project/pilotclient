@@ -7,20 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/interpolatorlinear.h"
+#include "interpolatorlinear.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
-#include "blackmisc/compare.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/compare.h"
 #include "blackmisc/range.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessage.h"
@@ -29,10 +29,11 @@
 #include <QList>
 #include <array>
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -49,11 +50,11 @@ namespace BlackMisc
         if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
         // find the first situation not in the correct order, keep only the situations before that one
-        auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto &&a, auto &&b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+        auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
         auto validSituations = makeRange(situations.begin(), end);
 
         // find the first situation earlier than the current time
-        auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
+        auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
         auto situationsNewer = makeRange(validSituations.begin(), pivot);
         auto situationsOlder = makeRange(pivot, validSituations.end());
 
@@ -103,8 +104,8 @@ namespace BlackMisc
         // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
         // 1) values > 1 mean extrapolation
         // 2) values > 2 mean no new situations coming in
-        double distanceToSplitTime = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
-        double simulationTimeFraction = 1.0 - (distanceToSplitTime / deltaTime);
+        const double distanceToSplitTime = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
+        const double simulationTimeFraction = 1.0 - (distanceToSplitTime / deltaTime);
         if (simulationTimeFraction > 2.0)
         {
             if (setup.showInterpolatorDebugMessages())
@@ -128,9 +129,9 @@ namespace BlackMisc
         const CAltitude newAlt(newSituation.getAltitude());
         Q_ASSERT_X(oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
         currentSituation.setAltitude(CAltitude((newAlt - oldAlt)
-                                               * simulationTimeFraction
-                                               + oldAlt,
-                                               oldAlt.getReferenceDatum()));
+                                                * simulationTimeFraction
+                                                + oldAlt,
+                                                oldAlt.getReferenceDatum()));
 
         if (!setup.isForcingFullInterpolation() && !vtolAiracraft && newVec == oldVec && oldAlt == newAlt)
         {
@@ -139,7 +140,7 @@ namespace BlackMisc
         }
 
         // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
-        CHeading headingBegin = oldSituation.getHeading();
+        const CHeading headingBegin = oldSituation.getHeading();
         CHeading headingEnd = newSituation.getHeading();
 
         if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
@@ -153,14 +154,14 @@ namespace BlackMisc
         }
 
         currentSituation.setHeading(CHeading((headingEnd - headingBegin)
-                                             * simulationTimeFraction
-                                             + headingBegin,
-                                             headingBegin.getReferenceNorth()));
+                                                * simulationTimeFraction
+                                                + headingBegin,
+                                                headingBegin.getReferenceNorth()));
 
         // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
-        CAngle pitchBegin = oldSituation.getPitch();
-        CAngle pitchEnd = newSituation.getPitch();
-        CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
+        const CAngle pitchBegin = oldSituation.getPitch();
+        const CAngle pitchEnd = newSituation.getPitch();
+        const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
         currentSituation.setPitch(pitch);
 
         // Interpolate bank: Bank = (BankB - BankA) * t + BankA
@@ -174,5 +175,4 @@ namespace BlackMisc
                                         + oldSituation.getGroundSpeed());
         return currentSituation;
     }
-
 } // namespace

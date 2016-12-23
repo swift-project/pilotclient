@@ -34,17 +34,17 @@ namespace BlackSimPlugin
             MPPositionVelocity positionVelocity;
 
             // Latitude - integer and decimal places
-            double latitude = newSituation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
+            const double latitude = newSituation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
             positionVelocity.lat_i = static_cast<qint32>(latitude);
             positionVelocity.lat_f = qAbs((latitude - positionVelocity.lat_i) * 65536);
 
             // Longitude - integer and decimal places
-            double longitude = newSituation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
+            const double longitude = newSituation.getPosition().longitude().value(CAngleUnit::deg()) * (65536.0 * 65536.0) / 360.0;
             positionVelocity.lon_hi = static_cast<qint32>(longitude);
             positionVelocity.lon_lo = qAbs((longitude - positionVelocity.lon_hi) * 65536);
 
             // Altitude - integer and decimal places
-            double altitude = newSituation.getAltitude().value(CLengthUnit::m());
+            const double altitude = newSituation.getAltitude().value(CLengthUnit::m());
             positionVelocity.alt_i = static_cast<qint32>(altitude);
             positionVelocity.alt_f = (altitude - positionVelocity.alt_i) * 65536;
 
@@ -70,7 +70,6 @@ namespace BlackSimPlugin
             helperPosition.setLatitude(newPosition.latitude());
             helperPosition.setLongitude(oldPosition.longitude());
             CLength distanceLatitudeObj = calculateGreatCircleDistance(oldPosition, helperPosition);
-
 
             // Now we want the Longitude distance. Latitude must be equal for old and new position.
             helperPosition.setLatitude(oldPosition.latitude());

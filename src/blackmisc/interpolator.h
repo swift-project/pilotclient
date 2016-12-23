@@ -12,8 +12,8 @@
 #ifndef BLACKMISC_INTERPOLATOR_H
 #define BLACKMISC_INTERPOLATOR_H
 
+#include "interpolationrenderingsetup.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
@@ -41,12 +41,8 @@ namespace BlackMisc
         static QString getLogCategory() { return "swift.interpolator"; }
 
         //! Status of interpolation
-        struct BLACKMISC_EXPORT InterpolationStatus
+        struct BLACKMISC_EXPORT InterpolationStatus // does not link without export/allTrue, reset
         {
-        private:
-            bool m_changedPosition = false;        //!< position was changed
-            bool m_interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
-
         public:
             //! Did interpolation succeed?
             bool didInterpolationSucceed() const { return m_interpolationSucceeded; }
@@ -65,14 +61,15 @@ namespace BlackMisc
 
             //! Reset to default values
             void reset();
+
+        private:
+            bool m_changedPosition = false;        //!< position was changed
+            bool m_interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
         };
 
         //! Status regarding parts
-        struct BLACKMISC_EXPORT PartsStatus
+        struct BLACKMISC_EXPORT PartsStatus // does not link without export/allTrue, resetx
         {
-        private:
-            bool m_supportsParts = false;   //!< supports parts for given callsign
-
         public:
             //! all OK
             bool allTrue() const;
@@ -85,6 +82,9 @@ namespace BlackMisc
 
             //! Reset to default values
             void reset();
+
+        private:
+            bool m_supportsParts = false;   //!< supports parts for given callsign
         };
 
         //! Current interpolated situation
@@ -114,7 +114,7 @@ namespace BlackMisc
 
         //! Enable debug messages etc.
         //! \threadsafe
-        void setInterpolatorSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup);
+        void setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup);
 
     protected:
         //! Constructor
@@ -122,11 +122,10 @@ namespace BlackMisc
 
         //! Enable debug messages etc.
         //! \threadsafe
-        BlackMisc::CInterpolationAndRenderingSetup getInterpolatorSetup() const;
+        CInterpolationAndRenderingSetup getInterpolatorSetup() const;
 
-        BlackMisc::CInterpolationAndRenderingSetup m_setup; //!< allows to disable debug messages
+        CInterpolationAndRenderingSetup m_setup; //!< allows to disable debug messages
         mutable QReadWriteLock m_lock; //!< lock interpolator
     };
 } // namespace
-
 #endif // guard

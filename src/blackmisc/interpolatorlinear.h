@@ -12,10 +12,9 @@
 #ifndef BLACKMISC_INTERPOLATOR_LINEAR_H
 #define BLACKMISC_INTERPOLATOR_LINEAR_H
 
+#include "interpolator.h"
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/interpolator.h"
 #include "blackmisc/aviation/aircraftsituation.h"
-
 #include <QString>
 #include <QtGlobal>
 
@@ -43,9 +42,7 @@ namespace BlackMisc
 
         //! Log category
         static QString getLogCategory() { return "swift.interpolatorlinear"; }
-   };
-
-} // guard
+    };
+} // ns
 
 #endif // guard
-

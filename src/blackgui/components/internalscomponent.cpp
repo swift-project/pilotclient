@@ -39,6 +39,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 using namespace BlackCore;
 
 namespace BlackGui
