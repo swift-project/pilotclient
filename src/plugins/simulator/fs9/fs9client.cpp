@@ -119,7 +119,7 @@ namespace BlackSimPlugin
         }
 
         CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
-                               BlackMisc::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
+                               BlackMisc::Simulation::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
             CDirectPlayPeer(owner, callsign),
             m_updateInterval(updateInterval), m_interpolator(interpolator), m_modelName(modelName)
         {

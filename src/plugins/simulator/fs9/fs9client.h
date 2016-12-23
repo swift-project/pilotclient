@@ -11,7 +11,7 @@
 #define DIRECTPLAY_CLIENT_H
 
 #include "directplaypeer.h"
-#include "blackmisc/interpolator.h"
+#include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/aviation/callsign.h"
@@ -40,7 +40,7 @@ namespace BlackSimPlugin
 
             //! Constructor
             CFs9Client(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelName,
-                       BlackMisc::IInterpolator *interpolator, const BlackMisc::PhysicalQuantities::CTime &updateInterval,
+                       BlackMisc::Simulation::IInterpolator *interpolator, const BlackMisc::PhysicalQuantities::CTime &updateInterval,
                        QObject *owner);
 
             //! Destructor
@@ -91,7 +91,7 @@ namespace BlackSimPlugin
             void sendMultiplayerChangePlayerPlane();
 
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
-            BlackMisc::IInterpolator *m_interpolator = nullptr;
+            BlackMisc::Simulation::IInterpolator *m_interpolator = nullptr;
             QString m_modelName;
             int m_timerId = 0;
 

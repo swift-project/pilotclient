@@ -18,7 +18,7 @@
 #include "../fscommon/simulatorfscommon.h"
 #include "blackmisc/simulation/simulatorsettings.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/interpolator.h"
+#include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/pixmap.h"

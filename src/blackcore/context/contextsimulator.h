@@ -31,7 +31,6 @@
 #include "blackcore/simulator.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/identifier.h"
-#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -39,6 +38,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/weather/weathergrid.h"
 
 #include <QObject>
@@ -165,10 +165,10 @@ namespace BlackCore
             virtual bool isTimeSynchronized() const = 0;
 
             //! Set interpolation and rendering
-            virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
 
             //! Set interpolation and rendering
-            virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) = 0;
+            virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) = 0;
 
             //! Time synchronization offset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;

@@ -13,7 +13,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_COMMON_H
 
 #include "blackcore/simulatorcommon.h"
-#include "blackmisc/interpolator.h"
+#include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgparser.h"
 #include "fsuipc.h"
 

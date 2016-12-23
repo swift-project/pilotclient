@@ -18,12 +18,12 @@
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
-#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QFlags>
@@ -125,10 +125,10 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Debugging messages etc.
-        virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
+        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
 
         //! Enable debugging messages etc.
-        virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) = 0;
+        virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) = 0;
 
         //! Is the aircraft rendered (displayed in simulator)?
         //! This shall only return true if the aircraft is really visible in the simulator

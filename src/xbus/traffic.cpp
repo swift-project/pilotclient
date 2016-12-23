@@ -14,9 +14,9 @@
 #endif
 #include "traffic.h"
 #include "utils.h"
-#include "blackmisc/interpolator.h"
-#include "blackmisc/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "XPMPMultiplayer.h"
 #include <XPLM/XPLMProcessing.h>
@@ -44,7 +44,7 @@ namespace XBus
 
     CTraffic::CTraffic(QObject *parent) :
         QObject(parent),
-        m_interpolator(new BlackMisc::CInterpolatorLinear(new BlackMisc::Simulation::CRemoteAircraftProviderDummy(this), this))
+        m_interpolator(new BlackMisc::Simulation::CInterpolatorLinear(new BlackMisc::Simulation::CRemoteAircraftProviderDummy(this), this))
     {
     }
 
@@ -305,7 +305,7 @@ namespace XBus
         {
         case xpmpDataType_Position:
             {
-                BlackMisc::IInterpolator::InterpolationStatus status;
+                BlackMisc::Simulation::IInterpolator::InterpolationStatus status;
                 const BlackMisc::Simulation::CInterpolationHints hints;
                 auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, hints, status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }

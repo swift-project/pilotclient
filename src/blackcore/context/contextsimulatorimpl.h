@@ -91,8 +91,8 @@ namespace BlackCore
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
             virtual bool setTimeSynchronization(bool enable, const BlackMisc::PhysicalQuantities::CTime &offset) override;
             virtual bool isTimeSynchronized() const override;
-            virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
-            virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override;
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
+            virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override;
             virtual BlackMisc::CPixmap iconForModel(const QString &modelString) const override;
             virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;

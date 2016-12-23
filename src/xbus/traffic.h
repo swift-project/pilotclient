@@ -25,11 +25,9 @@
 #define XBUS_TRAFFIC_OBJECTPATH "/xbus/traffic"
 //! \endcond
 
-namespace BlackMisc { class IInterpolator; }
-
+namespace BlackMisc { namespace Simulation { class IInterpolator; } }
 namespace XBus
 {
-
     /*!
      * XBus service object for traffic aircraft which is accessible through DBus
      */
@@ -144,9 +142,8 @@ namespace XBus
             return static_cast<CTraffic *>(self)->getPlaneData(id, dataType, io_data);
         }
 
-        BlackMisc::IInterpolator *m_interpolator = nullptr;
+        BlackMisc::Simulation::IInterpolator *m_interpolator = nullptr;
     };
-
 }
 
 #endif // guard

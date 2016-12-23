@@ -19,7 +19,6 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/simulation/aircraftmodelsetloader.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
@@ -28,6 +27,7 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/weather/weathergridprovider.h"
 #include "blackmisc/pq/length.h"
@@ -37,8 +37,6 @@
 
 namespace BlackMisc
 {
-    class IInterpolator;
-
     namespace Aviation
     {
         class CAircraftParts;
@@ -47,6 +45,7 @@ namespace BlackMisc
     }
     namespace Simulation
     {
+        class IInterpolator;
         class CAirspaceAircraftSnapshot;
         class CSimulatedAircraft;
     }
@@ -73,8 +72,8 @@ namespace BlackCore
         //! \name ISimulator implementations
         //! @{
         virtual BlackMisc::Simulation::CAircraftModel getDefaultModel() const override;
-        virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override;
-        virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
+        virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override;
+        virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) override;
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const override;
@@ -155,14 +154,14 @@ namespace BlackCore
         //! Set own model
         void reverseLookupAndUpdateOwnAircraftModel(const QString &modelString);
 
-        BlackMisc::IInterpolator *m_interpolator = nullptr;      //!< interpolator instance
-        bool m_pausedSimFreezesInterpolation = false;            //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        BlackMisc::Simulation::CAircraftModel m_defaultModel;    //!< default model
-        qint64 m_statsUpdateAircraftTimeTotalMs = 0;             //!< statistics update time
-        qint64 m_statsUpdateAircraftTimeAvgMs = 0;               //!< statistics update time
-        int    m_statsUpdateAircraftCountMs = 0;                 //!< statistics update time
-        BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals;          //!< setup object
-        BlackMisc::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< debug messages, rendering etc.
+        BlackMisc::Simulation::IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
+        bool m_pausedSimFreezesInterpolation = false;                    //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        BlackMisc::Simulation::CAircraftModel m_defaultModel;            //!< default model
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                     //!< statistics update time
+        qint64 m_statsUpdateAircraftTimeAvgMs = 0;                       //!< statistics update time
+        int    m_statsUpdateAircraftCountMs = 0;                         //!< statistics update time
+        BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals; //!< setup object
+        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< debug messages, rendering etc.
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model

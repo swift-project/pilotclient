@@ -141,14 +141,14 @@ namespace BlackCore
             }
 
             //! \copydoc ISimulator::getInterpolationAndRenderingSetup
-            virtual BlackMisc::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override
+            virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return BlackMisc::CInterpolationAndRenderingSetup();
+                return BlackMisc::Simulation::CInterpolationAndRenderingSetup();
             }
 
             //! \copydoc ISimulator::setInterpolationAndRenderingSetup
-            virtual void setInterpolationAndRenderingSetup(const BlackMisc::CInterpolationAndRenderingSetup &setup) override
+            virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override
             {
                 Q_UNUSED(setup);
                 logEmptyContextWarning(Q_FUNC_INFO);

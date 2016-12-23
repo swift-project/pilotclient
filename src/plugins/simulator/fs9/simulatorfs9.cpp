@@ -14,7 +14,7 @@
 #include "multiplayerpackets.h"
 #include "multiplayerpacketparser.h"
 #include "registermetadata.h"
-#include "blackmisc/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/logmessage.h"

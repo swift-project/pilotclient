@@ -20,6 +20,7 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/distributorlistpreferences.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/modelsettings.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
