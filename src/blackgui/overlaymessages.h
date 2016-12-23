@@ -13,6 +13,7 @@
 #define BLACKGUI_OVERLAYMESSAGES_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/settings/textmessagesettings.h"
 #include "blackmisc/pixmap.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
@@ -130,6 +131,7 @@ namespace BlackGui
 
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
+        BlackMisc::CSettingReadOnly<BlackGui::Settings::TextMessageSettings> m_messageSettings { this };
         QString                              m_header;
         int                                  m_lastConfirmation = QMessageBox::Cancel;
         bool                                 m_awaitingConfirmation = false;
@@ -145,6 +147,9 @@ namespace BlackGui
 
         //! Small
         bool useSmall() const;
+
+        //! Display this message (use settings to decide)
+        bool displayTextMessage(const BlackMisc::Network::CTextMessage &textMessage) const;
     };
 } // ns
 

@@ -16,7 +16,10 @@
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/views/viewbase.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/network/textmessage.h"
+#include "blackcore/context/contextownaircraft.h"
+#include "blackcore/application.h"
 #include "ui_overlaymessages.h"
 
 #include <QKeyEvent>
@@ -34,8 +37,12 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Simulation;
+using namespace BlackCore;
+using namespace BlackCore::Context;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
+using namespace BlackGui::Settings;
 
 namespace BlackGui
 {
@@ -110,6 +117,15 @@ namespace BlackGui
         return (this->width() < 400);
     }
 
+    bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
+    {
+        const CTextMessageSettings s = this->m_messageSettings.getThreadLocal();
+        if (s.popup(textMessage)) { return true; } // fast check without needing own aircraft
+        if (!sApp || !sApp->getIContextOwnAircraft()) { return false; }
+        const CSimulatedAircraft ownAircraft(sApp->getIContextOwnAircraft()->getOwnAircraft());
+        return s.popup(textMessage, ownAircraft);
+    }
+
     COverlayMessages::~COverlayMessages()
     {}
 
@@ -160,6 +176,7 @@ namespace BlackGui
     void COverlayMessages::showOverlayTextMessage(const CTextMessage &textMessage, int timeOutMs)
     {
         if (textMessage.isEmpty()) { return; }
+        if (!displayTextMessage(textMessage)) { return; }
         if (this->hasPendingConfirmation())
         {
             // defer message
