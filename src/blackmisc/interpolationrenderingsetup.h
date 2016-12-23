@@ -30,7 +30,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexInterpolatorDebugMessages = BlackMisc::CPropertyIndex::GloablIndexInterpolatorSetup,
+            IndexInterpolatorDebugMessages = BlackMisc::CPropertyIndex::GlobalIndexCInterpolatioRenderingSetup,
             IndexSimulatorDebugMessages,
             IndexForceFullInterpolation,
             IndexMaxRenderedAircraft,

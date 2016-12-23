@@ -9,6 +9,7 @@
 
 #include "interpolator.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/simulation/interpolationhints.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -24,14 +25,14 @@ namespace BlackMisc
     }
 
     BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeSinceEpoc,
-            bool isVtolAircraft, InterpolationStatus &status) const
+            const CInterpolationHints &hints, InterpolationStatus &status) const
     {
         // has to be thread safe
 
         status.reset();
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
 
-        auto currentSituation = this->getInterpolatedSituation(this->remoteAircraftSituations(callsign), currentTimeSinceEpoc, isVtolAircraft, status);
+        auto currentSituation = this->getInterpolatedSituation(this->remoteAircraftSituations(callsign), currentTimeSinceEpoc, hints, status);
         currentSituation.setCallsign(callsign); // make sure callsign is correct
         return currentSituation;
     }
@@ -65,6 +66,14 @@ namespace BlackMisc
     {
         QReadLocker l(&m_lock);
         return m_setup;
+    }
+
+    void IInterpolator::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation)
+    {
+        if (hints.getElevation().isNull()) return;
+        if (situation.hasGroundElevation()) return;
+        if (!hints.isWithinRange(situation)) return;
+        situation.setGroundElevation(hints.getElevation().geodeticHeight());
     }
 
     bool IInterpolator::InterpolationStatus::allTrue() const

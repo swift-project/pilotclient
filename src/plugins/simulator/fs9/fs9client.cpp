@@ -14,6 +14,7 @@
 #include "multiplayerpacketparser.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
+#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/logmessage.h"
@@ -169,8 +170,8 @@ namespace BlackSimPlugin
             if (m_clientStatus == Disconnected) { return; }
 
             IInterpolator::InterpolationStatus status;
-            bool vtolAircraft(false);
-            CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, vtolAircraft, status);
+            const CInterpolationHints hints;
+            const CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, hints, status);
 
             // Test only for successful interpolation. FS9 requires constant positions
             if (!status.didInterpolationSucceed()) { return; }

@@ -109,6 +109,7 @@ namespace BlackMisc
             GlobalIndexICoordinateGeodetic              =  5000,
             GlobalIndexICoordinateWithRelativePosition  =  5100,
             GlobalIndexCCoordinateGeodetic              =  5200,
+            GlobalIndexCElevationPlane                  =  5300,
             GlobalIndexCClient                          =  6000,
             GlobalIndexClientCapabilities               =  6100, //!< used with map key
             GlobalIndexCUser                            =  6200,
@@ -142,7 +143,8 @@ namespace BlackMisc
             GlobalIndexCSettingsReaders                 = 14400,
             GlobalIndexCViewUpdateSettings              = 14500,
             GlobalIndexCGeneralGuiSettings              = 14600,
-            GloablIndexInterpolatorSetup                = 15000,
+            GlobalIndexCInterpolatioRenderingSetup      = 15000,
+            GlobalIndexCInterpolationHints              = 15100,
             GlobalIndexLineNumber                       = 20000, //!< pseudo index for line numbers
         };
 

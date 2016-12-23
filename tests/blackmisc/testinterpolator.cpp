@@ -34,6 +34,7 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 
@@ -89,6 +90,7 @@ namespace BlackMiscTest
 
         // interpolation functional check
         IInterpolator::InterpolationStatus status;
+        const CInterpolationHints hints;
         double latOld = 360.0;
         double lngOld = 360.0;
         for (qint64 currentTime = ts - 2 * deltaT + offset; currentTime < ts + offset; currentTime += (deltaT / 20))
@@ -97,7 +99,7 @@ namespace BlackMiscTest
             // from:  ts - 2 * deltaT + offset
             // to:    ts              + offset
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                (cs, currentTime, false, status)
+                                                (cs, currentTime, hints, status)
                                                );
             QVERIFY2(status.didInterpolationSucceed(), "Interpolation was not succesful");
             QVERIFY2(status.hasChangedPosition(), "Interpolation did not changed");
@@ -114,7 +116,6 @@ namespace BlackMiscTest
         int interpolationNo = 0;
         qint64 startTimeMsSinceEpoch = ts - 2 * deltaT;
 
-
         // Pseudo performance test:
         // Those make not completely sense, as the performance depends on the implementation of
         // the dummy provider, which is different from the real provider
@@ -128,7 +129,7 @@ namespace BlackMiscTest
                 // from:  ts - 2* deltaT + offset
                 // to:    ts             + offset
                 CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                    (cs, currentTime, false, status)
+                                                    (cs, currentTime, hints, status)
                                                    );
                 QVERIFY2(status.allTrue(), "Failed interpolation");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");

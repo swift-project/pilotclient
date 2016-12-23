@@ -25,6 +25,7 @@
 namespace BlackMisc
 {
     namespace Aviation { class CCallsign; }
+    namespace Simulation { class CInterpolationHints; }
 
     //! Interpolator, calculation inbetween positions
     class BLACKMISC_EXPORT IInterpolator :
@@ -91,14 +92,14 @@ namespace BlackMisc
         //! \threadsafe
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
             const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-            bool isVtolAircraft, InterpolationStatus &status) const;
+            const CInterpolationHints &hints, InterpolationStatus &status) const;
 
         //! Current interpolated situation, to be implemented by subclass
         //! \threadsafe
         //! \remark public only for XP driver
         virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
             const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
-            bool isVtolAircraft, InterpolationStatus &status) const = 0;
+            const CInterpolationHints &hints, InterpolationStatus &status) const = 0;
 
         //! Parts before given offset time (aka pending parts)
         //! \threadsafe
@@ -123,6 +124,9 @@ namespace BlackMisc
         //! Enable debug messages etc.
         //! \threadsafe
         CInterpolationAndRenderingSetup getInterpolatorSetup() const;
+
+        //! Set the ground elevation from hints, if possible and not already set
+        static void setGroundElevationFromHint(const CInterpolationHints &hints, BlackMisc::Aviation::CAircraftSituation &situation);
 
         CInterpolationAndRenderingSetup m_setup; //!< allows to disable debug messages
         mutable QReadWriteLock m_lock; //!< lock interpolator

@@ -19,6 +19,7 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/range.h"
@@ -37,7 +38,7 @@ using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
-    CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc, bool vtolAiracraft, InterpolationStatus &status) const
+    CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc, const CInterpolationHints &hints, InterpolationStatus &status) const
     {
         // has to be thread safe
         const CInterpolationAndRenderingSetup setup = this->getInterpolatorSetup();
@@ -94,6 +95,13 @@ namespace BlackMisc
             Q_ASSERT(oldSituation.getAdjustedMSecsSinceEpoch() < newSituation.getAdjustedMSecsSinceEpoch());
         }
 
+        // take hint into account to calculate elevation and above ground level
+        if (!hints.getElevation().isNull())
+        {
+            setGroundElevationFromHint(hints, oldSituation);
+            setGroundElevationFromHint(hints, newSituation);
+        }
+
         CAircraftSituation currentSituation(oldSituation);
         CCoordinateGeodetic currentPosition;
 
@@ -125,15 +133,15 @@ namespace BlackMisc
         currentSituation.setPosition(currentPosition);
 
         // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
-        const CAltitude oldAlt(oldSituation.getAltitude());
-        const CAltitude newAlt(newSituation.getAltitude());
+        const CAltitude oldAlt(oldSituation.getCorrectedAltitude(hints.getCGAboveGround()));
+        const CAltitude newAlt(newSituation.getCorrectedAltitude(hints.getCGAboveGround()));
         Q_ASSERT_X(oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
         currentSituation.setAltitude(CAltitude((newAlt - oldAlt)
                                                 * simulationTimeFraction
                                                 + oldAlt,
                                                 oldAlt.getReferenceDatum()));
 
-        if (!setup.isForcingFullInterpolation() && !vtolAiracraft && newVec == oldVec && oldAlt == newAlt)
+        if (!setup.isForcingFullInterpolation() && !hints.isVtolAircraft() && newVec == oldVec && oldAlt == newAlt)
         {
             // stop interpolation here, does not work for VTOL aircraft. We need a flag for VTOL aircraft
             return currentSituation;

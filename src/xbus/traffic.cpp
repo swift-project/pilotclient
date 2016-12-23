@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "blackmisc/interpolator.h"
 #include "blackmisc/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "XPMPMultiplayer.h"
 #include <XPLM/XPLMProcessing.h>
@@ -305,7 +306,8 @@ namespace XBus
         case xpmpDataType_Position:
             {
                 BlackMisc::IInterpolator::InterpolationStatus status;
-                auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, false, status);
+                const BlackMisc::Simulation::CInterpolationHints hints;
+                auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, hints, status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
                 if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 

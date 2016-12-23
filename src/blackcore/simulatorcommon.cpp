@@ -16,6 +16,7 @@
 #include "blackmisc/interpolator.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/airspaceaircraftsnapshot.h"
+#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/simplecommandparser.h"
@@ -169,7 +170,7 @@ namespace BlackCore
         }
     }
 
-    bool CSimulatorCommon::setInitialAircraftSituation(CSimulatedAircraft &aircraft) const
+    bool CSimulatorCommon::setInitialAircraftSituation(CSimulatedAircraft &aircraft)
     {
         if (!this->m_interpolator) { return false; }
         const CCallsign callsign(aircraft.getCallsign());
@@ -179,7 +180,9 @@ namespace BlackCore
         // to avoid position jittering when displayed
         const qint64 time = QDateTime::currentMSecsSinceEpoch();
         IInterpolator::InterpolationStatus interpolationStatus;
-        const CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, aircraft.isVtol(), interpolationStatus));
+        CInterpolationHints &hints = m_hints[aircraft.getCallsign()];
+        hints.setVtolAircraft(aircraft.isVtol());
+        const CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, hints, interpolationStatus));
         if (interpolationStatus.didInterpolationSucceed())
         {
             aircraft.setSituation(as);

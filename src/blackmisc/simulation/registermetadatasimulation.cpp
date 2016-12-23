@@ -9,10 +9,6 @@
 
 #include "registermetadatasimulation.h"
 #include "simulation.h"
-#include "blackmisc/simulation/simulatorsettings.h"
-#include "blackmisc/simulation/modelsettings.h"
-#include "blackmisc/valueobject.h"
-#include "blackmisc/variant.h"
 
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::Fsx;
@@ -32,19 +28,21 @@ namespace BlackMisc
             CDistributor::registerMetadata();
             CDistributorList::registerMetadata();
             CDistributorListPreferences::registerMetadata();
+            CInterpolationAndRenderingSetup::registerMetadata();
+            CInterpolationHints::registerMetadata();
+            CModelSettings::registerMetadata();
             CSimConnectUtilities::registerMetadata();
             CSimulatedAircraft::registerMetadata();
             CSimulatedAircraftList::registerMetadata();
             CSimulatorInfo::registerMetadata();
             CSimulatorInfoList::registerMetadata();
+            CSimulatorInternals::registerMetadata();
+            CSimulatorMessagesSettings::registerMetadata();
             CSimulatorPluginInfo::registerMetadata();
             CSimulatorPluginInfoList::registerMetadata();
-            CSimulatorInternals::registerMetadata();
+            CSimulatorSettings::registerMetadata();
             CVPilotModelRule::registerMetadata();
             CVPilotModelRuleSet::registerMetadata();
-            CSimulatorSettings::registerMetadata();
-            CModelSettings::registerMetadata();
-            CSimulatorMessagesSettings::registerMetadata();
         }
     } // ns
 } // ns

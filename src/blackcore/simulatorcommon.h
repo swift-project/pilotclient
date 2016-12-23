@@ -28,6 +28,7 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/weather/weathergridprovider.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -146,7 +147,7 @@ namespace BlackCore
         void resetAircraftFromProvider(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Override situation from current interpolator values, if any!
-        bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft) const;
+        bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Set own model
         void reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
@@ -165,6 +166,7 @@ namespace BlackCore
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model
+        QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< last ground elevation fetched
 
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);
