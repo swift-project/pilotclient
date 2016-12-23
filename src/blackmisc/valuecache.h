@@ -29,6 +29,7 @@
 #include <QChar>
 #include <QDBusArgument>
 #include <QDateTime>
+#include <QFile>
 #include <QJsonObject>
 #include <QMap>
 #include <QMetaType>
@@ -320,6 +321,7 @@ namespace BlackMisc
         Element &getElement(const QString &key);
         Element &getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos);
         std::tuple<CVariant, qint64, bool> getValue(const QString &key);
+        void backupFile(QFile &file) const;
 
         virtual void connectPage(Private::CValuePage *page);
 

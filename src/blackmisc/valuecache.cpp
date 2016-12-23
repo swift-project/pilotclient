@@ -22,7 +22,6 @@
 #include <QCoreApplication>
 #include <QDBusMetaType>
 #include <QDir>
-#include <QFile>
 #include <QFileInfo>
 #include <QFlags>
 #include <QIODevice>
@@ -450,6 +449,7 @@ namespace BlackMisc
             if (! messages.isEmpty())
             {
                 ok = false;
+                backupFile(file);
                 CLogMessage::preformatted(messages);
             }
             temp.removeDuplicates(currentValues);
@@ -457,6 +457,26 @@ namespace BlackMisc
         }
         return CStatusMessage(this).info("Loaded cache values %1 from %2 %3") <<
             (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir << (ok ? "successfully" : "with errors");
+    }
+
+    void CValueCache::backupFile(QFile &file) const
+    {
+        QDir dir = getCacheRootDirectory();
+        QString relative = "backups/" + dir.relativeFilePath(file.fileName());
+        QString absolute = dir.absoluteFilePath(relative);
+        absolute += "." + QDateTime::currentDateTime().toString(QStringLiteral("yyMMddhhmmss"));
+        if (QFile::exists(absolute)) { return; }
+        if (! dir.mkpath(QFileInfo(relative).path()))
+        {
+            CLogMessage(this).error("Failed to create %1") << QFileInfo(absolute).path();
+            return;
+        }
+        if (! file.copy(absolute))
+        {
+            CLogMessage(this).error("Failed to back up %1: %2") << QFileInfo(file).fileName() << file.errorString();
+            return;
+        }
+        CLogMessage(this).info("Backed up %1 to %2") << QFileInfo(file).fileName() << dir.absoluteFilePath("backups");
     }
 
     void CValueCache::markAllAsSaved(const QString &keyPrefix)
