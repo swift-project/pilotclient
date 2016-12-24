@@ -144,8 +144,9 @@ namespace BlackMisc
             GlobalIndexCViewUpdateSettings              = 14500,
             GlobalIndexCGeneralGuiSettings              = 14600,
             GlobalIndexCTextMessageSettings             = 14700,
-            GlobalIndexCInterpolatioRenderingSetup      = 15000,
-            GlobalIndexCInterpolationHints              = 15100,
+            GlobalIndexCAtcStationsSettings             = 14800,
+            GlobalIndexCInterpolatioRenderingSetup      = 16000,
+            GlobalIndexCInterpolationHints              = 16100,
             GlobalIndexLineNumber                       = 20000, //!< pseudo index for line numbers
         };
 

@@ -13,6 +13,7 @@
 #include "blackgui/settings/viewupdatesettings.h"
 #include "blackgui/settings/guisettings.h"
 #include "blackgui/settings/textmessagesettings.h"
+#include "blackgui/settings/atcstationssettings.h"
 #include "blackgui/components/registermetadatacomponents.h"
 
 namespace BlackGui
@@ -24,6 +25,7 @@ namespace BlackGui
         BlackGui::Settings::CViewUpdateSettings::registerMetadata();
         BlackGui::Settings::CGeneralGuiSettings::registerMetadata();
         BlackGui::Settings::CTextMessageSettings::registerMetadata();
+        BlackGui::Settings::CAtcStationsSettings::registerMetadata();
         BlackGui::Components::registerMetadata();
     }
 }
