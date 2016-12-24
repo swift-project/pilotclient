@@ -62,6 +62,16 @@
      </widget>
     </item>
     <item>
+     <widget class="BlackGui::Components::CSettingsAtcStationsInlineComponent" name="comp_AtcStationsSettings">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QFrame" name="fr_AtcStationsOnlineBottom">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -287,6 +297,12 @@
    <class>BlackGui::Views::CAtcStationView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/atcstationview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsAtcStationsInlineComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingsatcstationsinlinecomponent.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

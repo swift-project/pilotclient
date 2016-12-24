@@ -162,10 +162,14 @@ namespace BlackGui
                 // update
                 if (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations)
                 {
-                    const CAtcStationList onlineStations =
-                        // test: filter by frequency, see if this is better
-                        // sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom()
+                    // sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom()
+                    const CAtcStationsSettings settings = m_settingsAtc.getThreadLocal();
+                    CAtcStationList onlineStations =
                         sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency();
+                    if (settings.showOnlyInRange())
+                    {
+                        onlineStations.removeIfOutsideRange();
+                    }
 
                     ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(onlineStations);
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
@@ -309,7 +313,7 @@ namespace BlackGui
 
         void CAtcStationComponent::ps_settingsChanged()
         {
-            const CViewUpdateSettings settings = this->m_settings.get();
+            const CViewUpdateSettings settings = this->m_settingsView.get();
             const int ms = settings.getAtcUpdateTime().toMs();
             this->m_updateTimer.setInterval(ms);
         }

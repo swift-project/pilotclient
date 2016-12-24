@@ -16,6 +16,7 @@
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackgui/settings/viewupdatesettings.h"
+#include "blackgui/settings/atcstationssettings.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/identifiable.h"
@@ -136,7 +137,8 @@ namespace BlackGui
             QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations; //!< stations read
             QDateTime m_timestampBookedStationsChanged;  //!< stations marked as changed
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings> m_settings { this, &CAtcStationComponent::ps_settingsChanged };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings>  m_settingsView { this, &CAtcStationComponent::ps_settingsChanged };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TAtcStationsSettings> m_settingsAtc { this, &CAtcStationComponent::ps_settingsChanged };
         };
     } // namespace
 } // namespace
