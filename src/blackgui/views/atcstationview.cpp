@@ -23,7 +23,6 @@ using namespace BlackMisc::Aviation;
 using namespace BlackGui::Models;
 using namespace BlackGui::Menus;
 
-
 namespace BlackGui
 {
     namespace Views

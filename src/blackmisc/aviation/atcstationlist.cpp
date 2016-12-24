@@ -27,7 +27,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAtcStationList::CAtcStationList() { }
 
         CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) :
@@ -75,6 +74,5 @@ namespace BlackMisc
             Q_ASSERT_X(c == 0 || c == 1, Q_FUNC_INFO, "Found >1 matching station");
             return c;
         }
-
     } // namespace
 } // namespace
