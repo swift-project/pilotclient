@@ -59,6 +59,9 @@ namespace BlackMisc
             //! All controllers (with valid data)
             BlackMisc::Network::CUserList getControllers() const;
 
+            //! Remove if marked outside of range
+            int removeIfOutsideRange();
+
             //! Synchronize with ATC station representing booking information.
             //! Both sides (booking, online station) will be updated.
             //! \pre Can be used only if the stored data in this list are online ATC stations

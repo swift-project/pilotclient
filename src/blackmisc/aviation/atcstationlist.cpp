@@ -56,6 +56,11 @@ namespace BlackMisc
             return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
         }
 
+        int CAtcStationList::removeIfOutsideRange()
+        {
+            return this->removeIf(&CAtcStation::isInRange, false);
+        }
+
         int CAtcStationList::synchronizeWithBookedStation(CAtcStation &bookedAtcStation)
         {
             int c = 0;
