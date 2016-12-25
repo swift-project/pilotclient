@@ -12,6 +12,7 @@
 #include "blackgui/menus/menuaction.h"
 #include "blackgui/views/statusmessageview.h"
 #include "blackgui/views/viewbase.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/icons.h"
 #include "ui_logcomponent.h"
 
@@ -49,8 +50,10 @@ namespace BlackGui
             QFrame(parent), ui(new Ui::CLogComponent)
         {
             ui->setupUi(this);
-            ui->tvp_StatusMessages->setAutoResizeFrequency(3);
             connect(ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, ui->form_StatusMessage, &CStatusMessageForm::setVariant);
+            connect(ui->tvp_StatusMessages, &CStatusMessageView::modelDataChangedDigest, this, &CLogComponent::onStatusMessageDataChanged);
+            ui->tvp_StatusMessages->setAutoResizeFrequency(3);
+            ui->tvp_StatusMessages->addFilterDialog();
             ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
             ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         }
@@ -103,6 +106,17 @@ namespace BlackGui
         {
             if (statusMessages.isEmpty()) { return; }
             ui->tvp_StatusMessages->insert(statusMessages);
+        }
+
+        void CLogComponent::onStatusMessageDataChanged(int count, bool withFilter)
+        {
+            Q_UNUSED(count);
+            Q_UNUSED(withFilter);
+            const int i = ui->tw_StatusPage->indexOf(ui->pg_LogPage);
+            QString o = ui->tw_StatusPage->tabText(i);
+            const QString f = ui->tvp_StatusMessages->hasFilter() ? "F" : "";
+            o = CGuiUtility::replaceTabCountValue(o, ui->tvp_StatusMessages->rowCount()) + f;
+            ui->tw_StatusPage->setTabText(i, o);
         }
 
         void CLogComponent::CLogMenu::customMenu(CMenuActions &menuActions)

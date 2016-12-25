@@ -28,11 +28,9 @@ class QPoint;
 class QWidget;
 
 namespace Ui { class CLogComponent; }
-
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
-
     namespace Components
     {
         //! Text edit for our log component
@@ -60,7 +58,7 @@ namespace BlackGui
             explicit CLogComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CLogComponent();
+            virtual ~CLogComponent();
 
             //! Display log
             void displayLog(bool attention = false);
@@ -93,6 +91,9 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CLogComponent> ui;
+
+            //! Status messages changed
+            void onStatusMessageDataChanged(int count, bool withFilter);
 
             //! Custom menu for the log component
             class CLogMenu : public BlackGui::Menus::IMenuDelegate

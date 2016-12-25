@@ -9,11 +9,12 @@
 
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/views/statusmessageview.h"
-
+#include "blackgui/filters/statusmessagefilterdialog.h"
 #include <QFlags>
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;
+using namespace BlackGui::Filters;
 
 namespace BlackGui
 {
@@ -32,5 +33,14 @@ namespace BlackGui
             this->derivedModel()->setMode(mode);
         }
 
+        void CStatusMessageView::addFilterDialog()
+        {
+            this->setFilterDialog(new CStatusMessageFilterDialog(this));
+        }
+
+        CStatusMessageFilterDialog *CStatusMessageView::getFilterDialog() const
+        {
+            return qobject_cast<CStatusMessageFilterDialog *>(this->getFilterWidget());
+        }
     } // namespace
 } // namespace

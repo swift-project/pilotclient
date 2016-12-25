@@ -24,6 +24,7 @@ class QWidget;
 
 namespace BlackGui
 {
+    namespace Filters { class CStatusMessageFilterDialog; }
     namespace Views
     {
         //! Status message view
@@ -38,6 +39,12 @@ namespace BlackGui
 
             //! Set mode
             void setMode(BlackGui::Models::CStatusMessageListModel::Mode mode);
+
+            //! Add my own filter dialog
+            void addFilterDialog();
+
+            //! Filter dialog if any
+            BlackGui::Filters::CStatusMessageFilterDialog *getFilterDialog() const;
         };
     } // ns
 } // ns
