@@ -459,9 +459,9 @@ namespace BlackGui
                 this->m_modelModifyDialog->setValue(ui->comp_StashAircraft->view()->selectedObject());
             }
 
-            QDialog::DialogCode s = static_cast<QDialog::DialogCode>(this->m_modelModifyDialog->exec());
+            const QDialog::DialogCode s = static_cast<QDialog::DialogCode>(this->m_modelModifyDialog->exec());
             if (s == QDialog::Rejected) { return; }
-            CPropertyIndexVariantMap vm = this->m_modelModifyDialog->getValues();
+            const CPropertyIndexVariantMap vm = this->m_modelModifyDialog->getValues();
             ui->comp_StashAircraft->applyToSelected(vm);
         }
 

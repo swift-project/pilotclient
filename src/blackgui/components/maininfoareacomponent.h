@@ -42,7 +42,7 @@ namespace BlackGui
         class CWeatherComponent;
 
 
-        //! Main info area
+        //! Main info area of pilot client
         class BLACKGUI_EXPORT CMainInfoAreaComponent : public BlackGui::CInfoArea
         {
             Q_OBJECT

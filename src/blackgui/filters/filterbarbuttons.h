@@ -22,7 +22,6 @@
 class QWidget;
 
 namespace Ui { class CFilterBarButtons; }
-
 namespace BlackGui
 {
     namespace Filters
@@ -47,7 +46,7 @@ namespace BlackGui
             explicit CFilterBarButtons(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CFilterBarButtons();
+            virtual ~CFilterBarButtons();
 
             //! Show the counter
             void displayCount(bool show);

@@ -51,7 +51,7 @@ namespace BlackGui
             void rejectDialog();
 
         protected:
-            //! Set and connect filter bar buttonsd
+            //! Set and connect filter bar buttons
             void setButtonsAndCount(CFilterBarButtons *buttons);
 
             //! Clear the filter form

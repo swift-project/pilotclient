@@ -22,8 +22,7 @@ namespace BlackGui
             m_countryIso(countryIso.trimmed().toUpper()), m_real(isReal), m_va(isVa)
         {
             this->m_valid =  !(this->m_countryIso.isEmpty() && this->m_vDesignator.isEmpty() &&
-                               this->m_name.isEmpty() &&
-                               !m_va && !m_real);
+                               this->m_name.isEmpty() && !this->m_va && !this->m_real);
         }
 
         CAirlineIcaoCodeList CAirlineIcaoFilter::filter(const CAirlineIcaoCodeList &inContainer) const

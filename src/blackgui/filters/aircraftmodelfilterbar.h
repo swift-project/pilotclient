@@ -45,7 +45,7 @@ namespace BlackGui
             explicit CAircraftModelFilterBar(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftModelFilterBar();
+            virtual ~CAircraftModelFilterBar();
 
             //! Show count
             void displayCount(bool show);
@@ -58,7 +58,7 @@ namespace BlackGui
             virtual void onRowCountChanged(int count, bool withFilter) override;
 
         protected:
-            //! Clear form
+            //! \copydoc CFilterWidget::clearForm
             virtual void clearForm() override;
 
         private slots:

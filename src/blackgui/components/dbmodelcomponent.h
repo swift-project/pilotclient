@@ -27,7 +27,6 @@
 class QWidget;
 
 namespace Ui { class CDbModelComponent; }
-
 namespace BlackGui
 {
     namespace Components
