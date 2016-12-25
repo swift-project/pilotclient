@@ -85,14 +85,13 @@ namespace BlackGui
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
-            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChanged, this, &CAtcStationComponent::ps_onCountChanged);
-            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChanged, this, &CAtcStationComponent::ps_onCountChanged);
+            connect(ui->tvp_AtcStationsOnline, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::ps_onCountChanged);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::ps_setComFrequency);
             connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
 
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
             connect(ui->tvp_AtcStationsBooked, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
-            connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChanged, this, &CAtcStationComponent::ps_onCountChanged);
+            connect(ui->tvp_AtcStationsBooked, &CAtcStationView::modelDataChangedDigest, this, &CAtcStationComponent::ps_onCountChanged);
 
             connect(ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
             connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
