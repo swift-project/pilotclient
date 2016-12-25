@@ -221,6 +221,9 @@ namespace BlackMisc
         //! Info or debug, no warning or error
         bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
 
+        //! Is this message's severity higher or equal
+        bool isSeverityHigherOrEqual(CStatusMessage::StatusSeverity severity) const;
+
         //! Warning or above
         bool isWarningOrAbove() const { return this->m_severity == SeverityWarning || this->m_severity == SeverityError; }
 

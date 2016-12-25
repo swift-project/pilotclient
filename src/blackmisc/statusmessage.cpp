@@ -219,14 +219,19 @@ namespace BlackMisc
         return true;
     }
 
+    bool CStatusMessage::isSeverityHigherOrEqual(CStatusMessage::StatusSeverity severity) const
+    {
+        return this->getSeverity() >= severity;
+    }
+
     bool CStatusMessage::isSuccess() const
     {
-        return !isFailure();
+        return !this->isFailure();
     }
 
     bool CStatusMessage::isFailure() const
     {
-        return getSeverity() == SeverityError;
+        return this->getSeverity() == SeverityError;
     }
 
     void CStatusMessage::prependMessage(const QString &msg)
