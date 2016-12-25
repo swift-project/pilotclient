@@ -1207,6 +1207,8 @@ namespace BlackGui
                 this->m_model->setSelectionModel(this);
                 bool c = connect(this->m_model, &ModelClass::modelDataChanged, this, &CViewBase::modelDataChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+                c = connect(this->m_model, &ModelClass::modelDataChangedDigest, this, &CViewBase::modelDataChangedDigest);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 c = connect(this->m_model, &ModelClass::objectChanged, this, &CViewBase::objectChanged);
                 Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
                 c = connect(this->m_model, &ModelClass::changed, this, &CViewBase::modelChanged);

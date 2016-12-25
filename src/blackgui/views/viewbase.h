@@ -274,6 +274,9 @@ namespace BlackGui
             //! Model data changed
             void modelDataChanged(int count, bool withFilter);
 
+            //! Model data changed,
+            void modelDataChangedDigest(int count, bool withFilter);
+
             //! Model bas been changed (means data in view have been changed)
             void modelChanged();
 
