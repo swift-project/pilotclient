@@ -35,6 +35,7 @@ namespace BlackGui
 
         void CStatusMessageView::addFilterDialog()
         {
+            if (this->getFilterDialog()) { return; } // already existing
             this->setFilterDialog(new CStatusMessageFilterDialog(this));
         }
 

@@ -141,6 +141,7 @@ void CSwiftCore::initLogDisplay()
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
     logHandler->subscribe(this, &CSwiftCore::ps_appendLogMessage);
+    ui->comp_InfoArea->getLogComponent()->showFilterDialog(); // add a filter dialog
 }
 
 void CSwiftCore::startCore(const QString &dBusAdress)

@@ -32,7 +32,7 @@ namespace BlackGui
             ui(new Ui::CDataMainInfoAreaComponent)
         {
             ui->setupUi(this);
-            initInfoArea(); // init base class
+            this->initInfoArea(); // init base class
             this->setWindowIcon(CIcons::swiftDatabase24());
 
             connect(ui->comp_Mapping, &CDbMappingComponent::filterByLivery, ui->comp_DataInfoArea->getLiveryComponent(), &CDbLiveryComponent::filter);
@@ -41,6 +41,8 @@ namespace BlackGui
 
             connect(ui->comp_DataInfoArea->getModelComponent(), &CDbModelComponent::requestStash, ui->comp_Mapping, &CDbMappingComponent::stashModels);
             connect(ui->comp_Log, &CLogComponent::requestAttention, this, &CDataMainInfoAreaComponent::selectLog);
+
+            ui->comp_Log->showFilterBar();
         }
 
         CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent()
