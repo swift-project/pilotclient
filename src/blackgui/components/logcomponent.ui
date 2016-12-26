@@ -70,6 +70,16 @@
         <number>0</number>
        </property>
        <item>
+        <widget class="BlackGui::Filters::CStatusMessageFilterBar" name="filter_LogMessages">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="BlackGui::Views::CStatusMessageView" name="tvp_StatusMessages">
          <property name="selectionMode">
           <enum>QAbstractItemView::SingleSelection</enum>
@@ -180,6 +190,12 @@
    <class>BlackGui::Components::CConsoleTextEdit</class>
    <extends>QPlainTextEdit</extends>
    <header>blackgui/components/logcomponent.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Filters::CStatusMessageFilterBar</class>
+   <extends>QFrame</extends>
+   <header>blackgui/filters/statusmessagefilterbar.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

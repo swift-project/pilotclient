@@ -53,7 +53,6 @@ namespace BlackGui
             connect(ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, ui->form_StatusMessage, &CStatusMessageForm::setVariant);
             connect(ui->tvp_StatusMessages, &CStatusMessageView::modelDataChangedDigest, this, &CLogComponent::onStatusMessageDataChanged);
             ui->tvp_StatusMessages->setAutoResizeFrequency(3);
-            ui->tvp_StatusMessages->addFilterDialog();
             ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
             ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         }
@@ -76,6 +75,18 @@ namespace BlackGui
         void CLogComponent::showDetails(bool details)
         {
             ui->form_StatusMessage->setVisible(details);
+        }
+
+        void CLogComponent::showFilterDialog()
+        {
+            ui->tvp_StatusMessages->addFilterDialog();
+            ui->filter_LogMessages->hide();
+        }
+
+        void CLogComponent::showFilterBar()
+        {
+            ui->tvp_StatusMessages->setFilterWidget(ui->filter_LogMessages);
+            ui->filter_LogMessages->show();
         }
 
         void CLogComponent::clear()

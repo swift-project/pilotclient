@@ -69,6 +69,12 @@ namespace BlackGui
             //! Show log details
             void showDetails(bool details);
 
+            //! Show filter dialog and disable bar
+            void showFilterDialog();
+
+            //! Show a filter bar
+            void showFilterBar();
+
             //! Clear
             void clear();
 
