@@ -99,23 +99,22 @@ namespace BlackGui
                 dbf = BlackMisc::Db::Invalid;
             }
 
-            return std::unique_ptr<CAircraftModelFilter>(
-                       new CAircraftModelFilter(
-                           ui->le_ModelString->text(),
-                           ui->le_ModelDescription->text(),
-                           mf,
-                           dbf,
-                           ui->cbt_Military->checkState(),
-                           ui->cbt_ColorLiveries->checkState(),
-                           ui->le_AircraftIcao->text(),
-                           ui->le_AircraftManufacturer->text(),
-                           ui->le_AirlineIcao->text(),
-                           ui->le_AirlineName->text(),
-                           ui->le_LiveryCode->text(),
-                           ui->le_FileName->text(),
-                           ui->frp_SimulatorSelector->getValue(),
-                           ui->comp_DistributorSelector->getDistributor()
-                       ));
+            return std::make_unique<CAircraftModelFilter>(
+                       ui->le_ModelString->text(),
+                       ui->le_ModelDescription->text(),
+                       mf,
+                       dbf,
+                       ui->cbt_Military->checkState(),
+                       ui->cbt_ColorLiveries->checkState(),
+                       ui->le_AircraftIcao->text(),
+                       ui->le_AircraftManufacturer->text(),
+                       ui->le_AirlineIcao->text(),
+                       ui->le_AirlineName->text(),
+                       ui->le_LiveryCode->text(),
+                       ui->le_FileName->text(),
+                       ui->frp_SimulatorSelector->getValue(),
+                       ui->comp_DistributorSelector->getDistributor()
+                   );
         }
 
         void CAircraftModelFilterBar::onRowCountChanged(int count, bool withFilter)

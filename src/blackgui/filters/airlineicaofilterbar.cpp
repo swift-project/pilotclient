@@ -50,14 +50,13 @@ namespace BlackGui
 
         std::unique_ptr<BlackGui::Models::IModelFilter<CAirlineIcaoCodeList> > CAirlineIcaoFilterBar::createModelFilter() const
         {
-            return std::unique_ptr<CAirlineIcaoFilter>(
-                       new CAirlineIcaoFilter(
-                           ui->le_Designator->text().trimmed(),
-                           ui->le_Name->text().trimmed(),
-                           ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
-                           ui->cb_RealAirline->isChecked(),
-                           ui->cb_VirtualAirline->isChecked()
-                       ));
+            return std::make_unique<CAirlineIcaoFilter>(
+                       ui->le_Designator->text().trimmed(),
+                       ui->le_Name->text().trimmed(),
+                       ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
+                       ui->cb_RealAirline->isChecked(),
+                       ui->cb_VirtualAirline->isChecked()
+                   );
         }
 
         void CAirlineIcaoFilterBar::filter(const CAirlineIcaoCode &icao)

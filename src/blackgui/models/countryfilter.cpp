@@ -32,7 +32,7 @@ namespace BlackGui
                 if (!m_isoCode.isEmpty())
                 {
                     if (country.getIsoCode() != m_isoCode) { continue; }
-                    end = true; // there should me only one designator
+                    end = true; // there should be only one designator
                 }
 
                 if (!this->m_name.isEmpty())

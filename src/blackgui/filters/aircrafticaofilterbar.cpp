@@ -50,13 +50,12 @@ namespace BlackGui
 
         std::unique_ptr<BlackGui::Models::IModelFilter<CAircraftIcaoCodeList> > CAircraftIcaoFilterBar::createModelFilter() const
         {
-            return std::unique_ptr<CAircraftIcaoFilter>(
-                       new CAircraftIcaoFilter(
-                           ui->le_Designator->text(),
-                           ui->le_Manufacturer->text(),
-                           ui->le_Description->text(),
-                           ui->combinedType_Selector->getCombinedType()
-                       ));
+            return std::make_unique<CAircraftIcaoFilter>(
+                       ui->le_Designator->text(),
+                       ui->le_Manufacturer->text(),
+                       ui->le_Description->text(),
+                       ui->combinedType_Selector->getCombinedType()
+                   );
         }
 
         void CAircraftIcaoFilterBar::filter(const CAircraftIcaoCode &icao)

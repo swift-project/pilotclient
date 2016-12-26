@@ -29,7 +29,6 @@ namespace BlackGui
         {
             if (!this->isValid()) { return inContainer; }
             CAirlineIcaoCodeList outContainer;
-            bool end = false;
             for (const CAirlineIcaoCode &icao : inContainer)
             {
                 if (!m_vDesignator.isEmpty())
@@ -58,7 +57,6 @@ namespace BlackGui
                 }
 
                 outContainer.push_back(icao);
-                if (end) { break; }
             }
             return outContainer;
         }

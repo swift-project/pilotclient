@@ -46,11 +46,10 @@ namespace BlackGui
 
         std::unique_ptr<BlackGui::Models::IModelFilter<CCountryList> > CCountryFilterBar::createModelFilter() const
         {
-            return std::unique_ptr<CCountryFilter>(
-                       new CCountryFilter(
-                           ui->le_IsoCode->text(),
-                           ui->le_Name->text()
-                       ));
+            return std::make_unique<CCountryFilter>(
+                       ui->le_IsoCode->text(),
+                       ui->le_Name->text()
+                   );
         }
 
         void CCountryFilterBar::onRowCountChanged(int count, bool withFilter)
