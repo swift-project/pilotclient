@@ -80,6 +80,7 @@ namespace BlackSimPlugin
                     QDBusPendingReply<T> reply = *watcher;
                     if (reply.isError()) { emit asyncMethodError(reply.error()); }
                     else { *obj = reply; }
+                    watcher->deleteLater();
                 };
             }
 
