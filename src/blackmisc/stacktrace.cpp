@@ -15,6 +15,8 @@
 #include <QStringBuilder>
 #include <QMutexLocker>
 #include <array>
+#include <cstdlib>
+#include <mutex>
 
 #if defined(Q_CC_MSVC)
 #   include <windows.h>
@@ -47,8 +49,15 @@ namespace BlackMisc
         static QMutex mutex;
         QMutexLocker lock(&mutex);
 
+        static std::once_flag flag;
+        std::call_once(flag, []
+        {
+            SymInitialize(GetCurrentProcess(), nullptr, true);
+            std::atexit([] { SymCleanup(GetCurrentProcess()); });
+        });
+
         auto process = GetCurrentProcess();
-        SymInitialize(process, nullptr, true);
+        SymRefreshModuleList(process);
 
         std::array<void*, 100> stack;
         auto frames = CaptureStackBackTrace(1, static_cast<DWORD>(stack.size()), stack.data(), nullptr);
