@@ -420,6 +420,8 @@ namespace BlackMisc
             return CVariant::from(this->getHumanReadablePattern());
         case IndexCategoryHumanReadableOrTechnicalAsString:
             return CVariant::from(this->getHumanOrTechnicalCategoriesAsString());
+        case IndexMessageAsHtml:
+            return CVariant::from(this->toHtml());
         default:
             return CValueObject::propertyByIndex(index);
         }
@@ -455,6 +457,7 @@ namespace BlackMisc
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
+        case IndexMessageAsHtml:
         case IndexMessage:
             return this->getMessage().compare(compareValue.getMessage());
         case IndexSeverity:
@@ -494,7 +497,7 @@ namespace BlackMisc
             break;
         }
         html.append(this->getMessage());
-        if (this->getSeverity() == SeverityInfo) return html;
+        if (this->getSeverity() == SeverityInfo) { return html; }
         html.append("</font>");
         return html;
     }

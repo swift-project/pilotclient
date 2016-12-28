@@ -150,7 +150,8 @@ namespace BlackMisc
             IndexCategoryHumanReadableOrTechnicalAsString,
             IndexSeverity,
             IndexSeverityAsString,
-            IndexMessage
+            IndexMessage,
+            IndexMessageAsHtml
         };
 
         //! Construct a message with some specific category.

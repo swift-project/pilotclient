@@ -183,7 +183,7 @@ namespace BlackMisc
 
             for (const CPropertyIndex &index : usedIndexes)
             {
-                rowHtml += "<td>" + statusMessage.propertyByIndex(index).toQString(true) + "</td>";
+                rowHtml += "<td>" + statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped() + "</td>";
             }
 
             rowHtml = "<tr class=\"%1\">" + rowHtml + "</tr>";
