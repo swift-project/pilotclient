@@ -241,14 +241,17 @@ namespace BlackCore
         //! Delegates to QCommandLineParser::value
         QString getParserValue(const QCommandLineOption &option) const;
 
-        //! Display parser error message
-        virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const;
-
         //! Parses and handles the standard options such as help, version, parse error
         //! \note in some cases (error, version, help) application is terminated during this step
         //! \sa parsingHookIn
         bool parse();
         //! @}
+
+        //! Display error message
+        virtual void cmdLineErrorMessage(const QString &cmdLineErrorMessage) const;
+
+        //! Display error message
+        virtual void cmdLineErrorMessage(const BlackMisc::CStatusMessageList &msgs) const;
 
         // ----------------------- contexts ----------------------------------------
 

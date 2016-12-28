@@ -226,7 +226,7 @@ namespace BlackGui
             }
             if (!tableMode)
             {
-                html += l;
+                html += l.toHtmlEscaped();
                 html += "<br>";
             }
             else
@@ -246,7 +246,7 @@ namespace BlackGui
                 else
                 {
                     html += " ";
-                    html += l.simplified();
+                    html += l.simplified().toHtmlEscaped();
                 }
             }
         }
@@ -261,11 +261,31 @@ namespace BlackGui
             const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
             QMessageBox::warning(nullptr,
                                  QGuiApplication::applicationDisplayName(),
-                                 "<html><head/><body><h2>" + errorMessage + "</h2>" + helpText + "</body></html>");
+                                 "<html><head/><body><h2>" + errorMessage + "</h2><br>" + helpText + "</body></html>");
         }
         else
         {
             CApplication::cmdLineErrorMessage(errorMessage);
+        }
+    }
+
+    void CGuiApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
+    {
+        if (msgs.isEmpty()) { return; }
+        if (!msgs.hasErrorMessages()) { return; }
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
+            static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
+            const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
+            const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
+            QMessageBox::critical(nullptr,
+                                  QGuiApplication::applicationDisplayName(),
+                                  "<html><head/><body>" + msgsHtml + "<br><br>" + helpText + "</body></html>");
+        }
+        else
+        {
+            CApplication::cmdLineErrorMessage(msgs);
         }
     }
 

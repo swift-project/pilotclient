@@ -866,6 +866,15 @@ namespace BlackCore
         fputs(qPrintable(this->m_parser.helpText()), stderr);
     }
 
+    void CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
+    {
+        if (msgs.isEmpty()) { return; }
+        if (!msgs.hasErrorMessages())  { return; }
+        return CApplication::cmdLineErrorMessage(
+                   msgs.toFormattedQString(true)
+               );
+    }
+
     void CApplication::cmdLineHelpMessage()
     {
         this->m_parser.showHelp(); // terminates
