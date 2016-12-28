@@ -36,7 +36,7 @@ namespace BlackGui
             explicit CRegisterComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CRegisterComponent();
+            virtual ~CRegisterComponent();
 
         private slots:
             //! Update data

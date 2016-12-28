@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
     CGuiApplication a("swift mapping tool", CApplicationInfo::MappingTool, CIcons::swiftDatabase48());
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swiftDatabase256());
+    a.parse();
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forMappingTool());
     if (!a.start()) { return EXIT_FAILURE; }
     CSwiftData w;

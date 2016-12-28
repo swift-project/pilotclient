@@ -35,13 +35,13 @@ namespace BlackCore
 
     CCoreFacadeConfig CCoreFacadeConfig::forCoreAllLocalInDBus(const QString &dbusBootstrapAddress)
     {
-        const CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::LocalInDbusServer, dbusBootstrapAddress));
+        const CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDbusServer, dbusBootstrapAddress);
         return cfg;
     }
 
     CCoreFacadeConfig CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress)
     {
-        CCoreFacadeConfig cfg = CCoreFacadeConfig(CCoreFacadeConfig(CCoreFacadeConfig::LocalInDbusServer, dbusBootstrapAddress));
+        CCoreFacadeConfig cfg(CCoreFacadeConfig::LocalInDbusServer, dbusBootstrapAddress);
         cfg.m_audio = CCoreFacadeConfig::NotUsed;
         return cfg;
     }

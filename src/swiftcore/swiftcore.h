@@ -41,7 +41,7 @@ public:
     CSwiftCore(QWidget *parent = nullptr);
 
     //! Destructor
-    ~CSwiftCore();
+    virtual ~CSwiftCore();
 
 private slots:
     //! \name PushButton slots

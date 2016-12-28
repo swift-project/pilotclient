@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
+    Q_UNUSED(qa); // init of qa is required, but qa not used
     CGuiApplication a("swift core", CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
@@ -39,7 +40,11 @@ int main(int argc, char *argv[])
     a.useContexts(a.isParserOptionSet("coreaudio") ?
                   CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAdress) :
                   CCoreFacadeConfig::forCoreAllLocalInDBusNoAudio(dBusAdress));
-    a.start();
+    if (!a.start())
+    {
+        a.gracefulShutdown();
+        return EXIT_FAILURE;
+    }
     //! [SwiftApplicationDemo]
 
     if (!QSystemTrayIcon::isSystemTrayAvailable())

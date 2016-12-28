@@ -112,7 +112,6 @@ namespace BlackGui
             const auto currentAircraftParts = sGui->getIContextNetwork()->getRemoteAircraftParts(cs, -1).frontOrDefault();
             const auto aircraftPartsHistory = sGui->getIContextNetwork()->getAircraftPartsHistory(cs);
 
-
             QString html;
             if (currentAircraftParts == CAircraftParts() && aircraftPartsHistory.isEmpty())
             {
