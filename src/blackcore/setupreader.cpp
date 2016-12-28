@@ -71,8 +71,8 @@ namespace BlackCore
             return msgs;
         }
 
-        m_setup.synchronize(); // make sure it is loaded
-        CGlobalSetup cachedSetup = m_setup.get();
+        this->m_setup.synchronize(); // make sure it is loaded
+        const CGlobalSetup cachedSetup = m_setup.get();
         const bool cacheAvailable = cachedSetup.wasLoaded();
         msgs.push_back(cacheAvailable ?
                        CStatusMessage(this, CStatusMessage::SeverityInfo , "Cached setup synchronized and contains data") :
@@ -107,7 +107,7 @@ namespace BlackCore
                 const CUrlList bootstrapCacheUrls(cachedSetup.getBootstrapFileUrls());
                 this->m_bootstrapUrls.push_back(bootstrapCacheUrls);
                 msgs.push_back(bootstrapCacheUrls.isEmpty() ?
-                               CStatusMessage(this, CStatusMessage::SeverityWarning, "No bootsrap URLs in cache") :
+                               CStatusMessage(this, CStatusMessage::SeverityWarning, "No bootstrap URLs in cache") :
                                CStatusMessage(this, CStatusMessage::SeverityInfo, "Adding " + QString::number(bootstrapCacheUrls.size()) + " bootstrap URLs from cache"));
             }
         }
@@ -124,10 +124,10 @@ namespace BlackCore
         }
         else
         {
-            CStatusMessageList readMsgs = triggerReadSetup();
+            CStatusMessageList readMsgs = this->triggerReadSetup(); // async loading
             if (cacheAvailable && readMsgs.isFailure())
             {
-                // error but cache is available, we can continue
+                // error, but cache is available, we can continue
                 readMsgs.clampSeverity(CStatusMessage::SeverityWarning);
                 msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, "Loading setup failed, but cache is available, will continue"));
                 msgs.push_back(readMsgs);
@@ -145,7 +145,7 @@ namespace BlackCore
         // bootstrap file URL where we can download the bootstrap file
         const QString parserValueUrl = sApp->getParserValue(this->m_cmdBootstrapUrl);
         this->m_bootstrapUrlFileValue = CGlobalSetup::buildBootstrapFileUrl(parserValueUrl);
-        QUrl url(this->m_bootstrapUrlFileValue);
+        const QUrl url(this->m_bootstrapUrlFileValue);
         const QString urlString(url.toString());
         this->m_bootstrapMode = stringToEnum(sApp->getParserValue(this->m_cmdBootstrapMode));
         if (urlString.isEmpty() && this->m_bootstrapMode == Explicit)
@@ -196,13 +196,14 @@ namespace BlackCore
 
     CStatusMessageList CSetupReader::triggerReadSetup()
     {
-        if (m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
+        if (this->m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
         if (!CNetworkUtils::hasConnectedInterface())
         {
             const CStatusMessage m(this, CStatusMessage::SeverityError,
                                    "No network, cancelled reading of setup");
             CStatusMessageList msgs(m);
             msgs.push_back(this->manageSetupAvailability(false, false));
+            this->setLastSetupReadErrorMessages(msgs);
             return msgs;
         }
 
@@ -214,10 +215,12 @@ namespace BlackCore
                                    " failed URLs: " + this->m_bootstrapUrls.getFailedUrls().toQString());
             CStatusMessageList msgs(m);
             msgs.push_back(this->manageSetupAvailability(false, false));
+            this->setLastSetupReadErrorMessages(msgs);
             return msgs;
         }
         const CStatusMessage m(this, CStatusMessage::SeverityInfo, "Start reading URL: " + url.toQString());
         sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseSetupFile });
+        this->setLastSetupReadErrorMessages(m); // clear errors
         return m;
     }
 
@@ -290,9 +293,9 @@ namespace BlackCore
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (m_shutdown) { return; }
 
-        QUrl url(nwReply->url());
-        QString urlString(url.toString());
-        QString replyMessage(nwReply->errorString());
+        const QUrl url(nwReply->url());
+        const QString urlString(url.toString());
+        const QString replyMessage(nwReply->errorString());
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
@@ -320,31 +323,28 @@ namespace BlackCore
                     return; // success
                 }
 
-                // in the past I used to do a timestamp comparison here and skipped further laoding
+                // in the past I used to do a timestamp comparison here and skipped further setting
                 // with changed files from a different URL this was wrongly assuming outdated loaded files and was removed
-                CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
-                if (m.isWarningOrAbove())
+                const CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
+                CLogMessage::preformatted(m);
+                if (m.isSeverityInfoOrLess())
                 {
-                    m.setCategories(getLogCategories());
-                    CLogMessage::preformatted(m);
-                    CLogMessage::preformatted(this->manageSetupAvailability(false));
-                    return; // issue with cache
-                }
-                else
-                {
+                    // no issue with cache
                     this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
                     CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
-                    CLogMessage::preformatted(this->manageSetupAvailability(true));
-                    return; // success
-                } // cache
-
+                }
+                CLogMessage::preformatted(this->manageSetupAvailability(true));
+                return;
             } // json empty
         } // no error
         else
         {
-            // network error
-            CLogMessage(this).warning("Reading setup failed %1 %2") << replyMessage << urlString;
+            // network error, log as warning as we will read again if possible
+            // however, store as error because this will be a possible root cause if nothing else is
             nwReply->abort();
+            const CStatusMessage msg = CStatusMessage(this).error("Reading setup failed %1 %2 (can possibly be fixed by reading from another server afterwards)") << replyMessage << urlString;
+            CLogMessage::preformatted(msg);
+            this->setLastSetupReadErrorMessages(msg);
         }
 
         // try next one if any
@@ -354,7 +354,8 @@ namespace BlackCore
         }
         else
         {
-            CLogMessage::preformatted(manageSetupAvailability(false));
+            const CStatusMessageList msgs = this->manageSetupAvailability(false);
+            CLogMessage::preformatted(msgs);
         }
     }
 
@@ -365,9 +366,9 @@ namespace BlackCore
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (m_shutdown) { return; }
 
-        QUrl url(nwReply->url());
-        QString urlString(url.toString());
-        QString replyMessage(nwReply->errorString());
+        const QUrl url(nwReply->url());
+        const QString urlString(url.toString());
+        const QString replyMessage(nwReply->errorString());
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
@@ -385,7 +386,7 @@ namespace BlackCore
                 CUpdateInfo loadedUpdateInfo;
                 loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson));
                 if (lastModified > 0 && lastModified > loadedUpdateInfo.getMSecsSinceEpoch()) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
-                bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
+                const bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
                 if (sameVersionLoaded)
                 {
                     CLogMessage(this).info("Same update info version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
@@ -396,7 +397,7 @@ namespace BlackCore
                 CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
                 if (!m.isEmpty())
                 {
-                    m.setCategories(getLogCategories());
+                    m.addCategories(getLogCategories());
                     CLogMessage::preformatted(m);
                     this->manageUpdateAvailability(false);
                     return; // issue with cache
@@ -412,8 +413,8 @@ namespace BlackCore
         else
         {
             // network error
-            CLogMessage(this).warning("Reading update info failed %1 %2") << replyMessage << urlString;
             nwReply->abort();
+            CLogMessage(this).error("Reading update info failed %1 %2 (can possibly be fixed by reading from another server afterwards)") << replyMessage << urlString;
         }
 
         // try next one if any
@@ -423,7 +424,8 @@ namespace BlackCore
         }
         else
         {
-            this->manageUpdateAvailability(false);
+            const CStatusMessageList msgs = this->manageSetupAvailability(false);
+            CLogMessage::preformatted(msgs);
         }
     } // function
 
@@ -431,6 +433,16 @@ namespace BlackCore
     {
         static const CLogCategoryList cats({ CLogCategory("swift.setupreader"), CLogCategory::webservice(), CLogCategory::startup()});
         return cats;
+    }
+
+    bool CSetupReader::hasCmdLineBootstrapUrl() const
+    {
+        return !sApp->getParserValue(this->m_cmdBootstrapUrl).isEmpty();
+    }
+
+    QString CSetupReader::getCmdLineBootstrapUrl() const
+    {
+        return sApp->getParserValue(this->m_cmdBootstrapUrl);
     }
 
     CGlobalSetup CSetupReader::getSetup() const
@@ -443,18 +455,30 @@ namespace BlackCore
         return m_updateInfo.get();
     }
 
+    CStatusMessageList CSetupReader::getLastSetupReadErrorMessages() const
+    {
+        QReadLocker l(&m_lockSetup);
+        return this->m_setupReadErrorMsgs;
+    }
+
+    void CSetupReader::setLastSetupReadErrorMessages(const CStatusMessageList &messages)
+    {
+        QWriteLocker l(&m_lockSetup);
+        this->m_setupReadErrorMsgs = messages.getErrorMessages();
+    }
+
     CStatusMessageList CSetupReader::manageSetupAvailability(bool webRead, bool localRead)
     {
         Q_ASSERT_X(!(webRead && localRead), Q_FUNC_INFO, "Local and web read together seems to be wrong");
         CStatusMessageList msgs;
         if (webRead)
         {
-            msgs.push_back(CLogMessage(this).info("Setup loaded from web, will trigger read of update information"));
+            msgs.push_back(CStatusMessage(this).info("Setup loaded from web, will trigger read of update information"));
             QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
         }
         if (localRead)
         {
-            msgs.push_back(CLogMessage(this).info("Setup loaded locally, will trigger read of update information"));
+            msgs.push_back(CStatusMessage(this).info("Setup loaded locally, will trigger read of update information"));
             QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
         }
 
@@ -475,7 +499,6 @@ namespace BlackCore
         }
         else if (!available)
         {
-
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, "Setup not available"));
             if (this->m_bootstrapMode == Explicit)
             {
@@ -483,7 +506,7 @@ namespace BlackCore
             }
         }
         this->m_setupAvailable = available;
-        emit setupAvailable(available);
+        emit this->setupHandlingCompleted(available);
 
         if (!webRead && !localRead)
         {

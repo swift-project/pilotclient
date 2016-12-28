@@ -53,17 +53,27 @@ namespace BlackCore
         //! Categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
-        //! Current setup
+        //! Has a given cmd line argument for bootstrap URL
+        bool hasCmdLineBootstrapUrl() const;
+
+        //! CMD line argument for bootstrap URL
+        QString getCmdLineBootstrapUrl() const;
+
+        //! Current setup (reader URLs, DB location, crash server)
+        //! \remarks aka "bootstrap file"
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getSetup() const;
 
-        //! Update info
+        //! Update info (version, updates, download URLs)
         //! \threadsafe
         BlackCore::Data::CUpdateInfo getUpdateInfo() const;
 
+        //! Last setup parsing error messages (if any)
+        BlackMisc::CStatusMessageList getLastSetupReadErrorMessages() const;
+
     signals:
-        //! Setup avialable (from web, cache, or local file)
-        void setupAvailable(bool available);
+        //! Setup fetched or failed (from web, cache, or local file)
+        void setupHandlingCompleted(bool available);
 
         //! Setup avialable (from web, cache
         void updateInfoAvailable(bool available);
@@ -93,7 +103,7 @@ namespace BlackCore
         bool isUpdateInfoAvailable() const { return m_updateInfoAvailable; }
 
     private slots:
-        //! Setup has been read
+        //! Setup has been read (aka bootstrap file)
         void ps_parseSetupFile(QNetworkReply *nwReply);
 
         //! Update info has been read
@@ -127,6 +137,8 @@ namespace BlackCore
         BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
         QCommandLineOption m_cmdBootstrapUrl;                  //!< bootstrap URL
         QCommandLineOption m_cmdBootstrapMode;                 //!< bootstrap mode
+        mutable QReadWriteLock m_lockSetup;                    //!< lock for setup
+        BlackMisc::CStatusMessageList m_setupReadErrorMsgs;    //!< last parsing error messages
         BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
         BlackMisc::CData<BlackCore::Data::TUpdateInfo>  m_updateInfo {this};                             //!< data cache update info
 
@@ -143,6 +155,9 @@ namespace BlackCore
         //! Emit the available signal
         //! \threadsafe
         void manageUpdateAvailability(bool webRead);
+
+        //! Set last setup parsing messages
+        void setLastSetupReadErrorMessages(const BlackMisc::CStatusMessageList &messages);
 
         //! Convert string to mode
         static BootstrapMode stringToEnum(const QString &s);
