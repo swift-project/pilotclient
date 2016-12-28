@@ -28,7 +28,7 @@ CSwiftGuiStdApplication::CSwiftGuiStdApplication() :
     this->addVatlibOptions();
 }
 
-bool CSwiftGuiStdApplication::startHookIn()
+CStatusMessageList CSwiftGuiStdApplication::startHookIn()
 {
     Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed cmd line arguments");
     CoreModes::CoreMode coreMode = CoreModes::CoreInGuiProcess;
