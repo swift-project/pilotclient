@@ -359,7 +359,7 @@ namespace BlackMisc
         }
         if (! QDir::root().mkpath(dir))
         {
-            return CStatusMessage(this).error("Failed to create directory %1") << dir;
+            return CStatusMessage(this).error("Failed to create directory '%1'") << dir;
         }
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
@@ -381,7 +381,7 @@ namespace BlackMisc
                 return CStatusMessage(this).error("Failed to write to %1: %2") << file.fileName() << file.errorString();
             }
         }
-        return CStatusMessage(this).info("Written %1 to value cache in %2") <<
+        return CStatusMessage(this).info("Written '%1' to value cache in '%2'") <<
             (keysMessage.isEmpty() ? values.keys().to<QStringList>().join(",") : keysMessage) << dir;
     }
 
@@ -399,11 +399,11 @@ namespace BlackMisc
     {
         if (! QDir(dir).exists())
         {
-            return CStatusMessage(this).warning("No such directory %1") << dir;
+            return CStatusMessage(this).warning("No such directory '%1'") << dir;
         }
         if (! QDir(dir).isReadable())
         {
-            return CStatusMessage(this).error("Failed to read from directory %1") << dir;
+            return CStatusMessage(this).error("Failed to read from directory '%1'") << dir;
         }
 
         QMap<QString, QStringList> keysInFiles;

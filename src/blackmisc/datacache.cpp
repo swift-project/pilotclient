@@ -73,7 +73,7 @@ namespace BlackMisc
     {
         if (! QDir::root().mkpath(persistentStore()))
         {
-            CLogMessage(this).error("Failed to create directory %1") << persistentStore();
+            CLogMessage(this).error("Failed to create directory '%1'") << persistentStore();
         }
 
         connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStoreAsync);
