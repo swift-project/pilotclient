@@ -399,7 +399,7 @@ namespace BlackMisc
     {
         if (! QDir(dir).isReadable())
         {
-            return CStatusMessage(this).error("Failed to create directory %1") << dir;
+            return CStatusMessage(this).error("Failed to read from directory %1") << dir;
         }
 
         QMap<QString, QStringList> keysInFiles;
