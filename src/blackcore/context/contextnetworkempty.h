@@ -31,8 +31,8 @@ namespace BlackCore
 
         public slots: // IContextNetwork overrides
 
-            //! \copydoc IContextNetwork::readAtcBookingsFromSource()
-            virtual void readAtcBookingsFromSource() const override
+            //! \copydoc IContextNetwork::requestAtcBookingsUpdate()
+            virtual void requestAtcBookingsUpdate() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
             }

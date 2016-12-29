@@ -72,7 +72,7 @@ namespace BlackCore
         public slots:
             //! \name Interface overrides
             //! @{
-            virtual void readAtcBookingsFromSource() const override;
+            virtual void requestAtcBookingsUpdate() const override;
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const override;

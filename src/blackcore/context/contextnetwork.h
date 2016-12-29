@@ -164,13 +164,13 @@ namespace BlackCore
 
         public slots:
             //! Reload bookings from booking service
-            virtual void readAtcBookingsFromSource() const = 0;
+            virtual void requestAtcBookingsUpdate() const = 0;
 
             //! The ATC list with online ATC controllers
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const = 0;
 
             //! ATC list, with booked controllers
-            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0 ;
+            virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0;
 
             //! Aircraft list
             virtual BlackMisc::Simulation::CSimulatedAircraftList getAircraftInRange() const = 0;

@@ -134,6 +134,7 @@ namespace BlackCore
             //! \remarks Intentionally only running locally, not in interface
             bool isPendingConnection() const;
 
+            // --------------------- IContextNetwork implementations ---------------------
             //! \ingroup commandline
             //! @{
             //! <pre>
@@ -143,89 +144,38 @@ namespace BlackCore
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
-            //! \copydoc IContextNetwork::getAtcStationsBooked()
+            //! \publicsection
+            //! @{
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
-
-            //! \copydoc IContextNetwork::readAtcBookingsFromSource()
-            virtual void readAtcBookingsFromSource() const override;
-
-            //! \copydoc IContextNetwork::getAtcStationsOnline()
+            virtual void requestAtcBookingsUpdate() const override;
             virtual BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
-
-            //! \copydoc IContextNetwork::getOnlineStationForCallsign
             virtual BlackMisc::Aviation::CAtcStation getOnlineStationForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IContextNetwork::connectToNetwork()
             virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, BlackCore::INetwork::LoginMode mode) override;
-
-            //! \copydoc IContextNetwork::getConnectedServer
             virtual BlackMisc::Network::CServer getConnectedServer() const override;
-
-            //! \copydoc IContextNetwork::disconnectFromNetwork()
             virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
-
-            //! \copydoc IContextNetwork::isConnected()
             virtual bool isConnected() const override;
-
-            //! \copydoc IContextNetwork::sendTextMessages()
             virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
-
-            //! \copydoc IContextNetwork::sendFlightPlan()
             virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
-
-            //! \copydoc IContextNetwork::loadFlightPlanFromNetwork()
             virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IContextNetwork::getMetarForAirport
             BlackMisc::Weather::CMetar getMetarForAirport(const BlackMisc::Aviation::CAirportIcaoCode &airportIcaoCode) const override;
-
-            //! \copydoc IContextNetwork::getSelectedVoiceRooms()
             virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;
-
-            //! \copydoc IContextNetwork::getSelectedAtcStations
             virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override;
-
-            //! \copydoc IContextNetwork::getUsers()
             virtual BlackMisc::Network::CUserList getUsers() const override;
-
-            //! \copydoc IContextNetwork::getUsersForCallsigns
             virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
-
-            //! \copydoc IContextNetwork::getUserForCallsign
             virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const override;
-
-            //! \copydoc IContextNetwork::getOtherClients
             virtual BlackMisc::Network::CClientList getOtherClients() const override;
-
-            //! \copydoc IContextNetwork::getOtherClientsForCallsigns
             virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignSet &callsigns) const override;
-
-            //! \copydoc IContextNetwork::getVatsimFsdServers
             virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
-
-            //! \copydoc IContextNetwork::getVatsimVoiceServers
             virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
-
-            //! \copydoc IContextNetwork::requestDataUpdates
             virtual void requestDataUpdates()override;
-
-            //! \copydoc IContextNetwork::requestAtisUpdates
             virtual void requestAtisUpdates() override;
-
-            //! \copydoc IContextNetwork::setFastPositionEnabledCallsigns
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;
-
-            //! \copydoc IContextNetwork::getFastPositionEnabledCallsigns
             virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() override;
-
-            //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
             virtual void testCreateDummyOnlineAtcStations(int number) override;
-
-            //! \copydoc IContextNetwork::testAddAircraftParts
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
-
-            //! \copydoc IContextNetwork::testReceivedTextMessages
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
+            //! @}
+            // --------------------- IContextNetwork implementations ---------------------
 
             //! Gracefully shut down, e.g. for thread safety
             void gracefulShutdown();

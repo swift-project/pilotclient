@@ -91,9 +91,9 @@ namespace BlackCore
             this->relayBaseClassSignals(serviceName, connection, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName());
         }
 
-        void CContextNetworkProxy::readAtcBookingsFromSource() const
+        void CContextNetworkProxy::requestAtcBookingsUpdate() const
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("readAtcBookingsFromSource"));
+            this->m_dBusInterface->callDBus(QLatin1Literal("requestAtcBookingsUpdate"));
         }
 
         BlackMisc::Aviation::CAtcStationList CContextNetworkProxy::getAtcStationsOnline() const

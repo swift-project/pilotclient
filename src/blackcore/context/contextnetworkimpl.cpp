@@ -628,11 +628,10 @@ namespace BlackCore
             return c;
         }
 
-        void CContextNetwork::readAtcBookingsFromSource() const
+        void CContextNetwork::requestAtcBookingsUpdate() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            Q_ASSERT_X(sApp->getWebDataServices(), Q_FUNC_INFO, "missing reader");
-            sApp->getWebDataServices()->readInBackground(BlackMisc::Network::CEntityFlags::BookingEntity);
+            this->m_airspace->requestAtcBookingsUpdate();
         }
 
         bool CContextNetwork::updateAircraftRendered(const CCallsign &callsign, bool rendered)
