@@ -265,11 +265,11 @@ namespace BlackCore
 
         //! Init the contexts part and start core facade
         //! \sa coreFacadeStarted
-        bool useContexts(const CCoreFacadeConfig &coreConfig);
+        BlackMisc::CStatusMessageList useContexts(const CCoreFacadeConfig &coreConfig);
 
         //! Init web data services and start them
         //! \sa webDataServicesStarted
-        bool useWebDataServices(const CWebReaderFlags::WebReader webReader, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig);
+        BlackMisc::CStatusMessageList useWebDataServices(const CWebReaderFlags::WebReader webReader, const BlackCore::Db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
@@ -344,8 +344,8 @@ namespace BlackCore
                                          const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
 
     signals:
-        //! Setup available (cache, web load, ..)
-        void setupAvailable(bool success);
+        //! Setup available (cache, web load, ..) or failed to load setup
+        void setupHandlingCompleted(bool success);
 
         //! Update info available (cache, web load)
         void updateInfoAvailable(bool success);
@@ -362,7 +362,7 @@ namespace BlackCore
 
     protected slots:
         //! Setup read/synchronized
-        void ps_setupAvailable(bool available);
+        void ps_setupHandlingCompleted(bool available);
 
         //! Startup completed
         virtual void ps_startupCompleted();
@@ -381,7 +381,7 @@ namespace BlackCore
         virtual bool parsingHookIn() { return true; }
 
         //! Can be used to start special services
-        virtual bool startHookIn() { return true; }
+        virtual BlackMisc::CStatusMessageList startHookIn() { return BlackMisc::CStatusMessageList(); }
 
         //! Flag set or explicitly set to true
         bool isSetOrTrue(const QCommandLineOption &option) const;
@@ -393,11 +393,11 @@ namespace BlackCore
 
         //! Start the core facade
         //! \note does nothing when setup is not yet loaded
-        bool startCoreFacade();
+        BlackMisc::CStatusMessageList startCoreFacadeAndWebDataServices();
 
         //! Start the web data services
         //! \note does nothing when setup is not yet loaded
-        bool startWebDataServices();
+        BlackMisc::CStatusMessageList startWebDataServices();
 
         //! executable name
         static const QString &executable();
@@ -415,7 +415,6 @@ namespace BlackCore
         QCommandLineOption m_cmdClearCache {"clearcache"}; //!< Clear cache
         bool               m_parsed  = false;              //!< Parsing accomplished?
         bool               m_started = false;              //!< started with success?
-        bool               m_startUpCompleted = false;     //!< startup phase completed? Can mean startup failed
         bool               m_startSetupReader = false;     //!< start the setup reader
 
     private:
@@ -429,7 +428,7 @@ namespace BlackCore
         bool initIsRunningInDeveloperEnvironment() const;
 
         //! Async. start when setup is loaded
-        bool asyncWebAndContextStart();
+        BlackMisc::CStatusMessageList asyncWebAndContextStart();
 
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
@@ -457,9 +456,9 @@ namespace BlackCore
         bool                                     m_autoSaveSettings = true;//!< automatically saving all settings
 
         // -------------- crashpad -----------------
-        void initCrashHandler();
+        BlackMisc::CStatusMessageList initCrashHandler();
         void crashDumpUploadEnabledChanged();
-		
+
         #ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;

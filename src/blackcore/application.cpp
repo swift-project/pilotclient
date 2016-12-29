@@ -134,7 +134,7 @@ namespace BlackCore
             // global setup
             sApp = this;
             this->m_setupReader.reset(new CSetupReader(this));
-            connect(this->m_setupReader.data(), &CSetupReader::setupAvailable, this, &CApplication::ps_setupAvailable);
+            connect(this->m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::ps_setupHandlingCompleted);
             connect(this->m_setupReader.data(), &CSetupReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable);
 
             this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions());
@@ -317,7 +317,7 @@ namespace BlackCore
         }
         else
         {
-            return CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "No reader for setup/version");
+            return CStatusMessage(this).error("No reader for setup/version");
         }
     }
 
@@ -516,29 +516,29 @@ namespace BlackCore
         eventLoop.exec();
     }
 
-    bool CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
+    CStatusMessageList CApplication::useContexts(const CCoreFacadeConfig &coreConfig)
     {
         Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
         this->m_useContexts = true;
         this->m_coreFacadeConfig = coreConfig;
 
+        // if not yet initialized, init web data services
         if (!this->m_useWebData)
         {
-            bool s = this->useWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
-            if (!s) { return false; }
+            const CStatusMessageList msgs = this->useWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
+            if (msgs.hasErrorMessages()) { return msgs; }
         }
-        return this->startCoreFacade(); // will do nothing if setup is not yet loaded
+        return this->startCoreFacadeAndWebDataServices(); // will do nothing if setup is not yet loaded
     }
 
-    bool CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
+    CStatusMessageList CApplication::useWebDataServices(const CWebReaderFlags::WebReader webReaders, const CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(this->m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         BLACK_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
         if (!QSslSocket::supportsSsl())
         {
-            this->cmdLineErrorMessage("No SSL supported, can`t be used");
-            return false;
+            return CStatusMessage(this).error("No SSL supported, can`t be used");
         }
 
         this->m_webReadersUsed = webReaders;
@@ -547,11 +547,12 @@ namespace BlackCore
         return this->startWebDataServices();
     }
 
-    bool CApplication::startCoreFacade()
+    CStatusMessageList CApplication::startCoreFacadeAndWebDataServices()
     {
-        if (!this->m_useContexts) { return true; } // we do not use context, so no need to startup
-        if (!this->m_parsed) { return false; }
-        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return false; }
+        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
+
+        if (!this->m_useContexts) { return CStatusMessage(this).error("No need to start core facade"); } // we do not use context, so no need to startup
+        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
 
         Q_ASSERT_X(this->m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
         Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
@@ -559,29 +560,35 @@ namespace BlackCore
 
         this->startWebDataServices();
 
-        CLogMessage(this).info("Will start core facade now");
+        const CStatusMessageList msgs(CStatusMessage(this).info("Will start core facade now"));
         this->m_coreFacade.reset(new CCoreFacade(this->m_coreFacadeConfig));
         emit this->coreFacadeStarted();
-        return true;
+        return msgs;
     }
 
-    bool CApplication::startWebDataServices()
+    CStatusMessageList CApplication::startWebDataServices()
     {
-        if (!this->m_useWebData) { return true; }
-        if (!this->m_parsed) { return false; }
-        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return false; }
+        Q_ASSERT_X(this->m_parsed, Q_FUNC_INFO, "Call this function after parsing");
+
+        if (!this->m_useWebData) { return CStatusMessage(this).warning("No need to start web data services"); }
+        if (!this->m_setupReader || !this->m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error("No setup reader or setup available"); }
 
         Q_ASSERT_X(this->m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
+        CStatusMessageList msgs;
         if (!this->m_webDataServices)
         {
-            CLogMessage(this).info("Will start web data services now");
+            msgs.push_back(CStatusMessage(this).info("Will start web data services now"));
             this->m_webDataServices.reset(
                 new CWebDataServices(this->m_webReadersUsed, this->m_dbReaderConfig, {}, this)
             );
         }
+        else
+        {
+            msgs.push_back(CStatusMessage(this).info("Web data services already running"));
+        }
 
         emit webDataServicesStarted(true);
-        return true;
+        return msgs;
     }
 
     void CApplication::initLogging()
@@ -606,7 +613,7 @@ namespace BlackCore
 
         // dev. system
         this->m_cmdDevelopment = QCommandLineOption({ "dev", "development" },
-                                 QCoreApplication::translate("application", "Dev.system feature?"),
+                                 QCoreApplication::translate("application", "Dev. system features?"),
                                  "development");
         this->addParserOption(this->m_cmdDevelopment);
 
@@ -695,14 +702,16 @@ namespace BlackCore
         this->m_fileLogger->close();
     }
 
-    void CApplication::ps_setupAvailable(bool available)
+    void CApplication::ps_setupHandlingCompleted(bool available)
     {
         if (available)
         {
-            this->m_started = this->asyncWebAndContextStart();
+            // start follow ups when setup is avaialable
+            const CStatusMessageList msgs = this->asyncWebAndContextStart();
+            this->m_started = msgs.isSuccess();
         }
-        this->m_startUpCompleted = true;
-        emit setupAvailable(available);
+
+        emit this->setupHandlingCompleted(available);
 
         if (this->m_signalStartup)
         {
@@ -715,13 +724,15 @@ namespace BlackCore
         // void
     }
 
-    bool CApplication::asyncWebAndContextStart()
+    CStatusMessageList CApplication::asyncWebAndContextStart()
     {
-        if (this->m_started) { return true; }
+        if (this->m_started) { return CStatusMessage(this).info("Already started "); }
 
         // follow up startups
-        bool s = this->startWebDataServices();
-        return s && this->startCoreFacade();
+        CStatusMessageList msgs = this->startWebDataServices();
+        if (msgs.isFailure()) return msgs;
+        msgs.push_back(this->startCoreFacadeAndWebDataServices());
+        return msgs;
     }
 
     void CApplication::severeStartupProblem(const CStatusMessage &message)
@@ -995,19 +1006,19 @@ namespace BlackCore
 #ifdef BLACK_USE_CRASHPAD
     base::FilePath qstringToFilePath(const QString &str)
     {
-#ifdef Q_OS_WIN
+#   ifdef Q_OS_WIN
         return base::FilePath(str.toStdWString());
-#else
+#   else
         return base::FilePath(str.toStdString());
-#endif
+#   endif
     }
 #endif
 
-    void CApplication::initCrashHandler()
+    BlackMisc::CStatusMessageList CApplication::initCrashHandler()
     {
 #ifdef BLACK_USE_CRASHPAD
         // No crash handling for unit tests
-        if (isUnitTest()) { return; }
+        if (isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
 
         static const QString extension = CBuildConfig::isRunningOnWindowsNtPlatform() ? ".exe" : QString();
         static const QString handler = CDirectoryUtils::applicationDirectoryPath() + "/" + "swift_crashpad_handler" + extension;
@@ -1018,8 +1029,7 @@ namespace BlackCore
 
         if (!QFileInfo::exists(handler))
         {
-            CLogMessage(this).warning("%1 not found. Cannot init crash handler!") << handler;
-            return;
+            return CStatusMessage(this).warning("%1 not found. Cannot init crash handler!") << handler;
         }
 
         CUrl serverUrl;
@@ -1037,6 +1047,9 @@ namespace BlackCore
         m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database),
                                        serverUrl.getFullUrl().toStdString(), annotations, {}, false);
         m_crashpadClient->UseHandler();
+        return CStatusMessage(this).info("Using crash handler");
+#else
+        return CStatusMessage(this).info("Not using crash handler");
 #endif
     }
 
