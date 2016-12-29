@@ -22,7 +22,6 @@
 #include <QScopedPointer>
 #include <QString>
 #include <QStringList>
-#include <QTemporaryDir>
 #include <atomic>
 #include <functional>
 
@@ -438,7 +437,6 @@ namespace BlackCore
         QScopedPointer<CSetupReader>             m_setupReader;            //!< setup reader
         QScopedPointer<CWebDataServices>         m_webDataServices;        //!< web data services
         QScopedPointer<BlackMisc::CFileLogger>   m_fileLogger;             //!< file logger
-        QTemporaryDir                            m_tempDirectory;          //!< temp.directory for the lifetime of application object
         QNetworkAccessManager                    m_accessManager { this }; //!< single network access manager
         CCookieManager                           m_cookieManager;          //!< single cookie manager for our access manager
         QString                                  m_applicationName;        //!< application name

@@ -45,6 +45,7 @@
 #include <QNetworkRequest>
 #include <QSslSocket>
 #include <QStandardPaths>
+#include <QTemporaryDir>
 #include <QThread>
 #include <QTime>
 #include <QTimer>
@@ -431,14 +432,9 @@ namespace BlackCore
 
     QString CApplication::getTemporaryDirectory() const
     {
-        if (this->m_tempDirectory.isValid())
-        {
-            return this->m_tempDirectory.path();
-        }
-        else
-        {
-            return QDir::tempPath();
-        }
+        static QTemporaryDir tempDir;
+        if (tempDir.isValid()) { return tempDir.path(); }
+        return QDir::tempPath();
     }
 
     QString CApplication::getInfoString(const QString &separator) const
