@@ -41,6 +41,9 @@ namespace BlackCore
             //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
             void atcBookingsRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
+            //! Bookings have been re-read but did not change
+            void atcBookingsReadUnchanged();
+
             //! Data have been read
             void dataRead(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Network::CEntityFlags::ReadState state, int number);
 
@@ -60,9 +63,10 @@ namespace BlackCore
             void ps_read();
 
         private:
-            void reloadSettings();
+            //! Settings changed
+            void settingsChanged();
 
-            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimBookings> m_settings { this, &CVatsimBookingReader::reloadSettings };
+            BlackMisc::CSettingReadOnly<BlackCore::Vatsim::TVatsimBookings> m_settings { this, &CVatsimBookingReader::settingsChanged };
         };
     } // ns
 } // ns

@@ -45,7 +45,7 @@ namespace BlackCore
         CVatsimBookingReader::CVatsimBookingReader(QObject *owner) :
             CThreadedReader(owner, "CVatsimBookingReader")
         {
-            reloadSettings();
+            settingsChanged();
         }
 
         void CVatsimBookingReader::readInBackgroundThread()
@@ -90,7 +90,7 @@ namespace BlackCore
             this->threadAssertCheck();
 
             // Worker thread, make sure to write no members here od do it threadsafe
-            if (this->isAbandoned())
+            if (this->isShuttingDown())
             {
                 CLogMessage(this).debug() << Q_FUNC_INFO;
                 CLogMessage(this).info("Terminated booking parsing process");
@@ -107,8 +107,8 @@ namespace BlackCore
                 QDateTime updateTimestamp = QDateTime::currentDateTimeUtc(); // default
                 if (doc.setContent(xmlData))
                 {
-                    QDomNode timestamp = doc.elementsByTagName("timestamp").at(0);
-                    QString ts = timestamp.toElement().text().trimmed();
+                    const QDomNode timestamp = doc.elementsByTagName("timestamp").at(0);
+                    const QString ts = timestamp.toElement().text().trimmed();
                     Q_ASSERT(!ts.isEmpty());
 
                     if (!ts.isEmpty())
@@ -124,6 +124,7 @@ namespace BlackCore
                         if (!changed)
                         {
                             CLogMessage(this).info("Read bookings unchanged, skipped");
+                            emit this->atcBookingsReadUnchanged();
                             return; // stop, terminate straight away, ending thread
                         }
                     }
@@ -201,11 +202,10 @@ namespace BlackCore
             }
         } // method
 
-        void CVatsimBookingReader::reloadSettings()
+        void CVatsimBookingReader::settingsChanged()
         {
             CReaderSettings s = m_settings.get();
             setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
         }
-
     } // ns
 } // ns
