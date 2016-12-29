@@ -397,6 +397,10 @@ namespace BlackMisc
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values, const QString &keysMessage) const
     {
+        if (! QDir(dir).exists())
+        {
+            return CStatusMessage(this).warning("No such directory %1") << dir;
+        }
         if (! QDir(dir).isReadable())
         {
             return CStatusMessage(this).error("Failed to read from directory %1") << dir;
