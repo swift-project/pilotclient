@@ -233,72 +233,97 @@ namespace BlackCore
         return r->getUpdateInfo();
     }
 
-    bool CApplication::start(bool waitForStart)
+    bool CApplication::start()
     {
+        // parse if needed, parsing contains its own error handling
         if (!this->m_parsed)
         {
             bool s = this->parse();
             if (!s) { return false; }
         }
 
-        // clear cache?
-        if (this->isSetOrTrue(this->m_cmdClearCache))
-        {
-            QStringList files(CApplication::clearCaches());
-            CLogMessage(this).debug() << "Cleared cache, " << files.size() << " files";
-        }
-
         // parsing itself is done
-        if (this->m_startSetupReader && !this->m_setupReader->isSetupAvailable())
+        CStatusMessageList msgs;
+        do
         {
-            const CStatusMessageList msgs(this->requestReloadOfSetupAndVersion());
+            // clear cache?
+            if (this->isSetOrTrue(this->m_cmdClearCache))
+            {
+                const QStringList files(CApplication::clearCaches());
+                msgs.push_back(
+                    CLogMessage(this).debug() << "Cleared cache, " << files.size() << " files"
+                );
+            }
+
+            if (this->m_startSetupReader && !this->m_setupReader->isSetupAvailable())
+            {
+                msgs = this->requestReloadOfSetupAndVersion();
+                if (msgs.isSuccess())
+                {
+                    msgs.push_back(this->waitForSetup());
+                }
+                if (msgs.isFailure()) { break; }
+            }
+
+            // start hookin
+            msgs.push_back(this->startHookIn());
+            if (msgs.isFailure()) { break; }
+
+            // trigger loading and saving of settings in appropriate scenarios
+            if (this->m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
+            {
+                // facade running here locally
+                msgs.push_back(CSettingsCache::instance()->loadFromStore());
+                if (msgs.isFailure()) { break; }
+
+                // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()` means
+                // "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is sent to swiftcore and saved by swiftcore.
+                CSettingsCache::instance()->enableLocalSave();
+
+                // From this moment on, we have settings, so enable crash handler.
+                msgs.push_back(this->initCrashHandler());
+            }
+        }
+        while (false);
+
+        // terminate with failures, otherwise log messages
+        if (msgs.isFailure())
+        {
+            this->cmdLineErrorMessage(msgs);
+            return false;
+        }
+        else if (!msgs.isEmpty())
+        {
             CLogMessage::preformatted(msgs);
-            if (msgs.isFailure())
-            {
-                this->cmdLineErrorMessage(msgs.getWarningAndErrorMessages().toSingleMessage().getMessage());
-                return false;
-            }
         }
 
-        bool s = this->startHookIn();
-
-        // trigger loading and saving of settings in appropriate scenarios
-        if (this->m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
-        {
-            CStatusMessage m = CSettingsCache::instance()->loadFromStore();
-            if (!m.isEmpty())
-            {
-                m.setCategories(getLogCategories());
-                CLogMessage::preformatted(m);
-            }
-
-            // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()` means
-            // "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is sent to swiftcore and saved by swiftcore.
-            CSettingsCache::instance()->enableLocalSave();
-
-            // From this moment on, we have settings, so enable crash handler.
-            initCrashHandler();
-        }
-
-        if (waitForStart)
-        {
-            s = this->waitForStart();
-        }
-        this->m_started = s;
-        return s;
+        this->m_started = true;
+        return this->m_started;
     }
 
-    bool CApplication::waitForStart()
+    CStatusMessageList CApplication::waitForSetup()
     {
-        QEventLoop eventLoop;
-        QTimer::singleShot(5000, &eventLoop, &QEventLoop::quit);
-        connect(this, &CApplication::setupAvailable, &eventLoop, &QEventLoop::quit);
-        eventLoop.exec();
-        if (!this->m_startUpCompleted)
+        if (!this->m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
+        if (!this->m_setupReader->isSetupAvailable())
         {
-            CLogMessage(this).error("Waiting for startup timed out");
+            QEventLoop eventLoop;
+            QTimer::singleShot(5000, &eventLoop, &QEventLoop::quit);
+            connect(this, &CApplication::setupHandlingCompleted, &eventLoop, &QEventLoop::quit);
+            eventLoop.exec();
         }
-        return this->m_started;
+
+        // setup handling completed with success or failure, or we run into time out
+        if (this->m_setupReader->isSetupAvailable()) { return CStatusMessage(this).info("Setup available"); }
+        CStatusMessageList msgs(CStatusMessage(this).error("Setup not available, setup reading failed or timed out."));
+        if (this->m_setupReader->getLastSetupReadErrorMessages().hasErrorMessages())
+        {
+            msgs.push_back(this->m_setupReader->getLastSetupReadErrorMessages());
+        }
+        if (this->m_setupReader->hasCmdLineBootstrapUrl())
+        {
+            msgs.push_back(CStatusMessage(this).info("Check cmd line argument '%1'") << this->m_setupReader->getCmdLineBootstrapUrl());
+        }
+        return msgs;
     }
 
     bool CApplication::isSetupAvailable() const

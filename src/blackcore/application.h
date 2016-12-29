@@ -307,10 +307,10 @@ namespace BlackCore
         virtual void gracefulShutdown();
 
         //! Start services, if not yet parsed call CApplication::parse
-        virtual bool start(bool waitForStart = true);
+        virtual bool start();
 
-        //! Wait for stert by calling the event loop and waiting until everything is ready
-        bool waitForStart();
+        //! Wait for setup data by calling the event loop and waiting until everything is ready
+        BlackMisc::CStatusMessageList waitForSetup();
 
         //! Request to get network reply
         //! \threadsafe
