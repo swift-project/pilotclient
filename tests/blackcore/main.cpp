@@ -29,7 +29,11 @@ int main(int argc, char *argv[])
     Q_UNUSED(qa);
     BlackCore::CApplication a;
     a.addVatlibOptions();
-    a.start();
+    if (!a.start())
+    {
+        a.gracefulShutdown();
+        return EXIT_FAILURE;
+    }
     return CBlackCoreTestMain::unitMain(argc, argv);
 }
 

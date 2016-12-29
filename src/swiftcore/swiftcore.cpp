@@ -147,6 +147,8 @@ void CSwiftCore::initLogDisplay()
 void CSwiftCore::startCore(const QString &dBusAdress)
 {
     if (dBusAdress.isEmpty()) { return; }
+    Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+    Q_ASSERT_X(sGui->getCoreFacade(), Q_FUNC_INFO, "Missing facade");
 
     ui->pb_StartCore->setEnabled(false);
     ui->pb_StopCore->setEnabled(true);
@@ -163,7 +165,6 @@ void CSwiftCore::stopCore()
     ui->pb_StopCore->setEnabled(false);
     ui->gb_DBusMode->setDisabled(false);
     sGui->processEventsToRefreshGui();
-
     sGui->exit();
 }
 
