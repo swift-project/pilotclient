@@ -140,10 +140,10 @@ namespace BlackCore
         //! \threadsafe
         bool isAircraftInRange(const BlackMisc::Aviation::CCallsign &callsign) const;
 
-        //! Returns the current online ATC stations
+        //! Returns the current online ATC stations (consolidated with booked stations)
         BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
 
-        //! Returns the current booked ATC stations
+        //! Returns the current booked ATC stations (consolidated with online stations)
         BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
 
         //! Returns the closest ATC station operating on the given frequency, if any
@@ -157,6 +157,9 @@ namespace BlackCore
 
         //! Request to update ATC stations' ATIS data from the network
         void requestAtisUpdates();
+
+        //! Request updates of bookings
+        void requestAtcBookingsUpdate();
 
         //! Create dummy entries for performance tests
         void testCreateDummyOnlineAtcStations(int number);
@@ -246,8 +249,9 @@ namespace BlackCore
 
         INetwork            *m_network                  = nullptr; //!< corresponding network interface
         CAirspaceAnalyzer   *m_analyzer                 = nullptr; //!< owned analyzer
-        bool                 m_enableReverseLookupMsgs  = false;   //!< shall we log. information about the matching process
-        bool                 m_enableAircraftPartsHistory  = true;   //!< shall we keep a history of aircraft parts
+        bool m_enableReverseLookupMsgs  = false;  //!< shall we log. information about the matching process
+        bool m_enableAircraftPartsHistory = true; //!< shall we keep a history of aircraft parts
+        bool m_bookingsRequested = false;         //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
 
         // locks
         mutable QReadWriteLock m_lockSituations; //!< lock for situations: m_situationsByCallsign
@@ -298,7 +302,7 @@ namespace BlackCore
         //! Add new aircraft, ignored if aircraft already exists
         //! \remark position to own aircraft set, VATSIM data file data considered
         //! \threadsafe
-        bool addNewAircraftinRange(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        bool addNewAircraftInRange(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
         //! Init a new aircraft and add it or update model of existing aircraft
         //! \threadsafe
@@ -316,15 +320,15 @@ namespace BlackCore
         //! \threadsafe
         bool addNewClient(const BlackMisc::Network::CClient &client);
 
-        //! Update client
+        //! Update client by callsign
         //! \threadsafe
         int updateOrAddClient(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true);
 
-        //! Update online stations
-        int updateOnlineStations(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
+        //! Update online stations by callsign
+        int updateOnlineStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
-        //! Update booked stations
-        int updateBookedStations(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
+        //! Update booked station by callsign
+        int updateBookedStation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
 
         //! Call ps_customFSInnPacketReceived with stored packet
         void recallFsInnPacket(const BlackMisc::Aviation::CCallsign &callsign);
@@ -376,7 +380,8 @@ namespace BlackCore
         void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
         void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-        void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void ps_receivedAtcBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void ps_readUnchangedAtcBookings();
         void ps_receivedDataFile();
         void ps_aircraftConfigReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &jsonObject, bool isFull);
         void ps_aircraftInterimUpdateReceived(const BlackMisc::Aviation::CAircraftSituation &situation);
