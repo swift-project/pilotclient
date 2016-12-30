@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackgui/models/windlayerlistmodel.h"
-#include "blackgui/models/columnformatters.h"
+#include "windlayerlistmodel.h"
+#include "columnformatters.h"
 
 #include <Qt>
 #include <QtGlobal>
@@ -21,37 +21,13 @@ namespace BlackGui
 {
     namespace Models
     {
-
-        //! Speed
-        class CSpeedFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CSpeedUnit, BlackMisc::PhysicalQuantities::CSpeed>
-        {
-        public:
-            //! Constructor
-            CSpeedFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0, alignment, withUnit, i18n) {}
-
-            //! \copydoc CDefaultFormatter::displayRole
-            virtual CVariant displayRole(const CVariant &dataCVariant) const override
-            {
-                // special treatment for some cases
-                BlackMisc::PhysicalQuantities::CSpeed s = dataCVariant.value<BlackMisc::PhysicalQuantities::CSpeed>();
-                if (!s.isNull() && (s.isPositiveWithEpsilonConsidered() || s.isZeroEpsilonConsidered()))
-                {
-                    return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
-                }
-                else
-                {
-                    return "";
-                }
-            }
-        };
-
         CWindLayerListModel::CWindLayerListModel(QObject *parent) :
             CListModelBase("WindLayerListModel", parent)
         {
             this->m_columns.addColumn(CColumn("level", CWindLayer::IndexLevel, new CAltitudeFormatter()));
             this->m_columns.addColumn(CColumn("direction", CWindLayer::IndexDirection, new CAngleDegreeFormatter()));
-            this->m_columns.addColumn(CColumn("speed", CWindLayer::IndexSpeed, new CSpeedFormatter()));
-            this->m_columns.addColumn(CColumn("gust speed", CWindLayer::IndexGustSpeed, new CSpeedFormatter()));
+            this->m_columns.addColumn(CColumn("speed", CWindLayer::IndexSpeed, new CSpeedKtsFormatter()));
+            this->m_columns.addColumn(CColumn("gust speed", CWindLayer::IndexGustSpeed, new CSpeedKtsFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CWindLayer::IndexLevel);

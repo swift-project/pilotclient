@@ -378,7 +378,7 @@ namespace BlackGui
             CLatLonFormatter(int alignment = alignRightVCenter()) : CValueObjectFormatter(alignment) {}
         };
 
-        //! Airspace distance
+        //! Airspace distance displayed in NM
         class CAirspaceDistanceFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CLengthUnit, BlackMisc::PhysicalQuantities::CLength>
         {
         public:
@@ -389,17 +389,16 @@ namespace BlackGui
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
-        //! Airspeed
-        class CAircraftSpeedFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CSpeedUnit, BlackMisc::PhysicalQuantities::CSpeed>
+        //! Speed displayed in kts
+        class CSpeedKtsFormatter : public CPhysiqalQuantiyFormatter<BlackMisc::PhysicalQuantities::CSpeedUnit, BlackMisc::PhysicalQuantities::CSpeed>
         {
         public:
             //! Constructor
-            CAircraftSpeedFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0, alignment, withUnit, i18n) {}
+            CSpeedKtsFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0, alignment, withUnit, i18n) {}
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
-
     } // namespace
 } // namespace
 

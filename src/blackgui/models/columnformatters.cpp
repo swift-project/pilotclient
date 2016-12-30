@@ -260,7 +260,7 @@ namespace BlackGui
             }
         }
 
-        CVariant CAircraftSpeedFormatter::displayRole(const CVariant &dataCVariant) const
+        CVariant CSpeedKtsFormatter::displayRole(const CVariant &dataCVariant) const
         {
             // special treatment for some cases
             BlackMisc::PhysicalQuantities::CSpeed s = dataCVariant.value<BlackMisc::PhysicalQuantities::CSpeed>();
@@ -408,6 +408,5 @@ namespace BlackGui
             if (!rgbColor.isValid())  { return ""; }
             return rgbColor.hex(true);
         }
-
     } // namespace
 } // namespace
