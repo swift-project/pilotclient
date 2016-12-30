@@ -118,9 +118,6 @@ namespace BlackGui
             //! Set COM frequency
             void ps_setComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit unit);
 
-            //! Settings have been changed
-            void ps_settingsChanged();
-
             //! Airports read from web readers
             void ps_airportsRead();
 
@@ -131,14 +128,17 @@ namespace BlackGui
             //! Init the completers
             void initCompleters();
 
+            //! Settings have been changed
+            void settingsChanged();
+
             QScopedPointer<Ui::CAtcStationComponent> ui;
             QTimer m_updateTimer { this };
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged;  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations; //!< stations read
             QDateTime m_timestampBookedStationsChanged;  //!< stations marked as changed
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings>  m_settingsView { this, &CAtcStationComponent::ps_settingsChanged };
-            BlackMisc::CSettingReadOnly<BlackGui::Settings::TAtcStationsSettings> m_settingsAtc { this, &CAtcStationComponent::ps_settingsChanged };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TViewUpdateSettings>  m_settingsView { this, &CAtcStationComponent::settingsChanged };
+            BlackMisc::CSettingReadOnly<BlackGui::Settings::TAtcStationsSettings> m_settingsAtc { this, &CAtcStationComponent::settingsChanged };
         };
     } // namespace
 } // namespace

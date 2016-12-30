@@ -109,8 +109,8 @@ namespace BlackGui
                 this->ps_airportsRead();
             }
 
-            // settings have
-            this->ps_settingsChanged();
+            // init settings
+            this->settingsChanged();
         }
 
         CAtcStationComponent::~CAtcStationComponent()
@@ -142,10 +142,12 @@ namespace BlackGui
             Q_ASSERT(ui->tvp_AtcStationsOnline);
 
             // check if component is visible, if we have already data then skip udpate
-            bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;
+            const bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;
             if (hasData && !this->isVisibleWidget())
             {
                 // Update skipped, as not visible
+                ui->tvp_AtcStationsBooked->hideLoadIndicator();
+                ui->tvp_AtcStationsOnline->hideLoadIndicator();
                 return;
             }
 
@@ -161,10 +163,10 @@ namespace BlackGui
                 // update
                 if (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations)
                 {
-                    // sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidVoiceRoom()
                     const CAtcStationsSettings settings = m_settingsAtc.getThreadLocal();
                     CAtcStationList onlineStations =
-                        sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency();
+                        sGui->getIContextNetwork()->getAtcStationsOnline().stationsWithValidFrequency(); // alternatively: stationsWithValidVoiceRoom()
+
                     if (settings.showOnlyInRange())
                     {
                         onlineStations.removeIfOutsideRange();
@@ -179,6 +181,7 @@ namespace BlackGui
             else
             {
                 ui->tvp_AtcStationsOnline->clear();
+                ui->tvp_AtcStationsOnline->hideLoadIndicator();
                 this->updateTreeView();
             }
         }
@@ -196,7 +199,7 @@ namespace BlackGui
 
         void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
         {
-            QString icao(airportIcaoCode.isEmpty() ? ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
+            const QString icao(airportIcaoCode.isEmpty() ? ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
             ui->le_AtcStationsOnlineMetar->setText(icao);
             if (icao.length() != 4) { return; }
             CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
@@ -224,7 +227,7 @@ namespace BlackGui
             {
                 // trigger new read, which takes some time. A signal will be received when this is done
                 CLogMessage(this).info("Requested new bookings");
-                sGui->getIContextNetwork()->readAtcBookingsFromSource();
+                sGui->getIContextNetwork()->requestAtcBookingsUpdate();
             }
             else
             {
@@ -246,7 +249,11 @@ namespace BlackGui
             // a single value is updated (e.g. online status)
             // just update timestamp, data will be pulled by timer
             // the timestamp will tell if there are any newer data
+            // unlike online stations, this can happen if we are not connected to a FSD server
+
             this->m_timestampBookedStationsChanged = QDateTime::currentDateTimeUtc();
+            if (this->m_updateTimer.isActive()) { return; } // update by timer
+            this->update();
         }
 
         void CAtcStationComponent::ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
@@ -310,7 +317,7 @@ namespace BlackGui
             sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
         }
 
-        void CAtcStationComponent::ps_settingsChanged()
+        void CAtcStationComponent::settingsChanged()
         {
             const CViewUpdateSettings settings = this->m_settingsView.get();
             const int ms = settings.getAtcUpdateTime().toMs();
