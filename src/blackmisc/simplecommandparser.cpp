@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/pq/pqstring.h"
+#include "blackmisc/stringutils.h"
 #include "blackmisc/simplecommandparser.h"
 
 #include <QList>
@@ -18,7 +19,6 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
-
     CSimpleCommandParser::CSimpleCommandParser(const QStringList &knownCommands)
     {
         this->setCheckedCommandList(knownCommands);
@@ -55,7 +55,7 @@ namespace BlackMisc
     QString CSimpleCommandParser::remainingStringAfter(int index) const
     {
         if (index < 0) { return this->m_originalLine.trimmed(); }
-        QString p = this->part(index);
+        const QString p = this->part(index);
         int fi = this->m_originalLine.indexOf(p, 0, Qt::CaseInsensitive);
         if (fi < 0) { return ""; }
         return this->m_originalLine.mid(fi).trimmed();
@@ -64,6 +64,11 @@ namespace BlackMisc
     int CSimpleCommandParser::countParts() const
     {
         return this->m_splitParts.count();
+    }
+
+    bool CSimpleCommandParser::hasPart(int index) const
+    {
+        return index >= 0 && index < this->countParts();
     }
 
     int CSimpleCommandParser::countPartsWithoutCommand() const
@@ -75,8 +80,8 @@ namespace BlackMisc
     bool CSimpleCommandParser::isInt(int index) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) return false;
-        bool ok;
+        if (p.isEmpty()) { return false; }
+        bool ok = false;
         p.toInt(&ok);
         return ok;
     }
@@ -84,8 +89,8 @@ namespace BlackMisc
     bool CSimpleCommandParser::isDouble(int index) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) return false;
-        bool ok;
+        if (p.isEmpty()) { return false; }
+        bool ok = false;
         CPqString::parseNumber(p, ok, CPqString::SeparatorsBestGuess);
         return ok;
     }
@@ -93,19 +98,36 @@ namespace BlackMisc
     int CSimpleCommandParser::toInt(int index, int def) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) return def;
-        bool ok;
+        if (p.isEmpty()) { return def; }
+        bool ok = false;
         int i = p.toInt(&ok);
         return ok ? i : def;
+    }
+
+    bool CSimpleCommandParser::toBool(int index, bool def) const
+    {
+        const QString p = this->part(index);
+        if (p.isEmpty()) { return def; }
+        const bool b = stringToBool(p);
+        return b;
     }
 
     double CSimpleCommandParser::toDouble(int index, double def) const
     {
         const QString p = this->part(index);
         if (p.isEmpty()) { return def; }
-        bool ok;
+        bool ok = false;
         double d = CPqString::parseNumber(p, ok, CPqString::SeparatorsBestGuess);
         return ok ? d : def;
+    }
+
+    bool CSimpleCommandParser::matchesPart(int index, const QString &toMatch, Qt::CaseSensitivity cs) const
+    {
+        if (toMatch.isEmpty()) { return false; }
+        if (!this->hasPart(index)) { return false; }
+        const QString p(this->part(index));
+        if (p.isEmpty()) { return false; }
+        return (p.length() == toMatch.length() && p.startsWith(toMatch, cs));
     }
 
     QString CSimpleCommandParser::removeLeadingDot(const QString &candidate)
@@ -147,10 +169,9 @@ namespace BlackMisc
 
     void CSimpleCommandParser::setCheckedCommandList(const QStringList &commands)
     {
-        foreach(QString c, commands)
+        for (const QString &c : commands)
         {
             this->m_knownCommands.append(formatCommand(c));
         }
     }
-
 } // namespace

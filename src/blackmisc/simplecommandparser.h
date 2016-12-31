@@ -13,7 +13,6 @@
 #define BLACKMISC_SIMPLECOMMANDPARSER_H
 
 #include "blackmisc/blackmiscexport.h"
-
 #include <QString>
 #include <QStringList>
 
@@ -24,7 +23,7 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CSimpleCommandParser
     {
     public:
-        //! No Constructor
+        //! Constructor
         CSimpleCommandParser(const QStringList &knownCommands);
 
         //! Known command
@@ -51,6 +50,9 @@ namespace BlackMisc
         //! Count parts
         int countParts() const;
 
+        //! Existing part
+        bool hasPart(int index) const;
+
         //! Count parts, command excluded
         int countPartsWithoutCommand() const;
 
@@ -63,11 +65,17 @@ namespace BlackMisc
         //! Part as integer
         int toInt(int index, int def = -1) const;
 
+        //! Part as bool
+        bool toBool(int index, bool def = false) const;
+
         //! Part as double
         double toDouble(int index, double def = -1.0) const;
 
+        //! Matches given part
+        bool matchesPart(int index, const QString &toMatch, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
+
     private:
-        QString m_originalLine;
+        QString m_originalLine;      //!< line as entered by user
         QString m_cleanedLine;       //!< trimmed, no double spaces etc.
         QString m_commandPart;       //!< command part (e.g. ".msg", if any)
         QStringList m_splitParts;    //!< split parts (split by " ")
