@@ -37,6 +37,8 @@
 
 namespace BlackMisc
 {
+    class CSimpleCommandParser;
+
     namespace Aviation
     {
         class CAircraftParts;
@@ -69,8 +71,7 @@ namespace BlackCore
         //! Destructor
         virtual ~CSimulatorCommon();
 
-        //! \name ISimulator implementations
-        //! @{
+        // --------- ISimulator implementations ------------
         virtual BlackMisc::Simulation::CAircraftModel getDefaultModel() const override;
         virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) override;
         virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const override;
@@ -80,7 +81,8 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
         virtual void unload() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
-        //! @}
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+        // --------- ISimulator implementations ------------
 
     protected slots:
         //! \name Connected with remote aircraft provider signals
@@ -153,6 +155,9 @@ namespace BlackCore
 
         //! Set own model
         void reverseLookupAndUpdateOwnAircraftModel(const QString &modelString);
+
+        //! Parse driver specific details for ISimulator::parseCommandLine
+        virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser);
 
         BlackMisc::Simulation::IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;                    //!< paused simulator will also pause interpolation (so AI aircraft will hold)

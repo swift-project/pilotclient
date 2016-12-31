@@ -9,6 +9,7 @@
 
 #include "simulatorfscommon.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/stringutils.h"
 
@@ -52,6 +53,17 @@ namespace BlackSimPlugin
             this->m_simulatorInternals = s;
         }
 
+        bool CSimulatorFsCommon::parseDetails(const CSimpleCommandParser &parser)
+        {
+            if (parser.matchesPart(1, "fsuipc") && parser.hasPart(2))
+            {
+                const bool on = parser.toBool(2);
+                const bool s = useFsuipc(on);
+                return s;
+            }
+            return false;
+        }
+
         bool CSimulatorFsCommon::disconnectFrom()
         {
             if (this->m_fsuipc) { this->m_fsuipc->disconnect(); }
@@ -65,6 +77,21 @@ namespace BlackSimPlugin
         bool CSimulatorFsCommon::isFsuipcConnected() const
         {
             return !m_fsuipc.isNull() && m_fsuipc->isConnected();
+        }
+
+        bool CSimulatorFsCommon::useFsuipc(bool on)
+        {
+            if (!m_fsuipc) { return false; } // no FSUIPC available
+            m_useFsuipc = on;
+            if (on)
+            {
+                m_useFsuipc = m_fsuipc->connect();
+            }
+            else
+            {
+                m_fsuipc->disconnect();
+            }
+            return m_useFsuipc;
         }
 
         CTime CSimulatorFsCommon::getTimeSynchronizationOffset() const

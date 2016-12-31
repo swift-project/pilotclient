@@ -33,8 +33,10 @@ namespace BlackSimPlugin
             //! FSUIPC connected?
             bool isFsuipcConnected() const;
 
-            //! \name ISimulator interface implementations
-            //! @{
+            //! FSUIPC on/off, correctly disconnecting/connecting
+            bool useFsuipc(bool on);
+
+            // ---------------------- ISimulator ------------------
             virtual bool disconnectFrom() override;
             virtual bool isPaused() const override { return m_simPaused; }
             virtual bool isTimeSynchronized() const override { return m_simTimeSynced; }
@@ -43,7 +45,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
             virtual bool changeRemoteAircraftModel(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
             virtual bool changeRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft) override;
-            //! @}
+            // ---------------------- ISimulator ------------------
 
         protected slots:
             //! \copydoc BlackCore::CSimulatorCommon::ps_allSwiftDataRead
@@ -59,6 +61,9 @@ namespace BlackSimPlugin
 
             //! Init the internals objects
             virtual void initInternalsObject();
+
+            //! \copydoc BlackCore::CSimulatorCommon::parseDetails
+            virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
             QString m_simulatorName;                                //!< name of simulator
             QString m_simulatorDetails;                             //!< describes version etc.

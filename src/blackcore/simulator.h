@@ -144,6 +144,16 @@ namespace BlackCore
         //! Driver will be unloaded
         virtual void unload() = 0;
 
+        //! \addtogroup commandline
+        //! @{
+        //! <pre>
+        //! .drv    unload                  unload driver                           CSimulatorCommon
+        //! .drv    fsuipc      on|off      enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
+        //! </pre>
+        //! @}
+        //! Parse command line
+        virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
+
         //! Status to string
         static QString statusToString(int status);
 

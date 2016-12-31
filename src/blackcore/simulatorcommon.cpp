@@ -201,6 +201,12 @@ namespace BlackCore
         this->reverseLookupAndUpdateOwnAircraftModel(model);
     }
 
+    bool CSimulatorCommon::parseDetails(const CSimpleCommandParser &parser)
+    {
+        Q_UNUSED(parser);
+        return false;
+    }
+
     void CSimulatorCommon::reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
@@ -321,6 +327,25 @@ namespace BlackCore
             removed++;
         }
         return removed;
+    }
+
+    bool CSimulatorCommon::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+    {
+        if (this->isMyIdentifier(originator)) { return false; }
+        if (commandLine.isEmpty()) { return false; }
+        CSimpleCommandParser parser(
+        {
+            ".plugin", ".drv", ".driver"
+        });
+        parser.parse(commandLine);
+        if (!parser.isKnownCommand()) { return false; }
+
+        if (parser.matchesPart(1, "unload"))
+        {
+            this->unload();
+            return true;
+        }
+        return this->parseDetails(parser);
     }
 
     void CSimulatorCommon::ps_oneSecondTimer()
