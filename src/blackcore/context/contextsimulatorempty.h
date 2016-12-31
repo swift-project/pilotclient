@@ -214,6 +214,15 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
+
+            //! \copydoc IContextSimulator::parseCommandLine
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator)
+            {
+                Q_UNUSED(commandLine);
+                Q_UNUSED(originator);
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return false;
+            }
         };
     } // namespace
 } // namespace

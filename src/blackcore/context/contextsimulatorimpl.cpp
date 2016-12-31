@@ -22,6 +22,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
@@ -579,6 +580,26 @@ namespace BlackCore
             if (m_enableMatchingMessages == enabled) { return; }
             m_enableMatchingMessages = enabled;
             emit CContext::changedLogOrDebugSettings();
+        }
+
+        bool CContextSimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+        {
+            Q_UNUSED(originator);
+            if (commandLine.isEmpty()) { return false; }
+            CSimpleCommandParser parser(
+            {
+                ".plugin",
+                ".drv", ".driver"    // forwarded to driver
+            });
+            parser.parse(commandLine);
+            if (!parser.isKnownCommand()) { return false; }
+
+            if (parser.matchesCommand("plugin") || parser.matchesCommand("drv") || parser.matchesCommand("driver"))
+            {
+                if (!this->m_simulatorPlugin.second) { return false; }
+                return this->m_simulatorPlugin.second->parseCommandLine(commandLine, originator);
+            }
+            return false;
         }
 
         void CContextSimulator::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)

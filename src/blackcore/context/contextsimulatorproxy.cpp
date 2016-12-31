@@ -193,5 +193,10 @@ namespace BlackCore
         {
             m_dBusInterface->callDBus(QLatin1Literal("enableMatchingMessages"), enabled);
         }
+
+        bool CContextSimulatorProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
+        {
+            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
+        }
     } // namespace
 } // namespace

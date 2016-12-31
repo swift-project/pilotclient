@@ -78,6 +78,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             //! @}
 
         private:

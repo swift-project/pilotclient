@@ -200,6 +200,9 @@ namespace BlackCore
             //! Request weather grid. Argument identifier is past in the signal to identify the requestor
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;
 
+            //! Parse a given command line
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
+
         protected:
             //! Constructor
             IContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}

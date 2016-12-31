@@ -137,6 +137,7 @@ namespace BlackCore
         if (this->getIContextAudio()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator); }
         if (this->getIContextNetwork()) { handled = handled || this->getIContextNetwork()->parseCommandLine(commandLine, originator); }
         if (this->getIContextOwnAircraft()) { handled = handled || this->getIContextOwnAircraft()->parseCommandLine(commandLine, originator); }
+        if (this->getIContextSimulator()) { handled = handled || this->getIContextSimulator()->parseCommandLine(commandLine, originator); }
         return handled;
     }
 

@@ -73,7 +73,8 @@ namespace BlackCore
             void gracefulShutdown();
 
         public slots:
-            //! \name Interface implementations
+            // ----------------------------- context interface -----------------------------
+            //! \publicsection
             //! @{
             virtual BlackMisc::Simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override;
             virtual BlackMisc::Simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override;
@@ -101,6 +102,17 @@ namespace BlackCore
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;
             //! @}
+
+            //! \ingroup commandline
+            //! @{
+            //! <pre>
+            //! .plugin        forwared to plugin, see details there
+            //! .driver .drv   forwared to plugin (same as above)
+            //! </pre>
+            //! @}
+            //! \copydoc IContextSimulator::parseCommandLine
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+            // ----------------------------- context interface -----------------------------
 
         protected:
             //! Constructor
