@@ -36,7 +36,7 @@ namespace BlackMisc
         CIdentifier getCurrentTimestampIdentifier() const;
 
         //! My identifier?
-        bool isMyIdentifier(const CIdentifier &otherIdentifier) { return m_identifier == otherIdentifier; }
+        bool isMyIdentifier(const CIdentifier &otherIdentifier) const { return m_identifier == otherIdentifier; }
 
     protected:
         //! Use literal based object name

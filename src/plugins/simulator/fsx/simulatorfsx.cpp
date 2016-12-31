@@ -204,7 +204,7 @@ namespace BlackSimPlugin
             bool changed = false;
             if (newCom1.getFrequencyActive() != this->m_simCom1.getFrequencyActive())
             {
-                CFrequency newFreq = newCom1.getFrequencyActive();
+                const CFrequency newFreq = newCom1.getFrequencyActive();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Active,
                                                CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
@@ -212,7 +212,7 @@ namespace BlackSimPlugin
             }
             if (newCom1.getFrequencyStandby() != this->m_simCom1.getFrequencyStandby())
             {
-                CFrequency newFreq = newCom1.getFrequencyStandby();
+                const CFrequency newFreq = newCom1.getFrequencyStandby();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Standby,
                                                CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
@@ -220,14 +220,14 @@ namespace BlackSimPlugin
 
             if (newCom2.getFrequencyActive() != this->m_simCom2.getFrequencyActive())
             {
-                CFrequency newFreq = newCom2.getFrequencyActive();
+                const CFrequency newFreq = newCom2.getFrequencyActive();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Active,
                                                CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
             }
             if (newCom2.getFrequencyStandby() != this->m_simCom2.getFrequencyStandby())
             {
-                CFrequency newFreq = newCom2.getFrequencyStandby();
+                const CFrequency newFreq = newCom2.getFrequencyStandby();
                 SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Standby,
                                                CBcdConversions::comFrequencyToBcdHz(newFreq), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 changed = true;
