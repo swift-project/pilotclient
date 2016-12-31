@@ -301,7 +301,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::ps_dispatch()
         {
-            if (m_useFsuipc && m_fsuipc)
+            if (m_useFsuipc && m_fsuipc && m_fsuipc->isConnected())
             {
                 CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
                 const bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
@@ -385,19 +385,20 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
+            if (!m_useFsuipc || !m_fsuipc) { return; }
+            if (!m_fsuipc->isConnected()) { return; }
             m_fsuipc->write(weatherGrid);
         }
 
         void CSimulatorFs9::reloadWeatherSettings()
         {
-            if (m_fsuipc->isConnected())
+            if (!m_useFsuipc || !m_fsuipc) { return; }
+            if (!m_fsuipc->isConnected()) { return; }
+            const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
             {
-                auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-                if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-                {
-                    m_lastWeatherPosition = {};
-                    injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-                }
+                m_lastWeatherPosition = {};
+                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
             }
         }
 

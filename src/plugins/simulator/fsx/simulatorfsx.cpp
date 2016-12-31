@@ -1055,19 +1055,20 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
+            if (!m_useFsuipc || !m_fsuipc) { return; }
+            if (!m_fsuipc->isConnected()) { return; }
             m_fsuipc->write(weatherGrid);
         }
 
         void CSimulatorFsx::reloadWeatherSettings()
         {
-            if (m_fsuipc->isConnected())
+            if (!m_useFsuipc || !m_fsuipc) { return; }
+            if (!m_fsuipc->isConnected()) { return; }
+            const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
             {
-                auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-                if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-                {
-                    m_lastWeatherPosition = {};
-                    injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-                }
+                m_lastWeatherPosition = {};
+                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
             }
         }
 
