@@ -22,7 +22,7 @@ BLACK_CONFIG    *= Doxygen
 #BLACK_CONFIG    *= SwiftBeta
 #BLACK_CONFIG    *= SwiftShipped
 
-isEmpty(BLACK_EOL): BLACK_EOL = "20170101"
+isEmpty(BLACK_EOL): BLACK_EOL = "20180101"
 
 ## Private Area ##
 
