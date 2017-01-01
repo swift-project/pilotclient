@@ -140,9 +140,9 @@ namespace BlackCore
             //! \addtogroup commandline
             //! @{
             //! <pre>
-            //! .x    .xpdr  code       set transponder code    CContextOwnAircraft
-            //! .com1 .com2  frequency  set COM1/2 frequency    CContextOwnAircraft
-            //! .selcal      code       set SELCAL code         CContextOwnAircraft
+            //! .x    .xpdr  code       set transponder code    BlackCore::Context::CContextOwnAircraft
+            //! .com1 .com2  frequency  set COM1/2 frequency    BlackCore::Context::CContextOwnAircraft
+            //! .selcal      code       set SELCAL code         BlackCore::Context::CContextOwnAircraft
             //! </pre>
             //! @}
             //! \copydoc IContextOwnAircraft::parseCommandLine

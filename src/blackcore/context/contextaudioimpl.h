@@ -129,9 +129,9 @@ namespace BlackCore
             //! \addtogroup commandline
             //! @{
             //! <pre>
-            //! .mute                          mute             CContextAudio
-            //! .unmute                        unmute           CContextAudio
-            //! .vol .volume   volume 0..300   set volume       CContextAudio
+            //! .mute                          mute             BlackCore::Context::CContextAudio
+            //! .unmute                        unmute           BlackCore::Context::CContextAudio
+            //! .vol .volume   volume 0..300   set volume       BlackCore::Context::CContextAudio
             //! </pre>
             //! @}
             //! \copydoc IContextAudio::parseCommandLine
