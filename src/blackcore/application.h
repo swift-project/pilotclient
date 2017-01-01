@@ -244,6 +244,7 @@ namespace BlackCore
         //! Parses and handles the standard options such as help, version, parse error
         //! \note in some cases (error, version, help) application is terminated during this step
         //! \sa parsingHookIn
+        //! \return true means to continue, false to stop
         bool parse();
         //! @}
 

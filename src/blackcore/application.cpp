@@ -873,14 +873,15 @@ namespace BlackCore
         // help/version
         if (this->m_parser.isSet(this->m_cmdHelp))
         {
-            // Important parser help will already stop application
+            // Important: parser help will already stop application
             this->cmdLineHelpMessage();
-            return true;
+            return false;
         }
         if (this->m_parser.isSet(this->m_cmdVersion))
         {
+            // Important: version will already stop application
             this->cmdLineVersionMessage();
-            return true;
+            return false;
         }
 
         // dev.

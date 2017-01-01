@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
     if (!QSystemTrayIcon::isSystemTrayAvailable())
     {
         a.cmdLineErrorMessage("I could not detect any system tray on this system.");
+        a.gracefulShutdown();
         return EXIT_FAILURE;
     }
 
