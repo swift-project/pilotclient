@@ -8,6 +8,7 @@
  */
 
 #include "weatherdatagfs.h"
+#include "blackcore/application.h"
 #include "blackmisc/worker.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/math/mathutils.h"
@@ -51,11 +52,8 @@ namespace BlackWxPlugin
         }
 
         CWeatherDataGfs::CWeatherDataGfs(QObject *parent) :
-            IWeatherData(parent),
-            m_networkAccessManager(this)
-        {
-            connect(&m_networkAccessManager, &QNetworkAccessManager::finished, this, &CWeatherDataGfs::ps_parseGfsFile);
-        }
+            IWeatherData(parent)
+        { }
 
         void CWeatherDataGfs::fetchWeatherData(const CWeatherGrid &grid, const CLength &range)
         {
@@ -67,7 +65,7 @@ namespace BlackWxPlugin
                 QUrl url = getDownloadUrl();
                 CLogMessage(this).debug() << "Download url:" << url.toString();
                 QNetworkRequest request(url);
-                m_networkAccessManager.get(request);
+                sApp->getFromNetwork(request, { this, &CWeatherDataGfs::ps_parseGfsFile });
             }
             else
             {

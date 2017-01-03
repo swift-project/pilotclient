@@ -19,8 +19,8 @@
 #include <QHash>
 #include <QVector>
 #include <QUrl>
-#include <QNetworkAccessManager>
 #include <QByteArray>
+#include <QNetworkReply>
 #include <array>
 
 class QNetworkAccessManager;
@@ -157,7 +157,6 @@ namespace BlackWxPlugin
 
             mutable QReadWriteLock m_lockData;
             QByteArray m_gribData;
-            QNetworkAccessManager m_networkAccessManager;
 
             QVector<GfsGridPoint> m_gfsWeatherGrid;
             BlackMisc::Weather::CWeatherGrid m_weatherGrid;
