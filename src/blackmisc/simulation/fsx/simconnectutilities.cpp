@@ -18,6 +18,9 @@
 #include <QMetaObject>
 #include <QTextStream>
 
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Weather;
+
 namespace BlackMisc
 {
     namespace Simulation
@@ -72,10 +75,256 @@ namespace BlackMisc
                 return beautify ? sf.replace('_', ' ') : sf;
             }
 
+            QString CSimConnectUtilities::convertToSimConnectMetar(const CGridPoint &gridPoint)
+            {
+                // STATION ID
+                Q_ASSERT(!gridPoint.getIdentifier().isEmpty());
+                QString simconnectMetar = gridPoint.getIdentifier();
+
+                // SURFACE WINDS/WINDS ALOFT
+                CWindLayerList windLayers = gridPoint.getWindLayers();
+                windLayers.sortBy(&CWindLayer::getLevel);
+                simconnectMetar += windsToSimConnectMetar(windLayers);
+
+                // VISIBILITY
+                CVisibilityLayerList visibilityLayers = gridPoint.getVisibilityLayers();
+                visibilityLayers.sortBy(&CVisibilityLayer::getBase);
+                simconnectMetar += visibilitiesToSimConnectMetar(visibilityLayers);
+
+                // PRESENT CONDITIONS
+                // todo
+
+                // PARTIAL OBSCURATION
+                // todo
+
+                // SKY CONDITIONS
+                CCloudLayerList cloudLayers = gridPoint.getCloudLayers();
+                cloudLayers.sortBy(&CCloudLayer::getBase);
+                simconnectMetar += cloudsToSimConnectMetar(cloudLayers);
+
+                // TEMPERATURE
+
+                CTemperatureLayerList temperatureLayers = gridPoint.getTemperatureLayers();
+                temperatureLayers.sortBy(&CTemperatureLayer::getLevel);
+                simconnectMetar += temperaturesToSimConnectMetar(temperatureLayers);
+
+                // ALTIMETER
+                // Format:
+                // QNNNN
+                // Q = specifier for altimeter in millibars
+                simconnectMetar += QLatin1String(" Q");
+                // NNNN = altimeter in millibars
+                auto altimeter = gridPoint.getSurfacePressure().valueInteger(CPressureUnit::mbar());
+                simconnectMetar += QStringLiteral("%1").arg(altimeter, 4, 10, QLatin1Char('0'));
+
+                return simconnectMetar;
+            }
+
             void CSimConnectUtilities::registerMetadata()
             {
                 qRegisterMetaType<CSimConnectUtilities::SIMCONNECT_EXCEPTION>();
                 qRegisterMetaType<CSimConnectUtilities::SIMCONNECT_SURFACE>();
+            }
+
+            QString CSimConnectUtilities::windsToSimConnectMetar(const BlackMisc::Weather::CWindLayerList &windLayers)
+            {
+                QString simconnectWinds;
+                bool surface = true;
+                for (const auto &windLayer : windLayers)
+                {
+                    simconnectWinds += QLatin1Char(' ');
+
+                    // Format:
+                    // DDDSSSUUU (steady)
+                    // DDDSSSGXXUUU (gusts)
+                    if (windLayer.isDirectionVariable())
+                    {
+                        // DDD = VRB for variable
+                        simconnectWinds += QLatin1String("VRB");
+                    }
+                    else
+                    {
+                        // DDD = Direction (0-360 degrees)
+                        auto direction = windLayer.getDirection().valueInteger(CAngleUnit::deg());
+                        simconnectWinds += QStringLiteral("%1").arg(direction, 3, 10, QLatin1Char('0'));
+
+                        // SSS = Speed
+                        auto speed = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
+                        simconnectWinds += QStringLiteral("%1").arg(speed, 3, 10, QLatin1Char('0'));
+                    }
+                    // XX = Gust speed
+                    auto gustSpeed = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
+                    if (gustSpeed) { simconnectWinds += QStringLiteral("G%1").arg(gustSpeed, 2, 10, QLatin1Char('0')); }
+
+                    // UUU = Speed units
+                    simconnectWinds += QLatin1String("KT");
+
+                    if (surface)
+                    {
+                        // Surface extension:
+                        // &DNNNNTS
+                        // D = specifier for surface layer
+                        simconnectWinds += QLatin1String("&D");
+                        // Surface default depth is 1000 feet or 305m
+                        simconnectWinds += QLatin1String("305");
+                        // We don't have turbulence or wind shear information, hence we use the defaults
+                        simconnectWinds += QLatin1String("NG");
+                        surface = false;
+                    }
+                    else
+                    {
+                        // Winds aloft extension:
+                        // &ANNNNTS
+                        // A = specifier for altitude above mean sea-level (MSL)
+                        simconnectWinds += QLatin1String("&A");
+                        // NNNN = depth (height) in meters.
+                        auto altitude = windLayer.getLevel();
+                        altitude.toMeanSeaLevel();
+                        int altitudeValue = altitude.valueInteger(CLengthUnit::m());
+                        simconnectWinds += QStringLiteral("%1").arg(altitudeValue, 4, 10, QLatin1Char('0'));
+                        // We don't have turbulence or wind shear information, hence we use the defaults
+                        simconnectWinds += QLatin1String("NG");
+                    }
+                }
+                return simconnectWinds;
+            }
+
+            QString CSimConnectUtilities::visibilitiesToSimConnectMetar(const BlackMisc::Weather::CVisibilityLayerList &visibilityLayers)
+            {
+                // There are several format options, we use the meter format:
+                // NNNND&BXXXX&DYYYY
+                QString simconnectVisibilities;
+                for (const auto &visibilityLayer : visibilityLayers)
+                {
+                    simconnectVisibilities += QLatin1Char(' ');
+
+                    // NNNN = in meters
+                    auto visibility = visibilityLayer.getVisibility().valueInteger(CLengthUnit::m());
+                    visibility = qMin(9999, visibility);
+                    simconnectVisibilities += QStringLiteral("%1").arg(visibility, 4, 10, QLatin1Char('0'));
+
+                    // D = directional variation
+                    // We set NDV - no directional variation
+                    simconnectVisibilities += QLatin1String("NDV");
+
+                    // XXXX = base of visibility layer in meters
+                    auto base = visibilityLayer.getBase().valueInteger(CLengthUnit::m());
+                    simconnectVisibilities += QStringLiteral("&B%1").arg(base, 4, 10, QLatin1Char('0'));
+
+                    // YYYY = depth of visibility layer in meters
+                    auto depth = visibilityLayer.getTop().valueInteger(CLengthUnit::m());
+                    simconnectVisibilities += QStringLiteral("&D%1").arg(depth, 4, 10, QLatin1Char('0'));
+                }
+                return simconnectVisibilities;
+            }
+
+            QString CSimConnectUtilities::cloudsToSimConnectMetar(const BlackMisc::Weather::CCloudLayerList &cloudLayers)
+            {
+                // Format:
+                // CCCNNN&BXXXX&DYYYY
+                QString simconnectClouds;
+                for (const auto &cloudLayer : cloudLayers)
+                {
+                    simconnectClouds += QLatin1Char(' ');
+
+                    // CCC = Coverage string
+                    switch (cloudLayer.getCoverage())
+                    {
+                    case CCloudLayer::None: simconnectClouds += QLatin1String("CLR"); break;
+                    case CCloudLayer::Few: simconnectClouds += QLatin1String("FEW"); break;
+                    case CCloudLayer::Broken: simconnectClouds += QLatin1String("BKN"); break;
+                    case CCloudLayer::Overcast: simconnectClouds += QLatin1String("OVC"); break;
+                    case CCloudLayer::Scattered:
+                    default:
+                        simconnectClouds += QLatin1String("SCT");
+                    }
+
+                    // NNN = coded height
+                    // If NNN is 999 the level is 100,000 feet, otherwise it is 100 x NNN in feet
+                    auto level = cloudLayer.getTop().valueInteger(CLengthUnit::ft()) / 100;
+                    // Ignore clouds higher than 99900 feet
+                    if (level > 999) { continue; }
+                    simconnectClouds += QStringLiteral("%1").arg(level, 3, 10, QLatin1Char('0'));
+
+                    simconnectClouds += QLatin1Char('&');
+
+                    // TT = Cloud type
+                    switch (cloudLayer.getClouds())
+                    {
+                    case CCloudLayer::Cirrus: simconnectClouds += QLatin1String("CI"); break;
+                    case CCloudLayer::Stratus: simconnectClouds += QLatin1String("ST"); break;
+                    case CCloudLayer::Thunderstorm: simconnectClouds += QLatin1String("CB"); break;
+                    case CCloudLayer::Cumulus:
+                    default:
+                        simconnectClouds += QLatin1String("CU");
+                    }
+
+                    // 000 - Unused.
+                    simconnectClouds += QLatin1String("000");
+
+                    // F = Top of cloud
+                    // Default to F - flat
+                    simconnectClouds += QLatin1Char('F');
+                    // T = Turbulence
+                    // N - None (default)
+                    simconnectClouds += QLatin1Char('N');
+
+                    // P = precipitation rate
+                    // http://wiki.sandaysoft.com/a/Rain_measurement#Rain_Rate
+                    auto precipitationRate = cloudLayer.getPrecipitationRate();
+                    // Very light rain: precipitation rate is < 0.25 mm/hour
+                    if(precipitationRate < 0.25) {  simconnectClouds += QLatin1Char('V'); }
+                    // Light rain: precipitation rate is between 0.25mm/hour and 1.0mm/hour
+                    else if(precipitationRate >= 0.25 && precipitationRate < 1.0) { simconnectClouds += QLatin1Char('L'); }
+                    // Moderate rain: precipitation rate is between 1.0 mm/hour and 4.0 mm/hour
+                    else if(precipitationRate >= 1.0 && precipitationRate < 4.0) { simconnectClouds += QLatin1Char('M'); }
+                    // Heavy rain: recipitation rate is between 4.0 mm/hour and 16.0 mm/hour
+                    else if(precipitationRate >= 4.0 && precipitationRate < 16.0) { simconnectClouds += QLatin1Char('H'); }
+                    // Very heavy rain: precipitation rate is > 16.0 mm/hour
+                    else if(precipitationRate >= 16.0) { simconnectClouds += QLatin1Char('D'); }
+
+                    // Q = Type of precipitation
+                    switch (cloudLayer.getPrecipitation())
+                    {
+                    case CCloudLayer::Rain: simconnectClouds += QLatin1Char('R'); break;
+                    case CCloudLayer::Snow: simconnectClouds += QLatin1Char('S'); break;
+                    default: simconnectClouds += QLatin1Char('N');
+                    }
+
+                    // BBB = Coded base height
+                    // the precipitation ends at this height, set to 0 for it to land on the ground
+                    simconnectClouds += QLatin1String("000");
+
+                    // I = icing rate
+                    // Set to None for now
+                    simconnectClouds += QLatin1String("N");
+                }
+                return simconnectClouds;
+            }
+
+            QString CSimConnectUtilities::temperaturesToSimConnectMetar(const BlackMisc::Weather::CTemperatureLayerList &temperatureLayers)
+            {
+                // Format:
+                // TT/DD&ANNNNN
+                QString simconnectTemperatures;
+                for (const auto &temperatureLayer : temperatureLayers)
+                {
+                    simconnectTemperatures += QLatin1Char(' ');
+
+                    // TT = temperature in Celsius
+                    auto temperature = temperatureLayer.getTemperature().valueInteger(CTemperatureUnit::C());
+                    simconnectTemperatures += QStringLiteral("%1/").arg(temperature, 2, 10, QLatin1Char('0'));
+                    // DD = dewpoint in Celsius
+                    auto dewPoint = temperatureLayer.getDewPoint().valueInteger(CTemperatureUnit::C());
+                    simconnectTemperatures += QStringLiteral("%1").arg(dewPoint, 2, 10, QLatin1Char('0'));
+
+                    simconnectTemperatures += QLatin1String("&A");
+
+                    // NNNNN = altitude of the temperatures in meters.
+                    auto altitude = temperatureLayer.getLevel().valueInteger(CLengthUnit::m());
+                    simconnectTemperatures += QStringLiteral("%1").arg(altitude, 5, 10, QLatin1Char('0'));
+                }
+                return simconnectTemperatures;
             }
 
         } // namespace

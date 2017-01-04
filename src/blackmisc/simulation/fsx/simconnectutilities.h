@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/weather/gridpoint.h"
 
 #include <QMetaType>
 #include <QObject>
@@ -145,6 +146,9 @@ namespace BlackMisc
                     SIMCONNECT_EXCEPTION_OBJECT_SCHEDULE
                 };
 
+                //! Converts the weather at gridPoint to a SimConnect METAR string
+                static QString convertToSimConnectMetar(const BlackMisc::Weather::CGridPoint &gridPoint);
+
                 //! Register metadata
                 static void registerMetadata();
 
@@ -155,6 +159,11 @@ namespace BlackMisc
                 //! \param enumName name of the resolved enum
                 //! \return enum element's name
                 static const QString resolveEnumToString(const DWORD id, const char *enumName);
+
+                static QString windsToSimConnectMetar(const BlackMisc::Weather::CWindLayerList &windLayers);
+                static QString visibilitiesToSimConnectMetar(const BlackMisc::Weather::CVisibilityLayerList &visibilityLayers);
+                static QString cloudsToSimConnectMetar(const BlackMisc::Weather::CCloudLayerList &cloudLayers);
+                static QString temperaturesToSimConnectMetar(const BlackMisc::Weather::CTemperatureLayerList &temperatureLayers);
 
                 //! Hidden constructor
                 CSimConnectUtilities();
