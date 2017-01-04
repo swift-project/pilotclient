@@ -12,6 +12,9 @@
 #ifndef BLACKMISC_TYPETRAITS_H
 #define BLACKMISC_TYPETRAITS_H
 
+#include <type_traits>
+#include <utility> // for std::swap
+
 #if defined(Q_CC_CLANG) || (defined(Q_CC_GNU) && __GNUC__ >= 5)
 #define BLACK_HAS_FIXED_CWG1558
 #endif
@@ -37,6 +40,22 @@ namespace BlackMisc
     using void_t = typename Private::make_void<Ts...>::type;
 #endif
     //! \endcond
+
+    namespace Private
+    {
+        //! \private Own implementation of C++17 std::is_nothrow_swappable.
+        template <typename T, typename U>
+        struct is_nothrow_swappable
+        {
+            static constexpr bool impl()
+            {
+                using std::swap;
+                return noexcept(swap(std::declval<T>(), std::declval<U>()))
+                    && noexcept(swap(std::declval<U>(), std::declval<T>()));
+            }
+            static constexpr bool value = impl();
+        };
+    }
 
     /*!
      * Trait to detect whether T contains a member function toQString.

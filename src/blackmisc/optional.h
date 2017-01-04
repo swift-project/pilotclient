@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_OPTIONAL_H
 #define BLACKMISC_OPTIONAL_H
 
+#include "blackmisc/typetraits.h"
 #include <QtGlobal>
 #include <utility>
 
@@ -26,16 +27,20 @@ namespace BlackMisc
     {
     public:
         //! Default constructor.
-        Optional() {}
+        Optional() noexcept {}
 
         //! Construct from a value.
-        Optional(T value) { new (m_data.bytes) T(std::move(value)); m_isValid = true; }
+        Optional(T value) noexcept(std::is_nothrow_move_constructible<T>::value)
+        {
+            new (m_data.bytes) T(std::move(value));
+            m_isValid = true;
+        }
 
         //! Construct from a nullptr, equivalent to default constructor.
-        Optional(std::nullptr_t) {}
+        Optional(std::nullptr_t) noexcept {}
 
         //! Copy constructor.
-        Optional(const Optional &other)
+        Optional(const Optional &other) noexcept(std::is_nothrow_copy_constructible<T>::value)
         {
             if (other.m_isValid) { new (m_data.bytes) T(*other); }
             m_isValid = other.m_isValid;
@@ -49,14 +54,14 @@ namespace BlackMisc
         }
 
         //! Assign a nullptr.
-        Optional &operator =(std::nullptr_t)
+        Optional &operator =(std::nullptr_t) noexcept
         {
             reset();
             return *this;
         }
 
         //! Copy assignment.
-        Optional &operator =(const Optional &other)
+        Optional &operator =(const Optional &other) noexcept(std::is_nothrow_copy_constructible<T>::value)
         {
             reset();
             if (other.m_isValid) { new (m_data.bytes) T(*other); }
@@ -65,7 +70,7 @@ namespace BlackMisc
         }
 
         //! Move assignment.
-        Optional &operator =(Optional &&other) noexcept(std::is_nothrow_move_assignable<T>::value)
+        Optional &operator =(Optional &&other) noexcept(std::is_nothrow_move_constructible<T>::value)
         {
             reset();
             if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
@@ -77,7 +82,7 @@ namespace BlackMisc
         ~Optional() { if (m_isValid) { (*this)->~T(); } }
 
         //! Explicit cast to bool, true if this Optional contains a value.
-        explicit operator bool() const { return m_isValid; }
+        explicit operator bool() const noexcept { return m_isValid; }
 
         //! If object is valid, destroy to make it invalid.
         void reset() noexcept
@@ -115,10 +120,9 @@ namespace BlackMisc
 
     /*!
      * Efficient swap for two Optional objects.
-     * \todo Make conditionally noexcept using C++17 std::is_nothrow_swappable.
      */
     template <typename T>
-    void swap(Optional<T> &a, Optional<T> &b)
+    void swap(Optional<T> &a, Optional<T> &b) noexcept(Private::is_nothrow_swappable<T, T>::value)
     {
         if (a)
         {
