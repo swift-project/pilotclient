@@ -54,7 +54,7 @@ namespace BlackSimPlugin
             m_realityBubbleTimer.setInterval(20 * 1000);
             connect(&m_realityBubbleTimer, &QTimer::timeout, this, &CSimulatorFsx::ps_addAircraftCurrentlyOutOfBubble);
 
-            m_useFsuipc = true; // Temporarily enabled until Simconnect Weather is implemented.
+            m_useFsuipc = false; // Temporarily enabled until Simconnect Weather is implemented.
             m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             m_defaultModel =
             {
@@ -1057,9 +1057,13 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::injectWeatherGrid(const Weather::CWeatherGrid &weatherGrid)
         {
-            if (!m_useFsuipc || !m_fsuipc) { return; }
-            if (!m_fsuipc->isConnected()) { return; }
-            m_fsuipc->write(weatherGrid);
+            // So far, there is only global weather
+            auto glob = weatherGrid.frontOrDefault();
+            glob.setIdentifier("GLOB");
+            QString metar = CSimConnectUtilities::convertToSimConnectMetar(glob);
+            SimConnect_WeatherSetModeCustom(m_hSimConnect);
+            SimConnect_WeatherSetModeGlobal(m_hSimConnect);
+            SimConnect_WeatherSetObservation(m_hSimConnect, 0, qPrintable(metar));
         }
 
         bool CSimulatorFsx::requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)
