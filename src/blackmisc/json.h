@@ -379,7 +379,7 @@ namespace BlackMisc
                     const auto value = json.value(name);
                     if (value.isUndefined())
                     {
-                        constexpr bool required = false; // \todo add RequiredForJson flag in metaclass system
+                        constexpr bool required = false; //! \fixme add RequiredForJson flag in metaclass system
                         if (required) { throw CJsonException(QStringLiteral("Missing required member '%1'").arg(name.m_latin1)); }
                     }
                     else

@@ -108,7 +108,7 @@ namespace BlackMisc
         const char *const m_name;
 
         //! Property index of the member.
-        //! \todo Not used yet.
+        //! \deprecated Reserved for future use.
         const int m_index;
 
         //! Any flags applying to the member.

@@ -65,7 +65,7 @@ namespace BlackMisc
             CAircraftSituation oldSituation;
             CAircraftSituation newSituation;
             status.setInterpolationSucceeded(true);
-            status.setChangedPosition(true); //! \todo efficiently determine whether the position has changed
+            status.setChangedPosition(true); //! \fixme efficiently determine whether the position has changed
 
             // latest first, now 00:20 split time
             // time     pos
