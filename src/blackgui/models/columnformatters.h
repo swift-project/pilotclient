@@ -279,6 +279,17 @@ namespace BlackGui
             QString m_formatString = "yyyy-MM-dd HH:mm"; //!< how the value is displayed
         };
 
+        //! Formatter when column contains an integer
+        class CIntegerFormatter : public CDefaultFormatter
+        {
+        public:
+            //! Constructor
+            CIntegerFormatter(int alignment = alignRightVCenter()) : CDefaultFormatter(alignment, false) {}
+
+            //! \copydoc CDefaultFormatter::displayRole
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &expectedInteger) const override;
+        };
+
         //! Formatter when column contains an altitude
         class CAltitudeFormatter : public CDefaultFormatter
         {

@@ -408,5 +408,10 @@ namespace BlackGui
             if (!rgbColor.isValid())  { return ""; }
             return rgbColor.hex(true);
         }
+
+        CVariant CIntegerFormatter::displayRole(const CVariant &expectedInteger) const
+        {
+            return QString::number(expectedInteger.toInt());
+        }
     } // namespace
 } // namespace

@@ -97,6 +97,11 @@ namespace BlackGui
             return CColumn("#", "order", propertyIndex, new CStringFormatter(alignment));
         }
 
+        CColumn CColumn::standardInteger(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, int alignment)
+        {
+            return CColumn(headerName, toolTip, propertyIndex, new CIntegerFormatter(alignment));
+        }
+
         // --------------- columns ----------------------------------------------
 
         CColumns::CColumns(const QString &translationContext, QObject *parent) :
