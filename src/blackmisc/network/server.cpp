@@ -13,6 +13,7 @@
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/variant.h"
 
 #include <Qt>
@@ -28,12 +29,17 @@ namespace BlackMisc
         QString CServer::convertToQString(bool i18n) const
         {
             QString s(this->m_name);
-            s.append(" ").append(this->m_description);
-            s.append(" ").append(this->m_address);
-            s.append(" ").append(QString::number(this->m_port));
-            s.append(" ").append(this->m_user.toQString(i18n));
-            s.append(" ").append(boolToYesNo(this->m_isAcceptingConnections));
-            s.append(" ").append(this->m_fsdSetup.toQString(i18n));
+            s.append(' ').append(this->m_description);
+            s.append(' ').append(this->m_address);
+            s.append(' ').append(QString::number(this->m_port));
+            s.append(' ').append(this->m_user.toQString(i18n));
+            s.append(' ').append(boolToYesNo(this->m_isAcceptingConnections));
+            s.append(' ').append(this->m_fsdSetup.toQString(i18n));
+
+            if (this->isConnected())
+            {
+                s.append(" connected: ").append(this->getFormattedUtcTimestampHms());
+            }
             return s;
         }
 
@@ -65,6 +71,11 @@ namespace BlackMisc
             return m_port > 0 && !m_address.isEmpty();
         }
 
+        bool CServer::isConnected() const
+        {
+            return this->m_timestampMSecsSinceEpoch >= 0;
+        }
+
         CStatusMessageList CServer::validate() const
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation()}));
@@ -79,10 +90,19 @@ namespace BlackMisc
             return msgs;
         }
 
+        QString CServer::getServerSessionId() const
+        {
+            if (!this->isConnected()) { return ""; }
+            const QString session("%1 %2:%3 %4 %5");
+            return session.arg(this->getName(), this->getAddress()).arg(this->getPort()).arg(this->getUser().getRealName(), this->getFormattedUtcTimestampHms());
+        }
+
         CVariant CServer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAddress:
@@ -107,7 +127,9 @@ namespace BlackMisc
         void CServer::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CServer>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); return; }
+
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAddress:
@@ -135,6 +157,34 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
             }
+        }
+
+        int CServer::comparePropertyByIndex(const CPropertyIndex &index, const CServer &compareValue) const
+        {
+            if (index.isMyself()) { return this->getName().compare(compareValue.getName()); }
+            if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue);}
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexAddress:
+                return this->getAddress().compare(compareValue.getAddress(), Qt::CaseInsensitive);
+            case IndexDescription:
+                return this->getDescription().compare(compareValue.getDescription(), Qt::CaseInsensitive);
+            case IndexFsdSetup:
+                return this->getFsdSetup().toQString().compare(compareValue.getFsdSetup().toQString());
+            case IndexName:
+                return this->getName().compare(compareValue.getName(), Qt::CaseInsensitive);
+            case IndexIsAcceptingConnections:
+                return Compare::compare(this->isAcceptingConnections(), compareValue.isAcceptingConnections());
+            case IndexPort:
+                return Compare::compare(this->getPort(), compareValue.getPort());
+            case IndexUser:
+                return this->getUser().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getUser());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "No compare function");
+            return 0;
         }
     } // namespace
 } // namespace

@@ -18,6 +18,7 @@
 #include "blackmisc/network/fsdsetup.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/timestampbased.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
@@ -29,7 +30,9 @@ namespace BlackMisc
     namespace Network
     {
         //! Value object encapsulating information of a server
-        class BLACKMISC_EXPORT CServer : public CValueObject<CServer>
+        class BLACKMISC_EXPORT CServer :
+            public CValueObject<CServer>,
+            public BlackMisc::ITimestampBased
         {
         public:
             //! Properties by index
@@ -89,10 +92,10 @@ namespace BlackMisc
             //! Set port
             void setPort(int port) { m_port = port; }
 
-            //! Server is accepting connections (allows to disable server temporarily)
+            //! Server is accepting connections (allows to disable server temporarily or generally)
             bool isAcceptingConnections() const { return m_isAcceptingConnections; }
 
-            //! Set whether server is accepting connections (allows to disable server temporarily)
+            //! Set whether server is accepting connections (allows to disable server temporarily or generally)
             void setIsAcceptingConnections(bool value) { m_isAcceptingConnections = value; }
 
             //! Is valid for login?
@@ -107,14 +110,32 @@ namespace BlackMisc
             //! Set setup
             void setFsdSetup(const CFsdSetup &setup) { this->m_fsdSetup = setup; }
 
+            //! Connected since
+            QDateTime getConnectedSince() const { return this->getUtcTimestamp(); }
+
+            //! Mark as connected since now
+            void setConnectedSinceNow() { this->setCurrentUtcTime(); }
+
+            //! Mark as diconnected
+            void markAsDisconnected() { this->setTimestampToNull(); }
+
+            //! Is connected?
+            bool isConnected() const;
+
             //! Validate, provide details about issues
             BlackMisc::CStatusMessageList validate() const;
+
+            //! Identifying a session, if not connected empty
+            QString getServerSessionId() const;
 
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
+            //! Compare by index
+            int comparePropertyByIndex(const CPropertyIndex &index, const CServer &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
@@ -126,7 +147,7 @@ namespace BlackMisc
             int       m_port = -1;
             CUser     m_user;
             CFsdSetup m_fsdSetup;
-            bool      m_isAcceptingConnections = true; //!< temp. disable server
+            bool      m_isAcceptingConnections = true; //!< disable server for connections
 
             BLACK_METACLASS(
                 CServer,
@@ -136,7 +157,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(port),
                 BLACK_METAMEMBER(user),
                 BLACK_METAMEMBER(fsdSetup),
-                BLACK_METAMEMBER(isAcceptingConnections)
+                BLACK_METAMEMBER(isAcceptingConnections),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison)
             );
         };
     } // namespace

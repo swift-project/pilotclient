@@ -25,10 +25,9 @@ namespace BlackGui
     namespace Models
     {
         //! Server list model
-        class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>
+        class BLACKGUI_EXPORT CServerListModel : public CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList, true>
         {
         public:
-
             //! Constructor
             explicit CServerListModel(QObject *parent = nullptr);
 

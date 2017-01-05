@@ -44,6 +44,9 @@ namespace BlackMisc
         //! Timestamp as ms value
         qint64 getMSecsSinceEpoch() const { return m_timestampMSecsSinceEpoch; }
 
+        //! Set to null
+        void setTimestampToNull();
+
         //! Timestamp as ms value
         void setMSecsSinceEpoch(qint64 mSecsSinceEpoch) { m_timestampMSecsSinceEpoch = mSecsSinceEpoch; }
 

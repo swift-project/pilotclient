@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Models
     {
         CServerListModel::CServerListModel(QObject *parent) :
-            CListModelBase("ModelServerList", parent)
+            CListModelBase("ServerListModel", parent)
         {
             this->m_columns.addColumn(CColumn::standardString("name", CServer::IndexName));
             this->m_columns.addColumn(CColumn::standardString("description", CServer::IndexDescription));
@@ -31,12 +31,12 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId}));
 
             // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("ModelServerList", "name");
-            (void)QT_TRANSLATE_NOOP("ModelServerList", "description");
-            (void)QT_TRANSLATE_NOOP("ModelServerList", "address");
-            (void)QT_TRANSLATE_NOOP("ModelServerList", "port");
-            (void)QT_TRANSLATE_NOOP("ModelServerList", "realname");
-            (void)QT_TRANSLATE_NOOP("ModelServerList", "userid");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "name");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "description");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "address");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "port");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "realname");
+            (void)QT_TRANSLATE_NOOP("ServerListModel", "userid");
         }
 
     } // class
