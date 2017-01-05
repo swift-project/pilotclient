@@ -104,9 +104,6 @@ namespace BlackCore
             virtual BlackMisc::Simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
             //! @}
 
-            //! Network library
-            INetwork *network() const { return m_network; }
-
         public slots:
             // from context and provider interface
             //! \ingroup remoteaircraftprovider
@@ -186,6 +183,14 @@ namespace BlackCore
 
             //! Register myself in DBus
             CContextNetwork *registerWithDBus(BlackMisc::CDBusServer *server);
+
+            //! Network library
+            //! \remarks normally only for core facade internal usage
+            INetwork *network() const { return m_network; }
+
+            //! Airspace
+            //! \remarks normally only for core facade internal usage
+            CAirspaceMonitor *airspace() const { return m_airspace; }
 
         private:
             CAirspaceMonitor              *m_airspace = nullptr;

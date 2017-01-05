@@ -29,8 +29,7 @@ namespace BlackCore
             //! Constructor
             CContextNetworkEmpty(CCoreFacade *runtime) : IContextNetwork(CCoreFacadeConfig::NotUsed, runtime) {}
 
-        public slots: // IContextNetwork overrides
-
+        public slots:
             //! \copydoc IContextNetwork::requestAtcBookingsUpdate()
             virtual void requestAtcBookingsUpdate() const override
             {

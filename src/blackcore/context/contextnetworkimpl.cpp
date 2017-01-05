@@ -497,31 +497,31 @@ namespace BlackCore
 
         CSimulatedAircraft CContextNetwork::getAircraftInRangeForCallsign(const CCallsign &callsign) const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return this->m_airspace->getAircraftInRangeForCallsign(callsign);
         }
 
         CAircraftModel CContextNetwork::getAircraftInRangeModelForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return this->m_airspace->getAircraftInRangeModelForCallsign(callsign);
         }
 
         CStatusMessageList CContextNetwork::getReverseLookupMessages(const CCallsign &callsign) const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return this->m_airspace->getReverseLookupMessages(callsign);
         }
 
         bool CContextNetwork::isReverseLookupMessagesEnabled() const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return this->m_airspace->isReverseLookupMessagesEnabled();
         }
 
         void CContextNetwork::enableReverseLookupMessages(bool enabled)
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
             if (this->m_airspace->isReverseLookupMessagesEnabled() == enabled) { return; }
             this->m_airspace->enableReverseLookupMessages(enabled);
             emit CContext::changedLogOrDebugSettings();
@@ -529,32 +529,32 @@ namespace BlackCore
 
         CStatusMessageList CContextNetwork::getAircraftPartsHistory(const CCallsign &callsign) const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return this->m_airspace->getAircraftPartsHistory(callsign);
         }
 
         CAircraftPartsList CContextNetwork::getRemoteAircraftParts(const CCallsign &callsign, qint64 cutoffTimeValuesBefore) const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return this->m_airspace->remoteAircraftParts(callsign, cutoffTimeValuesBefore);
         }
 
         bool CContextNetwork::isAircraftPartsHistoryEnabled() const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             return this->m_airspace->isAircraftPartsHistoryEnabled();
         }
 
         void CContextNetwork::enableAircraftPartsHistory(bool enabled)
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << enabled; }
             this->m_airspace->enableAircraftPartsHistory(enabled);
             emit CContext::changedLogOrDebugSettings();
         }
 
         CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
         {
-            if (this->isDebugEnabled()) { BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            if (this->isDebugEnabled()) { CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
             return this->m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
         }
 
@@ -606,7 +606,7 @@ namespace BlackCore
         bool CContextNetwork::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
-            bool c = this->m_airspace->updateAircraftNetworkModel(callsign, model, originator);
+            const bool c = this->m_airspace->updateAircraftNetworkModel(callsign, model, originator);
             if (c)
             {
                 const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
@@ -711,11 +711,11 @@ namespace BlackCore
         CVoiceRoomList CContextNetwork::getSelectedVoiceRooms() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-            CAtcStationList stations = this->getSelectedAtcStations();
+            const CAtcStationList stations = this->getSelectedAtcStations();
             Q_ASSERT(stations.size() == 2);
             CVoiceRoomList rooms;
-            CAtcStation s1 = stations[0];
-            CAtcStation s2 = stations[1];
+            const CAtcStation s1 = stations[0];
+            const CAtcStation s2 = stations[1];
             rooms.push_back(s1.getVoiceRoom());
             rooms.push_back(s2.getVoiceRoom());
             return rooms;
