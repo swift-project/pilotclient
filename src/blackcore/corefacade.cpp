@@ -20,6 +20,7 @@
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/registermetadata.h"
+#include "blackcore/airspacemonitor.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/logmessage.h"
@@ -162,8 +163,13 @@ namespace BlackCore
         if (this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject())
         {
             // only connect if network runs locally, no round trips
+            // remark: from a design perspective it would be nice if those could be avoided (seperation of concerns)
+            //         those connects here reprent cross context dependencies
             if (this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject())
             {
+                Q_ASSERT_X(this->getCContextNetwork(), Q_FUNC_INFO, "No local network object");
+                Q_ASSERT_X(this->getCContextNetwork()->airspace(), Q_FUNC_INFO, "No airspace object");
+
                 c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
                             this->getCContextSimulator(), &CContextSimulator::ps_textMessagesReceived);
                 Q_ASSERT(c);
@@ -181,6 +187,12 @@ namespace BlackCore
                 Q_ASSERT(c);
                 c = connect(this->m_contextNetwork, &IContextNetwork::changedRemoteAircraftEnabled,
                             this->getCContextSimulator(), &CContextSimulator::ps_changedRemoteAircraftEnabled);
+                Q_ASSERT(c);
+                c = connect(this->m_contextNetwork, &IContextNetwork::connectionStatusChanged,
+                            this->getCContextSimulator(), &CContextSimulator::ps_networkConnectionStatusChanged);
+                Q_ASSERT(c);
+                c = connect(this->getCContextNetwork()->airspace(), &CAirspaceMonitor::requestedNewAircraft,
+                            this->getCContextSimulator(), &CContextSimulator::ps_networkRequestedNewAircraft);
                 Q_ASSERT(c);
                 c = connect(this->getCContextSimulator(), &CContextSimulator::renderRestrictionsChanged,
                             this->getCContextNetwork(), &CContextNetwork::ps_simulatorRenderRestrictionsChanged);
