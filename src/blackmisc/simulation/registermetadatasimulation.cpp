@@ -30,6 +30,8 @@ namespace BlackMisc
             CDistributorListPreferences::registerMetadata();
             CInterpolationAndRenderingSetup::registerMetadata();
             CInterpolationHints::registerMetadata();
+            CMatchingStatisticsEntry::registerMetadata();
+            CMatchingStatistics::registerMetadata();
             CModelSettings::registerMetadata();
             CSimConnectUtilities::registerMetadata();
             CSimulatedAircraft::registerMetadata();

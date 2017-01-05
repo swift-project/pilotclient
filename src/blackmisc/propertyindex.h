@@ -127,6 +127,7 @@ namespace BlackMisc
             GlobalIndexCModelSettings                   =  7400,
             GlobalIndexCAircraftCfgEntries              =  7500,
             GlobalIndexCDistributor                     =  7600,
+            GlobalIndexCMatchingStatisticsEntry         =  7700,
             GlobalIndexCVPilotModelRule                 =  8000,
             GlobalIndexCVoiceRoom                       =  9000,
             GlobalIndexCSettingKeyboardHotkey           = 10000,
