@@ -47,6 +47,8 @@
 #include "blackmisc/simulation/distributorlist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/simulation/matchingstatisticsentry.h"
+#include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/variant.h"
@@ -774,13 +776,14 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, true>;
         template class CListModelBase<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, true>;
-        template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList, false>;
+        template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList, true>;
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList, true>;
         template class CListModelBase<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList, false>;
         template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList, false>;
         template class CListModelBase<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, true>;
         template class CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>;
         template class CListModelBase<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, true>;
+        template class CListModelBase<BlackMisc::Simulation::CMatchingStatisticsEntry, BlackMisc::Simulation::CMatchingStatistics, true>;
         template class CListModelBase<BlackMisc::Weather::CCloudLayer, BlackMisc::Weather::CCloudLayerList, false>;
         template class CListModelBase<BlackMisc::Weather::CTemperatureLayer, BlackMisc::Weather::CTemperatureLayerList, false>;
         template class CListModelBase<BlackMisc::Weather::CWindLayer, BlackMisc::Weather::CWindLayerList, false>;
