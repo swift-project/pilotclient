@@ -358,14 +358,14 @@ namespace BlackCore
         return icao;
     }
 
-    int CAircraftMatcher::setModelSet(const CAircraftModelList &models)
+    int CAircraftMatcher::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulatorHint)
     {
         CAircraftModelList modelsCleaned(models);
         const int r1 = modelsCleaned.removeAllWithoutModelString();
         const int r2 = modelsCleaned.removeIfExcluded();
         if ((r1 + r2) > 0)
         {
-            CLogMessage(this).warning("Removed models for matcher, without string %1, excluded %2") << r1 << r2;
+            CLogMessage(this).warning("Removed models for matcher, without string '%1', excluded '%2'") << r1 << r2;
         }
         if (modelsCleaned.isEmpty())
         {
@@ -373,9 +373,11 @@ namespace BlackCore
         }
         else
         {
-            CLogMessage(this).info("Set %1 models in matcher") << modelsCleaned.size();
+            CLogMessage(this).info("Set %1 models in matcher, simulator '%2'") << modelsCleaned.size() << simulatorHint.toQString();
         }
         this->m_modelSet = modelsCleaned;
+        this->m_simulator = simulatorHint;
+        this->m_modelSetInfo = QString("Set: '%1' entries: %2").arg(simulatorHint.toQString()).arg(modelsCleaned.size());
         return models.size();
     }
 
@@ -388,6 +390,58 @@ namespace BlackCore
     {
         m_defaultModel = defaultModel;
         m_defaultModel.setModelType(CAircraftModel::TypeModelMatchingDefaultModel);
+    }
+
+    CMatchingStatistics CAircraftMatcher::getCurrentStatistics() const
+    {
+        return this->m_statistics;
+    }
+
+    void CAircraftMatcher::clearMatchingStatistics()
+    {
+        this->m_statistics.clear();
+    }
+
+    void CAircraftMatcher::evaluateStatisticsEntry(const QString &sessionId, const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
+    {
+        Q_UNUSED(livery);
+        Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
+        if (this->m_modelSet.isEmpty()) { return; } // ignore empty sets to not create silly stats
+        if (sessionId.isEmpty()) { return; }
+        if (aircraftIcao.isEmpty()) { return; }
+
+        QString description;
+        if (!sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(aircraftIcao).isLoadedFromDb())
+        {
+            description = QString("ICAO: '%1' not known, typo?").arg(aircraftIcao);
+        }
+
+        // resolve airline, mostly needed because of vPilot not sending airline icao codes in version 1
+        QString airlineIcaoChecked(airlineIcao.trimmed().toUpper());
+        if (airlineIcao.isEmpty())
+        {
+            const CAirlineIcaoCode al = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign);
+            if (al.isLoadedFromDb())
+            {
+                airlineIcaoChecked = al.getDesignator();
+            }
+        }
+
+        CMatchingStatisticsEntry::EntryType type = CMatchingStatisticsEntry::Missing;
+        if (airlineIcaoChecked.isEmpty())
+        {
+            type = this->m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
+                   CMatchingStatisticsEntry::Found :
+                   CMatchingStatisticsEntry::Missing;
+        }
+        else
+        {
+            type = this->m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
+                   CMatchingStatisticsEntry::Found :
+                   CMatchingStatisticsEntry::Missing;
+
+        }
+        this->m_statistics.addAircraftAirlineCombination(type, sessionId, this->m_modelSetInfo, description, aircraftIcao, airlineIcao);
     }
 
     CAircraftModel CAircraftMatcher::getClosestMatchSearchImplementation(MatchingMode mode, const BlackMisc::Simulation::CAircraftModelList &modelSet, const CSimulatedAircraft &remoteAircraft, CStatusMessageList *log) const
@@ -501,9 +555,8 @@ namespace BlackCore
             usedModelSet = modelSet;
         }
 
-
         // first decide what set to use for scoring, it should not be too large
-        if (remoteAircraft.hasAircraftAndAirlineDesignator() && usedModelSet.containsModelsWithAircraftAndAirlineDesignator(remoteAircraft.getAircraftIcaoCodeDesignator(), remoteAircraft.getAirlineIcaoCodeDesignator()))
+        if (remoteAircraft.hasAircraftAndAirlineDesignator() && usedModelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(remoteAircraft.getAircraftIcaoCodeDesignator(), remoteAircraft.getAirlineIcaoCodeDesignator()))
         {
             const CAircraftModelList byAircraftAndAirline(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft/airline ICAOs '%2'/'%3' for scoring").arg(byAircraftAndAirline.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey()), getLogCategories());

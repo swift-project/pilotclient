@@ -13,8 +13,8 @@
 #define BLACKCORE_AIRCRAFTMATCHER_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/statusmessage.h"
 
 #include <QFlags>
@@ -25,7 +25,7 @@ namespace BlackMisc
 {
     class CLogCategoryList;
     class CStatusMessageList;
-    namespace Aviation { class CCallsign; }
+    namespace Aviation   { class CCallsign; }
     namespace Simulation { class CSimulatedAircraft; }
 }
 
@@ -96,20 +96,33 @@ namespace BlackCore
         static BlackMisc::Aviation::CLivery reverseLookupStandardLivery(const BlackMisc::Aviation::CAirlineIcaoCode &airline, const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Turn callsign into airline
+        //! \threadsafe
         static BlackMisc::Aviation::CAirlineIcaoCode callsignToAirline(const BlackMisc::Aviation::CCallsign &callsign, BlackMisc::CStatusMessageList *log = nullptr);
 
         //! Get the models
-        BlackMisc::Simulation::CAircraftModelList getModelSet() const { return m_modelSet; }
+        const BlackMisc::Simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
+
+        //! Models
+        bool hasModels() const { return !m_modelSet.isEmpty(); }
 
         //! Set the models we want to use
-        //! \note use a set from "somewhere else" so it can also be used with arbitrary sets for testing
-        int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models);
+        //! \note uses a set from "somewhere else" so it can also be used with arbitrary sets for testing
+        int setModelSet(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulatorHint = {});
 
         //! Default model
         const BlackMisc::Simulation::CAircraftModel &getDefaultModel() const;
 
         //! Set default model
         void setDefaultModel(const BlackMisc::Simulation::CAircraftModel &defaultModel);
+
+        //! The current statistics
+        BlackMisc::Simulation::CMatchingStatistics getCurrentStatistics() const;
+
+        //! Clear the statistics
+        void clearMatchingStatistics();
+
+        //! Evaluate if a statistics entry makes sense and add it
+        void evaluateStatisticsEntry(const QString &sessionId, const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
 
     private:
         //! The search based implementation
@@ -155,9 +168,12 @@ namespace BlackCore
         //! Scores to string for debugging
         static QString scoresToString(const BlackMisc::Simulation::ScoredModels &scores, int lastElements = 5);
 
-        MatchingMode                              m_matchingMode = All;
-        BlackMisc::Simulation::CAircraftModel     m_defaultModel;         //!< model to be used as default model
-        BlackMisc::Simulation::CAircraftModelList m_modelSet;             //!< models used for model matching
+        MatchingMode                               m_matchingMode = All;
+        BlackMisc::Simulation::CAircraftModel      m_defaultModel;       //!< model to be used as default model
+        BlackMisc::Simulation::CAircraftModelList  m_modelSet;           //!< models used for model matching
+        BlackMisc::Simulation::CSimulatorInfo      m_simulator;          //!< simulator (optional)
+        BlackMisc::Simulation::CMatchingStatistics m_statistics;         //!< matching statistics
+        QString                                    m_modelSetInfo;
     };
 } // namespace
 

@@ -95,7 +95,7 @@ namespace BlackGui
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             this->m_modelSetLoader.changeSimulator(simulator);
-            this->m_matcher.setModelSet(this->m_modelSetLoader.getAircraftModels());
+            this->m_matcher.setModelSet(this->m_modelSetLoader.getAircraftModels(), simulator);
             this->redisplay();
         }
 
