@@ -74,8 +74,11 @@ namespace BlackMisc
             //! Contains given combined type
             bool containsCombinedType(const QString &combinedType) const;
 
-            //! Contains any model with aircraft and airline designator
-            bool containsModelsWithAircraftAndAirlineDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
+            //! Contains any model with aircraft ICAO designator
+            bool containsModelsWithAircraftIcaoDesignator(const QString &aircraftDesignator) const;
+
+            //! Contains any model with aircraft and airline ICAO designator
+            bool containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
 
             //! Find by model string
             //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used

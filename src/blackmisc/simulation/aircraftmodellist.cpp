@@ -68,7 +68,12 @@ namespace BlackMisc
             });
         }
 
-        bool CAircraftModelList::containsModelsWithAircraftAndAirlineDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const
+        bool CAircraftModelList::containsModelsWithAircraftIcaoDesignator(const QString &aircraftDesignator) const
+        {
+            return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator);
+        }
+
+        bool CAircraftModelList::containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const
         {
             return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator, &CAircraftModel::getAirlineIcaoCodeDesignator, airlineDesignator);
         }
