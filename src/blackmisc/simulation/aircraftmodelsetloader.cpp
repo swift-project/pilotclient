@@ -101,6 +101,11 @@ namespace BlackMisc
             return this->m_caches.synchronizeCurrentCache();
         }
 
+        bool CAircraftModelSetLoader::admitCache()
+        {
+            return this->m_caches.admitCurrentCache();
+        }
+
         bool CAircraftModelSetLoader::hasCachedData() const
         {
             return !this->m_caches.getCurrentCachedModels().isEmpty();

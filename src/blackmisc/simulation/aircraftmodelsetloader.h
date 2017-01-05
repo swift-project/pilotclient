@@ -54,6 +54,9 @@ namespace BlackMisc
             //! Make sure cache is synchronized
             bool synchronizeCache();
 
+            //! Admit current cache
+            bool admitCache();
+
             //! The loaded models
             //! \threadsafe
             BlackMisc::Simulation::CAircraftModelList getAircraftModels() const;
