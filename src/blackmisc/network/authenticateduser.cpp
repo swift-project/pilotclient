@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/network/authenticateduser.h"
-#include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -120,7 +119,7 @@ namespace BlackMisc
 
         CIcon CAuthenticatedUser::toIcon() const
         {
-            return CIconList::iconByIndex(CIcons::StandardIconUser16);
+            return CIcon::iconByIndex(CIcons::StandardIconUser16);
         }
 
         CVariant CAuthenticatedUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const

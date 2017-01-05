@@ -11,9 +11,6 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/textmessagetextedit.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
 #include "blackmisc/network/textmessage.h"
 
 #include <QAction>
@@ -38,7 +35,7 @@ namespace BlackGui
 
         // menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
-        m_actionClearTextEdit = new QAction(CIconList::iconByIndex(CIcons::StandardIconDelete16).toQIcon(), "Clear", this);
+        m_actionClearTextEdit = new QAction(CIcon::iconByIndex(CIcons::StandardIconDelete16).toQIcon(), "Clear", this);
         m_actionLast10 = new QAction("Keep last 10 messages", this);
         m_actionLast25 = new QAction("Keep last 25 messages", this);
         m_actionAll = new QAction("Keep all messages", this);

@@ -103,7 +103,7 @@ namespace BlackMisc
 
         CIcon CAltitude::toIcon() const
         {
-            return BlackMisc::CIconList::iconByIndex(CIcons::GeoPosition);
+            return BlackMisc::CIcon::iconByIndex(CIcons::GeoPosition);
         }
 
     } // namespace

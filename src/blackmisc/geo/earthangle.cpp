@@ -8,8 +8,6 @@
  */
 
 #include "blackmisc/geo/earthangle.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
@@ -148,7 +146,7 @@ namespace BlackMisc
         template <class LATorLON>
         CIcon CEarthAngle<LATorLON>::toIcon() const
         {
-            return BlackMisc::CIconList::iconByIndex(CIcons::GeoPosition);
+            return BlackMisc::CIcon::iconByIndex(CIcons::GeoPosition);
         }
 
         // see here for the reason of thess forward instantiations

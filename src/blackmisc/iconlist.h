@@ -27,9 +27,8 @@
 
 namespace BlackMisc
 {
-
     /*!
-     * Icon
+     * Icon list (swift standard icons)
      */
     class BLACKMISC_EXPORT CIconList : public CSequence<CIcon>
     {
@@ -48,14 +47,6 @@ namespace BlackMisc
 
         //! All icons
         static const CIconList &allIcons();
-
-        //! Icon for given index
-        //! \deprecated Use CIcon::iconByIndex instead.
-        static const CIcon &iconByIndex(CIcons::IconIndex index);
-
-        //! Icon for given index
-        //! \deprecated Use CIcon::iconByIndex instead.
-        static const CIcon &iconByIndex(int index);
     };
 }
 

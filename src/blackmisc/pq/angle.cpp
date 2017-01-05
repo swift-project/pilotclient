@@ -20,7 +20,7 @@ namespace BlackMisc
     {
         BlackMisc::CIcon CAngle::toIcon() const
         {
-            BlackMisc::CIcon i = CIconList::iconByIndex(CIcons::StandardIconArrowMediumNorth16);
+            BlackMisc::CIcon i = CIcon::iconByIndex(CIcons::StandardIconArrowMediumNorth16);
             i.setRotation(*this);
             return i;
         }

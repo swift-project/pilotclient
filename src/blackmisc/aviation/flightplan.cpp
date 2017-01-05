@@ -42,7 +42,7 @@ namespace BlackMisc
 
         BlackMisc::CIcon CFlightPlan::toIcon() const
         {
-            return BlackMisc::CIconList::iconByIndex(CIcons::StandardIconAppFlightPlan16);
+            return BlackMisc::CIcon::iconByIndex(CIcons::StandardIconAppFlightPlan16);
         }
     } // namespace
 } // namespace

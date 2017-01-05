@@ -10,9 +10,6 @@
 #include "blackmisc/compare.h"
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/db/datastoreutility.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -458,16 +455,16 @@ namespace BlackMisc
             switch (this->getModelMode())
             {
             case Include:
-                return CIconList::iconByIndex(CIcons::ModelInclude);
+                return CIcon::iconByIndex(CIcons::ModelInclude);
             case Exclude:
-                return CIconList::iconByIndex(CIcons::ModelExclude);
+                return CIcon::iconByIndex(CIcons::ModelExclude);
             case Undefined:
-                return CIconList::iconByIndex(CIcons::StandardIconUnknown16);
+                return CIcon::iconByIndex(CIcons::StandardIconUnknown16);
             default:
                 Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
                 break;
             }
-            return CIconList::iconByIndex(CIcons::ModelInclude);
+            return CIcon::iconByIndex(CIcons::ModelInclude);
         }
 
         void CAircraftModel::setModelModeAsString(const QString &mode)

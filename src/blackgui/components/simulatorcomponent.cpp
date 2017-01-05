@@ -19,7 +19,6 @@
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/iconlist.h"
 #include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/speed.h"
@@ -65,7 +64,7 @@ namespace BlackGui
 
         void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, CIcons::IconIndex iconIndex)
         {
-            this->addOrUpdateLiveDataByName(name, value, CIconList::iconByIndex(iconIndex));
+            this->addOrUpdateLiveDataByName(name, value, CIcon::iconByIndex(iconIndex));
         }
 
         int CSimulatorComponent::rowCount() const
@@ -112,8 +111,8 @@ namespace BlackGui
             const CComSystem c2 = ownAircraft.getCom2System();
             static const CIcon iconAlt(s.getAltitude().toIcon()); // minor performance improvement
             static const CIcon iconLatLng(s.latitude().toIcon());
-            static const CIcon iconRadio(CIconList::iconByIndex(CIcons::StandardIconRadio16));
-            static const CIcon iconAttitude(CIconList::iconByIndex(CIcons::AviationAttitudeIndicator));
+            static const CIcon iconRadio(CIcon::iconByIndex(CIcons::StandardIconRadio16));
+            static const CIcon iconAttitude(CIcon::iconByIndex(CIcons::AviationAttitudeIndicator));
 
             this->addOrUpdateLiveDataByName("latitude", s.latitude().toFormattedQString(), iconLatLng);
             this->addOrUpdateLiveDataByName("longitude", s.longitude().toFormattedQString(), iconLatLng);

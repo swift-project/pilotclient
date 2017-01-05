@@ -287,11 +287,11 @@ namespace BlackMisc
     {
         switch (severity)
         {
-        case SeverityDebug: return CIconList::iconByIndex(CIcons::StandardIconUnknown16); // TODO
-        case SeverityInfo: return CIconList::iconByIndex(CIcons::StandardIconInfo16);
-        case SeverityWarning: return CIconList::iconByIndex(CIcons::StandardIconWarning16);
-        case SeverityError: return CIconList::iconByIndex(CIcons::StandardIconError16);
-        default: return CIconList::iconByIndex(CIcons::StandardIconInfo16);
+        case SeverityDebug: return CIcon::iconByIndex(CIcons::StandardIconUnknown16); // TODO
+        case SeverityInfo: return CIcon::iconByIndex(CIcons::StandardIconInfo16);
+        case SeverityWarning: return CIcon::iconByIndex(CIcons::StandardIconWarning16);
+        case SeverityError: return CIcon::iconByIndex(CIcons::StandardIconError16);
+        default: return CIcon::iconByIndex(CIcons::StandardIconInfo16);
         }
     }
 

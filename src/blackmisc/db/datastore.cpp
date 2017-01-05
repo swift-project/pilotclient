@@ -11,8 +11,6 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/icon.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
 
 #include <QDateTime>
 #include <QtGlobal>
@@ -56,7 +54,7 @@ namespace BlackMisc
         const CIcon &IDatastoreObjectWithIntegerKey::toDatabaseIcon() const
         {
             static const CIcon empty;
-            if (this->hasValidDbKey()) { return CIconList::iconByIndex(CIcons::StandardIconDatabaseKey16); }
+            if (this->hasValidDbKey()) { return CIcon::iconByIndex(CIcons::StandardIconDatabaseKey16); }
             return empty;
         }
 
@@ -153,7 +151,7 @@ namespace BlackMisc
         const CIcon &IDatastoreObjectWithStringKey::toDatabaseIcon() const
         {
             static const CIcon empty;
-            if (this->hasValidDbKey()) { return CIconList::iconByIndex(CIcons::StandardIconDatabaseKey16); }
+            if (this->hasValidDbKey()) { return CIcon::iconByIndex(CIcons::StandardIconDatabaseKey16); }
             return empty;
         }
 

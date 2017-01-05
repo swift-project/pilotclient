@@ -9,8 +9,6 @@
 
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
 
 #include <QRegExp>
 #include <QRegularExpression>
@@ -39,7 +37,7 @@ namespace BlackMisc
         {
             if (callsign.getTypeHint() == CCallsign::Aircraft || !callsign.hasSuffix())
             {
-                return CIconList::iconByIndex(CIcons::NetworkRolePilot);
+                return CIcon::iconByIndex(CIcons::NetworkRolePilot);
             }
             else
             {
@@ -49,21 +47,21 @@ namespace BlackMisc
 
         const CIcon &CCallsign::atcSuffixToIcon(const QString &suffix)
         {
-            if (suffix.length() < 3) { return CIconList::iconByIndex(CIcons::NetworkRoleUnknown); }
+            if (suffix.length() < 3) { return CIcon::iconByIndex(CIcons::NetworkRoleUnknown); }
             QString sfx = suffix.toUpper();
-            if ("APP" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleApproach); }
-            if ("GND" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleGround); }
-            if ("TWR" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleTower); }
-            if ("DEL" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleDelivery); }
-            if ("CTR" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleCenter); }
-            if ("SUP" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleSup); }
-            if ("OBS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleObs); }
-            if ("INS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleMnt); }
-            if ("FSS" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleFss); }
-            if ("ATIS" == sfx) { return CIconList::iconByIndex(CIcons::AviationAtis); }
-            if ("EXAM" == sfx) { return CIconList::iconByIndex(CIcons::NetworkRoleMnt); }
-            if ("VATSIM" == sfx) { return CIconList::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
-            return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
+            if ("APP" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
+            if ("GND" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
+            if ("TWR" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
+            if ("DEL" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
+            if ("CTR" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
+            if ("SUP" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
+            if ("OBS" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
+            if ("INS" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
+            if ("FSS" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
+            if ("ATIS" == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
+            if ("EXAM" == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
+            if ("VATSIM" == sfx) { return CIcon::iconByIndex(CIcons::NetworkVatsimLogoWhite); }
+            return CIcon::iconByIndex(CIcons::NetworkRoleUnknown);
         }
 
         bool CCallsign::isAtcCallsign() const

@@ -187,14 +187,4 @@ namespace BlackMisc
         });
         return icons;
     }
-
-    const CIcon &CIconList::iconByIndex(CIcons::IconIndex index)
-    {
-        return CIcon::iconByIndex(index);
-    }
-
-    const CIcon &CIconList::iconByIndex(int index)
-    {
-        return CIcon::iconByIndex(index);
-    }
 } // ns

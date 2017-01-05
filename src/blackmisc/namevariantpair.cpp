@@ -7,11 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/iconlist.h"
-#include "blackmisc/icons.h"
 #include "blackmisc/namevariantpair.h"
 #include "blackmisc/propertyindexvariantmap.h"
-
 #include <tuple>
 
 namespace BlackMisc
@@ -61,7 +58,7 @@ namespace BlackMisc
             if (static_cast<QMetaType::Type>(variant.type()) == QMetaType::Int)
             {
                 CIcons::IconIndex iconIndex = variant.value<CIcons::IconIndex>();
-                this->m_icon = CIconList::iconByIndex(iconIndex);
+                this->m_icon = CIcon::iconByIndex(iconIndex);
             }
             else
             {
