@@ -43,9 +43,10 @@ namespace BlackCore
             int getAirportsCount() const;
 
             //! Read from static data file
-            bool readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AirportEntity);
+            BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AirportEntity);
 
             //! Read from static data file in background
+            //! \return succesfully started?
             bool readFromJsonFilesInBackground(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::AirportEntity);
 
             // base class overrides

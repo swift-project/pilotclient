@@ -1209,9 +1209,10 @@ namespace BlackCore
         }
         if (s && this->m_airportDataReader)
         {
-            s = inBackground ?
-                this->m_airportDataReader->readFromJsonFilesInBackground(dir) :
-                this->m_airportDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return this->m_airportDataReader->readFromJsonFilesInBackground(dir); }
+            const CStatusMessageList msgs = this->m_airportDataReader->readFromJsonFiles(dir);
+            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
+            return msgs.isSuccess();
         }
         return s;
     }

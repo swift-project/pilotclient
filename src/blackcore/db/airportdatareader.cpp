@@ -43,33 +43,57 @@ namespace BlackCore
             if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
             QTimer::singleShot(0, this, [this, dir, whatToRead]()
             {
-                bool s = this->readFromJsonFiles(dir, whatToRead);
-                Q_UNUSED(s);
+                CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead);
+                if (msgs.isFailure())
+                {
+                    CLogMessage::preformatted(msgs);
+                }
             });
             return true;
         }
 
-        bool CAirportDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
+        CStatusMessageList CAirportDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
         {
-            QDir directory(dir);
-            if (!directory.exists()) { return false; }
-            BlackMisc::Network::CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
-
-            if (whatToRead.testFlag(CEntityFlags::AirportEntity))
+            const QString fileName = CFileUtils::appendFilePaths(dir, "airports.json");
+            if (!QFile::exists(fileName))
             {
-                QString airportsJson(CFileUtils::readFileToString(CFileUtils::appendFilePaths(directory.absolutePath(), "airports.json")));
-                if (!airportsJson.isEmpty())
+                return CStatusMessage(this).error("File '%1' does not exist") << fileName;
+            }
+            whatToRead &= CEntityFlags::AirportEntity; // can handle these entities
+            if (whatToRead == CEntityFlags::NoEntity)
+            {
+                return CStatusMessage(this).info("'%1' No entity for this reader") << CEntityFlags::flagToString(whatToRead);
+            }
+
+            int c = 0;
+            CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
+            const QString airportsJson(CFileUtils::readFileToString(fileName));
+            if (!airportsJson.isEmpty())
+            {
+                try
                 {
                     CAirportList airports;
-                    airports.convertFromJson(airportsJson); //! \todo catch CJsonException or use convertFromJsonNoThrow
-                    const int c = airports.size();
+                    airports.convertFromJson(airportsJson);
+                    c = airports.size();
                     this->m_airportCache.set(airports);
 
                     emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c);
                     reallyRead |= CEntityFlags::AirportEntity;
                 }
+                catch (const CJsonException &ex)
+                {
+                    emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0);
+                    return ex.toStatusMessage(this, QString("Reading airports from '%1'").arg(fileName));
+                }
             }
-            return (reallyRead & CEntityFlags::DistributorLiveryModel) == whatToRead;
+            if ((reallyRead & CEntityFlags::AirportEntity) == CEntityFlags::AirportEntity)
+            {
+                return CStatusMessage(this).info("Written %1 airports from '%2' to cache") << c << fileName;
+            }
+            else
+            {
+                return CStatusMessage(this).error("Not able to read airports from '%1'") << fileName;
+            }
         }
 
         CEntityFlags::Entity CAirportDataReader::getSupportedEntities() const
