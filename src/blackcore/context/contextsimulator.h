@@ -35,9 +35,11 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/matchingstatistics.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/weather/weathergrid.h"
 
@@ -202,6 +204,9 @@ namespace BlackCore
 
             //! Parse a given command line
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
+
+            //! Current matching statistics
+            virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const = 0;
 
         protected:
             //! Constructor

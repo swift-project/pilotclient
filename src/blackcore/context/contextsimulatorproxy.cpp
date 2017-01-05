@@ -198,5 +198,10 @@ namespace BlackCore
         {
             return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
         }
+
+        CMatchingStatistics CContextSimulatorProxy::getCurrentMatchingStatistics(bool missingOnly) const
+        {
+            return m_dBusInterface->callDBusRet<CMatchingStatistics>(QLatin1Literal("getCurrentMatchingStatistics"), missingOnly);
+        }
     } // namespace
 } // namespace

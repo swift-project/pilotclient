@@ -12,7 +12,6 @@
 #ifndef BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 #define BLACKCORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 
-
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/context/contextsimulator.h"
@@ -101,6 +100,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;
+            BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const;
             //! @}
 
             //! \ingroup commandline
@@ -122,10 +122,7 @@ namespace BlackCore
             CContextSimulator *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private slots:
-
-            //
-            //  ------------ slots connected with network context and not to be used other by network contect  ---------
-            //
+            //  ------------ slots connected with network or other contexts ---------
             //! \ingroup crosscontextslot
             //! @{
 
@@ -141,10 +138,16 @@ namespace BlackCore
             //! Enable / disable aircraft
             void ps_changedRemoteAircraftEnabled(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
 
+            //! Network connection status
+            void ps_networkConnectionStatusChanged(int from, int to);
+
+            //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
+            void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
+
+            //! Raw data when a new aircraft was requested, used for statistics
+            void ps_networkRequestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
             //! @}
-            //
-            //  ------------ slots connected with network context and not to be used other by network contect  ---------
-            //
+            //  ------------ slots connected with network or other contexts ---------
 
             //! Handle new connection status of simulator
             void ps_onSimulatorStatusChanged(int status);
@@ -163,10 +166,6 @@ namespace BlackCore
 
             //! Failed adding remote aircraft
             void ps_addingRemoteAircraftFailed(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft, const BlackMisc::CStatusMessage &message);
-
-            //! Update simulator cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
-            //! \ingroup crosscontextslot
-            void ps_updateSimulatorCockpitFromContext(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft, const BlackMisc::CIdentifier &originator);
 
             //! Relay status message to simulator under consideration of settings
             void ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
@@ -193,17 +192,21 @@ namespace BlackCore
             //! Add to message list for matching
             void addMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::CStatusMessageList &messages);
 
+            //! Load the last know model set
+            void initByLastUsedModelSet();
+
             QPair<BlackMisc::Simulation::CSimulatorPluginInfo, ISimulator *> m_simulatorPlugin; //!< Currently loaded simulator plugin
             CPluginManagerSimulator *m_plugins = nullptr;
             BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
             BlackCore::CWeatherManager m_weatherManager { this };
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
-            BlackCore::CAircraftMatcher m_modelMatcher; //!< Model matcher
+            BlackCore::CAircraftMatcher m_aircraftMatcher; //!< Model matcher
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
+            QString m_networkSessionId; //! Network session, if not connected empty
         };
     } // namespace
 } // namespace

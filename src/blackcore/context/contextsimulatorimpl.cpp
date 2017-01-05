@@ -62,6 +62,9 @@ namespace BlackCore
 
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::simulatorChanged, this, &CContextSimulator::ps_modelSetChanged);
             connect(&m_modelSetLoader, &CAircraftModelSetLoader::cacheChanged, this, &CContextSimulator::ps_modelSetChanged);
+
+            // deferred init of last model set, if no other data are set in meantime
+            QTimer::singleShot(1250, this, &CContextSimulator::initByLastUsedModelSet);
         }
 
         CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
@@ -150,12 +153,7 @@ namespace BlackCore
         CAircraftModelList CContextSimulator::getModelSet() const
         {
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
-
-            // If no ISimulator object is available, return a dummy.
-            if (m_simulatorPlugin.first.isUnspecified()) { return CAircraftModelList(); }
-
-            Q_ASSERT(m_simulatorPlugin.second);
-            return m_modelMatcher.getModelSet();
+            return m_aircraftMatcher.getModelSet();
         }
 
         CSimulatorInfo CContextSimulator::simulatorsWithInitializedModelSet() const
@@ -292,8 +290,8 @@ namespace BlackCore
             setRemoteAircraftProvider(renderedAircraftProvider);
             const CSimulatorInfo simInfo(simulatorPluginInfo.getIdentifier());
             m_modelSetLoader.changeSimulator(simInfo);
-            m_modelMatcher.setModelSet(m_modelSetLoader.getAircraftModels());
-            m_modelMatcher.setDefaultModel(simulator->getDefaultModel());
+            m_aircraftMatcher.setModelSet(m_modelSetLoader.getAircraftModels(), simInfo);
+            m_aircraftMatcher.setDefaultModel(simulator->getDefaultModel());
 
             bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::ps_onSimulatorStatusChanged);
             Q_ASSERT(c);
@@ -373,7 +371,7 @@ namespace BlackCore
                 listener->moveToThread(&m_listenersThread);
             }
 
-            bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
+            const bool s = QMetaObject::invokeMethod(listener, "start", Qt::QueuedConnection);
             Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
             Q_UNUSED(s);
 
@@ -426,7 +424,7 @@ namespace BlackCore
 
             CStatusMessageList matchingMessages;
             CStatusMessageList *pMatchingMessages = m_enableMatchingMessages ? &matchingMessages : nullptr;
-            const CAircraftModel aircraftModel = m_modelMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
+            const CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, pMatchingMessages);
             Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
             updateAircraftModel(callsign, aircraftModel, identifier());
             const CSimulatedAircraft aircraftAfterModelApplied = getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
@@ -508,6 +506,22 @@ namespace BlackCore
             m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
         }
 
+        void CContextSimulator::ps_networkConnectionStatusChanged(int from, int to)
+        {
+            Q_UNUSED(from);
+            BLACK_VERIFY_X(getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+            const INetwork::ConnectionStatus statusTo = static_cast<INetwork::ConnectionStatus>(to);
+            if (statusTo == INetwork::Connected && this->getIContextNetwork())
+            {
+                this->m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId();
+            }
+            else if (!m_networkSessionId.isEmpty())
+            {
+                this->m_networkSessionId.clear();
+                this->m_aircraftMatcher.clearMatchingStatistics();
+            }
+        }
+
         void CContextSimulator::ps_addingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, const CStatusMessage &message)
         {
             if (!isSimulatorSimulating()) { return; }
@@ -517,11 +531,16 @@ namespace BlackCore
         void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
         {
             if (!isSimulatorSimulating()) { return; }
-            // avoid loops
             if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
 
             // update
             m_simulatorPlugin.second->updateOwnSimulatorCockpit(ownAircraft, originator);
+        }
+
+        void CContextSimulator::ps_networkRequestedNewAircraft(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
+        {
+            if (m_networkSessionId.isEmpty()) { return; }
+            m_aircraftMatcher.evaluateStatisticsEntry(m_networkSessionId, callsign, aircraftIcao, airlineIcao, livery);
         }
 
         void CContextSimulator::ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message)
@@ -580,6 +599,15 @@ namespace BlackCore
             if (m_enableMatchingMessages == enabled) { return; }
             m_enableMatchingMessages = enabled;
             emit CContext::changedLogOrDebugSettings();
+        }
+
+        CMatchingStatistics CContextSimulator::getCurrentMatchingStatistics(bool missingOnly) const
+        {
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << missingOnly; }
+            const CMatchingStatistics statistics = this->m_aircraftMatcher.getCurrentStatistics();
+            return missingOnly ?
+                   statistics.findMissingOnly() :
+                   statistics;
         }
 
         bool CContextSimulator::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
@@ -652,6 +680,23 @@ namespace BlackCore
             else
             {
                 this->m_matchingMessages.insert(callsign, messages);
+            }
+        }
+
+        void CContextSimulator::initByLastUsedModelSet()
+        {
+            // no models in matcher, but in cache, we can set them as default
+            const CSimulatorInfo sim(m_modelSetLoader.getSimulator());
+            if (!m_aircraftMatcher.hasModels() && m_modelSetLoader.getAircraftModelsCount() > 0)
+            {
+                const CAircraftModelList models(m_modelSetLoader.getAircraftModels());
+                CLogMessage(this).info("Init aircraft matcher with %1 models from set for '%2'") << models.size() << sim.toQString();
+                m_aircraftMatcher.setModelSet(models, sim);
+            }
+            else
+            {
+                CLogMessage(this).info("Start loading of model set for '%1'") << sim.toQString();
+                m_modelSetLoader.admitCache(); // when ready chache change signal
             }
         }
     } // namespace

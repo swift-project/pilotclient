@@ -216,12 +216,19 @@ namespace BlackCore
             }
 
             //! \copydoc IContextSimulator::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator)
+            virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {
                 Q_UNUSED(commandLine);
                 Q_UNUSED(originator);
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
+            }
+
+            //! \copydoc IContextSimulator::getCurrentMatchingStatistics
+            virtual BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override
+            {
+                Q_UNUSED(missingOnly);
+                return BlackMisc::Simulation::CMatchingStatistics();
             }
         };
     } // namespace
