@@ -18,21 +18,21 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         QString CHeading::convertToQString(bool i18n) const
         {
-            QString s = CAngle::convertToQString(i18n).append(" ");
+            static const QString s("%1 %2");
             if (i18n)
             {
-                return s.append(this->isMagneticHeading() ?
-                                QCoreApplication::translate("Aviation", "magnetic") :
-                                QCoreApplication::translate("Aviation", "true"));
+                return s.arg(CAngle::convertToQString(i18n),
+                             this->isMagneticHeading() ?
+                             QCoreApplication::translate("Aviation", "magnetic") :
+                             QCoreApplication::translate("Aviation", "true"));
             }
             else
             {
-                return s.append(this->isMagneticHeading() ? "magnetic" : "true");
+                return s.arg(CAngle::convertToQString(i18n),
+                             this->isMagneticHeading() ? "magnetic" : "true");
             }
         }
-
     } // namespace
 } // namespace

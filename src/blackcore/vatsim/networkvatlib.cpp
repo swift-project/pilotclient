@@ -739,7 +739,7 @@ namespace BlackCore
         /**********************************           shimlib callbacks           ************************************/
         /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
 
-//! Cast void* to a pointer of CNetworkVatlib
+        // Cast void* to a pointer of CNetworkVatlib
         CNetworkVatlib *cbvar_cast(void *cbvar)
         {
             return static_cast<CNetworkVatlib *>(cbvar);

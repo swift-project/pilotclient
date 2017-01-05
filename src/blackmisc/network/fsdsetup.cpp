@@ -35,19 +35,18 @@ namespace BlackMisc
         QString CFsdSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s("Codec: ");
-            s.append(" ").append(this->m_textCodec);
-            s.append(" details:").append(sendReceiveDetailsToString(this->getSendReceiveDetails()));
+            static const QString s("Codec: '%1' details: '%2'");
+            s.arg(this->getTextCodec(), CFsdSetup::sendReceiveDetailsToString(this->getSendReceiveDetails()));
             return s;
         }
 
         QString CFsdSetup::sendReceiveDetailsToString(SendReceiveDetails details)
         {
-            QString ds("Send parts; %1 interim: %2 Receive parts: %3 interim: %4");
-            return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts))).
-                   arg(boolToYesNo(details.testFlag(SendIterimPositions))).
-                   arg(boolToYesNo(details.testFlag(ReceiveAircraftParts))).
-                   arg(boolToYesNo(details.testFlag(ReceiveInterimPositions)));
+            static const QString ds("Send parts; %1 interim: %2 Receive parts: %3 interim: %4");
+            return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
+                          boolToYesNo(details.testFlag(SendIterimPositions)),
+                          boolToYesNo(details.testFlag(ReceiveAircraftParts)),
+                          boolToYesNo(details.testFlag(ReceiveInterimPositions)));
         }
 
         void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool interimSend, bool interimReceive)

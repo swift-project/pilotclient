@@ -25,7 +25,6 @@ class QModelIndex;
 class QObject;
 
 namespace BlackMisc { namespace Simulation { class CAircraftModel; } }
-
 namespace BlackGui
 {
     namespace Models

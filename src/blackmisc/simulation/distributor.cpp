@@ -58,7 +58,7 @@ namespace BlackMisc
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::propertyByIndex(index); }
             if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAlias1: return CVariant::from(this->m_alias1);
@@ -76,7 +76,7 @@ namespace BlackMisc
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { IDatastoreObjectWithStringKey::setPropertyByIndex(index, variant); return; }
             if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(index, variant); return; }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAlias1:
@@ -101,7 +101,8 @@ namespace BlackMisc
         {
             if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue); }
             if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAlias1: return this->m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
@@ -118,7 +119,7 @@ namespace BlackMisc
         QString CDistributor::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s = QString("Id: %1").arg(m_dbKey);
+            QString s = QString("Id: '%1'").arg(m_dbKey);
             if (this->hasAlias1()) { s.append(" ").append(m_alias1); }
             if (this->hasAlias2()) { s.append(" ").append(m_alias2); }
             return s;

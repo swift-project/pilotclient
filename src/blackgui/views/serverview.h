@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_SERVERVIEW_H
-#define BLACKGUI_SERVERVIEW_H
+#ifndef BLACKGUI_VIEWS_SERVERVIEW_H
+#define BLACKGUI_VIEWS_SERVERVIEW_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/serverlistmodel.h"
@@ -20,7 +20,6 @@
 class QWidget;
 
 namespace BlackMisc { namespace Network { class CServer; } }
-
 namespace BlackGui
 {
     namespace Views
@@ -28,12 +27,10 @@ namespace BlackGui
         //! Network servers
         class BLACKGUI_EXPORT CServerView : public CViewBase<Models::CServerListModel, BlackMisc::Network::CServerList, BlackMisc::Network::CServer>
         {
-
         public:
-
             //! Constructor
             explicit CServerView(QWidget *parent = nullptr);
         };
     }
-}
+} // ns
 #endif // guard

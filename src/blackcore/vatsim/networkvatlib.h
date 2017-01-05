@@ -86,7 +86,6 @@ namespace BlackCore
             virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) override;
             virtual void sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void sendCustomFsinnReponse(const BlackMisc::Aviation::CCallsign &callsign) override;
-
             virtual void broadcastAircraftConfig(const QJsonObject &config) override;
             virtual void sendAircraftConfigQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}
@@ -118,7 +117,7 @@ namespace BlackCore
             virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcaoCode &airportIcao) override;
             //! @}
 
-            //! Cmd.line options this library can handle
+            //! Cmd. line options this library can handle
             static const QList<QCommandLineOption> &getCmdLineOptions();
 
             //! Client id and key if any from command line arguments

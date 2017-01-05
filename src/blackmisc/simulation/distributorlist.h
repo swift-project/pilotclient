@@ -12,12 +12,12 @@
 #ifndef BLACKMISC_SIMULATION_DISTRIBUTORLIST_H
 #define BLACKMISC_SIMULATION_DISTRIBUTORLIST_H
 
+#include "blackmisc/db/datastoreobjectlist.h"
+#include "blackmisc/simulation/distributor.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/collection.h"
-#include "blackmisc/db/datastoreobjectlist.h"
 #include "blackmisc/orderablelist.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/simulation/distributor.h"
 #include "blackmisc/variant.h"
 
 #include <QMetaType>

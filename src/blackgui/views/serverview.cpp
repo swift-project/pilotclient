@@ -10,7 +10,6 @@
 #include "blackgui/models/serverlistmodel.h"
 #include "blackgui/views/serverview.h"
 
-
 using namespace BlackMisc;
 using namespace BlackGui::Models;
 

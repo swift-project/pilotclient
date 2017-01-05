@@ -17,7 +17,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAircraftEngine::CAircraftEngine(int number, bool on) : m_number(number), m_on(on)
         {
             Q_ASSERT_X(number > 0, "CAircraftEngine", "Engine number have to be > 1");
@@ -32,11 +31,8 @@ namespace BlackMisc
         QString CAircraftEngine::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            QString s = QString::number(m_number);
-            s += " ";
-            s += BlackMisc::boolToOnOff(m_on);
-            return s;
+            static const QString s("%1 on: %2");
+            return s.arg(m_number).arg(BlackMisc::boolToOnOff(m_on));
         }
-
     } // namespace
 } // namespace
