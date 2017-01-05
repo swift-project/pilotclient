@@ -1197,23 +1197,24 @@ namespace BlackCore
         bool s = false;
         if (this->m_icaoDataReader)
         {
-            s = inBackground ?
-                this->m_icaoDataReader->readFromJsonFilesInBackground(dir) :
-                this->m_icaoDataReader->readFromJsonFiles(dir);
+            if (inBackground) { return this->m_icaoDataReader->readFromJsonFilesInBackground(dir); }
+            const CStatusMessageList msgs = this->m_icaoDataReader->readFromJsonFiles(dir);
+            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
+            s = msgs.isSuccess();
         }
         if (s && this->m_modelDataReader)
         {
-            if(inBackground) { return this->m_modelDataReader->readFromJsonFilesInBackground(dir); }
+            if (inBackground) { return this->m_modelDataReader->readFromJsonFilesInBackground(dir); }
             const CStatusMessageList msgs = this->m_modelDataReader->readFromJsonFiles(dir);
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
-            return msgs.isSuccess();
+            s = msgs.isSuccess();
         }
         if (s && this->m_airportDataReader)
         {
             if (inBackground) { return this->m_airportDataReader->readFromJsonFilesInBackground(dir); }
             const CStatusMessageList msgs = this->m_airportDataReader->readFromJsonFiles(dir);
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
-            return msgs.isSuccess();
+            s = msgs.isSuccess();
         }
         return s;
     }
