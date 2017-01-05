@@ -62,9 +62,7 @@ using namespace BlackMisc::Audio;
 using namespace BlackMisc::Input;
 using namespace BlackMisc::Simulation;
 
-/*
- * Constructor
- */
+// Constructor
 SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
     CIdentifiable(this),

@@ -32,10 +32,14 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("swift launcher", CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
-    a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup."), "installer"});
     if (!a.parse()) { return EXIT_FAILURE; }
-    if (!a.start()) { return EXIT_FAILURE; }
+    a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
+    if (!a.start())
+    {
+        a.gracefulShutdown();
+        return EXIT_FAILURE;
+    }
     //! [SwiftApplicationDemo]
 
     // Dialog to decide external or internal core
