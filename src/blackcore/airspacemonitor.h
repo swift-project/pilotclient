@@ -68,7 +68,7 @@ namespace BlackCore
     //! Central instance of data for \sa IRemoteAircraftProvider.
     class BLACKCORE_EXPORT CAirspaceMonitor :
         public QObject,
-        public BlackMisc::Simulation::IRemoteAircraftProvider,  // those data will be provided from the class CAirspaceMonitor
+        public BlackMisc::Simulation::IRemoteAircraftProvider, // those data will be provided from the class CAirspaceMonitor
         public BlackMisc::Simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
         public BlackMisc::CIdentifiable
     {
@@ -182,9 +182,6 @@ namespace BlackCore
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
 
-        static const qint64 AircraftSituationsRemovedOffsetMs = 30 * 1000; //!< situations older than now - offset will be removed
-        static const qint64 AircraftPartsRemoveOffsetMs = 30 * 1000;       //!< parts older than now - offset will be removed
-
     signals:
         //! Online ATC stations were changed
         void changedAtcStationsOnline();
@@ -197,6 +194,9 @@ namespace BlackCore
 
         //! Aircraft were changed
         void changedAircraftInRange();
+
+        //! Raw data as received from network
+        void requestedNewAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &livery);
 
         //! A new aircraft appeared
         void addedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &remoteAircraft);
@@ -254,12 +254,12 @@ namespace BlackCore
         bool m_bookingsRequested = false;         //!< bookings have been requested, it can happen we receive an BlackCore::Vatsim::CVatsimBookingReader::atcBookingsReadUnchanged signal
 
         // locks
-        mutable QReadWriteLock m_lockSituations; //!< lock for situations: m_situationsByCallsign
-        mutable QReadWriteLock m_lockParts;      //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
-        mutable QReadWriteLock m_lockAircraft;   //!< lock aircraft: m_aircraftInRange
-        mutable QReadWriteLock m_lockClient;     //!< lock clients: m_otherClients
-        mutable QReadWriteLock m_lockMessages;   //!< lock for messages
-        mutable QReadWriteLock m_lockPartsHistory;   //!< lock for aircraft parts
+        mutable QReadWriteLock m_lockSituations;   //!< lock for situations: m_situationsByCallsign
+        mutable QReadWriteLock m_lockParts;        //!< lock for parts: m_partsByCallsign, m_aircraftSupportingParts
+        mutable QReadWriteLock m_lockAircraft;     //!< lock aircraft: m_aircraftInRange
+        mutable QReadWriteLock m_lockClient;       //!< lock clients: m_otherClients
+        mutable QReadWriteLock m_lockMessages;     //!< lock for messages
+        mutable QReadWriteLock m_lockPartsHistory; //!< lock for aircraft parts
 
         //! Remove ATC online stations
         void removeAllOnlineAtcStations();

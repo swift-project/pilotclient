@@ -278,7 +278,7 @@ namespace BlackCore
 
             // with this little trick we try to make an asynchronous signal / slot
             // based approach a synchronous return value
-            QTime waitForFlightPlan = QTime::currentTime().addMSecs(1000);
+            const QTime waitForFlightPlan = QTime::currentTime().addMSecs(1000);
             while (QTime::currentTime() < waitForFlightPlan)
             {
                 // process some other events and hope network answer is received already
@@ -327,10 +327,10 @@ namespace BlackCore
         for (const CSimulatedAircraft &aircraft : this->getAircraftInRange())
         {
             if (searchList.isEmpty()) break;
-            CCallsign callsign = aircraft.getCallsign();
+            const CCallsign callsign = aircraft.getCallsign();
             if (searchList.contains(callsign))
             {
-                CUser user = aircraft.getPilot();
+                const CUser user = aircraft.getPilot();
                 users.push_back(user);
                 searchList.remove(callsign);
             }
@@ -339,10 +339,10 @@ namespace BlackCore
         for (const CAtcStation &station : this->m_atcStationsOnline)
         {
             if (searchList.isEmpty()) break;
-            CCallsign callsign = station.getCallsign();
+            const CCallsign callsign = station.getCallsign();
             if (searchList.contains(callsign))
             {
-                CUser user = station.getController();
+                const CUser user = station.getController();
                 users.push_back(user);
                 searchList.remove(callsign);
             }
@@ -350,7 +350,7 @@ namespace BlackCore
 
         // we might have unresolved callsigns
         // those are the ones not in range
-        for (const CCallsign &callsign : searchList)
+        for (const CCallsign &callsign : as_const(searchList))
         {
             const CUserList usersByCallsign = sApp->getWebDataServices()->getUsersForCallsign(callsign);
             if (usersByCallsign.isEmpty())
@@ -858,6 +858,8 @@ namespace BlackCore
         this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
         this->addReverseLookupMessages(callsign, reverseLookupMessages);
         this->ps_sendReadyForModelMatching(callsign);
+
+        emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
     }
 
     void CAirspaceMonitor::addReverseLookupMessages(const CCallsign &callsign, const CStatusMessageList &messages)
@@ -1006,7 +1008,7 @@ namespace BlackCore
 
     CSimulatedAircraft CAirspaceMonitor::initNewAircraft(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, CAircraftModel::ModelType type, CStatusMessageList *log)
     {
-        CAircraftModel model = CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
+        const CAircraftModel model = CAircraftMatcher::reverselLookupModel(callsign, aircraftIcao, airlineIcao, livery, modelString, type, log);
         const CSimulatedAircraft aircraft(model);
         return aircraft;
     }
@@ -1097,6 +1099,8 @@ namespace BlackCore
         Q_UNUSED(oldStatus);
         switch (newStatus)
         {
+        case INetwork::Connected:
+            break;
         case INetwork::Disconnected:
         case INetwork::DisconnectedError:
         case INetwork::DisconnectedLost:
