@@ -250,12 +250,21 @@ namespace BlackCore
             if (m_status != status)
             {
                 qSwap(m_status, status);
-                emit connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
+                if (m_status == vatStatusConnected)
+                {
+                    m_server.setConnectedSinceNow();
+                }
+                else
+                {
+                    m_server.markAsDisconnected();
+                }
 
                 if (isDisconnected())
                 {
                     stopPositionTimers();
                 }
+
+                emit connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
             }
         }
 
