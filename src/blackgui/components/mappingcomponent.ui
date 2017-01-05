@@ -27,253 +27,264 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tw_ListViews">
-     <property name="currentIndex">
-      <number>0</number>
+    <widget class="QSplitter" name="sp_MappingComponentSplitter">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QWidget" name="tb_CurrentMappings">
-      <attribute name="title">
-       <string>Rendered aircraft</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_CurrentMappings">
+     <widget class="QTabWidget" name="tw_ListViews">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tb_CurrentMappings">
+       <attribute name="title">
+        <string>Rendered aircraft</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_CurrentMappings">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Views::CSimulatedAircraftView" name="tvp_RenderedAircraft">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tb_AircraftModels">
+       <attribute name="title">
+        <string>Aircraft models</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_AircraftModels">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Views::CAircraftModelView" name="tvp_AircraftModels">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tb_Statistics">
+       <attribute name="title">
+        <string>Statistics</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_Statistics">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CMatchingStatisticsComponent" name="comp_Statistics"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tb_MatchingLog">
+       <attribute name="title">
+        <string>Matching log</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_MatchingLog">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CModelMatcherLogComponent" name="comp_MatchingLog"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tb_AircraftPartsHistory">
+       <attribute name="title">
+        <string>Aircraft parts log</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="vl_AircraftPartsHistory">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="BlackGui::Components::CAircraftPartsHistory" name="comp_AircraftPartsHistory"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="fr_AircraftModifications">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>80</height>
+       </size>
+      </property>
+      <layout class="QGridLayout" name="gl_AircraftModifications">
        <property name="leftMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="rightMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>3</number>
        </property>
-       <item>
-        <widget class="BlackGui::Views::CSimulatedAircraftView" name="tvp_RenderedAircraft">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lbl_Aircraft">
+         <property name="text">
+          <string>Aircraft</string>
          </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="cb_AircraftEnabled">
+         <property name="toolTip">
+          <string>enabled / disable</string>
          </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
+         <property name="text">
+          <string/>
          </property>
-         <attribute name="verticalHeaderVisible">
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
+         <property name="toolTip">
+          <string>show / hide icon</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="checked">
           <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tb_AircraftModels">
-      <attribute name="title">
-       <string>Aircraft models</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_AircraftModels">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="BlackGui::Views::CAircraftModelView" name="tvp_AircraftModels">
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tb_MatchingLog">
-      <attribute name="title">
-       <string>Matching log</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_MatchingLog">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="BlackGui::Components::CModelMatcherLogComponent" name="comp_MatchingLog">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
          </property>
         </widget>
        </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tb_AircraftPartsHistory">
-      <attribute name="title">
-       <string>Aircraft parts log</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="vl_AircraftPartsHistory">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="BlackGui::Components::CAircraftPartsHistory" name="comp_AircraftPartsHistory">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+       <item row="0" column="2" colspan="2">
+        <widget class="QLabel" name="lbl_AircraftIconDisplayed">
+         <property name="text">
+          <string>icon will go here</string>
          </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="lbl_AircraftIcon">
+         <property name="text">
+          <string>Icon</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QPushButton" name="pb_LoadModels">
+         <property name="toolTip">
+          <string>load models</string>
+         </property>
+         <property name="text">
+          <string>load</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QPushButton" name="pb_ResetAircraft">
+         <property name="text">
+          <string>reset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2" colspan="3">
+        <widget class="QLineEdit" name="le_Callsign">
+         <property name="maxLength">
+          <number>15</number>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>callsign</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <widget class="QPushButton" name="pb_SaveAircraft">
+         <property name="text">
+          <string>save</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="6">
+        <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="completer_ModelStrings">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>20</height>
+          </size>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="fr_AircraftModifications">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>75</height>
-      </size>
-     </property>
-     <layout class="QGridLayout" name="gl_AircraftModifications">
-      <property name="leftMargin">
-       <number>3</number>
-      </property>
-      <property name="topMargin">
-       <number>3</number>
-      </property>
-      <property name="rightMargin">
-       <number>3</number>
-      </property>
-      <property name="bottomMargin">
-       <number>3</number>
-      </property>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="cb_AircraftIconDisplayed">
-        <property name="toolTip">
-         <string>show / hide icon</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_Aircraft">
-        <property name="text">
-         <string>Aircraft</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QPushButton" name="pb_SaveAircraft">
-        <property name="text">
-         <string>save</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="pb_ResetAircraft">
-        <property name="text">
-         <string>reset</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="2">
-       <widget class="QLabel" name="lbl_AircraftIconDisplayed">
-        <property name="text">
-         <string>icon will go here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="cb_AircraftEnabled">
-        <property name="toolTip">
-         <string>enabled / disable</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_AircraftIcon">
-        <property name="text">
-         <string>Icon</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="6">
-       <widget class="BlackGui::Components::CAircraftModelStringCompleter" name="completer_ModelStrings">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QPushButton" name="pb_LoadModels">
-        <property name="toolTip">
-         <string>load models</string>
-        </property>
-        <property name="text">
-         <string>load</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" colspan="3">
-       <widget class="QLineEdit" name="le_Callsign">
-        <property name="maxLength">
-         <number>15</number>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>callsign</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>
@@ -305,6 +316,12 @@
    <class>BlackGui::Components::CAircraftModelStringCompleter</class>
    <extends>QFrame</extends>
    <header>blackgui/components/aircraftmodelstringcompleter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CMatchingStatisticsComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/matchingstatisticscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
