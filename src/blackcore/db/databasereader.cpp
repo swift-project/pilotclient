@@ -408,11 +408,12 @@ namespace BlackCore
 
         CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
         {
-            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing app object");
+            if (this->isShuttingDown()) { return CUrl(); }
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing app object, URLs cannot be obtained");
             switch (mode)
             {
             case CDbFlags::DbReading:
-                return getDbServiceBaseUrl().withAppendedPath("/service");
+                return this->getDbServiceBaseUrl().withAppendedPath("/service");
             case CDbFlags::SharedHeadersOnly:
             case CDbFlags::Shared:
                 return CDatabaseReader::getWorkingDbDataFileLocationUrl();
