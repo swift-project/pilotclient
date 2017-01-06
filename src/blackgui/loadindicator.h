@@ -107,7 +107,7 @@ namespace BlackGui
         //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
 
-        //! Is parent widget visible
+        //! Is parent widget visible?
         bool isParentVisible() const;
 
     private:

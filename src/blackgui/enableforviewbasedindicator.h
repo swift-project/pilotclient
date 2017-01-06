@@ -15,7 +15,6 @@
 #include "blackgui/blackguiexport.h"
 
 namespace BlackGui { namespace Views { class CViewBaseNonTemplate; }}
-
 namespace BlackGui
 {
     //! Hand over indication task to an embedded view
@@ -25,7 +24,7 @@ namespace BlackGui
         //! Enable loading indicator
         void enableLoadIndicator(bool enable);
 
-        //! Showing load indicator
+        //! Showing load indicator?
         bool isShowingLoadIndicator() const;
 
         //! Show loading indicator
