@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_DBUS_H
 #define BLACKMISC_DBUS_H
 
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"
 #include <QDBusArgument>
@@ -158,5 +159,10 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QPixmap &pixmap);
  * Non member non-friend streaming for QPixmap
  */
 QDBusArgument &operator<<(QDBusArgument &argument, const QPixmap &pixmap);
+
+//! Windows: prevents unloading of QtDBus shared library until the process is terminated.
+//! QtDBus must have been loaded already by the calling process.
+//! Does nothing on non-Windows platforms.
+BLACKMISC_EXPORT void preventQtDBusDllUnload();
 
 #endif // guard
