@@ -47,10 +47,20 @@ namespace BlackGui
             //! Visible shared refresh buttons
             void setVisibleSharedRefreshButtons(bool visible);
 
+            //! Showing load indicator?
+            bool isShowingLoadIndicator() const;
+
         signals:
             //! Trigger GUI update
             //! \private
             void ps_triggerDigestGuiUpdate();
+
+        protected:
+            //! \copydoc QWidget::resizeEvent
+            virtual void resizeEvent(QResizeEvent *event) override;
+
+            //! Center load indicator
+            void centerLoadIndicator();
 
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;

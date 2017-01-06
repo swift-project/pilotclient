@@ -31,7 +31,7 @@ namespace BlackGui
             Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "no data services");
 
             ui->setupUi(this);
-            admitCaches(); // in background
+            this->admitCaches(); // in background
 
             ui->lbl_DatabaseUrl->setTextFormat(Qt::RichText);
             ui->lbl_DatabaseUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -90,6 +90,28 @@ namespace BlackGui
             ui->tb_SharedReloadLiveries->setVisible(visible);
             ui->tb_SharedReloadModels->setVisible(visible);
             ui->tb_SharedReloadDistributors->setVisible(visible);
+        }
+
+        void CDbLoadOverviewComponent::resizeEvent(QResizeEvent *event)
+        {
+            if (this->isShowingLoadIndicator())
+            {
+                // re-center
+                this->centerLoadIndicator();
+            }
+            QFrame::resizeEvent(event);
+        }
+
+        bool CDbLoadOverviewComponent::isShowingLoadIndicator() const
+        {
+            return m_loadIndicator && this->isVisible() && m_loadIndicator->isAnimated();
+        }
+
+        void CDbLoadOverviewComponent::centerLoadIndicator()
+        {
+            if (!m_loadIndicator) { return; }
+            const QPoint middle = this->visibleRegion().boundingRect().center();
+            this->m_loadIndicator->centerLoadIndicator(middle);
         }
 
         void CDbLoadOverviewComponent::ps_setValues()
@@ -172,8 +194,8 @@ namespace BlackGui
             {
                 this->m_loadIndicator = new CLoadIndicator(64, 64, this);
             }
-            const QPoint middle = this->rect().center();
-            this->m_loadIndicator->centerLoadIndicator(middle);
+
+            this->centerLoadIndicator();
             this->m_loadIndicator->startAnimation(true);
         }
 
