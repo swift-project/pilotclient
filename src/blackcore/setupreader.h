@@ -143,12 +143,12 @@ namespace BlackCore
         BlackMisc::CData<BlackCore::Data::TUpdateInfo>  m_updateInfo {this};                             //!< data cache update info
 
         //! Read by local individual file and update cache from that
-        bool readLocalBootstrapFile(QString &fileName);
+        BlackMisc::CStatusMessageList readLocalBootstrapFile(QString &fileName);
 
         //! Trigger reading
         BlackMisc::CStatusMessageList triggerReadSetup();
 
-        //! Emit the availability signal and state
+        //! Emit the availability signal and state and trigger follow up actions
         //! \threadsafe
         BlackMisc::CStatusMessageList manageSetupAvailability(bool webRead, bool localRead = false);
 

@@ -9,6 +9,7 @@
 
 #include "blackcore/application.h"
 #include "blackcore/setupreader.h"
+#include "blackmisc/verify.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
@@ -63,11 +64,10 @@ namespace BlackCore
     CStatusMessageList CSetupReader::asyncLoad()
     {
         CStatusMessageList msgs;
-        if (this->readLocalBootstrapFile(this->m_localSetupFileValue))
+        if (!this->m_localSetupFileValue.isEmpty())
         {
-            // initialized by local file for testing
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, "Using local bootstrap file: " + this->m_localSetupFileValue));
-            msgs.push_back(this->manageSetupAvailability(false, true));
+            msgs = this->readLocalBootstrapFile(this->m_localSetupFileValue);
+            msgs.push_back(this->manageSetupAvailability(false, msgs.isSuccess()));
             return msgs;
         }
 
@@ -258,18 +258,18 @@ namespace BlackCore
         return url;
     }
 
-    bool CSetupReader::readLocalBootstrapFile(QString &fileName)
+    CStatusMessageList CSetupReader::readLocalBootstrapFile(QString &fileName)
     {
-        if (fileName.isEmpty()) { return false; }
+        if (fileName.isEmpty()) { return CStatusMessage(this).error("No file name for local bootstrap file"); }
         QString fn;
         QFile file(fileName);
         if (!file.exists())
         {
             // relative name?
             QString dir(sApp->getCmdSwiftPrivateSharedDir());
-            if (dir.isEmpty()) { return false; }
+            if (dir.isEmpty()) { return CStatusMessage(this).error("Empty shared directory '%1' for bootstrap file") << dir; }
 
-            // no version for local files, as those come withe the current code
+            // no version for local files, as those come with the current code
             fn = CFileUtils::appendFilePaths(dir, "bootstrap/bootstrap.json");
         }
         else
@@ -278,12 +278,20 @@ namespace BlackCore
         }
 
         QString content(CFileUtils::readFileToString(fn));
-        if (content.isEmpty()) { return false; }
-        CGlobalSetup s;
-        s.convertFromJson(content); //! \todo catch CJsonException or use convertFromJsonNoThrow
-        s.setDevelopment(true);
-        m_setup.set(s);
-        return true;
+        if (content.isEmpty()) { return CStatusMessage(this).error("File '%1' not existing or empty") << fn; }
+
+        try
+        {
+            CGlobalSetup s;
+            s.convertFromJson(content);
+            s.setDevelopment(true);
+            m_setup.set(s);
+            return CStatusMessage(this).info("Setup cache updated from local file '%1'") << fn;
+        }
+        catch (const CJsonException &ex)
+        {
+            return ex.toStatusMessage(this, QString("Parsing local setup file '%1'").arg(fn));
+        }
     }
 
     void CSetupReader::ps_parseSetupFile(QNetworkReply *nwReplyPtr)
@@ -304,37 +312,52 @@ namespace BlackCore
             nwReplyPtr->close();
             if (setupJson.isEmpty())
             {
-                CLogMessage(this).info("No bootstrap setup file at %1") << urlString;
+                CLogMessage(this).info("No bootstrap setup file at '%1'") << urlString;
                 // try next URL
             }
             else
             {
-                const CGlobalSetup currentSetup = m_setup.get();
-                CGlobalSetup loadedSetup;
-                loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
-                loadedSetup.markAsLoaded(true);
-                if (lastModified > 0 && lastModified > loadedSetup.getMSecsSinceEpoch()) { loadedSetup.setMSecsSinceEpoch(lastModified); }
-                bool sameVersionLoaded = (loadedSetup == currentSetup);
-                if (sameVersionLoaded)
+                try
                 {
-                    this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls(); // defaults
-                    CLogMessage(this).info("Same setup version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
-                    CLogMessage::preformatted(this->manageSetupAvailability(true));
-                    return; // success
-                }
+                    const CGlobalSetup currentSetup = m_setup.get();
+                    CGlobalSetup loadedSetup;
+                    loadedSetup.convertFromJson(Json::jsonObjectFromString(setupJson));
+                    loadedSetup.markAsLoaded(true);
+                    if (lastModified > 0 && lastModified > loadedSetup.getMSecsSinceEpoch()) { loadedSetup.setMSecsSinceEpoch(lastModified); }
+                    bool sameVersionLoaded = (loadedSetup == currentSetup);
+                    if (sameVersionLoaded)
+                    {
+                        this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls(); // defaults
+                        CLogMessage(this).info("Same setup version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
+                        CLogMessage::preformatted(this->manageSetupAvailability(true));
+                        return; // success
+                    }
 
-                // in the past I used to do a timestamp comparison here and skipped further setting
-                // with changed files from a different URL this was wrongly assuming outdated loaded files and was removed
-                const CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
-                CLogMessage::preformatted(m);
-                if (m.isSeverityInfoOrLess())
-                {
-                    // no issue with cache
-                    this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
-                    CLogMessage(this).info("Setup: Updated data cache in %1") << this->m_setup.getFilename();
+                    // in the past I used to do a timestamp comparison here and skipped further setting
+                    // with changed files from a different URL this was wrongly assuming outdated loaded files and was removed
+                    const CStatusMessage m = m_setup.set(loadedSetup, loadedSetup.getMSecsSinceEpoch());
+                    CLogMessage::preformatted(m);
+                    if (m.isSeverityInfoOrLess())
+                    {
+                        // no issue with cache
+                        this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
+                        CLogMessage(this).info("Setup: Updated data cache in '%1'") << this->m_setup.getFilename();
+                    }
+                    CLogMessage::preformatted(this->manageSetupAvailability(true));
+                    return;
                 }
-                CLogMessage::preformatted(this->manageSetupAvailability(true));
-                return;
+                catch (const CJsonException &ex)
+                {
+                    // we downloaded an unparsable JSON file.
+                    // as we control those files something is wrong
+                    const QString errorMsg = QString("Setup file loaded from '%1' cannot be parsed").arg(urlString);
+                    const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
+                    CLogMessage::preformatted(msg);
+
+                    // in dev. I get notified, in productive code I try next URL
+                    // by falling thru
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, errorMsg.toLocal8Bit().constData());
+                }
             } // json empty
         } // no error
         else
@@ -382,32 +405,47 @@ namespace BlackCore
             }
             else
             {
-                CUpdateInfo currentUpdateInfo(m_updateInfo.get()); // from cache
-                CUpdateInfo loadedUpdateInfo;
-                loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson)); //! \todo catch CJsonException or use convertFromJsonNoThrow
-                if (lastModified > 0 && lastModified > loadedUpdateInfo.getMSecsSinceEpoch()) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
-                const bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
-                if (sameVersionLoaded)
+                try
                 {
-                    CLogMessage(this).info("Same update info version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
-                    this->manageUpdateAvailability(true);
-                    return; // success
-                }
+                    CUpdateInfo currentUpdateInfo(m_updateInfo.get()); // from cache
+                    CUpdateInfo loadedUpdateInfo;
+                    loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson));
+                    if (lastModified > 0 && lastModified > loadedUpdateInfo.getMSecsSinceEpoch()) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
+                    const bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
+                    if (sameVersionLoaded)
+                    {
+                        CLogMessage(this).info("Same update info version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
+                        this->manageUpdateAvailability(true);
+                        return; // success
+                    }
 
-                CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
-                if (!m.isEmpty())
-                {
-                    m.addCategories(getLogCategories());
-                    CLogMessage::preformatted(m);
-                    this->manageUpdateAvailability(false);
-                    return; // issue with cache
+                    CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
+                    if (!m.isEmpty())
+                    {
+                        m.addCategories(getLogCategories());
+                        CLogMessage::preformatted(m);
+                        this->manageUpdateAvailability(false);
+                        return; // issue with cache
+                    }
+                    else
+                    {
+                        CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
+                        this->manageUpdateAvailability(true);
+                        return; // success
+                    } // cache
                 }
-                else
+                catch (const CJsonException &ex)
                 {
-                    CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
-                    this->manageUpdateAvailability(true);
-                    return; // success
-                } // cache
+                    // we downloaded an unparsable JSON file.
+                    // as we control those files something is wrong
+                    const QString errorMsg = QString("Update file loaded from '%1' cannot be parsed").arg(urlString);
+                    const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
+                    CLogMessage::preformatted(msg);
+
+                    // in dev. I get notified, in productive code I try next URL
+                    // by falling thru
+                    BLACK_VERIFY_X(false, Q_FUNC_INFO, errorMsg.toLocal8Bit().constData());
+                }
             } // json empty
         } // no error
         else
@@ -427,7 +465,7 @@ namespace BlackCore
             const CStatusMessageList msgs = this->manageSetupAvailability(false);
             CLogMessage::preformatted(msgs);
         }
-    } // function
+    }
 
     const CLogCategoryList &CSetupReader::getLogCategories()
     {
