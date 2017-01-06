@@ -1318,25 +1318,33 @@ namespace BlackGui
                                          tr("swift (*.json *.txt)"));
                 if (fileName.isEmpty())
                 {
-                    m = CStatusMessage(this, CStatusMessage::SeverityDebug, "Load canceled", true);
+                    m = CStatusMessage(this).error("Load canceled, no file name");
                     break;
                 }
 
-                QString json(CFileUtils::readFileToString(fileName));
+                const QString json(CFileUtils::readFileToString(fileName));
                 if (json.isEmpty())
                 {
-                    m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data", true);
+                    m = CStatusMessage(this).warning("Reading '%1' yields no data") << fileName;
                     break;
                 }
-                ContainerType container;
-                container.convertFromJson(json); //! \todo catch CJsonException or use convertFromJsonNoThrow
-                m = this->modifyLoadedJsonData(container);
-                if (m.isFailure()) { break; } // modification error
-                m = this->validateLoadedJsonData(container);
-                if (m.isFailure()) { break; } // validaton error
-                this->updateContainerMaybeAsync(container);
-                m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed", true);
-                this->jsonLoadedAndModelUpdated(container);
+                try
+                {
+                    ContainerType container;
+                    container.convertFromJson(json);
+                    m = this->modifyLoadedJsonData(container);
+                    if (m.isFailure()) { break; } // modification error
+                    m = this->validateLoadedJsonData(container);
+                    if (m.isFailure()) { break; } // validaton error
+                    this->updateContainerMaybeAsync(container);
+                    m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed", true);
+                    this->jsonLoadedAndModelUpdated(container);
+                }
+                catch (const CJsonException &ex)
+                {
+                    m = ex.toStatusMessage(this, QString("Reading JSON from '%1'").arg(fileName));
+                    break;
+                }
             }
             while (false);
 
