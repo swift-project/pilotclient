@@ -182,7 +182,7 @@ namespace BlackGui
 
         bool CViewBaseNonTemplate::isShowingLoadIndicator() const
         {
-            return m_enabledLoadIndicator && m_showingLoadIndicator;
+            return m_loadIndicator && m_enabledLoadIndicator && m_showingLoadIndicator;
         }
 
         void CViewBaseNonTemplate::setSelectionModel(QItemSelectionModel *model)
@@ -378,14 +378,14 @@ namespace BlackGui
             menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(), nullptr , { this, &CViewBaseNonTemplate::clearHighlighting });
         }
 
-        void CViewBaseNonTemplate::showEvent(QShowEvent *event)
+        void CViewBaseNonTemplate::resizeEvent(QResizeEvent *event)
         {
             if (this->isShowingLoadIndicator())
             {
                 // re-center
                 this->centerLoadIndicator();
             }
-            QTableView::showEvent(event);
+            QTableView::resizeEvent(event);
         }
 
         int CViewBaseNonTemplate::getHorizontalHeaderFontHeight() const
