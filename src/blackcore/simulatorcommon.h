@@ -27,6 +27,7 @@
 #include "blackmisc/simulation/simulatorinfo.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorinternals.h"
+#include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/weather/weathergridprovider.h"
@@ -79,6 +80,7 @@ namespace BlackCore
         virtual const BlackMisc::Simulation::CSimulatorPluginInfo &getSimulatorPluginInfo() const override;
         virtual const BlackMisc::Simulation::CSimulatorInternals &getSimulatorInternals() const override;
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+        virtual void setWeatherActivated(bool activated) override;
         virtual void unload() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
@@ -135,6 +137,9 @@ namespace BlackCore
         //! Clear all aircraft related data
         virtual void clearAllAircraft();
 
+        //! Inject weather grid to simulator
+        virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) { Q_UNUSED(weatherGrid); }
+
         //! Airports from web services
         BlackMisc::Aviation::CAirportList getWebServiceAirports() const;
 
@@ -156,6 +161,9 @@ namespace BlackCore
         //! Set own model
         void reverseLookupAndUpdateOwnAircraftModel(const QString &modelString);
 
+        //! Reload weather settings
+        void reloadWeatherSettings();
+
         //! Parse driver specific details for ISimulator::parseCommandLine
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser);
 
@@ -171,6 +179,10 @@ namespace BlackCore
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< last ground elevation fetched
+
+        bool m_isWeatherActivated = false;                               //!< Is simulator weather activated?
+        BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition;       //!< Own aircraft position at which weather was fetched and injected last
+        BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorCommon::reloadWeatherSettings }; //!< Selected weather scenario
 
         //! Lookup against DB data
         static BlackMisc::Simulation::CAircraftModel reverseLookupModel(const BlackMisc::Simulation::CAircraftModel &model);

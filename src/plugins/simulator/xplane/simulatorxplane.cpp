@@ -165,13 +165,16 @@ namespace BlackSimPlugin
                     identifier()
                 );
 
-                const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude(), {0} };
-                if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                        calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                if (m_isWeatherActivated)
                 {
-                    m_lastWeatherPosition = currentPosition;
-                    const auto weatherGrid = CWeatherGrid { { "", currentPosition } };
-                    requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
+                    const auto currentPosition = CCoordinateGeodetic { situation.latitude(), situation.longitude(), {0} };
+                    if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
+                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                    {
+                        m_lastWeatherPosition = currentPosition;
+                        const auto weatherGrid = CWeatherGrid { { "", currentPosition } };
+                        requestWeatherGrid(weatherGrid, { this, &CSimulatorXPlane::injectWeatherGrid });
+                    }
                 }
             }
         }
@@ -253,7 +256,6 @@ namespace BlackSimPlugin
                 m_service->updateAirportsInRange();
                 m_traffic->updateInstalledModels();
                 m_watcher->setConnection(m_conn);
-                reloadWeatherSettings();
                 loadCslPackages();
                 emitSimulatorCombinedStatus();
                 return true;
@@ -662,19 +664,6 @@ namespace BlackSimPlugin
 
             m_weather->setPrecipitationRatio(cloudLayers.frontOrDefault().getPrecipitationRate());
             m_weather->setThunderstormRatio(0.0);
-        }
-
-        void CSimulatorXPlane::reloadWeatherSettings()
-        {
-            if (m_weather)
-            {
-                auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-                if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-                {
-                    m_lastWeatherPosition = {};
-                    injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-                }
-            }
         }
 
         BlackCore::ISimulator *CSimulatorXPlaneFactory::create(const CSimulatorPluginInfo &info,

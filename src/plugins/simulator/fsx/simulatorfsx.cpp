@@ -97,7 +97,6 @@ namespace BlackSimPlugin
             initDataDefinitionsWhenConnected();
             m_simConnectTimerId = startTimer(10);
             m_realityBubbleTimer.start();
-            reloadWeatherSettings();
             return true;
         }
 
@@ -470,13 +469,16 @@ namespace BlackSimPlugin
                 --m_skipCockpitUpdateCycles;
             }
 
-            const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
-            if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                    calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+            if (m_isWeatherActivated)
             {
-                m_lastWeatherPosition = currentPosition;
-                const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-                requestWeatherGrid(weatherGrid, { this, &CSimulatorFsx::injectWeatherGrid });
+                const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
+                if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
+                        calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                {
+                    m_lastWeatherPosition = currentPosition;
+                    const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                    requestWeatherGrid(weatherGrid, { this, &CSimulatorFsx::injectWeatherGrid });
+                }
             }
         }
 
@@ -1058,18 +1060,6 @@ namespace BlackSimPlugin
             if (!m_useFsuipc || !m_fsuipc) { return; }
             if (!m_fsuipc->isConnected()) { return; }
             m_fsuipc->write(weatherGrid);
-        }
-
-        void CSimulatorFsx::reloadWeatherSettings()
-        {
-            if (!m_useFsuipc || !m_fsuipc) { return; }
-            if (!m_fsuipc->isConnected()) { return; }
-            const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-            {
-                m_lastWeatherPosition = {};
-                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-            }
         }
 
         bool CSimulatorFsx::requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period)

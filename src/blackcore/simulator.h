@@ -141,6 +141,9 @@ namespace BlackCore
         //! Highlight the aircraft for given time (or disable highlight)
         virtual void highlightAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const BlackMisc::PhysicalQuantities::CTime &displayTime) = 0;
 
+        //! Activates or deactivates simulator weather
+        virtual void setWeatherActivated(bool activated) = 0;
+
         //! Driver will be unloaded
         virtual void unload() = 0;
 

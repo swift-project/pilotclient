@@ -126,6 +126,11 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::isSimulating
             virtual bool isSimulating() const override { return isConnected(); }
 
+            //! \name Base class overrides
+            //! @{
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
+            //! @}
+
         private slots:
             void ps_serviceUnregistered();
             void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
@@ -138,10 +143,6 @@ namespace BlackSimPlugin
             void loadCslPackages();
             QString findCslPackage(const QString &modelFileName);
 
-            //! Inject weather grid to simulator
-            void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
-            void reloadWeatherSettings();
-
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             CXBusServiceProxy *m_service { nullptr };
@@ -152,9 +153,6 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAirportList m_airportsInRange;         //!< aiports in range of own aircraft
             BlackMisc::Simulation::CAircraftModelList m_installedModels; //!< \todo Do we still need this, as we now focus on model set
             BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetCacheXP> m_modelSet { this };
-
-            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorXPlane::reloadWeatherSettings };
 
             //! \todo Add units to members? pitchDeg?, altitudeFt?
             struct // data is written by DBus async method callbacks

@@ -324,6 +324,8 @@ namespace BlackCore
             emit simulatorPluginChanged(simulatorPluginInfo);
             CLogMessage(this).info("Simulator plugin loaded: %1") << simulatorPluginInfo.toQString(true);
 
+            simulator->setWeatherActivated(m_isWeatherActivated);
+
             m_matchingMessages.clear();
             return true;
         }
@@ -644,6 +646,15 @@ namespace BlackCore
             aircraft.setModel(aircraft.getNetworkModel());
             ps_addedRemoteAircraft(aircraft);
             return true;
+        }
+
+        void CContextSimulator::setWeatherActivated(bool activated)
+        {
+            m_isWeatherActivated = activated;
+
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            if (m_simulatorPlugin.first.isUnspecified()) { return; }
+            m_simulatorPlugin.second->setWeatherActivated(activated);
         }
 
         void CContextSimulator::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)

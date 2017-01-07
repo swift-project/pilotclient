@@ -199,6 +199,9 @@ namespace BlackCore
             //! Reset model by matching it again
             virtual bool resetToModelMatchingAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+            //! Activates or deactivates simulator weather
+            virtual void setWeatherActivated(bool activated) = 0;
+
             //! Request weather grid. Argument identifier is past in the signal to identify the requestor
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) = 0;
 

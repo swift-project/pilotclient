@@ -52,6 +52,8 @@ namespace BlackGui
             auto scenario = m_weatherScenarioSetting.get();
             ui->cb_weatherScenario->setCurrentIndex(scenario.getIndex());
 
+            ui->pb_ActivateWeather->setIcon(CIcons::metar());
+
             setupConnections();
             setupInputValidators();
             setupCompleter();
@@ -105,6 +107,21 @@ namespace BlackGui
                 ui->le_Lon->setText({});
                 updateWeatherInformation();
             }
+        }
+
+        void CWeatherComponent::toggleWeatherActivation()
+        {
+            if (m_isWeatherActivated)
+            {
+                m_isWeatherActivated = false;
+                ui->pb_ActivateWeather->setText("Activate");
+            }
+            else
+            {
+                m_isWeatherActivated = true;
+                ui->pb_ActivateWeather->setText("Deactivate");
+            }
+            sGui->getIContextSimulator()->setWeatherActivated(m_isWeatherActivated);
         }
 
         void CWeatherComponent::setWeatherScenario(int index)
@@ -198,6 +215,7 @@ namespace BlackGui
             connect(ui->le_Lon, &QLineEdit::returnPressed, this, &CWeatherComponent::updateWeatherInformation);
             connect(ui->cb_UseOwnAcftPosition, &QCheckBox::toggled, this, &CWeatherComponent::toggleUseOwnAircraftPosition);
             connect(&m_weatherUpdateTimer, &QTimer::timeout, this, &CWeatherComponent::updateWeatherInformation);
+            connect(ui->pb_ActivateWeather, &QPushButton::clicked, this, &CWeatherComponent::toggleWeatherActivation);
 
             // Context connections
             Q_ASSERT(sGui->getIContextSimulator());

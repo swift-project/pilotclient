@@ -194,6 +194,17 @@ namespace BlackCore
         }
     }
 
+    void CSimulatorCommon::reloadWeatherSettings()
+    {
+        if (!m_isWeatherActivated) { return; }
+        const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+        if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+        {
+            m_lastWeatherPosition = {};
+            injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
+        }
+    }
+
     void CSimulatorCommon::reverseLookupAndUpdateOwnAircraftModel(const QString &modelString)
     {
         CAircraftModel model = getOwnAircraftModel();
@@ -244,6 +255,20 @@ namespace BlackCore
         if (airports.isEmpty()) { return airports; }
         const CCoordinateGeodetic ownPosition = this->getOwnAircraftPosition();
         return airports.findClosest(maxAirportsInRange(), ownPosition);
+    }
+
+    void CSimulatorCommon::setWeatherActivated(bool activated)
+    {
+        m_isWeatherActivated = activated;
+        if (m_isWeatherActivated)
+        {
+            const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
+            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
+            {
+                m_lastWeatherPosition = {};
+                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
+            }
+        }
     }
 
     CAircraftModel CSimulatorCommon::reverseLookupModel(const CAircraftModel &model)

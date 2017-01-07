@@ -174,6 +174,11 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("resetToModelMatchingAircraft"), callsign, callsign);
         }
 
+        void CContextSimulatorProxy::setWeatherActivated(bool activated)
+        {
+            m_dBusInterface->callDBus(QLatin1Literal("setWeatherActivated"), activated);
+        }
+
         void CContextSimulatorProxy::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
             m_dBusInterface->callDBus(QLatin1Literal("requestWeatherGrid"), weatherGrid, identifier);

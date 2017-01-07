@@ -59,6 +59,7 @@ namespace BlackGui
 
         private:
             void toggleUseOwnAircraftPosition(bool checked);
+            void toggleWeatherActivation();
             void setWeatherScenario(int index);
 
             void updateWeatherInformation();
@@ -76,6 +77,7 @@ namespace BlackGui
             QTimer m_weatherUpdateTimer { this };
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
             BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
+            bool m_isWeatherActivated = false;
         };
     } // namespace
 } // namespace

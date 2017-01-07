@@ -114,6 +114,7 @@ namespace BlackSimPlugin
             virtual void reset() override;
             virtual void clearAllAircraft() override;
             virtual void initInternalsObject() override;
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}
 
             //! Timer event (our SimConnect event loop), runs ps_dispatch
@@ -200,12 +201,6 @@ namespace BlackSimPlugin
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
 
-            //! Inject weather grid to simulator
-            void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
-
-            //! Reload weather settings
-            void reloadWeatherSettings();
-
             //! Request data for a simObject (aka remote aircraft)
             bool requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
 
@@ -233,8 +228,6 @@ namespace BlackSimPlugin
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
-            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition;          //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFsx::reloadWeatherSettings };
             QTimer m_realityBubbleTimer { this };   //!< updating of aircraft out of reality bubble
         };
 

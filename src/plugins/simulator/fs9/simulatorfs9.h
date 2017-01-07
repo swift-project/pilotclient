@@ -73,6 +73,11 @@ namespace BlackSimPlugin
             virtual void timerEvent(QTimerEvent *event) override;
             //! \@}
 
+            //! \name Base class overrides
+            //! @{
+            virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
+            //! @}
+
         private slots:
             //! Dispatch SimConnect messages
             void ps_dispatch();
@@ -87,21 +92,12 @@ namespace BlackSimPlugin
             //! Disconnect all clients
             void disconnectAllClients();
 
-            //! Inject weather grid to simulator
-            void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid);
-
-            //! Reload Weather settings
-            void reloadWeatherSettings();
-
             QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
             QMetaObject::Connection m_connectionHostMessages;
             int m_dispatchTimerId = -1;
             bool m_simConnected = false; //!< Is simulator connected?
             QSharedPointer<CFs9Host> m_fs9Host;
             QSharedPointer<CLobbyClient> m_lobbyClient;
-
-            BlackMisc::Geo::CCoordinateGeodetic m_lastWeatherPosition; //!< Own aircraft position at which weather was fetched and injected last
-            BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSettings { this, &CSimulatorFs9::reloadWeatherSettings };
         };
 
         //! Listener for FS9

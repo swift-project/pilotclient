@@ -185,6 +185,13 @@ namespace BlackCore
                 return false;
             }
 
+            //! \copydoc IContextSimulator::setWeatherActivated
+            virtual void setWeatherActivated(bool activated) override
+            {
+                Q_UNUSED(activated);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextSimulator::requestWeatherGrid
             virtual void requestWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid, const BlackMisc::CIdentifier &identifier) override
             {

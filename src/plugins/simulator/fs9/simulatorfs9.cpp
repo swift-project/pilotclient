@@ -139,7 +139,6 @@ namespace BlackSimPlugin
             {
                 m_fsuipc->connect(); // connect FSUIPC too
             }
-            reloadWeatherSettings();
             initInternalsObject();
             m_dispatchTimerId = startTimer(50);
             return true;
@@ -340,15 +339,17 @@ namespace BlackSimPlugin
                     auto aircraftSituation = aircraftSituationfromFS9(mpPositionVelocity);
                     updateOwnSituation(aircraftSituation);
 
-                    const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
-                    if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
-                            calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                    if (m_isWeatherActivated)
                     {
-                        m_lastWeatherPosition = currentPosition;
-                        const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
-                        requestWeatherGrid(weatherGrid, { this, &CSimulatorFs9::injectWeatherGrid });
+                        const auto currentPosition = CCoordinateGeodetic { aircraftSituation.latitude(), aircraftSituation.longitude(), {0} };
+                        if (CWeatherScenario::isRealWeatherScenario(m_weatherScenarioSettings.get()) &&
+                                calculateGreatCircleDistance(m_lastWeatherPosition, currentPosition).value(CLengthUnit::mi()) > 20)
+                        {
+                            m_lastWeatherPosition = currentPosition;
+                            const auto weatherGrid = CWeatherGrid { { "GLOB", currentPosition } };
+                            requestWeatherGrid(weatherGrid, { this, &CSimulatorFs9::injectWeatherGrid });
+                        }
                     }
-
                     break;
                 }
             case CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND:
@@ -388,18 +389,6 @@ namespace BlackSimPlugin
             if (!m_useFsuipc || !m_fsuipc) { return; }
             if (!m_fsuipc->isConnected()) { return; }
             m_fsuipc->write(weatherGrid);
-        }
-
-        void CSimulatorFs9::reloadWeatherSettings()
-        {
-            if (!m_useFsuipc || !m_fsuipc) { return; }
-            if (!m_fsuipc->isConnected()) { return; }
-            const auto selectedWeatherScenario = m_weatherScenarioSettings.get();
-            if (!CWeatherScenario::isRealWeatherScenario(selectedWeatherScenario))
-            {
-                m_lastWeatherPosition = {};
-                injectWeatherGrid(CWeatherGrid::getByScenario(selectedWeatherScenario));
-            }
         }
 
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
