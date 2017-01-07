@@ -458,7 +458,6 @@ namespace BlackGui
                 ui->tvp_OwnAircraftModels->clear();
                 CLogMessage(this).error("Loading of models failed, simulator %1") << simulator.toQString();
             }
-            ui->tvp_OwnAircraftModels->hideLoadIndicator();
             ui->le_Simulator->setText(simulator.toQString());
             ui->comp_SimulatorSelector->setValue(simulator);
         }

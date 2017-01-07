@@ -181,7 +181,6 @@ namespace BlackGui
             else
             {
                 ui->tvp_AtcStationsOnline->clear();
-                ui->tvp_AtcStationsOnline->hideLoadIndicator();
                 this->updateTreeView();
             }
         }
