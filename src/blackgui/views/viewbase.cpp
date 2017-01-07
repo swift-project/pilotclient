@@ -83,6 +83,7 @@
 #include <QShortcut>
 #include <QVariant>
 #include <QWidget>
+#include <QMetaMethod>
 #include <limits>
 
 using namespace BlackConfig;
@@ -238,8 +239,18 @@ namespace BlackGui
             CMenuActions ma;
             switch (menu)
             {
-            case MenuRefresh: { ma.addAction(BlackMisc::CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReload }); break; }
-            case MenuBackend: { ma.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReloadFromBackend }); break; }
+            case MenuRefresh:
+                {
+                    static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestUpdate);
+                    if (!this->isSignalConnected(requestSignal)) break;
+                    ma.addAction(BlackMisc::CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReload }); break;
+                }
+            case MenuBackend:
+                {
+                    static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestNewBackendData);
+                    if (!this->isSignalConnected(requestSignal)) break;
+                    ma.addAction(BlackMisc::CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_triggerReloadFromBackend }); break;
+                }
             case MenuDisplayAutomatically:
                 {
                     QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::ps_toggleAutoDisplay });
