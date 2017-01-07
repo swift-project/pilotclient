@@ -289,7 +289,7 @@ namespace BlackGui
             if (m_showingLoadIndicator)
             {
                 // just in case, if this ever will be dangling
-                menuActions.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::hideLoadIndicator });
+                menuActions.addAction(BlackMisc::CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::ps_hideLoadIndicator });
             }
 
             if (this->m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
@@ -537,14 +537,19 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::ps_triggerReload()
         {
-            this->showLoadIndicator();
+            this->showLoadIndicatorWithTimeout(this->m_loadIndicatorTimeoutMsDefault);
             emit this->requestUpdate();
         }
 
         void CViewBaseNonTemplate::ps_triggerReloadFromBackend()
         {
-            this->showLoadIndicator();
+            this->showLoadIndicatorWithTimeout(this->m_loadIndicatorTimeoutMsDefault);
             emit this->requestNewBackendData();
+        }
+
+        void CViewBaseNonTemplate::ps_hideLoadIndicator()
+        {
+            this->hideLoadIndicator();
         }
 
         void CViewBaseNonTemplate::onModelChanged()
@@ -570,19 +575,19 @@ namespace BlackGui
             this->m_rowResizeMode = Content;
         }
 
-        void CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, bool processEvents)
+        int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, int timeoutMs, bool processEvents)
         {
-            if (!m_enabledLoadIndicator) { return; }
-            if (this->m_showingLoadIndicator) { return; }
+            if (!this->m_enabledLoadIndicator) { return -1; }
+            if (this->m_showingLoadIndicator) { return -1; }
             if (this->hasDockWidgetArea())
             {
-                if (!this->isVisibleWidget()) { return; }
+                if (!this->isVisibleWidget()) { return -1; }
             }
 
             if (containerSizeDependent >= 0)
             {
                 // really with indicator?
-                if (containerSizeDependent < ResizeSubsetThreshold) { return; }
+                if (containerSizeDependent < ResizeSubsetThreshold) { return -1; }
             }
             this->m_showingLoadIndicator = true;
             emit loadIndicatorVisibilityChanged(this->m_showingLoadIndicator);
@@ -592,7 +597,12 @@ namespace BlackGui
                 this->m_loadIndicator = new CLoadIndicator(64, 64, this);
             }
             this->centerLoadIndicator();
-            this->m_loadIndicator->startAnimation(processEvents);
+            return this->m_loadIndicator->startAnimation(timeoutMs > 0 ? timeoutMs : this->m_loadIndicatorTimeoutMsDefault, processEvents);
+        }
+
+        int CViewBaseNonTemplate::showLoadIndicatorWithTimeout(int timeoutMs, bool processEvents)
+        {
+            return this->showLoadIndicator(-1, timeoutMs, processEvents);
         }
 
         void CViewBaseNonTemplate::centerLoadIndicator()
@@ -602,13 +612,13 @@ namespace BlackGui
             this->m_loadIndicator->centerLoadIndicator(middle);
         }
 
-        void CViewBaseNonTemplate::hideLoadIndicator()
+        void CViewBaseNonTemplate::hideLoadIndicator(int loadingId)
         {
             if (!this->m_showingLoadIndicator) { return; }
             this->m_showingLoadIndicator = false;
             emit loadIndicatorVisibilityChanged(this->m_showingLoadIndicator);
             if (!this->m_loadIndicator) { return; }
-            this->m_loadIndicator->stopAnimation();
+            this->m_loadIndicator->stopAnimation(loadingId);
         }
 
         bool CViewBaseNonTemplate::isResizeConditionMet(int containerSize) const
@@ -824,6 +834,13 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         BlackMisc::CWorker *CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
         {
+            // avoid unnecessary effort when empty
+            if (container.isEmpty())
+            {
+                this->clear();
+                return nullptr;
+            }
+
             Q_UNUSED(sort);
             ModelClass *model = this->derivedModel();
             auto sortColumn = model->getSortColumn();
@@ -844,7 +861,11 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         void CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
         {
-            if (container.size() > ASyncRowsCountThreshold && sort)
+            if (container.isEmpty())
+            {
+                this->clear();
+            }
+            else if (container.size() > ASyncRowsCountThreshold && sort)
             {
                 // larger container with sorting
                 this->updateContainerAsync(container, sort, resize);
@@ -986,7 +1007,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType, class ObjectType>
         ObjectType CViewBase<ModelClass, ContainerType, ObjectType>::selectedObject() const
         {
-            ContainerType c = this->selectedObjects();
+            const ContainerType c = this->selectedObjects();
             return c.frontOrDefault();
         }
 
@@ -996,21 +1017,21 @@ namespace BlackGui
             if (!this->hasSelection()) { return 0; }
             if (this->isEmpty()) { return 0; }
 
-            int currentRows = this->rowCount();
+            const int currentRows = this->rowCount();
             if (currentRows == selectedRowCount())
             {
                 this->clear();
                 return currentRows;
             }
 
-            ContainerType selected(selectedObjects());
+            const ContainerType selected(selectedObjects());
             ContainerType newObjects(container());
             for (const ObjectType &obj : selected)
             {
                 newObjects.remove(obj);
             }
 
-            int delta = currentRows - newObjects.size();
+            const int delta = currentRows - newObjects.size();
             this->updateContainerMaybeAsync(newObjects);
             return delta;
         }
@@ -1052,6 +1073,14 @@ namespace BlackGui
             ContainerType filtered(this->m_model->containerFiltered());
             this->removeFilter();
             this->updateContainerMaybeAsync(filtered);
+        }
+
+        template <class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::clear()
+        {
+            Q_ASSERT(this->m_model);
+            this->m_model->clear();
+            this->hideLoadIndicator();
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

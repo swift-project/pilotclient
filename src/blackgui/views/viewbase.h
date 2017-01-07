@@ -313,14 +313,21 @@ namespace BlackGui
 
             //! Show loading indicator
             //! \param containerSizeDependent check against resize threshold if indicator makes sense
+            //! \param timeoutMs timeout the loading indicator
             //! \param processEvents force event processing to display indicator by updating GUI
-            void showLoadIndicator(int containerSizeDependent = -1, bool processEvents = true);
+            int showLoadIndicator(int containerSizeDependent = -1, int timeoutMs = -1, bool processEvents = true);
+
+            //! Show loading indicator which can time out
+            int showLoadIndicatorWithTimeout(int timeoutMs = -1, bool processEvents = true);
+
+            //! Load indicator's default time (ms)
+            void setLoadIndicatorTimeoutDefaultTime(int timeoutMs) { m_loadIndicatorTimeoutMsDefault = timeoutMs; }
 
             //! Underlying model changed
             void onModelChanged();
 
             //! Hide loading indicator
-            void hideLoadIndicator();
+            void hideLoadIndicator(int loadingId = -1);
 
             //! Remove selected rows
             virtual int removeSelectedRows() = 0;
@@ -399,6 +406,7 @@ namespace BlackGui
             int m_resizeCount                         = 0;                     //!< flag / counter, how many resize activities
             int m_skipResizeThreshold                 = 40;                    //!< when to skip resize (rows count)
             int m_resizeAutoNthTime                   = 1;                     //!< with ResizeAuto, resize every n-th time
+            int m_loadIndicatorTimeoutMsDefault       = 30 * 1000;             //!< default time for timeout
             bool m_forceStretchLastColumnWhenResized  = false;                 //!< a small table might (few columns) might to fail stretching, force again
             bool m_showingLoadIndicator               = false;                 //!< showing loading indicator
             bool m_enabledLoadIndicator               = true;                  //!< loading indicator enabled/disabled
@@ -457,6 +465,9 @@ namespace BlackGui
 
             //! Trigger reload from backend by signal requestNewBackendData()
             void ps_triggerReloadFromBackend();
+
+            //! Hide load indicator (no parameters)
+            void ps_hideLoadIndicator();
 
             // ------------ slots of CViewDbObjects ----------------
             // need to be declared here and overridden, as this is the only part with valid Q_OBJECT
@@ -589,7 +600,7 @@ namespace BlackGui
 
             //! \name BlackGui::Views::CViewBaseNonTemplate implementations
             //! @{
-            virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
+            virtual void clear() override;
             virtual int rowCount() const override;
             virtual bool isEmpty() const override;
             virtual bool isOrderable() const override;
