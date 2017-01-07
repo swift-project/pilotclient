@@ -46,7 +46,7 @@ namespace BlackGui
         return m_displayedWhenStopped;
     }
 
-    void CLoadIndicator::startAnimation(bool processEvents)
+    int CLoadIndicator::startAnimation(int timeoutMs, bool processEvents)
     {
         this->m_angle = 0;
         this->show();
@@ -56,10 +56,29 @@ namespace BlackGui
         {
             sGui->processEventsToRefreshGui();
         }
+
+        const int stopId = this->m_currentId++; // copy
+        if (timeoutMs > 0)
+        {
+            QTimer::singleShot(timeoutMs, this, [this, stopId]
+            {
+                // only timeout myself id
+                this->stopAnimation(stopId);
+            });
+        }
+        this->m_pendingIds.push_back(stopId);
+        return stopId;
     }
 
-    void CLoadIndicator::stopAnimation()
+    void CLoadIndicator::stopAnimation(int indicatorId)
     {
+        if (indicatorId > 0)
+        {
+            this->m_pendingIds.removeOne(indicatorId);
+            // if others pending do not stop
+            if (!this->m_pendingIds.isEmpty()) { return; }
+        }
+        this->m_pendingIds.clear();
         if (this->m_timerId != -1) { killTimer(this->m_timerId); }
         this->m_timerId = -1;
         this->hide();
@@ -70,8 +89,8 @@ namespace BlackGui
     void CLoadIndicator::setAnimationDelay(int delay)
     {
         this->m_delayMs = delay;
-        if (this->m_timerId != -1) { killTimer(this->m_timerId); }
-        this->m_timerId = startTimer(this->m_delayMs);
+        if (this->m_timerId != -1) { this->killTimer(this->m_timerId); }
+        this->m_timerId = this->startTimer(this->m_delayMs);
     }
 
     void CLoadIndicator::setColor(const QColor &color)
@@ -93,9 +112,8 @@ namespace BlackGui
     void CLoadIndicator::timerEvent(QTimerEvent *event)
     {
         Q_UNUSED(event);
-        m_angle = (m_angle + 30) % 360;
-        update();
-        emit updatedAnimation();
+        this->m_angle = (this->m_angle + 30) % 360;
+        this->update();
     }
 
     void CLoadIndicator::paintEvent(QPaintEvent *event)

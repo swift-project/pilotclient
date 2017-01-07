@@ -21,6 +21,7 @@
 #include <QSize>
 #include <QWidget>
 #include <Qt>
+#include <QList>
 
 class QPaintEvent;
 class QPainter;
@@ -44,7 +45,7 @@ namespace BlackGui
         //! Returns the delay between animation steps.
         //! \return The number of milliseconds between animation steps. By default, the animation delay is set to 40 milliseconds.
         //! \sa setAnimationDelay
-        int animationDelay() const { return m_delayMs; }
+        int getAnimationDelayTimeMs() const { return m_delayMs; }
 
         //! Returns a Boolean value indicating whether the component is currently animated.
         //! \return Animation state.
@@ -72,18 +73,14 @@ namespace BlackGui
         //! Center this load indicator
         void centerLoadIndicator(const QPoint &middle);
 
-    signals:
-        //! Animation has been updated
-        void updatedAnimation();
-
     public slots:
         //! Starts the spin animation.
         //! \sa stopAnimation isAnimated
-        void startAnimation(bool processEvents = false);
+        int startAnimation(int timeoutMs = -1, bool processEvents = false);
 
         //! Stops the spin animation.
         //! \sa startAnimation isAnimated
-        void stopAnimation();
+        void stopAnimation(int indicatorId = -1);
 
         //! Sets the delay between animation steps.
         //! Setting the \a delay to a value larger than 40 slows the animation, while setting the \a delay to a smaller value speeds it up.
@@ -114,6 +111,8 @@ namespace BlackGui
         int m_angle                 = 0;
         int m_timerId               = -1;
         int m_delayMs               = 1000;
+        int m_currentId             = 1;        //!< id indicating request starting this indicator
+        QList<int> m_pendingIds;                //!< ids not finished yet
         bool m_displayedWhenStopped = false;
         QColor m_color              = Qt::blue;
     };
