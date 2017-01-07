@@ -28,7 +28,7 @@ namespace BlackGui
         bool isShowingLoadIndicator() const;
 
         //! Show loading indicator
-        void showLoadIndicator();
+        int showLoadIndicator(int timeoutMs = -1);
 
         //! Hide loading indicator
         void hideLoadIndicator();

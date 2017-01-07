@@ -31,10 +31,11 @@ namespace BlackGui
         return false;
     }
 
-    void CEnableForViewBasedIndicator::showLoadIndicator()
+    int CEnableForViewBasedIndicator::showLoadIndicator(int timeoutMs)
     {
         Q_ASSERT_X(m_viewWithIndicator, Q_FUNC_INFO, "Missing view to display indicator");
-        if (m_viewWithIndicator) { m_viewWithIndicator->showLoadIndicator(); }
+        if (m_viewWithIndicator) { return m_viewWithIndicator->showLoadIndicatorWithTimeout(timeoutMs); }
+        return -1;
     }
 
     void CEnableForViewBasedIndicator::hideLoadIndicator()
@@ -53,5 +54,4 @@ namespace BlackGui
     {
         this->m_viewWithIndicator = viewWithIndicator;
     }
-
 } // namespace
