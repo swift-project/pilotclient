@@ -286,6 +286,7 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
         INSTALLER_PLATFORM = osx
         INSTALLER_BASENAME = swift-installer-$${BLACK_VERSION}-osx-$${WORD_SIZE}
         INSTALLER_EXT = app
+        INSTALLER_CONTAINER_EXT = dmg
     }
     else:unix {
         INSTALLER_PLATFORM = linux-x$${WORD_SIZE}
@@ -301,8 +302,14 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
 ############### Publish Jenkins build artifact ###############
 
 unix:!isEmpty(create_installer.commands) {
-    PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date -u '+%F_%H-%M-%S').$${INSTALLER_EXT}
-    publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
+    isEmpty(INSTALLER_CONTAINER_EXT) {
+        PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date -u '+%F_%H-%M-%S').$${INSTALLER_EXT}
+        publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
+    } else {
+        PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date -u '+%F_%H-%M-%S').$${INSTALLER_CONTAINER_EXT}
+        publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_CONTAINER_EXT} ../$${PUBLISHED_FILENAME}
+    }
+
     publish_installer.depends = create_installer
     QMAKE_EXTRA_TARGETS += publish_installer
 }
