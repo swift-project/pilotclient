@@ -301,7 +301,7 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
 ############### Publish Jenkins build artifact ###############
 
 unix:!isEmpty(create_installer.commands) {
-    PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date --utc '+%F_%H-%M-%S').$${INSTALLER_EXT}
+    PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date -u '+%F_%H-%M-%S').$${INSTALLER_EXT}
     publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
     publish_installer.depends = create_installer
     QMAKE_EXTRA_TARGETS += publish_installer
