@@ -77,7 +77,7 @@ namespace BlackMisc
 
         private:
             bool m_isVtol = false; //!< VTOL aircraft?
-            BlackMisc::Geo::CElevationPlane m_elevation; //! aircraft's elevation if available
+            BlackMisc::Geo::CElevationPlane m_elevation; //!< aircraft's elevation if available
             BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
 
             BLACK_METACLASS(
