@@ -43,7 +43,7 @@ namespace BlackMisc
             CSimulatorPluginInfoList(const CSequence<CSimulatorPluginInfo> &other);
 
             //! Is simulator supported
-            bool supportsSimulator(const QString &simulator);
+            bool supportsSimulator(const QString &simulator) const;
 
             //! String list with meaningful representations
             QStringList toStringList(bool i18n = false) const;

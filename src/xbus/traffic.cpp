@@ -307,7 +307,7 @@ namespace XBus
             {
                 BlackMisc::Simulation::IInterpolator::InterpolationStatus status;
                 const BlackMisc::Simulation::CInterpolationHints hints;
-                auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, hints, status);
+                const auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, hints, status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
                 if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 

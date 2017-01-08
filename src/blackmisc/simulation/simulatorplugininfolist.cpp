@@ -8,7 +8,6 @@
  */
 
 #include "blackmisc/iterator.h"
-#include "blackmisc/metaclassprivate.h"
 #include "blackmisc/range.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/simulatorplugininfolist.h"
@@ -23,7 +22,7 @@ namespace BlackMisc
 
         CSimulatorPluginInfoList::CSimulatorPluginInfoList() { }
 
-        bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator)
+        bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator) const
         {
             return std::find_if(begin(), end(), [&simulator](const CSimulatorPluginInfo & info)
             {

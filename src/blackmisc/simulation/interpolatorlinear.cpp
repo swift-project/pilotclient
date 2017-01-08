@@ -53,13 +53,13 @@ namespace BlackMisc
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
             // find the first situation not in the correct order, keep only the situations before that one
-            auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-            auto validSituations = makeRange(situations.begin(), end);
+            const auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+            const auto validSituations = makeRange(situations.begin(), end);
 
             // find the first situation earlier than the current time
-            auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
-            auto situationsNewer = makeRange(validSituations.begin(), pivot);
-            auto situationsOlder = makeRange(pivot, validSituations.end());
+            const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });
+            const auto situationsNewer = makeRange(validSituations.begin(), pivot);
+            const auto situationsOlder = makeRange(pivot, validSituations.end());
 
             // interpolation situations
             CAircraftSituation oldSituation;
@@ -108,7 +108,7 @@ namespace BlackMisc
             CCoordinateGeodetic currentPosition;
 
             // Time between start and end packet
-            double deltaTime = std::abs(oldSituation.getAdjustedMSecsSinceEpoch() - newSituation.getAdjustedMSecsSinceEpoch());
+            const double deltaTime = std::abs(oldSituation.getAdjustedMSecsSinceEpoch() - newSituation.getAdjustedMSecsSinceEpoch());
 
             // Fraction of the deltaTime, ideally [0.0 - 1.0]
             // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
