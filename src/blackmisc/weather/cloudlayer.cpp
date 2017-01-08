@@ -47,10 +47,10 @@ namespace BlackMisc
 
         CCloudLayer::Coverage CCloudLayer::getCoverage() const
         {
-            if (m_coveragePercent > 80) { return Overcast; }
-            if (m_coveragePercent > 60 && m_coveragePercent <= 80) { return Broken; }
-            if (m_coveragePercent > 40 && m_coveragePercent <= 60) { return Scattered; }
-            if (m_coveragePercent > 20 && m_coveragePercent <= 40) { return Few; }
+            if (m_coveragePercent > 85) { return Overcast; }
+            if (m_coveragePercent > 60 && m_coveragePercent <= 85) { return Broken; }
+            if (m_coveragePercent > 30 && m_coveragePercent <= 60) { return Scattered; }
+            if (m_coveragePercent > 10 && m_coveragePercent <= 30) { return Few; }
             return None;
         }
 
