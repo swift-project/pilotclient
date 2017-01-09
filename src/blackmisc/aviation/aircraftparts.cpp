@@ -133,5 +133,14 @@ namespace BlackMisc
             return this->m_engines.isEngineOn(number);
         }
 
+        double CAircraftParts::isOnGroundInterpolated() const
+        {
+            if (this->m_isOnGroundInterpolated < 0)
+            {
+                return this->m_isOnGround ? 1.0 : 0.0;
+            }
+            return this->m_isOnGroundInterpolated;
+        }
+
     } // namespace
 } // namespace

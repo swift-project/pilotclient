@@ -116,6 +116,12 @@ namespace BlackMisc
             //! Set aircraft on ground
             void setOnGround(bool onGround) { m_isOnGround = onGround; }
 
+            //! Is aircraft on ground? (Smoothly interpolated between 0 and 1.)
+            double isOnGroundInterpolated() const;
+
+            //! Set aircraft on ground. (Smoothly interpolated between 0 and 1.)
+            void setOnGroundInterpolated(double onGround) { m_isOnGroundInterpolated = onGround; }
+
             //! Milliseconds to add to timestamp for interpolation
             void setTimeOffsetMs(qint64 offset) { this->m_timeOffsetMs = offset; }
 
@@ -135,6 +141,7 @@ namespace BlackMisc
             bool m_gearDown     = false;
             bool m_spoilersOut  = false;
             bool m_isOnGround   = false;
+            double m_isOnGroundInterpolated = -1;
             qint64 m_timeOffsetMs = 0;
 
             BLACK_METACLASS(
@@ -145,6 +152,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER_NAMED(spoilersOut, "spoilers_out"),
                 BLACK_METAMEMBER_NAMED(engines, "engines"),
                 BLACK_METAMEMBER_NAMED(isOnGround, "on_ground"),
+                BLACK_METAMEMBER(isOnGroundInterpolated, 0, DisabledForJson | DisabledForComparison),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison),
                 BLACK_METAMEMBER(timeOffsetMs, 0, DisabledForJson | DisabledForComparison)
             );
