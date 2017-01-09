@@ -57,6 +57,8 @@ namespace BlackMisc
         typedef const T *const_pointer;
         typedef typename Iterators::ConstRandomAccessIterator<T> const_iterator;
         typedef typename Iterators::RandomAccessIterator<T> iterator;
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef std::reverse_iterator<iterator> reverse_iterator;
         typedef ptrdiff_t difference_type;
         typedef int size_type;
         //! @}
@@ -112,6 +114,24 @@ namespace BlackMisc
 
         //! Returns const iterator one past the end of the sequence.
         const_iterator cend() const { return pimpl() ? pimpl()->cend() : const_iterator(); }
+
+        //! Returns iterator at the beginning of the reversed sequence.
+        reverse_iterator rbegin() { return reverse_iterator(end()); }
+
+        //! Returns const iterator at the beginning of the reversed sequence.
+        const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+
+        //! Returns const iterator at the beginning of the reversed sequence.
+        const_reverse_iterator crbegin() const { return const_reverse_iterator(cend()); }
+
+        //! Returns iterator at the end of the reversed sequence.
+        reverse_iterator rend() { return reverse_iterator(begin()); }
+
+        //! Returns const iterator at the end of the reversed sequence.
+        const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+
+        //! Returns const iterator at the end of the reversed sequence.
+        const_reverse_iterator crend() const { return const_reverse_iterator(cbegin()); }
 
         //! Swap this sequence with another.
         void swap(CSequence &other) noexcept { m_pimpl.swap(other.m_pimpl); }

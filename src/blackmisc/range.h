@@ -180,6 +180,8 @@ namespace BlackMisc
         typedef const value_type *const_pointer;
         typedef I const_iterator;
         typedef I iterator;
+        typedef std::reverse_iterator<I> const_reverse_iterator;
+        typedef std::reverse_iterator<I> reverse_iterator;
         typedef typename std::iterator_traits<I>::difference_type difference_type;
         //! @}
 
@@ -193,6 +195,17 @@ namespace BlackMisc
         const_iterator end() const { return m_end; }
         const_iterator cend() const { return m_end; }
         //! @}
+
+        //! Reverse begin and end iterators.
+        //! @{
+        const_reverse_iterator rbegin() const { return const_reverse_iterator(m_end); }
+        const_reverse_iterator crbegin() const { return const_reverse_iterator(m_end); }
+        const_reverse_iterator rend() const { return const_reverse_iterator(m_begin); }
+        const_reverse_iterator crend() const { return const_reverse_iterator(m_begin); }
+        //! @}
+
+        //! Create a range from reverse iterators.
+        CRange<const_reverse_iterator> reverse() const { return { rbegin(), rend() }; }
 
         //! Implicit conversion to any container of value_type which supports push_back. This will copy elements.
         template <class T, class = std::enable_if_t<std::is_convertible<value_type, typename T::value_type>::value>>
