@@ -105,13 +105,13 @@ namespace BlackMisc
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
-            virtual BlackMisc::Aviation::CAircraftPartsList getPartsBeforeTime(
+            virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
                 PartsStatus &partsStatus) const;
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
-            virtual BlackMisc::Aviation::CAircraftPartsList getPartsBeforeTime(
+            virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
                 PartsStatus &partsStatus) const;
 

@@ -903,8 +903,8 @@ namespace BlackSimPlugin
                     // situation is used to anticipate parts if other client does not send them
                     if (enableAircraftParts)
                     {
-                        CAircraftPartsList parts;
-                        parts = this->m_interpolator->getPartsBeforeTime(callsign, interpolatedSituation.getMSecsSinceEpoch(), partsStatus);
+                        CAircraftParts parts;
+                        parts = this->m_interpolator->getInterpolatedParts(callsign, interpolatedSituation.getMSecsSinceEpoch(), partsStatus);
                         updateRemoteAircraftParts(simObj, parts, partsStatus, interpolatedSituation, isOnGround); // update and retrieve parts in the same step
                     }
                 }
@@ -916,7 +916,7 @@ namespace BlackSimPlugin
             m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
         }
 
-        bool CSimulatorFsx::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftPartsList &parts, IInterpolator::PartsStatus partsStatus, const CAircraftSituation &interpolatedSituation, bool isOnGround) const
+        bool CSimulatorFsx::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftParts &parts, IInterpolator::PartsStatus partsStatus, const CAircraftSituation &interpolatedSituation, bool isOnGround) const
         {
             if (!simObj.hasValidRequestAndObjectId()) { return false; }
 
@@ -924,27 +924,23 @@ namespace BlackSimPlugin
             DataDefinitionRemoteAircraftParts ddRemoteAircraftParts;
             if (partsStatus.isSupportingParts())
             {
-                // parts is supported, but do we need to update?
-                if (parts.isEmpty()) { return false; }
-
                 // we have parts
-                CAircraftParts newestParts = parts.front();
-                ddRemoteAircraftParts.lightStrobe = newestParts.getLights().isStrobeOn() ? 1 : 0;
-                ddRemoteAircraftParts.lightLanding = newestParts.getLights().isLandingOn() ? 1 : 0;
-                // ddRemoteAircraftParts.lightTaxi = newestParts.getLights().isTaxiOn() ? 1 : 0;
-                ddRemoteAircraftParts.lightBeacon = newestParts.getLights().isBeaconOn() ? 1 : 0;
-                ddRemoteAircraftParts.lightNav = newestParts.getLights().isNavOn() ? 1 : 0;
-                ddRemoteAircraftParts.lightLogo = newestParts.getLights().isLogoOn() ? 1 : 0;
-                ddRemoteAircraftParts.flapsLeadingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
-                ddRemoteAircraftParts.flapsLeadingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
-                ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = newestParts.getFlapsPercent() / 100.0;
-                ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = newestParts.getFlapsPercent() / 100.0;
-                ddRemoteAircraftParts.spoilersHandlePosition = newestParts.isSpoilersOut() ? 1 : 0;
-                ddRemoteAircraftParts.gearHandlePosition = isOnGround || newestParts.isGearDown() ? 1 : 0; // on ground we always show gear
-                ddRemoteAircraftParts.engine1Combustion = newestParts.isEngineOn(1) ? 1 : 0;
-                ddRemoteAircraftParts.engine2Combustion = newestParts.isEngineOn(2) ? 1 : 0;
-                ddRemoteAircraftParts.engine3Combustion = newestParts.isEngineOn(3) ? 1 : 0;
-                ddRemoteAircraftParts.engine4Combustion = newestParts.isEngineOn(4) ? 1 : 0;
+                ddRemoteAircraftParts.lightStrobe = parts.getLights().isStrobeOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightLanding = parts.getLights().isLandingOn() ? 1 : 0;
+                // ddRemoteAircraftParts.lightTaxi = parts.getLights().isTaxiOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightBeacon = parts.getLights().isBeaconOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightNav = parts.getLights().isNavOn() ? 1 : 0;
+                ddRemoteAircraftParts.lightLogo = parts.getLights().isLogoOn() ? 1 : 0;
+                ddRemoteAircraftParts.flapsLeadingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.flapsLeadingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
+                ddRemoteAircraftParts.spoilersHandlePosition = parts.isSpoilersOut() ? 1 : 0;
+                ddRemoteAircraftParts.gearHandlePosition = isOnGround || parts.isGearDown() ? 1 : 0; // on ground we always show gear
+                ddRemoteAircraftParts.engine1Combustion = parts.isEngineOn(1) ? 1 : 0;
+                ddRemoteAircraftParts.engine2Combustion = parts.isEngineOn(2) ? 1 : 0;
+                ddRemoteAircraftParts.engine3Combustion = parts.isEngineOn(3) ? 1 : 0;
+                ddRemoteAircraftParts.engine4Combustion = parts.isEngineOn(4) ? 1 : 0;
             }
             else
             {

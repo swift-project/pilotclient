@@ -75,7 +75,8 @@ namespace BlackMiscTest
             provider->insertNewSituation(s);
         }
 
-        for (int i = 0; i < IRemoteAircraftProvider::MaxPartsPerCallsign; i++)
+        constexpr int partsCount = 10;
+        for (int i = 0; i < partsCount; i++)
         {
             CAircraftParts p(getTestParts(i, ts, deltaT));
             provider->insertNewAircraftParts(cs, p);
@@ -86,7 +87,7 @@ namespace BlackMiscTest
 
         // check if all situations / parts have been received
         QVERIFY2(provider->remoteAircraftSituations(cs).size() == IRemoteAircraftProvider::MaxSituationsPerCallsign, "Missing situations");
-        QVERIFY2(provider->remoteAircraftParts(cs).size() == IRemoteAircraftProvider::MaxPartsPerCallsign, "Missing parts");
+        QVERIFY2(provider->remoteAircraftParts(cs).size() == partsCount, "Missing parts");
 
         // interpolation functional check
         IInterpolator::InterpolationStatus status;
@@ -149,10 +150,9 @@ namespace BlackMiscTest
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
             IInterpolator::PartsStatus partsStatus;
-            CAircraftPartsList pl(interpolator.getPartsBeforeTime(cs, ts, partsStatus));
+            CAircraftParts pl(interpolator.getInterpolatedParts(cs, ts, partsStatus));
             fetchedParts++;
             QVERIFY2(partsStatus.isSupportingParts(), "Parts not supported");
-            QVERIFY2(!pl.isEmpty(), "Parts empty");
         }
         timeMs = timer.elapsed();
         qDebug() << timeMs << "ms" << "for" << fetchedParts << "fetched parts";

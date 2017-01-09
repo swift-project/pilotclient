@@ -39,23 +39,24 @@ namespace BlackMisc
             return currentSituation;
         }
 
-        CAircraftPartsList IInterpolator::getPartsBeforeTime(const CAircraftPartsList &parts, qint64 cutoffTime, IInterpolator::PartsStatus &partsStatus) const
+        CAircraftParts IInterpolator::getInterpolatedParts(const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus) const
         {
             partsStatus.reset();
             partsStatus.setSupportsParts(true);
 
-            if (cutoffTime < 0) { return parts; }
-            return parts.findBefore(cutoffTime);
+            if (parts.isEmpty()) { return {}; }
+            if (currentTimeMsSinceEpoch < 0) { return parts.front(); }
+            return parts.findBefore(currentTimeMsSinceEpoch).front();
         }
 
-        CAircraftPartsList IInterpolator::getPartsBeforeTime(const CCallsign &callsign, qint64 cutoffTime, IInterpolator::PartsStatus &partsStatus) const
+        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus) const
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             partsStatus.reset();
 
             partsStatus.setSupportsParts(this->isRemoteAircraftSupportingParts(callsign));
             if (!partsStatus.isSupportingParts()) { return {}; }
-            return this->remoteAircraftParts(callsign, cutoffTime);
+            return this->getInterpolatedParts(this->remoteAircraftParts(callsign, -1), currentTimeMsSinceEpoch, partsStatus);
         }
 
         void IInterpolator::setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup)
