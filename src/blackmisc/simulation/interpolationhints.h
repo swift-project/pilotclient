@@ -15,6 +15,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/geo/elevationplane.h"
 #include "blackmisc/valueobject.h"
+#include "blackmisc/aviation/aircraftparts.h"
 
 namespace BlackMisc
 {
@@ -63,6 +64,15 @@ namespace BlackMisc
             //! VTOL aircraft
             void setVtolAircraft(bool vtol) { m_isVtol = vtol; }
 
+            //! Has valid aircraft parts?
+            bool hasAircraftParts() const { return m_hasParts; }
+
+            //! Aircraft parts
+            BlackMisc::Aviation::CAircraftParts getAircraftParts() const { return m_aircraftParts; }
+
+            //! Set aircraft parts
+            void setAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) { m_hasParts = true; m_aircraftParts = parts; }
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -79,12 +89,16 @@ namespace BlackMisc
             bool m_isVtol = false; //!< VTOL aircraft?
             BlackMisc::Geo::CElevationPlane m_elevation; //!< aircraft's elevation if available
             BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
+            bool m_hasParts = false; //!< Has valid aircraft parts?
+            BlackMisc::Aviation::CAircraftParts m_aircraftParts; //!< Aircraft parts
 
             BLACK_METACLASS(
                 CInterpolationHints,
                 BLACK_METAMEMBER(isVtol),
                 BLACK_METAMEMBER(elevation),
-                BLACK_METAMEMBER(cgAboveGround)
+                BLACK_METAMEMBER(cgAboveGround),
+                BLACK_METAMEMBER(hasParts),
+                BLACK_METAMEMBER(aircraftParts)
             );
         };
     } // namespace
