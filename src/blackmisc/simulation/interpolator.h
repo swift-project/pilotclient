@@ -119,6 +119,18 @@ namespace BlackMisc
             //! \threadsafe
             void setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup);
 
+            /*!
+             * Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
+             *
+             * Useful for making interpolation seem smoother, efficiently as it just uses simple arithmetic.
+             * \see https://en.wikipedia.org/wiki/Smoothstep
+             * \see http://sol.gfxile.net/interpolation/
+             */
+            static double smootherStep(double x)
+            {
+                return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
+            }
+
         protected:
             //! Constructor
             IInterpolator(BlackMisc::Simulation::IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent);

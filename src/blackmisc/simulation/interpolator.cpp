@@ -10,6 +10,7 @@
 #include "interpolator.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include <QDateTime>
 
 using namespace BlackMisc::Aviation;
 
@@ -42,11 +43,38 @@ namespace BlackMisc
         CAircraftParts IInterpolator::getInterpolatedParts(const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus) const
         {
             partsStatus.reset();
+
+            if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
+
+            // find the first parts not in the correct order, keep only the parts before that one
+            const auto end = std::is_sorted_until(parts.begin(), parts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+            const auto validParts = makeRange(parts.begin(), end);
+
+            // stop if we don't have any parts
+            if (validParts.isEmpty()) { return {}; }
             partsStatus.setSupportsParts(true);
 
-            if (parts.isEmpty()) { return {}; }
-            if (currentTimeMsSinceEpoch < 0) { return parts.front(); }
-            return parts.findBefore(currentTimeMsSinceEpoch).front();
+            // find the first parts earlier than the current time
+            const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto && p) { return p.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoch; });
+            const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
+            const auto partsOlder = makeRange(pivot, validParts.end());
+
+            if (partsOlder.isEmpty()) { return *(partsNewer.end() - 1); }
+            CAircraftParts currentParts = partsOlder.front();
+            if (currentParts.isOnGround()) { return currentParts; }
+
+            // here we know aircraft is not on ground, and we check if it was recently on ground or if it will be on ground soon
+            const auto latestTakeoff = std::adjacent_find(partsOlder.begin(), partsOlder.end(), [](auto &&, auto && p) { return p.isOnGround(); });
+            const auto soonestLanding = std::find_if(partsNewer.begin(), partsNewer.end(), [](auto && p) { return p.isOnGround(); });
+
+            const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? 5.0 : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
+            const double secondsUntilLanding = soonestLanding == partsNewer.end() ? 5.0 : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
+            const double secondsAirborne = std::min(secondsSinceTakeoff, secondsUntilLanding);
+            Q_ASSERT(secondsAirborne >= 0.0);
+
+            const double airborneFactor = std::min(secondsAirborne / 5.0, 1.0);
+            currentParts.setOnGroundInterpolated(1.0 - smootherStep(airborneFactor));
+            return currentParts;
         }
 
         CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus) const
