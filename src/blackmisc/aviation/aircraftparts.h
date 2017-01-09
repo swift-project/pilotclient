@@ -116,6 +116,15 @@ namespace BlackMisc
             //! Set aircraft on ground
             void setOnGround(bool onGround) { m_isOnGround = onGround; }
 
+            //! Milliseconds to add to timestamp for interpolation
+            void setTimeOffsetMs(qint64 offset) { this->m_timeOffsetMs = offset; }
+
+            //! Milliseconds to add to timestamp for interpolation
+            qint64 getTimeOffsetMs() const { return this->m_timeOffsetMs; }
+
+            //! Timestamp with offset added for interpolation
+            qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -126,6 +135,7 @@ namespace BlackMisc
             bool m_gearDown     = false;
             bool m_spoilersOut  = false;
             bool m_isOnGround   = false;
+            qint64 m_timeOffsetMs = 0;
 
             BLACK_METACLASS(
                 CAircraftParts,
@@ -135,7 +145,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER_NAMED(spoilersOut, "spoilers_out"),
                 BLACK_METAMEMBER_NAMED(engines, "engines"),
                 BLACK_METAMEMBER_NAMED(isOnGround, "on_ground"),
-                BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison)
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison),
+                BLACK_METAMEMBER(timeOffsetMs, 0, DisabledForJson | DisabledForComparison)
             );
         };
     } // namespace

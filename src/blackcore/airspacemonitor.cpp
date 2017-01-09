@@ -1227,10 +1227,20 @@ namespace BlackCore
         BLACK_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return; }
 
+        // get time offset from situation
+        qint64 timeOffsetMs = 6000; //! \fixme 6000 is assumed default offset, copied from CNetworkVatlib::onPilotPositionUpdate
+        {
+            QReadLocker lock(&m_lockSituations);
+            const CAircraftSituationList &situationList = this->m_situationsByCallsign[callsign];
+            if (!situationList.isEmpty()) { timeOffsetMs = situationList[0].getTimeOffsetMs(); }
+        }
+
         // list sorted from new to old
         QWriteLocker lock(&m_lockParts);
         CAircraftPartsList &partsList = this->m_partsByCallsign[callsign];
         partsList.push_frontMaxElements(parts, MaxPartsPerCallsign);
+
+        partsList.front().setTimeOffsetMs(timeOffsetMs);
 
         if (!m_aircraftSupportingParts.contains(callsign))
         {
