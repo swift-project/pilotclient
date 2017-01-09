@@ -48,7 +48,7 @@ namespace BlackMisc
         {
         public:
             static constexpr int MaxSituationsPerCallsign = 6; //!< How many situations per callsign
-            static constexpr int MaxPartsPerCallsign = 3;      //!< How many parts per callsign
+            static constexpr int PartsPerCallsignMaxAgeInSeconds = 20; //!< How many seconds to keep parts for
 
             //! Situations per callsign
             using CSituationsPerCallsign = QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList>;
