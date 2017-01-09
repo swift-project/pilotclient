@@ -19,6 +19,8 @@
 
 namespace BlackMisc
 {
+    namespace Aviation { class CAircraftSituation; }
+
     namespace Simulation
     {
         //! Hints for interpolator such as ground elevation
@@ -73,6 +75,15 @@ namespace BlackMisc
             //! Set aircraft parts
             void setAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) { m_hasParts = true; m_aircraftParts = parts; }
 
+            //! Function object that can obtain ground elevation
+            using ElevationProvider = std::function<BlackMisc::PhysicalQuantities::CLength(const BlackMisc::Aviation::CAircraftSituation &)>;
+
+            //! Function object that can obtain ground elevation
+            const ElevationProvider &getElevationProvider() const { return m_elevationProvider; }
+
+            //! Set function object that can obtain ground elevation
+            void setElevationProvider(const ElevationProvider &ep) { m_elevationProvider = ep; }
+
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
@@ -91,6 +102,7 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
             bool m_hasParts = false; //!< Has valid aircraft parts?
             BlackMisc::Aviation::CAircraftParts m_aircraftParts; //!< Aircraft parts
+            ElevationProvider m_elevationProvider; //!< Provider of ground elevation (lazy computation)
 
             BLACK_METACLASS(
                 CInterpolationHints,
@@ -99,6 +111,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(cgAboveGround),
                 BLACK_METAMEMBER(hasParts),
                 BLACK_METAMEMBER(aircraftParts)
+                // elevationProvider not included
             );
         };
     } // namespace

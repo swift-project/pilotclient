@@ -143,6 +143,22 @@ namespace BlackMisc
                                                    + oldAlt,
                                                    oldAlt.getReferenceDatum()));
 
+            // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
+            if (hints.hasAircraftParts())
+            {
+                const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
+                if (groundFactor > 0.0)
+                {
+                    const auto &groundElevation = hints.getElevationProvider();
+                    if (groundElevation)
+                    {
+                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor)
+                                                               + groundElevation(currentSituation) * groundFactor,
+                                                               oldAlt.getReferenceDatum()));
+                    }
+                }
+            }
+
             if (!setup.isForcingFullInterpolation() && !hints.isVtolAircraft() && newVec == oldVec && oldAlt == newAlt)
             {
                 // stop interpolation here, does not work for VTOL aircraft. We need a flag for VTOL aircraft
