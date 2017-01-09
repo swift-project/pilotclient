@@ -13,6 +13,7 @@
 //! \file
 
 #include "datarefs.h"
+#include "terrainprobe.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include <QObject>
@@ -26,7 +27,14 @@
 #define XBUS_TRAFFIC_OBJECTPATH "/xbus/traffic"
 //! \endcond
 
-namespace BlackMisc { namespace Simulation { class IInterpolator; } }
+namespace BlackMisc
+{
+    namespace Simulation
+    {
+        class IInterpolator;
+        class CInterpolationHints;
+    }
+}
 namespace XBus
 {
     /*!
@@ -131,6 +139,8 @@ namespace XBus
             char label[32] {};
             BlackMisc::Aviation::CAircraftSituationList situations;
             BlackMisc::Aviation::CAircraftPartsList parts;
+            CTerrainProbe terrainProbe;
+            BlackMisc::Simulation::CInterpolationHints hints(BlackMisc::Simulation::IInterpolator *) const;
             XPMPPlaneSurfaces_t surfaces;
             XPMPPlaneRadar_t xpdr;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);

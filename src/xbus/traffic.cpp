@@ -42,6 +42,23 @@ namespace XBus
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
+    BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints(BlackMisc::Simulation::IInterpolator *interpolator) const
+    {
+        BlackMisc::Simulation::CInterpolationHints hints;
+        BlackMisc::Simulation::IInterpolator::PartsStatus status;
+        hints.setAircraftParts(interpolator->getInterpolatedParts(parts, -1, status));
+        hints.setElevationProvider([this](const auto &situation)
+        {
+            using namespace BlackMisc::PhysicalQuantities;
+            const auto meters = terrainProbe.getElevation(situation.latitude().value(CAngleUnit::deg()),
+                                                          situation.longitude().value(CAngleUnit::deg()),
+                                                          situation.getAltitude().value(CLengthUnit::m()));
+            if (std::isnan(meters)) { return CLength(0, nullptr); }
+            return CLength(meters, CLengthUnit::m());
+        });
+        return hints;
+    }
+
     CTraffic::CTraffic(QObject *parent) :
         QObject(parent),
         m_interpolator(new BlackMisc::Simulation::CInterpolatorLinear(new BlackMisc::Simulation::CRemoteAircraftProviderDummy(this), this))
@@ -316,8 +333,7 @@ namespace XBus
         case xpmpDataType_Position:
             {
                 BlackMisc::Simulation::IInterpolator::InterpolationStatus status;
-                const BlackMisc::Simulation::CInterpolationHints hints;
-                const auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, hints, status);
+                const auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, plane->hints(m_interpolator), status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
                 if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 
