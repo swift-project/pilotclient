@@ -105,9 +105,9 @@ namespace BlackSimPlugin
             //! \copydoc XBus::CTraffic::addPlanePosition
             void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime);
 
-            //! \copydoc XBus::CTraffic::setPlaneSurfaces
-            void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern);
+            //! \copydoc XBus::CTraffic::addPlaneSurfaces
+            void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+                double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime);
 
             //! \copydoc XBus::CTraffic::setPlaneTransponder
             void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);

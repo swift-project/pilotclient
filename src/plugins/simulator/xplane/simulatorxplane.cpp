@@ -521,9 +521,10 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
         {
             Q_ASSERT(isConnected());
-            m_traffic->setPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
-            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
-            Q_UNUSED(parts); // TODO
+            //! \fixme Parts currently not used by libxplanemp
+            m_traffic->addPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0, parts.isOnGround(),
+                                        parts.getAdjustedMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch());
+            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
         }
 
         void CSimulatorXPlane::ps_remoteProviderRemovedAircraft(const CCallsign &callsign)

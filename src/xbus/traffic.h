@@ -14,6 +14,7 @@
 
 #include "datarefs.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
 #include <QObject>
 #include <QHash>
 #include <QVector>
@@ -105,8 +106,8 @@ namespace XBus
         void addPlanePosition(const QString &callsign, double latitude, double longitude, double altitude, double pitch, double roll, double heading, qint64 relativeTime);
 
         //! Set the flight control surfaces and lights of a traffic aircraft
-        void setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern);
+        void addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime);
 
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
@@ -129,6 +130,7 @@ namespace XBus
             bool hasXpdr = false;
             char label[32] {};
             BlackMisc::Aviation::CAircraftSituationList situations;
+            BlackMisc::Aviation::CAircraftPartsList parts;
             XPMPPlaneSurfaces_t surfaces;
             XPMPPlaneRadar_t xpdr;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);

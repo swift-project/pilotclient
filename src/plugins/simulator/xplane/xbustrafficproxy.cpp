@@ -91,11 +91,11 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("addPlanePosition"), callsign, latitude, longitude, altitude, pitch, roll, heading, relativeTime);
         }
 
-        void CXBusTrafficProxy::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern)
+        void CXBusTrafficProxy::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+            double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime)
         {
-            m_dbusInterface->callDBus(QLatin1String("setPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
-                landLight, beaconLight, strobeLight, navLight, lightPattern);
+            m_dbusInterface->callDBus(QLatin1String("addPlaneSurfaces"), callsign, gear, flap, spoiler, speedBrake, slat, wingSweep, thrust, elevator, rudder, aileron,
+                landLight, beaconLight, strobeLight, navLight, lightPattern, onGround, relativeTime);
         }
 
         void CXBusTrafficProxy::setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident)

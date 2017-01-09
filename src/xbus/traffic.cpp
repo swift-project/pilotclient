@@ -249,8 +249,8 @@ namespace XBus
         }
     }
 
-    void CTraffic::setPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-        double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern)
+    void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
+        double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime)
     {
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
         if (plane)
@@ -271,6 +271,16 @@ namespace XBus
             plane->surfaces.lights.strbLights = strobeLight;
             plane->surfaces.lights.navLights = navLight;
             plane->surfaces.lights.flashPattern = lightPattern;
+
+            plane->parts.push_front({});
+            plane->parts.front().setOnGround(onGround);
+            plane->parts.front().setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+
+            // remove outdated parts (but never remove the most recent one)
+            enum { maxAgeMs = BlackMisc::Simulation::IRemoteAircraftProvider::PartsPerCallsignMaxAgeInSeconds * 1000 }; // enum because MSVC constexpr bug
+            const auto predicate = [now = plane->parts.front().getMSecsSinceEpoch()](auto && p) { return p.getMSecsSinceEpoch() >= now - maxAgeMs; };
+            const auto newEnd = std::find_if(plane->parts.rbegin(), plane->parts.rend(), predicate).base();
+            plane->parts.erase(newEnd, plane->parts.end());
         }
     }
 
