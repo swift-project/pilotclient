@@ -516,6 +516,27 @@ namespace BlackSimPlugin
                                         situation.getBank().value(CAngleUnit::deg()),
                                         situation.getHeading().value(CAngleUnit::deg()),
                                         situation.getAdjustedMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch());
+
+            if (! isRemoteAircraftSupportingParts(situation.getCallsign()))
+            {
+                // if aircraft not supporting parts then guess (currently only onGround is guessed)
+                //! \todo not working for vtol
+                BlackMisc::Aviation::CAircraftParts parts;
+                parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
+                parts.setTimeOffsetMs(situation.getTimeOffsetMs());
+                if (situation.getGroundSpeed() < CSpeed(50, CSpeedUnit::kts()))
+                {
+                    const auto nearestAirport = std::min_element(m_airportsInRange.cbegin(), m_airportsInRange.cend(), [&situation](auto &&a, auto &&b)
+                    {
+                        return calculateEuclideanDistanceSquared(situation, a) < calculateEuclideanDistanceSquared(situation, b);
+                    });
+                    if (nearestAirport != m_airportsInRange.cend() && situation.getAltitude() - nearestAirport->getElevation() < CLength(50, CLengthUnit::ft()))
+                    {
+                        parts.setOnGround(true);
+                    }
+                }
+                ps_remoteProviderAddAircraftParts(situation.getCallsign(), parts);
+            }
         }
 
         void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
