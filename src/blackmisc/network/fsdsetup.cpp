@@ -36,8 +36,7 @@ namespace BlackMisc
         {
             Q_UNUSED(i18n);
             static const QString s("Codec: '%1' details: '%2'");
-            s.arg(this->getTextCodec(), CFsdSetup::sendReceiveDetailsToString(this->getSendReceiveDetails()));
-            return s;
+            return s.arg(this->getTextCodec(), CFsdSetup::sendReceiveDetailsToString(this->getSendReceiveDetails()));
         }
 
         QString CFsdSetup::sendReceiveDetailsToString(SendReceiveDetails details)

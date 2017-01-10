@@ -101,7 +101,7 @@ namespace BlackCore
             virtual BlackMisc::CStatusMessageList getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const override;
             virtual bool isMatchingMessagesEnabled() const override;
             virtual void enableMatchingMessages(bool enabled) override;
-            BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const;
+            BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
             //! @}
 
             //! \ingroup commandline
