@@ -54,7 +54,8 @@ namespace XBus
                                                           situation.longitude().value(CAngleUnit::deg()),
                                                           situation.getAltitude().value(CLengthUnit::m()));
             if (std::isnan(meters)) { return CLength(0, nullptr); }
-            return CLength(meters, CLengthUnit::m());
+            constexpr decltype(meters) fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
+            return CLength(meters + fudgeFactor, CLengthUnit::m());
         });
         return hints;
     }
