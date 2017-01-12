@@ -139,6 +139,15 @@ namespace BlackCore
         //! Delete all cookies from cookier manager
         void deleteAllCookies();
 
+        //! Network accessible?
+        bool isNetworkAccessible() const;
+
+        //! Network connected (at startup time)
+        bool isNetworkConnected() const;
+
+        //! Network connected and also accessible
+        bool isNetworkConnectedAndAccessible() const;
+
         //! Setup already synchronized
         bool isSetupAvailable() const;
 
@@ -367,6 +376,9 @@ namespace BlackCore
 
         //! Startup completed
         virtual void ps_startupCompleted();
+
+        //! Problem with network access manager
+        virtual void ps_networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible);
 
     protected:
         //! Init class, allows to init from BlackGui::CGuiApplication as well (pseudo virtual)

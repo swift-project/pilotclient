@@ -130,6 +130,7 @@ namespace BlackCore
             // Init network
             this->m_cookieManager.setParent(&this->m_accessManager);
             this->m_accessManager.setCookieJar(&this->m_cookieManager);
+            connect(&this->m_accessManager, &QNetworkAccessManager::networkAccessibleChanged, this, &CApplication::ps_networkAccessibleChanged);
 
             // global setup
             sApp = this;
@@ -154,7 +155,7 @@ namespace BlackCore
         CApplicationInfoList apps = getRunningApplications();
         apps.push_back(instance()->getApplicationInfo());
         bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), swiftDataRoot() + "apps.json");
-        if (!ok) { CLogMessage(static_cast<CApplication*>(nullptr)).error("Failed to write to application list file"); }
+        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
 
         return QCoreApplication::exec();
     }
@@ -176,13 +177,13 @@ namespace BlackCore
     {
         CApplicationInfoList apps;
         apps.convertFromJsonNoThrow(CFileUtils::readLockedFileToString(swiftDataRoot() + "apps.json"), {}, {});
-        apps.removeIf([](const CApplicationInfo &info) { return !info.processInfo().exists(); });
+        apps.removeIf([](const CApplicationInfo & info) { return !info.processInfo().exists(); });
         return apps;
     }
 
     bool CApplication::isAlreadyRunning() const
     {
-        return getRunningApplications().containsBy([this](const CApplicationInfo &info) { return info.application() == getSwiftApplication(); });
+        return getRunningApplications().containsBy([this](const CApplicationInfo & info) { return info.application() == getSwiftApplication(); });
     }
 
     const QString &CApplication::getApplicationNameAndVersion() const
@@ -490,6 +491,7 @@ namespace BlackCore
 
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
+        if (!this->isNetworkConnectedAndAccessible()) { return nullptr; }
         if (QThread::currentThread() != this->m_accessManager.thread())
         {
             multiPart->moveToThread(this->m_accessManager.thread());
@@ -517,6 +519,22 @@ namespace BlackCore
     void CApplication::deleteAllCookies()
     {
         this->m_cookieManager.deleteAllCookies();
+    }
+
+    bool CApplication::isNetworkAccessible() const
+    {
+        return this->m_accessManager.networkAccessible() == QNetworkAccessManager::Accessible;
+    }
+
+    bool CApplication::isNetworkConnected() const
+    {
+        static bool con = CNetworkUtils::hasConnectedInterface();
+        return con;
+    }
+
+    bool CApplication::isNetworkConnectedAndAccessible() const
+    {
+        return this->isNetworkConnected() && this->isNetworkAccessible();
     }
 
     void CApplication::exit(int retcode)
@@ -747,6 +765,22 @@ namespace BlackCore
     void CApplication::ps_startupCompleted()
     {
         // void
+    }
+
+    void CApplication::ps_networkAccessibleChanged(QNetworkAccessManager::NetworkAccessibility accessible)
+    {
+        switch (accessible)
+        {
+        case QNetworkAccessManager::Accessible:
+            CLogMessage(this).info("Network is accessible");
+            break;
+        case QNetworkAccessManager::NotAccessible:
+            CLogMessage(this).error("Network not accessible");
+            break;
+        default:
+            CLogMessage(this).warning("Network accessibility unknown");
+            break;
+        }
     }
 
     CStatusMessageList CApplication::asyncWebAndContextStart()
@@ -1091,6 +1125,7 @@ namespace BlackCore
     QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> method)
     {
         if (this->m_shutdown) { return nullptr; }
+        if (!this->isNetworkConnectedAndAccessible()) { return nullptr; }
         QWriteLocker locker(&m_accessManagerLock);
         Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (QThread::currentThread() != this->m_accessManager.thread())
