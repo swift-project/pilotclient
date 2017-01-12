@@ -659,14 +659,14 @@ namespace BlackCore
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsigns; }
             Q_ASSERT(this->m_network);
+            this->m_network->setInterimPositionReceivers(callsigns);
         }
 
-        CCallsignSet CContextNetwork::getFastPositionEnabledCallsigns()
+        CCallsignSet CContextNetwork::getFastPositionEnabledCallsigns() const
         {
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             Q_ASSERT(this->m_network);
-            //! \todo Fast position updates in vatlib
-            return CCallsignSet();
+            return this->m_network->getInterimPositionReceivers();
         }
 
         void CContextNetwork::testCreateDummyOnlineAtcStations(int number)

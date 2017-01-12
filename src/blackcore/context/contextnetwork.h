@@ -215,7 +215,7 @@ namespace BlackCore
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) = 0;
 
             //! Callsigns enabled for fast position updates
-            virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() = 0;
+            virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() const = 0;
 
             //! Connect to Network
             //! \return messages generated during connecting

@@ -358,6 +358,11 @@ namespace BlackCore
          */
         virtual void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &receiver) = 0;
 
+        /*!
+         * Get the group of callsigns receiving regular interim position updates.
+         */
+        virtual const BlackMisc::Aviation::CCallsignSet &getInterimPositionReceivers() const = 0;
+
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name Weather slots

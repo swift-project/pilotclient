@@ -167,7 +167,7 @@ namespace BlackCore
             virtual void requestDataUpdates()override;
             virtual void requestAtisUpdates() override;
             virtual void setFastPositionEnabledCallsigns(BlackMisc::Aviation::CCallsignSet &callsigns) override;
-            virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() override;
+            virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() const override;
             virtual void testCreateDummyOnlineAtcStations(int number) override;
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;

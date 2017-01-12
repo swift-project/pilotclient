@@ -211,7 +211,7 @@ namespace BlackCore
             this->m_dBusInterface->callDBus(QLatin1Literal("setFastPositionEnabledCallsigns"), callsigns);
         }
 
-        CCallsignSet CContextNetworkProxy::getFastPositionEnabledCallsigns()
+        CCallsignSet CContextNetworkProxy::getFastPositionEnabledCallsigns() const
         {
             return this->m_dBusInterface->callDBusRet<CCallsignSet>(QLatin1Literal("getFastPositionEnabledCallsigns"));
         }

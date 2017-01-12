@@ -110,6 +110,7 @@ namespace BlackCore
             virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void setInterimPositionReceivers(const BlackMisc::Aviation::CCallsignSet &receivers) override;
+            virtual const BlackMisc::Aviation::CCallsignSet &getInterimPositionReceivers() const override;
             //! @}
 
             //! \name Weather functions

@@ -517,6 +517,11 @@ namespace BlackCore
             m_interimPositionReceivers = receivers;
         }
 
+        const CCallsignSet &CNetworkVatlib::getInterimPositionReceivers() const
+        {
+            return m_interimPositionReceivers;
+        }
+
         void CNetworkVatlib::sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign)
         {
             Q_ASSERT_X(isConnected(), Q_FUNC_INFO, "Can't send to server when disconnected");

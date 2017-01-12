@@ -304,7 +304,7 @@ namespace BlackCore
             }
 
             //! \copydoc IContextNetwork::getFastPositionEnabledCallsigns
-            virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() override
+            virtual BlackMisc::Aviation::CCallsignSet getFastPositionEnabledCallsigns() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return BlackMisc::Aviation::CCallsignSet();
