@@ -9,7 +9,6 @@
 
 #include "weatherdatagfs.h"
 #include "blackcore/application.h"
-#include "blackmisc/worker.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/geo/coordinategeodetic.h"
@@ -55,6 +54,11 @@ namespace BlackWxPlugin
             IWeatherData(parent)
         { }
 
+        CWeatherDataGfs::~CWeatherDataGfs()
+        {
+            if (m_parseGribFileWorker && !m_parseGribFileWorker->isFinished()) { m_parseGribFileWorker->abandonAndWait(); }
+        }
+
         void CWeatherDataGfs::fetchWeatherData(const CWeatherGrid &grid, const CLength &range)
         {
             m_grid = grid;
@@ -70,11 +74,12 @@ namespace BlackWxPlugin
             else
             {
                 CLogMessage(this).debug() << "Using cached data";
-                CWorker *worker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
+                Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
+                m_parseGribFileWorker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
                 {
                     parseGfsFileImpl(m_gribData);
                 });
-                worker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
+                m_parseGribFileWorker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
             }
         }
 
@@ -92,11 +97,12 @@ namespace BlackWxPlugin
         void CWeatherDataGfs::ps_parseGfsFile(QNetworkReply *reply)
         {
             m_gribData = reply->readAll();
-            CWorker *worker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
+            Q_ASSERT_X(!m_parseGribFileWorker, Q_FUNC_INFO, "Worker already running");
+            m_parseGribFileWorker = BlackMisc::CWorker::fromTask(this, "parseGribFile", [this]()
             {
                 parseGfsFileImpl(m_gribData);
             });
-            worker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
+            m_parseGribFileWorker->then(this, &CWeatherDataGfs::ps_fetchingWeatherDataFinished);
             reply->deleteLater();
         }
 
@@ -199,6 +205,8 @@ namespace BlackWxPlugin
             g2int iseek = 0;
             for(;;)
             {
+                if(QThread::currentThread()->isInterruptionRequested()) { return; }
+
                 // Search next grib field
                 g2int lskip = 0;
                 g2int lgrib = 0;
@@ -246,6 +254,8 @@ namespace BlackWxPlugin
 
             for (const GfsGridPoint &gfsGridPoint : m_gfsWeatherGrid)
             {
+                if(QThread::currentThread()->isInterruptionRequested()) { return; }
+
                 CTemperatureLayerList temperatureLayers;
 
                 CAltitude surfaceAltitude (0, CAltitude::AboveGround, CLengthUnit::defaultUnit());

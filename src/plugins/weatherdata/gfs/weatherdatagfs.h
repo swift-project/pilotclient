@@ -14,6 +14,7 @@
 
 #include "g2clib/grib2.h"
 #include "blackmisc/weather/gridpoint.h"
+#include "blackmisc/worker.h"
 #include "blackcore/weatherdata.h"
 #include <QReadWriteLock>
 #include <QHash>
@@ -21,6 +22,7 @@
 #include <QUrl>
 #include <QByteArray>
 #include <QNetworkReply>
+#include <QPointer>
 #include <array>
 
 class QNetworkAccessManager;
@@ -41,6 +43,9 @@ namespace BlackWxPlugin
         public:
             //! Constructor
             CWeatherDataGfs(QObject *parent = nullptr);
+
+            //! Destructor
+            ~CWeatherDataGfs();
 
             //! \copydoc BlackCore::IWeatherData::fetchWeatherData
             virtual void fetchWeatherData(const BlackMisc::Weather::CWeatherGrid &grid,
@@ -160,6 +165,8 @@ namespace BlackWxPlugin
 
             QVector<GfsGridPoint> m_gfsWeatherGrid;
             BlackMisc::Weather::CWeatherGrid m_weatherGrid;
+
+            QPointer<BlackMisc::CWorker> m_parseGribFileWorker; //!< worker will destroy itself, so weak pointer
 
             using Grib2ParameterKey = std::array<g2int, 2>;
             using Grib2ParameterTable = QMap<Grib2ParameterKey, Grib2ParameterValue>;
