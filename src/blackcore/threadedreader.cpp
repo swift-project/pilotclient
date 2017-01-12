@@ -69,10 +69,9 @@ namespace BlackCore
         return delta <= timeLastMs;
     }
 
-    bool CThreadedReader::isNetworkAvailable() const
+    bool CThreadedReader::isNetworkConnectedAndAccessible() const
     {
-        static const bool nw = CNetworkUtils::hasConnectedInterface();
-        return nw;
+        return sApp->isNetworkConnectedAndAccessible();
     }
 
     void CThreadedReader::gracefulShutdown()
@@ -98,9 +97,9 @@ namespace BlackCore
 
     bool CThreadedReader::isShuttingDown() const
     {
-        if (this->m_shutdown) { return true; }
-        if (this->isAbandoned()) { return true; }
         if (!sApp) { return true; } // sApp object is gone, whole system shutdown
+        if (this->m_shutdown) { return true; } // marked as shutdown
+        if (this->isAbandoned()) { return true; } // worker abandoned
         return false;
     }
 

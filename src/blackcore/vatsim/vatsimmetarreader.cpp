@@ -80,7 +80,7 @@ namespace BlackCore
         void CVatsimMetarReader::readMetars()
         {
             if (this->isAbandoned()) { return; }
-            if (!this->isNetworkAvailable())
+            if (!this->isNetworkConnectedAndAccessible())
             {
                 CLogMessage(this).warning("No network, cannot read METARs");
                 return;

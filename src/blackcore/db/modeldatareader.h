@@ -136,6 +136,7 @@ namespace BlackCore
             virtual void invalidateCaches(BlackMisc::Network::CEntityFlags::Entity entities) override;
             virtual bool hasChangedUrl(BlackMisc::Network::CEntityFlags::Entity entity) const override;
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const override;
+
         private slots:
             //! Liveries have been read
             void ps_parseLiveryData(QNetworkReply *nwReply);
@@ -147,7 +148,7 @@ namespace BlackCore
             void ps_parseModelData(QNetworkReply *nwReply);
 
             //! Read / re-read data file
-            void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
+            void ps_read(BlackMisc::Network::CEntityFlags::Entity entities = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,
                          BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode = BlackMisc::Db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime());
 
             void ps_liveryCacheChanged();

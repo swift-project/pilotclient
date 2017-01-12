@@ -62,7 +62,8 @@ namespace BlackMisc
                 StartRead,                 //!< reading has been started
                 ReadFinished,              //!< reading done
                 ReadFinishedRestricted,    //!< finished a timestamp restricted read
-                ReadFailed                 //!< reading failed
+                ReadFailed,                //!< reading failed
+                ReadSkipped                //!< read skipped, e.g. because network is down
             };
 
             //! Convert to string

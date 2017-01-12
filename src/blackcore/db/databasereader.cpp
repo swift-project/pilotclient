@@ -167,7 +167,7 @@ namespace BlackCore
 
             // ps_read is implemented in the derived classes
             if (entities == CEntityFlags::NoEntity) { return; }
-            if (!this->isNetworkAvailable())
+            if (!this->isNetworkConnectedAndAccessible())
             {
                 CLogMessage(this).warning("No network, will not read %1") << CEntityFlags::flagToString(entities);
                 return;
@@ -318,7 +318,7 @@ namespace BlackCore
 
         bool CDatabaseReader::requestHeadersOfSharedFiles(const CEntityFlags::Entity &entities)
         {
-            if (!this->isNetworkAvailable())
+            if (!this->isNetworkConnectedAndAccessible())
             {
                 CLogMessage(this).warning("No network, will not read shared file headers for %1") << CEntityFlags::flagToString(entities);
                 return false;

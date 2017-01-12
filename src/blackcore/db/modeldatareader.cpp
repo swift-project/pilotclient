@@ -147,13 +147,19 @@ namespace BlackCore
                 getDistributorsCount() > 0;
         }
 
-        void CModelDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+        void CModelDataReader::ps_read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
         {
             this->threadAssertCheck();
             if (this->isShuttingDown()) { return; }
+            entities &= CEntityFlags::DistributorLiveryModel;
+            if (!this->isNetworkConnectedAndAccessible())
+            {
+                emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0);
+                return;
+            }
 
             CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
-            if (entity.testFlag(CEntityFlags::LiveryEntity))
+            if (entities.testFlag(CEntityFlags::LiveryEntity))
             {
                 CUrl url(getLiveryUrl(mode));
                 if (!url.isEmpty())
@@ -172,7 +178,7 @@ namespace BlackCore
                 }
             }
 
-            if (entity.testFlag(CEntityFlags::DistributorEntity))
+            if (entities.testFlag(CEntityFlags::DistributorEntity))
             {
                 CUrl url(getDistributorUrl(mode));
                 if (!url.isEmpty())
@@ -191,7 +197,7 @@ namespace BlackCore
                 }
             }
 
-            if (entity.testFlag(CEntityFlags::ModelEntity))
+            if (entities.testFlag(CEntityFlags::ModelEntity))
             {
                 CUrl url(getModelUrl(mode));
                 if (!url.isEmpty())

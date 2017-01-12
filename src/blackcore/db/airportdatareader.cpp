@@ -181,6 +181,12 @@ namespace BlackCore
         {
             this->threadAssertCheck();
             if (this->isShuttingDown()) { return; }
+            entity &= CEntityFlags::AirportEntity;
+            if (!this->isNetworkConnectedAndAccessible())
+            {
+                emit this->dataRead(entity, CEntityFlags::ReadSkipped, 0);
+                return;
+            }
 
             if (entity.testFlag(CEntityFlags::AirportEntity))
             {

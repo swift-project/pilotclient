@@ -132,6 +132,12 @@ namespace BlackCore
         {
             this->threadAssertCheck(); // runs in background thread
             if (this->isShuttingDown()) { return; }
+            entities &= CEntityFlags::AllIcaoAndCountries;
+            if (!this->isNetworkConnectedAndAccessible())
+            {
+                emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0);
+                return;
+            }
 
             CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
             if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
@@ -181,7 +187,7 @@ namespace BlackCore
 
             if (entitiesTriggered != CEntityFlags::NoEntity)
             {
-                emit dataRead(entitiesTriggered, CEntityFlags::StartRead, 0);
+                emit this->dataRead(entitiesTriggered, CEntityFlags::StartRead, 0);
             }
         }
 

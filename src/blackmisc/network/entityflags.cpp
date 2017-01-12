@@ -79,6 +79,7 @@ namespace BlackMisc
             case ReadFinished: return "finished";
             case ReadFinishedRestricted: return "finished (restricted)";
             case ReadFailed: return "failed";
+            case ReadSkipped: return "skipped";
             case StartRead: return "read started";
             default:
                 BLACK_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
@@ -94,6 +95,8 @@ namespace BlackMisc
             case ReadFinishedRestricted:
             case StartRead:
                 return CStatusMessage::SeverityInfo;
+            case ReadSkipped:
+                return CStatusMessage::SeverityWarning;
             case ReadFailed:
                 return CStatusMessage::SeverityError;
             default:

@@ -65,9 +65,14 @@ namespace BlackWxPlugin
             m_maxRange = range;
             if (m_gribData.isEmpty())
             {
-                CLogMessage(this).debug() << "Started to download GFS data...";
-                QUrl url = getDownloadUrl();
-                CLogMessage(this).debug() << "Download url:" << url.toString();
+                if (!sApp->isNetworkConnectedAndAccessible())
+                {
+                    CLogMessage(this).error("No wether download since network not accessible");
+                    return;
+                }
+
+                const QUrl url = getDownloadUrl();
+                CLogMessage(this).debug() << "Started to download GFS data from" << url.toString();
                 QNetworkRequest request(url);
                 sApp->getFromNetwork(request, { this, &CWeatherDataGfs::ps_parseGfsFile });
             }

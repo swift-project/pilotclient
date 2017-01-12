@@ -185,7 +185,7 @@ namespace BlackCore
 
         void CVatsimDataFileReader::ps_read()
         {
-            if (!this->isNetworkAvailable())
+            if (!this->isNetworkConnectedAndAccessible())
             {
                 CLogMessage(this).warning("No network, cannot read VATSIM data file");
                 return;

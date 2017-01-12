@@ -53,7 +53,7 @@ namespace BlackCore
         bool updatedWithinLastMs(qint64 timeLastMs);
 
         //! Network available
-        bool isNetworkAvailable() const;
+        bool isNetworkConnectedAndAccessible() const;
 
         //! Is marked as read failed
         //! \threadsafe
