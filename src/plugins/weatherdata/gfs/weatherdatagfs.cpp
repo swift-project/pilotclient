@@ -158,7 +158,7 @@ namespace BlackWxPlugin
             const QDateTime now = QDateTime::currentDateTimeUtc();
 
             // GFS data is published after 4 yours.
-            const QDateTime cnow = now.addSecs( -5 * 60 * 60);
+            const QDateTime cnow = now.addSecs(-5 * 60 * 60);
 
             int hourLastPublishedCycle = 0;
             for (const auto &cycle : cycles)
@@ -208,19 +208,19 @@ namespace BlackWxPlugin
 
             int messageNo = 0;
             g2int iseek = 0;
-            for(;;)
+            for (;;)
             {
                 if(QThread::currentThread()->isInterruptionRequested()) { return; }
 
                 // Search next grib field
                 g2int lskip = 0;
                 g2int lgrib = 0;
-                auto constData = reinterpret_cast<unsigned char*>(const_cast<char*>(gribData.data()));
+                auto constData = reinterpret_cast<unsigned char *>(const_cast<char *>(gribData.data()));
                 findNextGribMessage(constData, gribData.size(), iseek, &lskip, &lgrib);
                 if (lgrib == 0) { break; }
 
                 unsigned char *readPtr = constData + lskip;
-                iseek=lskip + lgrib;
+                iseek = lskip + lgrib;
 
                 g2int sec0[3];
                 g2int sec1[13];
@@ -263,7 +263,7 @@ namespace BlackWxPlugin
 
                 CTemperatureLayerList temperatureLayers;
 
-                CAltitude surfaceAltitude (0, CAltitude::AboveGround, CLengthUnit::defaultUnit());
+                CAltitude surfaceAltitude(0, CAltitude::AboveGround, CLengthUnit::defaultUnit());
                 CTemperatureLayer surfaceTemperature(surfaceAltitude, CTemperature(gfsGridPoint.surfaceTemperature, CTemperatureUnit::K()), {}, {});
                 temperatureLayers.insert(surfaceTemperature);
 
@@ -289,7 +289,7 @@ namespace BlackWxPlugin
                 }
 
                 CCloudLayerList cloudLayers;
-                for(auto cloudLayerIt = gfsGridPoint.cloudLayers.begin(); cloudLayerIt != gfsGridPoint.cloudLayers.end(); ++cloudLayerIt)
+                for (auto cloudLayerIt = gfsGridPoint.cloudLayers.begin(); cloudLayerIt != gfsGridPoint.cloudLayers.end(); ++cloudLayerIt)
                 {
                     CCloudLayer cloudLayer;
                     cloudLayer.setBase(CAltitude(cloudLayerIt.value().bottomLevel, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
@@ -328,14 +328,14 @@ namespace BlackWxPlugin
                 g2int start;
                 g2int vers;
                 // Look for "GRIB" at the beginning
-                gbit(bufferStart,&start,(k+0)*8,4*8);
-                gbit(bufferStart,&vers,(k+7)*8,1*8);
+                gbit(bufferStart, &start, (k + 0) * 8, 4 * 8);
+                gbit(bufferStart, &vers, (k + 7) * 8, 1 * 8);
                 if (start == 1196575042 && (vers == 1 || vers == 2))
                 {
                     g2int lengrib = 0;
                     //  Look for '7777' at end of GRIB message
-                    if (vers == 1) gbit(bufferStart,&lengrib,(k+4)*8,3*8);
-                    if (vers == 2) gbit(bufferStart,&lengrib,(k+12)*8,4*8);
+                    if (vers == 1) gbit(bufferStart, &lengrib, (k + 4) * 8, 3 * 8);
+                    if (vers == 2) gbit(bufferStart, &lengrib, (k + 12) * 8, 4 * 8);
 
                     // Check the limits
                     g2int endPos = ipos + k + lengrib;
@@ -343,12 +343,12 @@ namespace BlackWxPlugin
                     unsigned char *bufferEnd = buffer + endPos - 4;
                     // Hard code to 4 instead of sizeof(g2int)
                     g2int end;
-                    gbit(bufferEnd,&end, 0, 4*8);
+                    gbit(bufferEnd, &end, 0, 4 * 8);
                     if (end == 926365495)
                     {
                         // GRIB message found
-                        *lskip=ipos+k;
-                        *lgrib=lengrib;
+                        *lskip = ipos + k;
+                        *lgrib = lengrib;
                         return;
                     }
                 }
@@ -454,8 +454,8 @@ namespace BlackWxPlugin
                         GfsGridPoint gridPoint;
                         gridPoint.latitude = latitude1 - iy * dy;
                         gridPoint.longitude = longitude1 + ix * dx;
-                        if(gridPoint.longitude >= 360.0) { gridPoint.longitude -= 360.0; }
-                        if(gridPoint.longitude < 0.0) { gridPoint.longitude += 360.0; }
+                        if (gridPoint.longitude >= 360.0) { gridPoint.longitude -= 360.0; }
+                        if (gridPoint.longitude < 0.0) { gridPoint.longitude += 360.0; }
                         gridPoint.fieldPosition = ix + i;
                         CCoordinateGeodetic gridPointPosition(gridPoint.latitude, gridPoint.longitude, 0);
                         if (m_maxRange == CLength())
@@ -635,7 +635,7 @@ namespace BlackWxPlugin
         {
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
-                if(fld[gridPoint.fieldPosition] > 0.0) { gridPoint.cloudLayers[level].totalCoverage = fld[gridPoint.fieldPosition]; }
+                if (fld[gridPoint.fieldPosition] > 0.0) { gridPoint.cloudLayers[level].totalCoverage = fld[gridPoint.fieldPosition]; }
             }
         }
 
@@ -644,7 +644,7 @@ namespace BlackWxPlugin
             for (auto &gridPoint : m_gfsWeatherGrid)
             {
                 static const g2float minimumLayer = 0.0;
-                switch(surfaceType)
+                switch (surfaceType)
                 {
                 case LowCloudBottomLevel:
                 case MiddleCloudBottomLevel:
@@ -699,8 +699,8 @@ namespace BlackWxPlugin
         CTemperature CWeatherDataGfs::calculateDewPoint(const CTemperature &temperature, double relativeHumidity)
         {
             double temperatureInCelsius = temperature.value(CTemperatureUnit::C());
-            double saturationVaporPressure = 6.112 * std::exp((17.67 * temperatureInCelsius)/(temperatureInCelsius + 243.5));
-            double vaporPressure = saturationVaporPressure * ( relativeHumidity / 100.0);
+            double saturationVaporPressure = 6.112 * std::exp((17.67 * temperatureInCelsius) / (temperatureInCelsius + 243.5));
+            double vaporPressure = saturationVaporPressure * (relativeHumidity / 100.0);
             double dewPointInCelsius = std::log(vaporPressure / 6.112) * 243.5 / (17.67 - std::log(vaporPressure / 6.112));
             return { dewPointInCelsius, CTemperatureUnit::C() };
         }
