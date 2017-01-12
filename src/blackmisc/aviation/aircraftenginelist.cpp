@@ -63,6 +63,7 @@ namespace BlackMisc
             {
                 CAircraftEngine engine;
                 int number = e.toInt();
+                CJsonScope scope(e);
                 engine.convertFromJson(json.value(e).toObject());
                 engine.setNumber(number);
                 push_back(engine);
