@@ -128,6 +128,8 @@ namespace BlackGui
 
         void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Simulation::CSimulatedAircraft &ownAircraft)
         {
+            if (this->m_flightPlan.wasSentOrLoaded()) { return; }
+
             // only override with valid values
             if (CCallsign::isValidAircraftCallsign(ownAircraft.getCallsignAsString()))
             {
@@ -145,6 +147,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::prefillWithUserData(const Network::CUser &user)
         {
+            if (this->m_flightPlan.wasSentOrLoaded()) { return; }
             if (user.hasValidRealName())
             {
                 ui->le_PilotsName->setText(user.getRealName());
@@ -152,6 +155,10 @@ namespace BlackGui
             if (user.hasHomeBase())
             {
                 ui->le_PilotsHomeBase->setText(user.getHomeBase().getIcaoCode());
+            }
+            if (user.hasValidCallsign())
+            {
+                ui->le_Callsign->setText(user.getCallsign().asString());
             }
         }
 

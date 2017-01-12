@@ -44,7 +44,7 @@ namespace BlackGui
             explicit CFlightPlanComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CFlightPlanComponent();
+            virtual ~CFlightPlanComponent();
 
         public slots:
             //! Login data were set
