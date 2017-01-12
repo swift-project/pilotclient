@@ -181,7 +181,7 @@ namespace BlackCore
                 {
                     // Normal / Stealth mode
                     VatPilotPosition pos;
-                    // TODO: we need to distinguish true and pressure altitude
+                    //! \fixme we need to distinguish true and pressure altitude
                     pos.altitudePressure = myAircraft.getAltitude().value(CLengthUnit::ft());
                     pos.altitudeTrue = myAircraft.getAltitude().value(CLengthUnit::ft());
                     pos.heading      = myAircraft.getHeading().value(CAngleUnit::deg());
@@ -353,7 +353,7 @@ namespace BlackCore
 
         VatSimType CNetworkVatlib::convertToSimType(CSimulatorPluginInfo &simInfo)
         {
-            /* TODO Define recognized simulators somewhere */
+            //! \fixme Define recognized simulators somewhere */
             if (simInfo.getSimulator() == "fs9" || simInfo.getSimulator() == "fsx")
             {
                 return vatSimTypeMSCFS;
@@ -401,7 +401,7 @@ namespace BlackCore
             m_ownAircraftIcaoCode = ownAircraft.getAircraftIcaoCode();
             m_ownAirlineIcaoCode = ownAircraft.getAirlineIcaoCode();
             m_ownLiveryDescription = ownAircraft.getLivery().getDescription();
-            updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode); // \todo livery?
+            updateOwnIcaoCodes(m_ownAircraftIcaoCode, m_ownAirlineIcaoCode);
         }
 
         void CNetworkVatlib::presetLoginMode(LoginMode mode)
@@ -438,7 +438,7 @@ namespace BlackCore
                 VatPilotConnection info;
                 info.callsign = callsign.data();
                 info.name = name.data();
-                info.rating = vatPilotRatingStudent; //TODO
+                info.rating = vatPilotRatingStudent; // as documented, expected to be vatPilotRatingStudent only
                 info.simType = convertToSimType(m_simulatorInfo);
                 Vat_SpecifyPilotLogon(m_net.data(), toFSD(m_server.getAddress()), m_server.getPort(),
                                       toFSD(m_server.getUser().getId()),
@@ -1014,8 +1014,8 @@ namespace BlackCore
                 const QString fixed = cbvar_cast(cbvar)->fromFSD(atis->textLines[i]).trimmed();
                 if (! fixed.isEmpty())
                 {
-                    // detect the stupid z1, z2, z3 placeholders
-                    // TODO: Anything better as this stupid code here?
+                    //  detect the stupid z1, z2, z3 placeholders
+                    //! \fixme: Anything better as this stupid code here?
                     const QString test = fixed.toLower().remove(QRegExp("[\\n\\t\\r]"));
                     if (test == "z") return;
                     if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..

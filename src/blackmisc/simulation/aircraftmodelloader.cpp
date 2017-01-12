@@ -135,7 +135,7 @@ namespace BlackMisc
             }
             else if (useCachedData && mode.testFlag(CacheUntilNewer))
             {
-                //! \todo currently too slow, does not make sense with that overhead
+                //! \todo currently too slow with remote files, does not make sense with that overhead
                 if (!this->areModelFilesUpdated())
                 {
                     emit loadingFinished(true, this->getSimulator());

@@ -230,7 +230,7 @@ namespace BlackGui
             }
             else
             {
-                //! \todo correct version when multiline placeholder is fixed
+                //! \todo correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
                 // const QString es(e.join('\n'));
                 // ui->pte_ExcludeDirectories->setPlaceholderText(es);
 

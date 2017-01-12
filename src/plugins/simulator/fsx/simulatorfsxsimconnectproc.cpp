@@ -267,8 +267,7 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_CLIENT_DATA *clientData = (SIMCONNECT_RECV_CLIENT_DATA *)pData;
                     if (simulatorFsx->m_useSbOffsets && clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
                     {
-                        //! \todo why is offset 19 ident 2/0 ?
-                        //! In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here
+                        //! \fixme FSUIPC vs SimConnect why is offset 19 ident 2/0? In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here. Whoever knows, add comment or fix if wrong
                         DataDefinitionClientAreaSb *sbData = (DataDefinitionClientAreaSb *) &clientData->dwData;
                         simulatorFsx->updateOwnAircraftFromSimulator(*sbData);
                     }

@@ -914,7 +914,7 @@ namespace BlackGui
 
                 // Currently disabled as the same effect can be realized by filtering than
                 // this->addRemoveDbModels(menuActions);
-                //! \todo remove if not needed in the long term (added 2016-Sep)
+                // remove if not needed in the long term (added 2016-Sep)
 
                 this->m_autoStashing = menuActions.addAction(this->m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoStashingDialog });
                 this->m_autoSimulatorStashing = menuActions.addAction(this->m_autoSimulatorStashing, CIcons::appDbStash16(), "Cross simulator updating (FSX-P3D-FS9)", CMenuAction::pathStash(), this, { mapComp, &CDbMappingComponent::ps_displayAutoSimulatorStashingDialog });

@@ -319,7 +319,7 @@ namespace BlackGui
 
             //! Workaround to format vPilot view
             //! \remark presize does not work properly when data are loaded, reason is not understood. This here does a formatting when tab becomes visible.
-            //! \todo can be removed whenever a proper formatting is archived with data loading
+            //! \fixme can be removed whenever a proper formatting is archived with data loading, vPilot support will be removed in the long term anyway
             void formatVPilotView();
 
             //! Model for given index from sender/current view

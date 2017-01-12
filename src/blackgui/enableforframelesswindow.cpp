@@ -121,7 +121,7 @@ namespace BlackGui
 
         // Qt::WA_PaintOnScreen leads to a warning
         // setMask(QRegion(10, 10, 10, 10) would work, but requires "complex" calcs for rounded corners
-        //! \todo Transparent widget, try out void QWidget::setMask
+        //! \fixme further improve transparent widget, try out void QWidget::setMask
         this->setDynamicProperties(frameless);
     }
 

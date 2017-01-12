@@ -191,8 +191,6 @@ namespace BlackGui
                 Q_ASSERT_X(exisitingMenu.size() > 1, Q_FUNC_INFO, "Redundant menu entries");
                 Q_ASSERT_X(existingAction.getTitle() != title, Q_FUNC_INFO, "Title mismatch");
                 if (icon.isNull() || existingAction.hasIcon()) { return existingAction.getQAction(); }
-
-                //! \todo replace if we have icon now, but not before
                 return existingAction;
             }
 

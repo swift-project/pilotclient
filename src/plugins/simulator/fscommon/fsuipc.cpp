@@ -89,7 +89,8 @@ namespace BlackSimPlugin
             if (!this->isConnected()) { return false; }
 
             Q_UNUSED(aircraft);
-            //! \todo FSUIPC write values
+
+            //! \fixme FSUIPC write values not yet implemented
             return false;
         }
 
@@ -97,8 +98,7 @@ namespace BlackSimPlugin
         {
             if (!this->isConnected()) { return false; }
 
-            clearAllWeather();
-
+            this->clearAllWeather();
             CGridPoint gridPoint = weatherGrid.front();
 
             NewWeather nw;
@@ -157,7 +157,6 @@ namespace BlackSimPlugin
             for (const auto &cloudLayer : cloudLayers)
             {
                 NewCloud cloud;
-
                 switch (cloudLayer.getCoverage())
                 {
                 case CCloudLayer::None: cloud.Coverage = 0; break;
@@ -329,7 +328,7 @@ namespace BlackSimPlugin
                     // Mode by SB3
                     if (xpdrIdentSb3Raw != 0)
                     {
-                        //! \todo Reset value for FSUIPC
+                        //! \fixme Reset value for FSUIPC
                         xpdr.setTransponderMode(CTransponder::StateIdent);
                     }
                     else

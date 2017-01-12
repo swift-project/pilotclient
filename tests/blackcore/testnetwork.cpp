@@ -68,7 +68,8 @@ namespace BlackCoreTest
         })
         .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
         {
-            //! \todo verify how we want to handle the situation if the connect fails. On Jenkins that would cause a failed test case and hence a failed build
+            // we skip the test at the beginning if the server cannot be reached
+            // otherwise the whole build on Jenkins may fail
             QVERIFY(newStatus == INetwork::Connected);
             qDebug() << "CONNECTED";
         })

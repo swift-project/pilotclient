@@ -203,11 +203,11 @@ namespace BlackMisc
 
         const CSimulatorInfo CSimulatorInfo::getLocallyInstalledSimulators()
         {
-            //! \todo add XP, ...
             CSimulatorInfo sim;
             bool fs9 = false;
             bool fsx = false;
             bool p3d = false;
+            bool xp = false;
 
             if (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
@@ -224,7 +224,8 @@ namespace BlackMisc
                     !CFsCommonUtil::p3dDir().isEmpty() &&
                     !CFsCommonUtil::p3dSimObjectsDir().isEmpty();
             }
-            bool xp = true; //! \todo XP resolution
+
+            xp = true; //! \todo XP resolution for locally installed simulator
 
             sim.setSimulator(CSimulatorInfo::boolToFlag(fsx, fs9, xp, p3d));
             return sim;
