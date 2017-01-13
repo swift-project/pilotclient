@@ -85,7 +85,7 @@ namespace BlackGui
             ui->selector_AircraftIcao->displayMode(CDbAircraftIcaoSelectorComponent::DisplayIcaoAndId);
             ui->selector_AirlineIcao->displayMode(CDbAirlineIcaoSelectorComponent::DisplayVDesignatorAndId);
 
-            setOkButtonString(false);
+            this->setOkButtonString(false);
             connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CLoginComponent::ps_loginCancelled);
             connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CLoginComponent::ps_toggleNetworkConnection);
             connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CLoginComponent::requestNetworkSettings);
@@ -171,8 +171,15 @@ namespace BlackGui
             this->m_logoffCountdownTimer->stop(); // in any case stop the timer
             if (currentWidget != this && currentWidget != this->parentWidget())
             {
+                const bool wasVisible = this->m_visible;
                 this->m_visible = false;
                 this->m_logoffCountdownTimer->stop();
+
+                if (wasVisible)
+                {
+                    // set own values, and send signals
+                    this->setOwnModelAndIcaoValues();
+                }
             }
             else
             {
@@ -228,34 +235,8 @@ namespace BlackGui
                 }
 
                 // sync values with GUI values
-                CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
-                ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-                CAircraftIcaoCode aircraftCode(ownAircraft.getAircraftIcaoCode());
-                CAirlineIcaoCode airlineCode(ownAircraft.getAirlineIcaoCode());
-
-                bool setIcaoCodes = false;
-                if (!ownAircraft.hasAircraftDesignator() && aircraftValues.ownAircraftIcao.hasValidDesignator())
-                {
-                    aircraftCode = aircraftValues.ownAircraftIcao;
-                    setIcaoCodes = true;
-                }
-                if (!ownAircraft.hasAircraftDesignator() && aircraftValues.ownAirlineIcao.hasValidDesignator())
-                {
-                    airlineCode = aircraftValues.ownAirlineIcao;
-                    setIcaoCodes = true;
-                }
-
-                if (ownAircraft.getCallsign() != aircraftValues.ownCallsign)
-                {
-                    ownAircraft.setCallsign(aircraftValues.ownCallsign);
-                    this->updateOwnCallsignAndPilotFromGuiValue();
-                }
-
-                if (setIcaoCodes)
-                {
-                    ownAircraft.setIcaoCodes(aircraftCode, airlineCode);
-                    sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(ownAircraft.getAircraftIcaoCode(), ownAircraft.getAirlineIcaoCode());
-                }
+                this->updateOwnAircraftCallsignAndPilotFromGuiValues();
+                this->updateOwnAircaftIcaoValuesFromGuiValues();
 
                 // Login mode
                 INetwork::LoginMode mode = ui->gbp_LoginMode->getLoginMode();
@@ -396,7 +377,7 @@ namespace BlackGui
 
         CUser CLoginComponent::getUserFromVatsimGuiValues() const
         {
-            CVatsimValues values = getVatsimValuesFromGui();
+            const CVatsimValues values = this->getVatsimValuesFromGui();
             CUser user(values.vatsimId, values.vatsimRealName, "", values.vatsimPassword, getCallsignFromGui());
             user.setHomeBase(values.vatsimHomeAirport);
             return user;
@@ -404,7 +385,7 @@ namespace BlackGui
 
         CCallsign CLoginComponent::getCallsignFromGui() const
         {
-            CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
+            const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
             return cs;
         }
 
@@ -420,7 +401,7 @@ namespace BlackGui
 
         void CLoginComponent::setOkButtonString(bool connected)
         {
-            QString s = connected ? "Disconnect" : "Connect";
+            const QString s = connected ? "Disconnect" : "Connect";
             ui->bb_OkCancel->button(QDialogButtonBox::Ok)->setText(s);
         }
 
@@ -477,30 +458,42 @@ namespace BlackGui
                 }
             }
 
-            this->updateOwnCallsignAndPilotFromGuiValue();
-            this->triggerDataChangedSignal(1500);
+            const bool changedOwnAircraftCallsignPilot = this->updateOwnAircraftCallsignAndPilotFromGuiValues();
+            const bool changedOwnAircraftIcaoValues = this->updateOwnAircaftIcaoValuesFromGuiValues();
+            if (changedOwnAircraftIcaoValues || changedOwnAircraftCallsignPilot)
+            {
+                emit this->loginDataChanged();
+            }
         }
 
-        void CLoginComponent::setGuiIcaoValues(const CAircraftModel &model, bool onlyIfEmpty)
+        bool CLoginComponent::setGuiIcaoValues(const CAircraftModel &model, bool onlyIfEmpty)
         {
+            bool changed = false;
             if (!onlyIfEmpty || !ui->selector_AircraftIcao->isSet())
             {
-                ui->selector_AircraftIcao->setAircraftIcao(model.getAircraftIcaoCode());
+                changed = ui->selector_AircraftIcao->setAircraftIcao(model.getAircraftIcaoCode());
             }
             if (!onlyIfEmpty || !ui->selector_AirlineIcao->isSet())
             {
-                ui->selector_AirlineIcao->setAirlineIcao(model.getAirlineIcaoCode());
+                const bool c = ui->selector_AirlineIcao->setAirlineIcao(model.getAirlineIcaoCode());
+                changed |= c;
             }
             if (!onlyIfEmpty || ui->le_AircraftCombinedType->text().trimmed().isEmpty())
             {
-                ui->le_AircraftCombinedType->setText(model.getAircraftIcaoCode().getCombinedType());
+                const QString combined(model.getAircraftIcaoCode().getCombinedType());
+                if (ui->le_AircraftCombinedType->text() != combined)
+                {
+                    ui->le_AircraftCombinedType->setText(combined);
+                    changed = true;
+                }
             }
-            this->ps_validateAircraftValues();
+            const bool valid = this->ps_validateAircraftValues();
+            return valid ? changed : false;
         }
 
         bool CLoginComponent::ps_validateAircraftValues()
         {
-            CGuiAircraftValues values = getAircraftValuesFromGui();
+            const CGuiAircraftValues values = getAircraftValuesFromGui();
 
             const bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
             ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
@@ -599,10 +592,10 @@ namespace BlackGui
             }
 
             // check state of own aircraft
-            this->updateOwnCallsignAndPilotFromGuiValue();
+            this->updateOwnAircraftCallsignAndPilotFromGuiValues();
 
             // let others know data changed
-            this->triggerDataChangedSignal(1500);
+            emit this->loginDataChanged();
         }
 
         void CLoginComponent::ps_mappingWizard()
@@ -670,11 +663,6 @@ namespace BlackGui
             ui->le_SimulatorModel->setStyleSheet(sheet.arg(color));
         }
 
-        void CLoginComponent::triggerDataChangedSignal(int deferTimeMs)
-        {
-            QTimer::singleShot(deferTimeMs, this, &CLoginComponent::loginDataChanged);
-        }
-
         CAircraftModel CLoginComponent::getPrefillModel() const
         {
             CAircraftModel model = this->m_currentAircraftModel.get();
@@ -682,24 +670,60 @@ namespace BlackGui
             return IContextOwnAircraft::getDefaultOwnAircraftModel();
         }
 
-        void CLoginComponent::updateOwnCallsignAndPilotFromGuiValue()
+        bool CLoginComponent::updateOwnAircraftCallsignAndPilotFromGuiValues()
         {
-            if (!sGui || !sGui->getIContextOwnAircraft()) { return; }
-            const CSimulatedAircraft ownAircaft(sGui->getIContextOwnAircraft()->getOwnAircraft());
+            if (!sGui || !sGui->getIContextOwnAircraft()) { return false; }
+            CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
             const QString cs(ui->le_Callsign->text().trimmed().toUpper());
-            if (!cs.isEmpty() && ownAircaft.getCallsignAsString() != cs)
+            bool changedCallsign = false;
+            if (!cs.isEmpty() && ownAircraft.getCallsignAsString() != cs)
             {
-                sGui->getIContextOwnAircraft()->updateOwnCallsign(CCallsign(cs));
+                const CCallsign callsign(cs);
+                sGui->getIContextOwnAircraft()->updateOwnCallsign(callsign);
+                ownAircraft.setCallsign(callsign); // also update
+                changedCallsign = true;
             }
-            CUser pilot = ownAircaft.getPilot();
+            CUser pilot = ownAircraft.getPilot();
             pilot.setRealName(CUser::beautifyRealName(ui->le_VatsimRealName->text()));
             pilot.setHomeBase(CAirportIcaoCode(ui->le_VatsimHomeAirport->text()));
             pilot.setId(ui->le_VatsimId->text());
             pilot.setCallsign(CCallsign(cs));
-            if (ownAircaft.getPilot() != pilot)
+            bool changedPilot = false;
+            if (ownAircraft.getPilot() != pilot)
             {
-                sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(pilot);
+                // it can be that the callsign was changed and this results in unchanged here
+                changedPilot = sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(pilot);
             }
+            return changedCallsign || changedPilot;
+        }
+
+        bool CLoginComponent::updateOwnAircaftIcaoValuesFromGuiValues()
+        {
+            if (!sGui || !sGui->getIContextOwnAircraft()) { return false; }
+            const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
+            const CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
+
+            CAircraftIcaoCode aircraftCode(ownAircraft.getAircraftIcaoCode());
+            CAirlineIcaoCode airlineCode(ownAircraft.getAirlineIcaoCode());
+
+            bool changedIcaoCodes = false;
+            if (aircraftValues.ownAircraftIcao.hasValidDesignator() && aircraftValues.ownAircraftIcao != aircraftCode)
+            {
+                aircraftCode = aircraftValues.ownAircraftIcao;
+                changedIcaoCodes = true;
+            }
+            if (aircraftValues.ownAirlineIcao.hasValidDesignator() && aircraftValues.ownAirlineIcao != airlineCode)
+            {
+                airlineCode = aircraftValues.ownAirlineIcao;
+                changedIcaoCodes = true;
+            }
+
+            if (changedIcaoCodes)
+            {
+                sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(aircraftCode, airlineCode);
+            }
+
+            return changedIcaoCodes;
         }
     } // namespace
 } // namespace

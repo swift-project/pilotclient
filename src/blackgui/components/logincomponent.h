@@ -16,13 +16,14 @@
 #include "blackcore/data/vatsimsetup.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/settings/guisettings.h"
-#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/network/entityflags.h"
 #include "blackmisc/network/server.h"
 #include "blackmisc/network/user.h"
+#include "blackmisc/digestsignal.h"
+#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 
 #include <QFrame>
 #include <QObject>
@@ -50,8 +51,7 @@ namespace BlackGui
         /*!
          * Login component to flight network
          */
-        class BLACKGUI_EXPORT CLoginComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CLoginComponent : public QFrame
         {
             Q_OBJECT
 
@@ -66,7 +66,7 @@ namespace BlackGui
             void setAutoPopupWizad(bool autoPopup);
 
             //! Destructor
-            ~CLoginComponent();
+            virtual ~CLoginComponent();
 
         signals:
             //! Login
@@ -79,7 +79,11 @@ namespace BlackGui
             void requestNetworkSettings();
 
             //! Relevant login data changed
+            //! \private normally loginDataChangedDigest will be used
             void loginDataChanged();
+
+            //! Relevant login data changed (digest version)
+            void loginDataChangedDigest();
 
         public slots:
             //! Main info area changed
@@ -142,8 +146,7 @@ namespace BlackGui
                 QString vatsimHomeAirport;
             };
 
-            //! Load from settings
-            void loadRememberedVatsimData();
+            // -------------- values from GUI -----------------
 
             //! Values from GUI
             CGuiAircraftValues getAircraftValuesFromGui() const;
@@ -156,6 +159,25 @@ namespace BlackGui
 
             //! Callsign from GUI
             BlackMisc::Aviation::CCallsign getCallsignFromGui() const;
+
+            //! Set ICAO values
+            //! \return changed values
+            bool setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
+
+            // -------------- values from GUI -----------------
+
+            //! Update own callsign (own aircraft from what is set in the GUI)
+            //! \return changed?
+            bool updateOwnAircraftCallsignAndPilotFromGuiValues();
+
+            //! Update own ICAO values (own aircraft from what is set in the GUI)
+            //! \return changed?
+            bool updateOwnAircaftIcaoValuesFromGuiValues();
+
+            // -------------- others -----------------
+
+            //! Own model and ICAO data for GUI and own aircraft
+            void setOwnModelAndIcaoValues();
 
             //! Selected server (VATSIM)
             BlackMisc::Network::CServer getCurrentVatsimServer() const;
@@ -172,29 +194,21 @@ namespace BlackGui
             //! Logoff countdown
             void startLogoffTimerCountdown();
 
-            //! Own model and ICAO data
-            void setOwnModelAndIcaoValues();
-
-            //! Set ICAO values
-            void setGuiIcaoValues(const BlackMisc::Simulation::CAircraftModel &model, bool onlyIfEmpty);
-
             //! Completers
             void initCompleters(BlackMisc::Network::CEntityFlags::Entity entity);
 
             //! Highlight model field according to model data
             void highlightModelField(const BlackMisc::Simulation::CAircraftModel &model = {});
 
-            //! Trigger the signal that data have been changed
-            void triggerDataChangedSignal(int deferTimeMs);
+            //! Load from settings
+            void loadRememberedVatsimData();
 
             //! Get a prefill model
             BlackMisc::Simulation::CAircraftModel getPrefillModel() const;
 
-            //! Update own callsign (own aircraft from what is set in the GUI)
-            void updateOwnCallsignAndPilotFromGuiValue();
-
             QScopedPointer<Ui::CLoginComponent> ui;
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
+            BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChanged, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
             const int LogoffIntervalSeconds = 20; //!< time before logoff
