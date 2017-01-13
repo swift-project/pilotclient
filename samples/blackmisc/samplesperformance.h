@@ -42,8 +42,11 @@ namespace BlackSample
         //! JSON loading (database vs. own format
         static int samplesJsonModel(QTextStream &out);
 
-        //! String manipulation
-        static int samplesString(QTextStream &out);
+        //! String manipulation (inserter)
+        static int samplesStringUtilsVsRegEx(QTextStream &out);
+
+        //! String manipulation (concatenation)
+        static int samplesStringConcat(QTextStream &out);
 
         //! Situation values for testing
         static BlackMisc::Aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes);

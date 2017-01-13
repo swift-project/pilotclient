@@ -36,6 +36,7 @@
 #include <QRegularExpressionMatch>
 #include <QString>
 #include <QStringList>
+#include <QStringBuilder>
 #include <QTextStream>
 #include <QTime>
 #include <QVector>
@@ -402,7 +403,7 @@ namespace BlackSample
         return 0;
     }
 
-    int CSamplesPerformance::samplesString(QTextStream &out)
+    int CSamplesPerformance::samplesStringUtilsVsRegEx(QTextStream &out)
     {
         QTime timer;
         static const QString chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_-=+!\"@#$%^&*()[]{} \t;:\\/?,.<>";
@@ -483,6 +484,89 @@ namespace BlackSample
         return 0;
     }
 
+    int CSamplesPerformance::samplesStringConcat(QTextStream &out)
+    {
+        const int loop = 250000;
+        QString x;
+        const QString x1 = "11-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x2 = "22-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x3 = "33-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x4 = "44-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x5 = "55-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x6 = "66-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x7 = "77-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x8 = "88-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const QString x9 = "99-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        QTime time;
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x += "12-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        }
+        out << "+= String " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x += QLatin1String("12-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        }
+        out << "+= QLatin1String " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x += QStringLiteral("12-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        }
+        out << "+= QStringLiteral " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9;
+        }
+        out << "+ String multiple " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = x1 % x2 % x3 % x4 % x5 % x6 % x7 % x8 % x9;
+        }
+        out << "% String multiple " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = x.append(x1).append(x2).append(x3).append(x4).append(x5).append(x6).append(x7).append(x8).append(x9);
+        }
+        out << "append String multiple " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        static const QString xArgString("%1 %2 %3 %4 %5 %6 %7 %8 %9");
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = xArgString.arg(x1, x2, x3, x4, x5, x6, x7, x8, x9);
+        }
+        out << "arg String multiple " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        time.start();
+        for (int i = 0; i < loop; i++)
+        {
+            x = QStringLiteral("%1 %2 %3 %4 %5 %6 %7 %8 %9").arg(x1, x2, x3, x4, x5, x6, x7, x8, x9);
+        }
+        out << "arg QStringLiteral multiple " << time.elapsed() << "ms" << endl;
+        x.clear();
+
+        return 0;
+    }
+
     CAircraftSituationList CSamplesPerformance::createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes)
     {
         CAircraftSituationList situations;
@@ -523,5 +607,4 @@ namespace BlackSample
         }
         return models;
     }
-
 } // namespace
