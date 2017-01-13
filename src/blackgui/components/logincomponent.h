@@ -78,10 +78,6 @@ namespace BlackGui
             //! Request network settings
             void requestNetworkSettings();
 
-            //! Relevant login data changed
-            //! \private normally loginDataChangedDigest will be used
-            void loginDataChanged();
-
             //! Relevant login data changed (digest version)
             void loginDataChangedDigest();
 
@@ -208,7 +204,7 @@ namespace BlackGui
 
             QScopedPointer<Ui::CLoginComponent> ui;
             QScopedPointer<CDbQuickMappingWizard> m_mappingWizard;
-            BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChanged, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
+            BlackMisc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
             bool m_autoPopupWizard = false; //!< automatically popup wizard if mapping is needed
             bool m_visible = false; //!< is this component selected?
             const int LogoffIntervalSeconds = 20; //!< time before logoff

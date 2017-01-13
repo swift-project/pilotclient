@@ -7,13 +7,20 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/digestsignal.h"
+#include "digestsignal.h"
+#include "threadutils.h"
 
 namespace BlackMisc
 {
-
-    void CDigestSignal::ps_inputSignal()
+    void CDigestSignal::inputSignal()
     {
+        if (!CThreadUtils::isCurrentThreadObjectThread(this))
+        {
+            // call in correct thread
+            QTimer::singleShot(0, this, &CDigestSignal::inputSignal);
+            return;
+        }
+
         m_timer.start(); // start or restart
         m_inputsCount++;
         if (m_inputsCount >= m_maxInputsPerDigest)
@@ -27,6 +34,13 @@ namespace BlackMisc
         m_timer.stop();
         m_inputsCount = 0;
         emit digestSignal();
+    }
+
+    void CDigestSignal::init(int maxDelayMs)
+    {
+        QObject::connect(&m_timer, &QTimer::timeout, this, &CDigestSignal::ps_timeout);
+        m_timer.setSingleShot(true);
+        m_timer.setInterval(maxDelayMs);
     }
 
 } // namespace

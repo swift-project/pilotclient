@@ -205,7 +205,7 @@ namespace BlackGui
         {
             this->m_logoffCountdownTimer->stop();
             ui->pb_LogoffTimeout->setValue(LogoffIntervalSeconds);
-            emit loginOrLogoffCancelled();
+            emit this->loginOrLogoffCancelled();
         }
 
         void CLoginComponent::ps_toggleNetworkConnection()
@@ -301,11 +301,11 @@ namespace BlackGui
                 if (!ownAircraft.getAircraftIcaoCombinedType().isEmpty()) { ac += " "; ac += ownAircraft.getAircraftIcaoCode().getCombinedType(); }
                 ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
                 ui->le_LoginAsAircaft->setText(ac);
-                emit loginOrLogoffSuccessful();
+                emit this->loginOrLogoffSuccessful();
             }
             else
             {
-                emit loginOrLogoffCancelled();
+                emit this->loginOrLogoffCancelled();
             }
         }
 
@@ -462,7 +462,7 @@ namespace BlackGui
             const bool changedOwnAircraftIcaoValues = this->updateOwnAircaftIcaoValuesFromGuiValues();
             if (changedOwnAircraftIcaoValues || changedOwnAircraftCallsignPilot)
             {
-                emit this->loginDataChanged();
+                this->m_changedLoginDataDigestSignal.inputSignal();
             }
         }
 
@@ -595,7 +595,7 @@ namespace BlackGui
             this->updateOwnAircraftCallsignAndPilotFromGuiValues();
 
             // let others know data changed
-            emit this->loginDataChanged();
+            this->m_changedLoginDataDigestSignal.inputSignal();
         }
 
         void CLoginComponent::ps_mappingWizard()

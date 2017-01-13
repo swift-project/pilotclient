@@ -30,29 +30,39 @@ namespace BlackMisc
         CDigestSignal(T *sender, F1 inputSignal, F2 digestSignal, int maxDelayMs = 500, int maxInputsPerDigest = 3)
             : m_maxInputsPerDigest(maxInputsPerDigest)
         {
-            QObject::connect(sender, inputSignal, this, &CDigestSignal::ps_inputSignal);
+            QObject::connect(sender, inputSignal, this, &CDigestSignal::inputSignal);
             QObject::connect(this, &CDigestSignal::digestSignal, sender, digestSignal);
-
-            QObject::connect(&m_timer, &QTimer::timeout, this, &CDigestSignal::ps_timeout);
-            m_timer.setSingleShot(true);
-            m_timer.setInterval(maxDelayMs);
+            init(maxDelayMs);
         }
 
-        // Destructor
+        //! Constructor without input signal, can be manually triggered
+        template <class T, class F2>
+        CDigestSignal(T *sender, F2 digestSignal, int maxDelayMs = 500, int maxInputsPerDigest = 3)
+            : m_maxInputsPerDigest(maxInputsPerDigest)
+        {
+            QObject::connect(this, &CDigestSignal::digestSignal, sender, digestSignal);
+            init(maxDelayMs);
+        }
+
+        //! Destructor
         virtual ~CDigestSignal() {}
 
     signals:
         //! Send digest signal
         void digestSignal();
 
-    private slots:
-        //! Received input signal
-        void ps_inputSignal();
+    public slots:
+        //! Received input signal, or manually trigger
+        void inputSignal();
 
+    private slots:
         //! Timer timed out
         void ps_timeout();
 
     private:
+        //! Init in ctor
+        void init(int maxDelayMs);
+
         QTimer m_timer;
         const int m_maxInputsPerDigest = 3;
         int m_inputsCount = 0;
