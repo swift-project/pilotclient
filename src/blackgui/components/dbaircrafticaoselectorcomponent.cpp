@@ -58,7 +58,7 @@ namespace BlackGui
         CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent()
         { }
 
-        void CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
+        bool CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
         {
             CAircraftIcaoCode setIcao(icao);
             if (!icao.isLoadedFromDb())
@@ -74,16 +74,25 @@ namespace BlackGui
             {
                 m_currentIcao = setIcao;
                 emit changedAircraftIcao(setIcao);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
-        void CDbAircraftIcaoSelectorComponent::setAircraftIcao(int key)
+        bool CDbAircraftIcaoSelectorComponent::setAircraftIcao(int key)
         {
             const CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
             ui->lbl_Description->setText("");
             if (icao.hasCompleteData())
             {
-                this->setAircraftIcao(icao);
+                return this->setAircraftIcao(icao);
+            }
+            else
+            {
+                return false;
             }
         }
 
