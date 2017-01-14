@@ -333,6 +333,8 @@ namespace XBus
         {
         case xpmpDataType_Position:
             {
+                if (plane->situations.size() < 3) { return xpmpData_Unavailable; } // avoid sudden movements when a pilot connects
+
                 BlackMisc::Simulation::IInterpolator::InterpolationStatus status;
                 const auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, plane->hints(m_interpolator), status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
