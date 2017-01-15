@@ -297,7 +297,10 @@ namespace BlackWxPlugin
                     cloudLayer.setCoveragePercent(cloudLayerIt.value().totalCoverage);
                     if (gfsGridPoint.surfaceSnow > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Snow); }
                     if (gfsGridPoint.surfaceRain > 0.0) { cloudLayer.setPrecipitation(CCloudLayer::Rain); }
-                    cloudLayer.setPrecipitationRate(gfsGridPoint.surfacePrecipitationRate);
+
+                    // Precipitation rate is in kg m-2 s-1, which is equal to mm/s
+                    // Multiply with 3600 to convert to mm/h
+                    cloudLayer.setPrecipitationRate(gfsGridPoint.surfacePrecipitationRate * 3600.0);
                     cloudLayer.setClouds(CCloudLayer::CloudsUnknown);
                     cloudLayers.insert(cloudLayer);
                 }

@@ -35,7 +35,7 @@ namespace BlackGui
                 if (dataCVariant.canConvert<double>())
                 {
                     double rate = dataCVariant.value<double>();
-                    QString formattedString = QString::number(rate) + " mm/s";
+                    QString formattedString = QString::number(rate) + " mm/h";
                     return formattedString;
                 }
                 Q_ASSERT_X(false, "CPrecipitationRateFormatter", "no double value");

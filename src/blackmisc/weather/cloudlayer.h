@@ -102,10 +102,10 @@ namespace BlackMisc
             //! Get layer top
             BlackMisc::Aviation::CAltitude getTop() const { return m_top; }
 
-            //! Set precipitation rate
+            //! Set precipitation rate in mm/h
             void setPrecipitationRate(double rate) { m_precipitationRate = rate; }
 
-            //! Get precipitation rate
+            //! Get precipitation rate in mm/h
             double getPrecipitationRate() const { return m_precipitationRate; }
 
             //! Set precipitation
@@ -144,7 +144,7 @@ namespace BlackMisc
         private:
             BlackMisc::Aviation::CAltitude m_base;
             BlackMisc::Aviation::CAltitude m_top;
-            double m_precipitationRate = 0;
+            double m_precipitationRate = 0; //!< Unit mm/h
             Precipitation m_precipitation = NoPrecipitation;
             Clouds m_clouds = NoClouds;
             int m_coveragePercent;
