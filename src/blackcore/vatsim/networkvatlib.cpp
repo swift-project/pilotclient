@@ -117,7 +117,8 @@ namespace BlackCore
                 clientKey = CBuildConfig::vatsimPrivateKey();
             }
 
-            m_net.reset(Vat_CreateNetworkSession(vatServerLegacyFsd, sApp->swiftVersionChar(),
+            VatServerType serverType = CBuildConfig::isVatsimVersion() ? vatServerVatsim : vatServerLegacyFsd;
+            m_net.reset(Vat_CreateNetworkSession(serverType, sApp->swiftVersionChar(),
                                                  CVersion::versionMajor(), CVersion::versionMinor(),
                                                  "None", clientId, clientKey.toLocal8Bit().constData(),
                                                  clientCapabilities));

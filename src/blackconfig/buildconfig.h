@@ -69,6 +69,9 @@ namespace BlackConfig
         //! Shipped version?
         static bool isShippedVersion();
 
+        //! Vatsim enabled version?
+        static bool isVatsimVersion();
+
         //! Running on Windows NT platform?
         static bool isRunningOnWindowsNtPlatform();
 

@@ -42,6 +42,7 @@ include(vatsim.pri)
 !contains(BLACK_CONFIG, XPlane) { DEFINE_WITH_XPLANE = "//" }
 !contains(BLACK_CONFIG, SwiftBeta) { DEFINE_SWIFT_BETA = "//" }
 !contains(BLACK_CONFIG, SwiftShipped) { DEFINE_SWIFT_SHIPPED = "//" }
+!contains(BLACK_CONFIG, SwiftVatsimSupport) { DEFINE_SWIFT_VATSIM_SUPPORT = "//" }
 
 # Global compiler Macros
 contains(BLACK_CONFIG, Static) { DEFINES *= WITH_STATIC }

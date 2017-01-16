@@ -23,6 +23,7 @@ $$DEFINE_WITH_FS9#define WITH_FS9
 $$DEFINE_WITH_XPLANE#define WITH_XPLANE
 $$DEFINE_SWIFT_BETA#define SWIFT_BETA
 $$DEFINE_SWIFT_SHIPPED#define SWIFT_SHIPPED
+$$DEFINE_SWIFT_VATSIM_SUPPORT#define SWIFT_VATSIM_SUPPORT
 
 bool BlackConfig::CBuildConfig::isCompiledWithBlackCore()
 {
@@ -99,6 +100,15 @@ bool BlackConfig::CBuildConfig::isBetaTest()
 bool BlackConfig::CBuildConfig::isShippedVersion()
 {
 #ifdef SWIFT_SHIPPED
+    return true;
+#else
+    return false;
+#endif
+}
+
+bool BlackConfig::CBuildConfig::isVatsimVersion()
+{
+#ifdef SWIFT_VATSIM_SUPPORT
     return true;
 #else
     return false;
