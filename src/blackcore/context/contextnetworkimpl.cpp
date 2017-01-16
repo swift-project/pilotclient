@@ -179,6 +179,14 @@ namespace BlackCore
                 this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
                 const CSimulatedAircraft ownAircraft(this->ownAircraft());
                 this->m_network->presetServer(server);
+
+                // Fall back to observer mode, if no simulator is available or not simulating
+                if(!this->getIContextSimulator()->isSimulatorSimulating())
+                {
+                    CLogMessage(this).info("No simulator connected or connected simulator not simulating. Falling back to observer mode");
+                    mode = INetwork::LoginAsObserver;
+                }
+
                 this->m_network->presetLoginMode(mode);
                 this->m_network->presetCallsign(ownAircraft.getCallsign());
                 this->m_network->presetIcaoCodes(ownAircraft);

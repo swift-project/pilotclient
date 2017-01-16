@@ -437,7 +437,6 @@ namespace BlackGui
             else
             {
                 model = this->getPrefillModel();
-                ui->gbp_LoginMode->setLoginMode(INetwork::LoginNormal); //! \todo Set observer mode without simulator, currently not working in OBS mode
                 ui->le_SimulatorModel->setText("");
                 this->highlightModelField();
             }
