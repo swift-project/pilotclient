@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 {
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
-    CGuiApplication a;
+    CGuiApplication a("samplehotkey", BlackMisc::CApplicationInfo::Sample, QPixmap());
     BlackGui::Components::CSettingsHotkeyComponent w;
     w.show();
     return a.exec();

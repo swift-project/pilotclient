@@ -32,7 +32,8 @@ namespace BlackMisc
             PilotClientCore,
             PilotClientGui,
             MappingTool,
-            UnitTest
+            UnitTest,
+            Sample
         };
 
         //! Flags describing application modes
