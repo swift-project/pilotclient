@@ -47,7 +47,7 @@ namespace BlackGui
             void setValue(const BlackMisc::Network::CFsdSetup &setup);
 
             //! Enabled?
-            bool isFsdSetuoEnabled() const;
+            bool isFsdSetupEnabled() const;
 
             //! Set enabled / disabled
             void setFsdSetupEnabled(bool enabled);

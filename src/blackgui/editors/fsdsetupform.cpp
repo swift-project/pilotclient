@@ -62,7 +62,7 @@ namespace BlackGui
             ui->cb_FastPositionSend->setChecked(d & CFsdSetup::SendIterimPositions);
         }
 
-        bool CFsdSetupForm::isFsdSetuoEnabled() const
+        bool CFsdSetupForm::isFsdSetupEnabled() const
         {
             return ui->cb_Enabled->isChecked();
         }

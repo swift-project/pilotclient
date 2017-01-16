@@ -266,7 +266,7 @@ namespace BlackGui
                 }
 
                 // FSD setup, then override
-                if (ui->comp_FsdDetails->isFsdSetuoEnabled())
+                if (ui->comp_FsdDetails->isFsdSetupEnabled())
                 {
                     const CFsdSetup fsd = ui->comp_FsdDetails->getValue();
                     currentServer.setFsdSetup(fsd);
