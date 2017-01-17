@@ -49,8 +49,6 @@ namespace BlackSimPlugin
             //! Set DirectPlay host address
             void setHostAddress(const QString &hostAddress);
 
-            //! Add new aircraft situation
-            void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         public slots:
             //! Send new text message
