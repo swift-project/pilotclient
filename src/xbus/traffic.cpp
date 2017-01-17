@@ -49,7 +49,7 @@ namespace XBus
         //       if the setup is needed more than once, store it here to avoid multiple locks
         BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
         BlackMisc::Simulation::CInterpolationHints hints;
-        BlackMisc::Simulation::IInterpolator::CPartsStatus status;
+        BlackMisc::Simulation::CPartsStatus status;
         hints.setAircraftParts(interpolator.getInterpolatedParts(callsign, -1, setup, status));
         hints.setElevationProvider([this](const auto & situation)
         {
@@ -333,7 +333,7 @@ namespace XBus
         case xpmpDataType_Position:
             {
                 BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
-                BlackMisc::Simulation::IInterpolator::CInterpolationStatus status;
+                BlackMisc::Simulation::CInterpolationStatus status;
                 const auto situation = plane->interpolator.getInterpolatedSituation(plane->callsign, -1, setup, plane->hints(), status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
                 if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }

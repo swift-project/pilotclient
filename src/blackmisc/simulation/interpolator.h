@@ -30,6 +30,8 @@ namespace BlackMisc
     namespace Simulation
     {
         class CInterpolationHints;
+        struct CInterpolationStatus;
+        struct CPartsStatus;
 
         //! Interpolator, calculation inbetween positions
         class BLACKMISC_EXPORT IInterpolator : public QObject
@@ -40,74 +42,27 @@ namespace BlackMisc
             //! Log category
             static QString getLogCategory() { return "swift.interpolator"; }
 
-            //! Status of interpolation
-            struct BLACKMISC_EXPORT InterpolationStatus // does not link without export/allTrue, reset
-            {
-            public:
-                //! Did interpolation succeed?
-                bool didInterpolationSucceed() const { return m_interpolationSucceeded; }
-
-                //! Set succeeded
-                void setInterpolationSucceeded(bool succeeded) { m_interpolationSucceeded = succeeded; }
-
-                //! Changed position?
-                bool hasChangedPosition() const { return m_changedPosition; }
-
-                //! Set as changed
-                void setChangedPosition(bool changed) { m_changedPosition = changed; }
-
-                //! all OK
-                bool allTrue() const;
-
-                //! Reset to default values
-                void reset();
-
-            private:
-                bool m_changedPosition = false;        //!< position was changed
-                bool m_interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
-            };
-
-            //! Status regarding parts
-            struct BLACKMISC_EXPORT PartsStatus // does not link without export/allTrue, resetx
-            {
-            public:
-                //! all OK
-                bool allTrue() const;
-
-                //! Supporting parts
-                bool isSupportingParts() const { return m_supportsParts; }
-
-                //! Set support flag
-                void setSupportsParts(bool supports) { m_supportsParts = supports; }
-
-                //! Reset to default values
-                void reset();
-
-            private:
-                bool m_supportsParts = false;   //!< supports parts for given callsign
-            };
-
             //! Current interpolated situation
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const;
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const;
 
             //! Current interpolated situation, to be implemented by subclass
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const = 0;
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const = 0;
 
             //! Parts before given offset time (aka pending parts)
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
-                const CInterpolationAndRenderingSetup &setup, PartsStatus &partsStatus, bool log = false) const;
+                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
 
             //! Parts before given offset time (aka pending parts)
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
-                const CInterpolationAndRenderingSetup &setup, PartsStatus &partsStatus, bool log = false) const;
+                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
 
             //! Add a new aircraft situation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
@@ -207,6 +162,53 @@ namespace BlackMisc
             mutable QReadWriteLock  m_lockLogs;  //!< lock logging
             mutable QList<PartsLog> m_partsLogs; //!< logs of parts
             mutable QList<InterpolationLog> m_interpolationLogs; //!< logs of interpolation
+        };
+
+        //! Status of interpolation
+        struct BLACKMISC_EXPORT CInterpolationStatus
+        {
+        public:
+            //! Did interpolation succeed?
+            bool didInterpolationSucceed() const { return m_interpolationSucceeded; }
+
+            //! Set succeeded
+            void setInterpolationSucceeded(bool succeeded) { m_interpolationSucceeded = succeeded; }
+
+            //! Changed position?
+            bool hasChangedPosition() const { return m_changedPosition; }
+
+            //! Set as changed
+            void setChangedPosition(bool changed) { m_changedPosition = changed; }
+
+            //! all OK
+            bool allTrue() const;
+
+            //! Reset to default values
+            void reset();
+
+        private:
+            bool m_changedPosition = false;        //!< position was changed
+            bool m_interpolationSucceeded = false; //!< interpolation succeeded (means enough values, etc.)
+        };
+
+        //! Status regarding parts
+        struct BLACKMISC_EXPORT CPartsStatus
+        {
+        public:
+            //! all OK
+            bool allTrue() const;
+
+            //! Supporting parts
+            bool isSupportingParts() const { return m_supportsParts; }
+
+            //! Set support flag
+            void setSupportsParts(bool supports) { m_supportsParts = supports; }
+
+            //! Reset to default values
+            void reset();
+
+        private:
+            bool m_supportsParts = false;   //!< supports parts for given callsign
         };
     } // namespace
 } // namespace

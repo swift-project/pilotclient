@@ -41,7 +41,7 @@ namespace BlackMisc
     namespace Simulation
     {
         CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const
+            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
         {
             status.reset();
 

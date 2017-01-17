@@ -84,7 +84,7 @@ namespace BlackMiscTest
         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
 
         // interpolation functional check
-        IInterpolator::InterpolationStatus status;
+        CInterpolationStatus status;
         const CInterpolationHints hints;
         const CInterpolationAndRenderingSetup setup;
         double latOld = 360.0;
@@ -144,7 +144,7 @@ namespace BlackMiscTest
         timer.start();
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
-            IInterpolator::PartsStatus partsStatus;
+            CPartsStatus partsStatus;
             CAircraftParts pl(interpolator.getInterpolatedParts(cs, ts, setup, partsStatus));
             fetchedParts++;
             QVERIFY2(partsStatus.isSupportingParts(), "Parts not supported");

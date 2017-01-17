@@ -35,7 +35,7 @@ namespace BlackMisc
 
         BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(
             qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-            const CInterpolationHints &hints, InterpolationStatus &status) const
+            const CInterpolationHints &hints, CInterpolationStatus &status) const
         {
             status.reset();
 
@@ -45,7 +45,7 @@ namespace BlackMisc
         }
 
         CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch,
-            const CInterpolationAndRenderingSetup &setup, IInterpolator::PartsStatus &partsStatus, bool log) const
+            const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
             Q_UNUSED(setup);
             partsStatus.reset();
@@ -109,7 +109,7 @@ namespace BlackMisc
         }
 
         CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
-            const CInterpolationAndRenderingSetup &setup, IInterpolator::PartsStatus &partsStatus, bool log) const
+            const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
             partsStatus.reset();
             return this->getInterpolatedParts(callsign, this->m_aircraftParts, currentTimeMsSinceEpoch, setup, partsStatus, log);
@@ -398,23 +398,23 @@ namespace BlackMisc
             return QString("%1 %2 %3").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
         }
 
-        bool IInterpolator::InterpolationStatus::allTrue() const
+        bool CInterpolationStatus::allTrue() const
         {
             return m_interpolationSucceeded && m_changedPosition;
         }
 
-        void IInterpolator::InterpolationStatus::reset()
+        void CInterpolationStatus::reset()
         {
             m_changedPosition = false;
             m_interpolationSucceeded = false;
         }
 
-        bool IInterpolator::PartsStatus::allTrue() const
+        bool CPartsStatus::allTrue() const
         {
             return m_supportsParts;
         }
 
-        void IInterpolator::PartsStatus::reset()
+        void CPartsStatus::reset()
         {
             m_supportsParts = false;
         }

@@ -899,14 +899,14 @@ namespace BlackSimPlugin
                 // fetch parts, as they are needed for ground interpolation
                 const bool useAircraftParts = enableAircraftParts && aircraftWithParts.contains(callsign);
                 const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
-                IInterpolator::PartsStatus partsStatus;
+                CPartsStatus partsStatus;
                 partsStatus.setSupportsParts(useAircraftParts);
 
                 const CInterpolationAndRenderingSetup setup(getInterpolationAndRenderingSetup());
                 const CAircraftParts parts = useAircraftParts ? simObj.getInterpolator()->getInterpolatedParts(callsign, -1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
                 // get interpolated situation
-                IInterpolator::InterpolationStatus interpolatorStatus;
+                CInterpolationStatus interpolatorStatus;
                 CInterpolationHints hints(m_hints[simObj.getCallsign()]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
                 hints.setLoggingInterpolation(logInterpolationAndParts);
@@ -946,7 +946,7 @@ namespace BlackSimPlugin
             m_statsUpdateAircraftTimeAvgMs = m_statsUpdateAircraftTimeTotalMs / m_statsUpdateAircraftCountMs;
         }
 
-        bool CSimulatorFsx::guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftSituation &interpolatedSituation, const IInterpolator::InterpolationStatus &interpolationStatus)
+        bool CSimulatorFsx::guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftSituation &interpolatedSituation, const CInterpolationStatus &interpolationStatus)
         {
             if (!simObj.hasValidRequestAndObjectId()) { return false; }
             if (!interpolationStatus.didInterpolationSucceed()) { return false; }
@@ -1017,7 +1017,7 @@ namespace BlackSimPlugin
             return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftParts, lights);
         }
 
-        bool CSimulatorFsx::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftParts &parts, const IInterpolator::PartsStatus &partsStatus)
+        bool CSimulatorFsx::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftParts &parts, const CPartsStatus &partsStatus)
         {
             if (!simObj.hasValidRequestAndObjectId()) { return false; }
             if (!partsStatus.isSupportingParts()) { return false; }
