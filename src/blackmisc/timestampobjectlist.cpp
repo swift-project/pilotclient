@@ -224,7 +224,7 @@ namespace BlackMisc
     }
 
     // see here for the reason of thess forward instantiations
-    // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
+    // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
     //! \cond PRIVATE
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CCountry, BlackMisc::CCountryList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::CIdentifier, BlackMisc::CIdentifierList>;

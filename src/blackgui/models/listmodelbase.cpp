@@ -766,7 +766,7 @@ namespace BlackGui
         }
 
         // see here for the reason of thess forward instantiations
-        // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
+        // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
         template class CListModelBase<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, true>;
         template class CListModelBase<BlackMisc::CIdentifier, BlackMisc::CIdentifierList, false>;
         template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList, true>;

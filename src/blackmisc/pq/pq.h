@@ -17,7 +17,7 @@
 
 // All units / quantities, required for the instantiations of the template
 // especially as CRTP (Curiously recurring template pattern) is used.
-// http://www.parashift.com/c++-faq-lite/separate-template-fn-defn-from-decl.html
+// https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
 // http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 
 #include "blackmisc/pq/acceleration.h"
