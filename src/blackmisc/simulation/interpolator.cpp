@@ -67,12 +67,18 @@ namespace BlackMisc
             const auto latestTakeoff = std::adjacent_find(partsOlder.begin(), partsOlder.end(), [](auto &&, auto && p) { return p.isOnGround(); });
             const auto soonestLanding = std::find_if(partsNewer.begin(), partsNewer.end(), [](auto && p) { return p.isOnGround(); });
 
+            // our clairvoyance is limited by the time offset
+            const double significantPast = 5.0;
+            const double predictableFuture = soonestLanding == partsNewer.end() ? 5.0 : std::min(5.0, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0);
+
             const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? 5.0 : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
             const double secondsUntilLanding = soonestLanding == partsNewer.end() ? 5.0 : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
-            const double secondsAirborne = std::min(secondsSinceTakeoff, secondsUntilLanding);
-            Q_ASSERT(secondsAirborne >= 0.0);
+            Q_ASSERT(secondsSinceTakeoff >= 0.0);
+            Q_ASSERT(secondsUntilLanding >= 0.0);
 
-            const double airborneFactor = std::min(secondsAirborne / 5.0, 1.0);
+            const double takeoffFactor = secondsSinceTakeoff / significantPast;
+            const double landingFactor = secondsUntilLanding / predictableFuture;
+            const double airborneFactor = std::min(std::min(takeoffFactor, landingFactor), 1.0);
             currentParts.setOnGroundInterpolated(1.0 - smootherStep(airborneFactor));
             return currentParts;
         }
