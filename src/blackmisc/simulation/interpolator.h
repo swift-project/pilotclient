@@ -13,7 +13,6 @@
 #define BLACKMISC_SIMULATION_INTERPOLATOR_H
 
 #include "interpolationrenderingsetup.h"
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
@@ -30,37 +29,41 @@ namespace BlackMisc
     namespace Simulation
     {
         class CInterpolationHints;
+        class CInterpolatorLinear;
         struct CInterpolationStatus;
         struct CPartsStatus;
 
         //! Interpolator, calculation inbetween positions
-        class BLACKMISC_EXPORT IInterpolator : public QObject
+        template <typename Derived>
+        class CInterpolator : public QObject
         {
-            Q_OBJECT
-
         public:
             //! Log category
             static QString getLogCategory() { return "swift.interpolator"; }
 
             //! Current interpolated situation
-            virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
                 const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const;
 
             //! Current interpolated situation, to be implemented by subclass
-            virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const = 0;
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
+            {
+                qFatal("Not implemented");
+                return {};
+            }
 
             //! Parts before given offset time (aka pending parts)
-            virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
+            BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
                 const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
 
             //! Parts before given offset time (aka pending parts)
-            virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
+            BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
                 const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
 
@@ -120,7 +123,7 @@ namespace BlackMisc
             };
 
             //! Constructor
-            IInterpolator(const QString &objectName, QObject *parent);
+            CInterpolator(const QString &objectName, QObject *parent);
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons
             //! \remark const to allow const interpolator functions
@@ -158,6 +161,9 @@ namespace BlackMisc
 
             //! Create readable time
             static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
+
+            Derived *derived() { return static_cast<Derived *>(this); }
+            const Derived *derived() const { return static_cast<const Derived *>(this); }
 
             mutable QReadWriteLock  m_lockLogs;  //!< lock logging
             mutable QList<PartsLog> m_partsLogs; //!< logs of parts
@@ -210,6 +216,10 @@ namespace BlackMisc
         private:
             bool m_supportsParts = false;   //!< supports parts for given callsign
         };
+
+        //! \cond PRIVATE
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorLinear>;
+        //! \endcond
     } // namespace
 } // namespace
 #endif // guard

@@ -28,14 +28,7 @@
 #define XBUS_TRAFFIC_OBJECTPATH "/xbus/traffic"
 //! \endcond
 
-namespace BlackMisc
-{
-    namespace Simulation
-    {
-        class IInterpolator;
-        class CInterpolationHints;
-    }
-}
+namespace BlackMisc { namespace Simulation { class CInterpolationHints; } }
 namespace XBus
 {
     /*!

@@ -50,7 +50,7 @@ namespace BlackSimPlugin
             void setHostAddress(const QString &hostAddress);
 
             //! Get interpolator
-            BlackMisc::Simulation::IInterpolator *getInterpolator() { return &m_interpolator; }
+            BlackMisc::Simulation::CInterpolatorLinear *getInterpolator() { return &m_interpolator; }
 
             //! Set interpolation setup
             //! \threadsafe

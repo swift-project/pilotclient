@@ -49,7 +49,6 @@ namespace BlackMisc
     }
     namespace Simulation
     {
-        class IInterpolator;
         class CAirspaceAircraftSnapshot;
         class CSimulatedAircraft;
     }

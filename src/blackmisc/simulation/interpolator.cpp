@@ -10,6 +10,7 @@
 #include "interpolator.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/logmessage.h"
@@ -27,24 +28,27 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        IInterpolator::IInterpolator(const QString &objectName, QObject *parent) :
+        template <typename Derived>
+        CInterpolator<Derived>::CInterpolator(const QString &objectName, QObject *parent) :
             QObject(parent)
         {
             this->setObjectName(objectName);
         }
 
-        BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(
+        template <typename Derived>
+        BlackMisc::Aviation::CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(
             qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
             const CInterpolationHints &hints, CInterpolationStatus &status) const
         {
             status.reset();
 
-            auto currentSituation = this->getInterpolatedSituation(callsign, this->m_aircraftSituations, currentTimeSinceEpoc, setup, hints, status);
+            auto currentSituation = derived()->getInterpolatedSituation(callsign, this->m_aircraftSituations, currentTimeSinceEpoc, setup, hints, status);
             currentSituation.setCallsign(callsign); // make sure callsign is correct
             return currentSituation;
         }
 
-        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch,
+        template <typename Derived>
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch,
             const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
             Q_UNUSED(setup);
@@ -102,31 +106,35 @@ namespace BlackMisc
                 log.callsign = callsign;
                 log.timestamp = currentTimeMsSinceEpoch;
                 log.parts = currentParts;
-                IInterpolator::logParts(log);
+                CInterpolator::logParts(log);
             }
 
             return currentParts;
         }
 
-        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
+        template <typename Derived>
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
             const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
             partsStatus.reset();
             return this->getInterpolatedParts(callsign, this->m_aircraftParts, currentTimeMsSinceEpoch, setup, partsStatus, log);
         }
 
-        void IInterpolator::addAircraftSituation(const CAircraftSituation &situation)
+        template <typename Derived>
+        void CInterpolator<Derived>::addAircraftSituation(const CAircraftSituation &situation)
         {
             m_aircraftSituations.push_frontMaxElements(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
         }
 
-        void IInterpolator::addAircraftParts(const CAircraftParts &parts)
+        template <typename Derived>
+        void CInterpolator<Derived>::addAircraftParts(const CAircraftParts &parts)
         {
             m_aircraftParts.push_front(parts);
             IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
         }
 
-        CWorker *IInterpolator::writeLogInBackground()
+        template <typename Derived>
+        CWorker *CInterpolator<Derived>::writeLogInBackground()
         {
             QList<InterpolationLog> interpolation;
             QList<PartsLog> parts;
@@ -138,7 +146,7 @@ namespace BlackMisc
 
             CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [interpolation, parts]()
             {
-                const CStatusMessageList msg = IInterpolator::writeLogFile(interpolation, parts);
+                const CStatusMessageList msg = CInterpolator::writeLogFile(interpolation, parts);
                 CLogMessage::preformatted(msg);
             });
             return worker;
@@ -164,57 +172,62 @@ namespace BlackMisc
             return files;
         }
 
-        CStatusMessageList IInterpolator::writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts)
+        template <typename Derived>
+        CStatusMessageList CInterpolator<Derived>::writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts)
         {
-            if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<IInterpolator *>(nullptr)).warning("No data for log"); }
+            if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<CInterpolator *>(nullptr)).warning("No data for log"); }
             static const QString html = QLatin1String("Entries: %1\n\n%2");
             const QString htmlTemplate = CFileUtils::readFileToString(CBuildConfig::getHtmlTemplateFileName());
 
             CStatusMessageList msgs;
             const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss");
-            const QString htmlInterpolation = IInterpolator::getHtmlInterpolationLog(interpolation);
+            const QString htmlInterpolation = CInterpolator::getHtmlInterpolationLog(interpolation);
             if (!htmlInterpolation.isEmpty())
             {
                 const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getLogDirectory(), QString("%1 interpolation.html").arg(ts));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(interpolation.size()).arg(htmlInterpolation)), fn);
-                msgs.push_back(IInterpolator::logStatusFileWriting(s, fn));
+                msgs.push_back(CInterpolator::logStatusFileWriting(s, fn));
             }
 
-            const QString htmlParts = IInterpolator::getHtmlPartsLog(parts);
+            const QString htmlParts = CInterpolator::getHtmlPartsLog(parts);
             if (!htmlParts.isEmpty())
             {
                 const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getLogDirectory(), QString("%1 parts.html").arg(ts));
                 const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(parts.size()).arg(htmlParts)), fn);
-                msgs.push_back(IInterpolator::logStatusFileWriting(s, fn));
+                msgs.push_back(CInterpolator::logStatusFileWriting(s, fn));
             }
             return msgs;
         }
 
-        CStatusMessage IInterpolator::logStatusFileWriting(bool success, const QString &fileName)
+        template <typename Derived>
+        CStatusMessage CInterpolator<Derived>::logStatusFileWriting(bool success, const QString &fileName)
         {
             if (success)
             {
-                return CStatusMessage(static_cast<IInterpolator *>(nullptr)).info("Written log file '%1'") << fileName;
+                return CStatusMessage(static_cast<CInterpolator *>(nullptr)).info("Written log file '%1'") << fileName;
             }
             else
             {
-                return CStatusMessage(static_cast<IInterpolator *>(nullptr)).error("Failed to write log file '%1'") << fileName;
+                return CStatusMessage(static_cast<CInterpolator *>(nullptr)).error("Failed to write log file '%1'") << fileName;
             }
         }
 
-        void IInterpolator::logInterpolation(const IInterpolator::InterpolationLog &log) const
+        template <typename Derived>
+        void CInterpolator<Derived>::logInterpolation(const typename CInterpolator<Derived>::InterpolationLog &log) const
         {
             QWriteLocker l(&m_lockLogs);
             m_interpolationLogs.append(log);
         }
 
-        void IInterpolator::logParts(const IInterpolator::PartsLog &parts) const
+        template <typename Derived>
+        void CInterpolator<Derived>::logParts(const typename CInterpolator<Derived>::PartsLog &parts) const
         {
             QWriteLocker l(&m_lockLogs);
             m_partsLogs.append(parts);
         }
 
-        QString IInterpolator::getHtmlInterpolationLog(const QList<InterpolationLog> &logs)
+        template <typename Derived>
+        QString CInterpolator<Derived>::getHtmlInterpolationLog(const QList<InterpolationLog> &logs)
         {
             if (logs.isEmpty()) { return {}; }
             const QString tableHeader =
@@ -294,7 +307,8 @@ namespace BlackMisc
             return QLatin1String("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1String("</table>\n");
         }
 
-        QString IInterpolator::getHtmlPartsLog(const QList<PartsLog> &logs)
+        template <typename Derived>
+        QString CInterpolator<Derived>::getHtmlPartsLog(const QList<PartsLog> &logs)
         {
             if (logs.isEmpty()) { return {}; }
             const QString tableHeader =
@@ -321,14 +335,16 @@ namespace BlackMisc
             return QLatin1String("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1String("</table>\n");
         }
 
-        void IInterpolator::clearLog()
+        template <typename Derived>
+        void CInterpolator<Derived>::clearLog()
         {
             QWriteLocker l(&m_lockLogs);
             this->m_partsLogs.clear();
             this->m_interpolationLogs.clear();
         }
 
-        void IInterpolator::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation, bool override)
+        template <typename Derived>
+        void CInterpolator<Derived>::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation, bool override)
         {
             if (!override && situation.hasGroundElevation()) { return; }
             const CAltitude elevation = hints.getGroundElevation(situation);
@@ -336,7 +352,8 @@ namespace BlackMisc
             situation.setGroundElevation(elevation);
         }
 
-        void IInterpolator::setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, CAircraftSituation &situation)
+        template <typename Derived>
+        void CInterpolator<Derived>::setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, CAircraftSituation &situation)
         {
             // by interpolation
             if (groundFactor >= 1.0)
@@ -386,13 +403,15 @@ namespace BlackMisc
             situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
         }
 
-        QString IInterpolator::msSinceEpochToTime(qint64 ms)
+        template <typename Derived>
+        QString CInterpolator<Derived>::msSinceEpochToTime(qint64 ms)
         {
             static const QString dateFormat("hh:mm:ss.zzz");
             return QDateTime::fromMSecsSinceEpoch(ms).toString(dateFormat);
         }
 
-        QString IInterpolator::msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3)
+        template <typename Derived>
+        QString CInterpolator<Derived>::msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3)
         {
             if (t3 < 0) return QString("%1 %2").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2));
             return QString("%1 %2 %3").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
@@ -418,5 +437,11 @@ namespace BlackMisc
         {
             m_supportsParts = false;
         }
+
+        // see here for the reason of thess forward instantiations
+        // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
+        //! \cond PRIVATE
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CInterpolator<CInterpolatorLinear>;
+        //! \endcond
     } // namespace
 } // namespace

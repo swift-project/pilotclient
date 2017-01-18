@@ -26,22 +26,24 @@ namespace BlackMisc
     namespace Simulation
     {
         //! Linear interpolator, calculation inbetween positions
-        class BLACKMISC_EXPORT CInterpolatorLinear : public IInterpolator
+        class BLACKMISC_EXPORT CInterpolatorLinear : public CInterpolator<CInterpolatorLinear>
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CInterpolatorLinear(QObject *parent = nullptr) :
-                IInterpolator("CInterpolatorLinear", parent)
+                CInterpolator("CInterpolatorLinear", parent)
             {}
 
             // public base class signature
-            using IInterpolator::getInterpolatedSituation;
+            using CInterpolator::getInterpolatedSituation;
 
             //! \copydoc IInterpolator::getInterpolatedSituation
-            virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-                const BlackMisc::Simulation::CInterpolationHints &hints, CInterpolationStatus &status) const override;
+                const BlackMisc::Simulation::CInterpolationHints &hints, CInterpolationStatus &status) const;
 
             //! Log category
             static QString getLogCategory() { return "swift.interpolatorlinear"; }
