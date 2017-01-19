@@ -125,8 +125,19 @@ isEmpty(EXTERNALSROOT) {
 # Externals
 ################################
 
-clang_cl: EXTERNALS_SPEC = win32-msvc2015
-else: EXTERNALS_SPEC = $$basename(QMAKESPEC)
+EXTERNALS_SPEC = $$basename(QMAKESPEC)
+msvc {
+    clang_cl: EXTERNALS_SPEC = win32-msvc2015
+    win32-msvc2017: EXTERNALS_SPEC = win32-msvc2015
+    win32-msvc {
+        # From Qt 5.8.1 onwards, QMAKESPEC is win32-msvc without the version number
+        # see https://codereview.qt-project.org/#/c/162754/
+        lessThan(MSVC_VER, 14.0) | greaterThan(MSVC_VER, 15.0) {
+            error(This version of Visual Studio is not supported (MSVC_VER = $$MSVC_VER))
+        }
+        EXTERNALS_SPEC = win32-msvc2015
+    }
+}
 
 INCLUDEPATH *= $$EXTERNALSROOT/common/include
 INCLUDEPATH *= $$EXTERNALSROOT/$$EXTERNALS_SPEC/include
