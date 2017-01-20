@@ -19,13 +19,6 @@
 namespace XBus
 {
 
-
-    const int c_screenWidth = 1024;
-    const int c_screenHeight = 768;
-    const int c_boxLeft = 128;
-    const int c_boxTop = c_screenHeight - 16;
-    const int c_boxRight = c_screenWidth - 128;
-
     void CMessageBox::draw()
     {
         const int messageCount = static_cast<int>(m_messages.size());
@@ -75,7 +68,8 @@ namespace XBus
         return len;
     }
 
-    CMessageBoxControl::CMessageBoxControl() :
+    CMessageBoxControl::CMessageBoxControl(int left, int right, int top) :
+        m_messageBox(left, right, top),
         m_showCommand("org/swift-project/xbus/show_messages", "Show XBus text messages", [this] { show(); }),
         m_hideCommand("org/swift-project/xbus/hide_messages", "Hide XBus text messages", [this] { hide(); }),
         m_toggleCommand("org/swift-project/xbus/toggle_messages", "Toggle XBus text messages", [this] { toggle(); }),

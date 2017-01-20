@@ -28,7 +28,7 @@ namespace XBus
     struct CMessage
     {
         //! Constructor.
-        CMessage(const std::string &text, float r, float g, float b) : m_text(text), m_rgb{{ r, g, b }} {}
+        CMessage(const std::string &text, float r = 1, float g = 1, float b = 1) : m_text(text), m_rgb{{ r, g, b }} {}
 
         //! Text.
         std::string m_text;
@@ -44,7 +44,11 @@ namespace XBus
     {
     public:
         //! Constructor.
-        CMessageBox() : CDrawable(xplm_Phase_Window, true) {}
+        //! \param left Number of "virtual pixels" between screen left edge and box left edge.
+        //! \param right Number of "virtual pixels" between screen right edge and box right edge.
+        //! \param top Number of "virtual pixels" between screen top edge and box top edge.
+        CMessageBox(int left, int right, int top) : CDrawable(xplm_Phase_Window, true),
+            c_boxLeft(left), c_boxRight(c_screenWidth - right), c_boxTop(c_screenHeight - top) {}
 
         //! Set messages to draw in message box, from a pair of iterators.
         template <typename Iterator>
@@ -71,6 +75,11 @@ namespace XBus
         std::vector<CMessage> m_messages;
         bool m_upArrow = false;
         bool m_downArrow = false;
+        const int c_boxLeft = 0;
+        const int c_boxRight = 0;
+        const int c_boxTop = 0;
+        constexpr static int c_screenWidth = 1024;
+        constexpr static int c_screenHeight = 768;
     };
 
     /*!
@@ -79,8 +88,8 @@ namespace XBus
     class CMessageBoxControl
     {
     public:
-        //! Constructor.
-        CMessageBoxControl();
+        //! \copydoc CMessageBox::CMessageBox
+        CMessageBoxControl(int left, int right, int top);
 
         //! Add a new message to the bottom of the list.
         void addMessage(const CMessage &message);

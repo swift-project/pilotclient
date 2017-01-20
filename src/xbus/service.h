@@ -225,7 +225,7 @@ namespace XBus
         double getSpeedBrakeRatio() const { return m_speedBrakeRatio.get(); }
 
     private:
-        CMessageBoxControl m_messages;
+        CMessageBoxControl m_messages { 128, 128, 16 };
         BlackMisc::Simulation::XPlane::CNavDataReferenceList m_airports;
         QTimer *m_airportUpdater = nullptr;
         void readAirportsDatabase();
