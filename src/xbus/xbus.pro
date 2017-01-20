@@ -9,6 +9,10 @@ CONFIG += blackmisc
 
 INCLUDEPATH += $$EXTERNALSROOT/common/include/XPLM
 
+# Inhibit "warning: 'FSFindFolder' is deprecated: first deprecated in macOS 10.8"
+# TODO implement proper fix
+macx:QMAKE_CXXFLAGS_WARN_ON *= -Wno-deprecated-declarations
+
 win32 {
     equals(WORD_SIZE,64): LIBS += -lXPLM_64 -lXPWidgets_64
     equals(WORD_SIZE,32): LIBS += -lXPLM -lXPWidgets
