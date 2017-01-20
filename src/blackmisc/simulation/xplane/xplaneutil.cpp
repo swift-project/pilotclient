@@ -87,7 +87,7 @@ namespace BlackMisc
                 QString xplaneInstallFile = QStringLiteral("/x-plane_install_10.txt");
 #if defined(Q_OS_WIN)
                 xplaneInstallFilePath = getWindowsLocalAppDataPath() + xplaneInstallFile;
-#elif defined (Q_OS_UNIX)
+#elif defined (Q_OS_LINUX)
                 xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/.x-plane") + xplaneInstallFile;
 #elif defined (Q_OS_OSX)
                 xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/Library/Preferences") + xplaneInstallFile;

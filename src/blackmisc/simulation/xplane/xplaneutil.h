@@ -30,11 +30,9 @@ namespace BlackMisc
                 CXPlaneUtil() = delete;
 
                 //! XPlane 9 directory
-                //! \todo Test on OSX
                 static QString xplane9Dir();
 
                 //! XPlane 10 directory
-                //! \todo Test on OSX
                 static QString xplane10Dir();
 
                 //! XPlane root directory
