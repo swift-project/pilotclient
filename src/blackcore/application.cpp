@@ -1082,10 +1082,12 @@ namespace BlackCore
 
         static const QString extension = CBuildConfig::isRunningOnWindowsNtPlatform() ? ".exe" : QString();
         static const QString handler = CDirectoryUtils::applicationDirectoryPath() + "/" + "swift_crashpad_handler" + extension;
-        static const QString database = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+        static const QString crashpadPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
                                         "/org.swift-project/" +
                                         CDirectoryUtils::normalizedApplicationDirectory() +
                                         "/crashpad";
+        static const QString database = crashpadPath + "/database";
+        static const QString metrics = crashpadPath + "/metrics";
 
         if (!QFileInfo::exists(handler))
         {
@@ -1104,9 +1106,8 @@ namespace BlackCore
         auto settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal());
         m_crashpadClient = std::make_unique<CrashpadClient>();
-        m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database),
-                                       serverUrl.getFullUrl().toStdString(), annotations, {}, false);
-        m_crashpadClient->UseHandler();
+        m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database), qstringToFilePath(metrics),
+                                       serverUrl.getFullUrl().toStdString(), annotations, {}, false, true);
         return CStatusMessage(this).info("Using crash handler");
 #else
         return CStatusMessage(this).info("Not using crash handler");

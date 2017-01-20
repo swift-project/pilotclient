@@ -41,8 +41,8 @@ DESTDIR = $$DestRoot/lib
 DLLDESTDIR = $$DestRoot/bin
 
 msvc {
-    CONFIG(debug, debug|release): LIBS *= -lcrashpad_clientd -lcrashpad_utild -lbased -lRpcrt4
-    CONFIG(release, debug|release): LIBS *= -lcrashpad_client -lcrashpad_util -lbase -lRpcrt4
+    CONFIG(debug, debug|release): LIBS *= -lcrashpad_clientd -lcrashpad_utild -lbased -lRpcrt4 -lAdvapi32
+    CONFIG(release, debug|release): LIBS *= -lcrashpad_client -lcrashpad_util -lbase -lRpcrt4 -lAdvapi32
 }
 macx: LIBS *= -lcrashpad_client -lcrashpad_util -lbase -lbsm -framework Security
 
