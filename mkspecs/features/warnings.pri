@@ -2,7 +2,7 @@ msvc:DEFINES *= _SCL_SECURE_NO_WARNINGS
 
 # swift standard warnings
 msvc:QMAKE_CXXFLAGS_WARN_ON *= /wd4351 /wd4661
-clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra
+clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra -Wno-unknown-pragmas
 
 # elevated warnings
 contains(BLACK_CONFIG, AllowNoisyWarnings) {
