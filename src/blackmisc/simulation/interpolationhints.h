@@ -20,7 +20,6 @@
 namespace BlackMisc
 {
     namespace Aviation { class CAircraftSituation; }
-
     namespace Simulation
     {
         //! Hints for interpolator such as ground elevation
@@ -44,6 +43,9 @@ namespace BlackMisc
 
             //! Get elevation
             const BlackMisc::Geo::CElevationPlane &getElevation() const { return m_elevation;}
+
+            //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
+            Aviation::CAltitude getGroundElevation(const BlackMisc::Aviation::CAircraftSituation &situation) const;
 
             //! Set elevation
             void setElevation(const BlackMisc::Geo::CElevationPlane &elevation) { m_elevation = elevation; }
@@ -69,16 +71,18 @@ namespace BlackMisc
             //! Has valid aircraft parts?
             bool hasAircraftParts() const { return m_hasParts; }
 
-            //! Aircraft parts
+            //! Aircraft parts required for interpolation
             BlackMisc::Aviation::CAircraftParts getAircraftParts() const { return m_aircraftParts; }
 
-            //! Set aircraft parts
-            void setAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts) { m_hasParts = true; m_aircraftParts = parts; }
+            //! Set aircraft parts required for interpolation if any
+            //! \remark when used to reset value (default object) use hasParts false. Needed as there is no null parts object
+            void setAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts, bool hasParts = true);
 
             //! Function object that can obtain ground elevation
-            using ElevationProvider = std::function<BlackMisc::PhysicalQuantities::CLength(const BlackMisc::Aviation::CAircraftSituation &)>;
+            using ElevationProvider = std::function<BlackMisc::Aviation::CAltitude(const BlackMisc::Aviation::CAircraftSituation &)>;
 
             //! Function object that can obtain ground elevation
+            //! \remark either a provider or a value set can be used
             const ElevationProvider &getElevationProvider() const { return m_elevationProvider; }
 
             //! Set function object that can obtain ground elevation
@@ -97,12 +101,12 @@ namespace BlackMisc
             QString debugInfo(const BlackMisc::Geo::CElevationPlane &deltaElevation) const;
 
         private:
-            bool m_isVtol = false; //!< VTOL aircraft?
-            BlackMisc::Geo::CElevationPlane m_elevation; //!< aircraft's elevation if available
-            BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
+            bool m_isVtol = false;   //!< VTOL aircraft?
             bool m_hasParts = false; //!< Has valid aircraft parts?
             BlackMisc::Aviation::CAircraftParts m_aircraftParts; //!< Aircraft parts
-            ElevationProvider m_elevationProvider; //!< Provider of ground elevation (lazy computation)
+            BlackMisc::Geo::CElevationPlane m_elevation; //!< aircraft's elevation if available
+            ElevationProvider m_elevationProvider;       //!< Provider of ground elevation (lazy computation)
+            BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
 
             BLACK_METACLASS(
                 CInterpolationHints,

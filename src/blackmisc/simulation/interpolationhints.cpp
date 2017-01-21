@@ -10,6 +10,7 @@
 #include "interpolationhints.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -22,6 +23,13 @@ namespace BlackMisc
         CInterpolationHints::CInterpolationHints(bool isVtolAircraft) : m_isVtol(isVtolAircraft)
         { }
 
+        CAltitude CInterpolationHints::getGroundElevation(const Aviation::CAircraftSituation &situation) const
+        {
+            if (m_elevationProvider) { return m_elevationProvider(situation); }
+            if (m_elevation.isNull() || !m_elevation.isWithinRange(situation)) { return CAltitude::null(); }
+            return m_elevation.geodeticHeight();
+        }
+
         void CInterpolationHints::resetElevation()
         {
             m_elevation = CElevationPlane();
@@ -31,6 +39,12 @@ namespace BlackMisc
         {
             if (m_elevation.isNull()) return false;
             return m_elevation.isWithinRange(coordinate);
+        }
+
+        void CInterpolationHints::setAircraftParts(const CAircraftParts &parts, bool hasParts)
+        {
+            m_hasParts = hasParts;
+            m_aircraftParts = parts;
         }
 
         CVariant CInterpolationHints::propertyByIndex(const CPropertyIndex &index) const

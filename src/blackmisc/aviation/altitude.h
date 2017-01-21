@@ -63,7 +63,7 @@ namespace BlackMisc
             /*!
              * Enum type to distinguish between MSL and AGL
              */
-            enum ReferenceDatum : uint
+            enum ReferenceDatum
             {
                 MeanSeaLevel = 0,   //!< MSL
                 AboveGround,        //!< AGL
@@ -114,6 +114,9 @@ namespace BlackMisc
 
             //! \copydoc BlackMisc::Mixin::Icon::toIcon
             BlackMisc::CIcon toIcon() const;
+
+            //! Null altitude (MSL)
+            static const CAltitude &null();
 
         private:
             ReferenceDatum m_datum; //!< MSL or AGL?

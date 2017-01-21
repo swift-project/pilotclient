@@ -170,7 +170,7 @@ namespace BlackSimPlugin
             if (m_clientStatus == Disconnected) { return; }
 
             IInterpolator::InterpolationStatus status;
-            const CInterpolationHints hints;
+            const CInterpolationHints hints; // \fixme 201701 #865 KB if there is an elevation provider for FS9 add it here or set elevation
             const CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, hints, status);
 
             // Test only for successful interpolation. FS9 requires constant positions

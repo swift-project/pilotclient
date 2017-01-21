@@ -106,5 +106,11 @@ namespace BlackMisc
             return BlackMisc::CIcon::iconByIndex(CIcons::GeoPosition);
         }
 
+        const CAltitude &CAltitude::null()
+        {
+            static const CAltitude null(0, CAltitude::MeanSeaLevel, CLengthUnit::nullUnit());
+            return null;
+        }
+
     } // namespace
 } // namespace

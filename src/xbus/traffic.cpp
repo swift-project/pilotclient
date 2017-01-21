@@ -50,12 +50,14 @@ namespace XBus
         hints.setElevationProvider([this](const auto &situation)
         {
             using namespace BlackMisc::PhysicalQuantities;
-            const auto meters = terrainProbe.getElevation(situation.latitude().value(CAngleUnit::deg()),
-                                                          situation.longitude().value(CAngleUnit::deg()),
-                                                          situation.getAltitude().value(CLengthUnit::m()));
-            if (std::isnan(meters)) { return CLength(0, nullptr); }
+            using namespace BlackMisc::Aviation;
+            const auto meters = terrainProbe.getElevation(
+                                    situation.latitude().value(CAngleUnit::deg()),
+                                    situation.longitude().value(CAngleUnit::deg()),
+                                    situation.getAltitude().value(CLengthUnit::m()));
+            if (std::isnan(meters)) { return CAltitude::null(); }
             constexpr decltype(meters) fudgeFactor = 3.0; //! \fixme Value should be different for each plane, derived from the CSL model geometry
-            return CLength(meters + fudgeFactor, CLengthUnit::m());
+            return CAltitude(CLength(meters + fudgeFactor, CLengthUnit::m()), CAltitude::MeanSeaLevel);
         });
         return hints;
     }
