@@ -185,7 +185,7 @@ namespace BlackSimPlugin
                     {
                     case CSimConnectDefinitions::RequestOwnAircraft:
                         {
-                            static_assert(sizeof(DataDefinitionOwnAircraft) == 28 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
+                            static_assert(sizeof(DataDefinitionOwnAircraft) == 30 * sizeof(double), "DataDefinitionOwnAircraft has an incorrect size.");
                             const DataDefinitionOwnAircraft *ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
                             simulatorFsx->updateOwnAircraftFromSimulator(*ownAircaft);
                             break;
@@ -245,7 +245,7 @@ namespace BlackSimPlugin
                         if (!pFacilityAirport) { break; }
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) { continue; } // airfield without ICAO code
-                        if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in SIM
+                        if (!CAirportIcaoCode::isValidIcaoDesignator(icao)) { continue; } // tiny airfields in simulator
                         const CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
                         CAirport airport(CAirportIcaoCode(icao), pos);
                         const CLength d = airport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);

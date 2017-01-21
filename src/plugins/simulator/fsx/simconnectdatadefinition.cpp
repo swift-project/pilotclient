@@ -35,6 +35,8 @@ namespace BlackSimPlugin
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LATITUDE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LONGITUDE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALTITUDE", "Feet");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE ALT ABOVE GROUND", "Feet");
+            hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "STATIC CG TO GROUND", "Feet");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE HEADING DEGREES TRUE", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE PITCH DEGREES", "Degrees");
             hr +=  SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE BANK DEGREES", "Degrees");

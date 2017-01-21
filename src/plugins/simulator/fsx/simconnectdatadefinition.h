@@ -34,6 +34,8 @@ namespace BlackSimPlugin
             double latitude;        //!< Latitude (deg)
             double longitude;       //!< Longitude (deg)
             double altitude;        //!< Altitude (ft)
+            double altitudeAboveGround; //!< Altitude above ground (ft)
+            double cgToGround;      //!< Static CG to ground (ft)
             double trueHeading;     //!< True heading (deg)
             double pitch;           //!< Pitch (deg)
             double bank;            //!< Bank (deg)
@@ -99,7 +101,7 @@ namespace BlackSimPlugin
             double longitude;  //!< Longitude (deg)
             double altitude;   //!< Altitude (ft)
             double elevation;  //!< Elevation (ft)
-            double cgToGround; //!< CG to ground (ft)
+            double cgToGround; //!< Static CG to ground (ft)
 
             //! Above ground ft
             double aboveGround() const { return altitude - elevation; }
