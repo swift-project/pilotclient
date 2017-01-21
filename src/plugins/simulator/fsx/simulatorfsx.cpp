@@ -1000,7 +1000,7 @@ namespace BlackSimPlugin
             SIMCONNECT_DATA_INITPOSITION position;
             position.Latitude = situation.latitude().value(CAngleUnit::deg());
             position.Longitude = situation.longitude().value(CAngleUnit::deg());
-            position.Altitude = situation.getCorrectedAltitude(hints.getCGAboveGround()).value(CLengthUnit::ft());
+            position.Altitude = situation.getAltitude().value(CLengthUnit::ft()); // already corrected in interpolator if there is an underflow
             position.Heading = situation.getHeading().value(CAngleUnit::deg());
             position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
 

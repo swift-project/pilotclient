@@ -100,8 +100,8 @@ namespace BlackMisc
             // take hint into account to calculate elevation and above ground level
             if (!hints.getElevation().isNull())
             {
-                setGroundElevationFromHint(hints, oldSituation);
-                setGroundElevationFromHint(hints, newSituation);
+                IInterpolator::setGroundElevationFromHint(hints, oldSituation);
+                IInterpolator::setGroundElevationFromHint(hints, newSituation);
             }
 
             CAircraftSituation currentSituation(oldSituation);
@@ -135,8 +135,8 @@ namespace BlackMisc
             currentSituation.setPosition(currentPosition);
 
             // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
-            const CAltitude oldAlt(oldSituation.getCorrectedAltitude(hints.getCGAboveGround()));
-            const CAltitude newAlt(newSituation.getCorrectedAltitude(hints.getCGAboveGround()));
+            const CAltitude oldAlt(oldSituation.getCorrectedAltitude()); // avoid underflow below ground elevation
+            const CAltitude newAlt(newSituation.getCorrectedAltitude());
             Q_ASSERT_X(oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
             currentSituation.setAltitude(CAltitude((newAlt - oldAlt)
                                                    * simulationTimeFraction
@@ -149,11 +149,12 @@ namespace BlackMisc
                 const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
                 if (groundFactor > 0.0)
                 {
-                    const auto &groundElevation = hints.getElevationProvider();
-                    if (groundElevation)
+                    const CAltitude groundElevation = hints.getGroundElevation(currentSituation);
+                    Q_ASSERT_X(groundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
+                    if (!groundElevation.isNull())
                     {
                         currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor)
-                                                               + groundElevation(currentSituation) * groundFactor,
+                                                               + groundElevation * groundFactor,
                                                                oldAlt.getReferenceDatum()));
                     }
                 }

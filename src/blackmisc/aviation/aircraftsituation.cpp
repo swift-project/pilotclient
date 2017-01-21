@@ -202,13 +202,12 @@ namespace BlackMisc
             return { 0, nullptr };
         }
 
-        CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &cgAboveGround) const
+        CAltitude CAircraftSituation::getCorrectedAltitude() const
         {
-            if (!this->hasGroundElevation()) { return this->getAltitude(); }
-            const CAltitude groundElevation(cgAboveGround.isNull() ?
-                                            this->getGroundElevation() :
-                                            CAltitude(this->getGroundElevation() + cgAboveGround, CAltitude::MeanSeaLevel));
-            return (groundElevation <= this->getAltitude()) ? this->getAltitude() : groundElevation;
+            if (this->getGroundElevation().isNull()) { return this->getAltitude(); }
+            if (this->getAltitude().getReferenceDatum() != CAltitude::MeanSeaLevel) { return this->getAltitude(); }
+            if (this->getGroundElevation() < this->getAltitude()) { return this->getAltitude(); }
+            return this->getGroundElevation();
         }
 
         void CAircraftSituation::setCallsign(const CCallsign &callsign)

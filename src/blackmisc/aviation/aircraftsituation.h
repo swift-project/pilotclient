@@ -132,8 +132,8 @@ namespace BlackMisc
             //! Get altitude
             const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_position.geodeticHeight(); }
 
-            //! Get altitude under consideration of ground elevation and CG (if available)
-            BlackMisc::Aviation::CAltitude getCorrectedAltitude(const PhysicalQuantities::CLength &cgAboveGround = { 0, nullptr }) const;
+            //! Get altitude under consideration of ground elevation
+            BlackMisc::Aviation::CAltitude getCorrectedAltitude() const;
 
             //! Set altitude
             void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_position.setGeodeticHeight(altitude); }

@@ -8,11 +8,13 @@
  */
 
 #include "interpolator.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/aviation/callsign.h"
+#include "blackmisc/pq/length.h"
 #include <QDateTime>
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -68,7 +70,7 @@ namespace BlackMisc
             const auto soonestLanding = std::find_if(partsNewer.begin(), partsNewer.end(), [](auto && p) { return p.isOnGround(); });
 
             // our clairvoyance is limited by the time offset
-            const double significantPast = 5.0;
+            const double significantPast = 5.0; // \fixme 20170121 KB would it make sense to centrally define the update time (5secs), in case it changes. I see a lot of 5.0 hardcoded here
             const double predictableFuture = soonestLanding == partsNewer.end() ? 5.0 : std::min(5.0, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0);
 
             const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? 5.0 : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
@@ -107,10 +109,10 @@ namespace BlackMisc
 
         void IInterpolator::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation)
         {
-            if (hints.getElevation().isNull()) return;
-            if (situation.hasGroundElevation()) return;
-            if (!hints.isWithinRange(situation)) return;
-            situation.setGroundElevation(hints.getElevation().geodeticHeight());
+            if (situation.hasGroundElevation()) { return; }
+            const CAltitude elevation = hints.getGroundElevation(situation);
+            if (elevation.isNull()) { return; }
+            situation.setGroundElevation(elevation);
         }
 
         bool IInterpolator::InterpolationStatus::allTrue() const
