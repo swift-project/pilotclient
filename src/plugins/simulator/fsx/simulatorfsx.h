@@ -196,7 +196,7 @@ namespace BlackSimPlugin
             const CSimConnectObjects &getSimConnectObjects() const { return m_simConnectObjects; }
 
             //! Format conversion
-            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Simulation::CInterpolationHints &hints);
+            SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(const BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! Sync time with user's computer
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);

@@ -157,7 +157,7 @@ namespace BlackSimPlugin
                 setInitialAircraftSituation(addedAircraft); // set interpolated data/parts if available
 
                 const DWORD requestId = obtainRequestId();
-                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation(), CInterpolationHints());
+                SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
                 const QString modelString(addedAircraft.getModelString());
 
                 if (m_interpolationRenderingSetup.showSimulatorDebugMessages())
@@ -881,7 +881,7 @@ namespace BlackSimPlugin
                 if (interpolatorStatus.allTrue())
                 {
                     // update situation
-                    SIMCONNECT_DATA_INITPOSITION position = aircraftSituationToFsxPosition(interpolatedSituation, hints);
+                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(interpolatedSituation);
                     HRESULT hr = S_OK;
                     hr += SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPosition,
                                                         static_cast<SIMCONNECT_OBJECT_ID>(simObj.getObjectId()), 0, 0,
@@ -995,7 +995,7 @@ namespace BlackSimPlugin
             return hr == S_OK;
         }
 
-        SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxPosition(const CAircraftSituation &situation, const CInterpolationHints &hints)
+        SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxPosition(const CAircraftSituation &situation)
         {
             SIMCONNECT_DATA_INITPOSITION position;
             position.Latitude = situation.latitude().value(CAngleUnit::deg());
@@ -1007,9 +1007,13 @@ namespace BlackSimPlugin
             // MSFS has inverted pitch and bank angles
             position.Pitch = -situation.getPitch().value(CAngleUnit::deg());
             position.Bank = -situation.getBank().value(CAngleUnit::deg());
+            position.OnGround = 0U;
 
-            const bool onGround = situation.isOnGroundGuessed(hints.getCGAboveGround());
-            position.OnGround = onGround ? 1U : 0U;
+            if (situation.isOnGroundInfoAvailable())
+            {
+                const bool onGround = situation.isOnGround() == CAircraftSituation::OnGround;
+                position.OnGround = onGround ? 1U : 0U;
+            }
             return position;
         }
 
