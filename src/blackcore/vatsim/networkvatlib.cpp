@@ -457,6 +457,8 @@ namespace BlackCore
             stopPositionTimers();
             if (m_net && isConnected())
             {
+                // Process all pending tasks before logging off
+                process();
                 Vat_Logoff(m_net.data());
             }
         }
