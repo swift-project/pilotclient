@@ -157,29 +157,16 @@ namespace BlackMisc
             return 0;
         }
 
-        bool CAircraftSituation::isOnGroundGuessed(const CLength &cgAboveGround) const
+        bool CAircraftSituation::isOnGroundInfoAvailable() const
         {
-            const CLength heightAboveGround(this->getHeightAboveGround());
-            if (!heightAboveGround.isNull())
-            {
-                if (cgAboveGround.isNull())
-                {
-                    return heightAboveGround.value(CLengthUnit::m()) < 1.0;
-                }
-                else
-                {
-                    return heightAboveGround <= cgAboveGround;
-                }
-            }
+            return this->isOnGround() != CAircraftSituation::OnGroundSituationUnknown &&
+                   this->getOnGroundReliability() != CAircraftSituation::OnGroundReliabilityNoSet;
+        }
 
-            // we guess on pitch and bank
-            if (qAbs(this->getPitch().value(CAngleUnit::deg())) > 10) { return false; }
-            if (qAbs(this->getBank().value(CAngleUnit::deg())) > 10)  { return false; }
-
-            if (this->getGroundSpeed().value(CSpeedUnit::km_h()) > 50) { return false; }
-
-            // not sure, but this is a guess
-            return true;
+        void CAircraftSituation::setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundReliability reliability)
+        {
+            this->setOnGround(onGround);
+            this->setOnGroundReliabiliy(reliability);
         }
 
         bool CAircraftSituation::hasGroundElevation() const

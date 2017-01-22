@@ -58,6 +58,23 @@ namespace BlackMisc
                 IndexCallsign
             };
 
+            //! Is on ground?
+            enum IsOnGround
+            {
+                NotOnGround,
+                OnGround,
+                OnGroundSituationUnknown
+            };
+
+            //! Reliability of on ground information
+            enum OnGroundReliability
+            {
+                OnGroundByGuessing,
+                OnGroundByElevation,
+                OnGroundByInterpolation,
+                OnGroundReliabilityNoSet
+            };
+
             //! Default constructor.
             CAircraftSituation();
 
@@ -99,8 +116,23 @@ namespace BlackMisc
             //! \copydoc Geo::ICoordinateGeodetic::longitude()
             virtual BlackMisc::Geo::CLongitude longitude() const override { return this->m_position.longitude(); }
 
-            //! Guess if aircraft is "on ground"
-            bool isOnGroundGuessed(const BlackMisc::PhysicalQuantities::CLength &cgAboveGround = { 0, nullptr }) const;
+            //! On ground?
+            IsOnGround isOnGround() const { return static_cast<CAircraftSituation::IsOnGround>(m_isOnGround); }
+
+            //! On ground info available?
+            bool isOnGroundInfoAvailable() const;
+
+            //! Set on ground
+            void setOnGround(CAircraftSituation::IsOnGround onGround) { m_isOnGround = static_cast<int>(onGround); }
+
+            //! Set on ground
+            void setOnGround(CAircraftSituation::IsOnGround onGround, CAircraftSituation::OnGroundReliability reliability);
+
+            //! On ground reliability
+            OnGroundReliability getOnGroundReliability() const { return static_cast<CAircraftSituation::OnGroundReliability>(m_onGroundReliability); }
+
+            //! Reliability
+            void setOnGroundReliabiliy(CAircraftSituation::OnGroundReliability onGroundReliability) { m_onGroundReliability = static_cast<int>(onGroundReliability); }
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
@@ -188,6 +220,8 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundSpeed;
             BlackMisc::Aviation::CAltitude m_groundElevation;
+            int m_isOnGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
+            int m_onGroundReliability = static_cast<int>(CAircraftSituation::OnGroundReliabilityNoSet);
             qint64 m_timeOffsetMs = 0;
             bool m_isInterim = false;
 
@@ -200,6 +234,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(bank),
                 BLACK_METAMEMBER(groundSpeed),
                 BLACK_METAMEMBER(groundElevation),
+                BLACK_METAMEMBER(isOnGround),
+                BLACK_METAMEMBER(onGroundReliability),
                 BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(timeOffsetMs),
                 BLACK_METAMEMBER(isInterim)
@@ -209,5 +245,7 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::IsOnGround)
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation::OnGroundReliability)
 
 #endif // guard

@@ -25,6 +25,8 @@ namespace BlackMisc
             CAircraftParts::registerMetadata();
             CAircraftPartsList::registerMetadata();
             CAircraftSituation::registerMetadata();
+            qRegisterMetaType<CAircraftSituation::IsOnGround>();
+            qRegisterMetaType<CAircraftSituation::OnGroundReliability>();
             CAircraftSituationList::registerMetadata();
             CAirlineIcaoCode::registerMetadata();
             CAirlineIcaoCodeList::registerMetadata();
