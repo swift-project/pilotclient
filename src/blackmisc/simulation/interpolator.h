@@ -142,6 +142,9 @@ namespace BlackMisc
             //! Set the ground elevation from hints, if possible and not already set
             static void setGroundElevationFromHint(const CInterpolationHints &hints, BlackMisc::Aviation::CAircraftSituation &situation);
 
+            //! Set on ground flag
+            static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, BlackMisc::Aviation::CAircraftSituation &situation);
+
             CInterpolationAndRenderingSetup m_setup; //!< allows to disable debug messages
             mutable QReadWriteLock m_lock; //!< lock interpolator
         };

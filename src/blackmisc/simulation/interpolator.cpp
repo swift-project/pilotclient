@@ -115,6 +115,48 @@ namespace BlackMisc
             situation.setGroundElevation(elevation);
         }
 
+        void IInterpolator::setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, CAircraftSituation &situation)
+        {
+            // by interpolation
+            if (groundFactor >= 1.0)
+            {
+                situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByInterpolation);
+                return;
+            }
+            if (groundFactor < 1.0 && groundFactor >= 0.0)
+            {
+                situation.setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByInterpolation);
+                return;
+            }
+
+            // no value by factor, guess on elevation
+            const CLength heightAboveGround(situation.getHeightAboveGround());
+            const CLength cgAboveGround(hints.getCGAboveGround());
+            if (!heightAboveGround.isNull())
+            {
+                const bool og = cgAboveGround.isNull() ?
+                                heightAboveGround.value(CLengthUnit::m()) < 1.0 :
+                                heightAboveGround <= cgAboveGround;
+                situation.setOnGround(og ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByElevation);
+            }
+
+            // for VTOL aircraft we give up
+            if (hints.isVtolAircraft())
+            {
+                situation.setOnGround(CAircraftSituation::OnGroundSituationUnknown, CAircraftSituation::OnGroundReliabilityNoSet);
+                return;
+            }
+
+            // we guess on speed, pitch and bank by excluding situations
+            situation.setOnGround(CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByGuessing);
+            if (qAbs(situation.getPitch().value(CAngleUnit::deg())) > 10) { return; }
+            if (qAbs(situation.getBank().value(CAngleUnit::deg())) > 10)  { return; }
+            if (situation.getGroundSpeed().value(CSpeedUnit::km_h()) > 50) { return; }
+
+            // not sure, but this is a guess
+            situation.setOnGround(CAircraftSituation::OnGround, CAircraftSituation::OnGroundByGuessing);
+        }
+
         bool IInterpolator::InterpolationStatus::allTrue() const
         {
             return m_interpolationSucceeded && m_changedPosition;

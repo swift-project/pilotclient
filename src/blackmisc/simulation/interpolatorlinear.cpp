@@ -158,6 +158,13 @@ namespace BlackMisc
                                                                oldAlt.getReferenceDatum()));
                     }
                 }
+                IInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
+            }
+            else
+            {
+                // guess ground flag
+                constexpr double NoGroundFactor = -1;
+                IInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
             }
 
             if (!setup.isForcingFullInterpolation() && !hints.isVtolAircraft() && newVec == oldVec && oldAlt == newAlt)
