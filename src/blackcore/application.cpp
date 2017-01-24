@@ -639,11 +639,7 @@ namespace BlackCore
         CLogHandler::instance()->install(); // make sure we have a log handler!
 
         // File logger
-        static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                                       "/org.swift-project/" +
-                                       CDirectoryUtils::normalizedApplicationDirectory() +
-                                       "/logs";
-        this->m_fileLogger.reset(new CFileLogger(executable(), logPath));
+        this->m_fileLogger.reset(new CFileLogger(executable(), CDirectoryUtils::getLogDirectory()));
         this->m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
     }
 

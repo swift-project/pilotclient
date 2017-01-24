@@ -14,10 +14,10 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QRegularExpression>
+#include <QStandardPaths>
 
 namespace BlackMisc
 {
-
     QString applicationDirectoryPathImpl()
     {
         QString appDirectoryString(qApp->applicationDirPath());
@@ -47,6 +47,15 @@ namespace BlackMisc
     {
         static const QString appDir(normalizedApplicationDirectoryImpl());
         return appDir;
+    }
+
+    const QString &CDirectoryUtils::getLogDirectory()
+    {
+        static const QString logPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
+                                       "/org.swift-project/" +
+                                       CDirectoryUtils::normalizedApplicationDirectory() +
+                                       "/logs";
+        return logPath;
     }
 
 } // ns

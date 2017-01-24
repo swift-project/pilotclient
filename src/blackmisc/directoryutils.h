@@ -13,7 +13,6 @@
 #define BLACKMISC_DIRECTORYUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-
 #include <QString>
 
 namespace BlackMisc
@@ -32,8 +31,11 @@ namespace BlackMisc
         //! \note There is no trailing '/'.
         //! \warning The normalization rules are implementation specific and could change over time.
         static const QString &normalizedApplicationDirectory();
-    };
 
+        //! Directory for log files
+        //! \remark In BlackMisc so it can also be used from BlackMisc classes
+        static const QString &getLogDirectory();
+    };
 } // ns
 
 #endif // guard

@@ -15,6 +15,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/registermetadata.h"
+#include "blackmisc/directoryutils.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -370,6 +371,17 @@ namespace BlackGui
         {
             const QStringList files(CDataCache::instance()->enumerateStore());
             this->displayTextInConsole(files.join("\n"));
+        });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+
+        a = menu.addAction(CIcons::disk16(), "Log directory");
+        c = connect(a, &QAction::triggered, this, [this]()
+        {
+            const QString path(QDir::toNativeSeparators(CDirectoryUtils::getLogDirectory()));
+            if (QDir(path).exists())
+            {
+                QDesktopServices::openUrl(QUrl("file:///" + path));
+            }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
     }
