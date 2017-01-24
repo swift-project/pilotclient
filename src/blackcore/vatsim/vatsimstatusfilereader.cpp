@@ -71,7 +71,7 @@ namespace BlackCore
         void CVatsimStatusFileReader::ps_read()
         {
             this->threadAssertCheck();
-            if (!this->isNetworkConnectedAndAccessible()) { return; }
+            if (!this->isNetworkAccessible()) { return; }
 
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
             CFailoverUrlList urls(sApp->getGlobalSetup().getVatsimStatusFileUrls());

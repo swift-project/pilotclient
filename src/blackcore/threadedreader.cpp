@@ -69,7 +69,7 @@ namespace BlackCore
         return delta <= timeLastMs;
     }
 
-    bool CThreadedReader::isNetworkConnectedAndAccessible() const
+    bool CThreadedReader::isNetworkAccessible() const
     {
         return sApp->isNetworkAccessible();
     }

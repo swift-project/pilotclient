@@ -152,7 +152,7 @@ namespace BlackCore
             this->threadAssertCheck();
             if (this->isShuttingDown()) { return; }
             entities &= CEntityFlags::DistributorLiveryModel;
-            if (!this->isNetworkConnectedAndAccessible())
+            if (!this->isNetworkAccessible())
             {
                 emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0);
                 return;

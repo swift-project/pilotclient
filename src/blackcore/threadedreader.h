@@ -52,8 +52,8 @@ namespace BlackCore
         //! \threadsafe
         bool updatedWithinLastMs(qint64 timeLastMs);
 
-        //! Network available
-        bool isNetworkConnectedAndAccessible() const;
+        //! Network accessable?
+        bool isNetworkAccessible() const;
 
         //! Is marked as read failed
         //! \threadsafe

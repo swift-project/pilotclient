@@ -133,7 +133,7 @@ namespace BlackCore
             this->threadAssertCheck(); // runs in background thread
             if (this->isShuttingDown()) { return; }
             entities &= CEntityFlags::AllIcaoAndCountries;
-            if (!this->isNetworkConnectedAndAccessible())
+            if (!this->isNetworkAccessible())
             {
                 emit this->dataRead(entities, CEntityFlags::ReadSkipped, 0);
                 return;

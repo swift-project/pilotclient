@@ -67,7 +67,7 @@ namespace BlackCore
 
         void CVatsimBookingReader::ps_read()
         {
-            if (!this->isNetworkConnectedAndAccessible())
+            if (!this->isNetworkAccessible())
             {
                 CLogMessage(this).warning("No network, cannot read VATSIM bookings");
                 return;
