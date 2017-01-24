@@ -197,7 +197,7 @@ namespace BlackCore
     CStatusMessageList CSetupReader::triggerReadSetup()
     {
         if (this->m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
-        if (!CNetworkUtils::hasConnectedInterface())
+        if (!sApp->isNetworkAccessible())
         {
             const CStatusMessage m(this, CStatusMessage::SeverityError,
                                    "No network, cancelled reading of setup");

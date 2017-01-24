@@ -71,7 +71,7 @@ namespace BlackCore
 
     bool CThreadedReader::isNetworkConnectedAndAccessible() const
     {
-        return sApp->isNetworkConnectedAndAccessible();
+        return sApp->isNetworkAccessible();
     }
 
     void CThreadedReader::gracefulShutdown()

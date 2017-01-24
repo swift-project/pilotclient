@@ -539,7 +539,7 @@ namespace BlackCore
 
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
     {
-        if (!this->isNetworkConnectedAndAccessible()) { return nullptr; }
+        if (!this->isNetworkAccessible()) { return nullptr; }
         if (QThread::currentThread() != this->m_accessManager.thread())
         {
             multiPart->moveToThread(this->m_accessManager.thread());
@@ -1176,7 +1176,7 @@ namespace BlackCore
     QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, const BlackMisc::CSlot<void (QNetworkReply *)> &callback, int maxRedirects, std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod)
     {
         if (this->m_shutdown) { return nullptr; }
-        if (!this->isNetworkConnectedAndAccessible()) { return nullptr; }
+        if (!this->isNetworkAccessible()) { return nullptr; }
         QWriteLocker locker(&m_accessManagerLock);
         Q_ASSERT_X(QCoreApplication::instance()->thread() == m_accessManager.thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
         if (QThread::currentThread() != this->m_accessManager.thread())

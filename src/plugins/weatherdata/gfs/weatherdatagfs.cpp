@@ -65,7 +65,7 @@ namespace BlackWxPlugin
             m_maxRange = range;
             if (m_gribData.isEmpty())
             {
-                if (!sApp->isNetworkConnectedAndAccessible())
+                if (!sApp->isNetworkAccessible())
                 {
                     CLogMessage(this).error("No weather download since network not accessible");
                     return;

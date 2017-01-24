@@ -153,7 +153,7 @@ void SwiftGuiStd::init()
     this->m_init = true;
     QTimer::singleShot(2500, this, &SwiftGuiStd::ps_verifyDataAvailability);
 
-    if (!CNetworkUtils::hasConnectedInterface())
+    if (!sGui->isNetworkAccessible())
     {
         CLogMessage(this).error("No network interface, software will not work properly");
     }
