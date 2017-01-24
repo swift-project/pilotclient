@@ -44,9 +44,13 @@ namespace XBus
 
     BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints(BlackMisc::Simulation::IInterpolator *interpolator) const
     {
+        // \todo MS 865 CInterpolationAndRenderingSetup allows to setup interpolation in the GUI, e.g.
+        //       also to disable aircraft parts / or logging parts (log file). I wonder if you want to consider it here
+        //       e.g. interpolator->getInterpolatorSetup().getLogCallsigns().contains(callsign)
+        //       if the setup is needed more than once, store it here to avoid multiple locks
         BlackMisc::Simulation::CInterpolationHints hints;
         BlackMisc::Simulation::IInterpolator::PartsStatus status;
-        hints.setAircraftParts(interpolator->getInterpolatedParts(parts, -1, status));
+        hints.setAircraftParts(interpolator->getInterpolatedParts(callsign, parts, -1, status));
         hints.setElevationProvider([this](const auto &situation)
         {
             using namespace BlackMisc::PhysicalQuantities;
@@ -338,7 +342,7 @@ namespace XBus
                 if (plane->situations.size() < 3) { return xpmpData_Unavailable; } // avoid sudden movements when a pilot connects
 
                 BlackMisc::Simulation::IInterpolator::InterpolationStatus status;
-                const auto situation = m_interpolator->getInterpolatedSituation(plane->situations, -1, plane->hints(m_interpolator), status);
+                const auto situation = m_interpolator->getInterpolatedSituation(plane->callsign, plane->situations, -1, plane->hints(m_interpolator), status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
                 if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 

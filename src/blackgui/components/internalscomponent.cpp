@@ -71,7 +71,6 @@ namespace BlackGui
             connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
 
             connect(ui->cb_DebugDriver, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
-            connect(ui->cb_DebugInterpolator, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_ForceFullInterpolation, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_EnableParts, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
 
@@ -192,12 +191,11 @@ namespace BlackGui
             else if (sender == ui->cb_DebugContextNetwork) { sGui->getIContextNetwork()->setDebugEnabled(debug);}
             else if (sender == ui->cb_DebugContextOwnAircraft) { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
             else if (sender == ui->cb_DebugContextSimulator)   { sGui->getIContextSimulator()->setDebugEnabled(debug);}
-            else if (sender == ui->cb_DebugDriver || sender == ui->cb_EnableParts || sender == ui->cb_DebugInterpolator || sender == ui->cb_ForceFullInterpolation)
+            else if (sender == ui->cb_DebugDriver || sender == ui->cb_EnableParts || sender == ui->cb_ForceFullInterpolation)
             {
                 CInterpolationAndRenderingSetup setup;
                 setup.setForceFullInterpolation(ui->cb_ForceFullInterpolation->isChecked());
                 setup.setDriverDebuggingMessages(ui->cb_DebugDriver->isChecked());
-                setup.setInterpolatorDebuggingMessages(ui->cb_DebugInterpolator->isChecked());
                 setup.setEnabledAircraftParts(ui->cb_EnableParts->isChecked());
                 sGui->getIContextSimulator()->setInterpolationAndRenderingSetup(setup);
             }

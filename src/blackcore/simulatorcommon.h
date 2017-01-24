@@ -83,6 +83,18 @@ namespace BlackCore
         virtual void setWeatherActivated(bool activated) override;
         virtual void unload() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
+
+        //! \copydoc ISimulator::parseCommandLine
+        //! \ingroup commandline
+        //! @{
+        //! <pre>
+        //! .plugin unload              unload plugin
+        //! .plugin logint  callsign    log interpolator for callsign
+        //! .plugin logint  off         no log information for interpolator
+        //! .plugin logint  write       write interpolator log to file
+        //! .plugin logint  clear       clear current log
+        //! </pre>
+        //! @}
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
         // --------- ISimulator implementations ------------
 

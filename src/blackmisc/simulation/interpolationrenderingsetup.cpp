@@ -136,6 +136,26 @@ namespace BlackMisc
             return rt;
         }
 
+        void CInterpolationAndRenderingSetup::addCallsignToLog(const BlackMisc::Aviation::CCallsign &callsign)
+        {
+            m_callsignsToLog.insert(callsign);
+        }
+
+        void CInterpolationAndRenderingSetup::removeCallsignFromLog(const BlackMisc::Aviation::CCallsign &callsign)
+        {
+            m_callsignsToLog.remove(callsign);
+        }
+
+        void CInterpolationAndRenderingSetup::clearInterpolatorLogCallsigns()
+        {
+            m_callsignsToLog.clear();
+        }
+
+        BlackMisc::Aviation::CCallsignSet CInterpolationAndRenderingSetup::getLogCallsigns() const
+        {
+            return m_callsignsToLog;
+        }
+
         QString CInterpolationAndRenderingSetup::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);

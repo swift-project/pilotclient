@@ -108,17 +108,10 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="cb_DebugInterpolator">
-            <property name="text">
-             <string>Interpolator dbg. msgs.</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="cb_ForceFullInterpolation">
             <property name="text">
-             <string>force full interpol.</string>
+             <string>force full interpolation</string>
             </property>
            </widget>
           </item>

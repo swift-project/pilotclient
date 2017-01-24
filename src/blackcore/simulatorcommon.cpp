@@ -159,7 +159,7 @@ namespace BlackCore
         if (enabled)
         {
             // are we already visible?
-            if (!isPhysicallyRenderedAircraft(callsign))
+            if (!this->isPhysicallyRenderedAircraft(callsign))
             {
                 this->physicallyAddRemoteAircraft(aircraft);
             }
@@ -182,16 +182,10 @@ namespace BlackCore
         IInterpolator::InterpolationStatus interpolationStatus;
         CInterpolationHints &hints = m_hints[aircraft.getCallsign()];
         hints.setVtolAircraft(aircraft.isVtol());
-        const CAircraftSituation as(m_interpolator->getInterpolatedSituation(callsign, time, hints, interpolationStatus));
-        if (interpolationStatus.didInterpolationSucceed())
-        {
-            aircraft.setSituation(as);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        const CAircraftSituation currentSituation(m_interpolator->getInterpolatedSituation(callsign, time, hints, interpolationStatus));
+        if (!interpolationStatus.didInterpolationSucceed()) { return false; }
+        aircraft.setSituation(currentSituation);
+        return true;
     }
 
     void CSimulatorCommon::reloadWeatherSettings()
@@ -360,16 +354,65 @@ namespace BlackCore
         if (commandLine.isEmpty()) { return false; }
         CSimpleCommandParser parser(
         {
-            ".plugin", ".drv", ".driver"
+            ".plugin", ".drv", ".driver",
         });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
+        // .plugin unload
         if (parser.matchesPart(1, "unload"))
         {
             this->unload();
             return true;
         }
+
+        // .plugin loginterpolator etc.
+        if (parser.part(1).startsWith("logint") && parser.hasPart(2))
+        {
+            if (!this->m_interpolator) { return false; }
+            const QString p = parser.part(2).toLower();
+            if (p == "off" || p == "false")
+            {
+                this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                this->m_interpolator->setInterpolatorSetup(this->m_interpolationRenderingSetup);
+                CStatusMessage(this).info("Disabled interpolation logging");
+                return true;
+            }
+            if (p == "clear" || p == "clr")
+            {
+                this->m_interpolator->clearLog();
+                CStatusMessage(this).info("Cleared interpolation logging");
+                return true;
+            }
+            if (p == "write" || p == "save")
+            {
+                // stop logging
+                this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
+                this->m_interpolator->setInterpolatorSetup(this->m_interpolationRenderingSetup);
+
+                // write
+                this->m_interpolator->writeLogInBackground();
+                CLogMessage(this).info("Started writing interpolation log");
+                return true;
+            }
+
+            const QString cs = p.toUpper();
+            if (!CCallsign::isValidAircraftCallsign(cs)) { return false; }
+            if (this->getAircraftInRangeCallsigns().contains(cs))
+            {
+                this->m_interpolationRenderingSetup.addCallsignToLog(CCallsign(cs));
+                this->m_interpolator->setInterpolatorSetup(this->m_interpolationRenderingSetup);
+                CLogMessage(this).info("Will log interpolation for '%1'") << cs;
+                return true;
+            }
+            else
+            {
+                CLogMessage(this).warning("Cannot log interpolation for '%1', no aircraft in range") << cs;
+                return false;
+            }
+        }
+
+        // driver specific cmd line arguments
         return this->parseDetails(parser);
     }
 

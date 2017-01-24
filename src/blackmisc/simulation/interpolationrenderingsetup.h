@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_INTERPOLATIONRENDERINGSETUP_H
 #define BLACKMISC_SIMULATION_INTERPOLATIONRENDERINGSETUP_H
 
+#include "blackmisc/aviation/callsignset.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/propertyindex.h"
@@ -45,12 +46,6 @@ namespace BlackMisc
 
             //! Considered as "all aircraft"
             static int InfiniteAircraft();
-
-            //! Debugging messages
-            bool showInterpolatorDebugMessages() const { return m_interpolatorDebugMessage; }
-
-            //! Debugging messages
-            void setInterpolatorDebuggingMessages(bool debug) { m_interpolatorDebugMessage = debug; }
 
             //! Debugging messages
             bool showSimulatorDebugMessages() const { return m_simulatorDebugMessages; }
@@ -106,6 +101,18 @@ namespace BlackMisc
             //! Text describing the restrictions
             QString getRenderRestrictionText() const;
 
+            //! Add a callsign which will be logged
+            void addCallsignToLog(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Remove a callsign from logging
+            void removeCallsignFromLog(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Clear all interpolator log callsigns
+            void clearInterpolatorLogCallsigns();
+
+            //! Callsigns for logging
+            BlackMisc::Aviation::CCallsignSet getLogCallsigns() const;
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -122,6 +129,7 @@ namespace BlackMisc
             bool m_enabledAircraftParts   = true;    //! Update aircraft parts
             int  m_maxRenderedAircraft = InfiniteAircraft(); //!< max.rendered aircraft
             BlackMisc::PhysicalQuantities::CLength m_maxRenderedDistance { 0, nullptr }; //!< max.distance for rendering
+            BlackMisc::Aviation::CCallsignSet m_callsignsToLog;
 
             BLACK_METACLASS(
                 CInterpolationAndRenderingSetup,
@@ -130,7 +138,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(forceFullInterpolation),
                 BLACK_METAMEMBER(enabledAircraftParts),
                 BLACK_METAMEMBER(maxRenderedAircraft),
-                BLACK_METAMEMBER(maxRenderedDistance)
+                BLACK_METAMEMBER(maxRenderedDistance),
+                BLACK_METAMEMBER(callsignsToLog, 0, DisabledForComparison)
             );
         };
     } // namespace

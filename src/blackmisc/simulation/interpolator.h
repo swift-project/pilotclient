@@ -100,14 +100,16 @@ namespace BlackMisc
             //! \threadsafe
             //! \remark public only for XP driver
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+                const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
                 const CInterpolationHints &hints, InterpolationStatus &status) const = 0;
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
-                PartsStatus &partsStatus) const;
+                    const Aviation::CCallsign &callsign,
+                    const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
+                    PartsStatus &partsStatus) const;
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe

@@ -40,7 +40,10 @@ namespace BlackMisc
             using IInterpolator::getInterpolatedSituation;
 
             //! \copydoc IInterpolator::getInterpolatedSituation
-            virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc, const BlackMisc::Simulation::CInterpolationHints &hints, InterpolationStatus &status) const override;
+            virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
+                const BlackMisc::Aviation::CCallsign &callsign,
+                const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
+                const BlackMisc::Simulation::CInterpolationHints &hints, InterpolationStatus &status) const override;
 
             //! Log category
             static QString getLogCategory() { return "swift.interpolatorlinear"; }
