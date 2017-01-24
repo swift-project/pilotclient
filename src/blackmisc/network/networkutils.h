@@ -106,6 +106,9 @@ namespace BlackMisc
             //! Set user agent for request
             static void setSwiftUserAgent(QNetworkRequest &request);
 
+            //! Set swift client ssl certificate
+            static void setSwiftClientSslCertificate(QNetworkRequest &request);
+
             //! Multipart with DEBUG FLAG for server
             static QHttpPart getMultipartWithDebugFlag();
 

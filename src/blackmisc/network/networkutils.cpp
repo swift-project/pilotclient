@@ -20,7 +20,9 @@
 #include <QNetworkInterface>
 #include <QNetworkReply>
 #include <QObject>
+#include <QSslCertificate>
 #include <QSslConfiguration>
+#include <QSslKey>
 #include <QSslSocket>
 #include <QTcpSocket>
 #include <QTextStream>
@@ -220,6 +222,36 @@ namespace BlackMisc
         {
             static const QString userAgent("swift/" + CVersion::version());
             request.setRawHeader("User-Agent", userAgent.toLatin1());
+        }
+
+        //! \cond PRIVATE
+        QSslKey loadPrivateSslKey()
+        {
+            QFile privateKeyFile(":/blackmisc/ssl/swiftclient.key");
+            privateKeyFile.open(QIODevice::ReadOnly);
+            QSslKey privateKey(&privateKeyFile, QSsl::Rsa, QSsl::Pem, QSsl::PrivateKey, QByteArrayLiteral("ead811e4474a29539a37ff766ca18330"));
+            Q_ASSERT(!privateKey.isNull());
+            return privateKey;
+        }
+
+        QSslCertificate loadSslCertifcate()
+        {
+            QFile certificateFile(":/blackmisc/ssl/swiftclient.crt");
+            certificateFile.open(QIODevice::ReadOnly);
+            QSslCertificate certificate(&certificateFile);
+            Q_ASSERT(!certificate.isNull());
+            return certificate;
+        }
+        //! \endcond
+
+        void CNetworkUtils::setSwiftClientSslCertificate(QNetworkRequest &request)
+        {
+            static const QSslKey privateKey(loadPrivateSslKey());
+            static const QSslCertificate certificate(loadSslCertifcate());
+            QSslConfiguration sslConfiguration = request.sslConfiguration();
+            sslConfiguration.setPrivateKey(privateKey);
+            sslConfiguration.setLocalCertificate(certificate);
+            request.setSslConfiguration(sslConfiguration);
         }
 
         QHttpPart CNetworkUtils::getMultipartWithDebugFlag()
