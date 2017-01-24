@@ -52,6 +52,10 @@ namespace BlackMisc
                 IndexAltitude,
                 IndexHeading,
                 IndexBank,
+                IndexIsOnGround,
+                IndexIsOnGroundString,
+                IndexOnGroundReliability,
+                IndexOnGroundReliabilityString,
                 IndexPitch,
                 IndexGroundSpeed,
                 IndexGroundElevation,
@@ -119,6 +123,9 @@ namespace BlackMisc
             //! On ground?
             IsOnGround isOnGround() const { return static_cast<CAircraftSituation::IsOnGround>(m_isOnGround); }
 
+            //! On ground?
+            const QString &isOnGroundAsString() const;
+
             //! On ground info available?
             bool isOnGroundInfoAvailable() const;
 
@@ -131,8 +138,14 @@ namespace BlackMisc
             //! On ground reliability
             OnGroundReliability getOnGroundReliability() const { return static_cast<CAircraftSituation::OnGroundReliability>(m_onGroundReliability); }
 
+            //! On ground reliability as string
+            const QString &getOnGroundReliabilityAsString() const;
+
             //! Reliability
             void setOnGroundReliabiliy(CAircraftSituation::OnGroundReliability onGroundReliability) { m_onGroundReliability = static_cast<int>(onGroundReliability); }
+
+            //! On ground info as string
+            QString getOnGroundInfo() const;
 
             //! \copydoc Geo::ICoordinateGeodetic::geodeticHeight
             const BlackMisc::Aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
@@ -212,6 +225,12 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Enum to string
+            static const QString &isOnGroundToString(IsOnGround onGround);
+
+            //! Enum to string
+            static const QString &onGroundReliabilityToString(OnGroundReliability reliability);
+
         private:
             CCallsign m_correspondingCallsign;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
@@ -219,7 +238,7 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_pitch;
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundSpeed;
-            BlackMisc::Aviation::CAltitude m_groundElevation;
+            BlackMisc::Aviation::CAltitude m_groundElevation{0, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()};
             int m_isOnGround = static_cast<int>(CAircraftSituation::OnGroundSituationUnknown);
             int m_onGroundReliability = static_cast<int>(CAircraftSituation::OnGroundReliabilityNoSet);
             qint64 m_timeOffsetMs = 0;

@@ -11,9 +11,10 @@
 #include "blackmisc/pq/physicalquantity.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/comparefunctions.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
-
+#include "QStringBuilder"
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -41,14 +42,50 @@ namespace BlackMisc
 
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
-            QString s(this->m_position.toQString(i18n));
-            s.append(" bank: ").append(this->m_bank.toQString(i18n));
-            s.append(" pitch: ").append(this->m_pitch.toQString(i18n));
-            s.append(" gs: ").append(this->m_groundSpeed.toQString(i18n));
-            s.append(" elevation: ").append(this->m_groundElevation.toQString(i18n));
-            s.append(" heading: ").append(this->m_heading.toQString(i18n));
-            s.append(" timestamp: ").append(this->getFormattedUtcTimestampDhms());
+            const QString s = (this->m_position.toQString(i18n)) %
+                              QLatin1Literal(" bank: ") % (this->m_bank.toQString(i18n)) %
+                              QLatin1Literal(" pitch: ") % (this->m_pitch.toQString(i18n)) %
+                              QLatin1Literal(" gs: ") % (this->m_groundSpeed.toQString(i18n)) %
+                              QLatin1Literal(" elevation: ") % (this->m_groundElevation.toQString(i18n)) %
+                              QLatin1Literal(" heading: ") % (this->m_heading.toQString(i18n)) %
+                              QLatin1Literal(" timestamp: ") % (this->getFormattedUtcTimestampDhms());
             return s;
+        }
+
+        const QString &CAircraftSituation::isOnGroundToString(CAircraftSituation::IsOnGround onGround)
+        {
+            static const QString notog("not on ground");
+            static const QString og("on ground");
+            static const QString unknown("unknown");
+
+            switch (onGround)
+            {
+            case CAircraftSituation::NotOnGround: return notog;
+            case CAircraftSituation::OnGround: return og;
+            case CAircraftSituation::OnGroundSituationUnknown:
+            default:
+                return unknown;
+            }
+        }
+
+        const QString &CAircraftSituation::onGroundReliabilityToString(CAircraftSituation::OnGroundReliability reliability)
+        {
+            static const QString elv("by elevation");
+            static const QString elvCg("by elevation/CG");
+            static const QString inter("by interpolation");
+            static const QString guess("guessing");
+            static const QString unknown("unknown");
+
+            switch (reliability)
+            {
+            case CAircraftSituation::OnGroundByElevation: return elv;
+            case CAircraftSituation::OnGroundByElevationAndCG: return elvCg;
+            case CAircraftSituation::OnGroundByGuessing: return guess;
+            case CAircraftSituation::OnGroundByInterpolation: return inter;
+            case CAircraftSituation::OnGroundReliabilityNoSet:
+            default:
+                return unknown;
+            }
         }
 
         CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -80,6 +117,14 @@ namespace BlackMisc
                 return this->m_groundElevation.propertyByIndex(index.copyFrontRemoved());
             case IndexCallsign:
                 return this->m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexIsOnGround:
+                return CVariant::fromValue(m_isOnGround);
+            case IndexIsOnGroundString:
+                return CVariant::fromValue(this->isOnGroundAsString());
+            case IndexOnGroundReliability:
+                return CVariant::fromValue(m_onGroundReliability);
+            case IndexOnGroundReliabilityString:
+                return CVariant::fromValue(this->getOnGroundReliabilityAsString());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -115,6 +160,12 @@ namespace BlackMisc
             case IndexCallsign:
                 this->m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
+            case IndexIsOnGround:
+                this->m_isOnGround = variant.toInt();
+                break;
+            case IndexOnGroundReliability:
+                this->m_onGroundReliability = variant.toInt();
+                break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
@@ -130,31 +181,35 @@ namespace BlackMisc
             {
             case IndexPosition:
                 return this->m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
-                break;
             case IndexAltitude:
                 return this->getAltitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAltitude());
-                break;
             case IndexPitch:
                 return this->m_pitch.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPitch());
-                break;
             case IndexBank:
                 return this->m_bank.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getBank());
-                break;
             case IndexGroundSpeed:
                 return this->m_groundSpeed.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundSpeed());
-                break;
             case IndexGroundElevation:
                 return this->m_groundElevation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getGroundElevation());
-                break;
             case IndexCallsign:
                 return this->m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-                break;
+            case IndexIsOnGround:
+            case IndexIsOnGroundString:
+                return Compare::compare(this->m_isOnGround, compareValue.m_isOnGround);
+            case IndexOnGroundReliability:
+            case IndexOnGroundReliabilityString:
+                return Compare::compare(this->m_onGroundReliability, compareValue.m_onGroundReliability);
             default:
                 break;
             }
             const QString assertMsg("No comparison for index " + index.toQString());
             BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(assertMsg));
             return 0;
+        }
+
+        const QString &CAircraftSituation::isOnGroundAsString() const
+        {
+            return CAircraftSituation::isOnGroundToString(this->isOnGround());
         }
 
         bool CAircraftSituation::isOnGroundInfoAvailable() const
@@ -167,6 +222,16 @@ namespace BlackMisc
         {
             this->setOnGround(onGround);
             this->setOnGroundReliabiliy(reliability);
+        }
+
+        const QString &CAircraftSituation::getOnGroundReliabilityAsString() const
+        {
+            return CAircraftSituation::onGroundReliabilityToString(this->getOnGroundReliability());
+        }
+
+        QString CAircraftSituation::getOnGroundInfo() const
+        {
+            return this->isOnGroundAsString() % QLatin1Char(' ') % this->getOnGroundReliabilityAsString();
         }
 
         bool CAircraftSituation::hasGroundElevation() const
