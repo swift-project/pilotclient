@@ -40,9 +40,11 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc, const CInterpolationHints &hints, InterpolationStatus &status) const
+        CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc, const CInterpolationHints &hints, InterpolationStatus &status) const
         {
-            // has to be thread safe
+            //
+            // function has to be thread safe
+            //
             const CInterpolationAndRenderingSetup setup = this->getInterpolatorSetup();
             status.reset();
 
@@ -53,6 +55,7 @@ namespace BlackMisc
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
             // find the first situation not in the correct order, keep only the situations before that one
+            // any updates in wrong chronological order are discounted
             const auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
             const auto validSituations = makeRange(situations.begin(), end);
 
@@ -64,8 +67,8 @@ namespace BlackMisc
             // interpolation situations
             CAircraftSituation oldSituation;
             CAircraftSituation newSituation;
-            status.setInterpolationSucceeded(true);
-            status.setChangedPosition(true); //! \fixme efficiently determine whether the position has changed
+            const bool logInterpolation = setup.getLogCallsigns().contains(callsign);
+            InterpolationLog log;
 
             // latest first, now 00:20 split time
             // time     pos
@@ -77,7 +80,7 @@ namespace BlackMisc
             // 00:05    14    older
 
             // The first condition covers a situation, when there are no before / after situations.
-            // We just place at he last position until we get before / after situations
+            // We just place at the last position until we get before / after situations
             if (situationsOlder.isEmpty() || situationsNewer.isEmpty())
             {
                 // no before situations
@@ -108,21 +111,22 @@ namespace BlackMisc
             CCoordinateGeodetic currentPosition;
 
             // Time between start and end packet
-            const double deltaTime = std::abs(oldSituation.getAdjustedMSecsSinceEpoch() - newSituation.getAdjustedMSecsSinceEpoch());
+            const double deltaTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - oldSituation.getAdjustedMSecsSinceEpoch();
+            Q_ASSERT_X(deltaTimeMs >= 0, Q_FUNC_INFO, "Negative delta time");
+            log.deltaTimeMs = deltaTimeMs;
 
             // Fraction of the deltaTime, ideally [0.0 - 1.0]
             // < 0 should not happen due to the split, > 1 can happen if new values are delayed beyond split time
             // 1) values > 1 mean extrapolation
             // 2) values > 2 mean no new situations coming in
-            const double distanceToSplitTime = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
-            const double simulationTimeFraction = 1.0 - (distanceToSplitTime / deltaTime);
-            if (simulationTimeFraction > 2.0)
-            {
-                if (setup.showInterpolatorDebugMessages())
-                {
-                    CLogMessage(this).warning("Extrapolation, fraction > 1: %1 for callsign: %2") << simulationTimeFraction << oldSituation.getCallsign();
-                }
-            }
+            const double distanceToSplitTimeMs = newSituation.getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoc;
+            const double simulationTimeFraction = 1.0 - (distanceToSplitTimeMs / deltaTimeMs);
+            const double deltaTimeFractionMs = deltaTimeMs * simulationTimeFraction;
+            log.simulationTimeFraction = simulationTimeFraction;
+            log.deltaTimeFractionMs = deltaTimeFractionMs;
+
+            currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
+            currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
 
             const std::array<double, 3> oldVec(oldSituation.getPosition().normalVectorDouble());
             const std::array<double, 3> newVec(newSituation.getPosition().normalVectorDouble());
@@ -137,7 +141,7 @@ namespace BlackMisc
             // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
             const CAltitude oldAlt(oldSituation.getCorrectedAltitude()); // avoid underflow below ground elevation
             const CAltitude newAlt(newSituation.getCorrectedAltitude());
-            Q_ASSERT_X(oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
+            Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
             currentSituation.setAltitude(CAltitude((newAlt - oldAlt)
                                                    * simulationTimeFraction
                                                    + oldAlt,
@@ -147,12 +151,13 @@ namespace BlackMisc
             if (hints.hasAircraftParts())
             {
                 const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
+                log.groundFactor = groundFactor;
                 if (groundFactor > 0.0)
                 {
                     const CAltitude groundElevation = hints.getGroundElevation(currentSituation);
-                    Q_ASSERT_X(groundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
                     if (!groundElevation.isNull())
                     {
+                        Q_ASSERT_X(groundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
                         currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor)
                                                                + groundElevation * groundFactor,
                                                                oldAlt.getReferenceDatum()));
@@ -167,46 +172,59 @@ namespace BlackMisc
                 IInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
             }
 
-            if (!setup.isForcingFullInterpolation() && !hints.isVtolAircraft() && newVec == oldVec && oldAlt == newAlt)
+            // full interpolation?
+            if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || newVec != oldVec || oldAlt != newAlt)
             {
-                // stop interpolation here, does not work for VTOL aircraft. We need a flag for VTOL aircraft
-                return currentSituation;
+                // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
+                // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
+                const CHeading headingBegin = oldSituation.getHeading();
+                CHeading headingEnd = newSituation.getHeading();
+
+                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
+                {
+                    headingEnd += CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+                }
+
+                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) > 180)
+                {
+                    headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+                }
+
+                currentSituation.setHeading(CHeading((headingEnd - headingBegin)
+                                                     * simulationTimeFraction
+                                                     + headingBegin,
+                                                     headingBegin.getReferenceNorth()));
+
+                // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
+                const CAngle pitchBegin = oldSituation.getPitch();
+                const CAngle pitchEnd = newSituation.getPitch();
+                const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
+                currentSituation.setPitch(pitch);
+
+                // Interpolate bank: Bank = (BankB - BankA) * t + BankA
+                const CAngle bankBegin = oldSituation.getBank();
+                const CAngle bankEnd = newSituation.getBank();
+                const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
+                currentSituation.setBank(bank);
+
+                currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
+                                                * simulationTimeFraction
+                                                + oldSituation.getGroundSpeed());
+
+                status.setChangedPosition(true);
+            }
+            status.setInterpolationSucceeded(true);
+            if (logInterpolation)
+            {
+                log.timestamp = currentTimeMsSinceEpoc;
+                log.callsign = callsign;
+                log.vtolAircraft = hints.isVtolAircraft();
+                log.currentSituation = currentSituation;
+                log.oldSituation = oldSituation;
+                log.newSituation = newSituation;
+                this->logInterpolation(log);
             }
 
-            // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
-            const CHeading headingBegin = oldSituation.getHeading();
-            CHeading headingEnd = newSituation.getHeading();
-
-            if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
-            {
-                headingEnd += CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
-            }
-
-            if ((headingEnd - headingBegin).value(CAngleUnit::deg()) > 180)
-            {
-                headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
-            }
-
-            currentSituation.setHeading(CHeading((headingEnd - headingBegin)
-                                                 * simulationTimeFraction
-                                                 + headingBegin,
-                                                 headingBegin.getReferenceNorth()));
-
-            // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
-            const CAngle pitchBegin = oldSituation.getPitch();
-            const CAngle pitchEnd = newSituation.getPitch();
-            const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
-            currentSituation.setPitch(pitch);
-
-            // Interpolate bank: Bank = (BankB - BankA) * t + BankA
-            const CAngle bankBegin = oldSituation.getBank();
-            const CAngle bankEnd = newSituation.getBank();
-            const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
-            currentSituation.setBank(bank);
-
-            currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
-                                            * simulationTimeFraction
-                                            + oldSituation.getGroundSpeed());
             return currentSituation;
         }
     } // namespace
