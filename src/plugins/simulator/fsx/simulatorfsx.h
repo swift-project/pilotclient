@@ -113,7 +113,7 @@ namespace BlackSimPlugin
             //! @{
             virtual void reset() override;
             virtual void clearAllAircraft() override;
-            virtual void initInternalsObject() override;
+            virtual void initSimulatorInternals() override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
             //! @}
 

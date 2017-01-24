@@ -88,7 +88,6 @@ namespace BlackConfig
         static bool isRunningOnUnixPlatform();
 
         //! Application directory where current application is located
-        //! \todo Move to to CApplication
         static const QString &getApplicationDir();
 
         //! Where resource files (static DB files, ...) etc are located

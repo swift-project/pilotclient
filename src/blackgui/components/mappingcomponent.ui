@@ -248,6 +248,9 @@
        </item>
        <item row="0" column="5">
         <widget class="QPushButton" name="pb_ResetAircraft">
+         <property name="toolTip">
+          <string>reset model by callsign</string>
+         </property>
          <property name="text">
           <string>reset</string>
          </property>
@@ -268,6 +271,9 @@
        </item>
        <item row="1" column="5">
         <widget class="QPushButton" name="pb_SaveAircraft">
+         <property name="toolTip">
+          <string>save selected model</string>
+         </property>
          <property name="text">
           <string>save</string>
          </property>

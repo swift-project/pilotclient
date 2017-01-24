@@ -139,7 +139,7 @@ namespace BlackSimPlugin
             {
                 m_fsuipc->connect(); // connect FSUIPC too
             }
-            initInternalsObject();
+            initSimulatorInternals();
             m_dispatchTimerId = startTimer(50);
             return true;
         }

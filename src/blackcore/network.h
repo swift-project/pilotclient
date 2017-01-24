@@ -520,16 +520,19 @@ namespace BlackCore
         /*!
          * We received a custom packet.
          * \deprecated As a short cut you can use this signal directly, but it is better to implement the decoding in INetwork and add a new signal.
+         * \sa CNetworkVatlib::customPacketDispatcher
          */
         void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
         /*!
-         * We received an FSInn custom packet.
+         * We received a FSInn custom packet.
          */
         void customFSInnPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
                                        const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
 
-        //! We received a aircraft config packet
+        /*!
+         * We received an aircraft config packet.
+         */
         void aircraftConfigPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QJsonObject &incremental, bool isFull);
 
         //! @}

@@ -157,8 +157,11 @@
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="lbl_VatsimHomeAirport">
+            <property name="toolTip">
+             <string>Home airport, e.g. &quot;KLAX&quot;</string>
+            </property>
             <property name="text">
-             <string>Home airport</string>
+             <string>Home</string>
             </property>
            </widget>
           </item>

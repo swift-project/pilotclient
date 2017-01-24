@@ -843,7 +843,7 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        BlackMisc::CWorker *CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
+        CWorker *CViewBase<ModelClass, ContainerType, ObjectType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
         {
             // avoid unnecessary effort when empty
             if (container.isEmpty())
@@ -857,7 +857,7 @@ namespace BlackGui
             auto sortColumn = model->getSortColumn();
             auto sortOrder = model->getSortOrder();
             this->showLoadIndicator(container.size());
-            BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "ViewSort", [model, container, sortColumn, sortOrder]()
+            CWorker *worker = CWorker::fromTask(this, "ViewSort", [model, container, sortColumn, sortOrder]()
             {
                 return model->sortContainerByColumn(container, sortColumn, sortOrder);
             });

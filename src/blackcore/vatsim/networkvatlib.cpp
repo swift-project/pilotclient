@@ -473,7 +473,7 @@ namespace BlackCore
             if (messages.isEmpty()) { return; }
             CTextMessageList privateMessages = messages.getPrivateMessages();
             privateMessages.markAsSent();
-            for (const auto &message : privateMessages)
+            for (const auto &message : as_const(privateMessages))
             {
                 if (message.getRecipientCallsign().isEmpty()) { continue; }
                 Vat_SendTextMessage(m_net.data(), toFSD(message.getRecipientCallsign()), toFSD(message.getMessage()));
@@ -646,7 +646,7 @@ namespace BlackCore
         void CNetworkVatlib::sendIncrementalAircraftConfig()
         {
             if (!isConnected()) { return; }
-            CAircraftParts currentParts(getOwnAircraftParts());
+            const CAircraftParts currentParts(getOwnAircraftParts());
 
             // If it hasn't changed, return
             if (m_sentAircraftConfig == currentParts) { return; }
@@ -661,9 +661,9 @@ namespace BlackCore
             // Method could have been triggered by another change in aircraft config
             // so a previous update might still be scheduled. Stop it.
             if (m_scheduledConfigUpdate.isActive()) m_scheduledConfigUpdate.stop();
-            QJsonObject previousConfig = m_sentAircraftConfig.toJson();
-            QJsonObject currentConfig = currentParts.toJson();
-            QJsonObject incrementalConfig = getIncrementalObject(previousConfig, currentConfig);
+            const QJsonObject previousConfig = m_sentAircraftConfig.toJson();
+            const QJsonObject currentConfig = currentParts.toJson();
+            const QJsonObject incrementalConfig = getIncrementalObject(previousConfig, currentConfig);
             broadcastAircraftConfig(incrementalConfig);
             m_sentAircraftConfig = currentParts;
         }
@@ -734,7 +734,7 @@ namespace BlackCore
             QString modelString = myAircraft.getModel().getModelString();
             if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
-            QStringList data { { "0" },
+            const QStringList data { { "0" },
                 myAircraft.getAirlineIcaoCodeDesignator(),
                 myAircraft.getAircraftIcaoCodeDesignator(),
                 { "" }, { "" }, { "" }, { "" },
@@ -751,7 +751,7 @@ namespace BlackCore
             QString modelString = myAircraft.getModel().getModelString();
             if (modelString.isEmpty()) { modelString = defaultModelString(); }
 
-            QStringList data { { "0" },
+            const QStringList data { { "0" },
                 myAircraft.getAirlineIcaoCodeDesignator(),
                 myAircraft.getAircraftIcaoCodeDesignator(),
                 { "" }, { "" }, { "" }, { "" },
@@ -770,8 +770,8 @@ namespace BlackCore
 
         void CNetworkVatlib::sendAircraftConfigQuery(const CCallsign &callsign)
         {
-            QJsonDocument doc(JsonPackets::aircraftConfigRequest());
-            QString data { doc.toJson(QJsonDocument::Compact) };
+            const QJsonDocument doc(JsonPackets::aircraftConfigRequest());
+            const QString data { doc.toJson(QJsonDocument::Compact) };
             Vat_SendAircraftConfig(m_net.data(), toFSD(callsign), toFSD(data));
         }
 

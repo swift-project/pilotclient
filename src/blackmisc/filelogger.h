@@ -23,7 +23,6 @@
 
 namespace BlackMisc
 {
-
     //! Class to write log messages to file
     class BLACKMISC_EXPORT CFileLogger : public QObject
     {
@@ -45,7 +44,7 @@ namespace BlackMisc
         CFileLogger(const QString &applicationName, const QString &logPath, QObject *parent = nullptr);
 
         //! Destructor.
-        ~CFileLogger();
+        virtual ~CFileLogger();
 
         //! Change the log pattern. Default is to log all messages.
         void changeLogPattern(const CLogPattern &pattern) { m_logPattern = pattern; }

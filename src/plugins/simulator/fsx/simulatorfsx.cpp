@@ -309,12 +309,12 @@ namespace BlackSimPlugin
         void CSimulatorFsx::setSimConnected()
         {
             m_simConnected = true;
-            this->initInternalsObject();
+            this->initSimulatorInternals();
             emitSimulatorCombinedStatus();
 
             // Internals depends on sim data which take a while to be read
             // this is a trich and I re-init again after a while (which is not really expensive)
-            QTimer::singleShot(1000, this, [this] { this->initInternalsObject(); });
+            QTimer::singleShot(1000, this, [this] { this->initSimulatorInternals(); });
         }
 
         void CSimulatorFsx::onSimRunning()
@@ -1081,9 +1081,9 @@ namespace BlackSimPlugin
             return false;
         }
 
-        void CSimulatorFsx::initInternalsObject()
+        void CSimulatorFsx::initSimulatorInternals()
         {
-            CSimulatorFsCommon::initInternalsObject();
+            CSimulatorFsCommon::initSimulatorInternals();
             CSimulatorInternals s = this->m_simulatorInternals;
             const QString fsxPath = CFsCommonUtil::fsxDirFromRegistry(); // can be empty for remote FSX
             if (!fsxPath.isEmpty()) { s.setSimulatorInstallationDirectory(fsxPath); }

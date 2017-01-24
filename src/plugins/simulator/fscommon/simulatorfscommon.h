@@ -59,10 +59,16 @@ namespace BlackSimPlugin
                                BlackMisc::Weather::IWeatherGridProvider       *weatherGridProvider,
                                QObject *parent = nullptr);
 
-            //! Init the internals objects
-            virtual void initInternalsObject();
+            //! Init the internal objects
+            virtual void initSimulatorInternals();
 
             //! \copydoc BlackCore::CSimulatorCommon::parseDetails
+            //! \ingroup commandline
+            //! @{
+            //! <pre>
+            //! .plugin fsuipc  on|off      FSUIPC on/off
+            //! </pre>
+            //! @}
             virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser) override;
 
             QString m_simulatorName;                                //!< name of simulator

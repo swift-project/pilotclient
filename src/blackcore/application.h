@@ -213,6 +213,7 @@ namespace BlackCore
         static void processEventsFor(int milliseconds);
 
         //! Clear the caches
+        //! \return all cache files
         static QStringList clearCaches();
 
         // ----------------------- parsing ----------------------------------------
