@@ -1135,6 +1135,19 @@ namespace BlackCore
         QNetworkRequest r(request); // no QObject
         CNetworkUtils::ignoreSslVerification(r);
         CNetworkUtils::setSwiftUserAgent(r);
+
+        // If url is one of the shared urls, add swift client SSL certificate
+        const CUrlList swiftSharedUrls = getGlobalSetup().getSwiftSharedUrls();
+        for (const CUrl &sharedUrl : swiftSharedUrls)
+        {
+            QString urlString = request.url().toString();
+            if (urlString.startsWith(sharedUrl.toQString()))
+            {
+                CNetworkUtils::setSwiftClientSslCertificate(r);
+                break;
+            }
+        }
+
         QNetworkReply *reply = method(this->m_accessManager, r);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
         if (callback)
