@@ -11,6 +11,7 @@
 #include "blackmisc/comparefunctions.h"
 #include "blackmisc/stringutils.h"
 
+#include "QStringBuilder"
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -21,18 +22,18 @@ namespace BlackMisc
     {
         QString CAircraftParts::convertToQString(bool i18n) const
         {
-            QString s;
-            s += m_lights.toQString(i18n);
-            s += " gear down: ";
-            s += BlackMisc::boolToYesNo(m_gearDown);
-            s += " flaps pct: ";
-            s += QString::number(m_flapsPercentage);
-            s += " spoilers out: ";
-            s += BlackMisc::boolToYesNo(m_spoilersOut);
-            s += " engines on: ";
-            s += m_engines.toQString(i18n);
-            s += " on ground: ";
-            s += BlackMisc::boolToYesNo(m_isOnGround);
+            const QString s =
+                m_lights.toQString(i18n) %
+                " gear down: " %
+                BlackMisc::boolToYesNo(m_gearDown) %
+                " flaps pct: " %
+                QString::number(m_flapsPercentage) %
+                " spoilers out: " %
+                BlackMisc::boolToYesNo(m_spoilersOut) %
+                " engines on: " %
+                m_engines.toQString(i18n) %
+                " on ground: " %
+                BlackMisc::boolToYesNo(m_isOnGround);
             return s;
         }
 

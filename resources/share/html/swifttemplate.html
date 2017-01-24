@@ -9,7 +9,7 @@
 body {
   background-color: white;
   font-family: arial;
-  font-size: 12px;
+  font-size: 0.75em;
 }
 tr:nth-child(even) {
   background-color: #c0c0c0;
@@ -23,6 +23,9 @@ th {
   color:#fff;
   white-space: nowrap;
 }
+.small {
+	font-size: 0.5em;
+}
 .mouseoverdisplay {
   background-color: #eeeeee;
   position: absolute;
@@ -35,6 +38,11 @@ th {
 a:hover + .mouseoverdisplay {
   display: block;
 }
+
+/** classes for interpolation log **/
+.old { color: blue; }
+.new { color: green; }
+.cur { color: red; }
 </style>
 </head>
 <body>

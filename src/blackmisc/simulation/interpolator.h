@@ -16,6 +16,7 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
 
 #include <QObject>
@@ -24,6 +25,7 @@
 
 namespace BlackMisc
 {
+    class CWorker;
     namespace Aviation { class CCallsign; }
     namespace Simulation
     {
@@ -38,7 +40,7 @@ namespace BlackMisc
 
         public:
             //! Virtual destructor
-            virtual ~IInterpolator() {}
+            virtual ~IInterpolator();
 
             //! Log category
             static QString getLogCategory() { return "swift.interpolator"; }
@@ -121,6 +123,12 @@ namespace BlackMisc
             //! \threadsafe
             void setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup);
 
+            //! Write a log in background
+            BlackMisc::CWorker *writeLogInBackground();
+
+            //! Clear log file
+            void clearLog();
+
             /*!
              * Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
              *
@@ -134,6 +142,29 @@ namespace BlackMisc
             }
 
         protected:
+            //! Log for interpolation
+            struct InterpolationLog
+            {
+                qint64 timestamp = -1;       //!< current timestamp
+                double groundFactor = -1;    //!< current ground factor
+                double vtolAircraft = false; //!< VTOL aircraft
+                double deltaTimeMs = 0;      //!< delta time to last situation
+                double simulationTimeFraction = -1;      //!< time fraction, normally 0..1
+                double deltaTimeFractionMs = -1;         //!< delta time fraction
+                BlackMisc::Aviation::CCallsign callsign; //!< current callsign
+                BlackMisc::Aviation::CAircraftSituation oldSituation;     //!< old situation
+                BlackMisc::Aviation::CAircraftSituation newSituation;     //!< new situation
+                BlackMisc::Aviation::CAircraftSituation currentSituation; //!< interpolated situation
+            };
+
+            //! Log for parts
+            struct PartsLog
+            {
+                qint64 timestamp = -1; //!< current timestamp
+                BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
+                BlackMisc::Aviation::CAircraftParts parts; //!< parts to be logged
+            };
+
             //! Constructor
             IInterpolator(BlackMisc::Simulation::IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent);
 
@@ -141,14 +172,46 @@ namespace BlackMisc
             //! \threadsafe
             CInterpolationAndRenderingSetup getInterpolatorSetup() const;
 
+            //! Log interpolation, only stores in memory, for performance reasons
+            //! \remark const to allow const interpolator functions
+            //! \threadsafe
+            void logInterpolation(const InterpolationLog &log) const;
+
+            //! Log parts, only stores in memory, for performance reasons
+            //! \remark const to allow const interpolator functions
+            //! \threadsafe
+            void logParts(const PartsLog &parts) const;
+
+            //! Get log as HTML table
+            //! \threadsafe
+            static QString getHtmlInterpolationLog(const QList<InterpolationLog> &logs);
+
+            //! Get log as HTML table
+            //! \threadsafe
+            static QString getHtmlPartsLog(const QList<PartsLog> &logs);
+
             //! Set the ground elevation from hints, if possible and not already set
             static void setGroundElevationFromHint(const CInterpolationHints &hints, BlackMisc::Aviation::CAircraftSituation &situation);
 
             //! Set on ground flag
             static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, BlackMisc::Aviation::CAircraftSituation &situation);
 
-            CInterpolationAndRenderingSetup m_setup; //!< allows to disable debug messages
-            mutable QReadWriteLock m_lock; //!< lock interpolator
+            CInterpolationAndRenderingSetup m_setup; //!< allows to enable/disable debug/log messages
+
+        private:
+            //! Write log to file
+            static CStatusMessage writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts);
+
+            //! Create readable time
+            static QString msSinceEpochToTime(qint64 ms);
+
+            //! Create readable time
+            static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
+
+            mutable QReadWriteLock  m_lockSetup; //!< lock setup
+            mutable QReadWriteLock  m_lockLogs;  //!< lock logging
+            mutable QList<PartsLog> m_partsLogs; //!< logs of parts
+            mutable QList<InterpolationLog> m_interpolationLogs; //!< logs of interpolation
         };
     } // namespace
 } // namespace
