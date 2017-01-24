@@ -43,17 +43,6 @@ macx:staticlib:isEmpty(SOURCES) {
 }
 
 ################################
-# Work around QTBUG-57695
-################################
-
-equals(QT_VERSION, 5.8.0):!isEmpty(OUT_PWD) {
-    equals(TEMPLATE, vcapp)|equals(TEMPLATE, vclib) {
-        write_file($$OUT_PWD/debug/moc_predefs.h.cbt))
-        write_file($$OUT_PWD/release/moc_predefs.h.cbt))
-    }
-}
-
-################################
 # Black libs
 ################################
 
