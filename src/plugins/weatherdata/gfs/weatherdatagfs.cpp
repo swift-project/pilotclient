@@ -67,7 +67,7 @@ namespace BlackWxPlugin
             {
                 if (!sApp->isNetworkConnectedAndAccessible())
                 {
-                    CLogMessage(this).error("No wether download since network not accessible");
+                    CLogMessage(this).error("No weather download since network not accessible");
                     return;
                 }
 
