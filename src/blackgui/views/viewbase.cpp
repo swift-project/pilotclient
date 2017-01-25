@@ -418,15 +418,17 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::selectRows(const QSet<int> &rows)
         {
-            // Multi row selection only work in MultiSelection
+            if (!this->selectionModel()) { return; }
+
+            // multiple times faster than multiple than this->selectRow()
             this->clearSelection();
-            const SelectionMode m = this->selectionMode();
-            this->setSelectionMode(MultiSelection);
+            QItemSelection selectedItems;
+            const int columns = this->model()->columnCount() - 1;
             for (int r : rows)
             {
-                this->selectRow(r);
+                selectedItems.select(this->model()->index(r, 0), this->model()->index(r, columns));
             }
-            this->setSelectionMode(m);
+            this->selectionModel()->select(selectedItems, QItemSelectionModel::Select);
         }
 
         int CViewBaseNonTemplate::selectedRowCount() const
