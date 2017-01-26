@@ -28,9 +28,10 @@ using namespace BlackCore;
 //! main
 int main(int argc, char *argv[])
 {
-    QCoreApplication(argc, argv);
+    QCoreApplication qa(argc, argv);
     CApplication a;
     Q_UNUSED(a);
+    Q_UNUSED(qa);
 
     QTextStream out(stdout, QIODevice::WriteOnly);
     CSamplesPhysicalQuantities::samples(out);

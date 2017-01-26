@@ -58,6 +58,10 @@ namespace BlackSample
         l3 = l3 * 2;
         out << "doubled l3: " << l3 << endl;
 
+        // null test
+        CLength nullLength(0, CLengthUnit::nullUnit());
+        out << "Null PQ: " << nullLength << " converted " << nullLength.valueRoundedWithUnit(CLengthUnit::m(), 2) << endl;
+
         // more tests
         CFrequency f1(1E6, CFrequencyUnit::Hz()); // 1MHz
         out << f1 << " " << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << " " << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);

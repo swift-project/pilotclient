@@ -257,10 +257,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         double CPhysicalQuantity<MU, PQ>::value() const
         {
-            if (this->isNull())
-            {
-                return 0.0;
-            }
+            if (this->isNull()) { return 0.0; }
             return this->m_value;
         }
 
@@ -282,24 +279,29 @@ namespace BlackMisc
         template <class MU, class PQ>
         QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool i18n) const
         {
+            Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
+            if (this->isNull()) { return this->convertToQString(i18n); }
             return unit.makeRoundedQStringWithUnit(this->value(unit), digits, i18n);
         }
 
         template <class MU, class PQ>
         QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(int digits, bool i18n) const
         {
+            if (this->isNull()) { return this->convertToQString(i18n); }
             return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
         }
 
         template <class MU, class PQ>
         double CPhysicalQuantity<MU, PQ>::valueRounded(const MU &unit, int digits) const
         {
+            Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             return unit.roundValue(this->value(unit), digits);
         }
 
         template <class MU, class PQ>
         int CPhysicalQuantity<MU, PQ>::valueInteger(const MU &unit) const
         {
+            Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             double v = unit.roundValue(this->value(unit), 0);
             return static_cast<int>(v);
         }
@@ -313,16 +315,14 @@ namespace BlackMisc
         template <class MU, class PQ>
         double CPhysicalQuantity<MU, PQ>::value(const MU &unit) const
         {
+            Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
             return unit.convertFrom(this->m_value, this->m_unit);
         }
 
         template <class MU, class PQ>
         QString CPhysicalQuantity<MU, PQ>::convertToQString(bool i18n) const
         {
-            if (this->isNull())
-            {
-                return i18n ? QCoreApplication::translate("CPhysicalQuantity", "undefined") : "undefined";
-            }
+            if (this->isNull()) { return i18n ? QCoreApplication::translate("CPhysicalQuantity", "undefined") : "undefined"; }
             return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
         }
 
