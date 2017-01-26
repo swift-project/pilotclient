@@ -121,6 +121,9 @@ namespace BlackCore
             //! Cmd. line options this library can handle
             static const QList<QCommandLineOption> &getCmdLineOptions();
 
+            static int const c_positionTimeOffsetMsec = 6000;           //!< offset time for received position updates
+            static int const c_interimPositionTimeOffsetMsec = 2000;    //!< offset time for received interim position updates
+
         private:
             bool getCmdLineClientIdAndKey(int &id, QString &key) const;
             bool getCmdLineServerType(VatServerType &serverType) const;
@@ -219,10 +222,9 @@ namespace BlackCore
             QTimer m_positionUpdateTimer;
             QTimer m_interimPositionUpdateTimer;
 
-            static int const c_processingIntervalMsec = 100;
-            static int const c_updatePostionIntervalMsec = 5000;
-            static int const c_updateInterimPostionIntervalMsec = 1000;
-            static int const c_logoffTimeoutSec = 5;
+            static int const c_processingIntervalMsec = 100;            //!< interval for the processing timer
+            static int const c_updatePostionIntervalMsec = 5000;        //!< interval for the position update timer (send our position to network)
+            static int const c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
         };
     } //namespace
 } //namespace

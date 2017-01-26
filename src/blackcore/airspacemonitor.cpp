@@ -12,6 +12,7 @@
 #include "blackcore/aircraftmatcher.h"
 #include "blackcore/matchingutils.h"
 #include "blackcore/application.h"
+#include "blackcore/vatsim/networkvatlib.h"
 #include "blackcore/vatsim/vatsimbookingreader.h"
 #include "blackcore/vatsim/vatsimdatafilereader.h"
 #include "blackcore/webdataservices.h"
@@ -1228,7 +1229,7 @@ namespace BlackCore
         if (callsign.isEmpty()) { return; }
 
         // get time offset from situation
-        qint64 timeOffsetMs = 6000; //! \fixme 6000 is assumed default offset, copied from CNetworkVatlib::onPilotPositionUpdate
+        qint64 timeOffsetMs = CNetworkVatlib::c_positionTimeOffsetMsec;
         {
             QReadLocker lock(&m_lockSituations);
             const CAircraftSituationList &situationList = this->m_situationsByCallsign[callsign];

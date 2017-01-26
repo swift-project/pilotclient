@@ -846,7 +846,7 @@ namespace BlackCore
                 CAltitude({ 0, nullptr }, CAltitude::MeanSeaLevel)
             );
             situation.setCurrentUtcTime();
-            situation.setTimeOffsetMs(6000);
+            situation.setTimeOffsetMs(c_positionTimeOffsetMsec);
 
             QString transponderName("transponder ");
             transponderName.append(callsign.asString());
@@ -923,7 +923,7 @@ namespace BlackCore
                 CAltitude({ 0, nullptr }, CAltitude::MeanSeaLevel)
             );
             situation.setCurrentUtcTime();
-            situation.setTimeOffsetMs(2000);
+            situation.setTimeOffsetMs(c_interimPositionTimeOffsetMsec);
             situation.setInterimFlag(true);
 
             emit cbvar_cast(cbvar)->aircraftInterimPositionUpdate(situation);
