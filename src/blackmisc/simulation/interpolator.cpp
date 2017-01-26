@@ -78,19 +78,21 @@ namespace BlackMisc
             const auto latestTakeoff = std::adjacent_find(partsOlder.begin(), partsOlder.end(), [](auto &&, auto && p) { return p.isOnGround(); });
             const auto soonestLanding = std::find_if(partsNewer.begin(), partsNewer.end(), [](auto && p) { return p.isOnGround(); });
 
-            // our clairvoyance is limited by the time offset
-            const double significantPast = 5.0;
-            // \fixme 20170121 KB would it make sense to centrally define the update time (5secs), in case it changes. I see a lot of 5.0 hardcoded here
-            // I also wonder if the time is const (interim updates)
-            const double predictableFuture = soonestLanding == partsNewer.end() ? 5.0 : std::min(5.0, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0);
+            // maxSecs is the maximum effective value of `secondsSinceTakeoff` and `secondsUntilLanding`. If `secondsSinceTakeoff > significantPast` then `takeoffFactor > 1`
+            //         and if `secondsUntilLanding > predictableFuture` then `landingFactor > 1`, and `std::min(std::min(takeoffFactor, landingFactor), 1.0)` ensures `>1` is ignored.
+            //         but if the offset < 5s then we must use a smaller value for the landing, hence `std::min(max, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0)`.
+            const double maxSecs = 5.0; // preferred length of time over which to blend the onground flag, when possible
 
-            const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? 5.0 : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
-            const double secondsUntilLanding = soonestLanding == partsNewer.end() ? 5.0 : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
+            // our clairvoyance is limited by the time offset (all times here in seconds)
+            const double significantPastSecs = maxSecs;
+            const double predictableFutureSecs = soonestLanding == partsNewer.end() ? maxSecs : std::min(maxSecs, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0);
+            const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? maxSecs : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
+            const double secondsUntilLanding = soonestLanding == partsNewer.end() ? maxSecs : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
             Q_ASSERT(secondsSinceTakeoff >= 0.0);
             Q_ASSERT(secondsUntilLanding >= 0.0);
 
-            const double takeoffFactor = secondsSinceTakeoff / significantPast;
-            const double landingFactor = secondsUntilLanding / predictableFuture;
+            const double takeoffFactor = secondsSinceTakeoff / significantPastSecs;
+            const double landingFactor = secondsUntilLanding / predictableFutureSecs;
             const double airborneFactor = std::min(std::min(takeoffFactor, landingFactor), 1.0);
             currentParts.setOnGroundInterpolated(1.0 - smootherStep(airborneFactor));
 
