@@ -167,9 +167,16 @@ namespace BlackSimPlugin
             //! Update remote aircraft
             void updateRemoteAircraft();
 
-            //! Update remote airacraft parts (send to FSX)
-            bool updateRemoteAircraftParts(const CSimConnectObject &simObj, const BlackMisc::Aviation::CAircraftParts &parts,
-                                           BlackMisc::Simulation::IInterpolator::PartsStatus partsStatus, const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, bool isOnGround) const;
+            //! Update remote aircraft parts (send to FSX)
+            bool updateRemoteAircraftParts(const CSimConnectObject &simObj,
+                                           const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Simulation::IInterpolator::PartsStatus &partsStatus) const;
+
+            //! Update remote aircraft parts by guessing (send to FSX)
+            bool guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj,
+                                                   const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, const BlackMisc::Simulation::IInterpolator::InterpolationStatus &interpolationStatus) const;
+
+            //! Send parts to sim
+            bool sendRemoteAircraftPartsToSim(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts) const;
 
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
