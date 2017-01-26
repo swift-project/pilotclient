@@ -118,5 +118,11 @@ namespace BlackMisc
             return this->m_remoteAircraftProvider->updateAircraftEnabled(callsign, enabledForRedering);
         }
 
+        void IRemoteAircraftProvider::removeOutdatedParts(CAircraftPartsList &partsList)
+        {
+            const auto predicate = [now = partsList.front().getMSecsSinceEpoch()](const auto & p) { return p.getMSecsSinceEpoch() >= now - PartsPerCallsignMaxAgeInSeconds * 1000; };
+            const auto newEnd = std::find_if(partsList.rbegin(), partsList.rend(), predicate).base();
+            partsList.erase(newEnd, partsList.end());
+        }
     } // namespace
 } // namespace

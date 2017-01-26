@@ -1240,14 +1240,12 @@ namespace BlackCore
         QWriteLocker lock(&m_lockParts);
         CAircraftPartsList &partsList = this->m_partsByCallsign[callsign];
         partsList.push_front(parts);
-
-        // remove outdated parts (but never remove the most recent one)
-        const auto predicate = [now = parts.getMSecsSinceEpoch()](const auto & p) { return p.getMSecsSinceEpoch() >= now - PartsPerCallsignMaxAgeInSeconds * 1000; };
-        const auto newEnd = std::find_if(partsList.rbegin(), partsList.rend(), predicate).base();
-        partsList.erase(newEnd, partsList.end());
-
         partsList.front().setTimeOffsetMs(timeOffsetMs);
 
+        // remove outdated parts (but never remove the most recent one)
+        IRemoteAircraftProvider::removeOutdatedParts(partsList);
+
+        // aircraft supporting parts
         if (!m_aircraftSupportingParts.contains(callsign))
         {
             m_aircraftSupportingParts.push_back(callsign); // mark as callsign which supports parts

@@ -32,7 +32,7 @@ namespace XBus
     CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_)
         : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_)
     {
-        std::memset(static_cast<void*>(&surfaces), 0, sizeof(surfaces));
+        std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
 
         surfaces.size = sizeof(surfaces);
@@ -51,7 +51,7 @@ namespace XBus
         BlackMisc::Simulation::CInterpolationHints hints;
         BlackMisc::Simulation::IInterpolator::PartsStatus status;
         hints.setAircraftParts(interpolator->getInterpolatedParts(callsign, parts, -1, status));
-        hints.setElevationProvider([this](const auto &situation)
+        hints.setElevationProvider([this](const auto & situation)
         {
             using namespace BlackMisc::PhysicalQuantities;
             using namespace BlackMisc::Aviation;
@@ -85,7 +85,7 @@ namespace XBus
         auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xbus" + g_sep + "LegacyData" + g_sep;
 
         auto err = XPMPMultiplayerInitLegacyData(qPrintable(dir + "CSL"), qPrintable(dir + "related.txt"),
-            qPrintable(dir + "lights.png"), qPrintable(dir + "Doc8643.txt"), "C172", preferences, preferences);
+                   qPrintable(dir + "lights.png"), qPrintable(dir + "Doc8643.txt"), "C172", preferences, preferences);
         if (*err) { s_legacyDataOK = false; }
     }
 
@@ -274,7 +274,7 @@ namespace XBus
     }
 
     void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
-        double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime)
+                                    double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime)
     {
         const auto plane = m_planesByCallsign.value(callsign, nullptr);
         if (plane)
@@ -301,10 +301,7 @@ namespace XBus
             plane->parts.front().setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
 
             // remove outdated parts (but never remove the most recent one)
-            enum { maxAgeMs = BlackMisc::Simulation::IRemoteAircraftProvider::PartsPerCallsignMaxAgeInSeconds * 1000 }; // enum because MSVC constexpr bug
-            const auto predicate = [now = plane->parts.front().getMSecsSinceEpoch()](auto && p) { return p.getMSecsSinceEpoch() >= now - maxAgeMs; };
-            const auto newEnd = std::find_if(plane->parts.rbegin(), plane->parts.rend(), predicate).base();
-            plane->parts.erase(newEnd, plane->parts.end());
+            BlackMisc::Simulation::IRemoteAircraftProvider::removeOutdatedParts(plane->parts);
         }
     }
 

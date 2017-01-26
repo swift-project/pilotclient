@@ -48,7 +48,7 @@ namespace BlackMisc
         {
         public:
             static constexpr int MaxSituationsPerCallsign = 6; //!< How many situations per callsign
-            static constexpr int PartsPerCallsignMaxAgeInSeconds = 20; //!< How many seconds to keep parts for
+            static constexpr int PartsPerCallsignMaxAgeInSeconds = 20; //!< How many seconds to keep parts for interpolation
 
             //! Situations per callsign
             using CSituationsPerCallsign = QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituationList>;
@@ -165,6 +165,9 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Aviation::CCallsign &)>                   removedAircraftSlot,
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
             ) = 0;
+
+            //! Remove outdated aircraft parts
+            void static removeOutdatedParts(Aviation::CAircraftPartsList &partsList);
         };
 
         //! Class which can be directly used to access an \sa IRemoteAircraftProvider object
