@@ -18,6 +18,8 @@
 
 namespace BlackMisc
 {
+    //! \defgroup swiftdotcommands dot commands
+
     //! Utility methods for simple line parsing used with the command line
     //! \remarks case insensitive parsing, commands start with . as ".msg"
     class BLACKMISC_EXPORT CSimpleCommandParser

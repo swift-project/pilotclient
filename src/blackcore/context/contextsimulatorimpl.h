@@ -104,14 +104,14 @@ namespace BlackCore
             BlackMisc::Simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
             //! @}
 
-            //! \copydoc IContextSimulator::parseCommandLine
-            //! \ingroup commandline
+            //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
             //! .plugin        forwarded to plugin, see details there
             //! .driver .drv   forwarded to plugin (same as above)
             //! </pre>
             //! @}
+            //! \copydoc IContextSimulator::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
             // ----------------------------- context interface -----------------------------
 

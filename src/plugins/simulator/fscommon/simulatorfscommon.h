@@ -62,8 +62,7 @@ namespace BlackSimPlugin
             //! Init the internal objects
             virtual void initSimulatorInternals();
 
-            //! \copydoc BlackCore::CSimulatorCommon::parseDetails
-            //! \ingroup commandline
+            //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
             //! .plugin fsuipc  on|off      FSUIPC on/off

@@ -147,10 +147,10 @@ namespace BlackCore
         //! Driver will be unloaded
         virtual void unload() = 0;
 
-        //! \addtogroup commandline
+        //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
-        //! .drv    unload                  unload driver                           CSimulatorCommon
+        //! .drv    unload                  unload driver                           BlackCore::CSimulatorCommon
         //! .drv    fsuipc      on|off      enable/disable FSUIPC (if applicable)   BlackSimPlugin::FsCommon::CSimulatorFsCommon
         //! </pre>
         //! @}

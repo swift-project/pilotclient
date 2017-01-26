@@ -132,13 +132,13 @@ namespace BlackCore
             bool isPendingConnection() const;
 
             // --------------------- IContextNetwork implementations ---------------------
-            //! \copydoc IContextNetwork::parseCommandLine
-            //! \ingroup commandline
+            //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
             //! .m .msg   message text
             //! </pre>
             //! @}
+            //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
 
             //! \publicsection

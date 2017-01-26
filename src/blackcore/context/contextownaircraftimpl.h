@@ -137,7 +137,7 @@ namespace BlackCore
             //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
             virtual void enableAutomaticVoiceRoomResolution(bool enable) override;
 
-            //! \addtogroup commandline
+            //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
             //! .x    .xpdr  code       set transponder code    BlackCore::Context::CContextOwnAircraft

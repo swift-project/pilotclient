@@ -84,17 +84,17 @@ namespace BlackCore
         virtual void unload() override;
         virtual int physicallyRemoveMultipleRemoteAircraft(const BlackMisc::Aviation::CCallsignSet &callsigns) override;
 
-        //! \copydoc ISimulator::parseCommandLine
-        //! \ingroup commandline
+        //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
-        //! .plugin unload              unload plugin
-        //! .plugin logint  callsign    log interpolator for callsign
-        //! .plugin logint  off         no log information for interpolator
-        //! .plugin logint  write       write interpolator log to file
-        //! .plugin logint  clear       clear current log
+        //! .plugin unload              unload plugin                           BlackCore::CSimulatorCommon
+        //! .plugin logint  callsign    log interpolator for callsign           BlackCore::CSimulatorCommon
+        //! .plugin logint  off         no log information for interpolator     BlackCore::CSimulatorCommon
+        //! .plugin logint  write       write interpolator log to file          BlackCore::CSimulatorCommon
+        //! .plugin logint  clear       clear current log                       BlackCore::CSimulatorCommon
         //! </pre>
         //! @}
+        //! \copydoc ISimulator::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
         // --------- ISimulator implementations ------------
 
@@ -186,7 +186,7 @@ namespace BlackCore
         qint64 m_statsUpdateAircraftTimeAvgMs = 0;                       //!< statistics update time
         int    m_statsUpdateAircraftCountMs = 0;                         //!< statistics update time
         BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals; //!< setup object
-        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< debug messages, rendering etc.
+        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model

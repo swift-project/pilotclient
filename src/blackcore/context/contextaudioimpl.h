@@ -126,7 +126,7 @@ namespace BlackCore
             //! \copydoc IContextAudio::isAudioLoopbackEnabled
             virtual bool isAudioLoopbackEnabled() const override;
 
-            //! \addtogroup commandline
+            //! \addtogroup swiftdotcommands
             //! @{
             //! <pre>
             //! .mute                          mute             BlackCore::Context::CContextAudio
