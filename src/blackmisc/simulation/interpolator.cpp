@@ -303,15 +303,23 @@ namespace BlackMisc
                 return;
             }
 
-            // no value by factor, guess on elevation
-            const CLength heightAboveGround(situation.getHeightAboveGround());
-            const CLength cgAboveGround(hints.getCGAboveGround());
-            if (!heightAboveGround.isNull())
+            // on elevation and CG
+            if (!situation.getGroundElevation().isNull())
             {
-                const bool og = cgAboveGround.isNull() ?
-                                heightAboveGround.value(CLengthUnit::m()) < 1.0 :
-                                heightAboveGround <= cgAboveGround;
-                situation.setOnGround(og ? CAircraftSituation::OnGround : CAircraftSituation::NotOnGround, CAircraftSituation::OnGroundByElevation);
+                CLength offset(hints.isVtolAircraft() ? 0.0 : 1.0, CLengthUnit::m()); // offset from ground
+                CAircraftSituation::OnGroundReliability reliability = CAircraftSituation::OnGroundByElevation;
+                if (!hints.isVtolAircraft() && !hints.getCGAboveGround().isNull())
+                {
+                    offset = hints.getCGAboveGround();
+                    reliability = CAircraftSituation::OnGroundByElevationAndCG;
+                }
+
+                Q_ASSERT_X(situation.getGroundElevation().getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL elevation");
+                const CAircraftSituation::IsOnGround og =
+                    situation.getHeightAboveGround() <= offset ?
+                    CAircraftSituation::OnGround : CAircraftSituation::NotOnGround;
+                situation.setOnGround(og, reliability);
+                return;
             }
 
             // for VTOL aircraft we give up

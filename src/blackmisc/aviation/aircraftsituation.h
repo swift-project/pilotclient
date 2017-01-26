@@ -73,9 +73,10 @@ namespace BlackMisc
             //! Reliability of on ground information
             enum OnGroundReliability
             {
-                OnGroundByGuessing,
+                OnGroundByInterpolation,  //!< strongest
+                OnGroundByElevationAndCG,
                 OnGroundByElevation,
-                OnGroundByInterpolation,
+                OnGroundByGuessing,       //!< weakest
                 OnGroundReliabilityNoSet
             };
 

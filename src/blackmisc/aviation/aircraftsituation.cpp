@@ -241,17 +241,15 @@ namespace BlackMisc
 
         CLength CAircraftSituation::getHeightAboveGround() const
         {
+            if (this->getAltitude().isNull()) { return { 0, nullptr }; }
             if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
             {
                 // we have a sure value explicitly set
                 return this->getAltitude();
             }
             const CLength gh(this->getGroundElevation());
-            if (!gh.isNull() && !getAltitude().isNull())
-            {
-                return this->getAltitude() - gh;
-            }
-            return { 0, nullptr };
+            if (gh.isNull()) { return { 0, nullptr }; }
+            return this->getAltitude() - gh;
         }
 
         CAltitude CAircraftSituation::getCorrectedAltitude() const
