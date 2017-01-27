@@ -117,7 +117,10 @@ namespace BlackCore
                 clientKey = CBuildConfig::vatsimPrivateKey();
             }
 
-            VatServerType serverType = CBuildConfig::isVatsimVersion() ? vatServerVatsim : vatServerLegacyFsd;
+            VatServerType serverType;
+            bool success = getCmdLineServerType(serverType);
+            if(!success) { serverType = CBuildConfig::isVatsimVersion() ? vatServerVatsim : vatServerLegacyFsd; }
+
             m_net.reset(Vat_CreateNetworkSession(serverType, sApp->swiftVersionChar(),
                                                  CVersion::versionMajor(), CVersion::versionMinor(),
                                                  "None", clientId, clientKey.toLocal8Bit().constData(),
@@ -683,8 +686,11 @@ namespace BlackCore
             static const QList<QCommandLineOption> opts
             {
                 QCommandLineOption({ "idAndKey", "clientIdAndKey" },
-                QCoreApplication::translate("application", "Client id and key pair separated by ':', e.g. <id>:<key>."),
-                "clientIdAndKey")
+                QCoreApplication::translate("networkvatlib", "Client id and key pair separated by ':', e.g. <id>:<key>."),
+                "clientIdAndKey"),
+                QCommandLineOption({ "s", "serverType" },
+                QCoreApplication::translate("networkvatlib", "FSD server type. Possible values: vatsim, fsd"),
+                "serverType")
             };
 
             // only in not officially shipped versions
@@ -702,6 +708,23 @@ namespace BlackCore
             if (!ok) { return false; }
             key = stringList[1];
             return true;
+        }
+
+        bool CNetworkVatlib::getCmdLineServerType(VatServerType &serverType) const
+        {
+             QString serverTypeAsString = sApp->getParserValue("serverType").toLower();
+             if(QString::compare(serverTypeAsString, "vatsim", Qt::CaseInsensitive) == 0)
+             {
+                 serverType = vatServerVatsim;
+                 return true;
+             }
+
+             if(QString::compare(serverTypeAsString, "fsd", Qt::CaseInsensitive) == 0)
+             {
+                 serverType = vatServerLegacyFsd;
+                 return true;
+             }
+             return false;
         }
 
         void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)

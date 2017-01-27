@@ -121,8 +121,9 @@ namespace BlackCore
             //! Cmd. line options this library can handle
             static const QList<QCommandLineOption> &getCmdLineOptions();
 
-            //! Client id and key if any from command line arguments
+        private:
             bool getCmdLineClientIdAndKey(int &id, QString &key) const;
+            bool getCmdLineServerType(VatServerType &serverType) const;
 
         private slots:
             void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
