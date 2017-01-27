@@ -213,10 +213,7 @@ QTabBar QToolButton { /* the scroll buttons are tool buttons */
   border: 1px solid green;
 }
 
-/* Splitter normally transparent
-QSplitter { background-color: transparent; }
-*/
-
+QSplitter { margin: 0px; }
 QSplitter::handle {
   background-color: rgba(0, 0, 255, 200);
   margin-top: 1px;

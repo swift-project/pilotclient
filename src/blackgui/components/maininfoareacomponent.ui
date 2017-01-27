@@ -177,12 +177,6 @@
         </property>
         <item>
          <widget class="BlackGui::Components::CAircraftComponent" name="comp_Aircraft">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -268,12 +262,6 @@
         </property>
         <item>
          <widget class="BlackGui::Components::CAtcStationComponent" name="comp_AtcStations">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -349,14 +337,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CUserComponent" name="comp_Users">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CUserComponent" name="comp_Users"/>
         </item>
        </layout>
       </widget>
@@ -474,14 +455,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CSimulatorComponent" name="comp_Simulator">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CSimulatorComponent" name="comp_Simulator"/>
         </item>
        </layout>
       </widget>
@@ -521,15 +495,6 @@
      </property>
      <item>
       <widget class="QFrame" name="fr_FlightPlanInner">
-       <property name="frameShape">
-        <enum>QFrame::NoFrame</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
-       </property>
-       <property name="lineWidth">
-        <number>0</number>
-       </property>
        <layout class="QVBoxLayout" name="vl_FlightPlanInner">
         <property name="spacing">
          <number>0</number>
@@ -629,14 +594,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CWeatherComponent" name="comp_Weather">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CWeatherComponent" name="comp_Weather"/>
         </item>
        </layout>
       </widget>
@@ -696,14 +654,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CMappingComponent" name="comp_Mappings">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CMappingComponent" name="comp_Mappings"/>
         </item>
        </layout>
       </widget>
@@ -772,17 +723,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CLogComponent" name="comp_Log">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
-          <property name="lineWidth">
-           <number>0</number>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CLogComponent" name="comp_Log"/>
         </item>
        </layout>
       </widget>
@@ -851,14 +792,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="BlackGui::Components::CSettingsComponent" name="comp_Settings">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
+         <widget class="BlackGui::Components::CSettingsComponent" name="comp_Settings"/>
         </item>
        </layout>
       </widget>

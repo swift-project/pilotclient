@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>236</width>
-    <height>297</height>
+    <height>337</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -36,78 +36,78 @@
     <property name="verticalSpacing">
      <number>20</number>
     </property>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="pb_Servers">
-      <property name="text">
-       <string>Servers</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QPushButton" name="pb_Network">
       <property name="text">
        <string>Network</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="3" column="0">
      <widget class="QPushButton" name="pb_Audio">
       <property name="text">
        <string>Audio</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="pb_Simulator">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pb_Servers">
       <property name="text">
-       <string>Simulator</string>
+       <string>Servers</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="pb_SimulatorBasics">
-      <property name="text">
-       <string>Simulator (basics)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="pb_Gui">
-      <property name="text">
-       <string>GUI</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QPushButton" name="pb_Hotkeys">
-      <property name="text">
-       <string>Hotkeys</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
+    <item row="4" column="1">
      <widget class="QPushButton" name="pb_Advanced">
       <property name="text">
        <string>Advanced</string>
       </property>
      </widget>
     </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="pb_Gui">
+      <property name="text">
+       <string>GUI</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QPushButton" name="pb_SimulatorBasics">
+      <property name="text">
+       <string>Simulator (basics)</string>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="1">
+     <widget class="QPushButton" name="pb_Hotkeys">
+      <property name="text">
+       <string>Hotkeys</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPushButton" name="pb_Simulator">
+      <property name="text">
+       <string>Simulator</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
      <widget class="QPushButton" name="pb_DataLoadAndCaches">
       <property name="text">
        <string>Data load and caches</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="5" column="1">
      <widget class="QPushButton" name="pb_SimulatorMessages">
       <property name="text">
        <string>Simulator (messages)</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0" colspan="2">
-     <spacer name="vs_Overview">
+    <item row="6" column="0" colspan="2">
+     <spacer name="vs_OverviewBottom">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -115,6 +115,22 @@
        <size>
         <width>20</width>
         <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <spacer name="vs_OverviewTop">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
        </size>
       </property>
      </spacer>
@@ -476,7 +492,7 @@
          <x>0</x>
          <y>0</y>
          <width>228</width>
-         <height>131</height>
+         <height>151</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="vl_DataLoadOverview">

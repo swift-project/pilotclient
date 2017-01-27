@@ -2,22 +2,11 @@
 <ui version="4.0">
  <class>CStatusMessageForm</class>
  <widget class="QFrame" name="CStatusMessageForm">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>407</width>
-    <height>158</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>Frame</string>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
+   <string>Status message</string>
   </property>
   <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
+   <enum>QFrame::Sunken</enum>
   </property>
   <layout class="QGridLayout" name="gl_StatusMessageForm">
    <property name="leftMargin">
@@ -49,19 +38,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="7">
-    <widget class="QLineEdit" name="le_Timestamp">
-     <property name="maximumSize">
-      <size>
-       <width>200</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="6">
     <widget class="QLabel" name="lbl_Timestamp">
      <property name="text">
@@ -83,18 +59,15 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="8">
-    <spacer name="hs_Top2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="0" column="5">
+    <widget class="QLabel" name="lbl_SeverityIcon">
+     <property name="text">
+      <string/>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+     <property name="pixmap">
+      <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
      </property>
-    </spacer>
+    </widget>
    </item>
    <item row="0" column="3">
     <widget class="QLineEdit" name="le_Severity">
@@ -110,26 +83,39 @@
     </widget>
    </item>
    <item row="0" column="4">
-    <widget class="QLabel" name="lbl_SeverityIcon">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/question.png</pixmap>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <spacer name="hs_Top1">
+    <spacer name="hs_1">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="7">
+    <widget class="QLineEdit" name="le_Timestamp">
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <spacer name="hs_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>25</width>
+       <width>40</width>
        <height>20</height>
       </size>
      </property>

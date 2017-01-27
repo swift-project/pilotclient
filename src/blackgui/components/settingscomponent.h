@@ -36,7 +36,7 @@ namespace BlackGui
             //! \remark needs to be in sync with tab order
             enum SettingTab
             {
-                SettingTabOverview = 0,
+                SettingTabOverview,
                 SettingTabServers,
                 SettingTabNetwork,
                 SettingTabAudio,
@@ -53,7 +53,7 @@ namespace BlackGui
             explicit CSettingsComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsComponent();
+            virtual ~CSettingsComponent();
 
             //! \copydoc CAudioSetupComponent::playNotificationSounds
             bool playNotificationSounds() const;

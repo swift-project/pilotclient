@@ -214,10 +214,10 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
     connect(ui->comp_Login, &CLoginComponent::loginDataChangedDigest, ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
     connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
-    connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
+    connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, [ this ]()
     {
         this->ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
-        ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetwork);
+        ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabServers);
     });
 
     // text messages
