@@ -203,6 +203,7 @@ namespace BlackMisc
                 QLatin1Literal("<th>elv.old</th><th>elv.new</th><th>elv.cur</th>") %
                 QLatin1Literal("<th>gnd.factor</th>") %
                 QLatin1Literal("<th>onGnd.old</th><th>onGnd.new</th><th>onGnd.cur</th>") %
+                QLatin1Literal("<th>parts</th><th>parts details</th>") %
                 QLatin1Literal("</tr>\n");
 
             static const CLengthUnit ft = CLengthUnit::ft();
@@ -244,7 +245,11 @@ namespace BlackMisc
                     QLatin1Literal("<td>") % QString::number(log.groundFactor) % QLatin1Literal("</td>") %
                     QLatin1Literal("<td class=\"old\">") % log.oldSituation.getOnGroundInfo() % QLatin1Literal("</td>") %
                     QLatin1Literal("<td class=\"new\">") % log.newSituation.getOnGroundInfo() % QLatin1Literal("</td>") %
-                    QLatin1Literal("<td class=\"cur\">") % log.currentSituation.getOnGroundInfo() % QLatin1Literal("</td>") %
+                    QLatin1Literal("<td class=\"cur\">") % log.currentSituation.getOnGroundInfo() % QLatin1Literal("</td>");
+
+                tableRows +=
+                    QLatin1Literal("<td>") % boolToYesNo(log.useParts) % QLatin1Literal("</td>") %
+                    QLatin1Literal("<td>") % (log.useParts ? log.parts.toQString(true) : QLatin1Literal("")) % QLatin1Literal("</td>") %
                     QLatin1Literal("</tr>\n");
             }
 

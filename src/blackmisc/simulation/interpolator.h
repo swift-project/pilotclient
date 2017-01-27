@@ -109,9 +109,9 @@ namespace BlackMisc
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                    const Aviation::CCallsign &callsign,
-                    const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
-                    PartsStatus &partsStatus) const;
+                const Aviation::CCallsign &callsign,
+                const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
+                PartsStatus &partsStatus) const;
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
@@ -149,9 +149,11 @@ namespace BlackMisc
                 double groundFactor = -1;    //!< current ground factor
                 double vtolAircraft = false; //!< VTOL aircraft
                 double deltaTimeMs = 0;      //!< delta time to last situation
-                double simulationTimeFraction = -1;      //!< time fraction, normally 0..1
-                double deltaTimeFractionMs = -1;         //!< delta time fraction
-                BlackMisc::Aviation::CCallsign callsign; //!< current callsign
+                double simulationTimeFraction = -1;        //!< time fraction, normally 0..1
+                double deltaTimeFractionMs = -1;           //!< delta time fraction
+                bool useParts = false;                     //!< supporting aircraft parts
+                BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
+                BlackMisc::Aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
                 BlackMisc::Aviation::CAircraftSituation oldSituation;     //!< old situation
                 BlackMisc::Aviation::CAircraftSituation newSituation;     //!< new situation
                 BlackMisc::Aviation::CAircraftSituation currentSituation; //!< interpolated situation

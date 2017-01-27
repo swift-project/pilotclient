@@ -107,7 +107,7 @@ namespace BlackMisc
                 IInterpolator::setGroundElevationFromHint(hints, newSituation);
             }
 
-            CAircraftSituation currentSituation(oldSituation);
+            CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available
             CCoordinateGeodetic currentPosition;
 
             // Time between start and end packet
@@ -139,7 +139,8 @@ namespace BlackMisc
             currentSituation.setPosition(currentPosition);
 
             // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
-            const CAltitude oldAlt(oldSituation.getCorrectedAltitude()); // avoid underflow below ground elevation
+            // avoid underflow below ground elevation by using getCorrectedAltitude
+            const CAltitude oldAlt(oldSituation.getCorrectedAltitude());
             const CAltitude newAlt(newSituation.getCorrectedAltitude());
             Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
             currentSituation.setAltitude(CAltitude((newAlt - oldAlt)
@@ -222,6 +223,7 @@ namespace BlackMisc
                 log.currentSituation = currentSituation;
                 log.oldSituation = oldSituation;
                 log.newSituation = newSituation;
+                log.useParts = hints.hasAircraftParts();
                 this->logInterpolation(log);
             }
 
