@@ -44,6 +44,8 @@ namespace BlackGui
         void setLoginMode(BlackCore::INetwork::LoginMode mode);
 
     private:
+        void configureLoginModes();
+
         QScopedPointer<Ui::CLoginModeButtons> ui;
     };
 }

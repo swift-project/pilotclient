@@ -7,12 +7,17 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackgui/loginmodebuttons.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/context/contextsimulator.h"
 #include "ui_loginmodebuttons.h"
 
 #include <QRadioButton>
 
+using namespace BlackConfig;
 using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -21,6 +26,9 @@ namespace BlackGui
         ui(new Ui::CLoginModeButtons)
     {
         ui->setupUi(this);
+        configureLoginModes();
+        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged,
+                this, &CLoginModeButtons::configureLoginModes);
     }
 
     CLoginModeButtons::~CLoginModeButtons()
@@ -54,6 +62,27 @@ namespace BlackGui
         case INetwork::LoginNormal:
             ui->rb_LoginNormal->setChecked(true);
             break;
+        }
+    }
+
+    void CLoginModeButtons::configureLoginModes()
+    {
+        if(CBuildConfig::isShippedVersion() && !sGui->getIContextSimulator()->isSimulatorSimulating())
+        {
+            // Disable pilot login modes
+            ui->rb_LoginNormal->setEnabled(false);
+            ui->rb_LoginStealth->setEnabled(false);
+            ui->rb_LoginNormal->setToolTip("No simulator available");
+            ui->rb_LoginStealth->setToolTip("No simulator available");
+            ui->rb_LoginObserver->setChecked(true);
+        }
+        else
+        {
+            ui->rb_LoginNormal->setEnabled(true);
+            ui->rb_LoginStealth->setEnabled(true);
+            ui->rb_LoginNormal->setToolTip({});
+            ui->rb_LoginStealth->setToolTip({});
+            ui->rb_LoginNormal->setChecked(true);
         }
     }
 }
