@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackcore/airspaceanalyzer.h"
 #include "blackcore/airspacemonitor.h"
 #include "blackcore/application.h"
@@ -40,6 +41,7 @@
 #include <stdbool.h>
 #include <QTimer>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
@@ -181,7 +183,7 @@ namespace BlackCore
                 this->m_network->presetServer(server);
 
                 // Fall back to observer mode, if no simulator is available or not simulating
-                if(!this->getIContextSimulator()->isSimulatorSimulating())
+                if(CBuildConfig::isShippedVersion() && !this->getIContextSimulator()->isSimulatorSimulating())
                 {
                     CLogMessage(this).info("No simulator connected or connected simulator not simulating. Falling back to observer mode");
                     mode = INetwork::LoginAsObserver;
