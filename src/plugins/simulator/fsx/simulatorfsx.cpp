@@ -484,20 +484,9 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftSimData &remoteAircraftData)
         {
-            CInterpolationHints &hints = m_hints[simObject.getCallsign()];
-
-            // we only need elevation near ground, in other cases we ignore it
+            // Near ground we use faster updates
             if (remoteAircraftData.aboveGround() <= 100.0)
             {
-                CElevationPlane elevation(remoteAircraftData.latitude, remoteAircraftData.longitude, remoteAircraftData.elevation);
-                elevation.setSinglePointRadius();
-
-                // const QString debug(hints.debugInfo(elevation));
-                hints.setElevation(elevation); // update elevation
-                hints.setCGAboveGround({ remoteAircraftData.cgToGround, CLengthUnit::ft() });
-
-                // set it in the remote aircraft provider
-                this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
                 // switch to fast updates
                 if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_VISUAL_FRAME)
                 {
@@ -506,13 +495,23 @@ namespace BlackSimPlugin
             }
             else
             {
-                hints.resetElevation();
                 // switch to slow updates
                 if (simObject.getSimDataPeriod() != SIMCONNECT_PERIOD_SECOND)
                 {
                     this->requestDataForSimObject(simObject, SIMCONNECT_PERIOD_SECOND);
                 }
             }
+
+            CElevationPlane elevation(remoteAircraftData.latitude, remoteAircraftData.longitude, remoteAircraftData.elevation);
+            elevation.setSinglePointRadius();
+
+            // const QString debug(hints.debugInfo(elevation));
+            CInterpolationHints &hints = m_hints[simObject.getCallsign()];
+            hints.setElevation(elevation); // update elevation
+            hints.setCGAboveGround({ remoteAircraftData.cgToGround, CLengthUnit::ft() }); // normally never changing, but if user changes ModelMatching
+
+            // set it in the remote aircraft provider
+            this->updateAircraftGroundElevation(simObject.getCallsign(), elevation);
         }
 
         void CSimulatorFsx::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
