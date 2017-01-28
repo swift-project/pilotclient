@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_DROPSITE_H
 #define BLACKGUI_DROPSITE_H
 

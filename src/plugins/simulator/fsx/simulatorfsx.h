@@ -234,8 +234,8 @@ namespace BlackSimPlugin
             DWORD  m_requestId = FirstRequestId;    //!< request id, use obtainRequestId() to get id
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
-            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
             QTimer m_realityBubbleTimer { this };   //!< updating of aircraft out of reality bubble
+            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
         };
 
         //! Listener for FSX

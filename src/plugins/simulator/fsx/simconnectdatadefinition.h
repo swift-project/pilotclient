@@ -34,7 +34,7 @@ namespace BlackSimPlugin
             double latitude;        //!< Latitude (deg)
             double longitude;       //!< Longitude (deg)
             double altitude;        //!< Altitude (ft)
-            double altitudeAboveGround; //!< Altitude above ground (ft)
+            double altitudeAGL;     //!< Altitude above ground (ft)
             double cgToGround;      //!< Static CG to ground (ft)
             double trueHeading;     //!< True heading (deg)
             double pitch;           //!< Pitch (deg)

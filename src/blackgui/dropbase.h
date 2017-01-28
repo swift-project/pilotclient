@@ -50,7 +50,6 @@ namespace BlackGui
         bool       m_allowDrop = true;   //!< dropping allowed?
         QList<int> m_acceptedMetaTypes;  //!< accepted meta types
     };
-
 } // ns
 
 #endif // guard
