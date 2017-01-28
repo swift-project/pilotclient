@@ -102,8 +102,8 @@ namespace BlackMisc
             // take hint into account to calculate elevation and above ground level
             if (!hints.getElevation().isNull())
             {
-                IInterpolator::setGroundElevationFromHint(hints, oldSituation);
-                IInterpolator::setGroundElevationFromHint(hints, newSituation);
+                IInterpolator::setGroundElevationFromHint(hints, oldSituation, false);
+                IInterpolator::setGroundElevationFromHint(hints, newSituation, false);
             }
 
             CAircraftSituation currentSituation(oldSituation); // also sets ground elevation if available
@@ -147,6 +147,12 @@ namespace BlackMisc
                                                    + oldAlt,
                                                    oldAlt.getReferenceDatum()));
 
+            // update current position by hints' elevation
+            // for XP provided by hints.getElevationProvider at current position
+            // for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
+            const CAltitude currentGroundElevation = hints.getGroundElevation(currentSituation);
+            if (!currentGroundElevation.isNull()) { currentSituation.setGroundElevation(currentGroundElevation); }
+
             // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
             if (hints.hasAircraftParts())
             {
@@ -154,12 +160,11 @@ namespace BlackMisc
                 log.groundFactor = groundFactor;
                 if (groundFactor > 0.0)
                 {
-                    const CAltitude groundElevation = hints.getGroundElevation(currentSituation);
-                    if (!groundElevation.isNull())
+                    if (!currentGroundElevation.isNull())
                     {
-                        Q_ASSERT_X(groundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
+                        Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
                         currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor)
-                                                               + groundElevation * groundFactor,
+                                                               + currentGroundElevation * groundFactor,
                                                                oldAlt.getReferenceDatum()));
                     }
                 }
