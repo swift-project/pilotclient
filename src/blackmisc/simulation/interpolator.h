@@ -193,8 +193,8 @@ namespace BlackMisc
             //! \threadsafe
             static QString getHtmlPartsLog(const QList<PartsLog> &logs);
 
-            //! Set the ground elevation from hints, if possible and not already set
-            static void setGroundElevationFromHint(const CInterpolationHints &hints, BlackMisc::Aviation::CAircraftSituation &situation);
+            //! Set the ground elevation from hints
+            static void setGroundElevationFromHint(const CInterpolationHints &hints, BlackMisc::Aviation::CAircraftSituation &situation, bool override = true);
 
             //! Set on ground flag
             static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, BlackMisc::Aviation::CAircraftSituation &situation);

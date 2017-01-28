@@ -321,9 +321,9 @@ namespace BlackMisc
             this->m_interpolationLogs.clear();
         }
 
-        void IInterpolator::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation)
+        void IInterpolator::setGroundElevationFromHint(const CInterpolationHints &hints, CAircraftSituation &situation, bool override)
         {
-            if (situation.hasGroundElevation()) { return; }
+            if (!override && situation.hasGroundElevation()) { return; }
             const CAltitude elevation = hints.getGroundElevation(situation);
             if (elevation.isNull()) { return; }
             situation.setGroundElevation(elevation);
