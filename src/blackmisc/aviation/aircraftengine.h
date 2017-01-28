@@ -27,7 +27,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAircraftEngine : public CValueObject<CAircraftEngine>
         {
         public:
-
             //! Default constructor
             CAircraftEngine() {}
 

@@ -52,12 +52,13 @@ namespace BlackMisc
             return currentSituation;
         }
 
-        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus) const
+        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus, bool log) const
         {
             partsStatus.reset();
             if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
 
             // find the first parts not in the correct order, keep only the parts before that one
+            if (parts.isEmpty()) { return {}; }
             const auto end = std::is_sorted_until(parts.begin(), parts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
             const auto validParts = makeRange(parts.begin(), end);
 
@@ -65,42 +66,46 @@ namespace BlackMisc
             if (validParts.isEmpty()) { return {}; }
             partsStatus.setSupportsParts(true);
 
-            // find the first parts earlier than the current time
-            const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto && p) { return p.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoch; });
-            const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
-            const auto partsOlder = makeRange(pivot, validParts.end());
+            CAircraftParts currentParts;
+            do
+            {
+                // find the first parts earlier than the current time
+                const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [ = ](auto && p) { return p.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoch; });
+                const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
+                const auto partsOlder = makeRange(pivot, validParts.end());
 
-            if (partsOlder.isEmpty()) { return *(partsNewer.end() - 1); }
-            CAircraftParts currentParts = partsOlder.front();
-            if (currentParts.isOnGround()) { return currentParts; }
+                if (partsOlder.isEmpty()) { currentParts = *(partsNewer.end() - 1); break; }
+                currentParts = partsOlder.front();
+                if (currentParts.isOnGround()) { break; }
 
-            // here we know aircraft is not on ground, and we check if it was recently on ground or if it will be on ground soon
-            const auto latestTakeoff = std::adjacent_find(partsOlder.begin(), partsOlder.end(), [](auto &&, auto && p) { return p.isOnGround(); });
-            const auto soonestLanding = std::find_if(partsNewer.begin(), partsNewer.end(), [](auto && p) { return p.isOnGround(); });
+                // here we know aircraft is not on ground, and we check if it was recently on ground or if it will be on ground soon
+                const auto latestTakeoff = std::adjacent_find(partsOlder.begin(), partsOlder.end(), [](auto &&, auto && p) { return p.isOnGround(); });
+                const auto soonestLanding = std::find_if(partsNewer.begin(), partsNewer.end(), [](auto && p) { return p.isOnGround(); });
 
-            // maxSecs is the maximum effective value of `secondsSinceTakeoff` and `secondsUntilLanding`. If `secondsSinceTakeoff > significantPast` then `takeoffFactor > 1`
-            //         and if `secondsUntilLanding > predictableFuture` then `landingFactor > 1`, and `std::min(std::min(takeoffFactor, landingFactor), 1.0)` ensures `>1` is ignored.
-            //         but if the offset < 5s then we must use a smaller value for the landing, hence `std::min(max, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0)`.
-            const double maxSecs = 5.0; // preferred length of time over which to blend the onground flag, when possible
+                // maxSecs is the maximum effective value of `secondsSinceTakeoff` and `secondsUntilLanding`. If `secondsSinceTakeoff > significantPast` then `takeoffFactor > 1`
+                //         and if `secondsUntilLanding > predictableFuture` then `landingFactor > 1`, and `std::min(std::min(takeoffFactor, landingFactor), 1.0)` ensures `>1` is ignored.
+                //         but if the offset < 5s then we must use a smaller value for the landing, hence `std::min(max, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0)`.
+                const double maxSecs = 5.0; // preferred length of time over which to blend the onground flag, when possible
 
-            // our clairvoyance is limited by the time offset (all times here in seconds)
-            const double significantPastSecs = maxSecs;
-            const double predictableFutureSecs = soonestLanding == partsNewer.end() ? maxSecs : std::min(maxSecs, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0);
-            const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? maxSecs : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
-            const double secondsUntilLanding = soonestLanding == partsNewer.end() ? maxSecs : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
-            Q_ASSERT(secondsSinceTakeoff >= 0.0);
-            Q_ASSERT(secondsUntilLanding >= 0.0);
+                // our clairvoyance is limited by the time offset (all times here in seconds)
+                const double significantPastSecs = maxSecs;
+                const double predictableFutureSecs = soonestLanding == partsNewer.end() ? maxSecs : std::min(maxSecs, static_cast<double>(soonestLanding->getTimeOffsetMs()) / 1000.0);
+                const double secondsSinceTakeoff = latestTakeoff == partsOlder.end() ? maxSecs : (currentTimeMsSinceEpoch - latestTakeoff->getAdjustedMSecsSinceEpoch()) / 1000.0;
+                const double secondsUntilLanding = soonestLanding == partsNewer.end() ? maxSecs : (soonestLanding->getAdjustedMSecsSinceEpoch() - currentTimeMsSinceEpoch) / 1000.0;
+                Q_ASSERT(secondsSinceTakeoff >= 0.0);
+                Q_ASSERT(secondsUntilLanding >= 0.0);
 
-            const double takeoffFactor = secondsSinceTakeoff / significantPastSecs;
-            const double landingFactor = secondsUntilLanding / predictableFutureSecs;
-            const double airborneFactor = std::min(std::min(takeoffFactor, landingFactor), 1.0);
-            currentParts.setOnGroundInterpolated(1.0 - smootherStep(airborneFactor));
+                const double takeoffFactor = secondsSinceTakeoff / significantPastSecs;
+                const double landingFactor = secondsUntilLanding / predictableFutureSecs;
+                const double airborneFactor = std::min(std::min(takeoffFactor, landingFactor), 1.0);
+                currentParts.setOnGroundInterpolated(1.0 - smootherStep(airborneFactor));
+            }
+            while (false);
 
-
-            const CInterpolationAndRenderingSetup setup = this->getInterpolatorSetup();
-            if (setup.getLogCallsigns().contains(callsign))
+            if (log)
             {
                 PartsLog log;
+                log.callsign = callsign;
                 log.timestamp = currentTimeMsSinceEpoch;
                 log.parts = currentParts;
                 IInterpolator::logParts(log);
@@ -109,14 +114,11 @@ namespace BlackMisc
             return currentParts;
         }
 
-        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus) const
+        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus, bool log) const
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             partsStatus.reset();
-
-            partsStatus.setSupportsParts(this->isRemoteAircraftSupportingParts(callsign));
-            if (!partsStatus.isSupportingParts()) { return {}; }
-            return this->getInterpolatedParts(callsign, this->remoteAircraftParts(callsign, -1), currentTimeMsSinceEpoch, partsStatus);
+            return this->getInterpolatedParts(callsign, this->remoteAircraftParts(callsign, -1), currentTimeMsSinceEpoch, partsStatus, log);
         }
 
         void IInterpolator::setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup)
@@ -143,30 +145,47 @@ namespace BlackMisc
 
             CWorker *worker = CWorker::fromTask(this, "WriteInterpolationLog", [interpolation, parts]()
             {
-                const CStatusMessage msg = IInterpolator::writeLogFile(interpolation, parts);
+                const CStatusMessageList msg = IInterpolator::writeLogFile(interpolation, parts);
                 CLogMessage::preformatted(msg);
             });
             return worker;
         }
 
-        CStatusMessage IInterpolator::writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts)
+        CStatusMessageList IInterpolator::writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts)
         {
             if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<IInterpolator *>(nullptr)).warning("No data for log"); }
-            const QString htmlInterpolation = IInterpolator::getHtmlInterpolationLog(interpolation);
-            const QString htmlParts = IInterpolator::getHtmlPartsLog(parts);
-            const QString html = htmlParts % QLatin1Literal("\n\n") % htmlInterpolation;
+            static const QString html = QLatin1Literal("Entries: %1\n\n%2");
             const QString htmlTemplate = CFileUtils::readFileToString(CBuildConfig::getHtmlTemplateFileName());
 
+            CStatusMessageList msgs;
             const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss");
-            const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getLogDirectory(), QString("%1 interpolation.html").arg(ts));
-            const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html), fn);
-            if (s)
+            const QString htmlInterpolation = IInterpolator::getHtmlInterpolationLog(interpolation);
+            if (!htmlInterpolation.isEmpty())
             {
-                return CStatusMessage(static_cast<IInterpolator *>(nullptr)).info("Written log file '%1'") << fn;
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getLogDirectory(), QString("%1 interpolation.html").arg(ts));
+                const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(interpolation.size()).arg(htmlInterpolation)), fn);
+                msgs.push_back(IInterpolator::logStatusFileWriting(s, fn));
+            }
+
+            const QString htmlParts = IInterpolator::getHtmlPartsLog(parts);
+            if (!htmlParts.isEmpty())
+            {
+                const QString fn = CFileUtils::appendFilePaths(CDirectoryUtils::getLogDirectory(), QString("%1 parts.html").arg(ts));
+                const bool s = CFileUtils::writeStringToFile(htmlTemplate.arg(html.arg(parts.size()).arg(htmlParts)), fn);
+                msgs.push_back(IInterpolator::logStatusFileWriting(s, fn));
+            }
+            return msgs;
+        }
+
+        CStatusMessage IInterpolator::logStatusFileWriting(bool success, const QString &fileName)
+        {
+            if (success)
+            {
+                return CStatusMessage(static_cast<IInterpolator *>(nullptr)).info("Written log file '%1'") << fileName;
             }
             else
             {
-                return CStatusMessage(static_cast<IInterpolator *>(nullptr)).error("Failed to write log file '%1'") << fn;
+                return CStatusMessage(static_cast<IInterpolator *>(nullptr)).error("Failed to write log file '%1'") << fileName;
             }
         }
 
@@ -191,10 +210,9 @@ namespace BlackMisc
         QString IInterpolator::getHtmlInterpolationLog(const QList<InterpolationLog> &logs)
         {
             if (logs.isEmpty()) { return {}; }
-            QString tableRows;
             const QString tableHeader =
-                QLatin1Literal("<tr>") %
-                QLatin1Literal("<th>CS</th><th>VTOL</th><th>timestamp</th>") %
+                QLatin1Literal("<thead><tr>") %
+                QLatin1Literal("<th>c.</th><th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>") %
                 QLatin1Literal("<th>ts old</th><th>ts new</th><th>ts cur</th>") %
                 QLatin1Literal("<th>&Delta;t</th><th>&Delta;t fr.</th><th>fraction</th>") %
                 QLatin1Literal("<th>lat.old</th><th>lat.new</th><th>lat.cur</th>") %
@@ -203,18 +221,30 @@ namespace BlackMisc
                 QLatin1Literal("<th>elv.old</th><th>elv.new</th><th>elv.cur</th>") %
                 QLatin1Literal("<th>gnd.factor</th>") %
                 QLatin1Literal("<th>onGnd.old</th><th>onGnd.new</th><th>onGnd.cur</th>") %
-                QLatin1Literal("<th>parts</th><th>parts details</th>") %
-                QLatin1Literal("</tr>\n");
+                QLatin1Literal("<th>parts</th><th>c.</th><th>parts details</th>") %
+                QLatin1Literal("</tr></thead>\n");
 
             static const CLengthUnit ft = CLengthUnit::ft();
+            const InterpolationLog firstLog = logs.first();
+            qint64 newPosTs = firstLog.newSituation.getMSecsSinceEpoch();
+            CAircraftParts lastParts; // default, so shown if parts are different from default
+
+            QString tableRows("<tbody>\n");
             for (const InterpolationLog &log : logs)
             {
+                const bool changedNewPosition = newPosTs != log.newSituation.getMSecsSinceEpoch();
+                const bool changedParts = lastParts != log.parts;
+                newPosTs = log.newSituation.getMSecsSinceEpoch();
+                lastParts = log.parts;
+
                 // concatenating in multiple steps, otherwise C4503 warnings
                 tableRows +=
                     QLatin1Literal("<tr>") %
+                    (changedNewPosition ? QLatin1Literal("<td class=\"changed\">*</td>") : QLatin1Literal("<td></td>")) %
                     QLatin1Literal("<td>") % log.callsign.asString() % QLatin1Literal("</td>") %
                     QLatin1Literal("<td>") % boolToYesNo(log.vtolAircraft) % QLatin1Literal("</td>") %
                     QLatin1Literal("<td>") % msSinceEpochToTime(log.timestamp) % QLatin1Literal("</td>") %
+                    QLatin1Literal("<td>") % QString::number(log.timestamp - firstLog.timestamp) % QLatin1Literal("</td>") %
 
                     QLatin1Literal("<td class=\"old\">") % msSinceEpochToTime(log.oldSituation.getAdjustedMSecsSinceEpoch()) % QLatin1Char('-') % QString::number(log.oldSituation.getTimeOffsetMs()) % QLatin1Literal("</td>") %
                     QLatin1Literal("<td class=\"new\">") % msSinceEpochToTime(log.newSituation.getAdjustedMSecsSinceEpoch()) % QLatin1Char('-') % QString::number(log.newSituation.getTimeOffsetMs()) % QLatin1Literal("</td>") %
@@ -249,33 +279,38 @@ namespace BlackMisc
 
                 tableRows +=
                     QLatin1Literal("<td>") % boolToYesNo(log.useParts) % QLatin1Literal("</td>") %
+                    (changedParts ? QLatin1String("<td>*</td>") : QLatin1String("<td></td>")) %
                     QLatin1Literal("<td>") % (log.useParts ? log.parts.toQString(true) : QLatin1Literal("")) % QLatin1Literal("</td>") %
                     QLatin1Literal("</tr>\n");
             }
-
+            tableRows += QLatin1Literal("</tbody>\n");
             return QLatin1Literal("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1Literal("</table>\n");
         }
 
         QString IInterpolator::getHtmlPartsLog(const QList<PartsLog> &logs)
         {
             if (logs.isEmpty()) { return {}; }
-            QString tableRows;
             const QString tableHeader =
-                QLatin1Literal("<tr>") %
+                QLatin1Literal("<thead><tr>") %
                 QLatin1Literal("<th>CS</th><th>timestamp</th>") %
+                QLatin1Literal("<th>c.</th>") %
                 QLatin1Literal("<th>parts</th>") %
-                QLatin1Literal("</tr>\n");
+                QLatin1Literal("</tr></thead>\n");
 
+            CAircraftParts lastParts; // default, so shown if parts are different from default
+            QString tableRows("<tbody>\n");
             for (const PartsLog &log : logs)
             {
-                // concatenating in multiple steps, otherwise C4503 warnings
+                const bool changedParts = lastParts != log.parts;
+                lastParts = log.parts;
                 tableRows +=
                     QLatin1Literal("<tr>") %
                     QLatin1Literal("<td>") % log.callsign.asString() % QLatin1Literal("</td>") %
                     QLatin1Literal("<td>") % msSinceEpochToTime(log.timestamp) % QLatin1Literal("</td>") %
+                    (changedParts ? QLatin1String("<td class=\"changed\">*</td>") : QLatin1String("<td></td>")) %
                     QLatin1Literal("<td>") % log.parts.toQString() % QLatin1Literal("</td>");
             }
-
+            tableRows += QLatin1Literal("</tbody>\n");
             return QLatin1Literal("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1Literal("</table>\n");
         }
 

@@ -166,7 +166,7 @@ namespace BlackMisc
                 std::function<void(const BlackMisc::Simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshot
             ) = 0;
 
-            //! Remove outdated aircraft parts
+            //! Remove outdated aircraft parts, but never the most recent one
             void static removeOutdatedParts(Aviation::CAircraftPartsList &partsList);
         };
 

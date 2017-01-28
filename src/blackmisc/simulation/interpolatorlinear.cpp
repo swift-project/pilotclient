@@ -67,7 +67,6 @@ namespace BlackMisc
             // interpolation situations
             CAircraftSituation oldSituation;
             CAircraftSituation newSituation;
-            const bool logInterpolation = setup.getLogCallsigns().contains(callsign);
             InterpolationLog log;
 
             // latest first, now 00:20 split time
@@ -215,7 +214,7 @@ namespace BlackMisc
                 status.setChangedPosition(true);
             }
             status.setInterpolationSucceeded(true);
-            if (logInterpolation)
+            if (hints.isLoggingInterpolation())
             {
                 log.timestamp = currentTimeMsSinceEpoc;
                 log.callsign = callsign;
@@ -224,6 +223,7 @@ namespace BlackMisc
                 log.oldSituation = oldSituation;
                 log.newSituation = newSituation;
                 log.useParts = hints.hasAircraftParts();
+                log.parts = hints.getAircraftParts();
                 this->logInterpolation(log);
             }
 

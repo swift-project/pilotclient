@@ -111,13 +111,13 @@ namespace BlackMisc
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
-                PartsStatus &partsStatus) const;
+                PartsStatus &partsStatus, bool log = false) const;
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
-                PartsStatus &partsStatus) const;
+                PartsStatus &partsStatus, bool log = false) const;
 
             //! Enable debug messages etc.
             //! \threadsafe
@@ -128,6 +128,11 @@ namespace BlackMisc
 
             //! Clear log file
             void clearLog();
+
+            //! Enable log messages etc.
+            //! \threadsafe
+            //! \remark public for FS9 to get setup in Fs9Client
+            CInterpolationAndRenderingSetup getInterpolatorSetup() const;
 
             /*!
              * Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
@@ -170,16 +175,12 @@ namespace BlackMisc
             //! Constructor
             IInterpolator(BlackMisc::Simulation::IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent);
 
-            //! Enable debug messages etc.
-            //! \threadsafe
-            CInterpolationAndRenderingSetup getInterpolatorSetup() const;
-
-            //! Log interpolation, only stores in memory, for performance reasons
+            //! Log current interpolation cycle, only stores in memory, for performance reasons
             //! \remark const to allow const interpolator functions
             //! \threadsafe
             void logInterpolation(const InterpolationLog &log) const;
 
-            //! Log parts, only stores in memory, for performance reasons
+            //! Log current parts cycle, only stores in memory, for performance reasons
             //! \remark const to allow const interpolator functions
             //! \threadsafe
             void logParts(const PartsLog &parts) const;
@@ -202,7 +203,10 @@ namespace BlackMisc
 
         private:
             //! Write log to file
-            static CStatusMessage writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts);
+            static CStatusMessageList writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts);
+
+            //! Status of file operation
+            static CStatusMessage logStatusFileWriting(bool success, const QString &fileName);
 
             //! Create readable time
             static QString msSinceEpochToTime(qint64 ms);

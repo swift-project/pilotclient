@@ -863,6 +863,9 @@ namespace BlackSimPlugin
             // values used for position and parts
             const qint64 currentTimestamp = QDateTime::currentMSecsSinceEpoch();
             const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
+            const CCallsignSet callsignsToLog(this->m_interpolationRenderingSetup.getLogCallsigns());
+
+            // interpolation for all remote aircraft
             for (const CSimConnectObject &simObj : simObjects)
             {
                 // happening if aircraft is not yet added to simulator or to be deleted
@@ -875,14 +878,17 @@ namespace BlackSimPlugin
 
                 // fetch parts, as they are needed for ground interpolation
                 const bool useAircraftParts = enableAircraftParts && aircraftWithParts.contains(callsign);
+                const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
                 IInterpolator::PartsStatus partsStatus;
                 partsStatus.setSupportsParts(useAircraftParts);
-                const CAircraftParts parts = useAircraftParts ? this->m_interpolator->getInterpolatedParts(callsign, -1, partsStatus) : CAircraftParts();
+                const CAircraftParts parts = useAircraftParts ? this->m_interpolator->getInterpolatedParts(callsign, -1, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
                 // get interpolated situation
                 IInterpolator::InterpolationStatus interpolatorStatus;
                 CInterpolationHints hints(m_hints[simObj.getCallsign()]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
+                hints.setLoggingInterpolation(logInterpolationAndParts);
+
                 const CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, hints, interpolatorStatus);
 
                 if (interpolatorStatus.allTrue())

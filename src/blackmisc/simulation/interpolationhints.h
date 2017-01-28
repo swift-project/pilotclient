@@ -68,6 +68,12 @@ namespace BlackMisc
             //! VTOL aircraft
             void setVtolAircraft(bool vtol) { m_isVtol = vtol; }
 
+            //! Log interpolation?
+            bool isLoggingInterpolation() const { return m_logInterpolation; }
+
+            //! Log interpolation?
+            void setLoggingInterpolation(bool log) { m_logInterpolation = log; }
+
             //! Has valid aircraft parts?
             bool hasAircraftParts() const { return m_hasParts; }
 
@@ -101,11 +107,12 @@ namespace BlackMisc
             QString debugInfo(const BlackMisc::Geo::CElevationPlane &deltaElevation) const;
 
         private:
-            bool m_isVtol = false;   //!< VTOL aircraft?
-            bool m_hasParts = false; //!< Has valid aircraft parts?
+            bool m_isVtol = false;           //!< VTOL aircraft?
+            bool m_hasParts = false;         //!< Has valid aircraft parts?
+            bool m_logInterpolation = false; //!< log interpolation
             BlackMisc::Aviation::CAircraftParts m_aircraftParts; //!< Aircraft parts
-            BlackMisc::Geo::CElevationPlane m_elevation; //!< aircraft's elevation if available
-            ElevationProvider m_elevationProvider;       //!< Provider of ground elevation (lazy computation)
+            BlackMisc::Geo::CElevationPlane m_elevation;         //!< aircraft's elevation if available
+            ElevationProvider m_elevationProvider;               //!< Provider of ground elevation (lazy computation)
             BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
 
             BLACK_METACLASS(
@@ -114,7 +121,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(elevation),
                 BLACK_METAMEMBER(cgAboveGround),
                 BLACK_METAMEMBER(hasParts),
-                BLACK_METAMEMBER(aircraftParts)
+                BLACK_METAMEMBER(aircraftParts),
+                BLACK_METAMEMBER(logInterpolation)
                 // elevationProvider not included
             );
         };
