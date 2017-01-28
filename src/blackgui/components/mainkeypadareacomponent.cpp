@@ -31,7 +31,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         CMainKeypadAreaComponent::CMainKeypadAreaComponent(QWidget *parent) :
             QFrame(parent),
             ui(new Ui::CMainKeypadAreaComponent)
@@ -62,7 +61,7 @@ namespace BlackGui
             connect(ui->pb_SoundMute, &QPushButton::released, this, &CMainKeypadAreaComponent::ps_buttonSelected);
 
             // command line
-            this->connect(ui->le_CommandLineInput, &QLineEdit::returnPressed, this, &CMainKeypadAreaComponent::ps_commandEntered);
+            this->connect(ui->lep_CommandLineInput, &QLineEdit::returnPressed, this, &CMainKeypadAreaComponent::ps_commandEntered);
 
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::ps_connectionStatusChanged);
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged);
@@ -154,10 +153,9 @@ namespace BlackGui
 
         void CMainKeypadAreaComponent::ps_commandEntered()
         {
-            QString c(ui->le_CommandLineInput->text().trimmed().simplified());
+            QString c(ui->lep_CommandLineInput->getLastEnteredLineFormatted());
             if (c.isEmpty()) { return; }
             emit this->commandEntered(c, keypadIdentifier());
-            ui->le_CommandLineInput->clear();
         }
 
         void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)

@@ -240,7 +240,7 @@ QLabel {
 }
 
 QLineEdit {
-  background: transparent;
+  background: black;
   border: 1px solid green;
   border-radius: 5px;
 }
