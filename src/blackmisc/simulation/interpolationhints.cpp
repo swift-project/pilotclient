@@ -26,25 +26,30 @@ namespace BlackMisc
         CAltitude CInterpolationHints::getGroundElevation(const Aviation::CAircraftSituation &situation) const
         {
             if (m_elevationProvider) { return m_elevationProvider(situation); }
-            if (m_elevation.isNull() || !m_elevation.isWithinRange(situation)) { return CAltitude::null(); }
-            return m_elevation.geodeticHeight();
+            if (m_elevationPlane.isNull() || !m_elevationPlane.isWithinRange(situation)) { return CAltitude::null(); }
+            return m_elevationPlane.geodeticHeight();
         }
 
-        void CInterpolationHints::resetElevation()
+        void CInterpolationHints::resetElevationPlane()
         {
-            m_elevation = CElevationPlane();
+            m_elevationPlane = CElevationPlane();
         }
 
         bool CInterpolationHints::isWithinRange(const Geo::ICoordinateGeodetic &coordinate) const
         {
-            if (m_elevation.isNull()) return false;
-            return m_elevation.isWithinRange(coordinate);
+            if (m_elevationPlane.isNull()) return false;
+            return m_elevationPlane.isWithinRange(coordinate);
         }
 
         void CInterpolationHints::setAircraftParts(const CAircraftParts &parts, bool hasParts)
         {
             m_hasParts = hasParts;
             m_aircraftParts = parts;
+        }
+
+        bool CInterpolationHints::hasElevationProvider() const
+        {
+            return static_cast<bool>(m_elevationProvider);
         }
 
         CVariant CInterpolationHints::propertyByIndex(const CPropertyIndex &index) const
@@ -56,7 +61,7 @@ namespace BlackMisc
             case IndexCenterOfGravity:
                 return this->m_cgAboveGround.propertyByIndex(index.copyFrontRemoved());
             case IndexElevationPlane:
-                return this->m_elevation.propertyByIndex(index.copyFrontRemoved());
+                return this->m_elevationPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexIsVtolAircraft:
                 return CVariant::fromValue(m_isVtol);
             default:
@@ -74,7 +79,7 @@ namespace BlackMisc
                 this->m_cgAboveGround.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexElevationPlane:
-                this->m_elevation.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                this->m_elevationPlane.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexIsVtolAircraft:
                 this->m_isVtol = variant.toBool();
@@ -88,17 +93,17 @@ namespace BlackMisc
         QString CInterpolationHints::convertToQString(bool i18n) const
         {
             static const QString s("%1 %2");
-            return s.arg(m_elevation.toQString(i18n), m_cgAboveGround.toQString(i18n));
+            return s.arg(m_elevationPlane.toQString(i18n), m_cgAboveGround.toQString(i18n));
         }
 
         QString CInterpolationHints::debugInfo(const Geo::CElevationPlane &deltaElevation) const
         {
             static const QString s("Lat: %1 Lng: %2 Elv: %3");
-            if (m_elevation.isNull() || deltaElevation.isNull()) return "null";
+            if (m_elevationPlane.isNull() || deltaElevation.isNull()) return "null";
             return s.arg(
-                       (deltaElevation.latitude() - m_elevation.latitude()).valueRoundedWithUnit(CAngleUnit::deg(), 10),
-                       (deltaElevation.longitude() - m_elevation.longitude()).valueRoundedWithUnit(CAngleUnit::deg(), 10),
-                       (deltaElevation.geodeticHeight() - m_elevation.geodeticHeight()).valueRoundedWithUnit(CLengthUnit::ft(), 2)
+                       (deltaElevation.latitude() - m_elevationPlane.latitude()).valueRoundedWithUnit(CAngleUnit::deg(), 10),
+                       (deltaElevation.longitude() - m_elevationPlane.longitude()).valueRoundedWithUnit(CAngleUnit::deg(), 10),
+                       (deltaElevation.geodeticHeight() - m_elevationPlane.geodeticHeight()).valueRoundedWithUnit(CLengthUnit::ft(), 2)
                    );
         }
     } // namespace

@@ -11,6 +11,7 @@
 #include "blackmisc/pq/length.h"
 #include "blackmisc/propertyindex.h"
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
@@ -27,6 +28,11 @@ namespace BlackMisc
                         );
         }
 
+        const CAltitude &CElevationPlane::getAltitudeIfWithinRadius(const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const
+        {
+            return (isWithinRange(coordinate)) ? geodeticHeight() : CAltitude::null();
+        }
+
         bool CElevationPlane::isNull() const
         {
             return m_radius.isNull();
@@ -34,7 +40,7 @@ namespace BlackMisc
 
         bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate) const
         {
-            if (m_radius.isNull()) { return false; }
+            if (isNull()) { return false; }
             const CLength d = this->calculateGreatCircleDistance(coordinate);
             const bool inRange = m_radius >= d;
             return inRange;

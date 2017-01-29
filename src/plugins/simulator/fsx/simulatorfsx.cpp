@@ -507,7 +507,7 @@ namespace BlackSimPlugin
 
             // const QString debug(hints.debugInfo(elevation));
             CInterpolationHints &hints = m_hints[simObject.getCallsign()];
-            hints.setElevation(elevation); // update elevation
+            hints.setElevationPlane(elevation); // update elevation
             hints.setCGAboveGround({ remoteAircraftData.cgToGround, CLengthUnit::ft() }); // normally never changing, but if user changes ModelMatching
 
             // set it in the remote aircraft provider

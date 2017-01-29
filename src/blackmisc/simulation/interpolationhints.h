@@ -42,16 +42,16 @@ namespace BlackMisc
             CInterpolationHints(bool isVtolAircraft);
 
             //! Get elevation
-            const BlackMisc::Geo::CElevationPlane &getElevation() const { return m_elevation;}
+            const BlackMisc::Geo::CElevationPlane &getElevationPlane() const { return m_elevationPlane;}
+
+            //! Set elevation
+            void setElevationPlane(const BlackMisc::Geo::CElevationPlane &elevation) { m_elevationPlane = elevation; }
+
+            //! Elevation plane set to null
+            void resetElevationPlane();
 
             //! Get elevation from CInterpolationHints::getElevationProvider or CInterpolationHints::getElevation
             Aviation::CAltitude getGroundElevation(const BlackMisc::Aviation::CAircraftSituation &situation) const;
-
-            //! Set elevation
-            void setElevation(const BlackMisc::Geo::CElevationPlane &elevation) { m_elevation = elevation; }
-
-            //! Elevation set to null
-            void resetElevation();
 
             //! Check if elevation is within radius and can be used
             bool isWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate) const;
@@ -90,6 +90,9 @@ namespace BlackMisc
             //! Function object that can obtain ground elevation
             using ElevationProvider = std::function<BlackMisc::Aviation::CAltitude(const BlackMisc::Aviation::CAircraftSituation &)>;
 
+            //! Has elevation provider
+            bool hasElevationProvider() const;
+
             //! Function object that can obtain ground elevation
             //! \remark either a provider or a value set can be used
             const ElevationProvider &getElevationProvider() const { return m_elevationProvider; }
@@ -114,14 +117,14 @@ namespace BlackMisc
             bool m_hasParts = false;         //!< Has valid aircraft parts?
             bool m_logInterpolation = false; //!< log interpolation
             BlackMisc::Aviation::CAircraftParts m_aircraftParts; //!< Aircraft parts
-            BlackMisc::Geo::CElevationPlane m_elevation;         //!< aircraft's elevation if available
+            BlackMisc::Geo::CElevationPlane m_elevationPlane;    //!< aircraft's elevation if available
             ElevationProvider m_elevationProvider;               //!< Provider of ground elevation (lazy computation)
             BlackMisc::PhysicalQuantities::CLength m_cgAboveGround { 0, nullptr }; //!< center of gravity above ground
 
             BLACK_METACLASS(
                 CInterpolationHints,
                 BLACK_METAMEMBER(isVtol),
-                BLACK_METAMEMBER(elevation),
+                BLACK_METAMEMBER(elevationPlane),
                 BLACK_METAMEMBER(cgAboveGround),
                 BLACK_METAMEMBER(hasParts),
                 BLACK_METAMEMBER(aircraftParts),

@@ -100,7 +100,8 @@ namespace BlackMisc
             }
 
             // take hint into account to calculate elevation and above ground level
-            if (!hints.getElevation().isNull())
+            // do not call for XP (lazy init)
+            if (!hints.hasElevationProvider())
             {
                 IInterpolator::setGroundElevationFromHint(hints, oldSituation, false);
                 IInterpolator::setGroundElevationFromHint(hints, newSituation, false);
@@ -147,11 +148,11 @@ namespace BlackMisc
                                                    + oldAlt,
                                                    oldAlt.getReferenceDatum()));
 
-            // update current position by hints' elevation
-            // for XP provided by hints.getElevationProvider at current position
-            // for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
-            const CAltitude currentGroundElevation = hints.getGroundElevation(currentSituation);
-            if (!currentGroundElevation.isNull()) { currentSituation.setGroundElevation(currentGroundElevation); }
+            // Update current position by hints' elevation
+            // * for XP provided by hints.getElevationProvider at current position
+            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
+            // As XP uses lazy init we will call getGroundElevation only when needed, so default here via getElevationPlane
+            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
 
             // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
             if (hints.hasAircraftParts())
@@ -160,6 +161,7 @@ namespace BlackMisc
                 log.groundFactor = groundFactor;
                 if (groundFactor > 0.0)
                 {
+                    currentGroundElevation = hints.getGroundElevation(currentSituation); // calls provider on XP
                     if (!currentGroundElevation.isNull())
                     {
                         Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
@@ -168,12 +170,14 @@ namespace BlackMisc
                                                                oldAlt.getReferenceDatum()));
                     }
                 }
+                currentSituation.setGroundElevation(currentGroundElevation);
                 IInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
             }
             else
             {
                 // guess ground flag
                 constexpr double NoGroundFactor = -1;
+                currentSituation.setGroundElevation(currentGroundElevation);
                 IInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
             }
 
