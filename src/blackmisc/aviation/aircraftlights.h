@@ -40,7 +40,6 @@ namespace BlackMisc
                 IndexLogo
             };
 
-
             //! Default constructor
             CAircraftLights() = default;
 

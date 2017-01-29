@@ -18,6 +18,7 @@
 #include <QMetaObject>
 #include <QTextStream>
 
+using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Weather;
 
@@ -36,7 +37,7 @@ namespace BlackMisc
 
             bool CSimConnectUtilities::writeSimConnectCfg(const QString &fileName, const QString &ip, int port)
             {
-                QString sc = CSimConnectUtilities::simConnectCfg(ip, port);
+                const QString sc = CSimConnectUtilities::simConnectCfg(ip, port);
                 QFile file(fileName);
                 bool success = false;
                 if ((success = file.open(QIODevice::WriteOnly | QIODevice::Text)))
@@ -50,8 +51,8 @@ namespace BlackMisc
 
             QString CSimConnectUtilities::simConnectCfg(const QString &ip, int port)
             {
-                QString sc = QString("[SimConnect]\nProtocol=Ipv4\nAddress=%1\nPort=%2\n"
-                                     "MaxReceiveSize=4096\nDisableNagle=0").arg(ip).arg(port);
+                const QString sc = QString("[SimConnect]\nProtocol=Ipv4\nAddress=%1\nPort=%2\n"
+                                           "MaxReceiveSize=4096\nDisableNagle=0").arg(ip).arg(port);
                 return sc;
             }
 
@@ -73,6 +74,18 @@ namespace BlackMisc
             {
                 QString sf = CSimConnectUtilities::resolveEnumToString(type, "SIMCONNECT_SURFACE");
                 return beautify ? sf.replace('_', ' ') : sf;
+            }
+
+            int CSimConnectUtilities::lightsToLightStates(const CAircraftLights &lights)
+            {
+                int lightMask = 0;
+                if (lights.isBeaconOn())  { lightMask |= Beacon; }
+                if (lights.isLandingOn()) { lightMask |= Landing; }
+                if (lights.isLogoOn())    { lightMask |= Logo; }
+                if (lights.isNavOn())     { lightMask |= Nav; }
+                if (lights.isStrobeOn())  { lightMask |= Strobe; }
+                if (lights.isTaxiOn())    { lightMask |= Taxi; }
+                return lightMask;
             }
 
             QString CSimConnectUtilities::convertToSimConnectMetar(const CGridPoint &gridPoint)
@@ -114,7 +127,7 @@ namespace BlackMisc
                 // Q = specifier for altimeter in millibars
                 simconnectMetar += QLatin1String(" Q");
                 // NNNN = altimeter in millibars
-                auto altimeter = gridPoint.getSurfacePressure().valueInteger(CPressureUnit::mbar());
+                const auto altimeter = gridPoint.getSurfacePressure().valueInteger(CPressureUnit::mbar());
                 simconnectMetar += QStringLiteral("%1").arg(altimeter, 4, 10, QLatin1Char('0'));
 
                 return simconnectMetar;
@@ -126,7 +139,7 @@ namespace BlackMisc
                 qRegisterMetaType<CSimConnectUtilities::SIMCONNECT_SURFACE>();
             }
 
-            QString CSimConnectUtilities::windsToSimConnectMetar(const BlackMisc::Weather::CWindLayerList &windLayers)
+            QString CSimConnectUtilities::windsToSimConnectMetar(const CWindLayerList &windLayers)
             {
                 QString simconnectWinds;
                 bool surface = true;
@@ -145,15 +158,15 @@ namespace BlackMisc
                     else
                     {
                         // DDD = Direction (0-360 degrees)
-                        auto direction = windLayer.getDirection().valueInteger(CAngleUnit::deg());
+                        const auto direction = windLayer.getDirection().valueInteger(CAngleUnit::deg());
                         simconnectWinds += QStringLiteral("%1").arg(direction, 3, 10, QLatin1Char('0'));
 
                         // SSS = Speed
-                        auto speed = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
+                        const auto speed = windLayer.getSpeed().valueInteger(CSpeedUnit::kts());
                         simconnectWinds += QStringLiteral("%1").arg(speed, 3, 10, QLatin1Char('0'));
                     }
                     // XX = Gust speed
-                    auto gustSpeed = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
+                    const auto gustSpeed = windLayer.getGustSpeed().valueInteger(CSpeedUnit::kts());
                     if (gustSpeed) { simconnectWinds += QStringLiteral("G%1").arg(gustSpeed, 2, 10, QLatin1Char('0')); }
 
                     // UUU = Speed units
@@ -189,7 +202,7 @@ namespace BlackMisc
                 return simconnectWinds;
             }
 
-            QString CSimConnectUtilities::visibilitiesToSimConnectMetar(const BlackMisc::Weather::CVisibilityLayerList &visibilityLayers)
+            QString CSimConnectUtilities::visibilitiesToSimConnectMetar(const CVisibilityLayerList &visibilityLayers)
             {
                 // There are several format options, we use the meter format:
                 // NNNND&BXXXX&DYYYY
@@ -208,17 +221,17 @@ namespace BlackMisc
                     simconnectVisibilities += QLatin1String("NDV");
 
                     // XXXX = base of visibility layer in meters
-                    auto base = visibilityLayer.getBase().valueInteger(CLengthUnit::m());
+                    const auto base = visibilityLayer.getBase().valueInteger(CLengthUnit::m());
                     simconnectVisibilities += QStringLiteral("&B%1").arg(base, 4, 10, QLatin1Char('0'));
 
                     // YYYY = depth of visibility layer in meters
-                    auto depth = visibilityLayer.getTop().valueInteger(CLengthUnit::m());
+                    const auto depth = visibilityLayer.getTop().valueInteger(CLengthUnit::m());
                     simconnectVisibilities += QStringLiteral("&D%1").arg(depth, 4, 10, QLatin1Char('0'));
                 }
                 return simconnectVisibilities;
             }
 
-            QString CSimConnectUtilities::cloudsToSimConnectMetar(const BlackMisc::Weather::CCloudLayerList &cloudLayers)
+            QString CSimConnectUtilities::cloudsToSimConnectMetar(const CCloudLayerList &cloudLayers)
             {
                 // Format:
                 // CCCNNN&BXXXX&DYYYY
@@ -273,15 +286,15 @@ namespace BlackMisc
                     // http://wiki.sandaysoft.com/a/Rain_measurement#Rain_Rate
                     auto precipitationRate = cloudLayer.getPrecipitationRate();
                     // Very light rain: precipitation rate is < 0.25 mm/hour
-                    if(precipitationRate < 0.25) {  simconnectClouds += QLatin1Char('V'); }
+                    if (precipitationRate < 0.25) {  simconnectClouds += QLatin1Char('V'); }
                     // Light rain: precipitation rate is between 0.25mm/hour and 1.0mm/hour
-                    else if(precipitationRate >= 0.25 && precipitationRate < 1.0) { simconnectClouds += QLatin1Char('L'); }
+                    else if (precipitationRate >= 0.25 && precipitationRate < 1.0) { simconnectClouds += QLatin1Char('L'); }
                     // Moderate rain: precipitation rate is between 1.0 mm/hour and 4.0 mm/hour
-                    else if(precipitationRate >= 1.0 && precipitationRate < 4.0) { simconnectClouds += QLatin1Char('M'); }
+                    else if (precipitationRate >= 1.0 && precipitationRate < 4.0) { simconnectClouds += QLatin1Char('M'); }
                     // Heavy rain: recipitation rate is between 4.0 mm/hour and 16.0 mm/hour
-                    else if(precipitationRate >= 4.0 && precipitationRate < 16.0) { simconnectClouds += QLatin1Char('H'); }
+                    else if (precipitationRate >= 4.0 && precipitationRate < 16.0) { simconnectClouds += QLatin1Char('H'); }
                     // Very heavy rain: precipitation rate is > 16.0 mm/hour
-                    else if(precipitationRate >= 16.0) { simconnectClouds += QLatin1Char('D'); }
+                    else if (precipitationRate >= 16.0) { simconnectClouds += QLatin1Char('D'); }
 
                     // Q = Type of precipitation
                     switch (cloudLayer.getPrecipitation())
@@ -302,7 +315,7 @@ namespace BlackMisc
                 return simconnectClouds;
             }
 
-            QString CSimConnectUtilities::temperaturesToSimConnectMetar(const BlackMisc::Weather::CTemperatureLayerList &temperatureLayers)
+            QString CSimConnectUtilities::temperaturesToSimConnectMetar(const CTemperatureLayerList &temperatureLayers)
             {
                 // Format:
                 // TT/DD&ANNNNN
@@ -326,7 +339,6 @@ namespace BlackMisc
                 }
                 return simconnectTemperatures;
             }
-
         } // namespace
     } // namespace
 } // namespace

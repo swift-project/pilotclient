@@ -13,6 +13,7 @@
 #define BLACKMISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/weather/gridpoint.h"
 
 #include <QMetaType>
@@ -23,10 +24,10 @@
 // though it does not make sense to be used on non WIN machines.
 // But it allows such parts to compile on all platforms.
 #ifdef Q_OS_WIN
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <Windows.h>
+#   ifndef NOMINMAX
+#       define NOMINMAX
+#   endif
+#   include <Windows.h>
 #else
 using DWORD = unsigned long; //!< Fake Windows DWORD
 #endif
@@ -73,7 +74,7 @@ namespace BlackMisc
                 static const QString simConnectSurfaceTypeToString(const DWORD type, bool beautify = true);
 
                 //! SimConnect surfaces.
-                // http://msdn.microsoft.com/en-us/library/cc526981.aspx#AircraftFlightInstrumentationData
+                //! \sa http://msdn.microsoft.com/en-us/library/cc526981.aspx#AircraftFlightInstrumentationData
                 enum SIMCONNECT_SURFACE
                 {
                     Concrete,
@@ -146,6 +147,25 @@ namespace BlackMisc
                     SIMCONNECT_EXCEPTION_OBJECT_SCHEDULE
                 };
 
+                //! Lights for FSX/P3D "LIGHT ON STATES"
+                //! \sa http://www.prepar3d.com/SDKv2/LearningCenter/utilities/variables/simulation_variables.html
+                enum LIGHT_STATES
+                {
+                    Nav         = 0x0001,
+                    Beacon      = 0x0002,
+                    Landing     = 0x0004,
+                    Taxi        = 0x0008,
+                    Strobe      = 0x0010,
+                    Panel       = 0x0020,
+                    Recognition = 0x0040,
+                    Wing        = 0x0080,
+                    Logo        = 0x0100,
+                    Cabin       = 0x0200
+                };
+
+                //! Lights to states
+                static int lightsToLightStates(const BlackMisc::Aviation::CAircraftLights &lights);
+
                 //! Converts the weather at gridPoint to a SimConnect METAR string
                 static QString convertToSimConnectMetar(const BlackMisc::Weather::CGridPoint &gridPoint);
 
@@ -167,7 +187,6 @@ namespace BlackMisc
 
                 //! Hidden constructor
                 CSimConnectUtilities();
-
             };
         } // namespace
     } // namespace
