@@ -92,6 +92,9 @@ namespace BlackSimPlugin
             double engine2Combustion;             //!< Engine 2 combustion flag
             double engine3Combustion;             //!< Engine 3 combustion flag
             double engine4Combustion;             //!< Engine 4 combustion flag
+
+            //! Equal to other parts
+            bool operator==(const DataDefinitionRemoteAircraftParts &rhs) const;
         };
 
         //! Data for AI object sent back from simulator

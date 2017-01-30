@@ -9,6 +9,7 @@
 
 #include "simconnectdatadefinition.h"
 #include "blackmisc/logmessage.h"
+#include <tuple>
 
 using namespace BlackMisc;
 
@@ -177,6 +178,18 @@ namespace BlackSimPlugin
                 CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error("SimConnect error: SimConnect_SetClientData %1") << hr;
             }
             return hr;
+        }
+
+        bool DataDefinitionRemoteAircraftParts::operator==(const DataDefinitionRemoteAircraftParts &rhs) const
+        {
+            return std::tie(lightBeacon, lightLanding, lightLogo, lightNav, lightStrobe,
+                            flapsLeadingEdgeLeftPercent, flapsLeadingEdgeRightPercent, flapsTrailingEdgeLeftPercent, flapsTrailingEdgeRightPercent,
+                            gearHandlePosition, spoilersHandlePosition,
+                            engine1Combustion, engine2Combustion, engine3Combustion, engine4Combustion) ==
+                   std::tie(rhs.lightBeacon, rhs.lightLanding, rhs.lightLogo, rhs.lightNav, rhs.lightStrobe,
+                            rhs.flapsLeadingEdgeLeftPercent, rhs.flapsLeadingEdgeRightPercent, rhs.flapsTrailingEdgeLeftPercent, rhs.flapsTrailingEdgeRightPercent,
+                            rhs.gearHandlePosition, rhs.spoilersHandlePosition,
+                            rhs.engine1Combustion, rhs.engine2Combustion, rhs.engine3Combustion, rhs.engine4Combustion);
         }
     } // namespace
 } // namespace

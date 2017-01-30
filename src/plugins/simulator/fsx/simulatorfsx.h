@@ -169,14 +169,14 @@ namespace BlackSimPlugin
 
             //! Update remote aircraft parts (send to FSX)
             bool updateRemoteAircraftParts(const CSimConnectObject &simObj,
-                                           const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Simulation::IInterpolator::PartsStatus &partsStatus) const;
+                                           const BlackMisc::Aviation::CAircraftParts &parts, const BlackMisc::Simulation::IInterpolator::PartsStatus &partsStatus);
 
             //! Update remote aircraft parts by guessing (send to FSX)
             bool guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj,
-                                                   const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, const BlackMisc::Simulation::IInterpolator::InterpolationStatus &interpolationStatus) const;
+                                                   const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, const BlackMisc::Simulation::IInterpolator::InterpolationStatus &interpolationStatus);
 
             //! Send parts to sim
-            bool sendRemoteAircraftPartsToSim(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts) const;
+            bool sendRemoteAircraftPartsToSim(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts);
 
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
@@ -235,7 +235,8 @@ namespace BlackSimPlugin
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             QTimer m_realityBubbleTimer { this };   //!< updating of aircraft out of reality bubble
-            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
+            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble;  //!< aircraft removed by FSX because they are out of reality bubble
+            QHash<DWORD, DataDefinitionRemoteAircraftParts> m_lastPartsSendToSim; //!< Last parts send to simulator, avoid always sending same parts
         };
 
         //! Listener for FSX
