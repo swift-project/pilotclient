@@ -65,7 +65,25 @@ namespace BlackSimPlugin
             EventSetTimeZuluDay,
             EventSetTimeZuluHours,
             EventSetTimeZuluMinutes,
-            EventToggleTaxiLights
+            // ------------ lights -------------
+            EventLandingLightsOff,
+            EventLandinglightsOn,
+            EventLandingLightsSet,
+            EventLandingLightsToggle,
+            EventPanelLightsOff,
+            EventPanelLightsOn,
+            EventPanelLightsSet,
+            EventStrobesOff,
+            EventStrobesOn,
+            EventStrobesSet,
+            EventStrobesToggle,
+            EventToggleBeaconLights,
+            EventToggleCabinLights,
+            EventToggleLogoLights,
+            EventToggleNavLights,
+            EventToggleRecognitionLights,
+            EventToggleTaxiLights,
+            EventToggleWingLights
         };
 
         //! FSX Simulator Implementation
