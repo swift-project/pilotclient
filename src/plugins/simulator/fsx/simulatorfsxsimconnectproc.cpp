@@ -160,7 +160,9 @@ namespace BlackSimPlugin
                     if (success)
                     {
                         const CSimConnectObject simObject = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
-                        HRESULT result = simulatorFsx->requestDataForSimObject(simObject);
+                        HRESULT result = S_OK;
+                        result += simulatorFsx->requestDataForSimObject(simObject);
+                        result += simulatorFsx->requestLightsForSimObject(simObject);
                         Q_UNUSED(result);
                     }
                     else
@@ -216,16 +218,36 @@ namespace BlackSimPlugin
                         }
                     default:
                         {
-                            static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
-                            const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForRequestId(requestId);
-                            if (simObj.hasValidRequestAndObjectId())
+                            const DWORD objectId = pObjData->dwObjectID;
+                            if (isRequestForSimData(requestId))
                             {
-                                const DWORD objectId = pObjData->dwObjectID;
+                                static_assert(sizeof(DataDefinitionRemoteAircraftSimData) == 5 * sizeof(double), "DataDefinitionRemoteAircraftSimData has an incorrect size.");
+                                const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
+                                if (!simObj.hasValidRequestAndObjectId()) break;
                                 const DataDefinitionRemoteAircraftSimData *remoteAircraftSimData = (DataDefinitionRemoteAircraftSimData *)&pObjData->dwData;
                                 // extra check, but ids should be the same
                                 if (objectId == simObj.getObjectId())
                                 {
                                     simulatorFsx->updateRemoteAircraftFromSimulator(simObj, *remoteAircraftSimData);
+                                }
+                            }
+                            else if (isRequestForLights(requestId))
+                            {
+                                static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 6 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
+                                const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
+                                if (!simObj.hasValidRequestAndObjectId()) break;
+                                const DataDefinitionRemoteAircraftLights *remoteAircraftLights = (DataDefinitionRemoteAircraftLights *)&pObjData->dwData;
+                                // extra check, but ids should be the same
+                                if (objectId == simObj.getObjectId())
+                                {
+                                    const CCallsign callsign(simObj.getCallsign());
+                                    const CAircraftLights lights = remoteAircraftLights->toLights(); // as in simulator
+                                    simulatorFsx->setCurrentLights(callsign, lights);
+                                    if (simObj.getLightsAsSent().isNull())
+                                    {
+                                        // allows to compare for toggle
+                                        simulatorFsx->setLightsAsSent(callsign, lights);
+                                    }
                                 }
                             }
                             break;
@@ -287,7 +309,6 @@ namespace BlackSimPlugin
                 }
             default:
                 break;
-
             } // main switch
         } // method
     } // namespace

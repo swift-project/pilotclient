@@ -171,7 +171,7 @@ namespace BlackSimPlugin
             void onSimExit();
 
             //! Get new request id, overflow safe
-            DWORD obtainRequestId();
+            DWORD obtainRequestIdSimData();
 
             //! Init when connected
             HRESULT initWhenConnected();
@@ -194,7 +194,7 @@ namespace BlackSimPlugin
                                                    const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, const BlackMisc::Simulation::IInterpolator::InterpolationStatus &interpolationStatus);
 
             //! Send parts to sim
-            bool sendRemoteAircraftPartsToSim(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts);
+            bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
 
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
@@ -214,6 +214,12 @@ namespace BlackSimPlugin
             //! Set ID of a SimConnect object, so far we only have an request id in the object
             bool setSimConnectObjectId(DWORD requestID, DWORD objectID);
 
+            //! Remember current lights
+            bool setCurrentLights(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftLights &lights);
+
+            //! Remember lights sent
+            bool setLightsAsSent(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftLights &lights);
+
             //! Display receive exceptions?
             bool stillDisplayReceiveExceptions();
 
@@ -229,32 +235,45 @@ namespace BlackSimPlugin
             //! Request data for a simObject (aka remote aircraft)
             bool requestDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
 
+            //! Request lights for a simObject
+            bool requestLightsForSimObject(const CSimConnectObject &simObject);
+
             //! FSX position as string
             static QString fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position);
 
             //! Get the callsigns which are no longer in the provider, but still in m_simConnectObjects
             BlackMisc::Aviation::CCallsignSet getCallsignsMissingInProvider() const;
 
-            static constexpr int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
-            static constexpr int IgnoreReceiveExceptions = 10;    //!< skip exceptions when displayed more than x times
-            static constexpr int FirstRequestId = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
+            //! Request for sim data?
+            static bool isRequestForSimData(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestSimDataOffset) && requestId < (RequestSimDataStart + RequestSimDataOffset + SimObjectNumber); }
+
+            //! Request for sim data?
+            static bool isRequestForLights(DWORD requestId) { return requestId >= (RequestSimDataStart + RequestLightsOffset) && requestId < (RequestSimDataStart + RequestLightsOffset + SimObjectNumber); }
+
+            static constexpr int GuessRemoteAircraftPartsCycle = 20; //!< guess every n-th cycle
+            static constexpr int SkipUpdateCyclesForCockpit = 10;    //!< skip x cycles before updating cockpit again
+            static constexpr int IgnoreReceiveExceptions = 10;       //!< skip exceptions when displayed more than x times
+            static constexpr int SimObjectNumber = 10000;            //!< max. SimObjects at the same time
+            static constexpr int RequestSimDataStart = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
+            static constexpr int RequestSimDataEnd = RequestSimDataStart + SimObjectNumber - 1;
+            static constexpr int RequestSimDataOffset = 0 * SimObjectNumber;
+            static constexpr int RequestLightsOffset  = 1 * SimObjectNumber;
 
             QString m_simConnectVersion;            //!< SimConnect version
             bool m_simConnected  = false;           //!< Is simulator connected?
             bool m_simSimulating = false;           //!< Simulator running?
             bool m_useSbOffsets  = true;            //!< with SB offsets
             int  m_syncDeferredCounter =  0;        //!< Set when synchronized, used to wait some time
-            int  m_simConnectTimerId   = -1;        //!< Timer identifier
+            int  m_simConnectTimerId = -1;          //!< Timer identifier
             int  m_skipCockpitUpdateCycles = 0;     //!< skip some update cycles to allow changes in simulator cockpit to be set
-            int  m_interpolationRequest  = 0;       //!< current interpolation request
+            int  m_interpolationRequest = 0;        //!< current interpolation request
             int  m_dispatchErrors = 0;              //!< number of dispatched failed, \sa ps_dispatch
             int  m_receiveExceptionCount = 0;       //!< exceptions
-            DWORD  m_requestId = FirstRequestId;    //!< request id, use obtainRequestId() to get id
             HANDLE m_hSimConnect = nullptr;         //!< handle to SimConnect object
             CSimConnectObjects m_simConnectObjects; //!< AI objects and their object / request ids
             QTimer m_realityBubbleTimer { this };   //!< updating of aircraft out of reality bubble
-            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble;  //!< aircraft removed by FSX because they are out of reality bubble
-            QHash<DWORD, DataDefinitionRemoteAircraftParts> m_lastPartsSendToSim; //!< Last parts send to simulator, avoid always sending same parts
+            DWORD m_requestIdSimData = RequestSimDataStart; //!< request id, use obtainRequestId() to get id
+            BlackMisc::Simulation::CSimulatedAircraftList m_outOfRealityBubble; //!< aircraft removed by FSX because they are out of reality bubble
         };
 
         //! Listener for FSX

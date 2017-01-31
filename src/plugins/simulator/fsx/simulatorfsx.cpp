@@ -156,7 +156,7 @@ namespace BlackSimPlugin
                 // initial position if interpolator has data, otherwise do nothing
                 setInitialAircraftSituation(addedAircraft); // set interpolated data/parts if available
 
-                const DWORD requestId = obtainRequestId();
+                const DWORD requestId = obtainRequestIdSimData();
                 SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
                 const QString modelString(addedAircraft.getModelString());
 
@@ -373,15 +373,10 @@ namespace BlackSimPlugin
             disconnectFrom();
         }
 
-        DWORD CSimulatorFsx::obtainRequestId()
+        DWORD CSimulatorFsx::obtainRequestIdSimData()
         {
-            DWORD id = m_requestId++;
-            if (id < FirstRequestId)
-            {
-                // overflow, restart
-                id = FirstRequestId;
-                m_requestId = FirstRequestId + 1;
-            }
+            const DWORD id = m_requestIdSimData++;
+            if (id > RequestSimDataEnd) { m_requestIdSimData = RequestSimDataStart; }
             return id;
         }
 
@@ -562,7 +557,7 @@ namespace BlackSimPlugin
             }
 
             // P3D also has SimConnect_AIReleaseControlEx;
-            const DWORD requestId = obtainRequestId();
+            const DWORD requestId = obtainRequestIdSimData();
             HRESULT hr = SimConnect_AIReleaseControl(m_hSimConnect, objectId, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId));
             if (hr == S_OK)
             {
@@ -670,6 +665,20 @@ namespace BlackSimPlugin
             return this->m_simConnectObjects.setSimConnectObjectIdForRequestId(requestID, objectID);
         }
 
+        bool CSimulatorFsx::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
+        {
+            if (!m_simConnectObjects.contains(callsign)) { return false; }
+            m_simConnectObjects[callsign].setCurrentLightsInSimulator(lights);
+            return true;
+        }
+
+        bool CSimulatorFsx::setLightsAsSent(const CCallsign &callsign, const CAircraftLights &lights)
+        {
+            if (!m_simConnectObjects.contains(callsign)) { return false; }
+            m_simConnectObjects[callsign].setLightsAsSent(lights);
+            return true;
+        }
+
         void CSimulatorFsx::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
@@ -733,9 +742,8 @@ namespace BlackSimPlugin
             }
 
             // call in SIM
-            SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestId++));
+            SimConnect_AIRemoveObject(m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestIdSimData++));
             m_hints.remove(simObject.getCallsign());
-            m_lastPartsSendToSim.remove(simObject.getObjectId());
 
             // mark in provider
             bool updated = updateAircraftRendered(callsign, false);
@@ -825,7 +833,7 @@ namespace BlackSimPlugin
             }
 
             // facility
-            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestId++));
+            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, static_cast<SIMCONNECT_DATA_REQUEST_ID>(m_requestIdSimData++));
             if (hr != S_OK)
             {
                 CLogMessage(this).error("FSX plugin error: %1") << "SimConnect_SubscribeToFacilities failed";
@@ -863,7 +871,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::updateRemoteAircraft()
         {
-            static_assert(sizeof(DataDefinitionRemoteAircraftParts) == 120, "DataDefinitionRemoteAircraftParts has an incorrect size.");
+            static_assert(sizeof(DataDefinitionRemoteAircraftParts) == sizeof(double) * 10, "DataDefinitionRemoteAircraftParts has an incorrect size.");
             Q_ASSERT_X(this->m_interpolator, Q_FUNC_INFO, "missing interpolator");
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
@@ -905,7 +913,6 @@ namespace BlackSimPlugin
                 CInterpolationHints hints(m_hints[simObj.getCallsign()]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
                 hints.setLoggingInterpolation(logInterpolationAndParts);
-
                 const CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, hints, interpolatorStatus);
 
                 if (interpolatorStatus.allTrue())
@@ -930,7 +937,7 @@ namespace BlackSimPlugin
                 else
                 {
                     // guess on position, but not every frame
-                    if (m_interpolationRequest % 20 == 0)
+                    if (m_interpolationRequest % GuessRemoteAircraftPartsCycle == 0)
                     {
                         this->guessAndUpdateRemoteAircraftParts(simObj, interpolatedSituation, interpolatorStatus);
                     }
@@ -950,44 +957,45 @@ namespace BlackSimPlugin
             DataDefinitionRemoteAircraftParts ddRemoteAircraftParts = {}; // init members
             const bool isOnGround = interpolatedSituation.isOnGround() == CAircraftSituation::OnGround;
             ddRemoteAircraftParts.gearHandlePosition = isOnGround ? 1 : 0;
+            CAircraftLights lights;
 
             // when first detected moving, lights on
             if (isOnGround)
             {
-                // ddRemoteAircraftParts.lightTaxi = 1;
-                ddRemoteAircraftParts.lightBeacon = 1;
-                ddRemoteAircraftParts.lightNav = 1;
+                lights.setTaxiOn(true);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
 
                 double gskmh = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::km_h());
                 if (gskmh > 7.5)
                 {
                     // mode taxi
-                    // ddRemoteAircraftParts.lightTaxi = 1;
-                    ddRemoteAircraftParts.lightLanding = 0;
+                    lights.setTaxiOn(true);
+                    lights.setLandingOn(false);
                 }
-                else if (gskmh > 25)
+                else if (gskmh > 40)
                 {
                     // mode accelaration for takeoff
-                    // ddRemoteAircraftParts.lightTaxi = 0;
-                    ddRemoteAircraftParts.lightLanding = 1;
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(true);
                 }
                 else
                 {
                     // slow movements or parking
-                    // ddRemoteAircraftParts.lightTaxi = 0;
-                    ddRemoteAircraftParts.lightLanding = 0;
+                    lights.setTaxiOn(false);
+                    lights.setLandingOn(false);
                 }
             }
             else
             {
-                // ddRemoteAircraftParts.lightTaxi = 0;
-                ddRemoteAircraftParts.lightBeacon = 1;
-                ddRemoteAircraftParts.lightNav = 1;
+                lights.setTaxiOn(false);
+                lights.setBeaconOn(true);
+                lights.setNavOn(true);
                 // landing lights for < 10000ft (normally MSL, here ignored)
-                ddRemoteAircraftParts.lightLanding = (interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000) ? 1 : 0;
+                lights.setLandingOn(interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000);
             }
 
-            return this->sendRemoteAircraftPartsToSim(simObj, ddRemoteAircraftParts);
+            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftParts, lights);
         }
 
         bool CSimulatorFsx::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftParts &parts, const IInterpolator::PartsStatus &partsStatus)
@@ -996,47 +1004,71 @@ namespace BlackSimPlugin
             if (!partsStatus.isSupportingParts()) { return false; }
 
             DataDefinitionRemoteAircraftParts ddRemoteAircraftParts; // no init, all values will be set
-
-            ddRemoteAircraftParts.lightStrobe = parts.getLights().isStrobeOn() ? 1 : 0;
-            ddRemoteAircraftParts.lightLanding = parts.getLights().isLandingOn() ? 1 : 0;
-            // ddRemoteAircraftParts.lightTaxi = parts.getLights().isTaxiOn() ? 1 : 0;
-            ddRemoteAircraftParts.lightBeacon = parts.getLights().isBeaconOn() ? 1 : 0;
-            ddRemoteAircraftParts.lightNav = parts.getLights().isNavOn() ? 1 : 0;
-            ddRemoteAircraftParts.lightLogo = parts.getLights().isLogoOn() ? 1 : 0;
             ddRemoteAircraftParts.flapsLeadingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
             ddRemoteAircraftParts.flapsLeadingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
             ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
             ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
             ddRemoteAircraftParts.spoilersHandlePosition = parts.isSpoilersOut() ? 1 : 0;
-            ddRemoteAircraftParts.gearHandlePosition = parts.isGearDown() ? 1 : 0; // on ground we always show gear
+            ddRemoteAircraftParts.gearHandlePosition = parts.isGearDown() ? 1 : 0;
             ddRemoteAircraftParts.engine1Combustion = parts.isEngineOn(1) ? 1 : 0;
             ddRemoteAircraftParts.engine2Combustion = parts.isEngineOn(2) ? 1 : 0;
             ddRemoteAircraftParts.engine3Combustion = parts.isEngineOn(3) ? 1 : 0;
             ddRemoteAircraftParts.engine4Combustion = parts.isEngineOn(4) ? 1 : 0;
 
-            return this->sendRemoteAircraftPartsToSim(simObj, ddRemoteAircraftParts);
+            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftParts, parts.getLights());
         }
 
-        bool CSimulatorFsx::sendRemoteAircraftPartsToSim(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts)
+        bool CSimulatorFsx::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts, const CAircraftLights &lights)
         {
             Q_ASSERT(m_hSimConnect);
             const DWORD objectId = simObj.getObjectId();
-            if (m_lastPartsSendToSim.contains(objectId))
-            {
-                // no need to send same parts
-                if (m_lastPartsSendToSim[objectId] == ddRemoteAircraftParts) { return true; }
-            }
 
+            // same as in simulator or same as already send to simulator
+            const CAircraftLights sentLights(simObj.getLightsAsSent());
+            if (simObj.getPartsAsSent() == ddRemoteAircraftParts &&
+                    (simObj.getCurrentLightsInSimulator() == lights || sentLights == lights)) { return true; }
 
-            m_lastPartsSendToSim[objectId] = ddRemoteAircraftParts;
-            HRESULT hr =  SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
-                          objectId, 0, 0,
-                          sizeof(DataDefinitionRemoteAircraftParts), &ddRemoteAircraftParts);
+            // in case we sent we sent everything
+            const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
+                               objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
+                               sizeof(DataDefinitionRemoteAircraftParts), &ddRemoteAircraftParts);
 
             if (hr != S_OK) { CLogMessage(this).warning("Failed so set parts on SimObject '%1' callsign: '%2'") << simObj.getObjectId() << simObj.getCallsign(); }
+
+            // lights we can set directly
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventLandingLightsSet, lights.isLandingOn() ? 1.0 : 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventStrobesSet, lights.isStrobeOn() ? 1.0 : 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+            // lights we need to toggle (risk with quickly changing values that we accidentally toggle back)
+            // I sent 0/1 here, but the value is supposed to be irrelevant since "toggling"
+            if (!sentLights.isNull())
+            {
+                if (sentLights.isTaxiOn() == lights.isTaxiOn())
+                {
+                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleTaxiLights, 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                }
+                if (sentLights.isNavOn() == lights.isNavOn())
+                {
+                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleNavLights, 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                }
+                if (sentLights.isBeaconOn() == lights.isBeaconOn())
+                {
+                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleBeaconLights, 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                }
+                if (sentLights.isLogoOn() == lights.isLogoOn())
+                {
+                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleLogoLights, 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                }
+            }
+
+            // Update data
+            CSimConnectObject &objUdpate = m_simConnectObjects[simObj.getCallsign()];
+            objUdpate.setPartsAsSent(ddRemoteAircraftParts);
+            objUdpate.setLightsAsSent(lights); // pretend lights are set
+
+            // done
             return hr == S_OK;
         }
-
 
         SIMCONNECT_DATA_INITPOSITION CSimulatorFsx::aircraftSituationToFsxPosition(const CAircraftSituation &situation)
         {
@@ -1114,12 +1146,21 @@ namespace BlackSimPlugin
             if (!simObject.hasValidRequestAndObjectId()) { return false; }
             if (simObject.getSimDataPeriod() == period) { return true; } // already queried like this
 
-            const HRESULT result = SimConnect_RequestDataOnSimObject(m_hSimConnect, simObject.getRequestId(), CSimConnectDefinitions::DataRemoteAircraftSimData, simObject.getObjectId(), period, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED);
+            const HRESULT result = SimConnect_RequestDataOnSimObject(m_hSimConnect, simObject.getRequestId() + RequestSimDataOffset, CSimConnectDefinitions::DataRemoteAircraftSimData, simObject.getObjectId(), period, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED);
             if (result == S_OK)
             {
                 m_simConnectObjects[simObject.getCallsign()].setSimDataPeriod(period);
                 return true;
             }
+            CLogMessage(this).error("Cannot request data on object '%1'") << simObject.getObjectId();
+            return false;
+        }
+
+        bool CSimulatorFsx::requestLightsForSimObject(const CSimConnectObject &simObject)
+        {
+            if (!simObject.hasValidRequestAndObjectId()) { return false; }
+            const HRESULT result = SimConnect_RequestDataOnSimObject(m_hSimConnect, simObject.getRequestId() + RequestLightsOffset, CSimConnectDefinitions::DataRemoteAircraftLights, simObject.getObjectId(), SIMCONNECT_PERIOD_SECOND, SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED);
+            if (result == S_OK) { return true; }
             CLogMessage(this).error("Cannot request data on object '%1'") << simObject.getObjectId();
             return false;
         }
@@ -1145,7 +1186,7 @@ namespace BlackSimPlugin
             m_syncDeferredCounter =  0;
             m_skipCockpitUpdateCycles = 0;
             m_interpolationRequest  = 0;
-            m_requestId = FirstRequestId;
+            m_requestIdSimData = RequestSimDataStart;
             m_dispatchErrors = 0;
             m_receiveExceptionCount = 0;
             CSimulatorFsCommon::reset();
@@ -1155,7 +1196,6 @@ namespace BlackSimPlugin
         {
             m_simConnectObjects.clear();
             m_outOfRealityBubble.clear();
-            m_lastPartsSendToSim.clear();
             CSimulatorFsCommon::clearAllAircraft();
         }
 
@@ -1191,7 +1231,7 @@ namespace BlackSimPlugin
         {
             constexpr int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
-            this->m_timer->setObjectName(this->objectName().append(":m_timer"));
+            m_timer->setObjectName(this->objectName().append(":m_timer"));
             connect(m_timer, &QTimer::timeout, this, &CSimulatorFsxListener::ps_checkConnection);
         }
 
