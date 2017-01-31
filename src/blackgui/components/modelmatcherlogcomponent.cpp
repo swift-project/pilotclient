@@ -105,7 +105,6 @@ namespace BlackGui
         void CModelMatcherLogComponent::ps_callsignEntered()
         {
             if (!this->hasContexts()) { return; }
-            static const CPropertyIndexList properties({ CPropertyIndex::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
             const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
             const CStatusMessageList reverseLookupMessages = sGui->getIContextNetwork()->getReverseLookupMessages(cs);
             const CStatusMessageList matchingMessages = sGui->getIContextSimulator()->getMatchingMessages(cs);
@@ -113,7 +112,7 @@ namespace BlackGui
             CStatusMessageList allMessages(reverseLookupMessages);
             allMessages.push_back(matchingMessages);
 
-            const QString html = allMessages.toHtml(properties);
+            const QString html = allMessages.toHtml();
             this->m_text.setHtml(html);
             ui->te_Messages->setDocument(&this->m_text);
         }

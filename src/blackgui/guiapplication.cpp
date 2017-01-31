@@ -324,7 +324,7 @@ namespace BlackGui
             const QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
             if (QDir(path).exists())
             {
-                QDesktopServices::openUrl(QUrl("file:///" + path));
+                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
             }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -353,7 +353,7 @@ namespace BlackGui
             const QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
             if (QDir(path).exists())
             {
-                QDesktopServices::openUrl(QUrl("file:///" + path));
+                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
             }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");

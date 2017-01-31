@@ -35,7 +35,7 @@ namespace BlackGui
             explicit CAircraftPartsHistory(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftPartsHistory();
+            virtual ~CAircraftPartsHistory();
 
         private:
             QScopedPointer<Ui::CAircraftPartsHistory> ui;

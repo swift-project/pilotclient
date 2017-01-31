@@ -16,6 +16,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QString>
+#include <QStringBuilder>
 #include <QStringList>
 #include <tuple>
 
@@ -178,29 +179,39 @@ namespace BlackMisc
             QString rowHtml;
             if (withLineNumbers)
             {
-                rowHtml += "<td>" + QString::number(line++) + "</td>";
+                rowHtml = QLatin1Literal("<td>") % QString::number(line++) % QLatin1Literal("</td>");
             }
 
             for (const CPropertyIndex &index : usedIndexes)
             {
-                rowHtml += "<td>" + statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped() + "</td>";
+                rowHtml += QLatin1Literal("<td>") % statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped() % QLatin1Literal("</td>");
             }
 
-            rowHtml = "<tr class=\"%1\">" + rowHtml + "</tr>";
             const QString severityClass = statusMessage.getSeverityAsString();
-            html += rowHtml.arg(severityClass);
+            html += QStringLiteral("<tr class=\"%1\">%2</tr>").arg(severityClass, rowHtml);
         }
-        return "<table>" + html + "</table>";
+        return "<table>" % html % "</table>";
+    }
+
+    const CPropertyIndexList &CStatusMessageList::simpleHtmlOutput()
+    {
+        static const CPropertyIndexList properties({ CPropertyIndex::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
+        return properties;
+    }
+
+    const CPropertyIndexList &CStatusMessageList::timestampHtmlOutput()
+    {
+        static const CPropertyIndexList properties({ CStatusMessage::IndexUtcTimestampFormattedHms, CStatusMessage::IndexMessage });
+        return properties;
     }
 
     const QString htmlStyleSheetImpl()
     {
-        QString style;
-        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityDebug) + " { color: lightgreen; } ";
-        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityInfo) + " { color: lightgreen; } ";
-        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityWarning) + " { color: yellow; } ";
-        style += "." + CStatusMessage::severityToString(CStatusMessage::SeverityError) + " { color: red; }";
-        return style; // "<style type=\"text/css\">" + style + "</style>";
+        const QString style = QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % QLatin1Literal(" { color: lightgreen; } ") %
+                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % QLatin1Literal(" { color: lightgreen; } ") %
+                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityWarning) % QLatin1Literal(" { color: yellow; } ") %
+                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityError) % QLatin1Literal(" { color: red; }");
+        return style;
     }
 
     const QString &CStatusMessageList::htmlStyleSheet()

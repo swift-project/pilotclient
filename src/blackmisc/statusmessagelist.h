@@ -101,7 +101,13 @@ namespace BlackMisc
         CStatusMessage toSingleMessage() const;
 
         //! Specialized version to convert to HTML
-        QString toHtml(const CPropertyIndexList &indexes) const;
+        QString toHtml(const CPropertyIndexList &indexes = simpleHtmlOutput()) const;
+
+        //! Properties for CStatusMessageList::toHtml
+        static const CPropertyIndexList &simpleHtmlOutput();
+
+        //! Properties for CStatusMessageList::toHtml
+        static const CPropertyIndexList &timestampHtmlOutput();
 
         //! Default style sheet which can be used with CStatusMessageList::toHtml
         static const QString &htmlStyleSheet();

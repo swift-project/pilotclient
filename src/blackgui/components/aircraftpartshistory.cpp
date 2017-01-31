@@ -17,6 +17,7 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
 #include <QCompleter>
+#include <QStringBuilder>
 #include <QStringListModel>
 
 using namespace BlackMisc;
@@ -106,7 +107,6 @@ namespace BlackGui
         {
             if (!this->hasContexts()) { return; }
             if (isBeingModified) { return; }
-            static const CPropertyIndexList properties({ CStatusMessage::IndexUtcTimestampFormattedHms, CStatusMessage::IndexMessage });
             const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
             if (cs.isEmpty()) { return; }
             const auto currentAircraftParts = sGui->getIContextNetwork()->getRemoteAircraftParts(cs, -1).frontOrDefault();
@@ -115,37 +115,37 @@ namespace BlackGui
             QString html;
             if (currentAircraftParts == CAircraftParts() && aircraftPartsHistory.isEmpty())
             {
-                html = cs.toQString() + QString(" does not support aircraft parts or nothing received yet.");
+                html = cs.toQString() % QLatin1Literal(" does not support aircraft parts or nothing received yet.");
             }
             else
             {
-                QString s;
-                s += "lights on:";
-                s += "<br>";
-                s += "&nbsp;&nbsp;&nbsp;&nbsp;";
-                s += currentAircraftParts.getLights().toQString();
-                s += "<br>";
-                s += "gear down: ";
-                s += BlackMisc::boolToYesNo(currentAircraftParts.isGearDown());
-                s += "<br>";
-                s += "flaps pct: ";
-                s += QString::number(currentAircraftParts.getFlapsPercent());
-                s += "<br>";
-                s += "spoilers out: ";
-                s += BlackMisc::boolToYesNo(currentAircraftParts.isSpoilersOut());
-                s += "<br>";
-                s += "engines on: ";
-                s += "<br>";
-                s += "&nbsp;&nbsp;&nbsp;&nbsp;";
-                s += currentAircraftParts.getEngines().toQString();
-                s += "<br>";
-                s += " on ground: ";
-                s += BlackMisc::boolToYesNo(currentAircraftParts.isOnGround());
+                const QString s =
+                    QLatin1Literal("lights on:") %
+                    QLatin1Literal("<br>") %
+                    QLatin1Literal("&nbsp;&nbsp;&nbsp;&nbsp;") %
+                    currentAircraftParts.getLights().toQString() %
+                    QLatin1Literal("<br>") %
+                    QLatin1Literal("gear down: ") %
+                    BlackMisc::boolToYesNo(currentAircraftParts.isGearDown()) %
+                    QLatin1Literal("<br>") %
+                    QLatin1Literal("flaps pct: ") %
+                    QString::number(currentAircraftParts.getFlapsPercent()) %
+                    QLatin1Literal("<br>") %
+                    QLatin1Literal("spoilers out: ") %
+                    BlackMisc::boolToYesNo(currentAircraftParts.isSpoilersOut()) %
+                    QLatin1Literal("<br>") %
+                    QLatin1Literal("engines on: ") %
+                    QLatin1Literal("<br>") %
+                    QLatin1Literal("&nbsp;&nbsp;&nbsp;&nbsp;") %
+                    currentAircraftParts.getEngines().toQString() %
+                    QLatin1Literal("<br>") %
+                    QLatin1Literal(" on ground: ") %
+                    BlackMisc::boolToYesNo(currentAircraftParts.isOnGround());
                 html += s;
                 if (ui->cb_PartsHistoryEnabled->isChecked())
                 {
-                    html +="<hr>";
-                    html += aircraftPartsHistory.toHtml(properties);
+                    html += QLatin1Literal("<hr>") %
+                            aircraftPartsHistory.toHtml(CStatusMessageList::timestampHtmlOutput());
                 }
             }
 
