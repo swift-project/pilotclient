@@ -17,6 +17,7 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#include "blackmisc/aviation/aircraftlights.h"
 #include <simconnect/SimConnect.h>
 #include <windows.h>
 #include <algorithm>
@@ -76,12 +77,6 @@ namespace BlackSimPlugin
         //! Data struct of remote aircraft parts
         struct DataDefinitionRemoteAircraftParts
         {
-            double lightStrobe;                   //!< Is strobe light on?
-            double lightLanding;                  //!< Is landing light on?
-            // double lightTaxi;                  //!< Is taxi light on?
-            double lightBeacon;                   //!< Is beacon light on?
-            double lightNav;                      //!< Is nav light on?
-            double lightLogo;                     //!< Is logo light on?
             double flapsLeadingEdgeLeftPercent;   //!< Leading edge left in percent
             double flapsLeadingEdgeRightPercent;  //!< Leading edge right in percent
             double flapsTrailingEdgeLeftPercent;  //!< Trailing edge left in percent
@@ -95,6 +90,20 @@ namespace BlackSimPlugin
 
             //! Equal to other parts
             bool operator==(const DataDefinitionRemoteAircraftParts &rhs) const;
+        };
+
+        //! Data for aircraft lighs
+        struct DataDefinitionRemoteAircraftLights
+        {
+            double lightStrobe;    //!< Is strobe light on?
+            double lightLanding;   //!< Is landing light on?
+            double lightTaxi;      //!< Is taxi light on?
+            double lightBeacon;    //!< Is beacon light on?
+            double lightNav;       //!< Is nav light on?
+            double lightLogo;      //!< Is logo light on?
+
+            //! Convert to lights
+            BlackMisc::Aviation::CAircraftLights toLights() const;
         };
 
         //! Data for AI object sent back from simulator
@@ -158,6 +167,7 @@ namespace BlackSimPlugin
             {
                 DataOwnAircraft,
                 DataOwnAircraftTitle,
+                DataRemoteAircraftLights,
                 DataRemoteAircraftParts,
                 DataRemoteAircraftPosition,
                 DataRemoteAircraftSimData,

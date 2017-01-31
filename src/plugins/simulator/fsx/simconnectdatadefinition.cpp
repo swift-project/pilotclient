@@ -12,6 +12,7 @@
 #include <tuple>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 
 namespace BlackSimPlugin
 {
@@ -81,14 +82,6 @@ namespace BlackSimPlugin
             // Hint: "Bool" and "Percent .." are units name
             // default data type is SIMCONNECT_DATATYPE_FLOAT64 -> double
 
-            // Lights
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT STROBE", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT LANDING", "Bool");
-            // hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT TAXI", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT BEACON", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT NAV", "Bool");
-            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LIGHT LOGO", "Bool");
-
             // Flaps
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LEADING EDGE FLAPS LEFT PERCENT", "Percent Over 100");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "LEADING EDGE FLAPS RIGHT PERCENT", "Percent Over 100");
@@ -104,6 +97,14 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:2", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:3", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts, "GENERAL ENG COMBUSTION:4", "Bool");
+
+            // Lights (other definition)
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT STROBE", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT LANDING", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT TAXI", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT BEACON", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT NAV", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT LOGO", "Bool");
 
             if (hr != S_OK)
             {
@@ -182,14 +183,17 @@ namespace BlackSimPlugin
 
         bool DataDefinitionRemoteAircraftParts::operator==(const DataDefinitionRemoteAircraftParts &rhs) const
         {
-            return std::tie(lightBeacon, lightLanding, lightLogo, lightNav, lightStrobe,
-                            flapsLeadingEdgeLeftPercent, flapsLeadingEdgeRightPercent, flapsTrailingEdgeLeftPercent, flapsTrailingEdgeRightPercent,
+            return std::tie(flapsLeadingEdgeLeftPercent, flapsLeadingEdgeRightPercent, flapsTrailingEdgeLeftPercent, flapsTrailingEdgeRightPercent,
                             gearHandlePosition, spoilersHandlePosition,
                             engine1Combustion, engine2Combustion, engine3Combustion, engine4Combustion) ==
-                   std::tie(rhs.lightBeacon, rhs.lightLanding, rhs.lightLogo, rhs.lightNav, rhs.lightStrobe,
-                            rhs.flapsLeadingEdgeLeftPercent, rhs.flapsLeadingEdgeRightPercent, rhs.flapsTrailingEdgeLeftPercent, rhs.flapsTrailingEdgeRightPercent,
+                   std::tie(rhs.flapsLeadingEdgeLeftPercent, rhs.flapsLeadingEdgeRightPercent, rhs.flapsTrailingEdgeLeftPercent, rhs.flapsTrailingEdgeRightPercent,
                             rhs.gearHandlePosition, rhs.spoilersHandlePosition,
                             rhs.engine1Combustion, rhs.engine2Combustion, rhs.engine3Combustion, rhs.engine4Combustion);
+        }
+
+        CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
+        {
+            return CAircraftLights(lightStrobe, lightLanding, lightTaxi, lightBeacon, lightNav, lightLogo);
         }
     } // namespace
 } // namespace
