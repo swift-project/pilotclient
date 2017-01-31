@@ -47,6 +47,7 @@
 #include <QToolButton>
 #include <QCompleter>
 #include <QStyledItemDelegate>
+#include <QStringBuilder>
 #include <QtGlobal>
 
 using namespace BlackConfig;
@@ -275,6 +276,9 @@ namespace BlackGui
                 ui->frp_CurrentServer->setServer(currentServer);
                 sGui->getIContextOwnAircraft()->updateOwnAircraftPilot(currentServer.getUser());
 
+                // set own aircraft from all values
+                ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+
                 // Login
                 msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, mode);
                 if (msg.isSuccess() && vatsimLogin)
@@ -296,9 +300,9 @@ namespace BlackGui
             CLogMessage::preformatted(msg);
             if (msg.isSuccess())
             {
-                QString ac(ownAircraft.getCallsignAsString() + " " + ownAircraft.getAircraftIcaoCodeDesignator());
-                if (ownAircraft.hasAirlineDesignator()) { ac += " "; ac += ownAircraft.getAirlineIcaoCodeDesignator(); }
-                if (!ownAircraft.getAircraftIcaoCombinedType().isEmpty()) { ac += " "; ac += ownAircraft.getAircraftIcaoCode().getCombinedType(); }
+                QString ac(ownAircraft.getCallsignAsString() % QLatin1Char(' ') % ownAircraft.getAircraftIcaoCodeDesignator());
+                if (ownAircraft.hasAirlineDesignator()) { ac += QLatin1Char(' ') % ownAircraft.getAirlineIcaoCodeDesignator(); }
+                if (!ownAircraft.getAircraftIcaoCombinedType().isEmpty()) { ac += QLatin1Char(' ') % ownAircraft.getAircraftIcaoCode().getCombinedType(); }
                 ui->le_LoginSince->setText(QDateTime::currentDateTimeUtc().toString());
                 ui->le_LoginAsAircaft->setText(ac);
                 emit this->loginOrLogoffSuccessful();
