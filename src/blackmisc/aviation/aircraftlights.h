@@ -43,6 +43,9 @@ namespace BlackMisc
             //! Default constructor
             CAircraftLights() = default;
 
+            //! Constructor, init to null
+            CAircraftLights(std::nullptr_t null);
+
             //! Constructor
             CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn);
 
@@ -94,6 +97,9 @@ namespace BlackMisc
             //! All off
             void setAllOff();
 
+            //! Is null;
+            bool isNull() const { return m_isNull; }
+
             //! Returns object with all lights switched on
             static CAircraftLights allLightsOn();
 
@@ -110,6 +116,7 @@ namespace BlackMisc
             bool m_beaconOn = false;
             bool m_navOn = false;
             bool m_logoOn = false;
+            bool m_isNull = false; //!< mark as null
 
             BLACK_METACLASS(
                 CAircraftLights,

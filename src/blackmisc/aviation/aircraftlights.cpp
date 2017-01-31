@@ -10,6 +10,7 @@
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/stringutils.h"
 #include "blackmisc/variant.h"
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 
@@ -17,6 +18,11 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+
+        CAircraftLights::CAircraftLights(std::nullptr_t null) : m_isNull(true)
+        {
+            Q_UNUSED(null);
+        }
 
         CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn)
             : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn), m_logoOn(logoOn)
@@ -34,19 +40,12 @@ namespace BlackMisc
 
         QString CAircraftLights::convertToQString(bool /** i18n */) const
         {
-            QString s;
-            s += " strobe: ";
-            s += boolToYesNo(m_strobeOn);
-            s += " landing: ";
-            s += boolToYesNo(m_landingOn);
-            s += " taxi: ";
-            s += boolToYesNo(m_taxiOn);
-            s += " beacon: ";
-            s += boolToYesNo(m_beaconOn);
-            s += " nav: ";
-            s += boolToYesNo(m_navOn);
-            s += " logo: ";
-            s += boolToYesNo(m_logoOn);
+            const QString s = QLatin1Literal("strobe: ") % boolToYesNo(m_strobeOn) %
+                              QLatin1Literal(" landing: ") % boolToYesNo(m_landingOn) %
+                              QLatin1Literal(" taxi: ") % boolToYesNo(m_taxiOn) %
+                              QLatin1Literal(" beacon: ") % boolToYesNo(m_beaconOn) %
+                              QLatin1Literal(" nav: ") % boolToYesNo(m_navOn) %
+                              QLatin1Literal(" logo: ") % boolToYesNo(m_logoOn);
             return s;
         }
 
