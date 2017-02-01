@@ -90,6 +90,15 @@ namespace BlackSimPlugin
 
             //! Equal to other parts
             bool operator==(const DataDefinitionRemoteAircraftParts &rhs) const;
+
+            //! All engines on/off
+            void setAllEngines(bool on);
+
+            //! Reset all flaps
+            void resetAllFlaps();
+
+            //! Reset spoilers
+            void resetSpoilers();
         };
 
         //! Data for aircraft lighs

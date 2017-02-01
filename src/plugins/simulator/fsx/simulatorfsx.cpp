@@ -954,26 +954,27 @@ namespace BlackSimPlugin
             if (!simObj.hasValidRequestAndObjectId()) { return false; }
             if (!interpolationStatus.didInterpolationSucceed()) { return false; }
 
+            CAircraftLights lights;
             DataDefinitionRemoteAircraftParts ddRemoteAircraftParts = {}; // init members
             const bool isOnGround = interpolatedSituation.isOnGround() == CAircraftSituation::OnGround;
-            ddRemoteAircraftParts.gearHandlePosition = isOnGround ? 1 : 0;
-            CAircraftLights lights;
+            const double gsKts = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts());
+            ddRemoteAircraftParts.setAllEngines(true);
 
             // when first detected moving, lights on
             if (isOnGround)
             {
+                ddRemoteAircraftParts.gearHandlePosition = 1;
                 lights.setTaxiOn(true);
                 lights.setBeaconOn(true);
                 lights.setNavOn(true);
 
-                double gskmh = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::km_h());
-                if (gskmh > 7.5)
+                if (gsKts > 5)
                 {
                     // mode taxi
                     lights.setTaxiOn(true);
                     lights.setLandingOn(false);
                 }
-                else if (gskmh > 40)
+                else if (gsKts > 30)
                 {
                     // mode accelaration for takeoff
                     lights.setTaxiOn(false);
@@ -984,15 +985,34 @@ namespace BlackSimPlugin
                     // slow movements or parking
                     lights.setTaxiOn(false);
                     lights.setLandingOn(false);
+                    ddRemoteAircraftParts.setAllEngines(false);
                 }
             }
             else
             {
+                // not on ground
+                ddRemoteAircraftParts.gearHandlePosition = 0;
                 lights.setTaxiOn(false);
                 lights.setBeaconOn(true);
                 lights.setNavOn(true);
                 // landing lights for < 10000ft (normally MSL, here ignored)
                 lights.setLandingOn(interpolatedSituation.getAltitude().value(CLengthUnit::ft()) < 10000);
+
+                if (!simObj.isVtol() && interpolatedSituation.hasGroundElevation())
+                {
+                    if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 1000)
+                    {
+                        ddRemoteAircraftParts.gearHandlePosition = 1;
+                        ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = 25;
+                        ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = 25;
+                    }
+                    else if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 2000)
+                    {
+                        ddRemoteAircraftParts.gearHandlePosition = 1;
+                        ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = 10;
+                        ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = 10;
+                    }
+                }
             }
 
             return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftParts, lights);

@@ -191,6 +191,27 @@ namespace BlackSimPlugin
                             rhs.engine1Combustion, rhs.engine2Combustion, rhs.engine3Combustion, rhs.engine4Combustion);
         }
 
+        void DataDefinitionRemoteAircraftParts::setAllEngines(bool on)
+        {
+            engine1Combustion = on ? 1 : 0;
+            engine2Combustion = on ? 1 : 0;
+            engine3Combustion = on ? 1 : 0;
+            engine4Combustion = on ? 1 : 0;
+        }
+
+        void DataDefinitionRemoteAircraftParts::resetAllFlaps()
+        {
+            flapsLeadingEdgeLeftPercent = 0;
+            flapsLeadingEdgeRightPercent = 0;
+            flapsTrailingEdgeLeftPercent = 0;
+            flapsTrailingEdgeRightPercent = 0;
+        }
+
+        void DataDefinitionRemoteAircraftParts::resetSpoilers()
+        {
+            spoilersHandlePosition = 0;
+        }
+
         CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
         {
             return CAircraftLights(lightStrobe, lightLanding, lightTaxi, lightBeacon, lightNav, lightLogo);
