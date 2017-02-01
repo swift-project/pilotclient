@@ -151,6 +151,26 @@ namespace BlackMisc
             return worker;
         }
 
+        QStringList IInterpolator::getLatestLogFiles()
+        {
+            QStringList files({ "", ""});
+            const QString logDir = CDirectoryUtils::getLogDirectory();
+            QDir logs(logDir);
+            if (!logs.exists()) { return files; }
+            logs.setNameFilters(QStringList() << "*interpolation.html" << "*parts.html");
+            const QStringList interpolations = logs.entryList(QStringList({"*interpolation.html"}), QDir::NoFilter, QDir::Time);
+            if (!interpolations.isEmpty())
+            {
+                files[0] = CFileUtils::appendFilePaths(logDir, interpolations.first());
+            }
+            const QStringList parts = logs.entryList(QStringList({"*parts.html"}), QDir::NoFilter, QDir::Time);
+            if (!parts.isEmpty())
+            {
+                files[1] = CFileUtils::appendFilePaths(logDir, parts.first());
+            }
+            return files;
+        }
+
         CStatusMessageList IInterpolator::writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts)
         {
             if (parts.isEmpty() && interpolation.isEmpty()) { return CStatusMessage(static_cast<IInterpolator *>(nullptr)).warning("No data for log"); }

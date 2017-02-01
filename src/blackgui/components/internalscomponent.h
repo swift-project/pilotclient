@@ -57,6 +57,9 @@ namespace BlackGui
             //! GUI to JSON
             void ps_guiToJson();
 
+            //! Current parts in UI
+            void ps_setCurrentParts();
+
             //! Enable / disable debugging
             void ps_enableDebug(int state);
 
@@ -65,6 +68,12 @@ namespace BlackGui
 
             //! Send a dummy status message
             void ps_logStatusMessage();
+
+            //! Show log files
+            void ps_showLogFiles();
+
+            //! Request parts (aka aircraft config) from network
+            void ps_requestPartsFromNetwork();
 
         private:
             QScopedPointer<Ui::CInternalsComponent> ui;
@@ -78,7 +87,6 @@ namespace BlackGui
             //! Set the context flags
             void contextFlagsToGui();
         };
-
     } // namespace
 } // namespace
 

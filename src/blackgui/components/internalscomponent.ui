@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>289</width>
-    <height>450</height>
+    <width>314</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,6 +57,18 @@
           <string>Contexts</string>
          </property>
          <layout class="QGridLayout" name="gl_Contexts">
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="cb_DebugContextAudio">
             <property name="text">
@@ -74,7 +86,7 @@
           <item row="0" column="3">
            <widget class="QCheckBox" name="cb_DebugContextOwnAircraft">
             <property name="text">
-             <string>Own aircraftt</string>
+             <string>Own aircraft</string>
             </property>
            </widget>
           </item>
@@ -101,6 +113,18 @@
           <string>Driver plugin and interpolator</string>
          </property>
          <layout class="QGridLayout" name="gl_DriverAndInterpolator">
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="cb_DebugDriver">
             <property name="text">
@@ -129,10 +153,22 @@
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="wi_StatusMessage" native="true">
+        <widget class="QGroupBox" name="gb_StatusMessage">
+         <property name="title">
+          <string>Status message</string>
+         </property>
          <layout class="QGridLayout" name="gl_StatusMessage">
           <property name="leftMargin">
-           <number>3</number>
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
           </property>
           <item row="0" column="3">
            <widget class="QRadioButton" name="rb_StatusMessageWarning">
@@ -180,15 +216,38 @@
         </widget>
        </item>
        <item>
-        <widget class="QWidget" name="wi_TextMessages" native="true">
+        <widget class="QGroupBox" name="gb_TextMessages">
+         <property name="title">
+          <string>Text message</string>
+         </property>
          <layout class="QGridLayout" name="gl_TextMessages">
           <property name="leftMargin">
-           <number>3</number>
+           <number>4</number>
           </property>
           <property name="topMargin">
-           <number>9</number>
+           <number>4</number>
           </property>
-          <item row="2" column="1">
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pb_SendTextMessage">
+            <property name="text">
+             <string>send</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="le_TxtMsgFrom">
+            <property name="placeholderText">
+             <string>from</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
            <widget class="QDoubleSpinBox" name="dsb_TxtMsgFrequency">
             <property name="suffix">
              <string>MHz</string>
@@ -210,35 +269,14 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="QPushButton" name="pb_SendTextMessage">
-            <property name="text">
-             <string>send</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="lbl_TextMessages">
-            <property name="text">
-             <string>Text messages:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="le_TxtMsgFrom">
-            <property name="placeholderText">
-             <string>from</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
+          <item row="0" column="2">
            <widget class="QLineEdit" name="le_TxtMsgTo">
             <property name="placeholderText">
              <string>to</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1" colspan="3">
+          <item row="2" column="1" colspan="3">
            <widget class="QPlainTextEdit" name="pte_TxtMsg">
             <property name="placeholderText">
              <string>Text message</string>
@@ -265,21 +303,42 @@
      </widget>
      <widget class="QWidget" name="tb_Statistics">
       <attribute name="title">
-       <string>Statistics</string>
+       <string>Statistics / Logs</string>
       </attribute>
-      <widget class="QLabel" name="lbl_Disclaimer">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>60</y>
-         <width>267</width>
-         <height>13</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>WORK IN PROGRESS!</string>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QFormLayout" name="fl_Statistics">
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_LatestInterpolationLog">
+           <property name="text">
+            <string>Latest interpolation log</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="pb_LatestInterpolationLog">
+           <property name="text">
+            <string>show</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="lbl_LatestPartsLog">
+           <property name="text">
+            <string>Latest parts log</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="pb_LatestPartsLog">
+           <property name="text">
+            <string>show</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tb_AircraftParts">
       <attribute name="title">
@@ -301,6 +360,12 @@
        <item>
         <widget class="QFrame" name="fr_Aircraft">
          <layout class="QFormLayout" name="fl_Aircraft">
+          <property name="horizontalSpacing">
+           <number>4</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>4</number>
+          </property>
           <property name="leftMargin">
            <number>2</number>
           </property>
@@ -328,6 +393,52 @@
               <height>25</height>
              </size>
             </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbl_PartsNetwork">
+            <property name="text">
+             <string>Network</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QWidget" name="wi_PartsNetwork" native="true">
+            <layout class="QHBoxLayout" name="hl_PartsNetwork">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="pb_RequestFromNetwork">
+               <property name="toolTip">
+                <string>Request from network</string>
+               </property>
+               <property name="text">
+                <string>request (network)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="tb_History">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../../blackmisc/blackmisc.qrc">
+                 <normaloff>:/diagona/icons/diagona/icons/table-sheet.png</normaloff>:/diagona/icons/diagona/icons/table-sheet.png</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -391,12 +502,19 @@
               <item>
                <layout class="QGridLayout" name="gl_AircraftParts">
                 <property name="spacing">
-                 <number>6</number>
+                 <number>4</number>
                 </property>
                 <item row="4" column="1">
                  <widget class="QCheckBox" name="cb_AircraftPartsLightsStrobe">
                   <property name="text">
                    <string>Strobe</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QCheckBox" name="cb_AircraftPartsLightsBeacon">
+                  <property name="text">
+                   <string>Beacon</string>
                   </property>
                  </widget>
                 </item>
@@ -421,13 +539,6 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QCheckBox" name="cb_AircraftPartsLightsBeacon">
-                  <property name="text">
-                   <string>Beacon</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="0">
                  <widget class="QLabel" name="lbl_AircraftPartsFlapsPercentage">
                   <property name="text">
@@ -435,17 +546,17 @@
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
-                 <widget class="QCheckBox" name="cb_AircraftPartsSpoilers">
-                  <property name="text">
-                   <string>Spoilers</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="3" column="0">
                  <widget class="QCheckBox" name="cb_AircraftPartsLightsTaxi">
                   <property name="text">
                    <string>Taxi</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="cb_AircraftPartsSpoilers">
+                  <property name="text">
+                   <string>Spoilers</string>
                   </property>
                  </widget>
                 </item>
@@ -460,6 +571,20 @@
                  <widget class="QCheckBox" name="cb_AircraftPartsLightsLogo">
                   <property name="text">
                    <string>Logo</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QPushButton" name="pb_AircraftPartsLightsOn">
+                  <property name="text">
+                   <string>all on</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pb_AircraftPartsLightsOff">
+                  <property name="text">
+                   <string>all off</string>
                   </property>
                  </widget>
                 </item>
@@ -480,15 +605,8 @@
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QPushButton" name="pb_AircraftPartsLightsOn">
-                  <property name="text">
-                   <string>all on</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QPushButton" name="pb_AircraftPartsLightsOff">
+                <item row="5" column="2">
+                 <widget class="QPushButton" name="pb_AircraftPartsEnginesOff">
                   <property name="text">
                    <string>all off</string>
                   </property>
@@ -501,24 +619,17 @@
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
-                 <widget class="QCheckBox" name="cb_AircraftPartsIsOnGround">
-                  <property name="text">
-                   <string>on ground</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="2">
-                 <widget class="QPushButton" name="pb_AircraftPartsEnginesOff">
-                  <property name="text">
-                   <string>all off</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="2">
                  <widget class="QPushButton" name="pb_AircraftPartsUiToJson">
                   <property name="text">
                    <string>to JSON</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QCheckBox" name="cb_AircraftPartsIsOnGround">
+                  <property name="text">
+                   <string>on ground</string>
                   </property>
                  </widget>
                 </item>
@@ -630,8 +741,21 @@
           </property>
           <item>
            <widget class="QCheckBox" name="cb_AircraftPartsIncremental">
+            <property name="toolTip">
+             <string>incremental</string>
+            </property>
             <property name="text">
-             <string>Incremental</string>
+             <string>Incr.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pb_CurrentParts">
+            <property name="toolTip">
+             <string>set current parts values</string>
+            </property>
+            <property name="text">
+             <string>current</string>
             </property>
            </widget>
           </item>

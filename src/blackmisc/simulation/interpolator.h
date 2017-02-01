@@ -124,6 +124,7 @@ namespace BlackMisc
             void setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup);
 
             //! Write a log in background
+            //! \threadsafe
             BlackMisc::CWorker *writeLogInBackground();
 
             //! Clear log file
@@ -134,17 +135,18 @@ namespace BlackMisc
             //! \remark public for FS9 to get setup in Fs9Client
             CInterpolationAndRenderingSetup getInterpolatorSetup() const;
 
-            /*!
-             * Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
-             *
-             * Useful for making interpolation seem smoother, efficiently as it just uses simple arithmetic.
-             * \see https://en.wikipedia.org/wiki/Smoothstep
-             * \see http://sol.gfxile.net/interpolation/
-             */
+            //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
+            //!
+            //! Useful for making interpolation seem smoother, efficiently as it just uses simple arithmetic.
+            //! \see https://en.wikipedia.org/wiki/Smoothstep
+            //! \see http://sol.gfxile.net/interpolation/
             static double smootherStep(double x)
             {
                 return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
             }
+
+            //! Latest log files: 0 Interpolation 1 Parts
+            static QStringList getLatestLogFiles();
 
         protected:
             //! Log for interpolation

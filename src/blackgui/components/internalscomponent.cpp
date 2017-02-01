@@ -16,11 +16,12 @@
 #include "blackgui/components/remoteaircraftselector.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/uppercasevalidator.h"
+#include "blackmisc/simulation/interpolationlogger.h"
+#include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/aviation/aircraftenginelist.h"
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/network/textmessage.h"
-
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
 #include "ui_internalscomponent.h"
@@ -34,6 +35,7 @@
 #include <QTextEdit>
 #include <Qt>
 #include <QtGlobal>
+#include <QDesktopServices>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -52,6 +54,7 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->tw_Internals->setCurrentIndex(0);
+            ui->comp_RemoteAircraftSelector->indicatePartsEnabled(true);
 
             ui->le_TxtMsgFrom->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
             ui->le_TxtMsgTo->setValidator(new CUpperCaseValidator(ui->le_TxtMsgFrom));
@@ -63,6 +66,7 @@ namespace BlackGui
             connect(ui->pb_AircraftPartsEnginesOn, &QPushButton::pressed, this, &CInternalsComponent::ps_setAllEngines);
             connect(ui->pb_AircraftPartsEnginesOff, &QPushButton::pressed, this, &CInternalsComponent::ps_setAllEngines);
             connect(ui->pb_AircraftPartsUiToJson, &QPushButton::pressed, this, &CInternalsComponent::ps_guiToJson);
+            connect(ui->pb_CurrentParts, &QPushButton::pressed, this, &CInternalsComponent::ps_setCurrentParts);
 
             connect(ui->cb_DebugContextAudio, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
             connect(ui->cb_DebugContextApplication, &QCheckBox::stateChanged, this, &CInternalsComponent::ps_enableDebug);
@@ -77,6 +81,10 @@ namespace BlackGui
             connect(ui->pb_SendTextMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_sendTextMessage);
             connect(ui->tb_LogStatusMessage, &QPushButton::pressed, this, &CInternalsComponent::ps_logStatusMessage);
             connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::ps_logStatusMessage);
+
+            connect(ui->pb_LatestInterpolationLog, &QPushButton::pressed, this, &CInternalsComponent::ps_showLogFiles);
+            connect(ui->pb_LatestPartsLog, &QPushButton::pressed, this, &CInternalsComponent::ps_showLogFiles);
+            connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::ps_requestPartsFromNetwork);
 
             contextFlagsToGui();
         }
@@ -98,7 +106,7 @@ namespace BlackGui
                 CLogMessage(this).validationError("Cannot send aircraft parts, network not connected");
                 return;
             }
-            CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
+            const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
             if (callsign.isEmpty())
             {
                 CLogMessage(this).validationError("No valid callsign selected");
@@ -106,7 +114,7 @@ namespace BlackGui
             }
 
             CAircraftParts parts;
-            bool json = (QObject::sender() == ui->pb_SendAircraftPartsJson);
+            const bool json = (QObject::sender() == ui->pb_SendAircraftPartsJson);
 
             if (json)
             {
@@ -141,6 +149,7 @@ namespace BlackGui
                 this->ps_guiToJson();
             }
 
+            ui->tb_History->setToolTip("");
             sGui->getIContextNetwork()->testAddAircraftParts(callsign, parts, ui->cb_AircraftPartsIncremental->isChecked());
             CLogMessage(this).info("Added parts for %1") << callsign.toQString();
         }
@@ -169,9 +178,28 @@ namespace BlackGui
 
         void CInternalsComponent::ps_guiToJson()
         {
-            QJsonDocument json(guiToAircraftParts().toJson());
+            const QJsonDocument json(guiToAircraftParts().toJson());
             QString j(json.toJson(QJsonDocument::Indented));
             ui->te_AircraftPartsJson->setText(j);
+        }
+
+        void CInternalsComponent::ps_setCurrentParts()
+        {
+            if (!sGui->getIContextNetwork()->isConnected()) { return; }
+            const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
+            if (callsign.isEmpty()) { return; }
+
+            const CAircraftPartsList partsList = sGui->getIContextNetwork()->getRemoteAircraftParts(callsign, -1);
+            if (partsList.isEmpty())
+            {
+                CStatusMessage(this).info("No parts for '%1'") << callsign.asString();
+                return;
+            }
+            const CAircraftParts parts = partsList.latestObject();
+            const CStatusMessageList history = sGui->getIContextNetwork()->getAircraftPartsHistory(callsign);
+            partsToGui(parts);
+            ui->te_AircraftPartsJson->setText(parts.toJsonString());
+            ui->tb_History->setToolTip(history.toHtml());
         }
 
         void CInternalsComponent::ps_enableDebug(int state)
@@ -182,9 +210,9 @@ namespace BlackGui
             Q_ASSERT(sGui->getIContextOwnAircraft());
             Q_ASSERT(sGui->getIContextSimulator());
 
-            Qt::CheckState checkState = static_cast<Qt::CheckState>(state);
-            bool debug = (checkState == Qt::Checked);
-            QObject *sender = QObject::sender();
+            const Qt::CheckState checkState = static_cast<Qt::CheckState>(state);
+            const bool debug = (checkState == Qt::Checked);
+            const QObject *sender = QObject::sender();
 
             if (sender == ui->cb_DebugContextApplication)  { sGui->getIContextApplication()->setDebugEnabled(debug); }
             else if (sender == ui->cb_DebugContextAudio)   { sGui->getIContextAudio()->setDebugEnabled(debug); }
@@ -247,9 +275,46 @@ namespace BlackGui
             CLogMessage::preformatted(sm);
         }
 
+        void CInternalsComponent::ps_showLogFiles()
+        {
+            QString file;
+            const QObject *sender = QObject::sender();
+            if (sender == ui->pb_LatestInterpolationLog)
+            {
+                file = CInterpolationLogger::getLatestLogFiles().first();
+            }
+            else if (sender == ui->pb_LatestPartsLog)
+            {
+                file = CInterpolationLogger::getLatestLogFiles().last();
+            }
+
+            if (file.isEmpty()) { return; }
+            QDesktopServices::openUrl(QUrl::fromLocalFile(file));
+        }
+
+        void CInternalsComponent::ps_requestPartsFromNetwork()
+        {
+            const CCallsign callsign(ui->comp_RemoteAircraftSelector->getSelectedCallsign());
+            if (callsign.isEmpty())
+            {
+                CLogMessage(this).validationError("No valid callsign selected");
+                return;
+            }
+            ui->pb_RequestFromNetwork->setEnabled(false);
+            sGui->getIContextNetwork()->testRequestAircraftConfig(callsign);
+            CLogMessage(this).info("Request aircraft config for '%1'") << callsign.asString();
+
+            // simple approach to update UI when parts are received
+            QTimer::singleShot(3000, this, [this]
+            {
+                ui->pb_CurrentParts->click();
+                ui->pb_RequestFromNetwork->setEnabled(true);
+            });
+        }
+
         CAircraftParts CInternalsComponent::guiToAircraftParts() const
         {
-            CAircraftLights lights(
+            const CAircraftLights lights(
                 ui->cb_AircraftPartsLightsStrobe->isChecked(),
                 ui->cb_AircraftPartsLightsLanding->isChecked(),
                 ui->cb_AircraftPartsLightsTaxi->isChecked(),
@@ -257,7 +322,7 @@ namespace BlackGui
                 ui->cb_AircraftPartsLightsNav->isChecked(),
                 ui->cb_AircraftPartsLightsLogo->isChecked()
             );
-            CAircraftEngineList engines(
+            const CAircraftEngineList engines(
             {
                 ui->cb_AircraftPartsEngine1->isChecked(),
                 ui->cb_AircraftPartsEngine2->isChecked(),
