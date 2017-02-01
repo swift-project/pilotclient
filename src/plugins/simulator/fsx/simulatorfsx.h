@@ -193,7 +193,7 @@ namespace BlackSimPlugin
             bool guessAndUpdateRemoteAircraftParts(const CSimConnectObject &simObj,
                                                    const BlackMisc::Aviation::CAircraftSituation &interpolatedSituation, const BlackMisc::Simulation::IInterpolator::InterpolationStatus &interpolationStatus);
 
-            //! Send parts to sim
+            //! Send parts to simulator
             bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
 
             //! Called when data about our own aircraft are received

@@ -629,7 +629,7 @@ namespace BlackSimPlugin
             }
             else
             {
-                // object was removed but not requested by us
+                // object was removed, but removal was not requested by us
                 // this means we are out of the reality bubble (or something else went wrong)
                 if (!simObject.getAircraftModelString().isEmpty())
                 {
@@ -1043,12 +1043,12 @@ namespace BlackSimPlugin
             Q_ASSERT(m_hSimConnect);
             const DWORD objectId = simObj.getObjectId();
 
-            // same as in simulator or same as already send to simulator
+            // same as in simulator or same as already send to simulator?
             const CAircraftLights sentLights(simObj.getLightsAsSent());
             if (simObj.getPartsAsSent() == ddRemoteAircraftParts &&
                     (simObj.getCurrentLightsInSimulator() == lights || sentLights == lights)) { return true; }
 
-            // in case we sent we sent everything
+            // in case we sent, we sent everything
             const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
                                objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                sizeof(DataDefinitionRemoteAircraftParts), &ddRemoteAircraftParts);

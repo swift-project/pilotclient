@@ -55,8 +55,9 @@ namespace BlackSimPlugin
                     const DWORD sendId = exception->dwSendID;
                     const DWORD index = exception->dwIndex;
                     const DWORD data = cbData;
+                    const QString exStr(CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException));
                     QString ex;
-                    ex.sprintf("Exception=%lu  SendID=%lu  Index=%lu  cbData=%lu", exceptionId, sendId, index, data);
+                    ex.sprintf("Exception=%lu | SendID=%lu | Index=%lu | cbData=%lu", exceptionId, sendId, index, data);
                     switch (exceptionId)
                     {
                     case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE:
@@ -66,8 +67,7 @@ namespace BlackSimPlugin
                     default:
                         break;
                     }
-                    CLogMessage(simulatorFsx).warning("Caught FSX simConnect exception: %1 %2")
-                            << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException) << ex;
+                    CLogMessage(simulatorFsx).warning("Caught FSX simConnect exception: %1 %2") << exStr << ex;
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:

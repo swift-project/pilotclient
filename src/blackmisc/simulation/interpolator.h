@@ -145,7 +145,7 @@ namespace BlackMisc
                 return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
             }
 
-            //! Latest log files: 0 Interpolation 1 Parts
+            //! Latest log files: 0: Interpolation / 1: Parts
             static QStringList getLatestLogFiles();
 
         protected:
