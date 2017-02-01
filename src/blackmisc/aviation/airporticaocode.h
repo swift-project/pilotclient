@@ -57,6 +57,9 @@ namespace BlackMisc
             //! Valid ICAO designator
             static bool isValidIcaoDesignator(const QString &icaoCode);
 
+            //! Containing numbers (normally indicator for small airfield/strip)
+            static bool containsNumbers(const QString &icaoCode);
+
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 

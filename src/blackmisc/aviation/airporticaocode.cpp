@@ -29,7 +29,7 @@ namespace BlackMisc
 
         QString CAirportIcaoCode::unifyAirportCode(const QString &icaoCode)
         {
-            QString code = icaoCode.trimmed().toUpper();
+            const QString code = icaoCode.trimmed().toUpper();
             if (code.length() != 4) return "";
             if (containsChar(code, [](QChar c) { return !c.isLetterOrNumber(); })) { return ""; }
             return code;
@@ -37,9 +37,13 @@ namespace BlackMisc
 
         bool CAirportIcaoCode::isValidIcaoDesignator(const QString &icaoCode)
         {
-            QString icao = unifyAirportCode(icaoCode);
+            const QString icao = unifyAirportCode(icaoCode);
             return icao.length() == 4;
         }
 
+        bool CAirportIcaoCode::containsNumbers(const QString &icaoCode)
+        {
+            return (containsChar(icaoCode, [](QChar c) { return c.isDigit(); }));
+        }
     } // namespace
 } // namespace
