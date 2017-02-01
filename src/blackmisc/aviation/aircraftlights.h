@@ -17,6 +17,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/nullable.h"
 
 #include <QMetaType>
 #include <QString>
@@ -26,7 +27,9 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information about aircraft's lights
-        class BLACKMISC_EXPORT CAircraftLights : public CValueObject<CAircraftLights>
+        class BLACKMISC_EXPORT CAircraftLights :
+            public CValueObject<CAircraftLights>,
+            public INullable
         {
         public:
             //! Properties by index
@@ -44,16 +47,10 @@ namespace BlackMisc
             CAircraftLights() = default;
 
             //! Constructor, init to null
-            CAircraftLights(std::nullptr_t null);
+            using INullable::INullable;
 
             //! Constructor
             CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn);
-
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
             //! Strobes lights on?
             bool isStrobeOn() const { return m_strobeOn; }
@@ -97,17 +94,20 @@ namespace BlackMisc
             //! All off
             void setAllOff();
 
-            //! Is null;
-            bool isNull() const { return m_isNull; }
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
 
             //! Returns object with all lights switched on
             static CAircraftLights allLightsOn();
 
             //! Returns object with all lights switched off
             static CAircraftLights allLightsOff();
-
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
 
         private:
             bool m_strobeOn = false;
@@ -116,10 +116,10 @@ namespace BlackMisc
             bool m_beaconOn = false;
             bool m_navOn = false;
             bool m_logoOn = false;
-            bool m_isNull = false; //!< mark as null
 
             BLACK_METACLASS(
                 CAircraftLights,
+                BLACK_METAMEMBER(isNull, 0, DisabledForJson), // disable since JSON is used for network
                 BLACK_METAMEMBER_NAMED(strobeOn, "strobe_on"),
                 BLACK_METAMEMBER_NAMED(landingOn, "landing_on"),
                 BLACK_METAMEMBER_NAMED(taxiOn, "taxi_on"),

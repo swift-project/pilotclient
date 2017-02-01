@@ -18,12 +18,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
-        CAircraftLights::CAircraftLights(std::nullptr_t null) : m_isNull(true)
-        {
-            Q_UNUSED(null);
-        }
-
         CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn)
             : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn), m_logoOn(logoOn)
         { }
@@ -52,8 +46,9 @@ namespace BlackMisc
         CVariant CAircraftLights::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
+            if (INullable::canHandleIndex(index)) { return INullable::propertyByIndex(index); }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexBeacon:
@@ -76,7 +71,9 @@ namespace BlackMisc
         void CAircraftLights::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CAircraftLights>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            if (INullable::canHandleIndex(index)) { INullable::setPropertyByIndex(index, variant); return; }
+
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexBeacon:
@@ -122,6 +119,5 @@ namespace BlackMisc
             m_strobeOn = false;
             m_taxiOn = false;
         }
-
     } // namespace
 } // namespace
