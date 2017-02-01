@@ -196,6 +196,10 @@ namespace BlackSimPlugin
             //! Send parts to simulator
             bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts, const BlackMisc::Aviation::CAircraftLights &lights);
 
+            //! Send lights to simulator (those which have to be toggled)
+            //! \remark challenge here is that I can only sent those value if I have already obtained the current light state from simulator
+            void sendToggledLightsToSimulator(const CSimConnectObject &simObj, const BlackMisc::Aviation::CAircraftLights &lightsWanted, bool force = false);
+
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 

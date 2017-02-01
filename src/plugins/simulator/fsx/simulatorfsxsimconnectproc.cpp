@@ -233,7 +233,7 @@ namespace BlackSimPlugin
                             }
                             else if (isRequestForLights(requestId))
                             {
-                                static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 6 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
+                                static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double), "DataDefinitionRemoteAircraftLights has an incorrect size.");
                                 const CSimConnectObject simObj = simulatorFsx->getSimConnectObjects().getSimObjectForObjectId(objectId);
                                 if (!simObj.hasValidRequestAndObjectId()) break;
                                 const DataDefinitionRemoteAircraftLights *remoteAircraftLights = (DataDefinitionRemoteAircraftLights *)&pObjData->dwData;
