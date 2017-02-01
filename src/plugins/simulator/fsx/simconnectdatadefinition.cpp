@@ -18,7 +18,7 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        CSimConnectDefinitions::CSimConnectDefinitions() {  }
+        CSimConnectDefinitions::CSimConnectDefinitions() { }
 
         HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect)
         {
@@ -105,6 +105,9 @@ namespace BlackSimPlugin
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT BEACON", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT NAV", "Bool");
             hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT LOGO", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT NAV", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT RECOGNITION", "Bool");
+            hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT CABIN", "Bool");
 
             if (hr != S_OK)
             {
@@ -214,7 +217,7 @@ namespace BlackSimPlugin
 
         CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
         {
-            return CAircraftLights(lightStrobe, lightLanding, lightTaxi, lightBeacon, lightNav, lightLogo);
+            return CAircraftLights(lightStrobe, lightLanding, lightTaxi, lightBeacon, lightNav, lightLogo, lightRecognition, lightCabin);
         }
     } // namespace
 } // namespace

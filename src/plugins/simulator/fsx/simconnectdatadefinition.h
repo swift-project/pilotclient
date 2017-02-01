@@ -104,12 +104,14 @@ namespace BlackSimPlugin
         //! Data for aircraft lighs
         struct DataDefinitionRemoteAircraftLights
         {
-            double lightStrobe;    //!< Is strobe light on?
-            double lightLanding;   //!< Is landing light on?
-            double lightTaxi;      //!< Is taxi light on?
-            double lightBeacon;    //!< Is beacon light on?
-            double lightNav;       //!< Is nav light on?
-            double lightLogo;      //!< Is logo light on?
+            double lightStrobe;      //!< Is strobe light on?
+            double lightLanding;     //!< Is landing light on?
+            double lightTaxi;        //!< Is taxi light on?
+            double lightBeacon;      //!< Is beacon light on?
+            double lightNav;         //!< Is nav light on?
+            double lightLogo;        //!< Is logo light on?
+            double lightRecognition; //!< Is recognition light on
+            double lightCabin;       //!< Is cabin light on
 
             //! Convert to lights
             BlackMisc::Aviation::CAircraftLights toLights() const;

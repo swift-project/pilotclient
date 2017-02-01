@@ -53,14 +53,15 @@ namespace BlackMisc
             //! Engine number 1..x on?
             bool isEngineOn(int engineNumber) const;
 
+            //! Is any engine on?
+            bool isAnyEngineOn() const;
+
             //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
             QJsonObject toJson() const;
 
             //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
             void convertFromJson(const QJsonObject &json);
-
         };
-
     } //namespace
 } // namespace
 

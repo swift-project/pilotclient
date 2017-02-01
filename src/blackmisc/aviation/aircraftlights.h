@@ -40,7 +40,9 @@ namespace BlackMisc
                 IndexTaxi,
                 IndexBeacon,
                 IndexNav,
-                IndexLogo
+                IndexLogo,
+                IndexRecognition,
+                IndexCabin
             };
 
             //! Default constructor
@@ -51,6 +53,9 @@ namespace BlackMisc
 
             //! Constructor
             CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn);
+
+            //! Constructor
+            CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn, bool recognition, bool cabin);
 
             //! Strobes lights on?
             bool isStrobeOn() const { return m_strobeOn; }
@@ -88,6 +93,18 @@ namespace BlackMisc
             //! Set logo lights
             void setLogoOn(bool on) { m_logoOn = on; }
 
+            //! Recognition lights on?
+            bool isRecognitionOn() const { return m_recognition; }
+
+            //! Set recognition lights
+            void setRecognitionOn(bool on) { m_recognition = on; }
+
+            //! Cabin lights on?
+            bool isCabinOn() const { return m_cabin; }
+
+            //! Set cabin lights
+            void setCabinOn(bool on) { m_cabin = on; }
+
             //! All on
             void setAllOn();
 
@@ -116,6 +133,8 @@ namespace BlackMisc
             bool m_beaconOn = false;
             bool m_navOn = false;
             bool m_logoOn = false;
+            bool m_recognition = false; //!< not supported by aircraft config (VATSIM)
+            bool m_cabin = false;       //!< not supported by aircraft config (VATSIM)
 
             BLACK_METACLASS(
                 CAircraftLights,
@@ -125,7 +144,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER_NAMED(taxiOn, "taxi_on"),
                 BLACK_METAMEMBER_NAMED(beaconOn, "beacon_on"),
                 BLACK_METAMEMBER_NAMED(navOn, "nav_on"),
-                BLACK_METAMEMBER_NAMED(logoOn, "logo_on")
+                BLACK_METAMEMBER_NAMED(logoOn, "logo_on"),
+                BLACK_METAMEMBER(recognition, 0, DisabledForJson), // disable since JSON is used for network
+                BLACK_METAMEMBER(cabin, 0, DisabledForJson) // disable since JSON is used for network
             );
         };
     } // namespace

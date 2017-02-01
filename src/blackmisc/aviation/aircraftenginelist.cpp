@@ -41,7 +41,12 @@ namespace BlackMisc
 
         bool CAircraftEngineList::isEngineOn(int engineNumber) const
         {
-            return getEngine(engineNumber).isOn();
+            return this->getEngine(engineNumber).isOn();
+        }
+
+        bool CAircraftEngineList::isAnyEngineOn() const
+        {
+            return this->contains(&CAircraftEngine::isOn, true);
         }
 
         QJsonObject CAircraftEngineList::toJson() const

@@ -134,6 +134,11 @@ namespace BlackMisc
             return this->m_engines.isEngineOn(number);
         }
 
+        bool CAircraftParts::isAnyEngineOn() const
+        {
+            return this->m_engines.isAnyEngineOn();
+        }
+
         double CAircraftParts::isOnGroundInterpolated() const
         {
             if (this->m_isOnGroundInterpolated < 0)

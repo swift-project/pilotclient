@@ -107,6 +107,9 @@ namespace BlackMisc
             //! Is engine with number 1..n on?
             bool isEngineOn(int number) const;
 
+            //! Any engine on?
+            bool isAnyEngineOn() const;
+
             //! Set engines
             void setEngines(const CAircraftEngineList &engines) { m_engines = engines; }
 
