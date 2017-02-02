@@ -665,7 +665,7 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dwp_Log">
    <property name="minimumSize">
     <size>
-     <width>91</width>
+     <width>125</width>
      <height>70</height>
     </size>
    </property>
