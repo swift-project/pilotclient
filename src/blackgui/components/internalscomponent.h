@@ -75,6 +75,9 @@ namespace BlackGui
             //! Request parts (aka aircraft config) from network
             void ps_requestPartsFromNetwork();
 
+            //! Selector has been changed
+            void ps_selectorChanged();
+
         private:
             QScopedPointer<Ui::CInternalsComponent> ui;
 

@@ -47,6 +47,10 @@ namespace BlackGui
             //! Indicate if aircraft parts enabled aircraft
             void indicatePartsEnabled(bool indicate);
 
+        signals:
+            //! Callsign changed
+            void changedCallsign();
+
         protected:
             //! \copydoc QWidget::showEvent
             virtual void showEvent(QShowEvent *event) override;
@@ -58,15 +62,19 @@ namespace BlackGui
             //! IContextNetwork::removedAircraft
             void ps_onRemovedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+            //! Combo box has been changed
+            void ps_comboBoxChanged(const QString &text);
+
         private:
             QScopedPointer<Ui::CRemoteAircraftSelector> ui;
-            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
+
+            QString m_currentText;
             bool m_showPartsEnabled = false;
+            BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
 
             //! Set combobox items
             void fillComboBox();
         };
-
     } // namespace
 } // namespace
 

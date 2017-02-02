@@ -86,6 +86,8 @@ namespace BlackGui
             connect(ui->pb_LatestPartsLog, &QPushButton::pressed, this, &CInternalsComponent::ps_showLogFiles);
             connect(ui->pb_RequestFromNetwork, &QPushButton::pressed, this, &CInternalsComponent::ps_requestPartsFromNetwork);
 
+            connect(ui->comp_RemoteAircraftSelector, &CRemoteAircraftSelector::changedCallsign, this, &CInternalsComponent::ps_selectorChanged);
+
             contextFlagsToGui();
         }
 
@@ -310,6 +312,11 @@ namespace BlackGui
                 ui->pb_CurrentParts->click();
                 ui->pb_RequestFromNetwork->setEnabled(true);
             });
+        }
+
+        void CInternalsComponent::ps_selectorChanged()
+        {
+            this->ps_setCurrentParts();
         }
 
         CAircraftParts CInternalsComponent::guiToAircraftParts() const

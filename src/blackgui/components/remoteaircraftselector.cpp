@@ -41,6 +41,7 @@ namespace BlackGui
             Q_ASSERT(s);
             s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::ps_onAddedAircraft);
             Q_ASSERT(s);
+            s = connect(ui->cb_RemoteAircraftSelector, &QComboBox::currentTextChanged, this, &CRemoteAircraftSelector::ps_comboBoxChanged);
             Q_UNUSED(s);
         }
 
@@ -81,6 +82,13 @@ namespace BlackGui
             {
                 this->fillComboBox();
             }
+        }
+
+        void CRemoteAircraftSelector::ps_comboBoxChanged(const QString &text)
+        {
+            if (this->m_currentText == text) { return; }
+            this->m_currentText = text;
+            emit this->changedCallsign();
         }
 
         void CRemoteAircraftSelector::fillComboBox()
@@ -127,6 +135,5 @@ namespace BlackGui
                 ui->cb_RemoteAircraftSelector->setCurrentIndex(index);
             }
         }
-
     } // namespace
 } // namespace
