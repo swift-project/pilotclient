@@ -17,6 +17,8 @@
 
 #include <QMenu>
 #include <QList>
+#include <QPushButton>
+#include <QToolButton>
 #include <QScopedPointer>
 
 namespace BlackGui
@@ -27,9 +29,6 @@ namespace BlackGui
         Q_OBJECT
 
     public:
-        //! Constructor
-        CGuiActionBindHandler(QAction *action);
-
         //! Destructor
         virtual ~CGuiActionBindHandler();
 
@@ -37,23 +36,44 @@ namespace BlackGui
         void boundFunction(bool enabled);
 
         //! Bind whole menu
+        //! \remark keep BlackCore::CActionBindings as long you want to keep this binding alive
         static BlackCore::CActionBindings bindMenu(QMenu *menu, const QString &path = {});
 
+        //! Bind button, with relative name
+        //! \remark keep BlackCore::CActionBinding as long you want to keep this binding alive
+        static BlackCore::CActionBinding bindButton(QAbstractButton *button, const QString &path, bool absoluteName);
+
+        //! Corresponding BlackCore::CActionBind died, so delete CGuiActionBindHandler
+        static void actionBindWasDestroyed(CGuiActionBindHandler *bindHandler);
+
     private:
+        //! Constructor for QAction
+        CGuiActionBindHandler(QAction *action);
+
+        //! Constructor for QPushButton
+        CGuiActionBindHandler(QAbstractButton *button);
+
         //! Corresponding action destroyed
         void destroyed();
 
         //! Set the action
-        void setAction(QAction *action);
+        void connectDestroy(QObject *action);
 
         //! Unbind this action
         void unbind();
+
+        //! Reset
+        void reset();
+
+        //! Target available?
+        bool hasTarget() const;
 
         //! Append path for action
         static QString appendPath(const QString &path, const QString &name);
 
         int m_index = -1;
-        QAction *m_action = nullptr;
+        QAction         *m_action = nullptr;
+        QAbstractButton *m_button = nullptr;
     };
 } // namespace
 

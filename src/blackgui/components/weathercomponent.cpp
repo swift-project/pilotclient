@@ -11,6 +11,7 @@
 #include "blackgui/infoarea.h"
 #include "blackgui/views/viewbase.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/guiactionbind.h"
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextownaircraft.h"
@@ -43,20 +44,23 @@ namespace BlackGui
             ui(new Ui::CWeatherComponent)
         {
             ui->setupUi(this);
-            m_weatherScenarios = CWeatherGrid::getAllScenarios();
 
-            for (const auto &scenario : m_weatherScenarios)
+            m_weatherScenarios = CWeatherGrid::getAllScenarios();
+            for (const auto &scenario : as_const(m_weatherScenarios))
             {
                 ui->cb_weatherScenario->addItem(scenario.getName(), QVariant::fromValue(scenario));
             }
-            auto scenario = m_weatherScenarioSetting.get();
-            ui->cb_weatherScenario->setCurrentIndex(scenario.getIndex());
 
+            const auto scenario = m_weatherScenarioSetting.get();
+            ui->cb_weatherScenario->setCurrentIndex(scenario.getIndex());
             ui->pb_ActivateWeather->setIcon(CIcons::metar());
 
             setupConnections();
             setupInputValidators();
             setupCompleter();
+
+            // hotkeys
+            m_hotkeyBindings.append(CGuiActionBindHandler::bindButton(ui->pb_ActivateWeather, "Weather/Toggle weather", true));
 
             // Set interval to 5 min
             m_weatherUpdateTimer.setInterval(1000 * 60 * 5);
@@ -146,7 +150,7 @@ namespace BlackGui
             {
                 Q_ASSERT(sGui->getIContextOwnAircraft());
                 position = sGui->getIContextOwnAircraft()->getOwnAircraft().getPosition();
-                if(position == CCoordinateGeodetic())
+                if (position == CCoordinateGeodetic())
                 {
                     ui->le_LatOrIcao->setText("N/A");
                     ui->le_Lon->setText("N/A");
@@ -187,7 +191,7 @@ namespace BlackGui
             if (CWeatherScenario::isRealWeatherScenario(scenario))
             {
                 if (!useOwnAcftPosition ||
-                        calculateGreatCircleDistance(position, m_lastOwnAircraftPosition).value(CLengthUnit::km()) > 20 )
+                        calculateGreatCircleDistance(position, m_lastOwnAircraftPosition).value(CLengthUnit::km()) > 20)
                 {
                     requestWeatherGrid(position);
                     m_lastOwnAircraftPosition = position;
@@ -201,7 +205,7 @@ namespace BlackGui
 
         void CWeatherComponent::weatherGridReceived(const CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
-            if(!isMyIdentifier(identifier)) { return; }
+            if (!isMyIdentifier(identifier)) { return; }
             ui->lb_Status->setText({});
             setWeatherGrid(weatherGrid);
         }

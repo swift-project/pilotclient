@@ -15,9 +15,14 @@ using namespace BlackCore;
 
 namespace BlackGui
 {
-    CGuiActionBindHandler::CGuiActionBindHandler(QAction *action) : QObject(action)
+    CGuiActionBindHandler::CGuiActionBindHandler(QAction *action) : QObject(action), m_action(action)
     {
-        this->setAction(action);
+        this->connectDestroy(action);
+    }
+
+    CGuiActionBindHandler::CGuiActionBindHandler(QAbstractButton *button) : QObject(button), m_button(button)
+    {
+        this->connectDestroy(button);
     }
 
     CGuiActionBindHandler::~CGuiActionBindHandler()
@@ -27,6 +32,7 @@ namespace BlackGui
 
     CActionBindings CGuiActionBindHandler::bindMenu(QMenu *menu, const QString &path)
     {
+        Q_ASSERT(menu);
         CActionBindings boundActions;
         if (!menu || menu->isEmpty()) { return boundActions; }
         for (QAction *action : menu->actions())
@@ -41,19 +47,36 @@ namespace BlackGui
             }
 
             CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(action);
-            QSharedPointer<CActionBind> actionBind(new CActionBind(pathNew, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { bindHandler->deleteLater(); }));
-            bindHandler->m_index = actionBind->getIndex();
-            boundActions.append(actionBind); // takes ownership
+            CActionBinding actionBinding(new CActionBind(pathNew, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+            bindHandler->m_index = actionBinding->getIndex();
+            boundActions.append(actionBinding); // takes ownership
         }
         return boundActions;
     }
 
-    void CGuiActionBindHandler::setAction(QAction *action)
+    CActionBinding CGuiActionBindHandler::bindButton(QAbstractButton *button, const QString &path, bool absoluteName)
     {
-        this->m_action = action;
+        Q_ASSERT(button);
+        const QString pathNew = absoluteName ?
+                                path :
+                                CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
+        CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(button);
+        CActionBinding actionBinding(new CActionBind(pathNew, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+        bindHandler->m_index = actionBinding->getIndex();
+        return actionBinding;
+    }
 
+    void CGuiActionBindHandler::actionBindWasDestroyed(CGuiActionBindHandler *bindHandler)
+    {
+        if (!bindHandler) { return; }
+        bindHandler->reset();
+        // do not delete, as it might be still referenced somewhere
+    }
+
+    void CGuiActionBindHandler::connectDestroy(QObject *object)
+    {
         // if the action is destroyed from somewhere else I unbind myself
-        QObject::connect(action, &QAction::destroyed, [ = ]
+        QObject::connect(object, &QObject::destroyed, [ = ]
         {
             this->unbind();
         });
@@ -61,21 +84,39 @@ namespace BlackGui
 
     void CGuiActionBindHandler::unbind()
     {
-        if (!this->m_action) { return; }
-        this->m_action = nullptr;
-        if (CInputManager::instance())
+        if (this->hasTarget())
         {
-            CInputManager::instance()->unbind(this->m_index);
-            m_index = -1;
+            if (CInputManager::instance())
+            {
+                CInputManager::instance()->unbind(this->m_index);
+            }
         }
+        this->reset();
+    }
+
+    void CGuiActionBindHandler::reset()
+    {
+        m_index = -1;
+        m_button = nullptr;
+        m_action = nullptr;
+    }
+
+    bool CGuiActionBindHandler::hasTarget() const
+    {
+        return (m_button || m_action) && m_index >= 0;
     }
 
     void CGuiActionBindHandler::boundFunction(bool enabled)
     {
-        if (!enabled) { return; }
-        if (!m_action) { return; }
-        if (m_index < 0) { return; }
-        m_action->trigger();
+        if (!enabled || !this->hasTarget()) { return; }
+        if (m_action)
+        {
+            m_action->trigger();
+        }
+        else if (m_button)
+        {
+            m_button->click();
+        }
     }
 
     QString CGuiActionBindHandler::appendPath(const QString &path, const QString &name)

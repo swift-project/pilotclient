@@ -12,8 +12,9 @@
 #ifndef BLACKGUI_WEATHERCOMPONENT_H
 #define BLACKGUI_WEATHERCOMPONENT_H
 
-#include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/blackguiexport.h"
+#include "blackcore/actionbind.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/weather/weatherscenario.h"
@@ -77,6 +78,7 @@ namespace BlackGui
             QTimer m_weatherUpdateTimer { this };
             BlackMisc::Geo::CCoordinateGeodetic m_lastOwnAircraftPosition;
             BlackMisc::CSetting<BlackMisc::Simulation::TSelectedWeatherScenario> m_weatherScenarioSetting { this };
+            BlackCore::CActionBindings m_hotkeyBindings;
             bool m_isWeatherActivated = false;
         };
     } // namespace

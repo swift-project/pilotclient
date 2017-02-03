@@ -58,8 +58,11 @@ namespace BlackCore
         std::function<void()> m_deleteCallback; //!< called when deleted
     };
 
+    //! Single binding
+    using CActionBinding  = QSharedPointer<CActionBind>;
+
     //! List of bindings
-    using CActionBindings = QList<QSharedPointer<CActionBind>>;
+    using CActionBindings = QList<CActionBinding>;
 }
 
 #endif
