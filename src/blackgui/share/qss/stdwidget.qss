@@ -111,10 +111,11 @@ BlackGui--CInfoArea {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+/* Overlay messages */
 BlackGui--COverlayMessages {
-  background: black; /* background is background color here */
+  background: transparent; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  border: 2px solid yellow;
+  border: 2px solid blue;
   border-radius: 10px;
 }
 
@@ -273,9 +274,14 @@ QGroupBox {
 }
 
 QGroupBox::title {
+  top: 2px;
+  left: 5px;
   subcontrol-origin: margin;
-  subcontrol-position: middle center; /* position at the top center */
-  padding: 0 5px;
+  subcontrol-position: middle left; /* position at the top center */
+  padding: 0px 10px;
+  background-color: darkblue;
+  border: 1px solid green;
+  border-radius: 5px;
 }
 
 QToolBox::tab {

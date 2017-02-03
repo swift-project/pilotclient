@@ -100,8 +100,10 @@ namespace BlackGui
     {
         int w = this->width();
         int h = this->height();
-        int wInner = 0.7 * w;
-        int hInner = 0.7 * h;
+        int wInner = this->m_widthFactor * w;
+        int hInner = this->m_heightFactor * h;
+        if (wInner > this->maximumWidth()) wInner = this->maximumWidth();
+        if (hInner > this->maximumHeight()) hInner = this->maximumHeight();
         return QSize(wInner, hInner);
     }
 

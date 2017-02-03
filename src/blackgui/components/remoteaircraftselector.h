@@ -25,7 +25,6 @@ class QWidget;
 
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CRemoteAircraftSelector; }
-
 namespace BlackGui
 {
     namespace Components
@@ -40,10 +39,13 @@ namespace BlackGui
             explicit CRemoteAircraftSelector(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CRemoteAircraftSelector();
+            virtual ~CRemoteAircraftSelector();
 
             //! Selected callsign
             BlackMisc::Aviation::CCallsign getSelectedCallsign() const;
+
+            //! Indicate if aircraft parts enabled aircraft
+            void indicatePartsEnabled(bool indicate);
 
         protected:
             //! \copydoc QWidget::showEvent
@@ -59,6 +61,7 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CRemoteAircraftSelector> ui;
             BlackMisc::Simulation::CSimulatedAircraftList m_aircraft;
+            bool m_showPartsEnabled = false;
 
             //! Set combobox items
             void fillComboBox();

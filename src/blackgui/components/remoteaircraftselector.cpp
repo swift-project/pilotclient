@@ -20,6 +20,7 @@
 #include <QStringList>
 #include <QWidget>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -53,6 +54,11 @@ namespace BlackGui
             return m_aircraft[index].getCallsign();
         }
 
+        void CRemoteAircraftSelector::indicatePartsEnabled(bool indicate)
+        {
+            m_showPartsEnabled = indicate;
+        }
+
         void CRemoteAircraftSelector::showEvent(QShowEvent *event)
         {
             // force new combobox when visible
@@ -80,11 +86,11 @@ namespace BlackGui
         void CRemoteAircraftSelector::fillComboBox()
         {
             if (!this->isVisible()) { return; } // for performance reasons
+            const CCallsign currentSelection(this->getSelectedCallsign());
             m_aircraft = sGui->getIContextNetwork()->getAircraftInRange();
             ui->cb_RemoteAircraftSelector->clear();
             if (m_aircraft.isEmpty()) { return; }
 
-            CCallsign currentSelection(this->getSelectedCallsign());
             QStringList items;
             for (const CSimulatedAircraft &aircraft : m_aircraft)
             {
@@ -92,14 +98,20 @@ namespace BlackGui
                 QString i(aircraft.getCallsign().toQString());
                 if (aircraft.hasAircraftDesignator())
                 {
-                    i += " (";
-                    i += aircraft.getAircraftIcaoCode().toQString(false);
-                    i += ")";
+                    i += QLatin1Literal(" (") %
+                         aircraft.getAircraftIcaoCode().toQString(false) %
+                         QLatin1Literal(")");
                 }
                 if (aircraft.hasValidRealName())
                 {
-                    i += " - ";
-                    i += aircraft.getPilotRealName();
+                    i += QLatin1Literal(" - ") % aircraft.getPilotRealName();
+                }
+                if (m_showPartsEnabled)
+                {
+                    if (aircraft.isPartsSynchronized())
+                    {
+                        i += " [parts]";
+                    }
                 }
                 items.append(i);
             }

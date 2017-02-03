@@ -47,7 +47,7 @@ namespace BlackGui
         explicit COverlayMessagesFrame(QWidget *parent = nullptr);
 
         //! Destructor
-        ~COverlayMessagesFrame();
+        virtual ~COverlayMessagesFrame();
 
         //! Show the inner frame
         void showStatusMessagesFrame();
@@ -55,13 +55,17 @@ namespace BlackGui
         //! Hide the inner frame
         void hideStatusMessagesFrame();
 
+        //! Inner frame factors 0..1
+        //! \remarks can also be restricted by maximumHeight() / maximumWidth()
+        void setInnerFrameFactor(double xFactor, double yFactor);
+
         //! \copydoc COverlayMessages::showOverlayMessagesWithConfirmation
         void showOverlayMessagesWithConfirmation(
             const BlackMisc::CStatusMessageList &messages,
             const QString                       &confirmationMessage,
-            std::function<void()>                okLambda,
-            int                                  defaultButton = QMessageBox::Cancel,
-            int                                  timeOutMs = -1
+            std::function<void()>               okLambda,
+            int                                 defaultButton = QMessageBox::Cancel,
+            int                                 timeOutMs = -1
         );
 
     public slots:
@@ -92,6 +96,9 @@ namespace BlackGui
 
         //! Init the inner frame (if not yet initialized)
         void initInnerFrame();
+
+        double m_widthFactor = 0.7; //!< inner frame x factor
+        double m_heightFactor = 0.7; //!< inner frame x factor
     };
 } // ns
 
