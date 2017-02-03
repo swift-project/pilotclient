@@ -23,7 +23,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CAltitude::CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) : CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
         {
             this->parseFromString(altitudeAsString, mode);
@@ -111,6 +110,5 @@ namespace BlackMisc
             static const CAltitude null(0, CAltitude::MeanSeaLevel, CLengthUnit::nullUnit());
             return null;
         }
-
     } // namespace
 } // namespace

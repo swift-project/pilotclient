@@ -119,7 +119,7 @@ namespace BlackCore
 
             VatServerType serverType;
             bool success = getCmdLineServerType(serverType);
-            if(!success) { serverType = CBuildConfig::isVatsimVersion() ? vatServerVatsim : vatServerLegacyFsd; }
+            if (!success) { serverType = CBuildConfig::isVatsimVersion() ? vatServerVatsim : vatServerLegacyFsd; }
 
             m_net.reset(Vat_CreateNetworkSession(serverType, sApp->swiftVersionChar(),
                                                  CVersion::versionMajor(), CVersion::versionMinor(),
@@ -686,11 +686,9 @@ namespace BlackCore
             static const QList<QCommandLineOption> opts
             {
                 QCommandLineOption({ "idAndKey", "clientIdAndKey" },
-                QCoreApplication::translate("networkvatlib", "Client id and key pair separated by ':', e.g. <id>:<key>."),
-                "clientIdAndKey"),
+                QCoreApplication::translate("networkvatlib", "Client id and key pair separated by ':', e.g. <id>:<key>."), "clientIdAndKey"),
                 QCommandLineOption({ "s", "serverType" },
-                QCoreApplication::translate("networkvatlib", "FSD server type. Possible values: vatsim, fsd"),
-                "serverType")
+                QCoreApplication::translate("networkvatlib", "FSD server type. Possible values: vatsim, fsd"), "serverType")
             };
 
             // only in not officially shipped versions
@@ -701,7 +699,7 @@ namespace BlackCore
         {
             QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
             if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
-            auto stringList = clientIdAndKey.split(':');
+            const auto stringList = clientIdAndKey.split(':');
             QString clientIdAsString = stringList[0];
             bool ok = true;
             id = clientIdAsString.toInt(&ok, 0);
@@ -712,19 +710,19 @@ namespace BlackCore
 
         bool CNetworkVatlib::getCmdLineServerType(VatServerType &serverType) const
         {
-             QString serverTypeAsString = sApp->getParserValue("serverType").toLower();
-             if(QString::compare(serverTypeAsString, "vatsim", Qt::CaseInsensitive) == 0)
-             {
-                 serverType = vatServerVatsim;
-                 return true;
-             }
+            QString serverTypeAsString = sApp->getParserValue("serverType").toLower();
+            if (QString::compare(serverTypeAsString, "vatsim", Qt::CaseInsensitive) == 0)
+            {
+                serverType = vatServerVatsim;
+                return true;
+            }
 
-             if(QString::compare(serverTypeAsString, "fsd", Qt::CaseInsensitive) == 0)
-             {
-                 serverType = vatServerLegacyFsd;
-                 return true;
-             }
-             return false;
+            if (QString::compare(serverTypeAsString, "fsd", Qt::CaseInsensitive) == 0)
+            {
+                serverType = vatServerLegacyFsd;
+                return true;
+            }
+            return false;
         }
 
         void CNetworkVatlib::sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign)

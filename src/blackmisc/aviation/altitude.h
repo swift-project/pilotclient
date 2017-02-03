@@ -32,7 +32,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         /*!
          * Altitude as used in aviation, can be AGL or MSL altitude
          * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
