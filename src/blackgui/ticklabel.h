@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef TICKLABEL_H
-#define TICKLABEL_H
+#ifndef BLACKGUI_TICKLABEL_H
+#define BLACKGUI_TICKLABEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/icons.h"
@@ -30,7 +30,6 @@ namespace BlackGui
         Q_OBJECT
 
     public:
-
         //! Constructor
         explicit CTickLabel(QWidget *parent = nullptr);
 
@@ -57,11 +56,9 @@ namespace BlackGui
         QPixmap m_pixmapTicked = BlackMisc::CIcons::tick16();
         QPixmap m_pixmapUnticked = BlackMisc::CIcons::cross16();
 
-        //! Set the label according to \sa
+        //! Set the label
         void setLabel();
-
     };
-
 } // namespace
 
 #endif // guard

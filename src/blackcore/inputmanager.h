@@ -44,6 +44,7 @@ namespace BlackCore
         void registerRemoteActions(const QStringList &actions);
 
         //! Register a new hotkey function
+        //! \remark RecvObj has to be a QObject
         template <typename RecvObj>
         int bind(const QString &action, RecvObj *receiver, void (RecvObj:: *slotPointer)(bool))
         {
@@ -62,7 +63,6 @@ namespace BlackCore
         //! Unbind a slot
         void unbind(int index);
 
-        //!
         //! Select a key combination as hotkey. This method returns immediatly.
         //! Listen for signals combinationSelectionChanged and combinationSelectionFinished
         //! to retrieve the user input.
@@ -104,9 +104,7 @@ namespace BlackCore
         CInputManager(QObject *parent = nullptr);
 
     private slots:
-
         void ps_processKeyCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
-
         void ps_processButtonCombinationChanged(const BlackMisc::Input::CHotkeyCombination &combination);
 
         //! Change hotkey settings
@@ -116,7 +114,7 @@ namespace BlackCore
         //! Handle to a bound action
         struct BindInfo
         {
-            // Using unique int intex for identification because std::function does not have a operator==
+            // Using unique int index for identification because std::function does not have a operator==
             int m_index = 0;
             QString m_action;
             QPointer<QObject> m_receiver;
@@ -124,7 +122,6 @@ namespace BlackCore
         };
 
         int bindImpl(const QString &action, QObject *receiver, std::function<void(bool)> function);
-
         void processCombination(const BlackMisc::Input::CHotkeyCombination &combination);
 
         static CInputManager *m_instance;

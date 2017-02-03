@@ -14,7 +14,6 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-
     CTickLabel::CTickLabel(QWidget *parent) :
         QLabel(parent)
     {
@@ -58,5 +57,4 @@ namespace BlackGui
         this->setPixmap(this->m_isPixmapTicked ? m_pixmapTicked : m_pixmapUnticked);
         this->setToolTip(this->m_isPixmapTicked ? m_toolTipTicked : m_toolTipUnticked);
     }
-
 } // namespace

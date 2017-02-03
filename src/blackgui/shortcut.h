@@ -21,7 +21,7 @@ class QKeySequence;
 namespace BlackGui
 {
     /*!
-     * Shortcut class to avoid overlapping shortcut defintions
+     * Shortcut definitions to avoid duplicated shortcut defintions
      */
     class BLACKGUI_EXPORT CShortcut
     {

@@ -45,7 +45,7 @@ namespace BlackGui
             CActionModel(QObject *parent = nullptr);
 
             //! Destructor
-            ~CActionModel();
+            virtual ~CActionModel();
 
             //! \copydoc QAbstractItemModel::data
             QVariant data(const QModelIndex &index, int role) const override;

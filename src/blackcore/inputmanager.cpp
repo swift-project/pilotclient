@@ -22,7 +22,6 @@ using namespace BlackMisc::Input;
 
 namespace BlackCore
 {
-
     CInputManager::CInputManager(QObject *parent) :
         QObject(parent),
         m_keyboard(IKeyboard::create(this)),

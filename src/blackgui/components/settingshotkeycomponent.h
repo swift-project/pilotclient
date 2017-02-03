@@ -27,7 +27,6 @@
 class QWidget;
 
 namespace Ui { class CSettingsHotkeyComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -49,6 +48,7 @@ namespace BlackGui
             void ps_addEntry();
             void ps_editEntry();
             void ps_removeEntry();
+            void ps_hotkeySlot(bool keyDown);
 
         private:
             void addHotkeytoSettings(const BlackMisc::Input::CActionHotkey &actionHotkey);
@@ -61,10 +61,7 @@ namespace BlackGui
             BlackGui::Models::CActionHotkeyListModel m_model;
             BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this };
             BlackCore::CActionBind m_action { "/Test/Message", this, &CSettingsHotkeyComponent::ps_hotkeySlot };
-
-            void ps_hotkeySlot(bool keyDown);
         };
-
     } // ns
 } // ns
 

@@ -26,7 +26,6 @@ class QTimer;
 
 namespace BlackGui
 {
-
     //! Widget which displays a vertical audio level meter, indicating the
     //! RMS and peak levels of the window of audio samples most recently analyzed
     //! by the Engine.
@@ -38,13 +37,12 @@ namespace BlackGui
         CLevelMeter(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CLevelMeter();
+        virtual ~CLevelMeter();
 
         //! \copydoc QWidget::paintEvent
         void paintEvent(QPaintEvent *event) override;
 
     public slots:
-
         //! Clean up
         void reset();
 
