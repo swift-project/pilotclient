@@ -164,6 +164,7 @@ QPushButton::disabled {
   color: white;
   padding: 0px;
   margin-right: 5px;
+  qproperty-textElideMode: ElideMiddle;
 }
 
 QProgressBar {
@@ -271,6 +272,8 @@ QGroupBox {
   border: 1px solid green;
   margin-top: 2.5ex; /* leave space at the top for the title */
   border-radius: 5px;
+  background: black; /* background is background color here */
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
 QGroupBox::title {
@@ -530,8 +533,11 @@ QTreeView::item {
 }
 
 QTreeView::item:hover {
+  background: green;
+}
+
+QTreeView::item:selected {
   background: blue;
-  border: 1px solid #bfcde4;
 }
 
 QTreeView::branch:open:has-children {

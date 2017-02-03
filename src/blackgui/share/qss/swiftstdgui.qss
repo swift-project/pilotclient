@@ -132,14 +132,6 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   border-radius: 5px;
 }
 
-#gb_hotkey {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
-#gb_action {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
-#gb_machine {
+#gb_hotkey #gb_action #gb_machine {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
