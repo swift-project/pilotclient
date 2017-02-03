@@ -19,7 +19,6 @@ namespace BlackGui
 {
     namespace Models
     {
-
         //! One single action item in a tree
         class ActionItem
         {
@@ -34,13 +33,16 @@ namespace BlackGui
             void appendChild(ActionItem *child);
 
             //! Find child by its name
-            ActionItem *findChildByName(const QString &name);
+            ActionItem *findChildByName(const QString &name) const;
 
             //! Get child by row
-            ActionItem *getChildByRow(int row);
+            ActionItem *getChildByRow(int row) const;
 
-            //! Number of childs
+            //! Number of children
             int getChildCount() const;
+
+            //! Has children?
+            bool hasChildren() const;
 
             //! Number of columns
             int getColumnCount() const;
@@ -55,16 +57,15 @@ namespace BlackGui
             int getRow() const;
 
             //! Get parent item
-            ActionItem *getParentItem();
+            ActionItem *getParentItem() const;
 
         private:
             QList<ActionItem *> m_childItems;
             QString m_action;
             QString m_actionName;
-            ActionItem *m_parentItem;
+            ActionItem *m_parentItem = nullptr;
         };
-
     }
-}
+} // ns
 
 #endif // guard

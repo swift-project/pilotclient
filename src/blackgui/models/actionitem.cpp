@@ -8,18 +8,15 @@
  */
 
 #include "blackgui/models/actionitem.h"
-
 #include <QtAlgorithms>
 
 namespace BlackGui
 {
     namespace Models
     {
-
         ActionItem::ActionItem(const QString &action, const QString &name, ActionItem *parent) :
             m_action(action), m_actionName(name), m_parentItem(parent)
-        {
-        }
+        { }
 
         ActionItem::~ActionItem()
         {
@@ -31,7 +28,7 @@ namespace BlackGui
             m_childItems.append(item);
         }
 
-        ActionItem *ActionItem::findChildByName(const QString &name)
+        ActionItem *ActionItem::findChildByName(const QString &name) const
         {
             for (auto child : m_childItems)
             {
@@ -40,7 +37,7 @@ namespace BlackGui
             return nullptr;
         }
 
-        ActionItem *ActionItem::getChildByRow(int row)
+        ActionItem *ActionItem::getChildByRow(int row) const
         {
             return m_childItems.value(row);
         }
@@ -48,6 +45,11 @@ namespace BlackGui
         int ActionItem::getChildCount() const
         {
             return m_childItems.count();
+        }
+
+        bool ActionItem::hasChildren() const
+        {
+            return getChildCount() > 0;
         }
 
         int ActionItem::getColumnCount() const
@@ -65,7 +67,7 @@ namespace BlackGui
             return m_actionName;
         }
 
-        ActionItem *ActionItem::getParentItem()
+        ActionItem *ActionItem::getParentItem() const
         {
             return m_parentItem;
         }
@@ -73,9 +75,7 @@ namespace BlackGui
         int ActionItem::getRow() const
         {
             if (m_parentItem) { return m_parentItem->m_childItems.indexOf(const_cast<ActionItem *>(this)); }
-
             return 0;
         }
-
     }
 }
