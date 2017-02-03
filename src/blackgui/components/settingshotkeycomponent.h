@@ -43,7 +43,7 @@ namespace BlackGui
             CSettingsHotkeyComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsHotkeyComponent();
+            virtual ~CSettingsHotkeyComponent();
 
         private slots:
             void ps_addEntry();

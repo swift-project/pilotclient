@@ -72,21 +72,21 @@ namespace BlackGui
             m_inputManager = BlackCore::CInputManager::instance();
 
             ui->setupUi(this);
-            ui->advancedFrame->hide();
+            ui->qf_Advanced->hide();
 
-            ui->tv_actions->setModel(&m_actionModel);
-            ui->pb_advancedMode->setIcon(BlackMisc::CIcons::arrowMediumSouth16());
+            ui->tv_Actions->setModel(&m_actionModel);
+            ui->pb_AdvancedMode->setIcon(BlackMisc::CIcons::arrowMediumSouth16());
             selectAction();
 
-            if (!actionHotkey.getCombination().isEmpty()) { ui->pb_selectedHotkey->setText(actionHotkey.getCombination().toQString()); }
+            if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
 
-            connect(ui->pb_advancedMode, &QPushButton::clicked, this, &CHotkeyDialog::ps_advancedModeChanged);
-            connect(ui->pb_selectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::ps_selectHotkey);
-            connect(ui->pb_accept, &QPushButton::clicked, this, &CHotkeyDialog::ps_accept);
-            connect(ui->pb_cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
+            connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::ps_advancedModeChanged);
+            connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::ps_selectHotkey);
+            connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::ps_accept);
+            connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
             connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::ps_combinationSelectionChanged);
             connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::ps_combinationSelectionFinished);
-            connect(ui->tv_actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::ps_changeSelectedAction);
+            connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::ps_changeSelectedAction);
 
             initStyleSheet();
         }
@@ -99,7 +99,7 @@ namespace BlackGui
         {
             for (const auto &app : applications)
             {
-                ui->cb_identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
+                ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
             }
         }
 
@@ -129,29 +129,29 @@ namespace BlackGui
         {
             if (m_actionHotkey.getCombination().isEmpty()) return;
 
-            if (!ui->advancedFrame->isVisible())
+            if (!ui->qf_Advanced->isVisible())
             {
                 setupAdvancedFrame();
-                ui->advancedFrame->show();
-                ui->pb_advancedMode->setIcon(BlackMisc::CIcons::arrowMediumNorth16());
+                ui->qf_Advanced->show();
+                ui->pb_AdvancedMode->setIcon(BlackMisc::CIcons::arrowMediumNorth16());
             }
             else
             {
-                ui->pb_advancedMode->setIcon(BlackMisc::CIcons::arrowMediumSouth16());
-                ui->advancedFrame->hide();
-                ui->gb_hotkey->resize(0, 0);
+                ui->pb_AdvancedMode->setIcon(BlackMisc::CIcons::arrowMediumSouth16());
+                ui->qf_Advanced->hide();
+                ui->gb_Hotkey->resize(0, 0);
             }
         }
 
         void CHotkeyDialog::ps_selectHotkey()
         {
-            ui->pb_selectedHotkey->setText("Press any key/button...");
+            ui->pb_SelectedHotkey->setText("Press any key/button...");
             m_inputManager->startCapture();
         }
 
         void CHotkeyDialog::ps_combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination)
         {
-            ui->pb_selectedHotkey->setText(combination.toFormattedQString());
+            ui->pb_SelectedHotkey->setText(combination.toFormattedQString());
         }
 
         void CHotkeyDialog::ps_combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination)
@@ -171,19 +171,19 @@ namespace BlackGui
         {
             if (m_actionHotkey.getApplicableMachine().getMachineName().isEmpty())
             {
-                CLogMessage().validationWarning("Missing %1") << ui->gb_machine->title();
+                CLogMessage().validationWarning("Missing %1") << ui->gb_Machine->title();
                 return;
             }
 
             if (m_actionHotkey.getCombination().isEmpty())
             {
-                CLogMessage().validationWarning("Missing %1") << ui->gb_hotkey->title();
+                CLogMessage().validationWarning("Missing %1") << ui->gb_Hotkey->title();
                 return;
             }
 
             if (m_actionHotkey.getAction().isEmpty())
             {
-                CLogMessage().validationWarning("Missing %1") << ui->gb_action->title();
+                CLogMessage().validationWarning("Missing %1") << ui->gb_Action->title();
                 return;
             }
 
@@ -198,12 +198,12 @@ namespace BlackGui
 
         void CHotkeyDialog::synchronizeSimpleSelection()
         {
-            ui->pb_selectedHotkey->setText(m_actionHotkey.getCombination().toFormattedQString());
+            ui->pb_SelectedHotkey->setText(m_actionHotkey.getCombination().toFormattedQString());
         }
 
         void CHotkeyDialog::synchronizeAdvancedSelection()
         {
-            if (ui->advancedFrame->isVisible()) { setupAdvancedFrame(); }
+            if (ui->qf_Advanced->isVisible()) { setupAdvancedFrame(); }
         }
 
         void CHotkeyDialog::setupAdvancedFrame()
@@ -217,7 +217,7 @@ namespace BlackGui
                 if (splittedKey == "+") continue;
 
                 int currentIndex = -1;
-                CKeySelectionBox *ksb = new CKeySelectionBox(ui->advancedFrame);
+                CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
                 for (const auto &supportedKey : allSupportedKeys)
                 {
                     QString supportedKeyAsString = supportedKey.toQString();
@@ -228,8 +228,8 @@ namespace BlackGui
                     }
                 }
                 ksb->setSelectedIndex(currentIndex);
-                ui->advancedFrame->layout()->addWidget(ksb);
-                int position = ui->advancedFrame->layout()->count() - 1;
+                ui->qf_Advanced->layout()->addWidget(ksb);
+                int position = ui->qf_Advanced->layout()->count() - 1;
                 ksb->setProperty("position", position);
                 connect(ksb, &CKeySelectionBox::keySelectionChanged, this, &CHotkeyDialog::advancedKeyChanged);
             }
@@ -237,7 +237,7 @@ namespace BlackGui
 
         void CHotkeyDialog::clearAdvancedFrame()
         {
-            QLayout *layout = ui->advancedFrame->layout();
+            QLayout *layout = ui->qf_Advanced->layout();
             QLayoutItem *child;
 
             while ((child = layout->takeAt(0)) != 0)
@@ -273,10 +273,10 @@ namespace BlackGui
                 auto indexList = m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
                 if (indexList.isEmpty()) return;
                 parentIndex = indexList.first();
-                ui->tv_actions->expand(parentIndex);
+                ui->tv_Actions->expand(parentIndex);
             }
 
-            QItemSelectionModel *selectionModel = ui->tv_actions->selectionModel();
+            QItemSelectionModel *selectionModel = ui->tv_Actions->selectionModel();
             selectionModel->select(parentIndex, QItemSelectionModel::Select);
         }
     } // ns

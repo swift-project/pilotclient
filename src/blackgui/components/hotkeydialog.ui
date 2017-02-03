@@ -15,25 +15,25 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0" colspan="3">
-    <widget class="QGroupBox" name="gb_machine">
+    <widget class="QGroupBox" name="gb_Machine">
      <property name="title">
       <string>Machine</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="0">
-       <widget class="QComboBox" name="cb_identifier"/>
+       <widget class="QComboBox" name="cb_Identifier"/>
       </item>
      </layout>
     </widget>
    </item>
    <item row="1" column="0" colspan="3">
-    <widget class="QGroupBox" name="gb_hotkey">
+    <widget class="QGroupBox" name="gb_Hotkey">
      <property name="title">
       <string>Combination</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="3" column="3">
-       <widget class="QPushButton" name="pb_advancedMode">
+       <widget class="QPushButton" name="pb_AdvancedMode">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -58,7 +58,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QRadioButton" name="rb_press">
+       <widget class="QRadioButton" name="rb_Press">
         <property name="text">
          <string>Press</string>
         </property>
@@ -68,7 +68,7 @@
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
-       <widget class="QPushButton" name="pb_selectedHotkey">
+       <widget class="QPushButton" name="pb_SelectedHotkey">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -81,7 +81,7 @@
        </widget>
       </item>
       <item row="2" column="2" colspan="2">
-       <spacer name="horizontalSpacer">
+       <spacer name="hs_Hotkey">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -94,14 +94,14 @@
        </spacer>
       </item>
       <item row="2" column="1">
-       <widget class="QRadioButton" name="rb_release">
+       <widget class="QRadioButton" name="rb_Release">
         <property name="text">
          <string>Release</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="4">
-       <widget class="QFrame" name="advancedFrame">
+       <widget class="QFrame" name="qf_Advanced">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -118,13 +118,13 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="3">
-    <widget class="QGroupBox" name="gb_action">
+    <widget class="QGroupBox" name="gb_Action">
      <property name="title">
       <string>Action</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
-       <widget class="QTreeView" name="tv_actions">
+       <widget class="QTreeView" name="tv_Actions">
         <attribute name="headerVisible">
          <bool>false</bool>
         </attribute>
@@ -134,7 +134,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <spacer name="horizontalSpacer_2">
+    <spacer name="hs_Dialog">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -147,14 +147,14 @@
     </spacer>
    </item>
    <item row="3" column="1">
-    <widget class="QPushButton" name="pb_accept">
+    <widget class="QPushButton" name="pb_Accept">
      <property name="text">
       <string>Ok</string>
      </property>
     </widget>
    </item>
    <item row="3" column="2">
-    <widget class="QPushButton" name="pb_cancel">
+    <widget class="QPushButton" name="pb_Cancel">
      <property name="text">
       <string>Cancel</string>
      </property>

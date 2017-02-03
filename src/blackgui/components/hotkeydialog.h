@@ -70,7 +70,7 @@ namespace BlackGui
             CHotkeyDialog(const BlackMisc::Input::CActionHotkey &actionHotkey, QWidget *parent = nullptr);
 
             //! Destructor
-            ~CHotkeyDialog();
+            virtual ~CHotkeyDialog();
 
             //! Get hotkey selected by user
             BlackMisc::Input::CActionHotkey getSelectedActionHotkey() const { return m_actionHotkey; }
@@ -81,7 +81,7 @@ namespace BlackGui
             //! Init style sheet
             void initStyleSheet();
 
-            //! getHotkey runs the hotkey dialog and returns the result
+            //! Runs the hotkey dialog and returns the result
             static BlackMisc::Input::CActionHotkey getActionHotkey(const BlackMisc::Input::CActionHotkey &initial, const BlackMisc::CIdentifierList &applications,
                     QWidget *parent = nullptr);
 

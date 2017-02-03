@@ -42,14 +42,14 @@ namespace BlackGui
             ui(new Ui::CSettingsHotkeyComponent)
         {
             ui->setupUi(this);
-            ui->tv_hotkeys->setModel(&m_model);
+            ui->tv_Hotkeys->setModel(&m_model);
 
-            connect(ui->pb_addHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_addEntry);
-            connect(ui->pb_editHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_editEntry);
-            connect(ui->pb_removeHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_removeEntry);
+            connect(ui->pb_AddHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_addEntry);
+            connect(ui->pb_EditHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_editEntry);
+            connect(ui->pb_RemoveHotkey, &QPushButton::clicked, this, &CSettingsHotkeyComponent::ps_removeEntry);
 
             reloadHotkeysFromSettings();
-            ui->tv_hotkeys->selectRow(0);
+            ui->tv_Hotkeys->selectRow(0);
         }
 
         CSettingsHotkeyComponent::~CSettingsHotkeyComponent()
@@ -75,10 +75,10 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::ps_editEntry()
         {
-            auto index = ui->tv_hotkeys->selectionModel()->currentIndex();
+            auto index = ui->tv_Hotkeys->selectionModel()->currentIndex();
             if (!index.isValid()) return;
 
-            const auto model = ui->tv_hotkeys->model();
+            const auto model = ui->tv_Hotkeys->model();
             const QModelIndex indexHotkey = model->index(index.row(), 0, QModelIndex());
             Q_ASSERT(indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).canConvert<CActionHotkey>());
             CActionHotkey actionHotkey = indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
@@ -96,7 +96,7 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::ps_removeEntry()
         {
-            QModelIndexList indexes = ui->tv_hotkeys->selectionModel()->selectedRows();
+            QModelIndexList indexes = ui->tv_Hotkeys->selectionModel()->selectedRows();
             for (const auto &index : indexes)
             {
                 CActionHotkey actionHotkey = index.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
@@ -165,7 +165,7 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::ps_hotkeySlot(bool keyDown)
         {
-            if (keyDown) QMessageBox::information(this, "Test", "Push-To-Talk");
+            if (keyDown) { QMessageBox::information(this, "Test", "Hotkey test"); }
         }
     } // ns
 } // ns

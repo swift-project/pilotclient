@@ -11,15 +11,9 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>sample_hotkeys</string>
+   <string>Hotkeys</string>
   </property>
-  <property name="frameShape">
-   <enum>QFrame::StyledPanel</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Raised</enum>
-  </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gl_HotKeyComponent">
    <property name="leftMargin">
     <number>1</number>
    </property>
@@ -30,21 +24,21 @@
     <number>1</number>
    </property>
    <item row="1" column="1">
-    <widget class="QPushButton" name="pb_addHotkey">
+    <widget class="QPushButton" name="pb_AddHotkey">
      <property name="text">
       <string>Add</string>
      </property>
     </widget>
    </item>
    <item row="1" column="2">
-    <widget class="QPushButton" name="pb_editHotkey">
+    <widget class="QPushButton" name="pb_EditHotkey">
      <property name="text">
       <string>Edit</string>
      </property>
     </widget>
    </item>
    <item row="1" column="3">
-    <widget class="QPushButton" name="pb_removeHotkey">
+    <widget class="QPushButton" name="pb_RemoveHotkey">
      <property name="text">
       <string>Remove</string>
      </property>
@@ -64,7 +58,10 @@
     </spacer>
    </item>
    <item row="0" column="0" colspan="5">
-    <widget class="QTableView" name="tv_hotkeys">
+    <widget class="QTableView" name="tv_Hotkeys">
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
      </property>
@@ -75,9 +72,6 @@
       <bool>true</bool>
      </attribute>
      <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="verticalHeaderStretchLastSection">
       <bool>false</bool>
      </attribute>
     </widget>
