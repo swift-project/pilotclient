@@ -13,13 +13,14 @@
 #define BLACKCORE_ACTIONBIND_H
 
 #include "blackcore/inputmanager.h"
+#include "blackcoreexport.h"
 
 namespace BlackCore
 {
     /*!
      * CActionBind binds a member function to an action
      */
-    class CActionBind
+    class BLACKCORE_EXPORT CActionBind
     {
     public:
         //! Signature of receiving member function
@@ -28,24 +29,37 @@ namespace BlackCore
 
         //! Constructor
         template <typename Receiver>
-        CActionBind(const QString &action, Receiver *receiver, MembFunc<Receiver> slot = nullptr)
+        CActionBind(const QString &action, Receiver *receiver, MembFunc<Receiver> slot = nullptr, const std::function<void()> &deleteCallback = {}) :
+            m_deleteCallback(deleteCallback)
         {
+            const QString a = CActionBind::normalizeAction(action);
             auto inputManger = CInputManager::instance();
-            inputManger->registerAction(action);
-            m_index = inputManger->bind(action, receiver, slot);
+            inputManger->registerAction(a);
+            m_index = inputManger->bind(a, receiver, slot);
         }
 
         //! Destructor
-        ~CActionBind()
-        {
-            auto inputManger = CInputManager::instance();
-            inputManger->unbind(m_index);
-        }
+        ~CActionBind();
+
+        //! Unbind from BlackCore::CInputManager
+        void unbind();
+
+        //! Bound with BlackCore::CInputManager
+        bool isBound() const { return m_index >= 0; }
+
+        //! Index
+        int getIndex() const { return m_index; }
 
     private:
-        int m_index;
+        //! normalize the name string
+        static QString normalizeAction(const QString &action);
+
+        int m_index = -1; //!< action indexx (unique)
+        std::function<void()> m_deleteCallback; //!< called when deleted
     };
+
+    //! List of bindings
+    using CActionBindings = QList<QSharedPointer<CActionBind>>;
 }
 
 #endif
-
