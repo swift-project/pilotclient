@@ -170,24 +170,6 @@ namespace BlackCore
         }
     }
 
-    bool CSimulatorCommon::setInitialAircraftSituation(CSimulatedAircraft &aircraft)
-    {
-        if (!this->m_interpolator) { return false; }
-        const CCallsign callsign(aircraft.getCallsign());
-        Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
-
-        // with an interpolator the interpolated situation is used
-        // to avoid position jittering when displayed
-        const qint64 time = QDateTime::currentMSecsSinceEpoch();
-        IInterpolator::InterpolationStatus interpolationStatus;
-        CInterpolationHints &hints = m_hints[aircraft.getCallsign()];
-        hints.setVtolAircraft(aircraft.isVtol());
-        const CAircraftSituation currentSituation(m_interpolator->getInterpolatedSituation(callsign, time, hints, interpolationStatus));
-        if (!interpolationStatus.didInterpolationSucceed()) { return false; }
-        aircraft.setSituation(currentSituation);
-        return true;
-    }
-
     void CSimulatorCommon::reloadWeatherSettings()
     {
         if (!m_isWeatherActivated) { return; }

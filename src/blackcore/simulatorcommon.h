@@ -165,9 +165,6 @@ namespace BlackCore
         //! Restore aircraft from the provider data
         void resetAircraftFromProvider(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Override situation from current interpolator values, if any!
-        bool setInitialAircraftSituation(BlackMisc::Simulation::CSimulatedAircraft &aircraft);
-
         //! Set own model
         void reverseLookupAndUpdateOwnAircraftModel(const BlackMisc::Simulation::CAircraftModel &model);
 
