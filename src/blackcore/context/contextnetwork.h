@@ -299,6 +299,9 @@ namespace BlackCore
             //! Inject a text message as received
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
 
+            //! Request parts for callsign (from another client)
+            virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
         protected:
             //! Constructor
             IContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContext(mode, runtime) {}

@@ -116,6 +116,7 @@ namespace BlackCore
             virtual void testCreateDummyOnlineAtcStations(int number) override;
             virtual void testAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts, bool incremental) override;
             virtual void testReceivedTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
+            virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override;
             //! @}
 
         private:

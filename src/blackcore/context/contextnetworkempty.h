@@ -235,6 +235,13 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc IContextNetwork::testRequestAircraftConfig
+            virtual void testRequestAircraftConfig(const BlackMisc::Aviation::CCallsign &callsign) override
+            {
+                Q_UNUSED(callsign);
+                logEmptyContextWarning(Q_FUNC_INFO);
+            }
+
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override
             {

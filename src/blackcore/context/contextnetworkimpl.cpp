@@ -183,7 +183,7 @@ namespace BlackCore
                 this->m_network->presetServer(server);
 
                 // Fall back to observer mode, if no simulator is available or not simulating
-                if(CBuildConfig::isShippedVersion() && !this->getIContextSimulator()->isSimulatorSimulating())
+                if (CBuildConfig::isShippedVersion() && !this->getIContextSimulator()->isSimulatorSimulating())
                 {
                     CLogMessage(this).info("No simulator connected or connected simulator not simulating. Falling back to observer mode");
                     mode = INetwork::LoginAsObserver;
@@ -677,6 +677,13 @@ namespace BlackCore
             if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
             Q_ASSERT(this->m_network);
             return this->m_network->getInterimPositionReceivers();
+        }
+
+        void CContextNetwork::testRequestAircraftConfig(const CCallsign &callsign)
+        {
+            if (this->isDebugEnabled()) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+            Q_ASSERT(this->m_network);
+            this->m_network->sendAircraftConfigQuery(callsign);
         }
 
         void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
