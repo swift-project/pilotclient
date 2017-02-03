@@ -23,6 +23,7 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
+#include "blackgui/guiactionbind.h"
 #include "blackmisc/audio/notificationsounds.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/loghandler.h"
@@ -104,9 +105,10 @@ protected:
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
     QScopedPointer<BlackGui::Components::CNavigatorDialog> m_navigator{new BlackGui::Components::CNavigatorDialog()}; // if I pass the parent, the dialog is always centered over the parent
-    bool                        m_init = false;
+    BlackCore::CActionBindings  m_menuHotkeyHandlers;
     BlackGui::CManagedStatusBar m_statusBar;
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
+    bool                        m_init = false;
 
     // contexts
     bool m_coreAvailable           = false;

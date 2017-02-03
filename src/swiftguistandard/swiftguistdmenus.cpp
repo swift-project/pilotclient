@@ -9,6 +9,7 @@
 
 #include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/components/settingscomponent.h"
+#include "blackgui/guiactionbind.h"
 #include "blackgui/guiapplication.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/pq/units.h"
@@ -74,4 +75,9 @@ void SwiftGuiStd::initMenus()
     sGui->addMenuWindow(*ui->menu_Window);
     sGui->addMenuHelp(*ui->menu_Help);
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(ui->menu_InfoAreas));
+
+    // for hotkeys
+    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_InfoAreas, "Info areas"));
+    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_File, "File"));
+    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_Window, "Window"));
 }
