@@ -121,8 +121,7 @@ namespace BlackGui
             // add local application
             editDialog.setRegisteredApplications(applications);
             if (editDialog.exec()) { return editDialog.getSelectedActionHotkey(); }
-            else { return {}; }
-
+            return {};
         }
 
         void CHotkeyDialog::ps_advancedModeChanged()
@@ -270,7 +269,7 @@ namespace BlackGui
             for (const auto &token : tokens)
             {
                 QModelIndex startIndex = m_actionModel.index(0, 0, parentIndex);
-                auto indexList = m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
+                const auto indexList = m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
                 if (indexList.isEmpty()) return;
                 parentIndex = indexList.first();
                 ui->tv_Actions->expand(parentIndex);

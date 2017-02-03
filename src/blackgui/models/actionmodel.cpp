@@ -31,15 +31,16 @@ namespace BlackGui
 
         int CActionModel::columnCount(const QModelIndex &parent) const
         {
-            if (parent.isValid()) { return static_cast<ActionItem *>(parent.internalPointer())->getColumnCount(); }
-            else { return m_rootItem->getColumnCount(); }
+            return parent.isValid() ?
+                   static_cast<ActionItem *>(parent.internalPointer())->getColumnCount() :
+                   m_rootItem->getColumnCount();
         }
 
         QVariant CActionModel::data(const QModelIndex &index, int role) const
         {
             if (!index.isValid()) { return QVariant(); }
 
-            ActionItem *item = static_cast<ActionItem *>(index.internalPointer());
+            const ActionItem *item = static_cast<ActionItem *>(index.internalPointer());
 
             if (role == Qt::DisplayRole) { return item->getActionName(); }
             if (role == ActionRole) { return item->getAction(); }
@@ -50,21 +51,24 @@ namespace BlackGui
         Qt::ItemFlags CActionModel::flags(const QModelIndex &index) const
         {
             if (!index.isValid()) { return 0; }
-
-            return QAbstractItemModel::flags(index);
+            const ActionItem *item = static_cast<ActionItem *>(index.internalPointer());
+            const Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+            const bool selectable = item && !item->hasChildren(); // only leafs are selectable
+            return selectable ? flags | Qt::ItemIsSelectable : flags & ~Qt::ItemIsSelectable;
         }
 
         QModelIndex CActionModel::index(int row, int column, const QModelIndex &parent) const
         {
             if (!hasIndex(row, column, parent)) { return QModelIndex(); }
 
-            ActionItem *parentItem;
-            if (!parent.isValid()) { parentItem = m_rootItem.data(); }
-            else { parentItem = static_cast<ActionItem *>(parent.internalPointer()); }
+            const ActionItem *parentItem = parent.isValid() ?
+                                           static_cast<ActionItem *>(parent.internalPointer()) :
+                                           m_rootItem.data();
 
             ActionItem *childItem = parentItem->getChildByRow(row);
-            if (childItem) { return createIndex(row, column, childItem); }
-            else { return {}; }
+            return childItem ?
+                   createIndex(row, column, childItem) :
+                   QModelIndex();
         }
 
         QModelIndex CActionModel::parent(const QModelIndex &index) const

@@ -28,7 +28,7 @@ namespace BlackGui
         class ActionItem;
 
         /*!
-         * Action tree model
+         * Action tree model, used with hotkey actions
          */
         class BLACKGUI_EXPORT CActionModel : public QAbstractItemModel
         {
