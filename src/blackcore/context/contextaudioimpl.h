@@ -28,6 +28,7 @@
 #include "blackmisc/identifier.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/icons.h"
 #include "blacksound/selcalplayer.h"
 
 #include <QHash>
@@ -69,62 +70,29 @@ namespace BlackCore
             virtual ~CContextAudio();
 
         public slots:
-            //! \copydoc IContextAudio::getComVoiceRooms()
+            // Interface implementations
+            //! \publicsection
+            //! @{
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override;
-
-            //! \copydoc IContextAudio::getComVoiceRoomsWithAudioStatus()
             virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
-
-            //! \copydoc IContextAudio::getVoiceRoom
             virtual BlackMisc::Audio::CVoiceRoom getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const override;
-
-            //! \copydoc IContextAudio::setComVoiceRooms
             virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override;
-
-            //! \copydoc IContextAudio::setOwnCallsignForRooms
             virtual void setOwnCallsignForRooms(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-            //! \copydoc IContextAudio::getRoomCallsigns()
             virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
-
-            //! \copydoc IContextAudio::getRoomUsers()
             virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
-
-            //! \copydoc IContextAudio::leaveAllVoiceRooms
             virtual void leaveAllVoiceRooms() override;
-
-            //! \copydoc IContextAudio::getAudioDevices()
             virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override;
-
-            //! \copydoc IContextAudio::getCurrentAudioDevices()
             virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override;
-
-            //! \copydoc IContextAudio::setCurrentAudioDevice()
             virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
-
-            //! \copydoc IContextAudio::setVoiceOutputVolume
             virtual void setVoiceOutputVolume(int volume) override;
-
-            //! \copydoc IContextAudio::getVoiceOutputVolume
             virtual int getVoiceOutputVolume() const override;
-
-            //! \copydoc IContextAudio::setMute
             virtual void setMute(bool muted) override;
-
-            //! \copydoc IContextAudio::isMuted()
             virtual bool isMuted() const override;
-
-            //! \copydoc IContextAudio::playSelcalTone
             virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
-
-            //! \copydoc IContextAudio::playNotification
             virtual void playNotification(BlackMisc::Audio::CNotificationSounds::Notification notification, bool considerSettings) const override;
-
-            //! \copydoc IContextAudio::enableAudioLoopback
             virtual void enableAudioLoopback(bool enable = true) override;
-
-            //! \copydoc IContextAudio::isAudioLoopbackEnabled
             virtual bool isAudioLoopbackEnabled() const override;
+            //! @}
 
             //! \addtogroup swiftdotcommands
             //! @{
@@ -169,7 +137,7 @@ namespace BlackCore
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
             const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
-            CActionBind m_actionPtt { "/Voice/Activate push-to-talk", this, &CContextAudio::ps_setVoiceTransmission };
+            CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CContextAudio::ps_setVoiceTransmission };
             std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
             std::unique_ptr<IAudioMixer> m_audioMixer;
             int m_outVolumeBeforeMute = 90;

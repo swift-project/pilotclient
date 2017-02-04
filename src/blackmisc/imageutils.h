@@ -17,6 +17,7 @@
 #include <QByteArray>
 #include <QString>
 #include <QPixmap>
+#include <QIcon>
 
 //! Free functions in BlackMisc
 namespace BlackMisc
@@ -39,6 +40,8 @@ namespace BlackMisc
     //! Hex encoded pixmap string to Pixmap
     BLACKMISC_EXPORT bool pngHexStringToPixmapRef(const QString &hexString, QPixmap &pixmap);
 
+    //! Icon to pixmap
+    BLACKMISC_EXPORT QPixmap iconToPixmap(const QIcon &icon);
 } // ns
 
 #endif // guard

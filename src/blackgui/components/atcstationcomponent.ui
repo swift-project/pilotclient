@@ -14,7 +14,7 @@
    <string>ATC stations</string>
   </property>
   <property name="currentIndex">
-   <number>1</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="tb_AtcStationsOnline">
    <attribute name="title">

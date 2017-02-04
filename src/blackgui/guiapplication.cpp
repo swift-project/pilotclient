@@ -457,26 +457,28 @@ namespace BlackGui
     {
         QWidget *w = mainApplicationWindow();
         if (!w) { return; }
-        QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarMaxButton), "Fullscreen");
+        const QSize iconSize = CIcons::empty16().size();
+        QPixmap icon = w->style()->standardIcon(QStyle::SP_TitleBarMaxButton).pixmap(iconSize);
+        QAction *a = menu.addAction(icon.scaled(iconSize), "Fullscreen");
         bool c = connect(a, &QAction::triggered, this, [a, w]()
         {
             w->showFullScreen();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
-        a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarMinButton), "Minimize");
+        icon = w->style()->standardIcon(QStyle::SP_TitleBarMinButton).pixmap(iconSize);
+        a = menu.addAction(icon.scaled(iconSize), "Minimize");
         c = connect(a, &QAction::triggered, this, [a, w]()
         {
             w->showMinimized();
-
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
-        a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarNormalButton), "Normal");
+        icon = w->style()->standardIcon(QStyle::SP_TitleBarNormalButton).pixmap(iconSize);
+        a = menu.addAction(icon.scaled(iconSize), "Normal");
         c = connect(a, &QAction::triggered, this, [a, w]()
         {
             w->showNormal();
-
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 

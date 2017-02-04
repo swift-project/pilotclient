@@ -58,3 +58,11 @@ bool BlackMisc::pngHexStringToPixmapRef(const QString &hexString, QPixmap &pixma
     QByteArray ba(byteArrayFromHexString(hexString));
     return pngByteArrayToPixmapRef(ba, pixmap);
 }
+
+QPixmap BlackMisc::iconToPixmap(const QIcon &icon)
+{
+    if (icon.isNull()) { return QPixmap(); }
+    const QList<QSize> sizes = icon.availableSizes();
+    if (!sizes.isEmpty()) { return icon.pixmap(sizes.first()); }
+    return icon.pixmap(16, 16);
+}
