@@ -162,6 +162,7 @@ namespace BlackGui
         void CHotkeyDialog::ps_changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected)
         {
             Q_UNUSED(deselected);
+            if (selected.indexes().isEmpty()) { return; }
             const auto index = selected.indexes().first();
             m_actionHotkey.setAction(index.data(Models::CActionModel::ActionRole).toString());
         }
