@@ -64,7 +64,7 @@ namespace BlackGui
             ui(new Ui::CTextMessageComponent)
         {
             ui->setupUi(this);
-
+            ui->tw_TextMessages->setCurrentIndex(0);
             ui->le_textMessages->setVisible(false);
             ui->tvp_TextMessagesAll->setResizeMode(CTextMessageView::ResizingAuto);
 

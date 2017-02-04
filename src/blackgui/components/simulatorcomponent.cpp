@@ -43,6 +43,7 @@ namespace BlackGui
             ui(new Ui::CSimulatorComponent)
         {
             ui->setupUi(this);
+            this->setCurrentIndex(0);
             ui->tvp_LiveData->setIconMode(true);
             ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
             this->addOrUpdateLiveDataByName("info", "no data yet", CIcons::StandardIconWarning16);

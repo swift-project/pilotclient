@@ -59,6 +59,7 @@ namespace BlackGui
             ui(new Ui::CAtcStationComponent)
         {
             ui->setupUi(this);
+            this->setCurrentIndex(0);
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
             CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_AtcStationsOnlineMetar);

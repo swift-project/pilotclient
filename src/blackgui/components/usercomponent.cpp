@@ -35,6 +35,7 @@ namespace BlackGui
             ui(new Ui::CUserComponent)
         {
             ui->setupUi(this);
+            this->setCurrentIndex(0);
             this->tabBar()->setExpanding(false);
             this->tabBar()->setUsesScrollButtons(true);
             connect(ui->tvp_AllUsers, &CUserView::modelDataChangedDigest, this, &CUserComponent::ps_onCountChanged);
