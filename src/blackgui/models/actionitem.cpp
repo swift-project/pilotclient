@@ -14,21 +14,21 @@ namespace BlackGui
 {
     namespace Models
     {
-        ActionItem::ActionItem(const QString &action, const QString &name, ActionItem *parent) :
+        CActionItem::CActionItem(const QString &action, const QString &name, CActionItem *parent) :
             m_action(action), m_actionName(name), m_parentItem(parent)
         { }
 
-        ActionItem::~ActionItem()
+        CActionItem::~CActionItem()
         {
             qDeleteAll(m_childItems);
         }
 
-        void ActionItem::appendChild(ActionItem *item)
+        void CActionItem::appendChild(CActionItem *item)
         {
             m_childItems.append(item);
         }
 
-        ActionItem *ActionItem::findChildByName(const QString &name) const
+        CActionItem *CActionItem::findChildByName(const QString &name) const
         {
             for (auto child : m_childItems)
             {
@@ -37,44 +37,44 @@ namespace BlackGui
             return nullptr;
         }
 
-        ActionItem *ActionItem::getChildByRow(int row) const
+        CActionItem *CActionItem::getChildByRow(int row) const
         {
             return m_childItems.value(row);
         }
 
-        int ActionItem::getChildCount() const
+        int CActionItem::getChildCount() const
         {
             return m_childItems.count();
         }
 
-        bool ActionItem::hasChildren() const
+        bool CActionItem::hasChildren() const
         {
             return getChildCount() > 0;
         }
 
-        int ActionItem::getColumnCount() const
+        int CActionItem::getColumnCount() const
         {
             return 1;
         }
 
-        QString ActionItem::getAction() const
+        QString CActionItem::getAction() const
         {
             return m_action;
         }
 
-        QString ActionItem::getActionName() const
+        QString CActionItem::getActionName() const
         {
             return m_actionName;
         }
 
-        ActionItem *ActionItem::getParentItem() const
+        CActionItem *CActionItem::getParentItem() const
         {
             return m_parentItem;
         }
 
-        int ActionItem::getRow() const
+        int CActionItem::getRow() const
         {
-            if (m_parentItem) { return m_parentItem->m_childItems.indexOf(const_cast<ActionItem *>(this)); }
+            if (m_parentItem) { return m_parentItem->m_childItems.indexOf(const_cast<CActionItem *>(this)); }
             return 0;
         }
     }

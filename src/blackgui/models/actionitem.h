@@ -20,23 +20,23 @@ namespace BlackGui
     namespace Models
     {
         //! One single action item in a tree
-        class ActionItem
+        class CActionItem
         {
         public:
             //! Constructor
-            ActionItem(const QString &action, const QString &name, ActionItem *parentItem = nullptr);
+            CActionItem(const QString &action, const QString &name, CActionItem *parentItem = nullptr);
 
             //! Destructor
-            ~ActionItem();
+            ~CActionItem();
 
             //! Append a new child
-            void appendChild(ActionItem *child);
+            void appendChild(CActionItem *child);
 
             //! Find child by its name
-            ActionItem *findChildByName(const QString &name) const;
+            CActionItem *findChildByName(const QString &name) const;
 
             //! Get child by row
-            ActionItem *getChildByRow(int row) const;
+            CActionItem *getChildByRow(int row) const;
 
             //! Number of children
             int getChildCount() const;
@@ -57,13 +57,13 @@ namespace BlackGui
             int getRow() const;
 
             //! Get parent item
-            ActionItem *getParentItem() const;
+            CActionItem *getParentItem() const;
 
         private:
-            QList<ActionItem *> m_childItems;
+            QList<CActionItem *> m_childItems;
             QString m_action;
             QString m_actionName;
-            ActionItem *m_parentItem = nullptr;
+            CActionItem *m_parentItem = nullptr;
         };
     }
 } // ns

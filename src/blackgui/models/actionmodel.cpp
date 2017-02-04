@@ -21,7 +21,7 @@ namespace BlackGui
     {
         CActionModel::CActionModel(QObject *parent) :
             QAbstractItemModel(parent),
-            m_rootItem(new ActionItem(QString(), QString()))
+            m_rootItem(new CActionItem(QString(), QString()))
         {
             setupModelData();
         }
@@ -32,7 +32,7 @@ namespace BlackGui
         int CActionModel::columnCount(const QModelIndex &parent) const
         {
             return parent.isValid() ?
-                   static_cast<ActionItem *>(parent.internalPointer())->getColumnCount() :
+                   static_cast<CActionItem *>(parent.internalPointer())->getColumnCount() :
                    m_rootItem->getColumnCount();
         }
 
@@ -40,7 +40,7 @@ namespace BlackGui
         {
             if (!index.isValid()) { return QVariant(); }
 
-            const ActionItem *item = static_cast<ActionItem *>(index.internalPointer());
+            const CActionItem *item = static_cast<CActionItem *>(index.internalPointer());
 
             if (role == Qt::DisplayRole) { return item->getActionName(); }
             if (role == ActionRole) { return item->getAction(); }
@@ -51,7 +51,7 @@ namespace BlackGui
         Qt::ItemFlags CActionModel::flags(const QModelIndex &index) const
         {
             if (!index.isValid()) { return 0; }
-            const ActionItem *item = static_cast<ActionItem *>(index.internalPointer());
+            const CActionItem *item = static_cast<CActionItem *>(index.internalPointer());
             const Qt::ItemFlags flags = QAbstractItemModel::flags(index);
             const bool selectable = item && !item->hasChildren(); // only leafs are selectable
             return selectable ? flags | Qt::ItemIsSelectable : flags & ~Qt::ItemIsSelectable;
@@ -61,11 +61,11 @@ namespace BlackGui
         {
             if (!hasIndex(row, column, parent)) { return QModelIndex(); }
 
-            const ActionItem *parentItem = parent.isValid() ?
-                                           static_cast<ActionItem *>(parent.internalPointer()) :
+            const CActionItem *parentItem = parent.isValid() ?
+                                           static_cast<CActionItem *>(parent.internalPointer()) :
                                            m_rootItem.data();
 
-            ActionItem *childItem = parentItem->getChildByRow(row);
+            CActionItem *childItem = parentItem->getChildByRow(row);
             return childItem ?
                    createIndex(row, column, childItem) :
                    QModelIndex();
@@ -75,8 +75,8 @@ namespace BlackGui
         {
             if (!index.isValid()) { return {}; }
 
-            ActionItem *childItem = static_cast<ActionItem *>(index.internalPointer());
-            ActionItem *parentItem = childItem->getParentItem();
+            CActionItem *childItem = static_cast<CActionItem *>(index.internalPointer());
+            CActionItem *parentItem = childItem->getParentItem();
 
             if (parentItem == m_rootItem.data()) { return {}; }
 
@@ -85,29 +85,29 @@ namespace BlackGui
 
         int CActionModel::rowCount(const QModelIndex &parent) const
         {
-            ActionItem *parentItem;
+            CActionItem *parentItem;
             if (parent.column() > 0) { return 0; }
 
             if (!parent.isValid()) { parentItem = m_rootItem.data(); }
-            else { parentItem = static_cast<ActionItem *>(parent.internalPointer()); }
+            else { parentItem = static_cast<CActionItem *>(parent.internalPointer()); }
 
             return parentItem->getChildCount();
         }
 
         void CActionModel::setupModelData()
         {
-            m_rootItem.reset(new ActionItem(QString(), QString()));
+            m_rootItem.reset(new CActionItem(QString(), QString()));
 
             for (const auto &actionPath : BlackCore::CInputManager::instance()->allAvailableActions())
             {
                 const auto tokens = actionPath.split("/", QString::SkipEmptyParts);
-                ActionItem *parentItem = m_rootItem.data();
+                CActionItem *parentItem = m_rootItem.data();
                 for (const auto &token : tokens)
                 {
-                    ActionItem *child = parentItem->findChildByName(token);
+                    CActionItem *child = parentItem->findChildByName(token);
                     if (child == nullptr)
                     {
-                        child = new ActionItem(actionPath, token, parentItem);
+                        child = new CActionItem(actionPath, token, parentItem);
                         parentItem->appendChild(child);
                     }
                     Q_ASSERT(child);

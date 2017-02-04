@@ -25,7 +25,7 @@ namespace BlackGui
 {
     namespace Models
     {
-        class ActionItem;
+        class CActionItem;
 
         /*!
          * Action tree model, used with hotkey actions
@@ -69,7 +69,7 @@ namespace BlackGui
             //! Init model data
             void setupModelData();
 
-            QScopedPointer<ActionItem> m_rootItem;
+            QScopedPointer<CActionItem> m_rootItem;
         };
     }
 } // ns
