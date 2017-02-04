@@ -154,6 +154,39 @@ namespace BlackMisc
             mutable QList<InterpolationLog> m_interpolationLogs; //!< logs of interpolation
         };
 
+        //! Simple interpolator for pitch, bank, heading, groundspeed
+        class BLACKMISC_EXPORT CInterpolatorPbh
+        {
+        public:
+            //! Constructor
+            //! @{
+            CInterpolatorPbh()
+            {}
+            CInterpolatorPbh(const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) :
+                oldSituation(older), newSituation(newer)
+            {}
+            CInterpolatorPbh(double time, const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) :
+                simulationTimeFraction(time), oldSituation(older), newSituation(newer)
+            {}
+            //! @}
+
+            //! Getter
+            //! @{
+            Aviation::CHeading getHeading() const;
+            PhysicalQuantities::CAngle getPitch() const;
+            PhysicalQuantities::CAngle getBank() const;
+            PhysicalQuantities::CSpeed getGroundSpeed() const;
+            //! @}
+
+            //! Change time fraction
+            void setTimeFraction(double tf) { simulationTimeFraction = tf; }
+
+        private:
+            double simulationTimeFraction = 0.0;
+            Aviation::CAircraftSituation oldSituation;
+            Aviation::CAircraftSituation newSituation;
+        };
+
         //! Status of interpolation
         struct BLACKMISC_EXPORT CInterpolationStatus
         {

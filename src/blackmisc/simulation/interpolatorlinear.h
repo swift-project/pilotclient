@@ -36,10 +36,37 @@ namespace BlackMisc
                 CInterpolator("CInterpolatorLinear", parent)
             {}
 
-            //! \copydoc IInterpolator::getInterpolatedSituation
-            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-                const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-                const BlackMisc::Simulation::CInterpolationHints &hints, CInterpolationStatus &status, InterpolationLog &log) const;
+            //! Linear function that performs the actual interpolation
+            class Interpolant
+            {
+            public:
+                //! Constructor
+                //! @{
+                Interpolant(const Aviation::CAircraftSituation &situation) :
+                    situationsAvailable(1), oldSituation(situation) {}
+                Interpolant(const Aviation::CAircraftSituation &situation1, const Aviation::CAircraftSituation &situation2, double time) :
+                    situationsAvailable(2), oldSituation(situation1), newSituation(situation2), simulationTimeFraction(time) {}
+                //! @}
+
+                //! Perform the interpolation
+                //! @{
+                Geo::CCoordinateGeodetic interpolatePosition(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const;
+                Aviation::CAltitude interpolateAltitude(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const;
+                //! @}
+
+                //! Interpolator for pitch, bank, heading, groundspeed
+                CInterpolatorPbh pbh() const { return { simulationTimeFraction, oldSituation, newSituation }; }
+
+            private:
+                int situationsAvailable = 0;
+                Aviation::CAircraftSituation oldSituation;
+                Aviation::CAircraftSituation newSituation;
+                double simulationTimeFraction = 0.0;
+            };
+
+            //! Get the interpolant for the given time point
+            Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+                const CInterpolationHints &hints, CInterpolationStatus &status, InterpolationLog &log) const;
 
             //! Log category
             static QString getLogCategory() { return "swift.interpolatorlinear"; }

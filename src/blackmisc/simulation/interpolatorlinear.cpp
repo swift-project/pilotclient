@@ -11,7 +11,6 @@
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
-#include "blackmisc/aviation/callsign.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
@@ -36,9 +35,12 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc,
+        CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, InterpolationLog &log) const
         {
+            Q_UNUSED(setup);
+            Q_UNUSED(hints);
+
             // find the first situation not in the correct order, keep only the situations before that one
             // any updates in wrong chronological order are discounted
             const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
@@ -112,32 +114,44 @@ namespace BlackMisc
             currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
             currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
 
+            status.setChangedPosition(oldSituation.getPosition() != newSituation.getPosition() || oldSituation.getAltitude() != newSituation.getAltitude());
+            status.setInterpolationSucceeded(true);
+
+            log.oldSituation = oldSituation;
+            log.newSituation = newSituation;
+            return { oldSituation, newSituation, simulationTimeFraction };
+        }
+
+        CCoordinateGeodetic CInterpolatorLinear::Interpolant::interpolatePosition(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const
+        {
+            Q_UNUSED(setup);
+            Q_UNUSED(hints);
+
             const std::array<double, 3> oldVec(oldSituation.getPosition().normalVectorDouble());
             const std::array<double, 3> newVec(newSituation.getPosition().normalVectorDouble());
 
             // Interpolate position: pos = (posB - posA) * t + posA
+            CCoordinateGeodetic currentPosition;
             currentPosition.setNormalVector((newVec[0] - oldVec[0]) * simulationTimeFraction + oldVec[0],
                                             (newVec[1] - oldVec[1]) * simulationTimeFraction + oldVec[1],
                                             (newVec[2] - oldVec[2]) * simulationTimeFraction + oldVec[2]);
+            return currentPosition;
+        }
 
-            currentSituation.setPosition(currentPosition);
+        CAltitude CInterpolatorLinear::Interpolant::interpolateAltitude(const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints) const
+        {
+            Q_UNUSED(setup);
+            Q_UNUSED(hints);
 
             // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
             // avoid underflow below ground elevation by using getCorrectedAltitude
             const CAltitude oldAlt(oldSituation.getCorrectedAltitude());
             const CAltitude newAlt(newSituation.getCorrectedAltitude());
             Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
-            currentSituation.setAltitude(CAltitude((newAlt - oldAlt)
-                                                   * simulationTimeFraction
-                                                   + oldAlt,
-                                                   oldAlt.getReferenceDatum()));
-
-            status.setChangedPosition(newVec != oldVec || oldAlt != newAlt);
-            status.setInterpolationSucceeded(true);
-
-            log.oldSituation = oldSituation;
-            log.newSituation = newSituation;
-            return currentSituation;
+            return CAltitude((newAlt - oldAlt)
+                             * simulationTimeFraction
+                             + oldAlt,
+                             oldAlt.getReferenceDatum());
         }
     } // namespace
 } // namespace

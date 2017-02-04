@@ -51,12 +51,20 @@ namespace BlackMisc
 
             // any data at all?
             if (m_aircraftSituations.isEmpty()) { return {}; }
+            CAircraftSituation currentSituation = m_aircraftSituations.front();
 
             // data, split situations by time
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
-            // algorithm provided by derived class
-            CAircraftSituation currentSituation = derived()->getInterpolatedPosition(callsign, currentTimeMsSinceEpoc, setup, hints, status, log);
+            // interpolant function from derived class
+            auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, hints, status, log);
+
+            // succeeded so far?
+            if (!status.didInterpolationSucceed()) { return currentSituation; }
+
+            // use derived interpolant function
+            currentSituation.setPosition(interpolant.interpolatePosition(setup, hints));
+            currentSituation.setAltitude(interpolant.interpolateAltitude(setup, hints));
 
             // Update current position by hints' elevation
             // * for XP provided by hints.getElevationProvider at current position
@@ -93,42 +101,11 @@ namespace BlackMisc
 
             if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.hasChangedPosition())
             {
-                // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
-                // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
-                const CHeading headingBegin = oldSituation.getHeading();
-                CHeading headingEnd = newSituation.getHeading();
-
-                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
-                {
-                    headingEnd += CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
-                }
-
-                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) > 180)
-                {
-                    headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
-                }
-
-                currentSituation.setHeading(CHeading((headingEnd - headingBegin)
-                                                     * simulationTimeFraction
-                                                     + headingBegin,
-                                                     headingBegin.getReferenceNorth()));
-
-                // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
-                const CAngle pitchBegin = oldSituation.getPitch();
-                const CAngle pitchEnd = newSituation.getPitch();
-                const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
-                currentSituation.setPitch(pitch);
-
-                // Interpolate bank: Bank = (BankB - BankA) * t + BankA
-                const CAngle bankBegin = oldSituation.getBank();
-                const CAngle bankEnd = newSituation.getBank();
-                const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
-                currentSituation.setBank(bank);
-
-                currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
-                                                * simulationTimeFraction
-                                                + oldSituation.getGroundSpeed());
-
+                const auto pbh = interpolant.pbh();
+                currentSituation.setHeading(pbh.getHeading());
+                currentSituation.setPitch(pbh.getPitch());
+                currentSituation.setBank(pbh.getBank());
+                currentSituation.setGroundSpeed(pbh.getGroundSpeed());
                 status.setChangedPosition(true);
             }
             status.setInterpolationSucceeded(true);
@@ -144,6 +121,54 @@ namespace BlackMisc
             }
 
             return currentSituation;
+        }
+
+        CHeading CInterpolatorPbh::getHeading() const
+        {
+            // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
+            // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
+            const CHeading headingBegin = oldSituation.getHeading();
+            CHeading headingEnd = newSituation.getHeading();
+
+            if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
+            {
+                headingEnd += CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+            }
+
+            if ((headingEnd - headingBegin).value(CAngleUnit::deg()) > 180)
+            {
+                headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+            }
+
+            return CHeading((headingEnd - headingBegin)
+                            * simulationTimeFraction
+                            + headingBegin,
+                            headingBegin.getReferenceNorth());
+        }
+
+        CAngle CInterpolatorPbh::getPitch() const
+        {
+            // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
+            const CAngle pitchBegin = oldSituation.getPitch();
+            const CAngle pitchEnd = newSituation.getPitch();
+            const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
+            return pitch;
+        }
+
+        CAngle CInterpolatorPbh::getBank() const
+        {
+            // Interpolate bank: Bank = (BankB - BankA) * t + BankA
+            const CAngle bankBegin = oldSituation.getBank();
+            const CAngle bankEnd = newSituation.getBank();
+            const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
+            return bank;
+        }
+
+        CSpeed CInterpolatorPbh::getGroundSpeed() const
+        {
+            return (newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
+                   * simulationTimeFraction
+                   + oldSituation.getGroundSpeed();
         }
 
         template <typename Derived>
