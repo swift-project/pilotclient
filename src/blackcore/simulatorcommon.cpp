@@ -381,8 +381,9 @@ namespace BlackCore
             }
             if (p == "clear" || p == "clr")
             {
-                this->m_interpolator->clearLog();
-                CStatusMessage(this).info("Cleared interpolation logging");
+                //! \todo refactoring broken by rebase
+                //this->m_interpolator->clearLog();
+                //CStatusMessage(this).info("Cleared interpolation logging");
                 return true;
             }
             if (p == "write" || p == "save")
@@ -391,8 +392,9 @@ namespace BlackCore
                 this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
 
                 // write
-                this->m_interpolator->writeLogInBackground();
-                CLogMessage(this).info("Started writing interpolation log");
+                //! \todo refactoring broken by rebase
+                //this->m_interpolator->writeLogInBackground();
+                //CLogMessage(this).info("Started writing interpolation log");
                 return true;
             }
 

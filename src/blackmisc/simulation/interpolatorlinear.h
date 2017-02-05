@@ -25,15 +25,13 @@ namespace BlackMisc
     namespace Aviation { class CCallsign; }
     namespace Simulation
     {
-        class IRemoteAircraftProvider;
-
         //! Linear interpolator, calculation inbetween positions
         class BLACKMISC_EXPORT CInterpolatorLinear : public IInterpolator
         {
         public:
             //! Constructor
-            CInterpolatorLinear(BlackMisc::Simulation::IRemoteAircraftProvider *provider, QObject *parent = nullptr) :
-                IInterpolator(provider, "CInterpolatorLinear", parent)
+            CInterpolatorLinear(QObject *parent = nullptr) :
+                IInterpolator("CInterpolatorLinear", parent)
             {}
 
             // public base class signature

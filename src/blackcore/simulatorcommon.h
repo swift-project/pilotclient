@@ -180,7 +180,6 @@ namespace BlackCore
         //! Parse driver specific details for ISimulator::parseCommandLine
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser);
 
-        BlackMisc::Simulation::IInterpolator *m_interpolator = nullptr;  //!< interpolator instance
         bool m_pausedSimFreezesInterpolation = false;                    //!< paused simulator will also pause interpolation (so AI aircraft will hold)
         BlackMisc::Simulation::CAircraftModel m_defaultModel;            //!< default model
         qint64 m_statsUpdateAircraftTimeTotalMs = 0;                     //!< statistics update time

@@ -43,9 +43,6 @@ namespace BlackMisc
         CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const
         {
-            //
-            // function has to be thread safe
-            //
             status.reset();
 
             // any data at all?

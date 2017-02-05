@@ -8,6 +8,7 @@
  */
 
 #include "simconnectobject.h"
+#include "blackmisc/simulation/interpolatorlinear.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -16,10 +17,12 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        CSimConnectObject::CSimConnectObject() { }
+        CSimConnectObject::CSimConnectObject()
+        { }
 
         CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId) :
-            m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true)
+            m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
+            m_interpolator(QSharedPointer<BlackMisc::Simulation::CInterpolatorLinear>::create())
         { }
 
         bool CSimConnectObject::isPendingAdded() const

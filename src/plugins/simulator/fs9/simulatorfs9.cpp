@@ -112,7 +112,6 @@ namespace BlackSimPlugin
             m_lobbyClient(lobbyClient)
         {
             connect(lobbyClient.data(), &CLobbyClient::disconnected, this, std::bind(&CSimulatorFs9::simulatorStatusChanged, this, 0));
-            m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             m_defaultModel =
             {
                 "Boeing 737-400",
@@ -172,7 +171,7 @@ namespace BlackSimPlugin
 
             bool rendered = true;
             updateAircraftRendered(callsign, rendered);
-            CFs9Client *client = new CFs9Client(callsign, newRemoteAircraft.getModelString(), m_interpolator, CTime(25, CTimeUnit::ms()), this);
+            CFs9Client *client = new CFs9Client(callsign, newRemoteAircraft.getModelString(), CTime(25, CTimeUnit::ms()), this);
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
             client->start();
@@ -389,6 +388,20 @@ namespace BlackSimPlugin
             if (!m_useFsuipc || !m_fsuipc) { return; }
             if (!m_fsuipc->isConnected()) { return; }
             m_fsuipc->write(weatherGrid);
+        }
+
+        void CSimulatorFs9::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
+        {
+            const auto it = m_hashFs9Clients.find(situation.getCallsign());
+            if (it == m_hashFs9Clients.end()) { return; }
+            QTimer::singleShot(0, it->data(), [client = *it, situation] { client->getInterpolator()->addAircraftSituation(situation); });
+        }
+
+        void CSimulatorFs9::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
+        {
+            const auto it = m_hashFs9Clients.find(callsign);
+            if (it == m_hashFs9Clients.end()) { return; }
+            QTimer::singleShot(0, it->data(), [client = *it, parts] { client->getInterpolator()->addAircraftParts(parts); });
         }
 
         CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,

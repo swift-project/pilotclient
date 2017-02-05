@@ -133,6 +133,8 @@ namespace BlackSimPlugin
             virtual void clearAllAircraft() override;
             virtual void initSimulatorInternals() override;
             virtual void injectWeatherGrid(const BlackMisc::Weather::CWeatherGrid &weatherGrid) override;
+            virtual void ps_remoteProviderAddAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+            virtual void ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts) override;
             //! @}
 
             //! Timer event (our SimConnect event loop), runs ps_dispatch

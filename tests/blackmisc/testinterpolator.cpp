@@ -36,7 +36,6 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/remoteaircraftprovider.h"
-#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -57,8 +56,7 @@ namespace BlackMiscTest
 
     void CTestInterpolator::linearInterpolator()
     {
-        QScopedPointer<CRemoteAircraftProviderDummy> provider(new CRemoteAircraftProviderDummy());
-        CInterpolatorLinear interpolator(provider.data());
+        CInterpolatorLinear interpolator;
 
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
@@ -72,22 +70,18 @@ namespace BlackMiscTest
             // check height above ground
             CLength hag = (s.getAltitude() - s.getGroundElevation());
             QVERIFY2(s.getHeightAboveGround() == hag, "Wrong elevation");
-            provider->insertNewSituation(s);
+            interpolator.addAircraftSituation(s);
         }
 
         constexpr int partsCount = 10;
         for (int i = 0; i < partsCount; i++)
         {
             CAircraftParts p(getTestParts(i, ts, deltaT));
-            provider->insertNewAircraftParts(cs, p);
+            interpolator.addAircraftParts(p);
         }
 
         // make sure signals are processed, if the interpolator depends on those signals
         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
-
-        // check if all situations / parts have been received
-        QVERIFY2(provider->remoteAircraftSituations(cs).size() == IRemoteAircraftProvider::MaxSituationsPerCallsign, "Missing situations");
-        QVERIFY2(provider->remoteAircraftParts(cs).size() == partsCount, "Missing parts");
 
         // interpolation functional check
         IInterpolator::InterpolationStatus status;

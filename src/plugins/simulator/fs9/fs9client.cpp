@@ -119,9 +119,10 @@ namespace BlackSimPlugin
         }
 
         CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
-                               BlackMisc::Simulation::IInterpolator *interpolator, const CTime &updateInterval, QObject *owner) :
+                               const CTime &updateInterval, QObject *owner) :
             CDirectPlayPeer(owner, callsign),
-            m_updateInterval(updateInterval), m_interpolator(interpolator), m_modelName(modelName)
+            m_updateInterval(updateInterval),
+            m_modelName(modelName)
         {
         }
 
@@ -177,14 +178,13 @@ namespace BlackSimPlugin
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
-            Q_ASSERT_X(m_interpolator, Q_FUNC_INFO, "Missing interpolator");
 
             if (m_clientStatus == Disconnected) { return; }
 
             IInterpolator::InterpolationStatus status;
             CInterpolationHints hints; // \fixme 201701 #865 KB if there is an elevation provider for FS9 add it here or set elevation
-            hints.setLoggingInterpolation(this->m_interpolator->getInterpolatorSetup().getLogCallsigns().contains(m_callsign));
-            const CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, this->m_interpolationSetup, hints, status);
+            hints.setLoggingInterpolation(this->getInterpolationSetup().getLogCallsigns().contains(m_callsign));
+            const CAircraftSituation situation = this->m_interpolator.getInterpolatedSituation(m_callsign, -1, this->m_interpolationSetup, hints, status);
 
             // Test only for successful interpolation. FS9 requires constant positions
             if (!status.didInterpolationSucceed()) { return; }

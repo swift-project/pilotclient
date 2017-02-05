@@ -43,6 +43,9 @@ namespace BlackSimPlugin
             //! Simulated aircraft model string
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
 
+            //! Interpolator
+            BlackMisc::Simulation::IInterpolator *getInterpolator() const { return m_interpolator.data(); }
+
             //! Get current lights (requested from simulator)
             const BlackMisc::Aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }
 
@@ -119,6 +122,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
             BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };       //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;    //!< how often do we query ground elevation
+            QSharedPointer<BlackMisc::Simulation::IInterpolator> m_interpolator;   //!< shared pointer because CSimConnectObject can be copied
         };
 
         //! Simulator objects (aka AI aircraft)

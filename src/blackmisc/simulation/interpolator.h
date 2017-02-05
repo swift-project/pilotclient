@@ -32,9 +32,7 @@ namespace BlackMisc
         class CInterpolationHints;
 
         //! Interpolator, calculation inbetween positions
-        class BLACKMISC_EXPORT IInterpolator :
-            public QObject,
-            public BlackMisc::Simulation::CRemoteAircraftAware
+        class BLACKMISC_EXPORT IInterpolator : public QObject
         {
             Q_OBJECT
 
@@ -90,31 +88,32 @@ namespace BlackMisc
             };
 
             //! Current interpolated situation
-            //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
                 const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const;
 
             //! Current interpolated situation, to be implemented by subclass
-            //! \threadsafe
-            //! \remark public only for XP driver
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
                 const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const = 0;
 
             //! Parts before given offset time (aka pending parts)
-            //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
                 const CInterpolationAndRenderingSetup &setup, PartsStatus &partsStatus, bool log = false) const;
 
             //! Parts before given offset time (aka pending parts)
-            //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
                 const CInterpolationAndRenderingSetup &setup, PartsStatus &partsStatus, bool log = false) const;
+
+            //! Add a new aircraft situation
+            void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+            //! Add a new aircraft parts
+            void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
             //! Write a log in background
             //! \threadsafe
@@ -137,6 +136,9 @@ namespace BlackMisc
             static QStringList getLatestLogFiles();
 
         protected:
+            BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations
+            BlackMisc::Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts
+
             //! Log for interpolation
             struct InterpolationLog
             {
@@ -163,7 +165,7 @@ namespace BlackMisc
             };
 
             //! Constructor
-            IInterpolator(BlackMisc::Simulation::IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent);
+            IInterpolator(const QString &objectName, QObject *parent);
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons
             //! \remark const to allow const interpolator functions

@@ -27,24 +27,19 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        IInterpolator::IInterpolator(IRemoteAircraftProvider *provider, const QString &objectName, QObject *parent) :
-            QObject(parent),
-            CRemoteAircraftAware(provider)
+        IInterpolator::IInterpolator(const QString &objectName, QObject *parent) :
+            QObject(parent)
         {
-            Q_ASSERT_X(provider, Q_FUNC_INFO, "missing provider");
             this->setObjectName(objectName);
         }
 
         BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(
-            const CCallsign &callsign, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
             const CInterpolationHints &hints, InterpolationStatus &status) const
         {
-            // has to be thread safe
-
             status.reset();
-            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
 
-            auto currentSituation = this->getInterpolatedSituation(callsign, this->remoteAircraftSituations(callsign), currentTimeSinceEpoc, setup, hints, status);
+            auto currentSituation = this->getInterpolatedSituation(callsign, this->m_aircraftSituations, currentTimeSinceEpoc, setup, hints, status);
             currentSituation.setCallsign(callsign); // make sure callsign is correct
             return currentSituation;
         }
@@ -116,9 +111,19 @@ namespace BlackMisc
         CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
             const CInterpolationAndRenderingSetup &setup, IInterpolator::PartsStatus &partsStatus, bool log) const
         {
-            Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             partsStatus.reset();
-            return this->getInterpolatedParts(callsign, this->remoteAircraftParts(callsign, -1), currentTimeMsSinceEpoch, setup, partsStatus, log);
+            return this->getInterpolatedParts(callsign, this->m_aircraftParts, currentTimeMsSinceEpoch, setup, partsStatus, log);
+        }
+
+        void IInterpolator::addAircraftSituation(const CAircraftSituation &situation)
+        {
+            m_aircraftSituations.push_frontMaxElements(situation, IRemoteAircraftProvider::MaxSituationsPerCallsign);
+        }
+
+        void IInterpolator::addAircraftParts(const CAircraftParts &parts)
+        {
+            m_aircraftParts.push_front(parts);
+            IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
         }
 
         CWorker *IInterpolator::writeLogInBackground()

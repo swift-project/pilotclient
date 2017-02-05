@@ -17,7 +17,6 @@
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
-#include "blackmisc/simulation/remoteaircraftproviderdummy.h"
 #include "XPMPMultiplayer.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
@@ -42,7 +41,7 @@ namespace XBus
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
-    BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints(BlackMisc::Simulation::IInterpolator *interpolator) const
+    BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints() const
     {
         // \todo MS 865 CInterpolationAndRenderingSetup allows to setup interpolation in the GUI, e.g.
         //       also to disable aircraft parts / or logging parts (log file). I wonder if you want to consider it here
@@ -50,8 +49,8 @@ namespace XBus
         //       if the setup is needed more than once, store it here to avoid multiple locks
         BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
         BlackMisc::Simulation::CInterpolationHints hints;
-        BlackMisc::Simulation::IInterpolator::PartsStatus status;
-        hints.setAircraftParts(interpolator->getInterpolatedParts(callsign, parts, -1, setup, status));
+        BlackMisc::Simulation::IInterpolator::CPartsStatus status;
+        hints.setAircraftParts(interpolator.getInterpolatedParts(callsign, -1, setup, status));
         hints.setElevationProvider([this](const auto & situation)
         {
             using namespace BlackMisc::PhysicalQuantities;
@@ -68,8 +67,7 @@ namespace XBus
     }
 
     CTraffic::CTraffic(QObject *parent) :
-        QObject(parent),
-        m_interpolator(new BlackMisc::Simulation::CInterpolatorLinear(new BlackMisc::Simulation::CRemoteAircraftProviderDummy(this), this))
+        QObject(parent)
     {
     }
 
@@ -260,17 +258,16 @@ namespace XBus
         {
             using namespace BlackMisc::PhysicalQuantities;
             using namespace BlackMisc::Aviation;
-            constexpr int maxSituationCount = 6;
-            plane->situations.push_frontMaxElements(
-            {
+            CAircraftSituation situation(
                 callsign,
                 BlackMisc::Geo::CCoordinateGeodetic(latitude, longitude, altitude),
                 CHeading(heading, CHeading::True, CAngleUnit::deg()),
                 CAngle(pitch, CAngleUnit::deg()),
                 CAngle(roll, CAngleUnit::deg()),
                 CSpeed(0, CSpeedUnit::kts())
-            }, maxSituationCount);
-            plane->situations.front().setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+            );
+            situation.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+            plane->interpolator.addAircraftSituation(situation);
         }
     }
 
@@ -297,12 +294,10 @@ namespace XBus
             plane->surfaces.lights.navLights = navLight;
             plane->surfaces.lights.flashPattern = lightPattern;
 
-            plane->parts.push_front({});
-            plane->parts.front().setOnGround(onGround);
-            plane->parts.front().setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
-
-            // remove outdated parts (but never remove the most recent one)
-            BlackMisc::Simulation::IRemoteAircraftProvider::removeOutdatedParts(plane->parts);
+            BlackMisc::Aviation::CAircraftParts parts;
+            parts.setOnGround(onGround);
+            parts.setMSecsSinceEpoch(relativeTime + QDateTime::currentMSecsSinceEpoch());
+            plane->interpolator.addAircraftParts(parts);
         }
     }
 
@@ -337,11 +332,9 @@ namespace XBus
         {
         case xpmpDataType_Position:
             {
-                if (plane->situations.size() < 3) { return xpmpData_Unavailable; } // avoid sudden movements when a pilot connects
-
                 BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
-                BlackMisc::Simulation::IInterpolator::InterpolationStatus status;
-                const auto situation = m_interpolator->getInterpolatedSituation(plane->callsign, plane->situations, -1, setup, plane->hints(m_interpolator), status);
+                BlackMisc::Simulation::IInterpolator::CInterpolationStatus status;
+                const auto situation = plane->interpolator.getInterpolatedSituation(plane->callsign, -1, setup, plane->hints(), status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
                 if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 

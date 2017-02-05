@@ -55,7 +55,6 @@ namespace BlackSimPlugin
             connect(&m_realityBubbleTimer, &QTimer::timeout, this, &CSimulatorFsx::ps_addAircraftCurrentlyOutOfBubble);
 
             m_useFsuipc = false; // Temporarily enabled until Simconnect Weather is implemented.
-            m_interpolator = new CInterpolatorLinear(remoteAircraftProvider, this);
             m_defaultModel =
             {
                 "Boeing 737-800 Paint1",
@@ -153,9 +152,6 @@ namespace BlackSimPlugin
             CSimulatedAircraft addedAircraft(newRemoteAircraft);
             if (isConnected())
             {
-                // initial position if interpolator has data, otherwise do nothing
-                setInitialAircraftSituation(addedAircraft); // set interpolated data/parts if available
-
                 const DWORD requestId = obtainRequestIdSimData();
                 SIMCONNECT_DATA_INITPOSITION initialPosition = aircraftSituationToFsxPosition(addedAircraft.getSituation());
                 const QString modelString(addedAircraft.getModelString());
@@ -872,7 +868,6 @@ namespace BlackSimPlugin
         void CSimulatorFsx::updateRemoteAircraft()
         {
             static_assert(sizeof(DataDefinitionRemoteAircraftParts) == sizeof(double) * 10, "DataDefinitionRemoteAircraftParts has an incorrect size.");
-            Q_ASSERT_X(this->m_interpolator, Q_FUNC_INFO, "missing interpolator");
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
@@ -908,14 +903,14 @@ namespace BlackSimPlugin
                 partsStatus.setSupportsParts(useAircraftParts);
 
                 const CInterpolationAndRenderingSetup setup(getInterpolationAndRenderingSetup());
-                const CAircraftParts parts = useAircraftParts ? this->m_interpolator->getInterpolatedParts(callsign, -1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
+                const CAircraftParts parts = useAircraftParts ? simObj.getInterpolator()->getInterpolatedParts(callsign, -1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
                 // get interpolated situation
                 IInterpolator::InterpolationStatus interpolatorStatus;
                 CInterpolationHints hints(m_hints[simObj.getCallsign()]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
                 hints.setLoggingInterpolation(logInterpolationAndParts);
-                const CAircraftSituation interpolatedSituation = this->m_interpolator->getInterpolatedSituation(callsign, currentTimestamp, setup, hints, interpolatorStatus);
+                const CAircraftSituation interpolatedSituation = simObj.getInterpolator()->getInterpolatedSituation(callsign, currentTimestamp, setup, hints, interpolatorStatus);
 
                 if (interpolatorStatus.allTrue())
                 {
@@ -1272,6 +1267,18 @@ namespace BlackSimPlugin
             m_simConnectObjects.clear();
             m_outOfRealityBubble.clear();
             CSimulatorFsCommon::clearAllAircraft();
+        }
+
+        void CSimulatorFsx::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
+        {
+            if (!m_simConnectObjects.contains(situation.getCallsign())) { return; }
+            m_simConnectObjects[situation.getCallsign()].getInterpolator()->addAircraftSituation(situation);
+        }
+
+        void CSimulatorFsx::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
+        {
+            if (!m_simConnectObjects.contains(callsign)) { return; }
+            m_simConnectObjects[callsign].getInterpolator()->addAircraftParts(parts);
         }
 
         QString CSimulatorFsx::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
