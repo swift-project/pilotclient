@@ -77,7 +77,9 @@ void SwiftGuiStd::initMenus()
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(ui->menu_InfoAreas));
 
     // for hotkeys
-    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_InfoAreas, "Info areas"));
-    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_File, "File"));
-    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_Window, "Window"));
+    const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());
+    static const CActionBind swiftRoot(swift, CIcons::swift16());
+    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_InfoAreas, swift + "Info areas"));
+    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_File, swift + "File"));
+    m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_Window, swift + "Window"));
 }

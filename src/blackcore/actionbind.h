@@ -14,6 +14,7 @@
 
 #include "blackcore/inputmanager.h"
 #include "blackcoreexport.h"
+#include <QPixmap>
 
 namespace BlackCore
 {
@@ -29,14 +30,17 @@ namespace BlackCore
 
         //! Constructor
         template <typename Receiver>
-        CActionBind(const QString &action, Receiver *receiver, MembFunc<Receiver> slot = nullptr, const std::function<void()> &deleteCallback = {}) :
+        CActionBind(const QString &action, const QPixmap &icon, Receiver *receiver,
+                    MembFunc<Receiver> slot = nullptr,
+                    const std::function<void()> &deleteCallback = {}) :
             m_deleteCallback(deleteCallback)
         {
-            const QString a = CActionBind::normalizeAction(action);
-            auto inputManger = CInputManager::instance();
-            inputManger->registerAction(a);
-            m_index = inputManger->bind(a, receiver, slot);
+            const QString a = CActionBind::registerAction(action, icon);
+            m_index = CInputManager::instance()->bind(a, receiver, slot);
         }
+
+        //! Signature just to set an icon for an action
+        CActionBind(const QString &action, const QPixmap &icon);
 
         //! Destructor
         ~CActionBind();
@@ -51,8 +55,11 @@ namespace BlackCore
         int getIndex() const { return m_index; }
 
     private:
-        //! normalize the name string
+        //! Normalize the action string
         static QString normalizeAction(const QString &action);
+
+        //! Register action
+        static QString registerAction(const QString &action, const QPixmap &icon);
 
         int m_index = -1; //!< action indexx (unique)
         std::function<void()> m_deleteCallback; //!< called when deleted

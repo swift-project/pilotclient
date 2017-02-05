@@ -14,6 +14,7 @@
 
 #include <QList>
 #include <QString>
+#include <QPixmap>
 
 namespace BlackGui
 {
@@ -25,6 +26,9 @@ namespace BlackGui
         public:
             //! Constructor
             CActionItem(const QString &action, const QString &name, CActionItem *parentItem = nullptr);
+
+            //! Constructor
+            CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem = nullptr);
 
             //! Destructor
             ~CActionItem();
@@ -40,6 +44,12 @@ namespace BlackGui
 
             //! Number of children
             int getChildCount() const;
+
+            //! Icon
+            const QPixmap &getIcon() const { return m_icon; }
+
+            //! Set icon
+            void setIcon(const QPixmap &icon) { m_icon = icon; }
 
             //! Has children?
             bool hasChildren() const;
@@ -60,9 +70,10 @@ namespace BlackGui
             CActionItem *getParentItem() const;
 
         private:
-            QList<CActionItem *> m_childItems;
             QString m_action;
             QString m_actionName;
+            QPixmap m_icon;
+            QList<CActionItem *> m_childItems;
             CActionItem *m_parentItem = nullptr;
         };
     }

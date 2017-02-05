@@ -46,6 +46,12 @@ namespace BlackGui
         //! Corresponding BlackCore::CActionBind died, so delete CGuiActionBindHandler
         static void actionBindWasDestroyed(CGuiActionBindHandler *bindHandler);
 
+        //! Path
+        static const QString &pathSwiftPilotClient();
+
+        //! Path
+        static const QString &pathSwiftCore();
+
     private:
         //! Constructor for QAction
         CGuiActionBindHandler(QAction *action);

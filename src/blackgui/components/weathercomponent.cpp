@@ -60,7 +60,8 @@ namespace BlackGui
             setupCompleter();
 
             // hotkeys
-            m_hotkeyBindings.append(CGuiActionBindHandler::bindButton(ui->pb_ActivateWeather, "Weather/Toggle weather", true));
+            const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());
+            m_hotkeyBindings.append(CGuiActionBindHandler::bindButton(ui->pb_ActivateWeather, swift + "Weather/Toggle weather", true));
 
             // Set interval to 5 min
             m_weatherUpdateTimer.setInterval(1000 * 60 * 5);

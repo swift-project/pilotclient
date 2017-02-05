@@ -10,10 +10,15 @@
 #include "blackcore/inputmanager.h"
 #include "blackgui/models/actionitem.h"
 #include "blackgui/models/actionmodel.h"
+#include "blackmisc/icons.h"
 
 #include <QString>
 #include <QStringList>
+#include <QStringBuilder>
 #include <QtGlobal>
+
+using namespace BlackMisc;
+using namespace BlackCore;
 
 namespace BlackGui
 {
@@ -41,9 +46,11 @@ namespace BlackGui
             if (!index.isValid()) { return QVariant(); }
 
             const CActionItem *item = static_cast<CActionItem *>(index.internalPointer());
+            Q_ASSERT_X(item, Q_FUNC_INFO, "Missing item");
 
-            if (role == Qt::DisplayRole) { return item->getActionName(); }
             if (role == ActionRole) { return item->getAction(); }
+            if (role == Qt::DisplayRole) { return item->getActionName(); }
+            if (role == Qt::DecorationRole) { return item->getIcon(); }
 
             return {};
         }
@@ -62,8 +69,8 @@ namespace BlackGui
             if (!hasIndex(row, column, parent)) { return QModelIndex(); }
 
             const CActionItem *parentItem = parent.isValid() ?
-                                           static_cast<CActionItem *>(parent.internalPointer()) :
-                                           m_rootItem.data();
+                                            static_cast<CActionItem *>(parent.internalPointer()) :
+                                            m_rootItem.data();
 
             CActionItem *childItem = parentItem->getChildByRow(row);
             return childItem ?
@@ -85,12 +92,10 @@ namespace BlackGui
 
         int CActionModel::rowCount(const QModelIndex &parent) const
         {
-            CActionItem *parentItem;
             if (parent.column() > 0) { return 0; }
-
-            if (!parent.isValid()) { parentItem = m_rootItem.data(); }
-            else { parentItem = static_cast<CActionItem *>(parent.internalPointer()); }
-
+            const CActionItem *parentItem = parent.isValid() ?
+                                            static_cast<CActionItem *>(parent.internalPointer()) :
+                                            m_rootItem.data();
             return parentItem->getChildCount();
         }
 
@@ -98,16 +103,23 @@ namespace BlackGui
         {
             m_rootItem.reset(new CActionItem(QString(), QString()));
 
-            for (const auto &actionPath : BlackCore::CInputManager::instance()->allAvailableActions())
+            const QMap<QString, QPixmap> availableActionsAndIcons = CInputManager::instance()->allAvailableActionsAndIcons();
+            QStringList keys = availableActionsAndIcons.keys();
+            keys.sort();
+            for (const QString &actionPath : as_const(keys))
             {
-                const auto tokens = actionPath.split("/", QString::SkipEmptyParts);
+                QString currentPath;
+                const QStringList tokens = actionPath.split("/", QString::SkipEmptyParts);
                 CActionItem *parentItem = m_rootItem.data();
                 for (const auto &token : tokens)
                 {
+                    currentPath += QLatin1Char('/') % token;
                     CActionItem *child = parentItem->findChildByName(token);
                     if (child == nullptr)
                     {
-                        child = new CActionItem(actionPath, token, parentItem);
+                        const bool isAction = currentPath == actionPath; // action istelf, or just a node?
+                        const QPixmap icon = isAction ? availableActionsAndIcons[actionPath] : CIcons::empty16();
+                        child = new CActionItem(isAction ? actionPath : "", token, icon, parentItem);
                         parentItem->appendChild(child);
                     }
                     Q_ASSERT(child);

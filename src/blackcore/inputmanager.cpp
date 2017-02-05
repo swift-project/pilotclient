@@ -37,12 +37,12 @@ namespace BlackCore
         return &instance;
     }
 
-    void CInputManager::registerAction(const QString &action)
+    void CInputManager::registerAction(const QString &action, const QPixmap &icon)
     {
         if (!m_availableActions.contains(action))
         {
-            m_availableActions.push_back(action);
-            emit hotkeyActionRegistered( { action } );
+            m_availableActions.insert(action, icon);
+            emit hotkeyActionRegistered({ action });
         }
     }
 
@@ -52,15 +52,15 @@ namespace BlackCore
         {
             if (!m_availableActions.contains(action))
             {
-                m_availableActions.push_back(action);
-                emit hotkeyActionRegistered( { action } );
+                m_availableActions.insert(action, {});
+                emit hotkeyActionRegistered({ action });
             }
         }
     }
 
     void CInputManager::unbind(int index)
     {
-        auto info = std::find_if (m_boundActions.begin(), m_boundActions.end(), [index] (const BindInfo &info) { return info.m_index == index; });
+        auto info = std::find_if(m_boundActions.begin(), m_boundActions.end(), [index](const BindInfo & info) { return info.m_index == index; });
         if (info != m_boundActions.end())
         {
             m_boundActions.erase(info);
@@ -104,7 +104,7 @@ namespace BlackCore
     void CInputManager::callFunctionsBy(const QString &action, bool isKeyDown)
     {
         if (action.isEmpty()) { return; }
-        if(m_actionRelayingEnabled) emit remoteActionFromLocal(action, isKeyDown);
+        if (m_actionRelayingEnabled) emit remoteActionFromLocal(action, isKeyDown);
 
         for (const auto &boundAction : m_boundActions)
         {

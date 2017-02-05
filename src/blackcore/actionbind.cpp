@@ -11,6 +11,20 @@
 
 namespace BlackCore
 {
+    CActionBind::CActionBind(const QString &action, const QPixmap &icon)
+    {
+        CActionBind::registerAction(action, icon);
+    }
+
+    QString CActionBind::registerAction(const QString &action, const QPixmap &icon)
+    {
+        const QString a = CActionBind::normalizeAction(action);
+        auto inputManger = CInputManager::instance();
+        Q_ASSERT_X(inputManger, Q_FUNC_INFO, "Missing input manager");
+        inputManger->registerAction(a, icon);
+        return a;
+    }
+
     CActionBind::~CActionBind()
     {
         unbind();
@@ -31,7 +45,8 @@ namespace BlackCore
     QString CActionBind::normalizeAction(const QString &action)
     {
         QString n = action.trimmed();
-        if (!n.startsWith('/')) { return n.insert(0, QChar('/')); }
+        if (!n.startsWith('/')) { n.insert(0, QChar('/')); }
+        if (n.endsWith('/')) { n.remove(n.length() - 1 , 1);}
         return n;
     }
 }

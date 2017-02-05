@@ -9,6 +9,7 @@
 
 #include "guiactionbind.h"
 #include "blackmisc/fileutils.h"
+#include "blackmisc/imageutils.h"
 
 using namespace BlackMisc;
 using namespace BlackCore;
@@ -38,7 +39,7 @@ namespace BlackGui
         for (QAction *action : menu->actions())
         {
             if (action->text().isEmpty()) { continue; }
-            if (action->isSeparator())  { continue; }
+            if (action->isSeparator()) { continue; }
 
             const QString pathNew = CGuiActionBindHandler::appendPath(path, action->text()).remove('&'); // remove E&xit key codes
             if (action->menu())
@@ -46,8 +47,9 @@ namespace BlackGui
                 CGuiActionBindHandler::bindMenu(action->menu(), pathNew);
             }
 
+            const bool hasIcon = !action->icon().isNull();
             CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(action);
-            CActionBinding actionBinding(new CActionBind(pathNew, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+            CActionBinding actionBinding(new CActionBind(pathNew, hasIcon ? action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
             bindHandler->m_index = actionBinding->getIndex();
             boundActions.append(actionBinding); // takes ownership
         }
@@ -61,7 +63,8 @@ namespace BlackGui
                                 path :
                                 CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
         CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(button);
-        CActionBinding actionBinding(new CActionBind(pathNew, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+        const bool hasIcon = !button->icon().isNull();
+        CActionBinding actionBinding(new CActionBind(pathNew, hasIcon ? button->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
         bindHandler->m_index = actionBinding->getIndex();
         return actionBinding;
     }
@@ -84,12 +87,10 @@ namespace BlackGui
 
     void CGuiActionBindHandler::unbind()
     {
+        Q_ASSERT_X(CInputManager::instance(), Q_FUNC_INFO, "Missing input manager");
         if (this->hasTarget())
         {
-            if (CInputManager::instance())
-            {
-                CInputManager::instance()->unbind(this->m_index);
-            }
+            CInputManager::instance()->unbind(this->m_index);
         }
         this->reset();
     }
@@ -122,5 +123,17 @@ namespace BlackGui
     QString CGuiActionBindHandler::appendPath(const QString &path, const QString &name)
     {
         return CFileUtils::appendFilePaths(path, name);
+    }
+
+    const QString &CGuiActionBindHandler::pathSwiftPilotClient()
+    {
+        static const QString s("Pilot client UI/");
+        return s;
+    }
+
+    const QString &CGuiActionBindHandler::pathSwiftCore()
+    {
+        static const QString s("Core UI/");
+        return s;
     }
 } // namespace

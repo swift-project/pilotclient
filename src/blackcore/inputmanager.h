@@ -18,6 +18,7 @@
 #include "blackinput/keyboard.h"
 #include "blackmisc/input/hotkeycombination.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/icons.h"
 
 #include <QHash>
 #include <QObject>
@@ -38,7 +39,7 @@ namespace BlackCore
 
     public:
         //! Register new action
-        void registerAction(const QString &action);
+        void registerAction(const QString &action, const QPixmap &icon = BlackMisc::CIcons::empty16());
 
         //! Register remote actions
         void registerRemoteActions(const QStringList &actions);
@@ -72,7 +73,10 @@ namespace BlackCore
         void resetAllActions() { m_configuredActions.clear(); }
 
         //! Get all available and known actions
-        QStringList allAvailableActions() const { return m_availableActions; }
+        QStringList allAvailableActions() const { return m_availableActions.keys(); }
+
+        //! All actions and their icons (if any)
+        QMap<QString, QPixmap> allAvailableActionsAndIcons() const { return m_availableActions; }
 
         //! Enable event forwarding to core
         void setForwarding(bool enabled) { m_actionRelayingEnabled = enabled; }
@@ -129,7 +133,7 @@ namespace BlackCore
         std::unique_ptr<BlackInput::IKeyboard> m_keyboard;
         std::unique_ptr<BlackInput::IJoystick> m_joystick;
 
-        QStringList m_availableActions;
+        QMap<QString, QPixmap> m_availableActions;
         QHash<BlackMisc::Input::CHotkeyCombination, QString> m_configuredActions;
         QVector<BindInfo> m_boundActions;
 
@@ -142,4 +146,4 @@ namespace BlackCore
     };
 }
 
-#endif //BLACKCORE_INPUTMANAGER_H
+#endif //guard

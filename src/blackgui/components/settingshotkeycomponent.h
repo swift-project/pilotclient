@@ -19,6 +19,7 @@
 #include "blackmisc/input/actionhotkey.h"
 #include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/icons.h"
 
 #include <QFrame>
 #include <QObject>
@@ -60,7 +61,7 @@ namespace BlackGui
             QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
             BlackGui::Models::CActionHotkeyListModel m_model;
             BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this };
-            BlackCore::CActionBind m_action { "/Test/Message", this, &CSettingsHotkeyComponent::ps_hotkeySlot };
+            BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::wrench16(), this, &CSettingsHotkeyComponent::ps_hotkeySlot };
         };
     } // ns
 } // ns
