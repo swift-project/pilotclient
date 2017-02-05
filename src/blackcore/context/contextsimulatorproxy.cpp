@@ -51,7 +51,7 @@ namespace BlackCore
                                    "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Simulation::CSimulatedAircraft)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, BlackMisc::PhysicalQuantities::CLength, BlackMisc::PhysicalQuantities::CLength)));
+                                   "renderRestrictionsChanged", this, SIGNAL(renderRestrictionsChanged(bool, bool, int, BlackMisc::PhysicalQuantities::CLength)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                    "simulatorPluginChanged", this, SIGNAL(simulatorPluginChanged(BlackMisc::Simulation::CSimulatorPluginInfo)));
@@ -63,7 +63,7 @@ namespace BlackCore
                                    "weatherGridReceived", this, SIGNAL(weatherGridReceived(BlackMisc::Weather::CWeatherGrid, BlackMisc::CIdentifier)));
             Q_ASSERT(s);
             s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                                   "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CStatusMessage &)));
+                                   "addingRemoteModelFailed", this, SIGNAL(addingRemoteModelFailed(BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::CStatusMessage)));
             Q_ASSERT(s);
             Q_UNUSED(s);
             this->relayBaseClassSignals(serviceName, connection, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName());

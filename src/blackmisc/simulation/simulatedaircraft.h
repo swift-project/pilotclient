@@ -437,14 +437,16 @@ namespace BlackMisc
                 BLACK_METAMEMBER(com2system),
                 BLACK_METAMEMBER(transponder),
                 BLACK_METAMEMBER(parts),
-                BLACK_METAMEMBER(relativeDistance),
-                BLACK_METAMEMBER(relativeBearing),
+                BLACK_METAMEMBER(selcal),
                 BLACK_METAMEMBER(model),
                 BLACK_METAMEMBER(networkModel),
                 BLACK_METAMEMBER(enabled),
                 BLACK_METAMEMBER(rendered),
                 BLACK_METAMEMBER(partsSynchronized),
-                BLACK_METAMEMBER(fastPositionUpdates)
+                BLACK_METAMEMBER(fastPositionUpdates),
+                // ICoordinateWithRelativePosition
+                BLACK_METAMEMBER(relativeDistance),
+                BLACK_METAMEMBER(relativeBearing)
             );
         };
     } // namespace
