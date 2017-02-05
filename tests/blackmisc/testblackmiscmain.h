@@ -11,11 +11,8 @@
 #define BLACKMISCTEST_TESTMAIN_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 namespace BlackMiscTest
 {

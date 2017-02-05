@@ -48,7 +48,7 @@ namespace BlackMisc
                               QLatin1Literal(" gs: ") % (this->m_groundSpeed.toQString(i18n)) %
                               QLatin1Literal(" elevation: ") % (this->m_groundElevation.toQString(i18n)) %
                               QLatin1Literal(" heading: ") % (this->m_heading.toQString(i18n)) %
-                              QLatin1Literal(" timestamp: ") % (this->getFormattedUtcTimestampDhms());
+                              QLatin1Literal(" timestamp: ") % (this->hasValidTimestamp() ? this->getFormattedUtcTimestampDhms() : QStringLiteral("-"));
             return s;
         }
 

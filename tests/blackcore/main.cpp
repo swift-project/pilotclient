@@ -16,7 +16,6 @@
 
 #include "testblackcoremain.h"
 #include "blackcore/application.h"
-
 #include <QCoreApplication>
 #include <QtGlobal>
 

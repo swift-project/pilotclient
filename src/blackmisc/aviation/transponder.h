@@ -27,7 +27,6 @@
 
 namespace BlackMisc
 {
-
     namespace Aviation
     {
         //! Transponder
@@ -37,9 +36,9 @@ namespace BlackMisc
             //! Transponder codes
             enum TransponderMode
             {
-                StateStandby = 0, // not a real mode, more a state
+                StateStandby = 0, //!< not a real mode, more a state
                 ModeMil1 = 1, ModeMil2 = 2, ModeMil3 = 3, ModeMil4 = 4, ModeMil5 = 5,
-                StateIdent = 10, // not a real mode, more a state
+                StateIdent = 10,  //!< not a real mode, more a state
                 ModeA = 11,
                 ModeC = 12,
                 ModeS = 20
@@ -62,44 +61,22 @@ namespace BlackMisc
             CTransponder() : m_transponderCode(0), m_transponderMode(StateStandby) {}
 
             //! Constructor
-            CTransponder(int transponderCode, TransponderMode transponderMode) :
-                m_transponderCode(transponderCode), m_transponderMode(transponderMode)
-            {  }
+            CTransponder(int transponderCode, TransponderMode transponderMode);
 
             //! Constructor with transponder mode as string
-            CTransponder(int transponderCode, QString transponderMode) :
-                m_transponderCode(transponderCode), m_transponderMode(StateStandby)
-            {
-                this->setModeAsString(transponderMode);
-            }
+            CTransponder(int transponderCode, QString transponderMode);
 
             //! Constructor, code as string
-            CTransponder(QString transponderCode, TransponderMode transponderMode) :
-                m_transponderCode(0), m_transponderMode(transponderMode)
-            {
-                bool ok = false;
-                this->m_transponderCode = transponderCode.toInt(&ok);
-                if (!ok) this->m_transponderCode = -1; // will cause assert / exception
-            }
+            CTransponder(QString transponderCode, TransponderMode transponderMode);
 
             //! Constructor
-            CTransponder(QString transponderCode, QString transponderMode) :
-                m_transponderCode(0), m_transponderMode(StateStandby)
-            {
-                bool ok = false;
-                this->m_transponderCode = transponderCode.toInt(&ok);
-                if (!ok) this->m_transponderCode = -1; // will cause assert / exception
-                this->setModeAsString(transponderMode);
-            }
+            CTransponder(QString transponderCode, QString transponderMode);
 
             //! Are set values valid?
             bool validValues() const;
 
             //! Transponder mode as string
-            QString getModeAsString() const
-            {
-                return modeAsString(this->getTransponderMode());
-            }
+            QString getModeAsString() const { return modeAsString(this->getTransponderMode()); }
 
             //! In any sending mode such as MIL1 oder ModeS
             bool isInNormalSendingMode() const;
@@ -111,25 +88,16 @@ namespace BlackMisc
             bool isIdentifying() const { return StateIdent == m_transponderMode; }
 
             //! Transponder mode as string
-            void setModeAsString(const QString &mode)
-            {
-                this->setTransponderMode(CTransponder::modeFromString(mode));
-            }
+            void setModeAsString(const QString &mode) { this->setTransponderMode(CTransponder::modeFromString(mode)); }
 
             //! Transponder mode
-            TransponderMode getTransponderMode() const
-            {
-                return this->m_transponderMode;
-            }
+            TransponderMode getTransponderMode() const { return this->m_transponderMode; }
 
             //! Transponder mode as string
             static const QString &modeAsString(TransponderMode mode);
 
             //! Transponder code
-            int getTransponderCode() const
-            {
-                return this->m_transponderCode;
-            }
+            int getTransponderCode() const { return this->m_transponderCode; }
 
             //! Transponder code
             QString getTransponderCodeFormatted() const;
@@ -158,17 +126,14 @@ namespace BlackMisc
             //! Set IFR
             void setIFR() { this->m_transponderCode = 2000; }
 
-            //! Transponder unit
-            static CTransponder getStandardTransponder(qint32 transponderCode, TransponderMode mode)
-            {
-                return CTransponder(transponderCode, mode);
-            }
-
             //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
 
             //! Is valid transponder code?
             static bool isValidTransponderCode(const QString &transponderCode);
@@ -176,8 +141,8 @@ namespace BlackMisc
             //! Is valid transponder code?
             static bool isValidTransponderCode(qint32 transponderMode);
 
-            //! \copydoc BlackMisc::Mixin::String::toQString
-            QString convertToQString(bool i18n = false) const;
+            //! Transponder unit
+            static CTransponder getStandardTransponder(qint32 transponderCode, TransponderMode mode);
 
         private:
             //! Default value?
@@ -192,7 +157,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(transponderMode)
             );
         };
-
     } // ns
 } // ns
 

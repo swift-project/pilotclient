@@ -30,7 +30,7 @@ namespace BlackMisc
 
         QString CCallsign::unifyCallsign(const QString &callsign)
         {
-            return removeChars(callsign.toUpper(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
+            return removeChars(callsign.toUpper().trimmed(), [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
         }
 
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)

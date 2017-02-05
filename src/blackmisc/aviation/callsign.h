@@ -56,12 +56,12 @@ namespace BlackMisc
 
             //! Constructor
             CCallsign(const QString &callsign, TypeHint hint = NoHint)
-                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_typeHint(hint)
+                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_typeHint(hint)
             {}
 
             //! Constructor
             CCallsign(const QString &callsign, const QString &telephonyDesignator, TypeHint hint = NoHint)
-                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
+                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign)), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
             {}
 
             //! Constructor, needed to disambiguate implicit conversion from string literal.

@@ -834,7 +834,7 @@ namespace BlackCore
     void CApplication::addDBusAddressOption()
     {
         this->m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbusaddress" },
-                                 QCoreApplication::translate("application", "DBus address."),
+                                 QCoreApplication::translate("application", "DBus address (session, system, P2P IP e.g. 192.168.23.5)"),
                                  "dbusaddress");
         this->addParserOption(this->m_cmdDBusAddress);
     }
@@ -849,7 +849,7 @@ namespace BlackCore
         if (this->isParserOptionSet(this->m_cmdDBusAddress))
         {
             const QString v(this->getParserValue(m_cmdDBusAddress));
-            const QString dBusAddress(CDBusServer:: normalizeAddress(v));
+            const QString dBusAddress(CDBusServer::normalizeAddress(v));
             return dBusAddress;
         }
         else

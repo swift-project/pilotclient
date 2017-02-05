@@ -29,9 +29,7 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CInformationMessage : public CValueObject<CInformationMessage>
         {
         public:
-            /*!
-             * Type
-             */
+            //! Type
             enum InformationType
             {
                 Unspecified,

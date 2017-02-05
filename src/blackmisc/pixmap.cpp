@@ -18,8 +18,6 @@
 #include <QtGlobal>
 #include <tuple>
 
-
-
 namespace BlackMisc
 {
     CPixmap::CPixmap(const QPixmap &pixmap) : m_pixmap(pixmap), m_hasCachedPixmap(true)

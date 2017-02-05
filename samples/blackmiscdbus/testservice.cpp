@@ -163,7 +163,7 @@ namespace BlackSample
     void Testservice::receiveLengthsQvl(const QVariantList &lengthsVariantList) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << lengthsVariantList;
-        foreach(QVariant lv, lengthsVariantList)
+        foreach (QVariant lv, lengthsVariantList)
         {
             BlackMisc::PhysicalQuantities::CLength l;
             lv.value<QDBusArgument>() >> l;
@@ -177,7 +177,7 @@ namespace BlackSample
     void Testservice::receiveLengthsQl(const QList<QVariant> &lengthsList) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received " << lengthsList;
-        foreach(QVariant lv, lengthsList)
+        foreach (QVariant lv, lengthsList)
         {
             BlackMisc::PhysicalQuantities::CLength l;
             lv.value<QDBusArgument>() >> l;

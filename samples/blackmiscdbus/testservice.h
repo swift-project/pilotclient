@@ -64,7 +64,6 @@ namespace BlackMisc
 
 namespace BlackSample
 {
-
     //! Testservice for PQ / CValueObject DBus tests
     class Testservice : public QObject
     {
@@ -79,7 +78,6 @@ namespace BlackSample
         void sendStringMessage(const QString &message);
 
     public slots:
-
         //! Receive string message
         void receiveStringMessage(const QString &message);
 
@@ -107,7 +105,7 @@ namespace BlackSample
         //! Receive track
         void receiveTrack(const BlackMisc::Aviation::CTrack &track) const;
 
-        //! Receive a length (not working)
+        //! Receive a length
         void receiveLength(const BlackMisc::PhysicalQuantities::CLength &length) const;
 
         //! Receive lengths
@@ -200,6 +198,7 @@ namespace BlackSample
     public:
         //! DBus interface name
         static const QString InterfaceName;
+
         //! DBus object path
         static const QString ObjectPath;
 
@@ -208,11 +207,8 @@ namespace BlackSample
 
     private:
         BlackMisc::Aviation::CAtcStationList m_someAtcStations;
-
     };
-
 } // namespace
 
 #pragma pop_macro("interface")
-
 #endif // guard

@@ -14,6 +14,7 @@
 
 #include <QByteArray>
 #include <QtGlobal>
+#include <QStringBuilder>
 #include <cmath>
 
 using namespace BlackMisc::Aviation;
@@ -142,6 +143,14 @@ namespace BlackMisc
             const QString m = QString("no property, index ").append(index.toQString());
             BLACK_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
             return 0;
+        }
+
+        QString ICoordinateGeodetic::convertToQString(bool i18n) const
+        {
+            Q_UNUSED(i18n);
+            return this->latitudeAsString() % QLatin1Char(' ') %
+                   this->longitudeAsString() % QLatin1Char(' ') %
+                   this->geodeticHeightAsString();
         }
 
         CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -326,6 +335,13 @@ namespace BlackMisc
                 }
             }
             return 0;
+        }
+
+        QString ICoordinateWithRelativePosition::convertToQString(bool i18n) const
+        {
+            return m_relativeBearing.toQString(i18n) % QLatin1Char(' ') %
+                   m_relativeDistance.toQString(i18n) % QLatin1Char(' ') %
+                   ICoordinateGeodetic::convertToQString(i18n);
         }
 
         ICoordinateWithRelativePosition::ICoordinateWithRelativePosition()

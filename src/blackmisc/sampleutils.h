@@ -13,7 +13,6 @@
 #define BLACKMISC_SAMPLEUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-
 #include <QString>
 #include <QStringList>
 
@@ -24,7 +23,6 @@ namespace BlackMisc
     //! Utils for sample programms
     class BLACKMISC_EXPORT CSampleUtils
     {
-
     public:
         //! Select directory among given ones
         static QString selectDirectory(const QStringList &directoryOptions, QTextStream &streamOut, QTextStream &streamIn);

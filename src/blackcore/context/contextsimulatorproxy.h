@@ -48,7 +48,7 @@ namespace BlackCore
 
         public:
             //! Destructor
-            ~CContextSimulatorProxy() {}
+            virtual ~CContextSimulatorProxy() {}
 
         public slots:
             //! \name Interface overrides

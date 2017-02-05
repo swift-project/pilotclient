@@ -21,7 +21,6 @@
 
 namespace BlackGui
 {
-
     CPluginSelector::CPluginSelector(QWidget *parent) : QWidget(parent),
         m_detailsButtonMapper(new QSignalMapper(this)),
         m_configButtonMapper(new QSignalMapper(this))
@@ -35,7 +34,7 @@ namespace BlackGui
         connect(m_configButtonMapper, static_cast<void (QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &CPluginSelector::pluginConfigRequested);
     }
 
-    void CPluginSelector::addPlugin(const QString& identifier, const QString &name, bool hasConfig, bool enabled)
+    void CPluginSelector::addPlugin(const QString &identifier, const QString &name, bool hasConfig, bool enabled)
     {
         QWidget *pw = new QWidget;
         QHBoxLayout *layout = new QHBoxLayout;
@@ -57,7 +56,8 @@ namespace BlackGui
 
         pw->layout()->addWidget(cb);
 
-        if (hasConfig) {
+        if (hasConfig)
+        {
             QPushButton *config = new QPushButton("...");
             m_configButtonMapper->setMapping(config, identifier);
             connect(config, &QPushButton::clicked, m_configButtonMapper, static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map));
@@ -78,14 +78,14 @@ namespace BlackGui
 
     void CPluginSelector::setEnabled(const QString &identifier, bool enabled)
     {
-        QCheckBox* cb = findChild<QCheckBox *>(identifier);
+        QCheckBox *cb = findChild<QCheckBox *>(identifier);
         Q_ASSERT(cb);
         cb->setChecked(enabled);
     }
 
     void CPluginSelector::ps_handlePluginStateChange()
     {
-        QCheckBox *cb = qobject_cast<QCheckBox*>(sender());
+        QCheckBox *cb = qobject_cast<QCheckBox *>(sender());
         Q_ASSERT(cb);
 
         bool enabled = cb->checkState() != Qt::Unchecked;
@@ -95,6 +95,4 @@ namespace BlackGui
 
         emit pluginStateChanged(identifier, enabled);
     }
-
-
-} // namespace
+} // ns

@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_SIMULATION_SIMULATEDAIRCRAFT_H
 #define BLACKMISC_SIMULATION_SIMULATEDAIRCRAFT_H
 
+#include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/aviation/aircraftparts.h"
 #include "blackmisc/aviation/aircraftsituation.h"
@@ -21,18 +22,17 @@
 #include "blackmisc/aviation/livery.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/aviation/transponder.h"
-#include "blackmisc/blackmiscexport.h"
-#include "blackmisc/compare.h"
+#include "blackmisc/network/user.h"
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/geo/latitude.h"
 #include "blackmisc/geo/longitude.h"
-#include "blackmisc/icon.h"
-#include "blackmisc/metaclass.h"
-#include "blackmisc/network/user.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
+#include "blackmisc/blackmiscexport.h"
+#include "blackmisc/compare.h"
+#include "blackmisc/icon.h"
+#include "blackmisc/metaclass.h"
 #include "blackmisc/propertyindex.h"
-#include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/valueobject.h"
 #include "blackmisc/variant.h"
 
@@ -100,9 +100,6 @@ namespace BlackMisc
             //! Constructor.
             CSimulatedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Network::CUser &user, const BlackMisc::Aviation::CAircraftSituation &situation);
 
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
-
             //! Get callsign.
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
@@ -137,7 +134,6 @@ namespace BlackMisc
             bool setAircraftIcaoCode(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) { return m_model.setAircraftIcaoCode(aircraftIcaoCode);}
 
             //! Set ICAO info
-            //! \deprecated
             bool setIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! Get livery
@@ -329,12 +325,6 @@ namespace BlackMisc
             //! Combined ICAO / color string
             QString getCombinedIcaoLiveryString(bool networkModel = false) const;
 
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
-
             //! Compare for index
             int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const;
 
@@ -407,8 +397,17 @@ namespace BlackMisc
             //! Set the synchronisation flag
             void setPartsSynchronized(bool synchronized) { m_partsSynchronized = synchronized; }
 
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
+
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
 
         private:
             BlackMisc::Aviation::CCallsign          m_callsign;

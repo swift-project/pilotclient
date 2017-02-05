@@ -29,7 +29,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         //! Value object for ICAO classification
         class BLACKMISC_EXPORT CAircraftIcaoCode :
             public CValueObject<CAircraftIcaoCode>,

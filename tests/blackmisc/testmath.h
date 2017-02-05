@@ -11,17 +11,13 @@
 #define BLACKMISCTEST_TESTMATH_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 #include <QObject>
 
 namespace BlackMiscTest
 {
-
     /*!
      * Math classes tests
      */
@@ -37,7 +33,6 @@ namespace BlackMiscTest
         //! Unit test for round to multiple of
         void testRoundToMultipleOf();
     };
-
 } // namespace
 
 //! \endcond

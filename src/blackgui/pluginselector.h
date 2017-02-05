@@ -22,7 +22,6 @@ class QSignalMapper;
 
 namespace BlackGui
 {
-
     /*!
      * Shows all available plugins in nice list and lets user enable, disable and configure
      * each of them.
@@ -43,7 +42,7 @@ namespace BlackGui
 
     public:
         //! Constructor
-        explicit CPluginSelector(QWidget *parent = 0);
+        explicit CPluginSelector(QWidget *parent = nullptr);
 
         //! Adds the new plugin to the list.
         //! \param identifier Identifier of the plugin
@@ -61,9 +60,7 @@ namespace BlackGui
     private:
         QSignalMapper *m_detailsButtonMapper;
         QSignalMapper *m_configButtonMapper;
-
     };
+} // ns
 
-} // namespace BlackGui
-
-#endif // BLACKGUI_PLUGINSELECTOR_H
+#endif // guard

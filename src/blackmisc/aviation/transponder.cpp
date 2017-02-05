@@ -25,6 +25,33 @@ namespace BlackMisc
             qRegisterMetaType<TransponderMode>();
         }
 
+        CTransponder::CTransponder(int transponderCode, CTransponder::TransponderMode transponderMode) :
+            m_transponderCode(transponderCode), m_transponderMode(transponderMode)
+        {  }
+
+        CTransponder::CTransponder(int transponderCode, QString transponderMode) :
+            m_transponderCode(transponderCode), m_transponderMode(StateStandby)
+        {
+            this->setModeAsString(transponderMode);
+        }
+
+        CTransponder::CTransponder(QString transponderCode, CTransponder::TransponderMode transponderMode) :
+            m_transponderCode(0), m_transponderMode(transponderMode)
+        {
+            bool ok = false;
+            this->m_transponderCode = transponderCode.toInt(&ok);
+            if (!ok) this->m_transponderCode = -1; // will cause assert / exception
+        }
+
+        CTransponder::CTransponder(QString transponderCode, QString transponderMode) :
+            m_transponderCode(0), m_transponderMode(StateStandby)
+        {
+            bool ok = false;
+            this->m_transponderCode = transponderCode.toInt(&ok);
+            if (!ok) this->m_transponderCode = -1; // will cause assert / exception
+            this->setModeAsString(transponderMode);
+        }
+
         bool CTransponder::validValues() const
         {
             if (this->isDefaultValue()) return true; // special case
@@ -62,11 +89,11 @@ namespace BlackMisc
             if (modeString.startsWith("Mode C", Qt::CaseInsensitive)) return ModeC;
             if (modeString.startsWith("C", Qt::CaseInsensitive)) return ModeC;
             if (modeString.startsWith("Mode S", Qt::CaseInsensitive)) return ModeS;
-            if (modeString.contains("Mode 1", Qt::CaseInsensitive)) return ModeMil1;
-            if (modeString.contains("Mode 2", Qt::CaseInsensitive)) return ModeMil2;
-            if (modeString.contains("Mode 3", Qt::CaseInsensitive)) return ModeMil3;
-            if (modeString.contains("Mode 4", Qt::CaseInsensitive)) return ModeMil4;
-            if (modeString.contains("Mode 5", Qt::CaseInsensitive)) return ModeMil5;
+            if (modeString.contains("1", Qt::CaseInsensitive)) return ModeMil1;
+            if (modeString.contains("2", Qt::CaseInsensitive)) return ModeMil2;
+            if (modeString.contains("3", Qt::CaseInsensitive)) return ModeMil3;
+            if (modeString.contains("4", Qt::CaseInsensitive)) return ModeMil4;
+            if (modeString.contains("5", Qt::CaseInsensitive)) return ModeMil5;
             return StateStandby;
         }
 
@@ -112,6 +139,11 @@ namespace BlackMisc
         {
             if (transponderCode < 0 || transponderCode > 7777) return false;
             return CTransponder::isValidTransponderCode(QString::number(transponderCode));
+        }
+
+        CTransponder CTransponder::getStandardTransponder(qint32 transponderCode, CTransponder::TransponderMode mode)
+        {
+            return CTransponder(transponderCode, mode);
         }
 
         const QString &CTransponder::modeAsString(CTransponder::TransponderMode mode)
@@ -206,6 +238,5 @@ namespace BlackMisc
                 break;
             }
         }
-
     } // namespace
 } // namespace

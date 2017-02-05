@@ -23,6 +23,7 @@
 #include <QList>
 #include <QString>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -56,18 +57,12 @@ namespace BlackMisc
 
         QString CAircraftModel::convertToQString(bool i18n) const
         {
-            QString s = this->m_modelString;
-            if (!s.isEmpty()) { s += " type: "; }
-            s += this->getModelTypeAsString();
-            s += ' ';
-            s += this->getAircraftIcaoCode().toQString(i18n);
-            s += ' ';
-            s += this->m_livery.toQString(i18n);
-            if (!this->m_fileName.isEmpty())
-            {
-                s += ' ';
-                s += m_fileName;
-            }
+            const QString s =
+                this->m_modelString %
+                QLatin1Literal(" type: '") % this->getModelTypeAsString() %
+                QLatin1Literal("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
+                QLatin1Literal("' {") % this->m_livery.toQString(i18n) %
+                QLatin1Literal("} file: '") % this->m_fileName % QLatin1Literal("'");
             return s;
         }
 
@@ -149,14 +144,9 @@ namespace BlackMisc
         {
             if (this->hasValidDbKey())
             {
-                if (this->hasModelString())
-                {
-                    return QString(this->getModelString()).append(" ").append(this->getDbKeyAsStringInParentheses());
-                }
-                else
-                {
-                    return this->getDbKeyAsString();
-                }
+                return this->hasModelString() ?
+                       QString(this->getModelString()).append(" ").append(this->getDbKeyAsStringInParentheses()) :
+                       this->getDbKeyAsString();
             }
             else
             {
@@ -175,7 +165,7 @@ namespace BlackMisc
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
             if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index);}
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexModelString:
@@ -229,7 +219,7 @@ namespace BlackMisc
             if (IOrderable::canHandleIndex(index)) { IOrderable::setPropertyByIndex(index, variant); return; }
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant); return; }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexModelString:

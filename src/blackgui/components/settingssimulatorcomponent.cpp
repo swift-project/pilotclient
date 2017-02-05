@@ -82,7 +82,7 @@ namespace BlackGui
             // list all available simulators
             for (const auto &p : getAvailablePlugins())
             {
-                QString config = m_plugins->getPluginConfigId(p.getIdentifier());
+                const QString config = m_plugins->getPluginConfigId(p.getIdentifier());
                 ui->ps_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
             }
 

@@ -24,7 +24,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
-
     CDBusServer::CDBusServer(const QString &service, const QString &address, QObject *parent) : QObject(parent)
     {
         m_serverMode = modeOfAddress(address);
@@ -347,7 +346,7 @@ namespace BlackMisc
 
     QString CDBusServer::normalizeAddress(const QString &address)
     {
-        QString lc(address.toLower().trimmed());
+        const QString lc(address.toLower().trimmed());
 
         if (lc.isEmpty()) { return sessionBusAddress(); }
         if (lc == sessionBusAddress() || lc == systemBusAddress()) { return lc; }
@@ -400,8 +399,8 @@ namespace BlackMisc
         {
             QString name = coreServiceName();
             QDBusConnection connection = dbusAddress == systemBusAddress() ?
-                        QDBusConnection::connectToBus(QDBusConnection::SystemBus, name) :
-                        QDBusConnection::connectToBus(QDBusConnection::SessionBus, name);
+                                         QDBusConnection::connectToBus(QDBusConnection::SystemBus, name) :
+                                         QDBusConnection::connectToBus(QDBusConnection::SessionBus, name);
 
             // todo: further checks would need to go here
             // failing session bus not detected yet
@@ -419,5 +418,4 @@ namespace BlackMisc
         QString unused;
         return isDBusAvailable(dbusAddress, unused, timeoutMs);
     }
-
 } // namespace

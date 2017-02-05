@@ -11,11 +11,8 @@
 #define BLACKMISCTEST_TESTPROCESS_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
-* \file
-* \ingroup testblackmisc
-*/
+//! \file
+//! \ingroup testblackmisc
 
 #include <QObject>
 

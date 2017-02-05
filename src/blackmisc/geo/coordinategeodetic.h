@@ -104,6 +104,9 @@ namespace BlackMisc
             //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateGeodetic &compareValue) const;
 
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
+
         protected:
             //! Can given index be handled?
             static bool canHandleIndex(const BlackMisc::CPropertyIndex &index);
@@ -164,6 +167,9 @@ namespace BlackMisc
 
             //! Compare by index
             int comparePropertyByIndex(const CPropertyIndex &index, const ICoordinateWithRelativePosition &compareValue) const;
+
+            //! \copydoc BlackMisc::Mixin::String::toQString
+            QString convertToQString(bool i18n = false) const;
 
         protected:
             //! Constructor

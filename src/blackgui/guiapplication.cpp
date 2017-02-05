@@ -278,7 +278,7 @@ namespace BlackGui
         {
             static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
             static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
-            const QString helpText(beautifyHelpMessage(this->m_parser.helpText()));
+            const QString helpText(CGuiApplication::beautifyHelpMessage(this->m_parser.helpText()));
             const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
             QMessageBox::critical(nullptr,
                                   QGuiApplication::applicationDisplayName(),
@@ -565,8 +565,9 @@ namespace BlackGui
     {
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
+            const QString helpText(CGuiApplication::beautifyHelpMessage(this->m_parser.helpText()));
             QMessageBox::information(nullptr, QGuiApplication::applicationDisplayName(),
-                                     "<html><head/><body><pre>" + this->m_parser.helpText() + "</pre></body></html>");
+                                     "<html><head/><body>" + helpText + "</body></html>");
         }
         else
         {

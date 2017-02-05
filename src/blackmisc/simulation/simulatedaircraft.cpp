@@ -15,7 +15,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/stringutils.h"
-
+#include <QStringBuilder>
 #include <tuple>
 
 using namespace BlackMisc;
@@ -530,24 +530,15 @@ namespace BlackMisc
 
         QString CSimulatedAircraft::convertToQString(bool i18n) const
         {
-            QString s(this->m_callsign.toQString(i18n));
-            s += " ";
-            s += this->m_pilot.toQString(i18n);
-            s += " ";
-            s += this->m_situation.toQString(i18n);
-            s += " ";
-            s += this->m_com1system.toQString(i18n);
-            s += " ";
-            s += this->m_com2system.toQString(i18n);
-            s += " ";
-            s += this->m_transponder.toQString(i18n);
-            s += " enabled: ";
-            s +=  BlackMisc::boolToYesNo(this->isEnabled());
-            s += " ";
-            s += " rendered: ";
-            s +=  BlackMisc::boolToYesNo(this->isRendered());
-            s += " ";
-            s += this->m_model.toQString(i18n);
+            const QString s = this->m_callsign.toQString(i18n) %
+                              QLatin1Char(' ') % this->m_pilot.toQString(i18n) %
+                              QLatin1Char(' ') % this->m_situation.toQString(i18n) %
+                              QLatin1Char(' ') % this->m_com1system.toQString(i18n) %
+                              QLatin1Char(' ') % this->m_com2system.toQString(i18n) %
+                              QLatin1Char(' ') % this->m_transponder.toQString(i18n) %
+                              QLatin1Literal(" enabled: ") % BlackMisc::boolToYesNo(this->isEnabled()) %
+                              QLatin1Literal(" rendered: ") % BlackMisc::boolToYesNo(this->isRendered()) %
+                              QLatin1Char(' ') % this->getModel().toQString(i18n);
             return s;
         }
     } // namespace

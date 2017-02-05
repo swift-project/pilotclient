@@ -22,7 +22,6 @@
 
 namespace BlackCore { class INetwork; }
 namespace BlackMisc { namespace Network { class CServer; } }
-
 namespace BlackCoreTest
 {
     /*!
@@ -52,7 +51,6 @@ namespace BlackCoreTest
         //! Test if server is available
         static bool pingServer(const BlackMisc::Network::CServer &server);
     };
-
 } //namespace
 
 //! \endcond

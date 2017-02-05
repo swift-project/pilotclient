@@ -37,8 +37,8 @@ namespace BlackMisc
         //! Value object encapsulating information about an airpot.
         class BLACKMISC_EXPORT CAirport :
             public CValueObject<CAirport>,
-            public BlackMisc::Db::IDatastoreObjectWithIntegerKey,
-            public Geo::ICoordinateWithRelativePosition
+            public Geo::ICoordinateWithRelativePosition,
+            public BlackMisc::Db::IDatastoreObjectWithIntegerKey
         {
         public:
             //! Properties by index
@@ -148,23 +148,25 @@ namespace BlackMisc
             static CAirport fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString());
 
         private:
-            CAirportIcaoCode                    m_icao;
             QString                             m_descriptiveName;
-            BlackMisc::Geo::CCoordinateGeodetic m_position;
-            CCountry                            m_country;
             bool                                m_operating;
+            CAirportIcaoCode                    m_icao;
+            BlackMisc::CCountry                 m_country;
+            BlackMisc::Geo::CCoordinateGeodetic m_position;
 
             BLACK_METACLASS(
                 CAirport,
-                BLACK_METAMEMBER(dbKey),
-                BLACK_METAMEMBER(timestampMSecsSinceEpoch),
                 BLACK_METAMEMBER(icao),
                 BLACK_METAMEMBER(descriptiveName),
                 BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(country),
                 BLACK_METAMEMBER(operating),
+                // ICoordinateWithRelativePosition
                 BLACK_METAMEMBER(relativeDistance),
-                BLACK_METAMEMBER(relativeBearing)
+                BLACK_METAMEMBER(relativeBearing),
+                // IDatastoreObjectWithIntegerKey
+                BLACK_METAMEMBER(dbKey),
+                BLACK_METAMEMBER(timestampMSecsSinceEpoch)
             );
         };
     } // namespace

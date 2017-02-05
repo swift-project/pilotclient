@@ -20,6 +20,7 @@
 
 #include <QCoreApplication>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -84,93 +85,49 @@ namespace BlackMisc
 
         QString CAtcStation::convertToQString(bool i18n) const
         {
-            QString s = i18n ?
-                        QCoreApplication::translate("Aviation", "ATC station") :
-                        "ATC station";
-            s.append(' ').append(this->m_callsign.toQString(i18n));
+            static const QString atcI18n(QCoreApplication::translate("Aviation", "ATC station"));
+            static const QString rangeI18n(QCoreApplication::translate("Aviation", "range"));
+            static const QString fromUtcI18n(QCoreApplication::translate("Aviation", "from(UTC)"));
+            static const QString untilUtcI18n(QCoreApplication::translate("Aviation", "until(UTC)"));
 
-            // position
-            s.append(' ').append(this->m_position.toQString(i18n));
+            const QString s = (i18n ? atcI18n : QLatin1Literal("ATC station")) %
+                              QLatin1Char(' ') % this->m_callsign.toQString(i18n) %
+                              QLatin1Char(' ') % this->m_position.toQString(i18n) %
+                              QLatin1String(" online: ") % boolToYesNo(m_isOnline) %
 
-            // Online?
-            s.append(' ');
-            if (this->m_isOnline)
-            {
-                i18n ? s.append(QCoreApplication::translate("Aviation", "online")) : s.append("online");
-            }
-            else
-            {
-                i18n ? s.append(QCoreApplication::translate("Aviation", "offline")) : s.append("offline");
-            }
+                              // controller
+                              (!this->m_controller.isValid() ? QStringLiteral("") :
+                               QStringLiteral(" ") % this->m_controller.toQString(i18n)) %
 
-            // controller name
-            if (this->m_controller.isValid())
-            {
-                s.append(' ');
-                s.append(this->m_controller.toQString(i18n));
-            }
+                              // frequency
+                              QLatin1Char(' ') % this->m_frequency.valueRoundedWithUnit(3, i18n) %
 
-            // frequency
-            s.append(' ');
-            s.append(this->m_frequency.valueRoundedWithUnit(3,  i18n));
+                              // ATIS
+                              (!this->hasAtis() ? QStringLiteral("") :
+                               QStringLiteral(" ") % this->m_atis.toQString(i18n)) %
 
-            // ATIS
-            if (this->hasAtis())
-            {
-                s.append(' ');
-                s.append(this->m_atis.toQString(i18n));
-            }
+                              // METAR
+                              (!this->hasMetar() ? QStringLiteral("") :
+                               QStringLiteral(" ") % this->m_metar.toQString(i18n)) %
 
-            // METAR
-            if (this->hasMetar())
-            {
-                s.append(' ');
-                s.append(this->m_metar.toQString(i18n));
-            }
+                              // range
+                              QLatin1Char(' ') % (i18n ? rangeI18n : QLatin1Literal("range")) %
+                              QLatin1Char(' ') % this->m_range.toQString(i18n) %
 
-            // range
-            s.append(' ');
-            i18n ? s.append(s.append(QCoreApplication::translate("Aviation", "range"))) : s.append("range");
-            s.append(": ");
-            s.append(this->m_range.toQString(i18n));
+                              // distance / bearing
+                              QLatin1Char(' ') % ICoordinateWithRelativePosition::convertToQString(i18n) %
 
-            // distance to plane
-            if (this->m_relativeDistance.isPositiveWithEpsilonConsidered())
-            {
-                s.append(' ');
-                i18n ? s.append(QCoreApplication::translate("Aviation", "distance")) : s.append("distance");
-                s.append(' ');
-                s.append(this->m_relativeDistance.toQString(i18n));
-            }
+                              // booking from/until
+                              QLatin1Char(' ') %
+                              (i18n ? fromUtcI18n : QLatin1Literal("from(UTC)")) %
+                              QLatin1Char(' ') %
+                              (this->m_bookedFromUtc.isNull() ? QLatin1String("-") : this->m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
 
-            // from / to
-            if (!this->hasBookingTimes()) return s;
+                              QLatin1Char(' ') %
+                              (i18n ? untilUtcI18n : QLatin1Literal("until(UTC)")) %
+                              QLatin1Char(' ') %
+                              (this->m_bookedUntilUtc.isNull() ? QLatin1String("-") : this->m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
 
-            // append from
-            s.append(' ');
-            i18n ? s.append(s.append(QCoreApplication::translate("Aviation", "from(UTC)"))) : s.append("from(UTC)");
-            s.append(": ");
-            if (this->m_bookedFromUtc.isNull())
-            {
-                s.append('-');
-            }
-            else
-            {
-                s.append(this->m_bookedFromUtc.toString("yy-MM-dd HH:mm"));
-            }
-
-            // append to
-            s.append(' ');
-            i18n ? s.append(s.append(QCoreApplication::translate("Aviation", "until(UTC)"))) : s.append("to(UTC)");
-            s.append(": ");
-            if (this->m_bookedFromUtc.isNull())
-            {
-                s.append('-');
-            }
-            else
-            {
-                s.append(this->m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
-            }
             return s;
 
             // force strings for translation in resource files

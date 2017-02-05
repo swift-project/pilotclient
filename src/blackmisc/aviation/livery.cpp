@@ -24,6 +24,7 @@
 #include <Qt>
 #include <QtGlobal>
 #include <tuple>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
@@ -69,9 +70,7 @@ namespace BlackMisc
             QString s(getCombinedCode());
             if (!this->getDescription().isEmpty())
             {
-                s += " (";
-                s += this->getDescription();
-                s += ")";
+                s += QLatin1Literal(" (") % this->getDescription() % QLatin1Literal(")");
             }
             return s;
         }
@@ -117,20 +116,16 @@ namespace BlackMisc
 
         QString CLivery::convertToQString(bool i18n) const
         {
-            QString s(i18n ? QCoreApplication::translate("Aviation", "Livery") : "Livery");
-            if (this->hasCombinedCode())
-            {
-                s.append(' ');
-                s.append(m_combinedCode);
-            }
-            s.append(' ');
-            s.append(this->m_airline.toQString(i18n));
-            s.append(' ');
-            if (!this->m_description.isEmpty()) { s.append(' ').append(this->m_description); }
-            if (this->m_colorFuselage.isValid()) { s.append(" F: ").append(this->m_colorFuselage.hex()); }
-            if (this->m_colorTail.isValid()) { s.append(" T: ").append(this->m_colorTail.hex()); }
-            s.append(" Mil: ").append(boolToYesNo(this->isMilitary()));
-            return s;
+            static const QString livery("Livery");
+            static const QString liveryI18n(QCoreApplication::translate("Aviation", "Livery"));
+
+            return (i18n ? liveryI18n : livery) %
+                   QLatin1Literal(" cc: '") % m_combinedCode %
+                   QLatin1Literal("' airline: '") % m_airline.toQString(i18n) %
+                   QLatin1Literal("' desc.: '") % m_description %
+                   QLatin1Literal("' F: '") % m_colorFuselage.hex() %
+                   QLatin1Literal("' T: '") % m_colorTail.hex() %
+                   QLatin1Literal("' Mil: ") % boolToYesNo(this->isMilitary());
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("Aviation", "Livery");

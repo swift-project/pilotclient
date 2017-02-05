@@ -77,17 +77,11 @@ namespace BlackMisc
                         bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(),  const QDateTime &bookedUntilUtc = QDateTime(),
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
-
             //! Has booking times?
             bool hasBookingTimes() const;
 
             //! Has ATIS?
-            bool hasAtis() const
-            {
-                return this->m_atis.hasMessage();
-            }
+            bool hasAtis() const { return this->m_atis.hasMessage(); }
 
             //! Has METAR?
             bool hasMetar() const;
@@ -256,6 +250,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+            BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
+
         private:
             CCallsign                                 m_callsign;
             BlackMisc::Network::CUser                 m_controller;
@@ -277,9 +274,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER(position),
                 BLACK_METAMEMBER(range),
                 BLACK_METAMEMBER(isOnline),
-                BLACK_METAMEMBER(atis),
                 BLACK_METAMEMBER(bookedFromUtc),
                 BLACK_METAMEMBER(bookedUntilUtc),
+                BLACK_METAMEMBER(atis),
                 BLACK_METAMEMBER(metar),
                 BLACK_METAMEMBER(voiceRoom),
                 BLACK_METAMEMBER(relativeDistance),

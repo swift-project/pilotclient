@@ -45,7 +45,7 @@ public:
 
 private slots:
     //! \name PushButton slots
-    //! @[
+    //! @{
     void ps_startCorePressed();
     void ps_stopCorePressed();
     void ps_appendLogMessage(const BlackMisc::CStatusMessage &message);

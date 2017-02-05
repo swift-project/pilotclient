@@ -13,9 +13,9 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
-        QString CInformationMessage::convertToQString(bool /** i18n **/) const
+        QString CInformationMessage::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
             return this->m_message;
         }
 
@@ -45,6 +45,5 @@ namespace BlackMisc
                 }
             }
         }
-
     } // namespace
 } // namespace

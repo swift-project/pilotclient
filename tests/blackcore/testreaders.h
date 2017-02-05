@@ -42,7 +42,7 @@ namespace BlackCoreTest
         explicit CTestReaders(QObject *parent = nullptr);
 
         //! Destructor
-        ~CTestReaders();
+        virtual ~CTestReaders();
 
     private slots:
         //! Read ICAO data
@@ -62,7 +62,6 @@ namespace BlackCoreTest
         //! Test if server is available
         static bool pingServer(const BlackMisc::Network::CUrl &url);
     };
-
 } //namespace
 
 //! \endcond

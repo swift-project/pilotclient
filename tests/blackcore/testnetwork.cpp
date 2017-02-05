@@ -43,7 +43,6 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCoreTest
 {
-
     void CTestNetwork::networkTest(BlackCore::INetwork *net)
     {
         CServer fsdServer("", "", "vatsim-germany.org", 6809, CUser("1234567", "", "", "123456"));
@@ -111,7 +110,6 @@ namespace BlackCoreTest
         }
         return true;
     }
-
 }
 
 //! \endcond
