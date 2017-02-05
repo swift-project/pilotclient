@@ -30,6 +30,7 @@ namespace BlackMisc
     {
         class CInterpolationHints;
         class CInterpolatorLinear;
+        class CInterpolatorSpline;
         struct CInterpolationStatus;
         struct CPartsStatus;
 
@@ -44,12 +45,12 @@ namespace BlackMisc
             //! Current interpolated situation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const;
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status);
 
             //! Parts before given offset time (aka pending parts)
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const Aviation::CCallsign &callsign, qint64 cutoffTime,
-                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
+                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
 
             //! Add a new aircraft situation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
@@ -236,6 +237,7 @@ namespace BlackMisc
 
         //! \cond PRIVATE
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorLinear>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE CInterpolator<CInterpolatorSpline>;
         //! \endcond
     } // namespace
 } // namespace

@@ -11,6 +11,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatorspline.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/heading.h"
 #include "blackmisc/pq/angle.h"
@@ -44,7 +45,7 @@ namespace BlackMisc
 
         template <typename Derived>
         CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
+            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status)
         {
             status.reset();
             InterpolationLog log;
@@ -173,7 +174,7 @@ namespace BlackMisc
 
         template <typename Derived>
         CAircraftParts CInterpolator<Derived>::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
-            const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
+            const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log)
         {
             Q_UNUSED(setup);
             partsStatus.reset();
@@ -557,6 +558,7 @@ namespace BlackMisc
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
         //! \cond PRIVATE
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CInterpolator<CInterpolatorLinear>;
+        template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CInterpolator<CInterpolatorSpline>;
         //! \endcond
     } // namespace
 } // namespace

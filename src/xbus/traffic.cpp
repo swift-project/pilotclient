@@ -16,7 +16,6 @@
 #include "utils.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/interpolationhints.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
 #include "XPMPMultiplayer.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
@@ -41,7 +40,7 @@ namespace XBus
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
-    BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints() const
+    BlackMisc::Simulation::CInterpolationHints CTraffic::Plane::hints()
     {
         // \todo MS 865 CInterpolationAndRenderingSetup allows to setup interpolation in the GUI, e.g.
         //       also to disable aircraft parts / or logging parts (log file). I wonder if you want to consider it here

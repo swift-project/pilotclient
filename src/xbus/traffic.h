@@ -16,7 +16,7 @@
 #include "terrainprobe.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
-#include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatorspline.h"
 #include <QObject>
 #include <QHash>
 #include <QVector>
@@ -131,9 +131,9 @@ namespace XBus
             bool hasSurfaces = false;
             bool hasXpdr = false;
             char label[32] {};
-            BlackMisc::Simulation::CInterpolatorLinear interpolator;
+            BlackMisc::Simulation::CInterpolatorSpline interpolator;
             CTerrainProbe terrainProbe;
-            BlackMisc::Simulation::CInterpolationHints hints() const;
+            BlackMisc::Simulation::CInterpolationHints hints();
             XPMPPlaneSurfaces_t surfaces;
             XPMPPlaneRadar_t xpdr;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);
