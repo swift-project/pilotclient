@@ -58,7 +58,6 @@ namespace BlackMisc
 
 namespace BlackSample
 {
-
     //! Proxy class for interface blackmisctest.testservice
     class TestServiceInterface: public QDBusAbstractInterface
     {
@@ -73,10 +72,9 @@ namespace BlackSample
         TestServiceInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
 
         //! Destructor
-        ~TestServiceInterface();
+        virtual ~TestServiceInterface();
 
     public Q_SLOTS:
-
         //! DBus calls
         //! @{
         inline QDBusPendingReply<BlackMisc::Aviation::CAtcStation> getAtcStation()
@@ -151,14 +149,28 @@ namespace BlackSample
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(icaoData);
-            return asyncCallWithArgumentList(QLatin1String("pingIcaoData"), argumentList);
+            return asyncCallWithArgumentList(QLatin1String("pingAircraftIcaoData"), argumentList);
         }
 
-        inline QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraft> pingAircraft(BlackMisc::Simulation::CSimulatedAircraft aircraft)
+        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftLights> pingAircraftLights(BlackMisc::Aviation::CAircraftLights lights)
         {
             QList<QVariant> argumentList;
-            argumentList << QVariant::fromValue(aircraft);
-            return asyncCallWithArgumentList(QLatin1String("pingAircraft"), argumentList);
+            argumentList << QVariant::fromValue(lights);
+            return asyncCallWithArgumentList(QLatin1String("pingAircraftLights"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftParts> pingAircraftParts(BlackMisc::Aviation::CAircraftParts parts)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(parts);
+            return asyncCallWithArgumentList(QLatin1String("pingAircraftParts"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftEngine> pingAircraftEngine(BlackMisc::Aviation::CAircraftEngine engine)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(engine);
+            return asyncCallWithArgumentList(QLatin1String("pingAircraftEngine"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraft> pingSimulatedAircraft(BlackMisc::Simulation::CSimulatedAircraft aircraft)

@@ -389,43 +389,69 @@ namespace BlackSample
             CSimulatorPluginInfo pluginInfo("fsx", "FSX Simulator", "FSX", "Flight Simulator X", true);
             CSimulatorPluginInfo pluginInfoReceived = testserviceInterface.pingPluginInfo(pluginInfo);
             qDebug() << "Pinged info via interface"
-                     << ((pluginInfo == pluginInfoReceived) ? "OK" : "ERROR!") << pluginInfoReceived;
+                     << ((pluginInfo == pluginInfoReceived) ? "OK" : "------------- ERROR! ------------") << pluginInfoReceived;
 
-            CAtcStation stationReceived  = testserviceInterface.pingAtcStation(station);
+            CSpeed speedNotNull(22, CSpeedUnit::m_s());
+            speedNull = CSpeed(0, CSpeedUnit::nullUnit());
+            speed = testserviceInterface.pingSpeed(speedNotNull);
+            qDebug() << "Pinged not null speed via interface"
+                     << ((speedNotNull == speed) ? "OK" : "------------- ERROR! ------------") << speed;
+            speed = testserviceInterface.pingSpeed(speedNull);
+            qDebug() << "Pinged null speed via interface"
+                     << ((speedNull == speed) ? "OK" : "------------- ERROR! ------------") << speed;
+
+            CAtcStation stationReceived = testserviceInterface.pingAtcStation(station);
             qDebug() << "Pinged ATC station via interface"
-                     << ((station == stationReceived) ? "OK" : "ERROR!") << stationReceived;
+                     << ((station == stationReceived) ? "OK" : "------------- ERROR! ------------") << stationReceived;
 
             CAircraftIcaoCode icaoData("B737", "L2J");
             CAircraftIcaoCode icaoReceived = testserviceInterface.pingAircraftIcaoData(icaoData);
             qDebug() << "Pinged ICAO data via interface"
-                     << ((icaoData == icaoReceived) ? "OK" : "ERROR!") << icaoReceived;
+                     << ((icaoData == icaoReceived) ? "OK" : "------------- ERROR! ------------") << icaoReceived;
+            qDebug() << icaoData << icaoReceived;
 
             CUser pingUser("223344", "Ping Me User");
             CUser userReceived = testserviceInterface.pingUser(pingUser);
             qDebug() << "Pinged user via interface"
-                     << ((userReceived == pingUser) ? "OK" : "ERROR!") << userReceived;
+                     << ((userReceived == pingUser) ? "OK" : "------------- ERROR! ------------") << userReceived;
 
             CAircraftSituation situation;
             CAircraftSituation situationReceived = testserviceInterface.pingSituation(situation);
             qDebug() << "Pinged situation via interface"
-                     << ((situation == situationReceived) ? "OK" : "ERROR!") << situationReceived;
+                     << ((situation == situationReceived) ? "OK" : "------------- ERROR! ------------") << situationReceived;
 
             CTransponder transponderReceived = testserviceInterface.pingTransponder(transponder);
             qDebug() << "Pinged transponder via interface"
-                     << ((transponderReceived == transponder) ? "OK" : "ERROR!") << transponderReceived;
+                     << ((transponderReceived == transponder) ? "OK" : "------------- ERROR! ------------") << transponderReceived;
+
+            CAircraftLights lights(true, false, true, false, true, false);
+            CAircraftLights lightsReceived = testserviceInterface.pingAircraftLights(lights);
+            qDebug() << "Pinged lights via interface"
+                     << ((lightsReceived == lights) ? "OK" : "------------- ERROR! ------------") << lightsReceived;
+
+            CAircraftEngine engine(3, true);
+            CAircraftEngine engineReceived = testserviceInterface.pingAircraftEngine(engine);
+            qDebug() << "Pinged engine via interface"
+                     << ((engineReceived == engine) ? "OK" : "------------- ERROR! ------------") << engineReceived;
+
+            CAircraftEngineList engines({engine});
+            CAircraftParts parts(lights, true, 11, true, engines, true);
+            CAircraftParts partsReceived = testserviceInterface.pingAircraftParts(parts);
+            qDebug() << "Pinged parts via interface"
+                     << ((partsReceived == parts) ? "OK" : "------------- ERROR! ------------") << partsReceived;
 
             CSimulatedAircraft aircraft(callsign, CUser("123456", "Joe Pilot"), situation);
             aircraft.setTransponder(transponder);
-            CSimulatedAircraft aircraftReceived(testserviceInterface.pingAircraft(aircraft));
+            CSimulatedAircraft aircraftReceived(testserviceInterface.pingSimulatedAircraft(aircraft));
             qDebug() << "Pinged aircraft via interface"
-                     << ((aircraft == aircraftReceived) ? "OK" : "ERROR!") << aircraftReceived;
+                     << ((aircraft == aircraftReceived) ? "OK" : "------------- ERROR! ------------") << aircraftReceived;
 
             CSimulatedAircraft simAircraft(aircraft);
             CAircraftModel model("foobar", CAircraftModel::TypeManuallySet);
             simAircraft.setModel(model);
             CSimulatedAircraft simAircraftReceived = testserviceInterface.pingSimulatedAircraft(simAircraft);
             qDebug() << "Pinged simulated aircraft via interface"
-                     << ((simAircraft == simAircraftReceived) ? "OK" : "ERROR!") << simAircraftReceived;
+                     << ((simAircraft == simAircraftReceived) ? "OK" : "------------- ERROR! ------------") << simAircraftReceived;
 
             CAtcStationList atcStationList;
             atcStationList.push_back(station);
@@ -462,7 +488,7 @@ namespace BlackSample
             qDebug() << "Send lengths via interface as CVariantList:";
             testserviceInterface.receiveLengthsQl(lengthsV);
             qDebug() << "Send lengths via interface as QList<CVariant>:";
-            foreach(CVariant lv, cvList)
+            foreach (CVariant lv, cvList)
             {
                 qDebug() << "   " << "Send length in list:" << lv;
             }

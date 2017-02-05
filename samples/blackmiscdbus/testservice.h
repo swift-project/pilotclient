@@ -144,8 +144,11 @@ namespace BlackSample
         //! Ping transponder
         BlackMisc::Aviation::CTransponder pingTransponder(const BlackMisc::Aviation::CTransponder &transponder);
 
-        //! Ping aircraft
-        BlackMisc::Simulation::CSimulatedAircraft pingAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);
+        //! Ping aircraft lights
+        BlackMisc::Aviation::CAircraftLights pingAircraftLights(const BlackMisc::Aviation::CAircraftLights &aircraftLights);
+
+        //! Ping parts
+        BlackMisc::Aviation::CAircraftParts pingAircraftParts(const BlackMisc::Aviation::CAircraftParts &aircraftParts);
 
         //! Ping simulated aircraft
         BlackMisc::Simulation::CSimulatedAircraft pingSimulatedAircraft(const BlackMisc::Simulation::CSimulatedAircraft &aircraft);

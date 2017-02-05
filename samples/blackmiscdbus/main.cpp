@@ -28,26 +28,27 @@
 //! main
 int main(int argc, char *argv[])
 {
-    // of course the code here is containing too many lines, but as it
+    // Of course the code here is containing too many lines, but as it
     // is just for testing, I did not split it up
 
     BlackMisc::registerMetadata();
     QCoreApplication a(argc, argv);
 
     // trying to get the arguments into a list
-    QStringList cmdlineArgs = QCoreApplication::arguments();
+    const QStringList cmdlineArgs = QCoreApplication::arguments();
     if (cmdlineArgs.length() < 1)
     {
         qFatal("Missing name of executable");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     // some runtime settings
-    QString ip = "192.168.0.133";
+    const QStringList ipV4Addresses = BlackMisc::Network::CNetworkUtils::getKnownLocalIpV4Addresses();
+    QString ip = ipV4Addresses.isEmpty() ? "192.168.0.125" : ipV4Addresses.last();
     QString port = "45000";
     const QString executable = QString(cmdlineArgs.at(0)); // used as command to fork myself
     const bool clientFlag = cmdlineArgs.contains("client", Qt::CaseInsensitive);
-    bool useSessionBusForServer;
+    bool useSessionBusForServer = false;
     if (cmdlineArgs.contains("session", Qt::CaseInsensitive))
     {
         // session mode
@@ -72,7 +73,6 @@ int main(int argc, char *argv[])
     {
         // Configure tests
     Menu:
-
         qDebug() << "1 .. Run testservice to test data transfer" << addressTcp;
         qDebug() << "1sb. Run testservice via session bus";
         qDebug() << "----- Change address / port (no validation, do before starting server)";
@@ -146,13 +146,18 @@ int main(int argc, char *argv[])
             args << ip;
             args << port;
         }
-        BlackSample::ServiceTool::startNewProcess(executable, args, &a);
 
         // run tests
         if (mode == "testservice")
         {
             BlackSample::ServiceTool::dataTransferTestServer(dBusServer);
         }
+
+        // in new process
+        BlackSample::ServiceTool::startNewProcess(executable, args, &a);
+
+        // in same process
+        // BlackSample::ServiceTool::dataTransferTestClient(address);
 
         // loop
         return a.exec();

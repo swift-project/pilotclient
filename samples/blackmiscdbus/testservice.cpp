@@ -37,7 +37,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackSample
 {
-
     const QString Testservice::InterfaceName = QString(BLACKSAMPLE_TESTSERVICE_INTERFACENAME);
     const QString Testservice::ObjectPath = QString(BLACKSAMPLE_TESTSERVICE_OBJECTPATH);
 
@@ -265,6 +264,33 @@ namespace BlackSample
     }
 
     /*
+     * Ping aircraft parts
+     */
+    CAircraftParts Testservice::pingAircraftParts(const CAircraftParts &aircraftParts)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircrafts parts:" << aircraftParts;
+        return aircraftParts;
+    }
+
+    /*
+     * Ping aircraft lights
+     */
+    CAircraftLights Testservice::pingAircraftLights(const CAircraftLights &aircraftLights)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircrafts lights:" << aircraftLights;
+        return aircraftLights;
+    }
+
+    /*
+     * Ping simulated aircraft
+     */
+    CSimulatedAircraft Testservice::pingSimulatedAircraft(const CSimulatedAircraft &aircraft)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping simulated aircraft:" << aircraft;
+        return aircraft;
+    }
+
+    /*
      * Ping airports
      */
     CAirportList Testservice::pingAirportList(const CAirportList &airportList)
@@ -352,24 +378,6 @@ namespace BlackSample
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping ATC:" << station;
         return station;
-    }
-
-    /*
-     * Ping aircraft
-     */
-    CSimulatedAircraft Testservice::pingAircraft(const CSimulatedAircraft &aircraft)
-    {
-        qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircraft:" << aircraft;
-        return aircraft;
-    }
-
-    /*
-     * Ping simulated aircraft
-     */
-    CSimulatedAircraft Testservice::pingSimulatedAircraft(const CSimulatedAircraft &aircraft)
-    {
-        qDebug() << "Pid:" << ServiceTool::getPid() << "ping simulated aircraft:" << aircraft;
-        return aircraft;
     }
 
     /*
