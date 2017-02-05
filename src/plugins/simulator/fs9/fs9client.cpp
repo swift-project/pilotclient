@@ -162,6 +162,18 @@ namespace BlackSimPlugin
             }
         }
 
+        void CFs9Client::setInterpolationSetup(const CInterpolationAndRenderingSetup &setup)
+        {
+            QWriteLocker lock(&m_interpolationSetupMutex);
+            m_interpolationSetup = setup;
+        }
+
+        CInterpolationAndRenderingSetup CFs9Client::getInterpolationSetup() const
+        {
+            QReadLocker lock(&m_interpolationSetupMutex);
+            return m_interpolationSetup;
+        }
+
         void CFs9Client::timerEvent(QTimerEvent *event)
         {
             Q_UNUSED(event);
@@ -172,7 +184,7 @@ namespace BlackSimPlugin
             IInterpolator::InterpolationStatus status;
             CInterpolationHints hints; // \fixme 201701 #865 KB if there is an elevation provider for FS9 add it here or set elevation
             hints.setLoggingInterpolation(this->m_interpolator->getInterpolatorSetup().getLogCallsigns().contains(m_callsign));
-            const CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, hints, status);
+            const CAircraftSituation situation = this->m_interpolator->getInterpolatedSituation(m_callsign, -1, this->m_interpolationSetup, hints, status);
 
             // Test only for successful interpolation. FS9 requires constant positions
             if (!status.didInterpolationSucceed()) { return; }

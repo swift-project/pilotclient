@@ -35,11 +35,8 @@ namespace BlackMisc
             this->setObjectName(objectName);
         }
 
-        IInterpolator::~IInterpolator()
-        { }
-
         BlackMisc::Aviation::CAircraftSituation IInterpolator::getInterpolatedSituation(
-            const CCallsign &callsign, qint64 currentTimeSinceEpoc,
+            const CCallsign &callsign, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
             const CInterpolationHints &hints, InterpolationStatus &status) const
         {
             // has to be thread safe
@@ -47,13 +44,15 @@ namespace BlackMisc
             status.reset();
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
 
-            auto currentSituation = this->getInterpolatedSituation(callsign, this->remoteAircraftSituations(callsign), currentTimeSinceEpoc, hints, status);
+            auto currentSituation = this->getInterpolatedSituation(callsign, this->remoteAircraftSituations(callsign), currentTimeSinceEpoc, setup, hints, status);
             currentSituation.setCallsign(callsign); // make sure callsign is correct
             return currentSituation;
         }
 
-        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus, bool log) const
+        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch,
+            const CInterpolationAndRenderingSetup &setup, IInterpolator::PartsStatus &partsStatus, bool log) const
         {
+            Q_UNUSED(setup);
             partsStatus.reset();
             if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
 
@@ -114,27 +113,16 @@ namespace BlackMisc
             return currentParts;
         }
 
-        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch, IInterpolator::PartsStatus &partsStatus, bool log) const
+        CAircraftParts IInterpolator::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
+            const CInterpolationAndRenderingSetup &setup, IInterpolator::PartsStatus &partsStatus, bool log) const
         {
             Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
             partsStatus.reset();
-            return this->getInterpolatedParts(callsign, this->remoteAircraftParts(callsign, -1), currentTimeMsSinceEpoch, partsStatus, log);
-        }
-
-        void IInterpolator::setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup)
-        {
-            QWriteLocker l(&m_lockSetup);
-            m_setup = setup;
+            return this->getInterpolatedParts(callsign, this->remoteAircraftParts(callsign, -1), currentTimeMsSinceEpoch, setup, partsStatus, log);
         }
 
         CWorker *IInterpolator::writeLogInBackground()
         {
-            // make sure logging is stopped
-            {
-                QWriteLocker l(&m_lockSetup);
-                m_setup.clearInterpolatorLogCallsigns();
-            }
-
             QList<InterpolationLog> interpolation;
             QList<PartsLog> parts;
             {
@@ -207,12 +195,6 @@ namespace BlackMisc
             {
                 return CStatusMessage(static_cast<IInterpolator *>(nullptr)).error("Failed to write log file '%1'") << fileName;
             }
-        }
-
-        CInterpolationAndRenderingSetup IInterpolator::getInterpolatorSetup() const
-        {
-            QReadLocker l(&m_lockSetup);
-            return m_setup;
         }
 
         void IInterpolator::logInterpolation(const IInterpolator::InterpolationLog &log) const

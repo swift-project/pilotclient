@@ -92,6 +92,7 @@ namespace BlackMiscTest
         // interpolation functional check
         IInterpolator::InterpolationStatus status;
         const CInterpolationHints hints;
+        const CInterpolationAndRenderingSetup setup;
         double latOld = 360.0;
         double lngOld = 360.0;
         for (qint64 currentTime = ts - 2 * deltaT + offset; currentTime < ts + offset; currentTime += (deltaT / 20))
@@ -100,7 +101,7 @@ namespace BlackMiscTest
             // from:  ts - 2 * deltaT + offset
             // to:    ts              + offset
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                (cs, currentTime, hints, status)
+                                                (cs, currentTime, setup, hints, status)
                                                );
             QVERIFY2(status.didInterpolationSucceed(), "Interpolation was not succesful");
             QVERIFY2(status.hasChangedPosition(), "Interpolation did not changed");
@@ -130,7 +131,7 @@ namespace BlackMiscTest
                 // from:  ts - 2* deltaT + offset
                 // to:    ts             + offset
                 CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                    (cs, currentTime, hints, status)
+                                                    (cs, currentTime, setup, hints, status)
                                                    );
                 QVERIFY2(status.allTrue(), "Failed interpolation");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");
@@ -150,7 +151,7 @@ namespace BlackMiscTest
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
             IInterpolator::PartsStatus partsStatus;
-            CAircraftParts pl(interpolator.getInterpolatedParts(cs, ts, partsStatus));
+            CAircraftParts pl(interpolator.getInterpolatedParts(cs, ts, setup, partsStatus));
             fetchedParts++;
             QVERIFY2(partsStatus.isSupportingParts(), "Parts not supported");
         }

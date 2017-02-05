@@ -14,6 +14,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QReadWriteLock>
 #include <QtGlobal>
 
 #include "blackcore/aircraftmatcher.h"
@@ -187,6 +188,7 @@ namespace BlackCore
         int    m_statsUpdateAircraftCountMs = 0;                         //!< statistics update time
         BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals; //!< setup object
         BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
+        mutable QReadWriteLock m_interpolationRenderingSetupMutex;       //!< mutex protecting setup object
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model

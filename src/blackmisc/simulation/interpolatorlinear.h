@@ -42,7 +42,7 @@ namespace BlackMisc
             //! \copydoc IInterpolator::getInterpolatedSituation
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
+                const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
                 const BlackMisc::Simulation::CInterpolationHints &hints, InterpolationStatus &status) const override;
 
             //! Log category

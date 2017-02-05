@@ -17,6 +17,7 @@
 #include "blackmisc/aviation/callsign.h"
 #include <QMutex>
 #include <QScopedPointer>
+#include <QReadWriteLock>
 
 //! \file
 
@@ -49,6 +50,9 @@ namespace BlackSimPlugin
             //! Set DirectPlay host address
             void setHostAddress(const QString &hostAddress);
 
+            //! Set interpolation setup
+            //! \threadsafe
+            void setInterpolationSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup);
 
         public slots:
             //! Send new text message
@@ -88,8 +92,12 @@ namespace BlackSimPlugin
             void sendMultiplayerParamaters();
             void sendMultiplayerChangePlayerPlane();
 
+            BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationSetup() const;
+
             BlackMisc::PhysicalQuantities::CTime m_updateInterval;
             BlackMisc::Simulation::IInterpolator *m_interpolator = nullptr;
+            BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationSetup;
+            mutable QReadWriteLock m_interpolationSetupMutex;
             QString m_modelName;
             int m_timerId = 0;
 

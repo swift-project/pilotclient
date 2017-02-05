@@ -39,9 +39,6 @@ namespace BlackMisc
             Q_OBJECT
 
         public:
-            //! Virtual destructor
-            virtual ~IInterpolator();
-
             //! Log category
             static QString getLogCategory() { return "swift.interpolator"; }
 
@@ -96,7 +93,7 @@ namespace BlackMisc
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-                const CInterpolationHints &hints, InterpolationStatus &status) const;
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const;
 
             //! Current interpolated situation, to be implemented by subclass
             //! \threadsafe
@@ -104,24 +101,20 @@ namespace BlackMisc
             virtual BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
-                const CInterpolationHints &hints, InterpolationStatus &status) const = 0;
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const = 0;
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
-                PartsStatus &partsStatus, bool log = false) const;
+                const CInterpolationAndRenderingSetup &setup, PartsStatus &partsStatus, bool log = false) const;
 
             //! Parts before given offset time (aka pending parts)
             //! \threadsafe
             virtual BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
-                PartsStatus &partsStatus, bool log = false) const;
-
-            //! Enable debug messages etc.
-            //! \threadsafe
-            void setInterpolatorSetup(const CInterpolationAndRenderingSetup &setup);
+                const CInterpolationAndRenderingSetup &setup, PartsStatus &partsStatus, bool log = false) const;
 
             //! Write a log in background
             //! \threadsafe
@@ -129,11 +122,6 @@ namespace BlackMisc
 
             //! Clear log file
             void clearLog();
-
-            //! Enable log messages etc.
-            //! \threadsafe
-            //! \remark public for FS9 to get setup in Fs9Client
-            CInterpolationAndRenderingSetup getInterpolatorSetup() const;
 
             //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
             //!
@@ -201,8 +189,6 @@ namespace BlackMisc
             //! Set on ground flag
             static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, BlackMisc::Aviation::CAircraftSituation &situation);
 
-            CInterpolationAndRenderingSetup m_setup; //!< allows to enable/disable debug/log messages
-
         private:
             //! Write log to file
             static CStatusMessageList writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts);
@@ -216,7 +202,6 @@ namespace BlackMisc
             //! Create readable time
             static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
 
-            mutable QReadWriteLock  m_lockSetup; //!< lock setup
             mutable QReadWriteLock  m_lockLogs;  //!< lock logging
             mutable QList<PartsLog> m_partsLogs; //!< logs of parts
             mutable QList<InterpolationLog> m_interpolationLogs; //!< logs of interpolation

@@ -310,9 +310,11 @@ namespace BlackCore
 
     void CSimulatorCommon::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
     {
-        this->m_interpolator->setInterpolatorSetup(setup);
-        if (this->m_interpolationRenderingSetup == setup) { return; }
-        this->m_interpolationRenderingSetup = setup;
+        {
+            QWriteLocker lock(&this->m_interpolationRenderingSetupMutex);
+            if (this->m_interpolationRenderingSetup == setup) { return; }
+            this->m_interpolationRenderingSetup = setup;
+        }
 
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
@@ -322,6 +324,7 @@ namespace BlackCore
 
     CInterpolationAndRenderingSetup CSimulatorCommon::getInterpolationAndRenderingSetup() const
     {
+        QReadLocker lock(&this->m_interpolationRenderingSetupMutex);
         return m_interpolationRenderingSetup;
     }
 
@@ -369,12 +372,10 @@ namespace BlackCore
         // .plugin loginterpolator etc.
         if (parser.part(1).startsWith("logint") && parser.hasPart(2))
         {
-            if (!this->m_interpolator) { return false; }
             const QString p = parser.part(2).toLower();
             if (p == "off" || p == "false")
             {
                 this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
-                this->m_interpolator->setInterpolatorSetup(this->m_interpolationRenderingSetup);
                 CStatusMessage(this).info("Disabled interpolation logging");
                 return true;
             }
@@ -388,7 +389,6 @@ namespace BlackCore
             {
                 // stop logging
                 this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
-                this->m_interpolator->setInterpolatorSetup(this->m_interpolationRenderingSetup);
 
                 // write
                 this->m_interpolator->writeLogInBackground();
@@ -401,7 +401,6 @@ namespace BlackCore
             if (this->getAircraftInRangeCallsigns().contains(cs))
             {
                 this->m_interpolationRenderingSetup.addCallsignToLog(CCallsign(cs));
-                this->m_interpolator->setInterpolatorSetup(this->m_interpolationRenderingSetup);
                 CLogMessage(this).info("Will log interpolation for '%1'") << cs;
                 return true;
             }

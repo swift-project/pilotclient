@@ -40,12 +40,12 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc, const CInterpolationHints &hints, InterpolationStatus &status) const
+        CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc,
+            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, InterpolationStatus &status) const
         {
             //
             // function has to be thread safe
             //
-            const CInterpolationAndRenderingSetup setup = this->getInterpolatorSetup();
             status.reset();
 
             // any data at all?

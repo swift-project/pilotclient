@@ -125,9 +125,11 @@ namespace BlackCore
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Debugging messages etc.
+        //! \threadsafe
         virtual BlackMisc::Simulation::CInterpolationAndRenderingSetup getInterpolationAndRenderingSetup() const = 0;
 
         //! Enable debugging messages etc.
+        //! \threadsafe
         virtual void setInterpolationAndRenderingSetup(const BlackMisc::Simulation::CInterpolationAndRenderingSetup &setup) = 0;
 
         //! Is the aircraft rendered (displayed in simulator)?
