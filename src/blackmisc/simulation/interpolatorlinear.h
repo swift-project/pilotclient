@@ -36,13 +36,9 @@ namespace BlackMisc
                 CInterpolator("CInterpolatorLinear", parent)
             {}
 
-            // public base class signature
-            using CInterpolator::getInterpolatedSituation;
-
             //! \copydoc IInterpolator::getInterpolatedSituation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-                const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
+                const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
                 const BlackMisc::Simulation::CInterpolationHints &hints, CInterpolationStatus &status) const;
 
             //! Log category

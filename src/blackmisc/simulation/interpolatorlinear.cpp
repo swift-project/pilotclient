@@ -40,7 +40,7 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-        CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, const CAircraftSituationList &situations, qint64 currentTimeMsSinceEpoc,
+        CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
         {
             status.reset();
@@ -53,8 +53,8 @@ namespace BlackMisc
 
             // find the first situation not in the correct order, keep only the situations before that one
             // any updates in wrong chronological order are discounted
-            const auto end = std::is_sorted_until(situations.begin(), situations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-            const auto validSituations = makeRange(situations.begin(), end);
+            const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+            const auto validSituations = makeRange(m_aircraftSituations.begin(), end);
 
             // find the first situation earlier than the current time
             const auto pivot = std::partition_point(validSituations.begin(), validSituations.end(), [ = ](auto && s) { return s.getAdjustedMSecsSinceEpoch() > currentTimeMsSinceEpoc; });

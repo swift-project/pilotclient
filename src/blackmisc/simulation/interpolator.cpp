@@ -36,19 +36,7 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        BlackMisc::Aviation::CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(
-            qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-            const CInterpolationHints &hints, CInterpolationStatus &status) const
-        {
-            status.reset();
-
-            auto currentSituation = derived()->getInterpolatedSituation(callsign, this->m_aircraftSituations, currentTimeSinceEpoc, setup, hints, status);
-            currentSituation.setCallsign(callsign); // make sure callsign is correct
-            return currentSituation;
-        }
-
-        template <typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(const CCallsign &callsign, const CAircraftPartsList &parts, qint64 currentTimeMsSinceEpoch,
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
             const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
         {
             Q_UNUSED(setup);
@@ -56,9 +44,8 @@ namespace BlackMisc
             if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
 
             // find the first parts not in the correct order, keep only the parts before that one
-            if (parts.isEmpty()) { return {}; }
-            const auto end = std::is_sorted_until(parts.begin(), parts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
-            const auto validParts = makeRange(parts.begin(), end);
+            const auto end = std::is_sorted_until(m_aircraftParts.begin(), m_aircraftParts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
+            const auto validParts = makeRange(m_aircraftParts.begin(), end);
 
             // stop if we don't have any parts
             if (validParts.isEmpty()) { return {}; }
@@ -110,14 +97,6 @@ namespace BlackMisc
             }
 
             return currentParts;
-        }
-
-        template <typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
-            const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log) const
-        {
-            partsStatus.reset();
-            return this->getInterpolatedParts(callsign, this->m_aircraftParts, currentTimeMsSinceEpoch, setup, partsStatus, log);
         }
 
         template <typename Derived>

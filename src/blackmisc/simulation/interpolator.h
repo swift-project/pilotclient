@@ -44,12 +44,6 @@ namespace BlackMisc
             //! Current interpolated situation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const;
-
-            //! Current interpolated situation, to be implemented by subclass
-            BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-                const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftSituationList &situations, qint64 currentTimeSinceEpoc,
                 const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
             {
                 qFatal("Not implemented");
@@ -58,13 +52,7 @@ namespace BlackMisc
 
             //! Parts before given offset time (aka pending parts)
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                const Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftPartsList &parts, qint64 cutoffTime,
-                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
-
-            //! Parts before given offset time (aka pending parts)
-            BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                const BlackMisc::Aviation::CCallsign &callsign, qint64 cutoffTime,
+                const Aviation::CCallsign &callsign, qint64 cutoffTime,
                 const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false) const;
 
             //! Add a new aircraft situation
