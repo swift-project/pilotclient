@@ -29,8 +29,8 @@ namespace BlackMisc
 
         public:
             //! Constructor
-            CInterpolatorSpline(QObject *parent = nullptr) :
-                CInterpolator("CInterpolatorSpline", parent)
+            CInterpolatorSpline(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent = nullptr) :
+                CInterpolator("CInterpolatorSpline", callsign, parent)
             {}
 
             //! Cubic function that performs the actual interpolation

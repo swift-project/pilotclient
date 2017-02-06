@@ -44,13 +44,11 @@ namespace BlackMisc
 
             //! Current interpolated situation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
-                const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status);
+                qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status);
 
             //! Parts before given offset time (aka pending parts)
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(
-                const Aviation::CCallsign &callsign, qint64 cutoffTime,
-                const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
+                qint64 cutoffTime, const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log = false);
 
             //! Add a new aircraft situation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
@@ -81,6 +79,7 @@ namespace BlackMisc
         protected:
             BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations
             BlackMisc::Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts
+            BlackMisc::Aviation::CCallsign m_callsign;                        //!< callsign
 
             //! Log for interpolation
             struct InterpolationLog
@@ -108,7 +107,7 @@ namespace BlackMisc
             };
 
             //! Constructor
-            CInterpolator(const QString &objectName, QObject *parent);
+            CInterpolator(const QString &objectName, const BlackMisc::Aviation::CCallsign &callsign, QObject *parent);
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons
             //! \remark const to allow const interpolator functions

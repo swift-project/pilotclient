@@ -32,8 +32,8 @@ namespace BlackMisc
 
         public:
             //! Constructor
-            CInterpolatorLinear(QObject *parent = nullptr) :
-                CInterpolator("CInterpolatorLinear", parent)
+            CInterpolatorLinear(const BlackMisc::Aviation::CCallsign &callsign, QObject *parent = nullptr) :
+                CInterpolator("CInterpolatorLinear", callsign, parent)
             {}
 
             //! Linear function that performs the actual interpolation

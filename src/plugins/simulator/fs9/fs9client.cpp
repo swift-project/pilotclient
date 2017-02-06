@@ -122,6 +122,7 @@ namespace BlackSimPlugin
                                const CTime &updateInterval, QObject *owner) :
             CDirectPlayPeer(owner, callsign),
             m_updateInterval(updateInterval),
+            m_interpolator(callsign),
             m_modelName(modelName)
         {
         }
@@ -184,7 +185,7 @@ namespace BlackSimPlugin
             CInterpolationStatus status;
             CInterpolationHints hints; // \fixme 201701 #865 KB if there is an elevation provider for FS9 add it here or set elevation
             hints.setLoggingInterpolation(this->getInterpolationSetup().getLogCallsigns().contains(m_callsign));
-            const CAircraftSituation situation = this->m_interpolator.getInterpolatedSituation(m_callsign, -1, this->m_interpolationSetup, hints, status);
+            const CAircraftSituation situation = this->m_interpolator.getInterpolatedSituation(-1, this->m_interpolationSetup, hints, status);
 
             // Test only for successful interpolation. FS9 requires constant positions
             if (!status.didInterpolationSucceed()) { return; }

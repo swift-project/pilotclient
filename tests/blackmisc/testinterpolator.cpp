@@ -56,13 +56,13 @@ namespace BlackMiscTest
 
     void CTestInterpolator::linearInterpolator()
     {
-        CInterpolatorLinear interpolator;
+        CCallsign cs("SWIFT");
+        CInterpolatorLinear interpolator(cs);
 
         // fixed time so everything can be debugged
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
         const qint64 offset = 5000;
-        CCallsign cs("SWIFT");
         for (int i = 0; i < IRemoteAircraftProvider::MaxSituationsPerCallsign; i++)
         {
             CAircraftSituation s(getTestSituation(cs, i, ts, deltaT, offset));
@@ -95,7 +95,7 @@ namespace BlackMiscTest
             // from:  ts - 2 * deltaT + offset
             // to:    ts              + offset
             CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                (cs, currentTime, setup, hints, status)
+                                                (currentTime, setup, hints, status)
                                                );
             QVERIFY2(status.didInterpolationSucceed(), "Interpolation was not succesful");
             QVERIFY2(status.hasChangedPosition(), "Interpolation did not changed");
@@ -125,7 +125,7 @@ namespace BlackMiscTest
                 // from:  ts - 2* deltaT + offset
                 // to:    ts             + offset
                 CAircraftSituation currentSituation(interpolator.getInterpolatedSituation
-                                                    (cs, currentTime, setup, hints, status)
+                                                    (currentTime, setup, hints, status)
                                                    );
                 QVERIFY2(status.allTrue(), "Failed interpolation");
                 QVERIFY2(currentSituation.getCallsign() == cs, "Wrong callsign");
@@ -145,7 +145,7 @@ namespace BlackMiscTest
         for (qint64 currentTime = ts - 2 * deltaT; currentTime < ts; currentTime += 250)
         {
             CPartsStatus partsStatus;
-            CAircraftParts pl(interpolator.getInterpolatedParts(cs, ts, setup, partsStatus));
+            CAircraftParts pl(interpolator.getInterpolatedParts(ts, setup, partsStatus));
             fetchedParts++;
             QVERIFY2(partsStatus.isSupportingParts(), "Parts not supported");
         }

@@ -903,14 +903,14 @@ namespace BlackSimPlugin
                 partsStatus.setSupportsParts(useAircraftParts);
 
                 const CInterpolationAndRenderingSetup setup(getInterpolationAndRenderingSetup());
-                const CAircraftParts parts = useAircraftParts ? simObj.getInterpolator()->getInterpolatedParts(callsign, -1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
+                const CAircraftParts parts = useAircraftParts ? simObj.getInterpolator()->getInterpolatedParts(-1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
                 // get interpolated situation
                 CInterpolationStatus interpolatorStatus;
                 CInterpolationHints hints(m_hints[simObj.getCallsign()]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
                 hints.setLoggingInterpolation(logInterpolationAndParts);
-                const CAircraftSituation interpolatedSituation = simObj.getInterpolator()->getInterpolatedSituation(callsign, currentTimestamp, setup, hints, interpolatorStatus);
+                const CAircraftSituation interpolatedSituation = simObj.getInterpolator()->getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
 
                 if (interpolatorStatus.allTrue())
                 {

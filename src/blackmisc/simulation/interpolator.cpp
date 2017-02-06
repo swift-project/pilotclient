@@ -37,14 +37,15 @@ namespace BlackMisc
     namespace Simulation
     {
         template <typename Derived>
-        CInterpolator<Derived>::CInterpolator(const QString &objectName, QObject *parent) :
-            QObject(parent)
+        CInterpolator<Derived>::CInterpolator(const QString &objectName, const BlackMisc::Aviation::CCallsign &callsign, QObject *parent) :
+            QObject(parent),
+            m_callsign(callsign)
         {
             this->setObjectName(objectName);
         }
 
         template <typename Derived>
-        CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc,
+        CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(qint64 currentTimeMsSinceEpoc,
             const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status)
         {
             status.reset();
@@ -113,7 +114,7 @@ namespace BlackMisc
             if (hints.isLoggingInterpolation())
             {
                 log.timestamp = currentTimeMsSinceEpoc;
-                log.callsign = callsign;
+                log.callsign = m_callsign;
                 log.vtolAircraft = hints.isVtolAircraft();
                 log.currentSituation = currentSituation;
                 log.useParts = hints.hasAircraftParts();
@@ -173,7 +174,7 @@ namespace BlackMisc
         }
 
         template <typename Derived>
-        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(const CCallsign &callsign, qint64 currentTimeMsSinceEpoch,
+        CAircraftParts CInterpolator<Derived>::getInterpolatedParts(qint64 currentTimeMsSinceEpoch,
             const CInterpolationAndRenderingSetup &setup, CPartsStatus &partsStatus, bool log)
         {
             Q_UNUSED(setup);
@@ -227,7 +228,7 @@ namespace BlackMisc
             if (log)
             {
                 PartsLog log;
-                log.callsign = callsign;
+                log.callsign = m_callsign;
                 log.timestamp = currentTimeMsSinceEpoch;
                 log.parts = currentParts;
                 CInterpolator::logParts(log);

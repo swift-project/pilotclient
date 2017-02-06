@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/aviation/callsign.h"
 #include "XPMPMultiplayer.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
@@ -28,7 +29,7 @@ namespace XBus
 {
 
     CTraffic::Plane::Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_)
-        : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_)
+        : id(id_), callsign(callsign_), aircraftIcao(aircraftIcao_), airlineIcao(airlineIcao_), livery(livery_), interpolator(callsign)
     {
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
         surfaces.lights.bcnLights = surfaces.lights.landLights = surfaces.lights.navLights = surfaces.lights.strbLights = 1;
@@ -49,7 +50,7 @@ namespace XBus
         BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
         BlackMisc::Simulation::CInterpolationHints hints;
         BlackMisc::Simulation::CPartsStatus status;
-        hints.setAircraftParts(interpolator.getInterpolatedParts(callsign, -1, setup, status));
+        hints.setAircraftParts(interpolator.getInterpolatedParts(-1, setup, status));
         hints.setElevationProvider([this](const auto & situation)
         {
             using namespace BlackMisc::PhysicalQuantities;
@@ -333,7 +334,7 @@ namespace XBus
             {
                 BlackMisc::Simulation::CInterpolationAndRenderingSetup setup;
                 BlackMisc::Simulation::CInterpolationStatus status;
-                const auto situation = plane->interpolator.getInterpolatedSituation(plane->callsign, -1, setup, plane->hints(), status);
+                const auto situation = plane->interpolator.getInterpolatedSituation(-1, setup, plane->hints(), status);
                 if (! status.didInterpolationSucceed()) { return xpmpData_Unavailable; }
                 if (! status.hasChangedPosition()) { return xpmpData_Unchanged; }
 
