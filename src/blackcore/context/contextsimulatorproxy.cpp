@@ -9,6 +9,7 @@
 
 #include "blackcore/context/contextsimulatorproxy.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 
@@ -34,6 +35,14 @@ namespace BlackCore
                 serviceName , IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                 connection, this);
             this->relaySignals(serviceName, connection);
+        }
+
+        void CContextSimulatorProxy::unitTestRelaySignals()
+        {
+            // connect signals, asserts when failures
+            QDBusConnection con = QDBusConnection::sessionBus();
+            CContextSimulatorProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
+            Q_UNUSED(c);
         }
 
         void CContextSimulatorProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)

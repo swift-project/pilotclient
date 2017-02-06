@@ -54,6 +54,9 @@ namespace BlackCore
             //! Destructor
             virtual ~CContextAudioProxy() {}
 
+            //! Unit test relay signals
+            //! \private
+            static void unitTestRelaySignals();
 
         public slots:
             // interface overrides

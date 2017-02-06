@@ -56,6 +56,10 @@ namespace BlackCore
             //! Destructor
             virtual ~CContextOwnAircraftProxy() {}
 
+            //! Unit test relay signals
+            //! \private
+            static void unitTestRelaySignals();
+
         public slots:
             //! \publicsection
             //! @{

@@ -68,6 +68,10 @@ namespace BlackCore
             //! Destructor
             virtual ~CContextNetworkProxy() {}
 
+            //! Unit test relay signals
+            //! \private
+            static void unitTestRelaySignals();
+
         public slots:
             //! \name Interface overrides
             //! @{

@@ -9,12 +9,14 @@
 
 #include "blackcore/context/contextaudioproxy.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
 
 #include <QDBusConnection>
 #include <QLatin1Literal>
 #include <QtGlobal>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
@@ -28,6 +30,14 @@ namespace BlackCore
             this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
                 serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
             this->relaySignals(serviceName, connection);
+        }
+
+        void CContextAudioProxy::unitTestRelaySignals()
+        {
+            // connect signals, asserts when failures
+            QDBusConnection con = QDBusConnection::sessionBus();
+            CContextAudioProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
+            Q_UNUSED(c);
         }
 
         void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)

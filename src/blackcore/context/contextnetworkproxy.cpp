@@ -10,12 +10,14 @@
 #include "blackcore/context/contextnetworkproxy.h"
 #include "blackmisc/audio/voiceroomlist.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
 
 #include <QDBusConnection>
 #include <QLatin1Literal>
 #include <QObject>
 #include <QtGlobal>
+#include <QMetaObject>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -34,6 +36,14 @@ namespace BlackCore
                 serviceName , IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                 connection, this);
             this->relaySignals(serviceName, connection);
+        }
+
+        void CContextNetworkProxy::unitTestRelaySignals()
+        {
+            // connect signals, asserts when failures
+            QDBusConnection con = QDBusConnection::sessionBus();
+            CContextNetworkProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
+            Q_UNUSED(c);
         }
 
         void CContextNetworkProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)

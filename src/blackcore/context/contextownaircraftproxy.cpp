@@ -9,6 +9,7 @@
 
 #include "blackcore/context/contextownaircraftproxy.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
 
 #include <QDBusConnection>
@@ -39,6 +40,14 @@ namespace BlackCore
             Q_ASSERT(s);
             Q_UNUSED(s);
             this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName());
+        }
+
+        void CContextOwnAircraftProxy::unitTestRelaySignals()
+        {
+            // connect signals, asserts when failures
+            QDBusConnection con = QDBusConnection::sessionBus();
+            CContextOwnAircraftProxy c(CDBusServer::coreServiceName(), con, CCoreFacadeConfig::Remote, nullptr);
+            Q_UNUSED(c);
         }
 
         BlackMisc::Simulation::CSimulatedAircraft CContextOwnAircraftProxy::getOwnAircraft() const
