@@ -44,11 +44,7 @@ namespace BlackMisc
             //! Current interpolated situation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc,
-                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
-            {
-                qFatal("Not implemented");
-                return {};
-            }
+                const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const;
 
             //! Parts before given offset time (aka pending parts)
             BlackMisc::Aviation::CAircraftParts getInterpolatedParts(

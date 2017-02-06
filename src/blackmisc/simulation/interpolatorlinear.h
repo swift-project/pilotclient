@@ -39,7 +39,7 @@ namespace BlackMisc
             //! \copydoc IInterpolator::getInterpolatedSituation
             BlackMisc::Aviation::CAircraftSituation getInterpolatedSituation(
                 const BlackMisc::Aviation::CCallsign &callsign, qint64 currentTimeSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-                const BlackMisc::Simulation::CInterpolationHints &hints, CInterpolationStatus &status) const;
+                const BlackMisc::Simulation::CInterpolationHints &hints, CInterpolationStatus &status, InterpolationLog &log) const;
 
             //! Log category
             static QString getLogCategory() { return "swift.interpolatorlinear"; }

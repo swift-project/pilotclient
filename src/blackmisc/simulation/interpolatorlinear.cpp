@@ -12,13 +12,9 @@
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/altitude.h"
 #include "blackmisc/aviation/callsign.h"
-#include "blackmisc/aviation/heading.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/pq/angle.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/physicalquantity.h"
-#include "blackmisc/pq/speed.h"
-#include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/compare.h"
@@ -41,16 +37,8 @@ namespace BlackMisc
     namespace Simulation
     {
         CAircraftSituation CInterpolatorLinear::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
+            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, InterpolationLog &log) const
         {
-            status.reset();
-
-            // any data at all?
-            if (situations.isEmpty()) { return {}; }
-
-            // data, split situations by time
-            if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
-
             // find the first situation not in the correct order, keep only the situations before that one
             // any updates in wrong chronological order are discounted
             const auto end = std::is_sorted_until(m_aircraftSituations.begin(), m_aircraftSituations.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
@@ -64,7 +52,6 @@ namespace BlackMisc
             // interpolation situations
             CAircraftSituation oldSituation;
             CAircraftSituation newSituation;
-            InterpolationLog log;
 
             // latest first, now 00:20 split time
             // time     pos
@@ -145,94 +132,11 @@ namespace BlackMisc
                                                    + oldAlt,
                                                    oldAlt.getReferenceDatum()));
 
-            // Update current position by hints' elevation
-            // * for XP provided by hints.getElevationProvider at current position
-            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
-            // As XP uses lazy init we will call getGroundElevation only when needed, so default here via getElevationPlane
-            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
-
-            // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
-            if (hints.hasAircraftParts())
-            {
-                const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
-                log.groundFactor = groundFactor;
-                if (groundFactor > 0.0)
-                {
-                    currentGroundElevation = hints.getGroundElevation(currentSituation); // calls provider on XP
-                    if (!currentGroundElevation.isNull())
-                    {
-                        Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
-                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor)
-                                                               + currentGroundElevation * groundFactor,
-                                                               oldAlt.getReferenceDatum()));
-                    }
-                }
-                currentSituation.setGroundElevation(currentGroundElevation);
-                IInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
-            }
-            else
-            {
-                // guess ground flag
-                constexpr double NoGroundFactor = -1;
-                currentSituation.setGroundElevation(currentGroundElevation);
-                IInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
-            }
-
-            // full interpolation?
-            if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || newVec != oldVec || oldAlt != newAlt)
-            {
-                // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
-                // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
-                const CHeading headingBegin = oldSituation.getHeading();
-                CHeading headingEnd = newSituation.getHeading();
-
-                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
-                {
-                    headingEnd += CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
-                }
-
-                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) > 180)
-                {
-                    headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
-                }
-
-                currentSituation.setHeading(CHeading((headingEnd - headingBegin)
-                                                     * simulationTimeFraction
-                                                     + headingBegin,
-                                                     headingBegin.getReferenceNorth()));
-
-                // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
-                const CAngle pitchBegin = oldSituation.getPitch();
-                const CAngle pitchEnd = newSituation.getPitch();
-                const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
-                currentSituation.setPitch(pitch);
-
-                // Interpolate bank: Bank = (BankB - BankA) * t + BankA
-                const CAngle bankBegin = oldSituation.getBank();
-                const CAngle bankEnd = newSituation.getBank();
-                const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
-                currentSituation.setBank(bank);
-
-                currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
-                                                * simulationTimeFraction
-                                                + oldSituation.getGroundSpeed());
-
-                status.setChangedPosition(true);
-            }
+            status.setChangedPosition(newVec != oldVec || oldAlt != newAlt);
             status.setInterpolationSucceeded(true);
-            if (hints.isLoggingInterpolation())
-            {
-                log.timestamp = currentTimeMsSinceEpoc;
-                log.callsign = callsign;
-                log.vtolAircraft = hints.isVtolAircraft();
-                log.currentSituation = currentSituation;
-                log.oldSituation = oldSituation;
-                log.newSituation = newSituation;
-                log.useParts = hints.hasAircraftParts();
-                log.parts = hints.getAircraftParts();
-                this->logInterpolation(log);
-            }
 
+            log.oldSituation = oldSituation;
+            log.newSituation = newSituation;
             return currentSituation;
         }
     } // namespace

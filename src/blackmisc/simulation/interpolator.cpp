@@ -12,6 +12,10 @@
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/aviation/callsign.h"
+#include "blackmisc/aviation/heading.h"
+#include "blackmisc/pq/angle.h"
+#include "blackmisc/pq/speed.h"
+#include "blackmisc/pq/units.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/worker.h"
@@ -22,7 +26,10 @@
 using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Math;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation;
 
 namespace BlackMisc
 {
@@ -33,6 +40,110 @@ namespace BlackMisc
             QObject(parent)
         {
             this->setObjectName(objectName);
+        }
+
+        template <typename Derived>
+        CAircraftSituation CInterpolator<Derived>::getInterpolatedSituation(const CCallsign &callsign, qint64 currentTimeMsSinceEpoc,
+            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status) const
+        {
+            status.reset();
+            InterpolationLog log;
+
+            // any data at all?
+            if (m_aircraftSituations.isEmpty()) { return {}; }
+
+            // data, split situations by time
+            if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
+
+            // algorithm provided by derived class
+            CAircraftSituation currentSituation = derived()->getInterpolatedPosition(callsign, currentTimeMsSinceEpoc, setup, hints, status, log);
+
+            // Update current position by hints' elevation
+            // * for XP provided by hints.getElevationProvider at current position
+            // * for FSX/P3D provided as hints.getElevation which is set to current position of remote aircraft in simulator
+            // As XP uses lazy init we will call getGroundElevation only when needed, so default here via getElevationPlane
+            CAltitude currentGroundElevation(hints.getElevationPlane().getAltitudeIfWithinRadius(currentSituation));
+
+            // Interpolate between altitude and ground elevation, with proportions weighted according to interpolated onGround flag
+            if (hints.hasAircraftParts())
+            {
+                const double groundFactor = hints.getAircraftParts().isOnGroundInterpolated();
+                log.groundFactor = groundFactor;
+                if (groundFactor > 0.0)
+                {
+                    currentGroundElevation = hints.getGroundElevation(currentSituation);
+                    if (!currentGroundElevation.isNull())
+                    {
+                        Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
+                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor)
+                                                               + currentGroundElevation * groundFactor,
+                                                               currentSituation.getAltitude().getReferenceDatum()));
+                    }
+                }
+                currentSituation.setGroundElevation(currentGroundElevation);
+                CInterpolator::setGroundFlagFromInterpolator(hints, groundFactor, currentSituation);
+            }
+            else
+            {
+                // guess ground flag
+                constexpr double NoGroundFactor = -1;
+                currentSituation.setGroundElevation(currentGroundElevation);
+                CInterpolator::setGroundFlagFromInterpolator(hints, NoGroundFactor, currentSituation);
+            }
+
+            if (setup.isForcingFullInterpolation() || hints.isVtolAircraft() || status.hasChangedPosition())
+            {
+                // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
+                // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
+                const CHeading headingBegin = oldSituation.getHeading();
+                CHeading headingEnd = newSituation.getHeading();
+
+                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
+                {
+                    headingEnd += CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+                }
+
+                if ((headingEnd - headingBegin).value(CAngleUnit::deg()) > 180)
+                {
+                    headingEnd -= CHeading(360, CHeading::Magnetic, CAngleUnit::deg());
+                }
+
+                currentSituation.setHeading(CHeading((headingEnd - headingBegin)
+                                                     * simulationTimeFraction
+                                                     + headingBegin,
+                                                     headingBegin.getReferenceNorth()));
+
+                // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
+                const CAngle pitchBegin = oldSituation.getPitch();
+                const CAngle pitchEnd = newSituation.getPitch();
+                const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
+                currentSituation.setPitch(pitch);
+
+                // Interpolate bank: Bank = (BankB - BankA) * t + BankA
+                const CAngle bankBegin = oldSituation.getBank();
+                const CAngle bankEnd = newSituation.getBank();
+                const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
+                currentSituation.setBank(bank);
+
+                currentSituation.setGroundSpeed((newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
+                                                * simulationTimeFraction
+                                                + oldSituation.getGroundSpeed());
+
+                status.setChangedPosition(true);
+            }
+            status.setInterpolationSucceeded(true);
+            if (hints.isLoggingInterpolation())
+            {
+                log.timestamp = currentTimeMsSinceEpoc;
+                log.callsign = callsign;
+                log.vtolAircraft = hints.isVtolAircraft();
+                log.currentSituation = currentSituation;
+                log.useParts = hints.hasAircraftParts();
+                log.parts = hints.getAircraftParts();
+                this->logInterpolation(log);
+            }
+
+            return currentSituation;
         }
 
         template <typename Derived>
