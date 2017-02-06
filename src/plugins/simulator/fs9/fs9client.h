@@ -41,7 +41,8 @@ namespace BlackSimPlugin
 
             //! Constructor
             CFs9Client(const BlackMisc::Aviation::CCallsign &callsign, const QString &modelName,
-                       const BlackMisc::PhysicalQuantities::CTime &updateInterval, QObject *owner);
+                       const BlackMisc::PhysicalQuantities::CTime &updateInterval,
+                       BlackMisc::Simulation::CInterpolationLogger *logger, QObject *owner);
 
             //! Destructor
             virtual ~CFs9Client();

@@ -20,10 +20,13 @@ namespace BlackSimPlugin
         CSimConnectObject::CSimConnectObject()
         { }
 
-        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId) :
+        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId,
+                                             BlackMisc::Simulation::CInterpolationLogger *logger) :
             m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
             m_interpolator(QSharedPointer<BlackMisc::Simulation::CInterpolatorLinear>::create(aircraft.getCallsign()))
-        { }
+        {
+            m_interpolator->attachLogger(logger);
+        }
 
         bool CSimConnectObject::isPendingAdded() const
         {

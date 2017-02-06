@@ -16,7 +16,14 @@
 #include "simconnectdatadefinition.h"
 #include <QSharedPointer>
 
-namespace BlackMisc { namespace Simulation { class CInterpolatorLinear; } }
+namespace BlackMisc
+{
+    namespace Simulation
+    {
+        class CInterpolatorLinear;
+        class CInterpolationLogger;
+    }
+}
 namespace BlackSimPlugin
 {
     namespace Fsx
@@ -29,7 +36,8 @@ namespace BlackSimPlugin
             CSimConnectObject();
 
             //! Constructor
-            CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId);
+            CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId,
+                              BlackMisc::Simulation::CInterpolationLogger *logger);
 
             //! Destructor
             ~CSimConnectObject() {}

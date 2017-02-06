@@ -31,6 +31,7 @@
 #include "blackmisc/simulation/simulatorsettings.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
 #include "blackmisc/simulation/interpolationhints.h"
+#include "blackmisc/simulation/interpolationlogger.h"
 #include "blackmisc/weather/weathergridprovider.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
@@ -184,6 +185,7 @@ namespace BlackCore
         BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals; //!< setup object
         BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
         mutable QReadWriteLock m_interpolationRenderingSetupMutex;       //!< mutex protecting setup object
+        BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
 
         // some optional functionality which can be used by the sims as needed
         BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model

@@ -171,7 +171,7 @@ namespace BlackSimPlugin
 
             bool rendered = true;
             updateAircraftRendered(callsign, rendered);
-            CFs9Client *client = new CFs9Client(callsign, newRemoteAircraft.getModelString(), CTime(25, CTimeUnit::ms()), this);
+            CFs9Client *client = new CFs9Client(callsign, newRemoteAircraft.getModelString(), CTime(25, CTimeUnit::ms()), &m_interpolationLogger, this);
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
             client->start();

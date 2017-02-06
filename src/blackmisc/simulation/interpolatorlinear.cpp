@@ -36,7 +36,7 @@ namespace BlackMisc
     namespace Simulation
     {
         CInterpolatorLinear::Interpolant CInterpolatorLinear::getInterpolant(qint64 currentTimeMsSinceEpoc,
-            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, InterpolationLog &log) const
+            const CInterpolationAndRenderingSetup &setup, const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log) const
         {
             Q_UNUSED(setup);
             Q_UNUSED(hints);

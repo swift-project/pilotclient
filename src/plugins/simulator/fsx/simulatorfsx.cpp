@@ -174,7 +174,7 @@ namespace BlackSimPlugin
                     // we will request a new aircraft by request ID, later we will receive its object id
                     // so far this object id is -1
                     addedAircraft.setRendered(false);
-                    const CSimConnectObject simObject(addedAircraft, requestId);
+                    const CSimConnectObject simObject(addedAircraft, requestId, &m_interpolationLogger);
                     m_simConnectObjects.insert(callsign, simObject);
                     adding = true;
                 }

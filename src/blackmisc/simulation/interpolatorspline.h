@@ -15,6 +15,7 @@
 #include "blackmisc/simulation/interpolator.h"
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraftsituation.h"
+#include "blackmisc/simulation/interpolationlogger.h"
 #include <QString>
 #include <QtGlobal>
 
@@ -56,7 +57,7 @@ namespace BlackMisc
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
             Interpolant getInterpolant(qint64 currentTimeMsSinceEpoc, const CInterpolationAndRenderingSetup &setup,
-                const CInterpolationHints &hints, CInterpolationStatus &status, InterpolationLog &log);
+                const CInterpolationHints &hints, CInterpolationStatus &status, CInterpolationLogger::SituationLog &log);
 
             //! Log category
             static QString getLogCategory() { return "swift.interpolatorspline"; }

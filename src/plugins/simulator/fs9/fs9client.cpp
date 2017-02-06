@@ -118,13 +118,14 @@ namespace BlackSimPlugin
             return positionSlewMode;
         }
 
-        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName,
-                               const CTime &updateInterval, QObject *owner) :
+        CFs9Client::CFs9Client(const CCallsign &callsign, const QString &modelName, const CTime &updateInterval,
+                               BlackMisc::Simulation::CInterpolationLogger *logger, QObject *owner) :
             CDirectPlayPeer(owner, callsign),
             m_updateInterval(updateInterval),
             m_interpolator(callsign),
             m_modelName(modelName)
         {
+            m_interpolator.attachLogger(logger);
         }
 
         CFs9Client::~CFs9Client()

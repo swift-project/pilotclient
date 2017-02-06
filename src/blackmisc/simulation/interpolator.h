@@ -29,6 +29,7 @@ namespace BlackMisc
     namespace Simulation
     {
         class CInterpolationHints;
+        class CInterpolationLogger;
         class CInterpolatorLinear;
         class CInterpolatorSpline;
         struct CInterpolationStatus;
@@ -56,13 +57,6 @@ namespace BlackMisc
             //! Add a new aircraft parts
             void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
 
-            //! Write a log in background
-            //! \threadsafe
-            BlackMisc::CWorker *writeLogInBackground();
-
-            //! Clear log file
-            void clearLog();
-
             //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
             //!
             //! Useful for making interpolation seem smoother, efficiently as it just uses simple arithmetic.
@@ -73,59 +67,16 @@ namespace BlackMisc
                 return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
             }
 
-            //! Latest log files: 0: Interpolation / 1: Parts
-            static QStringList getLatestLogFiles();
+            //! Attach an observer to read the interpolator's state for debugging
+            void attachLogger(CInterpolationLogger *logger) { m_logger = logger; }
 
         protected:
             BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations
             BlackMisc::Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts
             BlackMisc::Aviation::CCallsign m_callsign;                        //!< callsign
 
-            //! Log for interpolation
-            struct InterpolationLog
-            {
-                qint64 timestamp = -1;       //!< current timestamp
-                double groundFactor = -1;    //!< current ground factor
-                double vtolAircraft = false; //!< VTOL aircraft
-                double deltaTimeMs = 0;      //!< delta time to last situation
-                double simulationTimeFraction = -1;        //!< time fraction, normally 0..1
-                double deltaTimeFractionMs = -1;           //!< delta time fraction
-                bool useParts = false;                     //!< supporting aircraft parts
-                BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
-                BlackMisc::Aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
-                BlackMisc::Aviation::CAircraftSituation oldSituation;     //!< old situation
-                BlackMisc::Aviation::CAircraftSituation newSituation;     //!< new situation
-                BlackMisc::Aviation::CAircraftSituation currentSituation; //!< interpolated situation
-            };
-
-            //! Log for parts
-            struct PartsLog
-            {
-                qint64 timestamp = -1; //!< current timestamp
-                BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
-                BlackMisc::Aviation::CAircraftParts parts; //!< parts to be logged
-            };
-
             //! Constructor
             CInterpolator(const QString &objectName, const BlackMisc::Aviation::CCallsign &callsign, QObject *parent);
-
-            //! Log current interpolation cycle, only stores in memory, for performance reasons
-            //! \remark const to allow const interpolator functions
-            //! \threadsafe
-            void logInterpolation(const InterpolationLog &log) const;
-
-            //! Log current parts cycle, only stores in memory, for performance reasons
-            //! \remark const to allow const interpolator functions
-            //! \threadsafe
-            void logParts(const PartsLog &parts) const;
-
-            //! Get log as HTML table
-            //! \threadsafe
-            static QString getHtmlInterpolationLog(const QList<InterpolationLog> &logs);
-
-            //! Get log as HTML table
-            //! \threadsafe
-            static QString getHtmlPartsLog(const QList<PartsLog> &logs);
 
             //! Set the ground elevation from hints
             static void setGroundElevationFromHint(const CInterpolationHints &hints, BlackMisc::Aviation::CAircraftSituation &situation, bool override = true);
@@ -134,24 +85,10 @@ namespace BlackMisc
             static void setGroundFlagFromInterpolator(const CInterpolationHints &hints, double groundFactor, BlackMisc::Aviation::CAircraftSituation &situation);
 
         private:
-            //! Write log to file
-            static CStatusMessageList writeLogFile(const QList<InterpolationLog> &interpolation, const QList<PartsLog> &parts);
-
-            //! Status of file operation
-            static CStatusMessage logStatusFileWriting(bool success, const QString &fileName);
-
-            //! Create readable time
-            static QString msSinceEpochToTime(qint64 ms);
-
-            //! Create readable time
-            static QString msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3 = -1);
+            CInterpolationLogger *m_logger = nullptr;
 
             Derived *derived() { return static_cast<Derived *>(this); }
             const Derived *derived() const { return static_cast<const Derived *>(this); }
-
-            mutable QReadWriteLock  m_lockLogs;  //!< lock logging
-            mutable QList<PartsLog> m_partsLogs; //!< logs of parts
-            mutable QList<InterpolationLog> m_interpolationLogs; //!< logs of interpolation
         };
 
         //! Simple interpolator for pitch, bank, heading, groundspeed
