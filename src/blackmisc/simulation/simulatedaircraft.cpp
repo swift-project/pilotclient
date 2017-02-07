@@ -32,7 +32,7 @@ namespace BlackMisc
             init();
         }
 
-        CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_model(model), m_networkModel(model)
+        CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_models( {model, model})
         {
             this->setCallsign(model.getCallsign());
             init();
@@ -46,6 +46,8 @@ namespace BlackMisc
 
         void CSimulatedAircraft::init()
         {
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+
             // sync some values, order here is crucial
             // set get/set thing here updates the redundant data (e.g. livery / model.livery)
             this->setCallsign(this->getCallsign());
@@ -93,7 +95,7 @@ namespace BlackMisc
 
         const CAircraftIcaoCode &CSimulatedAircraft::getAircraftIcaoCode() const
         {
-            return m_model.getAircraftIcaoCode();
+            return m_models[CurrentModel].getAircraftIcaoCode();
         }
 
         void CSimulatedAircraft::setPilot(const Network::CUser &user)
@@ -120,20 +122,18 @@ namespace BlackMisc
 
         bool CSimulatedAircraft::setIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
         {
-            //! \note to be compatible with old version I still allow to set airline here but I should actually set a livery
-
             if (this->getLivery().getAirlineIcaoCode() != airlineIcaoCode)
             {
                 // create a dummy livery for given ICAO code
                 CLivery newLivery(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Standard auto generated");
-                this->m_model.setLivery(newLivery);
+                this->m_models[CurrentModel].setLivery(newLivery);
             }
-            return this->m_model.setAircraftIcaoCode(aircraftIcaoCode);
+            return this->m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);
         }
 
         const CAirlineIcaoCode &CSimulatedAircraft::getAirlineIcaoCode() const
         {
-            return this->m_model.getAirlineIcaoCode();
+            return this->m_models[CurrentModel].getAirlineIcaoCode();
         }
 
         const QString &CSimulatedAircraft::getAirlineIcaoCodeDesignator() const
@@ -143,7 +143,7 @@ namespace BlackMisc
 
         void CSimulatedAircraft::setAircraftIcaoDesignator(const QString &designator)
         {
-            this->m_model.setAircraftIcaoDesignator(designator);
+            this->m_models[CurrentModel].setAircraftIcaoDesignator(designator);
         }
 
         bool CSimulatedAircraft::hasAircraftDesignator() const
@@ -364,11 +364,11 @@ namespace BlackMisc
                 this->m_parts.setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexModel:
-                this->m_model.setPropertyByIndex(index.copyFrontRemoved(), variant);
-                this->setModel(this->m_model); // sync some values
+                this->m_models[CurrentModel].setPropertyByIndex(index.copyFrontRemoved(), variant);
+                this->setModel(this->m_models[CurrentModel]); // sync some values
                 break;
             case IndexNetworkModel:
-                this->m_networkModel.setPropertyByIndex(index.copyFrontRemoved(), variant);
+                this->m_models[NetworkModel].setPropertyByIndex(index.copyFrontRemoved(), variant);
                 break;
             case IndexEnabled:
                 this->m_enabled = variant.toBool();
@@ -423,9 +423,9 @@ namespace BlackMisc
             case IndexParts:
                 return this->m_parts.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getParts());
             case IndexModel:
-                return m_model.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
+                return m_models[CurrentModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
             case IndexNetworkModel:
-                return m_networkModel.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
+                return m_models[NetworkModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
             case IndexNetworkModelAircraftIcaoDifference:
                 return this->getNetworkModelAircraftIcaoDifference().compare(compareValue.getNetworkModelAircraftIcaoDifference());
             case IndexNetworkModelAirlineIcaoDifference:
@@ -455,12 +455,14 @@ namespace BlackMisc
 
         const CAircraftModel &CSimulatedAircraft::getNetworkModelOrModel() const
         {
-            return this->hasNetworkModel() ? this->m_networkModel : this->m_model;
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+            return this->hasNetworkModel() ? this->m_models[NetworkModel] : this->m_models[CurrentModel];
         }
 
         bool CSimulatedAircraft::hasNetworkModel() const
         {
-            return this->m_networkModel.hasModelString() || !this->m_networkModel.getCallsign().isEmpty();
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+            return this->m_models[NetworkModel].hasModelString() || !this->m_models[NetworkModel].getCallsign().isEmpty();
         }
 
         QString CSimulatedAircraft::getNetworkModelAircraftIcaoDifference() const
@@ -483,6 +485,8 @@ namespace BlackMisc
 
         QString CSimulatedAircraft::getNetworkModelLiveryDifference() const
         {
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+
             const CLivery livery(this->getModel().getLivery());
             const CLivery liveryNw(this->getNetworkModel().getLivery());
             if (livery == liveryNw) { return "[=] " + livery.getCombinedCodePlusInfo(); }
@@ -492,27 +496,32 @@ namespace BlackMisc
 
         void CSimulatedAircraft::setModel(const CAircraftModel &model)
         {
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+
             // sync the callsigns
-            this->m_model = model;
+            this->m_models[CurrentModel] = model;
             this->setCallsign(this->hasValidCallsign() ? this->getCallsign() : model.getCallsign());
             this->setIcaoCodes(model.getAircraftIcaoCode(), model.getAirlineIcaoCode());
         }
 
         void CSimulatedAircraft::setNetworkModel(const CAircraftModel &model)
         {
-            this->m_networkModel = model;
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+            this->m_models[NetworkModel] = model;
         }
 
         void CSimulatedAircraft::setModelString(const QString &modelString)
         {
-            this->m_model.setModelString(modelString);
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
+            this->m_models[CurrentModel].setModelString(modelString);
         }
 
         void CSimulatedAircraft::setCallsign(const CCallsign &callsign)
         {
+            Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");
             this->m_callsign = callsign;
-            this->m_model.setCallsign(callsign);
-            this->m_networkModel.setCallsign(callsign);
+            this->m_models[CurrentModel].setCallsign(callsign);
+            this->m_models[NetworkModel].setCallsign(callsign);
             this->m_pilot.setCallsign(callsign);
         }
 

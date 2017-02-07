@@ -131,13 +131,14 @@ namespace BlackMisc
             const QString &getAircraftIcaoCombinedType() const;
 
             //! Set aicraft ICAO code
-            bool setAircraftIcaoCode(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) { return m_model.setAircraftIcaoCode(aircraftIcaoCode);}
+            bool setAircraftIcaoCode(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode) { return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);}
 
             //! Set ICAO info
+            //! \note to be compatible with old version I still allow to set airline here, but I should actually set a livery
             bool setIcaoCodes(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcaoCode, const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! Get livery
-            const BlackMisc::Aviation::CLivery &getLivery() const { return m_model.getLivery(); }
+            const BlackMisc::Aviation::CLivery &getLivery() const { return m_models[CurrentModel].getLivery(); }
 
             //! Airline ICAO code if any
             const BlackMisc::Aviation::CAirlineIcaoCode &getAirlineIcaoCode() const;
@@ -158,7 +159,7 @@ namespace BlackMisc
             bool hasAircraftDesignator() const;
 
             //! Valid airline designator
-            bool hasAirlineDesignator() const { return this->m_model.getLivery().hasValidAirlineDesignator(); }
+            bool hasAirlineDesignator() const { return this->m_models[CurrentModel].getLivery().hasValidAirlineDesignator(); }
 
             //! Valid designators?
             bool hasAircraftAndAirlineDesignator() const;
@@ -329,10 +330,10 @@ namespace BlackMisc
             int comparePropertyByIndex(const CPropertyIndex &index, const CSimulatedAircraft &compareValue) const;
 
             //! Get model
-            const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_model; }
+            const BlackMisc::Simulation::CAircraftModel &getModel() const { return m_models[CurrentModel]; }
 
             //! Get network model
-            const BlackMisc::Simulation::CAircraftModel &getNetworkModel() const { return m_networkModel; }
+            const BlackMisc::Simulation::CAircraftModel &getNetworkModel() const { return m_models[NetworkModel]; }
 
             //! Get network model or (if not existing) model
             const BlackMisc::Simulation::CAircraftModel &getNetworkModelOrModel() const;
@@ -350,16 +351,16 @@ namespace BlackMisc
             QString getNetworkModelLiveryDifference() const;
 
             //! \copydoc BlackMisc::Simulation::CAircraftModel::getIconPath
-            const QString &getIconPath() const { return m_model.getIconPath(); }
+            const QString &getIconPath() const { return m_models[CurrentModel].getIconPath(); }
 
             //! Get model string
-            const QString &getModelString() const { return m_model.getModelString(); }
+            const QString &getModelString() const { return m_models[CurrentModel].getModelString(); }
 
             //! Set model string
             void setModelString(const QString &modelString);
 
             //! Has model string?
-            bool hasModelString() const { return m_model.hasModelString(); }
+            bool hasModelString() const { return m_models[CurrentModel].hasModelString(); }
 
             //! Set model
             void setModel(const BlackMisc::Simulation::CAircraftModel &model);
@@ -410,16 +411,17 @@ namespace BlackMisc
             BlackMisc::CIcon toIcon() const { return this->m_callsign.toIcon(); }
 
         private:
-            BlackMisc::Aviation::CCallsign          m_callsign;
-            BlackMisc::Network::CUser               m_pilot;
-            BlackMisc::Aviation::CAircraftSituation m_situation;
-            BlackMisc::Aviation::CComSystem         m_com1system;
-            BlackMisc::Aviation::CComSystem         m_com2system;
-            BlackMisc::Aviation::CTransponder       m_transponder;
-            BlackMisc::Aviation::CAircraftParts     m_parts;
-            BlackMisc::Aviation::CSelcal            m_selcal;
-            BlackMisc::Simulation::CAircraftModel   m_model;
-            BlackMisc::Simulation::CAircraftModel   m_networkModel; //!< model received from network
+            static constexpr int CurrentModel = 0; //!< m_models
+            static constexpr int NetworkModel = 1; //!< m_models
+            BlackMisc::Aviation::CCallsign            m_callsign;
+            BlackMisc::Network::CUser                 m_pilot;
+            BlackMisc::Aviation::CAircraftSituation   m_situation;
+            BlackMisc::Aviation::CComSystem           m_com1system;
+            BlackMisc::Aviation::CComSystem           m_com2system;
+            BlackMisc::Aviation::CTransponder         m_transponder;
+            BlackMisc::Aviation::CAircraftParts       m_parts;
+            BlackMisc::Aviation::CSelcal              m_selcal;
+            BlackMisc::Simulation::CAircraftModelList m_models = { { CAircraftModel(), CAircraftModel() } }; //!< Shorter DBus signature: current model, and model received from network
             bool m_enabled = true;              //!< to be displayed in simulator
             bool m_rendered = false;            //!< really shown in simulator
             bool m_partsSynchronized = false;   //!< synchronize parts
@@ -438,8 +440,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(transponder),
                 BLACK_METAMEMBER(parts),
                 BLACK_METAMEMBER(selcal),
-                BLACK_METAMEMBER(model),
-                // BLACK_METAMEMBER(networkModel),
+                BLACK_METAMEMBER(models),
                 BLACK_METAMEMBER(enabled),
                 BLACK_METAMEMBER(rendered),
                 BLACK_METAMEMBER(partsSynchronized),
