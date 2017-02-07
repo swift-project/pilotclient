@@ -114,7 +114,7 @@ namespace BlackMisc
             currentSituation.setTimeOffsetMs(oldSituation.getTimeOffsetMs() + (newSituation.getTimeOffsetMs() - oldSituation.getTimeOffsetMs()) * simulationTimeFraction);
             currentSituation.setMSecsSinceEpoch(oldSituation.getMSecsSinceEpoch() + deltaTimeFractionMs);
 
-            status.setChangedPosition(oldSituation.getPosition() != newSituation.getPosition() || oldSituation.getAltitude() != newSituation.getAltitude());
+            status.setChangedPosition(m_isFirstInterpolation || oldSituation.getPosition() != newSituation.getPosition() || oldSituation.getAltitude() != newSituation.getAltitude());
             status.setInterpolationSucceeded(true);
 
             log.oldSituation = oldSituation;

@@ -110,6 +110,8 @@ namespace BlackMisc
                 status.setChangedPosition(true);
             }
             status.setInterpolationSucceeded(true);
+            m_isFirstInterpolation = false;
+
             if (m_logger && hints.isLoggingInterpolation())
             {
                 log.timestamp = currentTimeMsSinceEpoc;
