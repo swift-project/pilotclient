@@ -63,7 +63,7 @@ namespace BlackMiscTest
         const qint64 ts =  1425000000000; // QDateTime::currentMSecsSinceEpoch();
         const qint64 deltaT = 5000; // ms
         const qint64 offset = 5000;
-        for (int i = 0; i < IRemoteAircraftProvider::MaxSituationsPerCallsign; i++)
+        for (int i = IRemoteAircraftProvider::MaxSituationsPerCallsign - 1; i >= 0; i--)
         {
             CAircraftSituation s(getTestSituation(cs, i, ts, deltaT, offset));
 
@@ -74,7 +74,7 @@ namespace BlackMiscTest
         }
 
         constexpr int partsCount = 10;
-        for (int i = 0; i < partsCount; i++)
+        for (int i = partsCount - 1; i >= 0; i--)
         {
             CAircraftParts p(getTestParts(i, ts, deltaT));
             interpolator.addAircraftParts(p);
