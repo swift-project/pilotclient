@@ -34,6 +34,8 @@
 #include <QList>
 #include <QString>
 #include <QtGlobal>
+#include <limits>
+#include <cmath>
 
 namespace BlackMisc
 {
@@ -159,7 +161,8 @@ namespace BlackMisc
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->value(UnitClass::defaultUnit());
+            constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
+            argument << (this->isNull() ? NaN : this->value(UnitClass::defaultUnit()));
             // argument << this->m_value;
             // argument << this->m_unit;
         }
@@ -168,8 +171,13 @@ namespace BlackMisc
         void CPhysicalQuantity<MU, PQ>::unmarshallFromDbus(const QDBusArgument &argument)
         {
             argument >> this->m_value;
-            // argument >> this->m_unit;
             this->m_unit = UnitClass::defaultUnit();
+            if (std::isnan(this->m_value))
+            {
+                this->setNull();
+            }
+            // argument >> this->m_value;
+            // argument >> this->m_unit;
         }
 
         template <class MU, class PQ>
@@ -251,6 +259,7 @@ namespace BlackMisc
         template <class MU, class PQ>
         void CPhysicalQuantity<MU, PQ>::setNull()
         {
+            this->m_value = 0;
             this->m_unit = MU::nullUnit();
         }
 
