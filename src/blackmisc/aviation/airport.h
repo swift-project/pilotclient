@@ -149,7 +149,7 @@ namespace BlackMisc
 
         private:
             QString                             m_descriptiveName;
-            bool                                m_operating;
+            bool                                m_operating = true;
             CAirportIcaoCode                    m_icao;
             BlackMisc::CCountry                 m_country;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
