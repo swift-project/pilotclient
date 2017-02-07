@@ -12,8 +12,9 @@
 
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/registermetadata.h"
+#include "blackmisc/network/networkutils.h"
+#include "blackcore/test/testutils.h"
 #include "servicetool.h"
-
 #include <stdio.h>
 #include <QCoreApplication>
 #include <QDBusServer>
@@ -33,6 +34,9 @@ int main(int argc, char *argv[])
 
     BlackMisc::registerMetadata();
     QCoreApplication a(argc, argv);
+    QTextStream out(stdout, QIODevice::WriteOnly);
+    QTextStream qtin(stdin);
+    const bool verbose = false;
 
     // trying to get the arguments into a list
     const QStringList cmdlineArgs = QCoreApplication::arguments();
@@ -69,19 +73,34 @@ int main(int argc, char *argv[])
 
     // Create a Testservice instance and register it with the session bus only if
     // the service isn't already available.
-    if (!clientFlag)
+    if (clientFlag)
     {
-        // Configure tests
+        // 2nd Process !!! Running on the client's side
+        // This runs in a second process, hence cannot be directly debugged within Qt Creators
+        out << "Running client side " << QCoreApplication::applicationPid() << endl;
+
+        // run tests
+        if (cmdlineArgs.contains("testservice", Qt::CaseInsensitive))
+        {
+            BlackSample::ServiceTool::dataTransferTestClient(address);
+        }
+
+        // loop
+        return a.exec();
+    }
+    else
+    {
     Menu:
-        qDebug() << "1 .. Run testservice to test data transfer" << addressTcp;
-        qDebug() << "1sb. Run testservice via session bus";
-        qDebug() << "----- Change address / port (no validation, do before starting server)";
-        qDebug() << "loop Address to loopback, 127.0.0.1";
-        qDebug() << "ip   some IP address, e.g 192.168.100.100";
-        qDebug() << "port some port, e.g 12345";
-        qDebug() << "-----";
-        qDebug() << "x .. Bye";
-        QTextStream qtin(stdin);
+        out << "Pid: " << QCoreApplication::applicationPid() << endl;
+        out << "1 .. Run testservice to test data transfer" << addressTcp << endl;
+        out << "1sb. Run testservice via session bus" << endl;
+        out << "2 .. Show signatures" << endl;
+        out << "----- Change address / port (no validation, do before starting server)" << endl;
+        out << "loop Address to loopback, 127.0.0.1" << endl;
+        out << "ip   some IP address, e.g " << ip << endl;
+        out << "port some port, e.g 12345" << endl;
+        out << "-----" << endl;
+        out << "x .. Bye" << endl;
         QString mode = qtin.readLine().toLower().trimmed();
 
         if (mode.startsWith("l"))
@@ -92,7 +111,7 @@ int main(int argc, char *argv[])
         }
         if (mode.startsWith("i"))
         {
-            QStringList p = mode.split(QRegExp("\\s"));
+            const QStringList p = mode.split(QRegExp("\\s"));
             if (p.length() > 1)
             {
                 ip = p.at(1);
@@ -102,12 +121,19 @@ int main(int argc, char *argv[])
         }
         if (mode.startsWith("p"))
         {
-            QStringList p = mode.split(QRegExp("\\s"));
+            const QStringList p = mode.split(QRegExp("\\s"));
             if (p.length() > 1)
             {
                 port = p.at(1);
                 addressTcp = QString("tcp:host=%1,port=%2").arg(ip).arg(port);
             }
+            goto Menu;
+        }
+        if (mode.startsWith("2"))
+        {
+            out << "---------------------------------" << endl;
+            BlackCore::Test::CTestUtils::showDBusSignatures(out);
+            out << "---------------------------------" << endl;
             goto Menu;
         }
 
@@ -125,13 +151,13 @@ int main(int argc, char *argv[])
 
         // I know I am in the "server process here", so I can safely create a CDBusServer
         // this runs in the original process and can be directly debugged
-        qDebug();
-        qDebug("--------------------------------------------------------");
+        out << "--------------------------------------------------------" << endl;
 
         BlackMisc::CDBusServer *dBusServer = new BlackMisc::CDBusServer(useSessionBusForServer ? "session" : address);
         if (dBusServer->hasQDBusServer())
         {
-            qDebug() << "server" << dBusServer->qDBusServer()->address() << "connected:" << dBusServer->qDBusServer()->isConnected();
+            out << "server" << dBusServer->qDBusServer()->address() <<
+                " connected:" << dBusServer->qDBusServer()->isConnected() << endl;
         }
         // start client process
         QStringList args;
@@ -139,7 +165,7 @@ int main(int argc, char *argv[])
         args << mode;
         if (address == "session")
         {
-            args << address; // set session as cmd arg
+            args << "session"; // set session as cmd arg
         }
         else
         {
@@ -150,28 +176,14 @@ int main(int argc, char *argv[])
         // run tests
         if (mode == "testservice")
         {
-            BlackSample::ServiceTool::dataTransferTestServer(dBusServer);
+            BlackSample::ServiceTool::dataTransferTestServer(dBusServer, verbose);
         }
 
-        // in new process
+        // testing in new process
         BlackSample::ServiceTool::startNewProcess(executable, args, &a);
 
-        // in same process
+        // testing in same process
         // BlackSample::ServiceTool::dataTransferTestClient(address);
-
-        // loop
-        return a.exec();
-    }
-    else
-    {
-        // 2nd Process !!! Running on the client's side
-        // This runs in a second process, hence cannot be directly debugged within Qt Creators
-
-        // run tests
-        if (cmdlineArgs.contains("testservice", Qt::CaseInsensitive))
-        {
-            BlackSample::ServiceTool::dataTransferTestClient(address);
-        }
 
         // loop
         return a.exec();

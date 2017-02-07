@@ -13,12 +13,6 @@
 #ifndef BLACKSAMPLE_SERVICETOOL_H
 #define BLACKSAMPLE_SERVICETOOL_H
 
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/callsign.h"
-#include "blackmisc/network/clientlist.h"
-#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
-
 #include <QCoreApplication>
 #include <QDBusArgument>
 #include <QString>
@@ -39,21 +33,12 @@ namespace BlackSample
      */
     class ServiceTool
     {
-    private:
-        ServiceTool() {}
-
     public:
-        //! Process id
-        static qint64 getPid()
-        {
-            return QCoreApplication::applicationPid();
-        }
-
         //! Client side of data transfer test
         static void dataTransferTestClient(const QString &address);
 
         //! Server side of data transfer test
-        static void dataTransferTestServer(BlackMisc::CDBusServer *dBusServer);
+        static void dataTransferTestServer(BlackMisc::CDBusServer *dBusServer, bool verbose);
 
         //! Start a new process
         static QProcess *startNewProcess(const QString &executable, const QStringList &arguments = QStringList(), QObject *parent = 0);
@@ -61,26 +46,9 @@ namespace BlackSample
         //! Loop to send data to test service (slots on server)
         static void sendDataToTestservice(const QDBusConnection &connection);
 
-        //! Display QDBusArgument
-        static void displayQDBusArgument(const QDBusArgument &arg, qint32 level = 0);
-
-        //! Register testservice with connection
-        static Testservice *registerTestservice(QDBusConnection &connection, QObject *parent = 0);
-
-        //! Get a random callsign
-        static BlackMisc::Aviation::CCallsign getRandomAtcCallsign();
-
-        //! Get stations
-        static BlackMisc::Aviation::CAtcStationList getStations(int number);
-
-        //! Get aircraft cfg entries
-        static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
-
-        //! Get airports
-        static BlackMisc::Aviation::CAirportList getAirports(int number);
-
-        //! Get clients
-        static BlackMisc::Network::CClientList getClients(int number);
+    private:
+        //! No constructor
+        ServiceTool() = delete;
     };
 } // namespace
 
