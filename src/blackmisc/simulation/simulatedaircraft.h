@@ -439,7 +439,7 @@ namespace BlackMisc
                 BLACK_METAMEMBER(parts),
                 BLACK_METAMEMBER(selcal),
                 BLACK_METAMEMBER(model),
-                BLACK_METAMEMBER(networkModel),
+                // BLACK_METAMEMBER(networkModel),
                 BLACK_METAMEMBER(enabled),
                 BLACK_METAMEMBER(rendered),
                 BLACK_METAMEMBER(partsSynchronized),
