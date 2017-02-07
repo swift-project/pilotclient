@@ -29,7 +29,15 @@ namespace BlackCoreTest
 {
     void CTestDBus::marshallUnmarshall()
     {
-        ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(), QDBusConnection::sessionBus());
+        QDBusConnection connection = QDBusConnection::sessionBus();
+        if (!CTestService::canRegisterTestService(connection))
+        {
+            QSKIP("Cannot register DBus service, skip unit test");
+            return;
+        }
+        CTestService *testService = CTestService::registerTestService(connection, false, QCoreApplication::instance());
+        Q_UNUSED(testService);
+        ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(), connection);
         int errors = ITestServiceInterface::pingTests(testServiceInterface, false);
         QVERIFY2(errors == 0, "DBus Ping tests fail");
     }
