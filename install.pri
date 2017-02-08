@@ -71,6 +71,14 @@ else:unix:qt5_audio_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/audio/*.so
 qt5_audio_plugins_target.path = $${PREFIX}/bin/audio
 INSTALLS += qt5_audio_plugins_target
 
+############### Install Qt5 bearer plugins ##############
+
+win32: qt5_bearer_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/bearer/*$${DLL_DEBUG_SUFFIX}.dll
+else:macx: qt5_bearer_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/bearer/*.dylib
+else:unix:qt5_bearer_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/bearer/*.so
+qt5_bearer_plugins_target.path = $${PREFIX}/bin/bearer
+INSTALLS += qt5_bearer_plugins_target
+
 ############### Install Qt5 iconengines plugins ##############
 
 win32: qt5_iconengines_plugins_target.files *= $$[QT_INSTALL_PLUGINS]/iconengines/*$${DLL_DEBUG_SUFFIX}.dll
