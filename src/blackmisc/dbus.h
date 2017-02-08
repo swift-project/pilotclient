@@ -15,12 +15,30 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/metaclass.h"
 #include "blackmisc/inheritancetraits.h"
+#include "blackmisc/typetraits.h"
 #include <QDBusArgument>
 #include <type_traits>
 
 namespace BlackMisc
 {
     class CEmpty;
+
+    namespace Private
+    {
+        //! \cond PRIVATE
+        template <class T, std::enable_if_t<THasMarshallMethods<T>::value, int> = 0>
+        void marshallMember(QDBusArgument &arg, const T &value) { value.marshallToDbus(arg); }
+
+        template <class T, std::enable_if_t<!THasMarshallMethods<T>::value, int> = 0>
+        void marshallMember(QDBusArgument &arg, const T &value) { arg << value; }
+
+        template <class T, std::enable_if_t<THasMarshallMethods<T>::value, int> = 0>
+        void unmarshallMember(const QDBusArgument &arg, T &value) { value.unmarshallFromDbus(arg); }
+
+        template <class T, std::enable_if_t<!THasMarshallMethods<T>::value, int> = 0>
+        void unmarshallMember(const QDBusArgument &arg, T &value) { arg >> value; }
+        //! \endcond
+    }
 
     namespace Mixin
     {
@@ -66,7 +84,7 @@ namespace BlackMisc
             {
                 baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember(*derived(), [ & ](const auto &member) { arg << member; });
+                meta.forEachMember(*derived(), [ & ](const auto &member) { Private::marshallMember(arg, member); });
             }
 
             //! Unmarshall without begin/endStructure, for when composed within another object
@@ -74,7 +92,7 @@ namespace BlackMisc
             {
                 baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember(*derived(), [ & ](auto &member) { arg >> member; });
+                meta.forEachMember(*derived(), [ & ](auto &member) { Private::unmarshallMember(arg, member); });
             }
 
         private:

@@ -19,6 +19,8 @@
 #define BLACK_HAS_FIXED_CWG1558
 #endif
 
+class QDBusArgument;
+
 namespace BlackMisc
 {
 
@@ -179,6 +181,17 @@ namespace BlackMisc
     //! \cond
     template <typename T, typename U>
     struct TIsEqualityComparable<T, U, void_t<decltype(std::declval<T>() == std::declval<U>())>> : public std::true_type {};
+    //! \endcond
+
+    /*!
+     * Trait which is true if T has methods marshallToDbus and unmarshallFromDbus.
+     */
+    template <typename T, typename = void_t<>>
+    struct THasMarshallMethods : public std::false_type {};
+    //! \cond
+    template <typename T>
+    struct THasMarshallMethods<T, void_t<decltype(std::declval<const T &>().marshallToDbus(std::declval<QDBusArgument &>()),
+                                                  std::declval<T &>().unmarshallFromDbus(std::declval<const QDBusArgument &>()))>> : public std::true_type {};
     //! \endcond
 
     /*!
