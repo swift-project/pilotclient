@@ -48,7 +48,7 @@ namespace BlackMisc
         bool CNetworkUtils::hasConnectedInterface(bool withDebugOutput)
         {
             // http://stackoverflow.com/questions/2475266/verfiying-the-network-connection-using-qt-4-4
-            QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+            const QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
             bool result = false;
 
             for (int i = 0; i < interfaces.count(); i++)
@@ -77,17 +77,20 @@ namespace BlackMisc
             return result;
         }
 
-        QStringList CNetworkUtils::getKnownIpAddresses()
+        QStringList CNetworkUtils::getKnownLocalIpV4Addresses()
         {
             QStringList ips;
-            if (!CNetworkUtils::hasConnectedInterface(false)) return ips;
-            foreach (const QHostAddress &address, QNetworkInterface::allAddresses())
+            if (!CNetworkUtils::hasConnectedInterface(false)) {return ips; }
+            for (const QHostAddress &address : QNetworkInterface::allAddresses())
             {
                 if (address.isLoopback() || address.isNull()) continue;
                 if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
                 {
                     QString a = address.toString();
-                    if (CNetworkUtils::isValidIPv4Address(a)) ips.append(a);
+                    if (CNetworkUtils::isValidIPv4Address(a))
+                    {
+                        ips.append(a);
+                    }
                 }
             }
             return ips;
