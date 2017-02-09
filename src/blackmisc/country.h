@@ -48,7 +48,7 @@ namespace BlackMisc
         };
 
         //! Constructor
-        CCountry() = default;
+        CCountry() {}
 
         //! Constructor
         CCountry(const QString &iso, const QString &name);

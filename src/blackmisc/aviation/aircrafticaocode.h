@@ -54,7 +54,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CAircraftIcaoCode() = default;
+            CAircraftIcaoCode() {}
 
             //! Constructor.
             CAircraftIcaoCode(const QString &designator, const QString &combinedType = "");
@@ -249,7 +249,7 @@ namespace BlackMisc
             BlackMisc::CStatusMessageList validate() const;
 
             //! As a brief HTML summary (e.g. used in tooltips)
-            QString asHtmlSummary () const;
+            QString asHtmlSummary() const;
 
             //! Considers rank, manufacturer and family 0..90
             //! \remark normally used with a selected set of ICAO codes or combined types

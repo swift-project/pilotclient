@@ -52,7 +52,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CCallsign() = default;
+            CCallsign() {}
 
             //! Constructor
             CCallsign(const QString &callsign, TypeHint hint = NoHint)

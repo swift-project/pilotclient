@@ -31,7 +31,7 @@ namespace BlackMisc
         {
         public:
             //! Default constructor.
-            CAirportIcaoCode() = default;
+            CAirportIcaoCode() {}
 
             //! Constructor
             CAirportIcaoCode(const QString &icaoCode) : m_icaoCode(CAirportIcaoCode::unifyAirportCode(icaoCode)) {}
