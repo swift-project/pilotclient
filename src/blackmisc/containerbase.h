@@ -182,6 +182,7 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &argument)
         {
+            derived().clear();
             argument.beginArray();
             while (!argument.atEnd()) { T value; argument >> value; derived().insert(value); }
             argument.endArray();
