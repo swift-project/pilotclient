@@ -16,6 +16,7 @@
 
 #include "testcontext.h"
 #include "blackcore/context/contextallproxies.h"
+#include <QTest>
 
 using namespace BlackCore::Context;
 
@@ -24,6 +25,12 @@ namespace BlackCoreTest
     void CTestContext::contextInitTest()
     {
         // will cause asserts when signal connects fail
+        QDBusConnection connection = QDBusConnection::sessionBus();
+        if (!connection.isConnected())
+        {
+            QSKIP("Cannot connect session DBus, skip unit test");
+            return;
+        }
 
         CContextAudioProxy::unitTestRelaySignals();
         CContextNetworkProxy::unitTestRelaySignals();
