@@ -74,28 +74,19 @@ namespace BlackInput
 
     bool CKeyboardMac::init()
     {
-        bool accessibilityEnabled = false;
-        if (AXIsProcessTrustedWithOptions != NULL)
-        {
-            // 10.9 and later
-            const void *keys[] = { kAXTrustedCheckOptionPrompt };
-            const void *values[] = { kCFBooleanTrue };
+        // 10.9 and later
+        const void *keys[] = { kAXTrustedCheckOptionPrompt };
+        const void *values[] = { kCFBooleanTrue };
 
-            CFDictionaryRef options = CFDictionaryCreate(
-                                          kCFAllocatorDefault,
-                                          keys,
-                                          values,
-                                          sizeof(keys) / sizeof(*keys),
-                                          &kCFCopyStringDictionaryKeyCallBacks,
-                                          &kCFTypeDictionaryValueCallBacks);
+        CFDictionaryRef options = CFDictionaryCreate(
+                                      kCFAllocatorDefault,
+                                      keys,
+                                      values,
+                                      sizeof(keys) / sizeof(*keys),
+                                      &kCFCopyStringDictionaryKeyCallBacks,
+                                      &kCFTypeDictionaryValueCallBacks);
 
-            accessibilityEnabled = AXIsProcessTrustedWithOptions(options);
-        }
-        else
-        {
-            // 10.8 and older
-            accessibilityEnabled = AXAPIEnabled();
-        }
+        bool accessibilityEnabled = AXIsProcessTrustedWithOptions(options);
 
         if (!accessibilityEnabled)
         {
