@@ -36,7 +36,7 @@
         using Class = CLASS;                                                \
         BLACK_NO_EXPORT_CONSTEXPR static auto getMemberList()               \
         {                                                                   \
-            return CMetaClass::makeMetaMemberList(__VA_ARGS__);             \
+            return makeMetaMemberList(__VA_ARGS__);                         \
         }                                                                   \
     }
 
@@ -53,7 +53,7 @@
  * \ingroup MetaClass
  */
 #define BLACK_METAMEMBER(MEMBER, ...)                                       \
-    CMetaClass::makeMetaMember(                                             \
+    makeMetaMember(                                                         \
         &Class::m_##MEMBER, #MEMBER BLACK_TRAILING_VA_ARGS(__VA_ARGS__)     \
     )
 
@@ -64,7 +64,7 @@
  * \ingroup MetaClass
  */
 #define BLACK_METAMEMBER_NAMED(MEMBER, NAME, ...)                           \
-    CMetaClass::makeMetaMember(                                             \
+    makeMetaMember(                                                         \
         &Class::m_##MEMBER, NAME BLACK_TRAILING_VA_ARGS(__VA_ARGS__)        \
     )
 
@@ -74,31 +74,35 @@ namespace BlackMisc
     class CVariant;
 
     /*!
-    * Metadata flags attached to members of a meta class.
-    * \ingroup MetaClass
-    */
-    enum MetaFlag
-    {
-        DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare() and comparison operators
-        DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
-        DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
-        DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
-        DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
-        CaseInsensitiveComparison = 1 << 5  //!< Element will be compared case insensitively (must be a QString)
-    };
-
-    /*!
      * Type wrapper for passing MetaFlag to CMetaClassIntrospector::with and CMetaClassIntrospector::without.
      * \ingroup MetaClass
      */
     template <quint64 F>
-    using MetaFlags = std::integral_constant<quint64, F>;
+    struct MetaFlags : public std::integral_constant<quint64, F>
+    {
+        //! Implicit conversion to std::false_type (if F is zero) or std::true_type (if F is non-zero).
+        constexpr operator std::integral_constant<bool, static_cast<bool>(F)>() const { return {}; }
+    };
+
+    /*!
+     * Compile-time union of MetaFlags.
+     * \ingroup MetaClass
+     */
+    template <quint64 A, quint64 B>
+    constexpr MetaFlags<A | B> operator |(MetaFlags<A>, MetaFlags<B>) { return {}; }
+
+    /*!
+     * Compile-time intersection of MetaFlags.
+     * \ingroup MetaClass
+     */
+    template <quint64 A, quint64 B>
+    constexpr MetaFlags<A & B> operator &(MetaFlags<A>, MetaFlags<B>) { return {}; }
 
     /*!
      * Literal aggregate type representing attributes of one member of a value class.
      * \ingroup MetaClass
      */
-    template <typename M>
+    template <typename M, quint64 Flags>
     struct CMetaMember
     {
         //! Pointer to the member.
@@ -112,11 +116,11 @@ namespace BlackMisc
         const int m_index;
 
         //! Any flags applying to the member.
-        const quint64 m_flags;
+        const MetaFlags<Flags> m_flags;
 
-        //! True if m_flags contains Flags.
-        template <typename Flags>
-        constexpr bool has(Flags) const { return (m_flags & Flags::value) == Flags::value; }
+        //! True if m_flags contains all flags.
+        template <typename Flags2>
+        constexpr bool has(Flags2 flags) const { return (m_flags & flags) == flags; }
 
         //! Invoke the member on an instance of the value class.
         template <typename T, typename... Ts>
@@ -151,6 +155,20 @@ namespace BlackMisc
     };
 
     /*!
+     * Metadata flags attached to members of a meta class.
+     * \ingroup MetaClass
+     */
+    enum MetaFlag
+    {
+        DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare() and comparison operators
+        DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
+        DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
+        DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
+        DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
+        CaseInsensitiveComparison = 1 << 5  //!< Element will be compared case insensitively (must be a QString)
+    };
+
+    /*!
      * Base class for meta classes.
      * Just static protected members to be used by derived meta classes.
      * \ingroup MetaClass
@@ -158,6 +176,16 @@ namespace BlackMisc
     class CMetaClass
     {
     protected:
+        //! Flags wrapped as compile-time constants.
+        //! @{
+        constexpr static MetaFlags<MetaFlag::DisabledForComparison> DisabledForComparison {};
+        constexpr static MetaFlags<MetaFlag::DisabledForMarshalling> DisabledForMarshalling {};
+        constexpr static MetaFlags<MetaFlag::DisabledForDebugging> DisabledForDebugging {};
+        constexpr static MetaFlags<MetaFlag::DisabledForHashing> DisabledForHashing {};
+        constexpr static MetaFlags<MetaFlag::DisabledForJson> DisabledForJson {};
+        constexpr static MetaFlags<MetaFlag::CaseInsensitiveComparison> CaseInsensitiveComparison {};
+        //! @}
+
         //! Return a CMetaMemberList of type deduced from the types of the meta members.
         //! Usually not used directly, but via the macros.
         template <typename... Members>
@@ -168,8 +196,8 @@ namespace BlackMisc
 
         //! Return a CMetaMethod of type deduced from the type of the member.
         //! Usually not used directly, but via the macros.
-        template <typename M>
-        constexpr static CMetaMember<M> makeMetaMember(M ptrToMember, const char *name = nullptr, int index = 0, quint64 flags = 0)
+        template <typename M, quint64 Flags = 0>
+        constexpr static CMetaMember<M, Flags> makeMetaMember(M ptrToMember, const char *name = nullptr, int index = 0, MetaFlags<Flags> flags = {})
         {
             static_assert(std::is_member_object_pointer<M>::value, "M must be a pointer to member object");
             return { ptrToMember, name, index, flags };
