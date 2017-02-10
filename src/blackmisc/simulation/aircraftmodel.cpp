@@ -109,7 +109,7 @@ namespace BlackMisc
             meta.forEachMember([ &, this ](auto member)
             {
                 auto &&maybeMemo = helper.maybeMemoize(member.in(*this));
-                json << std::make_pair(CExplicitLatin1String(member.latin1Name()).toJsonKey(), std::cref(maybeMemo));
+                json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(maybeMemo));
             });
             return json;
         }

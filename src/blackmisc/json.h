@@ -29,10 +29,6 @@
 #include <type_traits>
 #include <utility>
 
-#if QT_VERSION >= 0x50701
-#define BLACK_USE_LATIN1_JSON_KEYS
-#endif
-
 class QDateTime;
 class QPixmap;
 class QStringList;
@@ -53,17 +49,8 @@ namespace BlackMisc
         //! Implicit constructor.
         Q_DECL_CONSTEXPR CExplicitLatin1String(QLatin1String s) : m_latin1(s) {}
 
-#ifdef BLACK_USE_LATIN1_JSON_KEYS
-        //! Type usable as key in QJsonObject.
-        Q_DECL_CONSTEXPR auto toJsonKey() const { return *this; }
         //! Implicit conversion.
         Q_DECL_CONSTEXPR operator QLatin1String() const { return m_latin1; }
-#else
-        //! Type usable as key in QJsonObject.
-        QString toJsonKey() const { return m_latin1; }
-        //! Implicit conversion.
-        operator QString() const { return m_latin1; }
-#endif
     };
 }
 
@@ -357,7 +344,7 @@ namespace BlackMisc
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
                 meta.forEachMember([ &, this ](auto member)
                 {
-                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()).toJsonKey(), std::cref(member.in(*this->derived())));
+                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(member.in(*this->derived())));
                 });
                 return Json::appendJsonObject(json, baseToJson(static_cast<const TBaseOfT<Derived> *>(derived())));
             }

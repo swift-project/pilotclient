@@ -372,7 +372,6 @@ namespace BlackMisc
         }
 
         //! Set a callback to be called when the value is changed by another source.
-        //! \todo Qt 5.7.0: in assert use m_page->parent()->metaObject()->inherits(&U::staticMetaObject)
         template <typename F>
         void setNotifySlot(F slot)
         {
@@ -382,7 +381,7 @@ namespace BlackMisc
                 return;
             }
             using U = typename Private::TClassOfPointerToMember<F>::type;
-            Q_ASSERT_X(m_page->parent()->inherits(U::staticMetaObject.className()), Q_FUNC_INFO, "Slot is member function of wrong class");
+            Q_ASSERT_X(m_page->parent()->metaObject()->inherits(&U::staticMetaObject), Q_FUNC_INFO, "Slot is member function of wrong class");
             m_page->setNotifySlot(*m_element, { [slot](QObject *obj) { Private::invokeSlot(slot, static_cast<U *>(obj)); }, makeId(slot) });
         }
 
