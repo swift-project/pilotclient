@@ -355,9 +355,9 @@ namespace BlackMisc
             {
                 QJsonObject json;
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMemberName(*derived(), [ & ](const auto & member, CExplicitLatin1String name)
+                meta.forEachMember([ &, this ](auto member)
                 {
-                    json << std::make_pair(name.toJsonKey(), std::cref(member));
+                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()).toJsonKey(), std::cref(member.in(*derived())));
                 });
                 return Json::appendJsonObject(json, baseToJson(static_cast<const TBaseOfT<Derived> *>(derived())));
             }
@@ -374,18 +374,18 @@ namespace BlackMisc
             {
                 baseConvertFromJson(static_cast<TBaseOfT<Derived> *>(derived()), json);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
-                meta.forEachMemberName(*derived(), [ & ](auto & member, CExplicitLatin1String name)
+                meta.forEachMember([ &, this ](auto member)
                 {
-                    const auto value = json.value(name);
+                    const auto value = json.value(CExplicitLatin1String(member.latin1Name()));
                     if (value.isUndefined())
                     {
                         constexpr bool required = false; //! \fixme add RequiredForJson flag in metaclass system
-                        if (required) { throw CJsonException(QStringLiteral("Missing required member '%1'").arg(name.m_latin1)); }
+                        if (required) { throw CJsonException(QStringLiteral("Missing required member '%1'").arg(member.latin1Name())); }
                     }
                     else
                     {
-                        CJsonScope scope(name.m_latin1);
-                        value >> member;
+                        CJsonScope scope(member.latin1Name());
+                        value >> member.in(*derived());
                     }
                 });
             }

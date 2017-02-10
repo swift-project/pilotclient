@@ -72,10 +72,12 @@ namespace BlackMisc
         };
 
         // Work around MSVC2015 bug affecting generic lambda
+        template <typename T>
         struct Hasher
         {
-            template <typename T>
-            void operator()(const T &object) { m_hash ^= qHash(object); }
+            template <typename U>
+            void operator()(const U &member) { m_hash ^= qHash(member.in(m_object)); }
+            const T &m_object;
             uint &m_hash;
         };
 
@@ -496,7 +498,7 @@ namespace BlackMisc
             {
                 uint hash = baseHash(static_cast<const TBaseOfT<Derived> *>(&value));
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForHashing>());
-                meta.forEachMember(value, Private::Hasher { hash });
+                meta.forEachMember(Private::Hasher<Derived> { value, hash });
                 return hash;
             }
 

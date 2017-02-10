@@ -223,57 +223,16 @@ namespace BlackMisc
         template <typename Flags>
         static auto without(Flags) { return filter(MaskSequence<(! members().at(index<Is>()).has(Flags()))...>()); }
 
-        //! For each member in object, pass member as argument to visitor function.
-        //! @{
+        //! For each metamember in metaclass, pass metamember as argument to visitor function.
         template <typename F>
-        static void forEachMember(T &object, F &&visitor)
+        static void forEachMember(F &&visitor)
         {
-            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object)); });
+            // parameter pack swallow idiom
+            static_cast<void>(std::initializer_list<int>
+            {
+                (static_cast<void>(std::forward<F>(visitor)(members().at(index<Is>()))), 0)...
+            });
         }
-        template <typename F>
-        static void forEachMember(const T &object, F &&visitor)
-        {
-            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object)); });
-        }
-        //! @}
-
-        //! For each member in object pair, pass member pair as arguments to visitor function.
-        //! @{
-        template <typename F>
-        static void forEachMemberPair(T &left, T &right, F &&visitor)
-        {
-            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
-        }
-        template <typename F>
-        static void forEachMemberPair(const T &left, T &right, F &&visitor)
-        {
-            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
-        }
-        template <typename F>
-        static void forEachMemberPair(T &left, const T &right, F &&visitor)
-        {
-            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
-        }
-        template <typename F>
-        static void forEachMemberPair(const T &left, const T &right, F &&visitor)
-        {
-            forEachImpl([ & ](auto &&member, auto flags) { std::forward<F>(visitor)(member.in(left), member.in(right), flags); });
-        }
-        //! @}
-
-        //! For each member in object, pass member and its name as arguments to visitor function.
-        //! @{
-        template <typename F>
-        static void forEachMemberName(T &object, F &&visitor)
-        {
-            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), member.latin1Name()); });
-        }
-        template <typename F>
-        static void forEachMemberName(const T &object, F &&visitor)
-        {
-            forEachImpl([ & ](auto &&member, auto) { std::forward<F>(visitor)(member.in(object), member.latin1Name()); });
-        }
-        //! @}
 
     private:
         template <bool... Mask>
@@ -286,16 +245,6 @@ namespace BlackMisc
         using index = std::integral_constant<size_t, I>;
 
         constexpr static auto members() BLACK_TRAILING_RETURN(MetaClass::getMemberList()) { return MetaClass::getMemberList(); }
-
-        template <typename F>
-        static void forEachImpl(F &&visitor)
-        {
-            // parameter pack swallow idiom
-            static_cast<void>(std::initializer_list<int>
-            {
-                (static_cast<void>(std::forward<F>(visitor)(members().at(index<Is>()), MetaFlags<members().at(index<Is>()).m_flags>())), 0)...
-            });
-        }
     };
 
     namespace Private
