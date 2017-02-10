@@ -223,12 +223,6 @@ namespace BlackMisc
         template <typename Flags>
         static auto without(Flags) { return filter(MaskSequence<(! members().at(index<Is>()).has(Flags()))...>()); }
 
-        //! Return a tuple containing references to all members of object.
-        //! @{
-        static auto toTuple(T &object) { return std::tie((members().at(index<Is>()).in(object))...); }
-        static auto toTuple(const T &object) { return std::tie((members().at(index<Is>()).in(object))...); }
-        //! @}
-
         //! For each member in object, pass member as argument to visitor function.
         //! @{
         template <typename F>
