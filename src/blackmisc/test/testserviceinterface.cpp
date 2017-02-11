@@ -10,6 +10,7 @@
 #include "testserviceinterface.h"
 #include "testservice.h"
 #include "testutils.h"
+#include "blackmisc/test/testdata.h"
 #include <QTextStream>
 
 class QDBusConnection;
@@ -19,9 +20,10 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Test;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackCore
+namespace BlackMisc
 {
     namespace Test
     {
@@ -67,7 +69,7 @@ namespace BlackCore
             ok = pingCompare(speedNull, speedNullPing, out, verbose, errors);
             if (verbose) { out << "Pinged null speed via interface" << errorInfo(ok) << endl; }
 
-            const CAtcStation station = CTestUtils::getAtcStation();
+            const CAtcStation station = CTestData::getAtcStation();
             const CAtcStation stationPing = testServiceInterface.pingAtcStation(station);
             ok = pingCompare(station, stationPing, out, verbose, errors);
             if (verbose) { out << "Pinged ATC station via interface" << errorInfo(ok) << endl; }

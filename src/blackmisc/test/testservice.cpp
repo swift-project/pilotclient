@@ -33,7 +33,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
 
-namespace BlackCore
+namespace BlackMisc
 {
     namespace Test
     {
@@ -56,7 +56,7 @@ namespace BlackCore
 
         const QString &CTestService::InterfaceName()
         {
-            static const QString i(BLACKSAMPLE_TESTSERVICE_INTERFACENAME);
+            static const QString i(BLACKMISC_TESTSERVICE_INTERFACENAME);
             return i;
         }
 
@@ -90,7 +90,7 @@ namespace BlackCore
             if (connection.connect(service, CTestService::ObjectPath(), CTestService::InterfaceName(),
                                    "sendStringMessage", pTestService, SLOT(receiveStringMessage(const QString &))))
             {
-                out() << "Connected object with bus sendStringMessage" << endl;
+                out() << "Connected object with DBus 'sendStringMessage'" << endl;
             }
             else
             {
@@ -99,7 +99,7 @@ namespace BlackCore
             return pTestService;
         }
 
-        bool CTestService::unRegisterTestService(QDBusConnection &connection)
+        bool CTestService::unregisterTestService(QDBusConnection &connection)
         {
             return connection.unregisterService(CTestService::InterfaceName());
         }

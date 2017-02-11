@@ -9,14 +9,13 @@
 
 //! \file
 
-#ifndef BLACKCORE_TEST_TESTSERVICE_H
-#define BLACKCORE_TEST_TESTSERVICE_H
+#ifndef BLACKMISC_TEST_TESTSERVICE_H
+#define BLACKMISC_TEST_TESTSERVICE_H
 
 // clash with struct interface in objbase.h used to happen
 #pragma push_macro("interface")
 #undef interface
 
-#include "blackcore/blackcoreexport.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/aircraftsituation.h"
 #include "blackmisc/aviation/airportlist.h"
@@ -37,6 +36,7 @@
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QList>
 #include <QObject>
@@ -60,18 +60,18 @@ namespace BlackMisc
 }
 
 //! DBus interface for test service
-#define BLACKSAMPLE_TESTSERVICE_INTERFACENAME "blackcore.test"
+#define BLACKMISC_TESTSERVICE_INTERFACENAME "blackmisc.test"
 
-namespace BlackCore
+namespace BlackMisc
 {
     namespace Test
     {
         //! Testservice for PQ / CValueObject DBus tests. This part is the callee.
-        //! \remark corresponds with BlackCore::Test::TestServiceInterface
-        class BLACKCORE_EXPORT CTestService : public QObject
+        //! \remark corresponds with BlackMisc::Test::ITestServiceInterface
+        class BLACKMISC_EXPORT CTestService : public QObject
         {
             Q_OBJECT
-            Q_CLASSINFO("D-Bus Interface", BLACKSAMPLE_TESTSERVICE_INTERFACENAME)
+            Q_CLASSINFO("D-Bus Interface", BLACKMISC_TESTSERVICE_INTERFACENAME)
 
             // For some reasons the interface name in the XML is not set correctly
             // to the above name
@@ -90,7 +90,7 @@ namespace BlackCore
             static CTestService *registerTestService(QDBusConnection &connection, bool verbose, QObject *parent = nullptr);
 
             //! Can the testservice be registered?
-            static bool unRegisterTestService(QDBusConnection &connection);
+            static bool unregisterTestService(QDBusConnection &connection);
 
             //! Process id
             static qint64 getPid() { return QCoreApplication::applicationPid(); }

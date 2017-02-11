@@ -28,14 +28,12 @@ HEADERS += $$PWD/audio/*.h
 HEADERS += $$PWD/context/*.h
 HEADERS += $$PWD/data/*.h
 HEADERS += $$PWD/db/*.h
-HEADERS += $$PWD/test/*.h
 HEADERS += $$PWD/vatsim/*.h
 
 SOURCES += *.cpp
 SOURCES += $$PWD/context/*.cpp
 SOURCES += $$PWD/data/*.cpp
 SOURCES += $$PWD/db/*.cpp
-SOURCES += $$PWD/test/*.cpp
 SOURCES += $$PWD/vatsim/*.cpp
 
 LIBS *= -lvatlib

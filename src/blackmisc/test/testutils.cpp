@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #include "testutils.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 #include <QString>
@@ -24,7 +22,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Simulation::FsCommon;
 
-namespace BlackCore
+namespace BlackMisc
 {
     namespace Test
     {
@@ -106,37 +104,6 @@ namespace BlackCore
             out << "CSimulatedAircraftList" << " size: " << s.size() << " sig: " << s << endl;
             s = CTestUtils::dBusSignature(var);
             out << "CVariant" << " size: " << s.size() << " sig: " << s << endl;
-        }
-
-        CCallsign CTestUtils::getRandomAtcCallsign()
-        {
-            static QList<CCallsign> callsigns;
-            if (callsigns.isEmpty())
-            {
-                callsigns << CCallsign("EDDM_TWR");
-                callsigns << CCallsign("EDDM_APP");
-                callsigns << CCallsign("EDDM_GND");
-                callsigns << CCallsign("EDDF_TWR");
-                callsigns << CCallsign("EDDF_APP");
-                callsigns << CCallsign("EDDF_GND");
-            }
-            int i = (rand() % (callsigns.size()));
-            CCallsign cs = callsigns.at(i);
-            return cs;
-        }
-
-        CAtcStation CTestUtils::getAtcStation()
-        {
-            const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() }); // Munich
-            const CAtcStation station(CCallsign("eddm_twr"), CUser("654321", "client"),
-                                      CFrequency(118.7, CFrequencyUnit::MHz()),
-                                      geoPos, CLength(50, CLengthUnit::km()));
-            return station;
-        }
-
-        CSpeed CTestUtils::getSpeed()
-        {
-            return CSpeed(666, CSpeedUnit::km_h());
         }
 
         CAtcStationList CTestUtils::getStations(int number)

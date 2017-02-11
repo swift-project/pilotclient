@@ -9,22 +9,22 @@
 
 //! \file
 
-#ifndef BLACKCORE_TEST_TESTUTILS_H
-#define BLACKCORE_TEST_TESTUTILS_H
+#ifndef BLACKMISC_TEST_TESTUTILS_H
+#define BLACKMISC_TEST_TESTUTILS_H
 
-#include "blackcore/blackcoreexport.h"
+#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/network/clientlist.h"
 #include <QDBusArgument>
 
-namespace BlackCore
+namespace BlackMisc
 {
     namespace Test
     {
         //! Utils for UNIT tests / samples
-        class BLACKCORE_EXPORT CTestUtils
+        class BLACKMISC_EXPORT CTestUtils
         {
         public:
             //! Get QDBusArgument signature (formatted)
@@ -46,16 +46,6 @@ namespace BlackCore
             static void showDBusSignatures(QTextStream &out);
 
             // ----------------- some test data --------------------
-
-            //! Get a random callsign
-            static BlackMisc::Aviation::CCallsign getRandomAtcCallsign();
-
-            //! Get ATC station
-            static BlackMisc::Aviation::CAtcStation getAtcStation();
-
-            //! Get speed
-            static BlackMisc::PhysicalQuantities::CSpeed getSpeed();
-
             //! Get ATC stations
             static BlackMisc::Aviation::CAtcStationList getStations(int number);
 
