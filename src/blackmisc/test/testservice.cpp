@@ -9,6 +9,7 @@
 
 #include "testservice.h"
 #include "testutils.h"
+#include "testing.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/track.h"
@@ -343,13 +344,13 @@ namespace BlackMisc
         CAtcStationList CTestService::getAtcStationList(int n) const
         {
             if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getAtcStationList" << endl;
-            return CTestUtils::getStations(n);
+            return CTesting::createAtcStations(n, false);
         }
 
         CAircraftCfgEntriesList CTestService::getAircraftCfgEntriesList(int n) const
         {
             if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getAircraftCfgEntriesList" << endl;
-            return CTestUtils::getAircraftCfgEntries(n);
+            return CTesting::getAircraftCfgEntries(n);
         }
 
         QList<QDBusObjectPath> CTestService::getObjectPaths(int n) const

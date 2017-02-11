@@ -31,6 +31,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackMisc
 {
@@ -89,11 +90,11 @@ namespace BlackMisc
         {
             foreach (const CAtcStation station, stations)
             {
-                readStation(station, byPropertyIndex);
+                accessStationData(station, byPropertyIndex);
             }
         }
 
-        QString CTesting::readStation(const CAtcStation &station, bool byPropertyIndex)
+        QString CTesting::accessStationData(const CAtcStation &station, bool byPropertyIndex)
         {
             QString r;
             if (byPropertyIndex)
@@ -176,6 +177,56 @@ namespace BlackMisc
         {
             static const CAtcStationList s = createAtcStations(10000, false);
             return s;
+        }
+
+        CAircraftCfgEntriesList CTesting::getAircraftCfgEntries(int number)
+        {
+            CAircraftCfgEntriesList list;
+            for (int i = 0; i < number; i++)
+            {
+                CAircraftCfgEntries e;
+                e.setAtcModel("atc model");
+                e.setAtcParkingCode(QString::number(i));
+                e.setIndex(i);
+                e.setFileName("this will be the file path and pretty long");
+                e.setTitle("I am the aircraft title foobar");
+                e.setAtcType("B737");
+                list.push_back(e);
+            }
+            return list;
+        }
+
+        CAirportList CTesting::getAirports(int number)
+        {
+            BlackMisc::Aviation::CAirportList list;
+            for (int i = 0; i < number; i++)
+            {
+                const char cc = 65 + (i % 26);
+                QString icao = QString("EXX%1").arg(QLatin1Char(cc));
+                BlackMisc::Aviation::CAirport a(icao);
+                a.setPosition(CCoordinateGeodetic(i, i, i));
+                list.push_back(a);
+            }
+            return list;
+        }
+
+        CClientList CTesting::getClients(int number)
+        {
+            BlackMisc::Network::CClientList list;
+            for (int i = 0; i < number; i++)
+            {
+                CCallsign cs(QString("DXX%1").arg(i));
+                QString rn = QString("Joe Doe%1").arg(i);
+                CUser user(QString::number(i), rn, cs);
+                user.setCallsign(cs);
+                CClient client(user);
+                client.setCapability(true, CClient::FsdWithInterimPositions);
+                client.setCapability(true, CClient::FsdWithIcaoCodes);
+                const QString myFooModel = QString("fooModel %1").arg(i);
+                client.setQueriedModelString(myFooModel);
+                list.push_back(client);
+            }
+            return list;
         }
     }  // namespace
 } // namespace

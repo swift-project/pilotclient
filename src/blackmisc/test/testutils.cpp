@@ -9,6 +9,7 @@
 
 #include "testutils.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
+#include "blackmisc/aviation/airport.h"
 #include <QString>
 #include <QStringBuilder>
 #include <QVariant>
@@ -20,7 +21,6 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
-using namespace BlackMisc::Simulation::FsCommon;
 
 namespace BlackMisc
 {
@@ -104,72 +104,6 @@ namespace BlackMisc
             out << "CSimulatedAircraftList" << " size: " << s.size() << " sig: " << s << endl;
             s = CTestUtils::dBusSignature(var);
             out << "CVariant" << " size: " << s.size() << " sig: " << s << endl;
-        }
-
-        CAtcStationList CTestUtils::getStations(int number)
-        {
-            BlackMisc::Aviation::CAtcStationList list;
-            for (int i = 0; i < number; i++)
-            {
-                BlackMisc::Aviation::CAtcStation s;
-                s.setCallsign(QString::number(i));
-                s.setFrequency(BlackMisc::PhysicalQuantities::CFrequency(i, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-                s.setController(CUser(QString::number(i), "FooBar", "", ""));
-                s.setOnline(i % 2 == 0 ? true : false);
-                s.setPosition(CCoordinateGeodetic(i, i, i));
-                list.push_back(s);
-            }
-            return list;
-        }
-
-        CAircraftCfgEntriesList CTestUtils::getAircraftCfgEntries(int number)
-        {
-            CAircraftCfgEntriesList list;
-            for (int i = 0; i < number; i++)
-            {
-                CAircraftCfgEntries e;
-                e.setAtcModel("atc model");
-                e.setAtcParkingCode(QString::number(i));
-                e.setIndex(i);
-                e.setFileName("this will be the file path and pretty long");
-                e.setTitle("I am the aircraft title foobar");
-                e.setAtcType("B737");
-                list.push_back(e);
-            }
-            return list;
-        }
-
-        CAirportList CTestUtils::getAirports(int number)
-        {
-            BlackMisc::Aviation::CAirportList list;
-            for (int i = 0; i < number; i++)
-            {
-                const char cc = 65 + (i % 26);
-                QString icao = QString("EXX%1").arg(QLatin1Char(cc));
-                BlackMisc::Aviation::CAirport a(icao);
-                a.setPosition(CCoordinateGeodetic(i, i, i));
-                list.push_back(a);
-            }
-            return list;
-        }
-
-        CClientList CTestUtils::getClients(int number)
-        {
-            BlackMisc::Network::CClientList list;
-            for (int i = 0; i < number; i++)
-            {
-                CCallsign cs(QString("DXX%1").arg(i));
-                QString rn = QString("Joe Doe%1").arg(i);
-                CUser user(QString::number(i), rn, cs);
-                user.setCallsign(cs);
-                CClient client(user);
-                client.setCapability(true, CClient::FsdWithInterimPositions);
-                client.setCapability(true, CClient::FsdWithIcaoCodes);
-                const QString myFooModel = QString("fooModel %1").arg(i);
-                client.setQueriedModelString(myFooModel);
-                list.push_back(client);
-            }
-            return list;
         }
     } // ns
 } // ns

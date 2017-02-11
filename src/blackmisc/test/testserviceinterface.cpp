@@ -10,6 +10,7 @@
 #include "testserviceinterface.h"
 #include "testservice.h"
 #include "testutils.h"
+#include "testing.h"
 #include "blackmisc/test/testdata.h"
 #include <QTextStream>
 
@@ -142,12 +143,12 @@ namespace BlackMisc
             ok = pingCompare(atcStationList, atcStationListPing, out, verbose, errors);
             if (verbose) { out << "Pinged ATC station list via interface" << errorInfo(ok) << endl; }
 
-            const CAirportList airportList = CTestUtils::getAirports(10);
+            const CAirportList airportList = CTesting::getAirports(10);
             const CAirportList airportListPing = testServiceInterface.pingAirportList(airportList);
             ok = pingCompare(airportList, airportListPing, out, verbose, errors);
             if (verbose) { out << "Pinged airports list via interface" << errorInfo(ok) << endl; }
 
-            const CClientList clients = CTestUtils::getClients(10);
+            const CClientList clients = CTesting::getClients(10);
             const CClient client = clients.front();
             const CClient clientPing = testServiceInterface.pingClient(client);
             ok = pingCompare(client, clientPing, out, verbose, errors);

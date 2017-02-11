@@ -12,8 +12,10 @@
 #ifndef BLACKMISC_TEST_TESTING_H
 #define BLACKMISC_TEST_TESTING_H
 
-#include "blackmisc/aviation/atcstation.h"
+#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/aviation/atcstationlist.h"
+#include "blackmisc/aviation/airportlist.h"
+#include "blackmisc/network/clientlist.h"
 #include "blackmisc/blackmiscexport.h"
 #include <QString>
 
@@ -36,7 +38,16 @@ namespace BlackMisc
             static void readStations(const BlackMisc::Aviation::CAtcStationList &stations, bool byPropertyIndex = false);
 
             //! Read properties of a station and concatenate them
-            static QString readStation(const BlackMisc::Aviation::CAtcStation &station, bool byPropertyIndex = false);
+            static QString accessStationData(const BlackMisc::Aviation::CAtcStation &station, bool byPropertyIndex = false);
+
+            //! Get aircraft cfg entries
+            static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
+
+            //! Get airports
+            static BlackMisc::Aviation::CAirportList getAirports(int number);
+
+            //! Get clients
+            static BlackMisc::Network::CClientList getClients(int number);
 
             //! Calculate n times distance (greater circle distance)
             static void calculateDistance(int n);

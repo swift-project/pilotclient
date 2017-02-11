@@ -13,11 +13,8 @@
 #define BLACKMISC_TEST_TESTUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "blackmisc/aviation/atcstationlist.h"
-#include "blackmisc/aviation/airportlist.h"
-#include "blackmisc/network/clientlist.h"
 #include <QDBusArgument>
+#include <QTextStream>
 
 namespace BlackMisc
 {
@@ -44,19 +41,6 @@ namespace BlackMisc
 
             //! Show some (important) DBus signatures
             static void showDBusSignatures(QTextStream &out);
-
-            // ----------------- some test data --------------------
-            //! Get ATC stations
-            static BlackMisc::Aviation::CAtcStationList getStations(int number);
-
-            //! Get aircraft cfg entries
-            static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
-
-            //! Get airports
-            static BlackMisc::Aviation::CAirportList getAirports(int number);
-
-            //! Get clients
-            static BlackMisc::Network::CClientList getClients(int number);
         };
     } // ns
 } // ns
