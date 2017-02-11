@@ -18,8 +18,7 @@
 #include "testnetwork.h"
 #include "testreaders.h"
 #include "testcontext.h"
-#include "testdbus.h"
-#include "blackmisc/test.h"
+#include "blackmisc/test/test.h"
 #include <QStringList>
 #include <QtTest>
 
@@ -27,12 +26,8 @@ namespace BlackCoreTest
 {
     int CBlackCoreTestMain::unitMain(int argc, char *argv[])
     {
-        BlackMisc::CTest test(argc, argv);
+        BlackMisc::Test::CTest test(argc, argv);
         int status = 0;
-        {
-            CTestDBus dbusTests;
-            status |= test.exec(&dbusTests, "blackcore_dbus");
-        }
         {
             CTestContext contextTests;
             status |= test.exec(&contextTests, "blackcore_context");

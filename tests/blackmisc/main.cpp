@@ -8,11 +8,8 @@
  */
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 #include "testblackmiscmain.h"
 #include "blackmisc/registermetadata.h"

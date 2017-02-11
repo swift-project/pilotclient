@@ -8,11 +8,8 @@
  */
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 #include "testaviation.h"
 #include "testblackmiscmain.h"
@@ -30,7 +27,8 @@
 #include "testvaluecache.h"
 #include "testvariantandmap.h"
 #include "testweather.h"
-#include "blackmisc/test.h"
+#include "testdbus.h"
+#include "blackmisc/test/test.h"
 
 #include <QStringList>
 #include <QTest>
@@ -42,7 +40,7 @@ namespace BlackMiscTest
      */
     int CBlackMiscTestMain::unitMain(int argc, char *argv[])
     {
-        BlackMisc::CTest test(argc, argv);
+        BlackMisc::Test::CTest test(argc, argv);
 
         int status = 0;
         {
@@ -104,6 +102,10 @@ namespace BlackMiscTest
         {
             CTestProcess processTests;
             status |= test.exec(&processTests, "blackmisc_process");
+        }
+        {
+            CTestDBus testDBus;
+            status |= test.exec(&testDBus, "blackmisc_dbus");
         }
         return status;
     }

@@ -16,16 +16,16 @@
 
 #include "testdbus.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackcore/test/testutils.h"
-#include "blackcore/test/testservice.h"
-#include "blackcore/test/testserviceinterface.h"
+#include "blackmisc/test/testutils.h"
+#include "blackmisc/test/testservice.h"
+#include "blackmisc/test/testserviceinterface.h"
 #include <QDBusConnection>
 #include <QTest>
 
 using namespace BlackMisc::Simulation;
-using namespace BlackCore::Test;
+using namespace BlackMisc::Test;
 
-namespace BlackCoreTest
+namespace BlackMiscTest
 {
     void CTestDBus::marshallUnmarshall()
     {
@@ -38,7 +38,7 @@ namespace BlackCoreTest
         CTestService *testService = CTestService::registerTestService(connection, false, QCoreApplication::instance());
         Q_UNUSED(testService);
         ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(), connection);
-        int errors = ITestServiceInterface::pingTests(testServiceInterface, false);
+        const int errors = ITestServiceInterface::pingTests(testServiceInterface, false);
         QVERIFY2(errors == 0, "DBus Ping tests fail");
     }
 

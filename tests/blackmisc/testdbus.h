@@ -15,9 +15,9 @@
 
 //! \cond PRIVATE_TESTS
 //! \file
-//! \ingroup testblackcore
+//! \ingroup testblackmisc
 
-namespace BlackCoreTest
+namespace BlackMiscTest
 {
     /*!
      * DBus implementation classes tests
