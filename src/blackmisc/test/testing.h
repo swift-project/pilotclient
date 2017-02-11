@@ -9,35 +9,34 @@
 
 //! \file
 
-#ifndef BLACKMISC_TESTING_H
-#define BLACKMISC_TESTING_H
+#ifndef BLACKMISC_TEST_TESTING_H
+#define BLACKMISC_TEST_TESTING_H
 
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/blackmiscexport.h"
-
 #include <QString>
 
 //! Generate data for testing purposes.
 namespace BlackMisc
 {
-    namespace Aviation
+    namespace Test
     {
         //! Generate data for testing aviation classes
         class BLACKMISC_EXPORT CTesting
         {
         public:
             //! Generate number of ATC stations
-            static CAtcStationList createAtcStations(int number, bool byPropertyIndex = false);
+            static BlackMisc::Aviation::CAtcStationList createAtcStations(int number, bool byPropertyIndex = false);
 
             //! Single station, annotated by index
-            static CAtcStation createStation(int index, bool byPropertyIndex = false);
+            static BlackMisc::Aviation::CAtcStation createStation(int index, bool byPropertyIndex = false);
 
             //! Generate number of ATC stations
-            static void readStations(const CAtcStationList &stations, bool byPropertyIndex = false);
+            static void readStations(const BlackMisc::Aviation::CAtcStationList &stations, bool byPropertyIndex = false);
 
             //! Read properties of a station and concatenate them
-            static QString readStation(const CAtcStation &station, bool byPropertyIndex = false);
+            static QString readStation(const BlackMisc::Aviation::CAtcStation &station, bool byPropertyIndex = false);
 
             //! Calculate n times distance (greater circle distance)
             static void calculateDistance(int n);
@@ -46,16 +45,11 @@ namespace BlackMisc
             static void copy10kStations(int times);
 
             //! Const 10000 stations
-            static const CAtcStationList &stations10k()
-            {
-                static const CAtcStationList s = createAtcStations(10000, false);
-                return s;
-            }
+            static const BlackMisc::Aviation::CAtcStationList &stations10k();
 
             //! parse coordinates from WGS
             static void parseWgs(int times);
         };
-
     } // ns
 } // ns
 

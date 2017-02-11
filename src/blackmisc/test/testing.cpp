@@ -17,8 +17,8 @@
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/sequence.h"
-#include "blackmisc/testing.h"
 #include "blackmisc/variant.h"
+#include "testing.h"
 
 #include <QDateTime>
 #include <QList>
@@ -34,7 +34,7 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
-    namespace Aviation
+    namespace Test
     {
         CAtcStationList CTesting::createAtcStations(int number, bool byPropertyIndex)
         {
@@ -161,8 +161,7 @@ namespace BlackMisc
                 " 8° 21′ 13″ N", "11° 47′ 09″ W",
                 "18° 21′ 13″ S", "11° 47′ 09″ E",
                 "09° 12′ 13″ S", "11° 47′ 09″ W"
-            }
-            );
+            });
 
             CCoordinateGeodetic c;
             const CAltitude a(333, CLengthUnit::m());
@@ -172,5 +171,11 @@ namespace BlackMisc
                 c = CCoordinateGeodetic::fromWgs84(wgsLatLng.at(idx), wgsLatLng.at(idx + 1), a);
             }
         }
-    } // namespace
+
+        const CAtcStationList &CTesting::stations10k()
+        {
+            static const CAtcStationList s = createAtcStations(10000, false);
+            return s;
+        }
+    }  // namespace
 } // namespace
