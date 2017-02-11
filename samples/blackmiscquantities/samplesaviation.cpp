@@ -100,6 +100,17 @@ namespace BlackSample
         out << frankfurt << endl;
         out << "-----------------------------------------------" << endl;
 
+        CMetaMemberComparator cmp;
+        QList<QPair<QString, bool>> list = cmp(station1, station3);
+        for (const auto &member : list) { out << member.first << (member.second ? " equal" : " NOT equal") << endl; }
+        out << endl;
+        list = cmp(station1, station3, { "controller" });
+        for (const auto &member : list) { out << member.first << (member.second ? " equal" : " NOT equal") << endl; }
+        out << endl;
+        list = cmp(station1, station3, { "controller", "homebase" });
+        for (const auto &member : list) { out << member.first << (member.second ? " equal" : " NOT equal") << endl; }
+        out << "-----------------------------------------------" << endl;
+
         return 0;
     }
 } // namespace

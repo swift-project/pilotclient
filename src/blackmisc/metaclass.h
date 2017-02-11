@@ -263,6 +263,12 @@ namespace BlackMisc
             {
                 return getIntrospector<T>(Private::make_index_sequence<T::MetaClass::getMemberList().c_size>());
             }
+
+            template <typename T>
+            static std::true_type hasMetaClass(int, typename T::MetaClass * = nullptr) { return {}; }
+
+            template <typename T>
+            static std::false_type hasMetaClass(...) { return {}; }
         };
     }
 
@@ -276,6 +282,13 @@ namespace BlackMisc
     {
         return Private::CMetaClassAccessor::getIntrospector<T>();
     }
+
+    /*!
+     * Trait that is true if T has a metaclass.
+     * \ingroup MetaClass
+     */
+    template <typename T>
+    struct THasMetaClass : public decltype(Private::CMetaClassAccessor::hasMetaClass<T>(0)) {};
 
 } // namespace
 
