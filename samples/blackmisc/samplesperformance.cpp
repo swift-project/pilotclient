@@ -25,8 +25,8 @@
 #include "blackmisc/geo/coordinategeodetic.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/test/testing.h"
 #include "blackmisc/stringutils.h"
-#include "blackmisc/testing.h"
 
 #include <QDateTime>
 #include <QHash>
@@ -49,6 +49,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Test;
 using namespace BlackConfig;
 using namespace BlackCore::Db;
 
@@ -58,27 +59,27 @@ namespace BlackSample
     {
         QTime timer;
         int ms, number;
-        BlackMisc::Aviation::CTesting::copy10kStations(1); // init
+        CTesting::copy10kStations(1); // init
 
         // ATC stations, tradionally created
         timer.start();
-        CAtcStationList atcs1 = BlackMisc::Aviation::CTesting::createAtcStations(10000);
+        CAtcStationList atcs1 = CTesting::createAtcStations(10000);
         ms = timer.elapsed();
         out << "created (copy) " << atcs1.size() << " ATC stations in " << ms << "ms" << endl;
 
         timer.start();
-        CAtcStationList atcs2 = BlackMisc::Aviation::CTesting::createAtcStations(100000);
+        CAtcStationList atcs2 = CTesting::createAtcStations(100000);
         ms = timer.elapsed();
         out << "created (copy) " << atcs2.size() << " ATC stations in " << ms << "ms" << endl;
 
         // ATC stations, property index created
         timer.start();
-        CAtcStationList atcs3 = BlackMisc::Aviation::CTesting::createAtcStations(10000, true);
+        CAtcStationList atcs3 = CTesting::createAtcStations(10000, true);
         ms = timer.elapsed();
         out << "created (propertyIndex) " << atcs3.size() << " ATC stations in " << ms << "ms" << endl;
 
         timer.start();
-        CAtcStationList atcs4 = BlackMisc::Aviation::CTesting::createAtcStations(100000, true);
+        CAtcStationList atcs4 = CTesting::createAtcStations(100000, true);
         ms = timer.elapsed();
         out << "created (propertyIndex) " << atcs4.size() << " ATC stations in " << ms << "ms" << endl;
 
@@ -95,55 +96,55 @@ namespace BlackSample
 
         // Read data, this is what all our models do when displaying in a table view
         timer.start();
-        BlackMisc::Aviation::CTesting::readStations(atcs1, false);
+        CTesting::readStations(atcs1, false);
         ms = timer.elapsed();
         out << "Read (getters) " << atcs1.size() << " ATC stations in " << ms << "ms" << endl;
 
         timer.start();
-        BlackMisc::Aviation::CTesting::readStations(atcs2, false);
+        CTesting::readStations(atcs2, false);
         ms = timer.elapsed();
         out << "Read (getters) " << atcs2.size() << " ATC stations in " << ms << "ms"  << endl;
 
         timer.start();
-        BlackMisc::Aviation::CTesting::readStations(atcs1, true);
+        CTesting::readStations(atcs1, true);
         ms = timer.elapsed();
         out << "Read (propertyIndex) " << atcs1.size() << " ATC stations in " << ms << "ms" << endl;
 
         timer.start();
-        BlackMisc::Aviation::CTesting::readStations(atcs2, true);
+        CTesting::readStations(atcs2, true);
         ms = timer.elapsed();
         out << "Read (propertyIndex) " << atcs2.size() << " ATC stations in " << ms << "ms" << endl;
 
         // calculate
         number = 10000;
         timer.start();
-        BlackMisc::Aviation::CTesting::calculateDistance(number);
+        CTesting::calculateDistance(number);
         ms = timer.elapsed();
         out << "Calculated distances " << number << " in " << ms << "ms" << endl;
 
         number = 100000;
         timer.start();
-        BlackMisc::Aviation::CTesting::calculateDistance(number);
+        CTesting::calculateDistance(number);
         ms = timer.elapsed();
         out << "Calculated distances " << number << "in " << ms << "ms" << endl;
 
         // parse
         number = 100000;
         timer.start();
-        BlackMisc::Aviation::CTesting::parseWgs(number);
+        CTesting::parseWgs(number);
         ms = timer.elapsed();
         out << "Parse WGS coordinates " << number << " in " << ms << "ms" << endl;
 
         // copy
         timer.start();
         number = 20;
-        BlackMisc::Aviation::CTesting::copy10kStations(number);
+        CTesting::copy10kStations(number);
         ms = timer.elapsed();
         out << "Copied 10k stations " << number << " times in " << ms << "ms" << endl;
 
         timer.start();
         number = 100;
-        BlackMisc::Aviation::CTesting::copy10kStations(number);
+        CTesting::copy10kStations(number);
         ms = timer.elapsed();
         out << "Copied 10k stations " << number << " times in " << ms << "ms" << endl;
 

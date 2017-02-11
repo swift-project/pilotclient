@@ -13,7 +13,7 @@
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackcore/test/testutils.h"
+#include "blackmisc/test/testutils.h"
 #include "servicetool.h"
 #include <stdio.h>
 #include <QCoreApplication>
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
         if (mode.startsWith("2"))
         {
             out << "---------------------------------" << endl;
-            BlackCore::Test::CTestUtils::showDBusSignatures(out);
+            BlackMisc::Test::CTestUtils::showDBusSignatures(out);
             out << "---------------------------------" << endl;
             goto Menu;
         }

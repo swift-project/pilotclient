@@ -12,9 +12,9 @@
 
 #include "servicetool.h"
 #include "blackcore/application.h"
-#include "blackcore/test/testservice.h"
-#include "blackcore/test/testserviceinterface.h"
-#include "blackcore/test/testutils.h"
+#include "blackmisc/test/testservice.h"
+#include "blackmisc/test/testserviceinterface.h"
+#include "blackmisc/test/testutils.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/network/server.h"
 
@@ -51,8 +51,8 @@ using namespace BlackMisc::Math;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Test;
 using namespace BlackCore;
-using namespace BlackCore::Test;
 
 namespace BlackSample
 {

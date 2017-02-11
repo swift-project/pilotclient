@@ -26,6 +26,7 @@
 #include "blackmisc/network/user.h"
 #include "blackmisc/network/voicecapabilities.h"
 #include "blackmisc/pq/units.h"
+#include "blackmisc/test/testing.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/json.h"
@@ -35,7 +36,6 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/testing.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/variant.h"
 #include "blackmisc/verify.h"
@@ -54,8 +54,9 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Test;
 using namespace BlackMisc::Json;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
@@ -481,7 +482,7 @@ namespace BlackCore
     {
         if (number < 1) { return; }
         this->m_atcStationsOnline.push_back(
-            BlackMisc::Aviation::CTesting::createAtcStations(number)
+            CTesting::createAtcStations(number)
         );
         emit this->changedAtcStationsOnline();
     }
