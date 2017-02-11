@@ -9,7 +9,6 @@
 
 #include "testserviceinterface.h"
 #include "testservice.h"
-#include "testutils.h"
 #include "testing.h"
 #include "blackmisc/test/testdata.h"
 #include <QTextStream>

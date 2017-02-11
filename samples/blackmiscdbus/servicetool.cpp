@@ -14,7 +14,6 @@
 #include "blackcore/application.h"
 #include "blackmisc/test/testservice.h"
 #include "blackmisc/test/testserviceinterface.h"
-#include "blackmisc/test/testutils.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/network/server.h"
 

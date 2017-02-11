@@ -16,12 +16,13 @@
 
 #include "testdbus.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
-#include "blackmisc/test/testutils.h"
 #include "blackmisc/test/testservice.h"
 #include "blackmisc/test/testserviceinterface.h"
+#include "blackmisc/dbusutils.h"
 #include <QDBusConnection>
 #include <QTest>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Test;
 
@@ -49,15 +50,15 @@ namespace BlackMiscTest
 
         // normally CSimulatedAircraftList is expected to be the biggest one
         const CAircraftModel model;
-        s = CTestUtils::dBusSignature(model);
+        s = CDBusUtils::dBusSignature(model);
         QVERIFY2(s.length() <= max, "Signature CAircraftModel");
 
         const CSimulatedAircraft aircraft;
-        s = CTestUtils::dBusSignature(aircraft);
+        s = CDBusUtils::dBusSignature(aircraft);
         QVERIFY2(s.length() <= max, "Signature CSimulatedAircraft");
 
         const CSimulatedAircraftList al;
-        s = CTestUtils::dBusSignature(al);
+        s = CDBusUtils::dBusSignature(al);
         QVERIFY2(s.length() <= max, "Signature CSimulatedAircraftList");
     }
 }
