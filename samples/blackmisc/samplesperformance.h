@@ -47,15 +47,32 @@ namespace BlackSample
         //! String manipulation (concatenation)
         static int samplesStringConcat(QTextStream &out);
 
+    private:
+        static const qint64 DeltaTime = 10;
+
         //! Situation values for testing
         static BlackMisc::Aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes);
 
         //! Model values for testing
         static BlackMisc::Simulation::CAircraftModelList createModels(int numberOfModels, int numberOfMemoParts);
 
-    private:
-        static const qint64 DeltaTime = 10;
+        //! Calculate n times distance (greater circle distance)
+        static void calculateDistance(int n);
 
+        //! Copy 10k stations n times
+        static void copy10kStations(int times);
+
+        //! Const 10000 stations
+        static const BlackMisc::Aviation::CAtcStationList &stations10k();
+
+        //! Access properties of given stations
+        static void accessStationsData(const BlackMisc::Aviation::CAtcStationList &stations, bool byPropertyIndex = false);
+
+        //! Read properties of a station and concatenate them
+        static QString accessStationData(const BlackMisc::Aviation::CAtcStation &station, bool byPropertyIndex = false);
+
+        //! parse coordinates from WGS
+        static void parseWgs(int times);
     };
 } // namespace
 

@@ -47,6 +47,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Test;
@@ -59,7 +60,7 @@ namespace BlackSample
     {
         QTime timer;
         int ms, number;
-        CTesting::copy10kStations(1); // init
+        CSamplesPerformance::copy10kStations(1); // init
 
         // ATC stations, tradionally created
         timer.start();
@@ -96,55 +97,55 @@ namespace BlackSample
 
         // Read data, this is what all our models do when displaying in a table view
         timer.start();
-        CTesting::readStations(atcs1, false);
+        CSamplesPerformance::accessStationsData(atcs1, false);
         ms = timer.elapsed();
         out << "Read (getters) " << atcs1.size() << " ATC stations in " << ms << "ms" << endl;
 
         timer.start();
-        CTesting::readStations(atcs2, false);
+        CSamplesPerformance::accessStationsData(atcs2, false);
         ms = timer.elapsed();
         out << "Read (getters) " << atcs2.size() << " ATC stations in " << ms << "ms"  << endl;
 
         timer.start();
-        CTesting::readStations(atcs1, true);
+        CSamplesPerformance::accessStationsData(atcs1, true);
         ms = timer.elapsed();
         out << "Read (propertyIndex) " << atcs1.size() << " ATC stations in " << ms << "ms" << endl;
 
         timer.start();
-        CTesting::readStations(atcs2, true);
+        CSamplesPerformance::accessStationsData(atcs2, true);
         ms = timer.elapsed();
         out << "Read (propertyIndex) " << atcs2.size() << " ATC stations in " << ms << "ms" << endl;
 
         // calculate
         number = 10000;
         timer.start();
-        CTesting::calculateDistance(number);
+        CSamplesPerformance::calculateDistance(number);
         ms = timer.elapsed();
         out << "Calculated distances " << number << " in " << ms << "ms" << endl;
 
         number = 100000;
         timer.start();
-        CTesting::calculateDistance(number);
+        CSamplesPerformance::calculateDistance(number);
         ms = timer.elapsed();
         out << "Calculated distances " << number << "in " << ms << "ms" << endl;
 
         // parse
         number = 100000;
         timer.start();
-        CTesting::parseWgs(number);
+        CSamplesPerformance::parseWgs(number);
         ms = timer.elapsed();
         out << "Parse WGS coordinates " << number << " in " << ms << "ms" << endl;
 
         // copy
         timer.start();
         number = 20;
-        CTesting::copy10kStations(number);
+        CSamplesPerformance::copy10kStations(number);
         ms = timer.elapsed();
         out << "Copied 10k stations " << number << " times in " << ms << "ms" << endl;
 
         timer.start();
         number = 100;
-        CTesting::copy10kStations(number);
+        CSamplesPerformance::copy10kStations(number);
         ms = timer.elapsed();
         out << "Copied 10k stations " << number << " times in " << ms << "ms" << endl;
 
@@ -607,5 +608,99 @@ namespace BlackSample
             models.back().setDistributor(distributor);
         }
         return models;
+    }
+
+    void CSamplesPerformance::calculateDistance(int n)
+    {
+        if (n < 1) return;
+        CAtcStation atc = CTesting::createStation(1);
+        QList<CCoordinateGeodetic> pos(
+        {
+            CCoordinateGeodetic(10.0, 10.0, 10.0),
+            CCoordinateGeodetic(20.0, 20.0, 20.0),
+            CCoordinateGeodetic(30.0, 30.0, 30.0),
+            CCoordinateGeodetic(40.0, 40.0, 40.0),
+            CCoordinateGeodetic(50.0, 50.0, 50.0),
+            CCoordinateGeodetic(60.0, 60.0, 60.0),
+            CCoordinateGeodetic(70.0, 70.0, 70.0)
+        }
+        );
+        const int s = pos.size();
+        for (int i = 0; i < n; i++)
+        {
+            int p = i % s;
+            atc.calculcateAndUpdateRelativeDistance(pos.at(p));
+        }
+    }
+
+    void CSamplesPerformance::copy10kStations(int times)
+    {
+        CAtcStationList stations;
+        for (int i = 0; i < times; i++)
+        {
+            stations = stations10k();
+            stations.pop_back(); // make sure stations are really copied (copy-on-write)
+        }
+    }
+
+    void CSamplesPerformance::parseWgs(int times)
+    {
+        static QStringList wgsLatLng(
+        {
+            "12° 11′ 10″ N", "11° 22′ 33″ W",
+            "48° 21′ 13″ N", "11° 47′ 09″ E",
+            " 8° 21′ 13″ N", "11° 47′ 09″ W",
+            "18° 21′ 13″ S", "11° 47′ 09″ E",
+            "09° 12′ 13″ S", "11° 47′ 09″ W"
+        });
+
+        CCoordinateGeodetic c;
+        const CAltitude a(333, CLengthUnit::m());
+        for (int i = 0; i < times; i++)
+        {
+            int idx = (i % 5) * 2;
+            c = CCoordinateGeodetic::fromWgs84(wgsLatLng.at(idx), wgsLatLng.at(idx + 1), a);
+        }
+    }
+
+    const CAtcStationList &CSamplesPerformance::stations10k()
+    {
+        static const CAtcStationList s = CTesting::createAtcStations(10000, false);
+        return s;
+    }
+
+    void CSamplesPerformance::accessStationsData(const CAtcStationList &stations, bool byPropertyIndex)
+    {
+        for (const CAtcStation &station : stations)
+        {
+            const QString s = CSamplesPerformance::accessStationData(station, byPropertyIndex);
+            Q_UNUSED(s);
+        }
+    }
+
+    QString CSamplesPerformance::accessStationData(const CAtcStation &station, bool byPropertyIndex)
+    {
+        QString r;
+        if (byPropertyIndex)
+        {
+            r.append(station.propertyByIndex({ CAtcStation::IndexCallsign, CCallsign::IndexString}).toQString());
+            r.append(station.propertyByIndex({ CAtcStation::IndexController, CUser::IndexRealName}).toQString());
+            r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toQString());
+            r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toQString());
+            r.append(station.propertyByIndex({ CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
+            r.append(station.propertyByIndex({ CAtcStation::IndexBookedFrom}).toDateTime().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.propertyByIndex({ CAtcStation::IndexBookedUntil}).toDateTime().toString("yyyy-MM-dd hh:mm"));
+        }
+        else
+        {
+            r.append(station.getCallsignAsString());
+            r.append(station.getController().getRealName());
+            r.append(station.getPosition().latitudeAsString());
+            r.append(station.getPosition().longitudeAsString());
+            r.append(station.getRelativeDistance().toQString(true));
+            r.append(station.getBookedFromUtc().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.getBookedUntilUtc().toString("yyyy-MM-dd hh:mm"));
+        }
+        return r;
     }
 } // namespace

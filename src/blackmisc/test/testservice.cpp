@@ -8,8 +8,8 @@
  */
 
 #include "testservice.h"
-#include "testutils.h"
 #include "testing.h"
+#include "blackmisc/dbusutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/track.h"

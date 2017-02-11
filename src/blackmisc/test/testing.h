@@ -34,12 +34,6 @@ namespace BlackMisc
             //! Single station, annotated by index
             static BlackMisc::Aviation::CAtcStation createStation(int index, bool byPropertyIndex = false);
 
-            //! Generate number of ATC stations
-            static void readStations(const BlackMisc::Aviation::CAtcStationList &stations, bool byPropertyIndex = false);
-
-            //! Read properties of a station and concatenate them
-            static QString accessStationData(const BlackMisc::Aviation::CAtcStation &station, bool byPropertyIndex = false);
-
             //! Get aircraft cfg entries
             static BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
 
@@ -48,18 +42,6 @@ namespace BlackMisc
 
             //! Get clients
             static BlackMisc::Network::CClientList getClients(int number);
-
-            //! Calculate n times distance (greater circle distance)
-            static void calculateDistance(int n);
-
-            //! Copy 10k stations n times
-            static void copy10kStations(int times);
-
-            //! Const 10000 stations
-            static const BlackMisc::Aviation::CAtcStationList &stations10k();
-
-            //! parse coordinates from WGS
-            static void parseWgs(int times);
         };
     } // ns
 } // ns
