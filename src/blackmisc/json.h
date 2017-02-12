@@ -396,6 +396,24 @@ namespace BlackMisc
                 convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
             }
 
+            //! Get object from QJsonObject
+            template<class DerivedObj = Derived>
+            static DerivedObj fromJson(const QJsonObject &json)
+            {
+                DerivedObj obj;
+                obj.convertFromJson(json);
+                return obj;
+            }
+
+            //! Get object from JSON string
+            template<class DerivedObj = Derived>
+            static DerivedObj fromJson(const QString &jsonString)
+            {
+                DerivedObj obj;
+                obj.convertFromJson(BlackMisc::Json::jsonObjectFromString(jsonString));
+                return obj;
+            }
+
         private:
             const Derived *derived() const { return static_cast<const Derived *>(this); }
             Derived *derived() { return static_cast<Derived *>(this); }
