@@ -29,9 +29,6 @@ using namespace BlackMisc::Math;
 
 namespace BlackMiscTest
 {
-    /*
-     * Geo classes tests
-     */
     void CTestGeo::geoBasics()
     {
         CLatitude lati(10, CAngleUnit::deg());
@@ -48,7 +45,6 @@ namespace BlackMiscTest
         CCoordinateGeodetic equator = { 0.0, 70.354683 };
         QCOMPARE(calculateEuclideanDistance(northPole, equator), std::sqrt(2.0f));
     }
-
 } // namespace
 
 //! \endcond

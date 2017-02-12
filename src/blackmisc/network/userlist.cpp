@@ -17,11 +17,9 @@ namespace BlackMisc
 {
     namespace Network
     {
-
         CUserList::CUserList() { }
 
         CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other)
         { }
-
     } // namespace
 } // namespace

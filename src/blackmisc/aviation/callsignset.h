@@ -41,7 +41,6 @@ namespace BlackMisc
 
             //! Register metadata
             static void registerMetadata();
-
         };
     } //namespace
 } // namespace

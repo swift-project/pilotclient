@@ -21,7 +21,6 @@
 
 namespace BlackMiscTest
 {
-
     //! Geo classes tests
     class CTestGeo : public QObject
     {
@@ -38,7 +37,6 @@ namespace BlackMiscTest
         //! CCoordinateGeodetic unit tests
         void coordinateGeodetic();
     };
-
 } // namespace
 
 //! \endcond

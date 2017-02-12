@@ -49,20 +49,12 @@ namespace BlackMisc
             static constexpr int MaxRouteLength = 150; //!< Max route length
 
             //! Default constructor
-            CFlightPlan() = default;
+            CFlightPlan();
 
             //! Constructor
             CFlightPlan(const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
                         QDateTime takeoffTimePlanned, QDateTime takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
-                        const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks)
-                : m_equipmentIcao(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
-                  m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
-                  m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules),
-                  m_route(route.trimmed().left(MaxRouteLength).toUpper()), m_remarks(remarks.trimmed().left(MaxRemarksLength).toUpper())
-            {
-                m_enrouteTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
-                m_fuelTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
-            }
+                        const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks);
 
             //! Set ICAO aircraft equipment code string (e.g. "T/A320/F")
             void setEquipmentIcao(const QString &equipmentIcao) { m_equipmentIcao = equipmentIcao; }
@@ -178,7 +170,7 @@ namespace BlackMisc
             //! Flight plan already sent
             bool wasSentOrLoaded() const { return m_lastSentOrLoaded.isValid() && !m_lastSentOrLoaded.isNull(); }
 
-            //! \brief Received before n ms
+            //! Received before n ms
             qint64 timeDiffSentOrLoadedMs() const
             {
                 return this->m_lastSentOrLoaded.msecsTo(QDateTime::currentDateTimeUtc());
@@ -193,8 +185,11 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;
 
+            //! Rules to string
+            static const QString flightruleToString(FlightRules rule);
+
         private:
-            QString m_equipmentIcao;
+            QString m_equipmentIcao; //!< e.g. "T/A320/F"
             CAirportIcaoCode m_originAirportIcao;
             CAirportIcaoCode m_destinationAirportIcao;
             CAirportIcaoCode m_alternateAirportIcao;

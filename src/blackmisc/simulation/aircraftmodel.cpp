@@ -693,10 +693,10 @@ namespace BlackMisc
 
         CAircraftModel CAircraftModel::fromDatabaseJson(const QJsonObject &json, const QString prefix)
         {
-            QString modelString(json.value(prefix + "modelstring").toString());
-            QString modelDescription(json.value(prefix + "description").toString());
-            QString modelName(json.value(prefix + "name").toString());
-            QString modelMode(json.value(prefix + "mode").toString());
+            const QString modelString(json.value(prefix + "modelstring").toString());
+            const QString modelDescription(json.value(prefix + "description").toString());
+            const QString modelName(json.value(prefix + "name").toString());
+            const QString modelMode(json.value(prefix + "mode").toString());
 
             const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
             const CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, "ac_"));

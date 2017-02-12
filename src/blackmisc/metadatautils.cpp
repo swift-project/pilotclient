@@ -30,7 +30,7 @@ namespace BlackMisc
             {
                 fails++;
                 // normally a consecutive order of metatypes, we allow a space before we break
-                if (fails > 3) { return meta; }
+                if (fails > 3) { break; }
                 continue;
             }
             QMetaType metaType(mt);

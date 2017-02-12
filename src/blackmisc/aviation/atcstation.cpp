@@ -185,8 +185,8 @@ namespace BlackMisc
                     {
                         // we already have some booking dates, we will verify those now
                         // and will set the most appropriate booking dates
-                        CTime timeDiffBooking(bookedStation.bookedWhen());
-                        CTime timeDiffOnline(this->bookedWhen()); // diff to now
+                        const CTime timeDiffBooking(bookedStation.bookedWhen());
+                        const CTime timeDiffOnline(this->bookedWhen()); // diff to now
                         if (timeDiffBooking.isNegativeWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
                         {
                             // both in past

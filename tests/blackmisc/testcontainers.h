@@ -11,17 +11,13 @@
 #define BLACKMISCTEST_TESTCONTAINERS_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 #include <QObject>
 
 namespace BlackMiscTest
 {
-
     //! Testing containers
     class CTestContainers : public QObject
     {
@@ -39,7 +35,6 @@ namespace BlackMiscTest
         void dictionaryBasics();
         void timestampList();
     };
-
 } // namespace
 
 //! \endcond

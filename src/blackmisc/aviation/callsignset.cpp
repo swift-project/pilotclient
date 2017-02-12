@@ -20,7 +20,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         CCallsignSet::CCallsignSet() { }
 
         CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) :
@@ -37,6 +36,5 @@ namespace BlackMisc
             qDBusRegisterMetaType<CCallsignSet>();
             registerMetaValueType<CCallsignSet>();
         }
-
     } // namespace
 } // namespace

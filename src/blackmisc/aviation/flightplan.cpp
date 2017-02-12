@@ -10,34 +10,50 @@
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/iconlist.h"
 #include "blackmisc/icons.h"
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
     namespace Aviation
     {
+        CFlightPlan::CFlightPlan() { }
+
+        CFlightPlan::CFlightPlan(const QString &equipmentIcao, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao, QDateTime takeoffTimePlanned, QDateTime takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime, const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, CFlightPlan::FlightRules flightRules, const QString &route, const QString &remarks)
+            : m_equipmentIcao(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
+              m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
+              m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules),
+              m_route(route.trimmed().left(MaxRouteLength).toUpper()), m_remarks(remarks.trimmed().left(MaxRemarksLength).toUpper())
+        {
+            m_enrouteTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
+            m_fuelTime.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());
+        }
+
         QString CFlightPlan::convertToQString(bool i18n) const
         {
-            QString s;
-            s.append(m_equipmentIcao);
-            s.append(" ").append(m_originAirportIcao.toQString(i18n));
-            s.append(" ").append(m_destinationAirportIcao.toQString(i18n));
-            s.append(" ").append(m_alternateAirportIcao.toQString(i18n));
-            s.append(" ").append(m_takeoffTimePlanned.toString("ddhhmm"));
-            s.append(" ").append(m_takeoffTimeActual.toString("ddhhmm"));
-            s.append(" ").append(m_enrouteTime.toQString(i18n));
-            s.append(" ").append(m_fuelTime.toQString(i18n));
-            s.append(" ").append(m_cruiseAltitude.toQString(i18n));
-            s.append(" ").append(m_cruiseTrueAirspeed.toQString(i18n));
-            switch (m_flightRules)
-            {
-            case VFR:   s.append(" VFR"); break;
-            case IFR:   s.append(" IFR"); break;
-            case SVFR:  s.append(" SVFR"); break;
-            default:    s.append(" ???"); break;
-            }
-            s.append(" ").append(m_route);
-            s.append(" / ").append(m_remarks);
+            const QString s = m_equipmentIcao
+                              % QLatin1Char(' ') % m_originAirportIcao.toQString(i18n)
+                              % QLatin1Char(' ') % m_destinationAirportIcao.toQString(i18n)
+                              % QLatin1Char(' ') % m_alternateAirportIcao.toQString(i18n)
+                              % QLatin1Char(' ') % m_takeoffTimePlanned.toString("ddhhmm")
+                              % QLatin1Char(' ') % m_takeoffTimeActual.toString("ddhhmm")
+                              % QLatin1Char(' ') % m_enrouteTime.toQString(i18n)
+                              % QLatin1Char(' ') % m_fuelTime.toQString(i18n)
+                              % QLatin1Char(' ') % m_cruiseAltitude.toQString(i18n)
+                              % QLatin1Char(' ') % m_cruiseTrueAirspeed.toQString(i18n)
+                              % QLatin1Char(' ') % m_route
+                              % QLatin1Char(' ') % m_remarks;
             return s;
+        }
+
+        const QString CFlightPlan::flightruleToString(CFlightPlan::FlightRules rule)
+        {
+            switch (rule)
+            {
+            case VFR:   return QLatin1Literal("VFR");
+            case IFR:   return QLatin1Literal("IFR");
+            case SVFR:  return QLatin1Literal("SVFR");
+            default:    return QLatin1Literal("???");
+            }
         }
 
         BlackMisc::CIcon CFlightPlan::toIcon() const
