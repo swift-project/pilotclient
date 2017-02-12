@@ -11,11 +11,9 @@
 
 namespace BlackMisc
 {
-    /*
-     * Construct from base class object
-     */
-    CVariantList::CVariantList(const CSequence &other) :
-        CSequence(other)
+    CVariantList::CVariantList(const CSequence &other) : CSequence(other)
     {}
 
-} // namespace
+    CVariantList::CVariantList(std::initializer_list<CVariant> il) : CSequence(il)
+    {}
+} // ns

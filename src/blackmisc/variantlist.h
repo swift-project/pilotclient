@@ -16,12 +16,10 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/variant.h"
-
 #include <QMetaType>
 
 namespace BlackMisc
 {
-
     //! Value object encapsulating a list of variants.
     class BLACKMISC_EXPORT CVariantList :
         public CSequence<CVariant>,
@@ -31,11 +29,13 @@ namespace BlackMisc
         BLACKMISC_DECLARE_USING_MIXIN_METATYPE(CVariantList)
 
         //! Default constructor.
-        CVariantList() = default;
+        CVariantList() {}
 
         //! Construct from a base class object.
         CVariantList(const CSequence &other);
 
+        //! Initializer list constructor.
+        CVariantList(std::initializer_list<CVariant> il);
     };
 }
 
