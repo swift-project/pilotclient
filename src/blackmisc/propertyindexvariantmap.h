@@ -169,6 +169,9 @@ namespace BlackMisc
         //! clear
         void clear() { this->m_values.clear(); }
 
+        //! Number of elements
+        int size() const;
+
         //! Equal operator, required if maps are directly compared, not with CValueObject
         BLACKMISC_EXPORT friend bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 

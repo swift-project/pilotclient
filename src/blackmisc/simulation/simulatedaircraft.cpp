@@ -44,6 +44,13 @@ namespace BlackMisc
             init();
         }
 
+        CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CAircraftModel &model, const CUser &user, const CAircraftSituation &situation) :
+            m_callsign(callsign), m_pilot(user), m_situation(situation)
+        {
+            this->setModel(model);
+            init();
+        }
+
         void CSimulatedAircraft::init()
         {
             Q_ASSERT_X(m_models.size() == 2, Q_FUNC_INFO, "Wrong model size");

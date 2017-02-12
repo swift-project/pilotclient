@@ -53,7 +53,7 @@ namespace BlackMisc
     {
         if (this->isEmpty()) return QString("{wildcard: %1}").arg(this->m_wildcard ? "true" : "false");
         QString s;
-        foreach(CPropertyIndex index, this->m_values.keys())
+        foreach (CPropertyIndex index, this->m_values.keys())
         {
             CVariant v = this->m_values.value(index);
 
@@ -118,6 +118,11 @@ namespace BlackMisc
     CPropertyIndexList CPropertyIndexVariantMap::indexes() const
     {
         return CPropertyIndexList::fromImpl(this->m_values.keys());
+    }
+
+    int CPropertyIndexVariantMap::size() const
+    {
+        return this->m_values.size();
     }
 
     uint CPropertyIndexVariantMap::getValueHash() const

@@ -100,6 +100,9 @@ namespace BlackMisc
             //! Constructor.
             CSimulatedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Network::CUser &user, const BlackMisc::Aviation::CAircraftSituation &situation);
 
+            //! Constructor.
+            CSimulatedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Simulation::CAircraftModel &model, const BlackMisc::Network::CUser &user, const BlackMisc::Aviation::CAircraftSituation &situation);
+
             //! Get callsign.
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
