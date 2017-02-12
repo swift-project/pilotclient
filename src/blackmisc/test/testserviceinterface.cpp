@@ -45,10 +45,7 @@ namespace BlackMisc
             ok = pingCompare(pi, piPing, out, verbose, errors);
             if (verbose) { out << "Pinged property index via interface" << errorInfo(ok) << endl; }
 
-            CPropertyIndexVariantMap ivm;
-            ivm.addValue(1000, "one");
-            ivm.addValue(2000, "two");
-            ivm.addValue(3000, "three");
+            const CPropertyIndexVariantMap ivm = CTestData::getCPropertyIndexVariantMap();
             const CPropertyIndexVariantMap ivmPing = testServiceInterface.pingIndexVariantMap(ivm);
             ok = pingCompare(ivm, ivmPing, out, verbose, errors);
             if (verbose) { out << "Pinged variant map via interface" << errorInfo(ok) << endl; }
@@ -69,24 +66,22 @@ namespace BlackMisc
             ok = pingCompare(speedNull, speedNullPing, out, verbose, errors);
             if (verbose) { out << "Pinged null speed via interface" << errorInfo(ok) << endl; }
 
-            const CAtcStation station = CTestData::getAtcStation();
+            const CAtcStation station = CTestData::getRandomAtcStation();
             const CAtcStation stationPing = testServiceInterface.pingAtcStation(station);
             ok = pingCompare(station, stationPing, out, verbose, errors);
             if (verbose) { out << "Pinged ATC station via interface" << errorInfo(ok) << endl; }
 
-            const CAircraftIcaoCode icaoData("B737", "L2J");
+            const CAircraftIcaoCode icaoData = CTestData::getDBAircraftIcaoB737();
             const CAircraftIcaoCode icaoDataPing = testServiceInterface.pingAircraftIcaoData(icaoData);
             ok = pingCompare(icaoData, icaoDataPing, out, verbose, errors);
             if (verbose) { out << "Pinged ICAO data via interface" << errorInfo(ok) << endl; }
 
-            const CUser user("223344", "Ping Me User");
+            const CUser user = CTestData::getRandomPilot();
             const CUser userPing = testServiceInterface.pingUser(user);
             ok = pingCompare(user, userPing, out, verbose, errors);
             if (verbose) { out << "Pinged user via interface" << errorInfo(ok) << endl; }
 
-            // EDDF: 50° 2′ 0″ N, 8° 34′ 14″ E, 2000m MSL
-            const CCoordinateGeodetic coordinate = CCoordinateGeodetic::fromWgs84("50° 2′ 1″ 23 N", "8° 34′ 14″ E", { 2000, CLengthUnit::m() });
-            const CAircraftSituation situation = CAircraftSituation("DAMBZ", coordinate);
+            const CAircraftSituation situation = CTestData::getAircraftSituationAboveMunichTower();
             const CAircraftSituation situationPing = testServiceInterface.pingSituation(situation);
             ok = pingCompare(situation, situationPing, out, verbose, errors);
             if (verbose) { out << "Pinged situation via interface" << errorInfo(ok) << endl; }
@@ -112,33 +107,23 @@ namespace BlackMisc
             ok = pingCompare(parts, partsPing, out, verbose, errors);
             if (verbose) { out << "Pinged engine via interface" << errorInfo(ok) << endl; }
 
-            const CAircraftModel model("foobar", CAircraftModel::TypeManuallySet);
+            const CAircraftModel model = CTestData::getDbAircraftModelFsxAerosoftA320();
             const CAircraftModel modelPing = testServiceInterface.pingAircraftModel(model);
             ok = pingCompare(model, modelPing, out, verbose, errors);
             if (verbose) { out << "Pinged model via interface" << errorInfo(ok) << endl; }
 
-            const CAircraftModel model2("mymodel", CAircraftModel::TypeFSInnData);
-            const CAircraftModelList models({ model, model2});
+            const CAircraftModelList models({ model, CTestData::getDbAircraftModelFsxA2AC172Skyhawk() });
             const CAircraftModelList modelsPing = testServiceInterface.pingAircraftModelList(models);
             ok = pingCompare(models, modelsPing, out, verbose, errors);
             if (verbose) { out << "Pinged model list via interface" << errorInfo(ok) << endl; }
 
-            const CCallsign callsign("DEMBZ");
-            CSimulatedAircraft aircraft(callsign, CUser("123456", "Joe Pilot"), situation);
-            aircraft.setTransponder(transponder);
-            aircraft.setModel(model);
-            aircraft.setNetworkModel(model2);
+            const CSimulatedAircraft aircraft = CTestData::getA320Aircraft();
             const CSimulatedAircraft aircraftPing = testServiceInterface.pingSimulatedAircraft(aircraft);
             ok = pingCompare(aircraft, aircraftPing, out, verbose, errors);
-            pingCompare(aircraft.getModel(), aircraftPing.getModel(), out, verbose, errors);
-            pingCompare(aircraft.getNetworkModel(), aircraftPing.getNetworkModel(), out, verbose, errors);
             if (verbose) { out << "Pinged simulated aircraft via interface" << errorInfo(ok) << endl; }
 
-            CAtcStationList atcStationList;
-            atcStationList.push_back(station);
-            atcStationList.push_back(station);
-            atcStationList.push_back(station);
-            CAtcStationList atcStationListPing = testServiceInterface.pingAtcStationList(atcStationList);
+            const CAtcStationList atcStationList = CTestData::getAtcStations();
+            const CAtcStationList atcStationListPing = testServiceInterface.pingAtcStationList(atcStationList);
             ok = pingCompare(atcStationList, atcStationListPing, out, verbose, errors);
             if (verbose) { out << "Pinged ATC station list via interface" << errorInfo(ok) << endl; }
 
@@ -163,8 +148,8 @@ namespace BlackMisc
             if (verbose) { out << "Pinged CVariant(clients) list via interface" << errorInfo(ok) << endl; }
 
             const CVariant cv2 = CVariant::fromValue(aircraft);
-            const CVariant cvPing2 = testServiceInterface.pingCVariant(cv2);
-            ok = pingCompare(cv2.value<CSimulatedAircraft>(), cvPing2.value<CSimulatedAircraft>(), out, verbose, errors);
+            const CVariant cv2Ping = testServiceInterface.pingCVariant(cv2);
+            ok = pingCompare(cv2.value<CSimulatedAircraft>(), cv2Ping.value<CSimulatedAircraft>(), out, verbose, errors);
             if (verbose) { out << "Pinged CVariant(aircraft) list via interface" << errorInfo(ok) << endl; }
 
             // end

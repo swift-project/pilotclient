@@ -16,6 +16,7 @@
 #include "blackmisc/test/testserviceinterface.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/network/server.h"
+#include "blackmisc/test/testdata.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,7 +97,6 @@ namespace BlackSample
         ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(), connection);
         QTextStream qtin(stdin);
         QTextStream qtout(stdout);
-        QString line;
 
         while (true)
         {
@@ -138,17 +138,15 @@ namespace BlackSample
             speed.switchUnit(CSpeedUnit::kts());
             testServiceInterface.receiveSpeed(speed);
             qtout << "Send speed via interface " << speed << endl;
-            QThread::msleep(2500);
             speed.switchUnit(CSpeedUnit::km_h());
             speed.addValueSameUnit(1.0);
 
             // Network
-            const CServer trafficServer("fooserver", "a foo server", "localhost", 1234,
-                                        CUser("112233", "Some real name", "email@xyz.com", "secret"));
+            const CServer trafficServer = CTestData::getTrafficServer();
             QVariant tsqv = QVariant::fromValue(trafficServer);
             QDBusVariant tsv(tsqv);
             testServiceInterface.receiveVariant(tsv, tsqv.userType());
-            qtout << "Send server via interface and variant " << trafficServer <<  tsqv.userType() << endl;
+            qtout << "Send server via interface and variant '" << trafficServer << QLatin1Literal("' ") <<  tsqv.userType() << endl;
 
             // Aviation
             const CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(), CPhysicalQuantitiesConstants::FrequencyUnicom());
@@ -179,59 +177,34 @@ namespace BlackSample
             testServiceInterface.receiveLength(alt);
             qtout << "Send altitude via interface " << alt << endl;
 
-            const CCallsign callsign("d-ambz");
+            const CCallsign callsign = CTestData::getRandomPilotCallsign();
             testServiceInterface.receiveCallsign(callsign);
             qtout << "Send callsign via interface " << callsign << endl;
 
-            CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() }); // Munich
-            CAtcStation station(CCallsign("eddm_twr"), CUser("123456", "Joe Controller"),
-                                CFrequency(118.7, CFrequencyUnit::MHz()),
-                                geoPos, CLength(50, CLengthUnit::km()));
-
+            const CAtcStation station = CTestData::getMunichTower();
             testServiceInterface.receiveAtcStation(station);
             qtout << "Send ATC " << station << endl;
 
             // Geo
-            // EDDF: 50° 2′ 0″ N, 8° 34′ 14″ E, 100m MSL
-            geoPos = CCoordinateGeodetic::fromWgs84("50° 2′ 1″ 23 N", "8° 34′ 14″ E", { 111, CLengthUnit::m() });
+            const CCoordinateGeodetic geoPos = CTestData::getCoordinateFrankfurtTower();
             testServiceInterface.receiveGeoPosition(geoPos);
             qtout << "Send geo position " << geoPos << endl;
+            CApplication::processEventsFor(1000);
 
             qtout << "----------------- variant tests ----------------" << endl;
-            CVariantList cvList;
-            cvList.push_back(CVariant::fromValue(len));
-            cvList.push_back(CVariant::fromValue(alt));
-            CVariantList lengthsV;
-            lengthsV.push_back(CVariant::fromValue(len));
-            lengthsV.push_back(CVariant::fromValue(alt));
-            testServiceInterface.receiveLengthsQvl(cvList);
-            qtout << "Send lengths via interface as CVariantList" << endl;
-            testServiceInterface.receiveLengthsQl(lengthsV);
-            qtout << "Send lengths via interface as QList<CVariant>" << endl;
-            for (const CVariant &lv : cvList)
-            {
-                qtout << "  " << "Send length in list: " << lv << endl;
-            }
-            CApplication::processEventsFor(2000);
+            const CVariantList cvList = CTestData::getCVariantList();
+            testServiceInterface.receiveVariantList(cvList);
+            qtout << "Send " << cvList.size() << " variants via interface as CVariantList" << endl;
 
-            // Value map
-            qtout << "----------------- index variant map ----------------" << endl;
-
-            CPropertyIndexVariantMap valueMap;
-            valueMap.addValue(1000, 111.222);
-            valueMap.addValue(2000, callsign);
-            valueMap.addValue(3000, alt);
-            valueMap.addValue(4000, track);
-            valueMap.addValue(5000, QDateTime::currentDateTime().addDays(1));
-            valueMap.addValue(6000, QString("foobar"));
+            const CPropertyIndexVariantMap valueMap = CTestData::getCPropertyIndexVariantMap();
             testServiceInterface.receiveValueMap(valueMap);
-            qtout << "Send index variant map " << valueMap << endl;
-            CApplication::processEventsFor(2000);
+            qtout << "Send " << valueMap.size() << " index variant map entries" << endl;
+            CApplication::processEventsFor(1000);
 
             qtout << "----------------- pings ----------------" << endl;
-            int errors = ITestServiceInterface::pingTests(testServiceInterface, false);
+            const int errors = ITestServiceInterface::pingTests(testServiceInterface, false);
             qtout << "Ping errors " << errors << endl;
-            CApplication::processEventsFor(2000);
+            CApplication::processEventsFor(1000);
 
             // Performance tools
             qtout << "----------------- performance ----------------" << endl;
@@ -240,24 +213,24 @@ namespace BlackSample
             timer.start();
             for (int i = 0; i < 10; i++)
             {
-                CSpeed speedDummy(i, CSpeedUnit::km_h());
-                speedDummy = testServiceInterface.getSpeed();
+                CSpeed speedDummy = testServiceInterface.getSpeed();
+                Q_UNUSED(speedDummy);
             }
             qint64 t10 = timer.elapsed(); // ms
 
             timer.restart();
             for (int i = 0; i < 100; i++)
             {
-                CSpeed speedDummy(i, CSpeedUnit::km_h());
-                speedDummy = testServiceInterface.getSpeed();
+                CSpeed speedDummy = testServiceInterface.getSpeed();
+                Q_UNUSED(speedDummy);
             }
             qint64 t100 = timer.elapsed(); // ms
 
             timer.restart();
             for (int i = 0; i < 1000; i++)
             {
-                CSpeed speedDummy(i, CSpeedUnit::km_h());
-                speedDummy = testServiceInterface.getSpeed();
+                CSpeed speedDummy = testServiceInterface.getSpeed();
+                Q_UNUSED(speedDummy);
             }
             qint64 t1000 = timer.elapsed(); // ms
             timer.invalidate();
@@ -266,22 +239,22 @@ namespace BlackSample
             timer.start();
             for (int i = 0; i < 10; i++)
             {
-                CAtcStation stationDummy(QString::number(i));
-                stationDummy = testServiceInterface.getAtcStation();
+                CAtcStation stationDummy = testServiceInterface.getAtcStation();
+                Q_UNUSED(stationDummy);
             }
             t10 = timer.elapsed(); // ms
             timer.restart();
             for (int i = 0; i < 100; i++)
             {
-                CAtcStation stationDummy(QString::number(i));
-                stationDummy = testServiceInterface.getAtcStation();
+                CAtcStation stationDummy = testServiceInterface.getAtcStation();
+                Q_UNUSED(stationDummy);
             }
             t100 = timer.elapsed(); // ms
             timer.restart();
             for (int i = 0; i < 1000; i++)
             {
-                CAtcStation stationDummy(QString::number(i));
-                stationDummy = testServiceInterface.getAtcStation();
+                CAtcStation stationDummy = testServiceInterface.getAtcStation();
+                Q_UNUSED(stationDummy);
             }
             t1000 = timer.elapsed(); // ms
             qtout << "Reading station objects 10/100/1000 in ms: " << t10 << " " << t100 << " " << t1000 << endl;
@@ -326,7 +299,7 @@ namespace BlackSample
             // next round?
             qtout << "---------------------------------------" << endl;
             qtout << "Key  ....... x to exit" << endl;
-            line = qtin.readLine().toLower().trimmed();
+            QString line = qtin.readLine().toLower().trimmed();
             if (line.startsWith('x'))
             {
                 qtout << "Ending!" << endl;

@@ -11,6 +11,7 @@
 //! \ingroup sampleblackmisc
 
 #include "samplescontainer.h"
+#include "blackmisc/test/testdata.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/callsign.h"
@@ -35,27 +36,16 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Test;
 
 namespace BlackSample
 {
     int CSamplesContainer::samples()
     {
         // ATC stations
-        QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-        QDateTime dtUntil = dtFrom.addSecs(60 * 60); // 1 hour
-        QDateTime dtFrom2 = dtUntil;
-        QDateTime dtUntil2 = dtUntil.addSecs(60 * 60);
-        CFrequency freqEddmTwr(118.7, CFrequencyUnit::MHz());
-        CCallsign callsignEddmTwr("eddm_twr");
-        CCoordinateGeodetic geoPos =
-            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
-        CAtcStation station1(callsignEddmTwr, CUser("123456", "Joe Doe"),
-                             freqEddmTwr,
-                             geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
+        const CAtcStation station1(CTestData::getMunichTower());
         CAtcStation station2(station1);
-        CAtcStation station3(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
-                             CFrequency(120.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
+        CAtcStation station3(CTestData::getMunichApproach());
 
         // ATC List
         CAtcStationList atcList;
@@ -85,7 +75,6 @@ namespace BlackSample
         CFrequency changedFrequency(118.25, CFrequencyUnit::MHz());
         CPropertyIndexVariantMap vm(CAtcStation::IndexFrequency, CVariant::from(changedFrequency));
 
-
         // demonstration apply
         CPropertyIndexList changedProperties;
         changedProperties = station1Cpy.apply(vm, true);
@@ -95,11 +84,11 @@ namespace BlackSample
 
         // applyIf
         int changed;
-        changed = atcList.applyIf(&CAtcStation::getCallsign, callsignEddmTwr, vm);
+        changed = atcList.applyIf(&CAtcStation::getCallsign, CTestData::getMunichTower().getCallsign(), vm);
         qDebug() << "applyIf, changed" << changed << vm << "expected 1";
-        changed = atcList.applyIf(&CAtcStation::getCallsign, callsignEddmTwr, vm);
+        changed = atcList.applyIf(&CAtcStation::getCallsign, CTestData::getMunichTower().getCallsign(), vm);
         qDebug() << "applyIf, changed" << changed << vm << "expected 1";
-        changed = atcList.applyIf(&CAtcStation::getCallsign, callsignEddmTwr, vm, true);
+        changed = atcList.applyIf(&CAtcStation::getCallsign, CTestData::getMunichTower().getCallsign(), vm, true);
         qDebug() << "applyIf, changed" << changed << vm << "expected 0";
 
         return 0;

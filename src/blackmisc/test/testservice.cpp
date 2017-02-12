@@ -167,25 +167,12 @@ namespace BlackMisc
             if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received length: " << length << endl;
         }
 
-        void CTestService::receiveLengthsQvl(const QVariantList &lengthsVariantList) const
+        void CTestService::receiveVariantList(const CVariantList &variantList) const
         {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " " << lengthsVariantList.size() << endl;
-            foreach (QVariant lv, lengthsVariantList)
+            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " " << variantList.size() << endl;
+            for (CVariant lv : variantList)
             {
-                BlackMisc::PhysicalQuantities::CLength l;
-                lv.value<QDBusArgument>() >> l;
-                if (m_verbose) out() << "    Received length in list: " << l << endl;
-            }
-        }
-
-        void CTestService::receiveLengthsQl(const QList<QVariant> &lengthsList) const
-        {
-            if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received " << lengthsList.size() << endl;
-            foreach (QVariant lv, lengthsList)
-            {
-                BlackMisc::PhysicalQuantities::CLength l;
-                lv.value<QDBusArgument>() >> l;
-                if (m_verbose) out() << "    Received length in list: " << l << endl;
+                if (m_verbose) out() << "    Received variant: " << lv.toQString() << endl;
             }
         }
 

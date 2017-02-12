@@ -31,6 +31,7 @@
 #include "blackmisc/pq/speed.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/propertyindexvariantmap.h"
+#include "blackmisc/variantlist.h"
 #include "blackmisc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
@@ -136,11 +137,8 @@ namespace BlackMisc
             //! Receive a length
             void receiveLength(const BlackMisc::PhysicalQuantities::CLength &length) const;
 
-            //! Receive lengths
-            void receiveLengthsQl(const QList<QVariant> &lengthsList) const;
-
-            //! Receive lengths
-            void receiveLengthsQvl(const QVariantList &lengthsVariantList) const;
+            //! Receive variant list
+            void receiveVariantList(const BlackMisc::CVariantList &variantList) const;
 
             //! Receive ATC station
             void receiveAtcStation(const BlackMisc::Aviation::CAtcStation &station) const;
