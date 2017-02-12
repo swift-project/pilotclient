@@ -290,6 +290,12 @@ namespace BlackMisc
             return CCollection::CContainerBase::removeIf(k0, v0, keysValues...);
         }
 
+        //! Convert to a QList
+        QList<T> toQList() const
+        {
+            return this->to(QList<T>());
+        }
+
         //! Test for equality.
         bool operator ==(const CCollection &other) const { return *pimpl() == *other.pimpl(); }
 
