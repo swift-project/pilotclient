@@ -63,7 +63,7 @@ namespace BlackGui
             m_oldIndex = index;
         }
 
-        CHotkeyDialog::CHotkeyDialog(const BlackMisc::Input::CActionHotkey &actionHotkey, QWidget *parent) :
+        CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, QWidget *parent) :
             QDialog(parent),
             ui(new Ui::CHotkeyDialog),
             m_actionHotkey(actionHotkey),
@@ -92,8 +92,7 @@ namespace BlackGui
         }
 
         CHotkeyDialog::~CHotkeyDialog()
-        {
-        }
+        { }
 
         void CHotkeyDialog::setRegisteredApplications(const BlackMisc::CIdentifierList &applications)
         {
@@ -211,10 +210,10 @@ namespace BlackGui
             clearAdvancedFrame();
             auto allSupportedKeys = CKeyboardKeyList::allSupportedKeys();
 
-            QStringList splittedKeys = m_actionHotkey.getCombination().toQString().split('+', QString::SkipEmptyParts);
-            for (const auto &splittedKey : splittedKeys)
+            const QStringList splitKeys = m_actionHotkey.getCombination().toQString().split('+', QString::SkipEmptyParts);
+            for (const auto &splitKey : splitKeys)
             {
-                if (splittedKey == "+") continue;
+                if (splitKey == "+") continue;
 
                 int currentIndex = -1;
                 CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
@@ -222,7 +221,7 @@ namespace BlackGui
                 {
                     QString supportedKeyAsString = supportedKey.toQString();
                     ksb->addItem(supportedKeyAsString, QVariant::fromValue(supportedKey));
-                    if (supportedKeyAsString == splittedKey)
+                    if (supportedKeyAsString == splitKey)
                     {
                         currentIndex = ksb->count() - 1;
                     }
