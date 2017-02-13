@@ -94,11 +94,12 @@ namespace BlackGui
         CHotkeyDialog::~CHotkeyDialog()
         { }
 
-        void CHotkeyDialog::setRegisteredApplications(const BlackMisc::CIdentifierList &applications)
+        void CHotkeyDialog::setRegisteredApplications(const CIdentifierList &applications)
         {
-            for (const auto &app : applications)
+            const QStringList machines = applications.getMachineNames();
+            for (const QString &machine : machines)
             {
-                ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
+                ui->cb_Identifier->addItem(machine);
             }
         }
 
