@@ -42,6 +42,12 @@ namespace BlackMisc
 
         //! This list contains an identifier which is not contained in other.
         bool containsAnyNotIn(const CIdentifierList &other) const;
+
+        //! Get machine names
+        QStringList getMachineNames(bool unique = true, bool sort = true) const;
+
+        //! Remove duplicates
+        int removeDuplicates();
     };
 } //namespace
 

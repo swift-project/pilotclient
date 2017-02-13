@@ -23,6 +23,29 @@ namespace BlackMisc
 
     bool CIdentifierList::containsAnyNotIn(const CIdentifierList &other) const
     {
-        return containsBy([&other](const CIdentifier &id) { return ! other.contains(id); });
+        return containsBy([&other](const CIdentifier & id) { return ! other.contains(id); });
+    }
+
+    QStringList CIdentifierList::getMachineNames(bool unique, bool sort) const
+    {
+        QStringList codes = this->transform(Predicates::MemberTransform(&CIdentifier::getMachineName));
+        if (sort) { codes.sort(); }
+        if (unique) { codes.removeDuplicates(); }
+        return codes;
+    }
+
+    int CIdentifierList::removeDuplicates()
+    {
+        if (this->size() < 2) { return 0; }
+        CIdentifierList il;
+        for (const CIdentifier &identifier : *this)
+        {
+            if (il.contains(identifier)) continue;
+            il.push_back(identifier);
+        }
+        const int delta = this->size() - il.size();
+        if (delta == 0) { return 0; }
+        *this = il;
+        return delta;
     }
 } // namespace
