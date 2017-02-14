@@ -29,9 +29,6 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
-/*
- * Menu clicked
- */
 void SwiftGuiStd::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
@@ -78,7 +75,8 @@ void SwiftGuiStd::initMenus()
 
     // for hotkeys
     const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());
-    static const CActionBind swiftRoot(swift, CIcons::swift16());
+    static const CActionBind swiftRoot(swift, CIcons::swift16()); // inserts action for root folder
+    Q_UNUSED(swiftRoot);
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_InfoAreas, swift + "Info areas"));
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_File, swift + "File"));
     m_menuHotkeyHandlers.append(CGuiActionBindHandler::bindMenu(ui->menu_Window, swift + "Window"));

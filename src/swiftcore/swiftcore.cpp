@@ -54,6 +54,7 @@ CSwiftCore::CSwiftCore(QWidget *parent) :
     initSlots();
     initStyleSheet();
     initDBusMode();
+    initMenus();
 
     if (sGui->isParserOptionSet("start")) { startCore(sGui->getCmdDBusAddressValue()); }
 }
@@ -142,6 +143,13 @@ void CSwiftCore::initLogDisplay()
                       );
     logHandler->subscribe(this, &CSwiftCore::ps_appendLogMessage);
     ui->comp_InfoArea->getLogComponent()->showFilterDialog(); // add a filter dialog
+}
+
+void CSwiftCore::initMenus()
+{
+    sGui->addMenuFile(*ui->menu_File);
+    sGui->addMenuWindow(*ui->menu_Window);
+    sGui->addMenuHelp(*ui->menu_Help);
 }
 
 void CSwiftCore::startCore(const QString &dBusAdress)

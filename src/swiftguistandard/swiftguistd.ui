@@ -258,12 +258,12 @@
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
    </widget>
    <widget class="QMenu" name="menu_File">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="separator"/>
    </widget>
@@ -274,7 +274,7 @@
    </widget>
    <widget class="QMenu" name="menu_Window">
     <property name="title">
-     <string>Window</string>
+     <string>&amp;Window</string>
     </property>
     <addaction name="menu_WindowFont"/>
     <addaction name="menu_WindowToggleNavigator"/>
@@ -503,6 +503,12 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Components::CInfoBarStatusComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/infobarstatuscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::COverlayMessagesFrame</class>
    <extends>QFrame</extends>
    <header>blackgui/overlaymessagesframe.h</header>
@@ -518,12 +524,6 @@
    <class>BlackGui::CDockWidgetInfoBar</class>
    <extends>QDockWidget</extends>
    <header>blackgui/dockwidgetinfobar.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CInfoBarStatusComponent</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/infobarstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

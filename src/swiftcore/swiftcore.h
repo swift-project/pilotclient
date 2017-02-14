@@ -57,11 +57,12 @@ private slots:
 
 private:
     //! \name Init
-    //! @[
+    //! @{
     void initSlots();
     void initLogDisplay();
     void initStyleSheet();
     void initDBusMode();
+    void initMenus();
     //! @}
 
     void startCore(const QString &dBusAdress);
