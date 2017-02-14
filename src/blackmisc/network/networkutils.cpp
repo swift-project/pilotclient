@@ -257,6 +257,19 @@ namespace BlackMisc
             request.setSslConfiguration(sslConfiguration);
         }
 
+        void CNetworkUtils::setSwiftClientSslCertificate(QNetworkRequest &request, const CUrlList &swiftSharedUrls)
+        {
+            for (const CUrl &sharedUrl : swiftSharedUrls)
+            {
+                const QString urlString = request.url().toString();
+                if (urlString.startsWith(sharedUrl.toQString()))
+                {
+                    CNetworkUtils::setSwiftClientSslCertificate(request);
+                    break;
+                }
+            }
+        }
+
         QHttpPart CNetworkUtils::getMultipartWithDebugFlag()
         {
             QHttpPart textPartDebug;
@@ -309,15 +322,55 @@ namespace BlackMisc
 
         qint64 CNetworkUtils::lastModifiedMsSinceEpoch(QNetworkReply *nwReply)
         {
-            if (nwReply)
+            Q_ASSERT(nwReply);
+            const QDateTime lm = CNetworkUtils::lastModifiedDateTime(nwReply);
+            return lm.isValid() ? lm.toMSecsSinceEpoch() : -1;
+        }
+
+        QDateTime CNetworkUtils::lastModifiedDateTime(QNetworkReply *nwReply)
+        {
+            Q_ASSERT(nwReply);
+            const QVariant lastModifiedQv = nwReply->header(QNetworkRequest::LastModifiedHeader);
+            if (lastModifiedQv.isValid() && lastModifiedQv.canConvert<QDateTime>())
             {
-                QVariant lastModifiedQv = nwReply->header(QNetworkRequest::LastModifiedHeader);
-                if (lastModifiedQv.isValid() && lastModifiedQv.canConvert<QDateTime>())
-                {
-                    return lastModifiedQv.value<QDateTime>().toMSecsSinceEpoch();
-                }
+                return lastModifiedQv.value<QDateTime>();
             }
-            return -1;
+            return QDateTime();
+        }
+
+        qint64 CNetworkUtils::lastModifiedSinceNow(QNetworkReply *nwReply)
+        {
+            const qint64 sinceEpoch = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply);
+            return sinceEpoch > 0 ? std::max(0LL, QDateTime::currentMSecsSinceEpoch() - sinceEpoch) : QDateTime::currentMSecsSinceEpoch();
+        }
+
+        int CNetworkUtils::getHttpStatusCode(QNetworkReply *nwReply)
+        {
+            if (!nwReply) { return -1; }
+            const QVariant statusCode = nwReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+            if (!statusCode.isValid()) { return -1; }
+            const int status = statusCode.toInt();
+            return status;
+        }
+
+        bool CNetworkUtils::isHttpStatusRedirect(QNetworkReply *nwReply)
+        {
+            if (!nwReply) { return false; }
+            const int code = CNetworkUtils::getHttpStatusCode(nwReply);
+            return code == 301 || code == 302 || code == 303 || code == 307;
+        }
+
+        QUrl CNetworkUtils::getHttpRedirectUrl(QNetworkReply *nwReply)
+        {
+            if (!nwReply) { return QUrl(); }
+            const QVariant possibleRedirectUrl = nwReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+            if (!possibleRedirectUrl.isValid()) { return QUrl(); }
+            QUrl redirectUrl = possibleRedirectUrl.toUrl();
+            if (redirectUrl.isRelative())
+            {
+                redirectUrl = nwReply->url().resolved(redirectUrl);
+            }
+            return redirectUrl;
         }
 
         QString CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(const QString &errorMessage)

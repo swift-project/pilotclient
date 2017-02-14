@@ -13,7 +13,7 @@
 #define BLACKMISC_NETWORKUTILS_H
 
 #include "blackmisc/blackmiscexport.h"
-#include "blackmisc/network/url.h"
+#include "blackmisc/network/urllist.h"
 
 #include <QByteArray>
 #include <QHttpPart>
@@ -52,7 +52,6 @@ namespace BlackMisc
 
             //! Is a connected interface available?
             //! \param withDebugOutput enables some debugging output
-            //! \return
             static bool hasConnectedInterface(bool withDebugOutput = false);
 
             //! Can connect?
@@ -60,14 +59,12 @@ namespace BlackMisc
             //! \param port          80, 1234
             //! \param timeoutMs
             //! \param message       human readable message
-            //! \return
             static bool canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs = getTimeoutMs());
 
             //! Can connect to server?
             //! \param server
             //! \param message       human readable message
             //! \param timeoutMs
-            //! \return
             static bool canConnect(const BlackMisc::Network::CServer &server, QString &message, int timeoutMs = getTimeoutMs());
 
             //! Can connect to URL?
@@ -106,8 +103,11 @@ namespace BlackMisc
             //! Set user agent for request
             static void setSwiftUserAgent(QNetworkRequest &request);
 
-            //! Set swift client ssl certificate
+            //! Set swift client SSL certificate
             static void setSwiftClientSslCertificate(QNetworkRequest &request);
+
+            //! Set swift client SSL certificate
+            static void setSwiftClientSslCertificate(QNetworkRequest &request, const BlackMisc::Network::CUrlList &swiftSharedUrls);
 
             //! Multipart with DEBUG FLAG for server
             static QHttpPart getMultipartWithDebugFlag();
@@ -129,6 +129,26 @@ namespace BlackMisc
 
             //! Last modified from reply
             static qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply);
+
+            //! Last modified from reply
+            static QDateTime lastModifiedDateTime(QNetworkReply *nwReply);
+
+            //! Last modified from reply compared with now (in ms)
+            static qint64 lastModifiedSinceNow(QNetworkReply *nwReply);
+
+            //! Get the http status code
+            static int getHttpStatusCode(QNetworkReply *nwReply);
+
+            //! Is the reply an HTTP redirect?
+            //! \details Status codes:
+            //! - 301: Permanent redirect. Clients making subsequent requests for this resource should use the new URI. Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
+            //! - 302: Redirect for undefined reason. Clients making subsequent requests for this resource should not use the new URI. Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
+            //! - 303: Redirect for undefined reason. Typically, 'Operation has completed, continue elsewhere.' Clients making subsequent requests for this resource should not use the new URI. Clients should follow the redirect for POST/PUT/DELETE requests.
+            //! - 307: Temporary redirect. Resource may return to this location at a later point. Clients making subsequent requests for this resource should use the old URI. Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
+            static bool isHttpStatusRedirect(QNetworkReply *nwReply);
+
+            //! Get the redirect URL if any
+            static QUrl getHttpRedirectUrl(QNetworkReply *nwReply);
 
             //! Remove the HTML formatting from a PHP error message
             static QString removeHtmlPartsFromPhpErrorMessage(const QString &errorMessage);
