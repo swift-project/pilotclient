@@ -63,7 +63,7 @@
         </property>
         <layout class="QHBoxLayout" name="hl_Header">
          <property name="spacing">
-          <number>0</number>
+          <number>10</number>
          </property>
          <property name="leftMargin">
           <number>0</number>
@@ -98,6 +98,19 @@
           </spacer>
          </item>
          <item>
+          <widget class="QPushButton" name="pb_Kill">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>kill application</string>
+           </property>
+           <property name="text">
+            <string>Kill</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="tb_Close">
            <property name="text">
             <string>PushButton</string>
@@ -114,7 +127,7 @@
       <item>
        <widget class="QStackedWidget" name="sw_StatusMessagesComponent">
         <property name="currentIndex">
-         <number>4</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="pg_StatusMessages">
          <layout class="QVBoxLayout" name="vl_PgStatusMessages">

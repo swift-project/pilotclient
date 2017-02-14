@@ -54,6 +54,7 @@ namespace BlackGui
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
+        connect(ui->pb_Kill, &QPushButton::clicked, this, &COverlayMessages::ps_killClicked);
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAuto);
         ui->fr_Confirmation->setVisible(false);
@@ -73,9 +74,9 @@ namespace BlackGui
         ui->setupUi(this);
         this->resize(w, h);
         this->setAutoFillBackground(true);
+        this->m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
         ui->tvp_StatusMessages->setMode(CStatusMessageListModel::Simplified);
         connect(ui->tb_Close, &QToolButton::released, this, &COverlayMessages::close);
-        this->m_autoCloseTimer.setObjectName(objectName() + ":autoCloseTimer");
         connect(&m_autoCloseTimer, &QTimer::timeout, this, &COverlayMessages::close);
     }
 
@@ -112,9 +113,29 @@ namespace BlackGui
         this->close();
     }
 
+    void COverlayMessages::ps_killClicked()
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Shutdown the application.");
+        msgBox.setInformativeText("Do you want to terminate " + sGui->getApplicationNameAndVersion() + "?");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Save);
+        if (QMessageBox::Ok == msgBox.exec())
+        {
+            sGui->gracefulShutdown();
+            sGui->exit();
+        }
+    }
+
     bool COverlayMessages::useSmall() const
     {
         return (this->width() < 400);
+    }
+
+    void COverlayMessages::showKill(bool show)
+    {
+        ui->pb_Kill->setVisible(show);
+        ui->pb_Kill->setEnabled(show);
     }
 
     bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
@@ -142,8 +163,9 @@ namespace BlackGui
             return;
         }
 
-        this->setModeToMessages();
         ui->tvp_StatusMessages->updateContainer(messages);
+        this->showKill(false);
+        this->setModeToMessages(messages.hasErrorMessages());
         this->display(timeOutMs);
     }
 
@@ -162,12 +184,12 @@ namespace BlackGui
 
         if (this->useSmall())
         {
-            this->setModeToMessageSmall();
+            this->setModeToMessageSmall(message.isFailure());
             ui->form_StatusMessageSmall->setValue(message);
         }
         else
         {
-            this->setModeToMessage();
+            this->setModeToMessage(message.isFailure());
             ui->form_StatusMessage->setValue(message);
         }
         this->display(timeOutMs);
@@ -266,21 +288,24 @@ namespace BlackGui
         }
     }
 
-    void COverlayMessages::setModeToMessages()
+    void COverlayMessages::setModeToMessages(bool withKillButton)
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessages);
+        this->showKill(withKillButton);
         this->setHeader("Messages");
     }
 
-    void COverlayMessages::setModeToMessage()
+    void COverlayMessages::setModeToMessage(bool withKillButton)
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessage);
+        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 
-    void COverlayMessages::setModeToMessageSmall()
+    void COverlayMessages::setModeToMessageSmall(bool withKillButton)
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessageSmall);
+        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 

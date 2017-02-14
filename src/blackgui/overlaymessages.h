@@ -54,13 +54,13 @@ namespace BlackGui
         virtual ~COverlayMessages();
 
         //! Messages mode
-        void setModeToMessages();
+        void setModeToMessages(bool withKillButton = false);
 
         //! Single Message mode
-        void setModeToMessage();
+        void setModeToMessage(bool withKillButton = false);
 
         //! Single Message mode
-        void setModeToMessageSmall();
+        void setModeToMessageSmall(bool withKillButton = false);
 
         //! Single Text message mode
         void setModeToTextMessage();
@@ -129,6 +129,9 @@ namespace BlackGui
         //! Cancel clicked (only when confirmation bar is active)
         void ps_cancelClicked();
 
+        //! Kill clicked (only when errors)
+        void ps_killClicked();
+
     private:
         QScopedPointer<Ui::COverlayMessages> ui;
         BlackMisc::CSettingReadOnly<BlackGui::Settings::TextMessageSettings> m_messageSettings { this };
@@ -147,6 +150,9 @@ namespace BlackGui
 
         //! Small
         bool useSmall() const;
+
+        //! Show kill button
+        void showKill(bool show);
 
         //! Display this message (use settings to decide)
         bool displayTextMessage(const BlackMisc::Network::CTextMessage &textMessage) const;
