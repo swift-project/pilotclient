@@ -84,7 +84,7 @@ namespace BlackMisc
             {
                 baseMarshall(static_cast<const TBaseOfT<Derived> *>(derived()), arg);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember([ &, this ](auto member) { Private::marshallMember(arg, member.in(*derived())); });
+                meta.forEachMember([ &, this ](auto member) { Private::marshallMember(arg, member.in(*this->derived())); });
             }
 
             //! Unmarshall without begin/endStructure, for when composed within another object
@@ -92,7 +92,7 @@ namespace BlackMisc
             {
                 baseUnmarshall(static_cast<TBaseOfT<Derived> *>(derived()), arg);
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForMarshalling>());
-                meta.forEachMember([ &, this ](auto member) { Private::unmarshallMember(arg, member.in(*derived())); });
+                meta.forEachMember([ &, this ](auto member) { Private::unmarshallMember(arg, member.in(*this->derived())); });
             }
 
         private:

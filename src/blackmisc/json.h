@@ -357,7 +357,7 @@ namespace BlackMisc
                 auto meta = introspect<Derived>().without(MetaFlags<DisabledForJson>());
                 meta.forEachMember([ &, this ](auto member)
                 {
-                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()).toJsonKey(), std::cref(member.in(*derived())));
+                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()).toJsonKey(), std::cref(member.in(*this->derived())));
                 });
                 return Json::appendJsonObject(json, baseToJson(static_cast<const TBaseOfT<Derived> *>(derived())));
             }
@@ -385,7 +385,7 @@ namespace BlackMisc
                     else
                     {
                         CJsonScope scope(member.latin1Name());
-                        value >> member.in(*derived());
+                        value >> member.in(*this->derived());
                     }
                 });
             }
