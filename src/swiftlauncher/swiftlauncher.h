@@ -55,7 +55,7 @@ public:
     explicit CSwiftLauncher(QWidget *parent = nullptr);
 
     //! Destructor
-    ~CSwiftLauncher();
+    virtual ~CSwiftLauncher();
 
     //! Executable
     const QString &getExecutable() const { return m_executable; }
@@ -85,6 +85,7 @@ private:
     QTimer      m_checkTimer { this };
     int         m_startCoreWaitCycles = 0;
     int         m_startMappingToolWaitCycles = 0;
+    bool        m_updateInfoLoaded = false;
 
     //! Get core mode
     BlackCore::CoreModes::CoreMode getCoreMode() const;

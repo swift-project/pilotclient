@@ -40,7 +40,6 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
 {
     ui->setupUi(this);
     this->init();
-    ui->tb_Launcher->setCurrentIndex(0);
     connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CSwiftLauncher::ps_loadSetup);
     connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
@@ -50,8 +49,12 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::ps_tabChanged);
 
     // use version signal as trigger for completion
-    this->ps_loadedUpdateInfo(true); // defaults from settings, overridden by signal/slot when changed
     connect(sGui, &CApplication::updateInfoAvailable, this, &CSwiftLauncher::ps_loadedUpdateInfo);
+    QTimer::singleShot(10 * 1000, this, [ = ]
+    {
+        if (this->m_updateInfoLoaded) { return; }
+        this->ps_loadedUpdateInfo(true); // failover
+    });
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
@@ -112,7 +115,14 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
     if (nwReply->error() == QNetworkReply::NoError)
     {
         const QString html = nwReply->readAll().trimmed();
+        if (html.isEmpty()) { return; }
         ui->te_LatestNews->setHtml(html);
+        constexpr qint64 newNews = 72 * 3600 * 1000;
+        const qint64 deltaT = CNetworkUtils::lastModifiedSinceNow(nwReply.data());
+        if (deltaT > 0 && deltaT < newNews)
+        {
+            ui->tb_Launcher->setCurrentWidget(ui->pg_LatestNews);
+        }
     }
 }
 
@@ -140,6 +150,9 @@ void CSwiftLauncher::init()
     this->initLogDisplay();
     this->initDBusGui();
     this->initVersion();
+
+    ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
+    ui->tb_Launcher->setCurrentWidget(ui->pg_CoreMode);
 }
 
 void CSwiftLauncher::initStyleSheet()
@@ -316,6 +329,7 @@ void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
         return;
     }
 
+    this->m_updateInfoLoaded = true;
     const CUpdateInfo updateInfo(this->m_updateInfo.get());
     const QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
     CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
