@@ -326,12 +326,12 @@ namespace BlackCore
         //! Request to get network reply
         //! \threadsafe
         QNetworkReply *getFromNetwork(const BlackMisc::Network::CUrl &url,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = 2);
 
         //! Request to get network reply
         //! \threadsafe
         QNetworkReply *getFromNetwork(const QNetworkRequest &request,
-                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+                                      const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = 2);
 
         //! Post to network
         //! \threadsafe
@@ -347,12 +347,12 @@ namespace BlackCore
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
         QNetworkReply *headerFromNetwork(const BlackMisc::Network::CUrl &url,
-                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = -1);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
         QNetworkReply *headerFromNetwork(const QNetworkRequest &request,
-                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback);
+                                         const BlackMisc::CSlot<void(QNetworkReply *)> &callback, int maxRedirects = -1);
 
     signals:
         //! Setup available (cache, web load, ..) or failed to load setup
@@ -447,7 +447,8 @@ namespace BlackCore
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
                                        const BlackMisc::CSlot<void(QNetworkReply *)> &callback,
-                                       std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> method);
+                                       int maxRedirects,
+                                       std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)> requestOrPostMethod);
 
         QScopedPointer<CCoreFacade>              m_coreFacade;             //!< core facade if any
         QScopedPointer<CSetupReader>             m_setupReader;            //!< setup reader
