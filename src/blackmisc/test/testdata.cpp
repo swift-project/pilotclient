@@ -8,13 +8,16 @@
  */
 
 #include "testdata.h"
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/flightplan.h"
 #include "blackmisc/network/userlist.h"
 #include "blackmisc/network/server.h"
+#include "blackmisc/fileutils.h"
 #include "blackmisc/variantlist.h"
 
+using namespace BlackConfig;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
@@ -237,21 +240,23 @@ namespace BlackMisc
 
         const CAircraftIcaoCode &CTestData::getDBAircraftIcaoB737()
         {
-            static const QString json = "{\"combinedType\": \"L2J\", \"dbKey\": 1777, \"designator\": \"B739\", \"family\": \"B737\", \"iataCode\": \"739\", \"legacy\": false, \"manufacturer\": \"BOEING\", \"military\": false, \"modelDescription\": \"737-900 BBJ3\", \"rank\": 10, \"realWorld\": true, \"timestampMSecsSinceEpoch\": 1454013308000, \"wtc\": \"M\" }";
+            static const QString json = CFileUtils::readFileToString(CBuildConfig::getTestFilesDir(), "DBAircraftIcaoB737Boeing.json");
             static const CAircraftIcaoCode icao(CAircraftIcaoCode::fromJson(json));
+            Q_ASSERT(icao.hasValidDbKey());
             return icao;
         }
 
         const CAircraftIcaoCode &CTestData::getDBAircraftIcaoC172()
         {
-            static const QString json = "{ \"combinedType\": \"L1P\", \"dbKey\": 2279, \"designator\": \"C172\", \"family\": \"\", \"iataCode\": \"CN1\", \"legacy\": false, \"manufacturer\": \"CESSNA\", \"military\": false, \"modelDescription\": \"172 Skyhawk\", \"rank\": 1, \"realWorld\": true, \"timestampMSecsSinceEpoch\": 1476144089000, \"wtc\": \"L\" }";
+            static const QString json = CFileUtils::readFileToString(CBuildConfig::getTestFilesDir(), "DBAircraftIcaoC172Cessna.json");
             static const CAircraftIcaoCode icao(CAircraftIcaoCode::fromJson(json));
+            Q_ASSERT(icao.hasValidDbKey());
             return icao;
         }
 
         const CAirlineIcaoCode &CTestData::getDbAirlineIcaoDLH()
         {
-            static const QString json = "{ \"country\": { \"alias1\": \"\", \"alias2\": \"\", \"dbKey\": \"DE\", \"historic\": false, \"iso3\": \"\", \"loadedFromDb\": false, \"name\": \"Germany\", \"simplifiedName\": \"\", \"timestampMSecsSinceEpoch\": -1 }, \"dbKey\": 3221, \"designator\": \"DLH\", \"isMilitary\": false, \"isOperating\": true, \"isVa\": false, \"name\": \"Lufthansa\", \"telephonyDesignator\": \"LUFTHANSA\", \"timestampMSecsSinceEpoch\": 1454179410000 }";
+            static const QString json = CFileUtils::readFileToString(CBuildConfig::getTestFilesDir(), "DBAirlineIcaoDLH.json");
             static const CAirlineIcaoCode icao(CAirlineIcaoCode::fromJson(json));
             Q_ASSERT(icao.hasValidDbKey());
             return icao;
@@ -259,15 +264,15 @@ namespace BlackMisc
 
         const CAirlineIcaoCode &CTestData::getDbAirlineIcaoBAW()
         {
-            static const QString json = "{ \"country\": { \"alias1\": \"\", \"alias2\": \"\", \"dbKey\": \"GB\", \"historic\": false, \"iso3\": \"\", \"loadedFromDb\": false, \"name\": \"United Kingdom\", \"simplifiedName\": \"\", \"timestampMSecsSinceEpoch\": -1 }, \"dbKey\": 1299, \"designator\": \"BAW\", \"isMilitary\": false, \"isOperating\": true, \"isVa\": false, \"name\": \"British Airways\", \"telephonyDesignator\": \"SPEEDBIRD\", \"timestampMSecsSinceEpoch\": 1433786773000 }";
+            static const QString json = CFileUtils::readFileToString(CBuildConfig::getTestFilesDir(), "DBAirlineIcaoBAW.json");
             static const CAirlineIcaoCode icao(CAirlineIcaoCode::fromJson(json));
             Q_ASSERT(icao.hasValidDbKey());
             return icao;
         }
 
-        const CLivery &CTestData::getDbLiveryDLH()
+        const CLivery &CTestData::getDbLiveryDLHStarAlliance()
         {
-            static const QString json = "{ \"airline\": { \"country\": { \"alias1\": \"\", \"alias2\": \"\", \"dbKey\": \"DE\", \"historic\": false, \"iso3\": \"\", \"loadedFromDb\": false, \"name\": \"Germany\", \"simplifiedName\": \"\", \"timestampMSecsSinceEpoch\": -1 }, \"dbKey\": 3221, \"designator\": \"DLH\", \"isMilitary\": false, \"isOperating\": true, \"isVa\": false, \"name\": \"Lufthansa\", \"telephonyDesignator\": \"LUFTHANSA\", \"timestampMSecsSinceEpoch\": 1454179410000 }, \"colorFuselage\": { \"b\": 255, \"g\": 255, \"r\": 255 }, \"colorTail\": { \"b\": 102, \"g\": 0, \"r\": 1 }, \"combinedCode\": \"DLH.STAR\", \"dbKey\": 7097, \"description\": \"Lufthansa Star Alliance\", \"military\": false, \"timestampMSecsSinceEpoch\": 1481304168000 }";
+            static const QString json = CFileUtils::readFileToString(CBuildConfig::getTestFilesDir(), "DBLiveryDLHStarAlliance.json");
             static const CLivery livery(CLivery::fromJson(json));
             Q_ASSERT(livery.hasValidDbKey());
             return livery;
@@ -275,17 +280,19 @@ namespace BlackMisc
 
         const CAircraftModel &CTestData::getDbAircraftModelFsxA2AC172Skyhawk()
         {
-            static const QString json = "{\"mod_id\": 8227, \"mod_modelstring\": \"C172R N990CP\", \"mod_name\": null, \"mod_description\": \"A2A Cessna C172R Skyhawk\", \"mod_simfsx\": \"Y\", \"mod_simp3d\": \"N\", \"mod_simfs9\": \"N\", \"mod_simxplane\": \"N\", \"mod_enabled\": \"Y\", \"mod_mode\": \"I\", \"mod_created\": \"2016-09-02 22:13:28\", \"mod_lastupdated\": \"2016-09-02 22:13:28\", \"ac_id\": 2279, \"ac_designator\": \"C172\", \"ac_family\": null, \"ac_manufacturer\": \"CESSNA\", \"ac_model\": \"172 Skyhawk\", \"ac_rank\": 1, \"ac_type\": \"L\", \"ac_engine\": \"P\", \"ac_enginecount\": 1, \"ac_wtc\": \"L\", \"ac_realworld\": \"Y\", \"ac_legacy\": \"N\", \"ac_military\": \"N\", \"ac_created\": \"2013-07-31 11:38:42\", \"ac_lastupdated\": \"2016-10-11 00:01:29\", \"dist_id\": \"A2A\", \"dist_description\": \"A2A Simulations\", \"dist_alias1\": \"ACCUSIM\", \"dist_alias2\": null, \"dist_simfsx\": \"Y\", \"dist_simp3d\": \"N\", \"dist_simfs9\": \"N\", \"dist_simxplane\": \"N\", \"dist_created\": \"2016-08-26 15:26:10\", \"dist_lastupdated\": \"2016-08-26 15:26:10\", \"liv_id\": 7076, \"liv_idairlineicao\": null, \"liv_combinedcode\": \"_CC_NOCOLOR\", \"liv_description\": \"Temp: No color, no airline\", \"liv_colorfuselage\": null, \"liv_colortail\": null, \"liv_military\": \"N\", \"liv_created\": \"2016-01-30 17:43:15\", \"liv_lastupdated\": \"2016-01-30 17:43:15\", \"al_id\": null, \"al_designator\": null, \"al_callsign\": null, \"al_name\": null, \"al_country\": null, \"al_countryname\": null, \"al_va\": null, \"al_military\": null, \"al_operating\": null, \"al_created\": null, \"al_lastupdated\": null}";
+            static const QString json = CFileUtils::readFileToString(CBuildConfig::getTestFilesDir(), "DBModelFSXA2ACessnaC172.json");
             static const CAircraftModel model(CAircraftModel::fromDatabaseJson(Json::jsonObjectFromString(json)));
             Q_ASSERT(model.hasValidDbKey());
+            Q_ASSERT(!model.getModelString().isEmpty());
             return model;
         }
 
         const CAircraftModel &CTestData::getDbAircraftModelFsxAerosoftA320()
         {
-            static const QString json = "{\"mod_id\": 6651, \"mod_modelstring\": \"AIRBUS A321 LUFTHANSA D-AISH\", \"mod_name\": \"A321\", \"mod_description\": \"Airbus A321-231 IAE\", \"mod_simfsx\": \"Y\", \"mod_simp3d\": \"N\", \"mod_simfs9\": \"N\", \"mod_simxplane\": \"N\", \"mod_enabled\": \"Y\", \"mod_mode\": \"I\", \"mod_created\": \"2016-08-14 00:18:19\", \"mod_lastupdated\": \"2016-12-03 21:45:54\", \"ac_id\": 673, \"ac_designator\": \"A321\", \"ac_family\": \"A320\", \"ac_manufacturer\": \"AIRBUS\", \"ac_model\": \"A-321\", \"ac_rank\": 0, \"ac_type\": \"L\", \"ac_engine\": \"J\", \"ac_enginecount\": 2, \"ac_wtc\": \"M\", \"ac_realworld\": \"Y\", \"ac_legacy\": \"N\", \"ac_military\": \"N\", \"ac_created\": \"2013-07-31 11:38:42\", \"ac_lastupdated\": \"2016-01-28 20:41:09\", \"dist_id\": \"AEROSOFT\", \"dist_description\": \"Aerosoft\", \"dist_alias1\": \"AS\", \"dist_alias2\": \"AERO\", \"dist_simfsx\": \"Y\", \"dist_simp3d\": \"N\", \"dist_simfs9\": \"N\", \"dist_simxplane\": \"N\", \"dist_created\": \"2016-01-23 20:22:06\", \"dist_lastupdated\": \"2016-01-23 20:22:06\", \"liv_id\": 1928, \"liv_idairlineicao\": 3221, \"liv_combinedcode\": \"DLH._STD\", \"liv_description\": \"Standard Lufthansa\", \"liv_colorfuselage\": \"FFFFFF\", \"liv_colortail\": \"010066\", \"liv_military\": \"N\", \"liv_created\": \"2015-08-21 00:39:49\", \"liv_lastupdated\": \"2015-08-31 19:00:16\", \"al_id\": 3221, \"al_designator\": \"DLH\", \"al_callsign\": \"LUFTHANSA\", \"al_name\": \"Lufthansa\", \"al_country\": \"DE\", \"al_countryname\": \"Germany\", \"al_va\": \"N\", \"al_military\": \"N\", \"al_operating\": \"Y\", \"al_created\": \"2013-07-29 23:59:43\", \"al_lastupdated\": \"2016-01-30 18:43:30\"}";
+            static const QString json = CFileUtils::readFileToString(CBuildConfig::getTestFilesDir(), "DBModelFSXAerosoftA320.json");
             static const CAircraftModel model(CAircraftModel::fromDatabaseJson(Json::jsonObjectFromString(json)));
             Q_ASSERT(model.hasValidDbKey());
+            Q_ASSERT(!model.getModelString().isEmpty());
             return model;
         }
 

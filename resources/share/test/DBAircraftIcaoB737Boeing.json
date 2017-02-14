@@ -1,0 +1,15 @@
+{
+	"combinedType": "L2J", 
+	"dbKey": 1777, 
+	"designator": "B739", 
+	"family": "B737", 
+	"iataCode": "739", 
+	"legacy": false, 
+	"manufacturer": "BOEING",
+	"military": false, 
+	"modelDescription": "737-900 BBJ3", 
+	"rank": 10,
+	"realWorld": true, 
+	"timestampMSecsSinceEpoch": 1454013308000, 
+	"wtc": "M" 
+}

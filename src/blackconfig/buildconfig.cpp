@@ -264,6 +264,21 @@ namespace BlackConfig
         return s;
     }
 
+    QString getTestFilesDirImpl()
+    {
+        const QString d(CBuildConfig::getSwiftResourceDir());
+        if (d.isEmpty()) { return ""; }
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "test"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CBuildConfig::getTestFilesDir()
+    {
+        static QString s(getTestFilesDirImpl());
+        return s;
+    }
+
     const QString &CBuildConfig::getHtmlTemplateFileName()
     {
         static const QString s(getHtmlDir() + QDir::separator() + "swifttemplate.html");

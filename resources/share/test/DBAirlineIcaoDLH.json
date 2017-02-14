@@ -1,0 +1,21 @@
+{
+	"country": {
+		"alias1": "",
+		"alias2": "",
+		"dbKey": "DE",
+		"historic": false,
+		"iso3": "",
+		"loadedFromDb": false,
+		"name": "Germany",
+		"simplifiedName": "",
+		"timestampMSecsSinceEpoch": -1
+	},
+	"dbKey": 3221,
+	"designator": "DLH",
+	"isMilitary": false,
+	"isOperating": true,
+	"isVa": false,
+	"name": "Lufthansa",
+	"telephonyDesignator": "LUFTHANSA",
+	"timestampMSecsSinceEpoch": 1454179410000
+}

@@ -126,7 +126,7 @@ namespace BlackMisc
             static const BlackMisc::Aviation::CAirlineIcaoCode &getDbAirlineIcaoBAW();
 
             //! Aircraft model
-            static const BlackMisc::Aviation::CLivery &getDbLiveryDLH();
+            static const BlackMisc::Aviation::CLivery &getDbLiveryDLHStarAlliance();
 
             //! FSX aircraft model, a C172 Skyhawk
             static const BlackMisc::Simulation::CAircraftModel &getDbAircraftModelFsxA2AC172Skyhawk();

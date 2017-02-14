@@ -1,0 +1,21 @@
+{
+	"country": {
+		"alias1": "",
+		"alias2": "",
+		"dbKey": "GB",
+		"historic": false,
+		"iso3": "",
+		"loadedFromDb": false,
+		"name": "United Kingdom",
+		"simplifiedName": "",
+		"timestampMSecsSinceEpoch": -1
+	},
+	"dbKey": 1299,
+	"designator": "BAW",
+	"isMilitary": false,
+	"isOperating": true,
+	"isVa": false,
+	"name": "British Airways",
+	"telephonyDesignator": "SPEEDBIRD",
+	"timestampMSecsSinceEpoch": 1433786773000
+}

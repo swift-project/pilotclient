@@ -111,6 +111,9 @@ namespace BlackConfig
         //! Where HTML files are located
         static const QString &getHtmlDir();
 
+        //! Where test files are located
+        static const QString &getTestFilesDir();
+
         //! Where HTML files are located
         static const QString &getHtmlTemplateFileName();
 

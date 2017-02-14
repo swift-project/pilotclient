@@ -1,0 +1,15 @@
+{
+    "combinedType": "L1P",
+    "dbKey": 2279,
+    "designator": "C172",
+    "family": "",
+    "iataCode": "CN1",
+    "legacy": false,
+    "manufacturer": "CESSNA","
+    "military": false,
+    "modelDescription": "172 Skyhawk",
+    "rank": 1,
+    "realWorld": true,
+    "timestampMSecsSinceEpoch": 1476144089000,
+    "wtc": "L"
+}
