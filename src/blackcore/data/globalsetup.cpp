@@ -67,6 +67,11 @@ namespace BlackCore
             return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
         }
 
+        CUrl CGlobalSetup::getLegalDirectoryUrl() const
+        {
+            return getDbRootDirectoryUrl().withAppendedPath("/legal/");
+        }
+
         CUrl CGlobalSetup::getDbLoginServiceUrl() const
         {
             return getDbRootDirectoryUrl().

@@ -149,7 +149,7 @@ namespace BlackConfig
         return isBundled;
     }
 
-    QString getSwiftResourceDirImpl()
+    QString getSwiftShareDirImpl()
     {
         QDir dir(CBuildConfig::getApplicationDir());
         bool success = true;
@@ -170,15 +170,15 @@ namespace BlackConfig
         return "";
     }
 
-    const QString &CBuildConfig::getSwiftResourceDir()
+    const QString &CBuildConfig::getSwiftShareDir()
     {
-        static const QString s(getSwiftResourceDirImpl());
+        static const QString s(getSwiftShareDirImpl());
         return s;
     }
 
     const QString getBootstrapResourceFileImpl()
     {
-        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftShareDir());
         if (d.isEmpty()) { return ""; }
         const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/boostrap/boostrap.json"));
         Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing dir");
@@ -193,7 +193,7 @@ namespace BlackConfig
 
     QString getSwiftStaticDbFilesDirImpl()
     {
-        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftShareDir());
         if (d.isEmpty()) { return ""; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
@@ -208,7 +208,7 @@ namespace BlackConfig
 
     QString getSoundFilesDirImpl()
     {
-        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftShareDir());
         if (d.isEmpty()) { return ""; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
@@ -223,7 +223,7 @@ namespace BlackConfig
 
     QString getStylesheetsDirImpl()
     {
-        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftShareDir());
         if (d.isEmpty()) { return ""; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
@@ -238,7 +238,7 @@ namespace BlackConfig
 
     QString getImagesDirImpl()
     {
-        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftShareDir());
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "images"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -252,7 +252,7 @@ namespace BlackConfig
 
     QString getHtmlDirImpl()
     {
-        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftShareDir());
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "html"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -264,9 +264,29 @@ namespace BlackConfig
         return s;
     }
 
+    QString getLegalDirImpl()
+    {
+        const QString d(CBuildConfig::getSwiftShareDir());
+        const QDir dir(QDir::cleanPath(d + QDir::separator() + "legal"));
+        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
+        return dir.absolutePath();
+    }
+
+    const QString &CBuildConfig::getLegalDir()
+    {
+        static const QString s(getLegalDirImpl());
+        return s;
+    }
+
+    const QString &CBuildConfig::getAboutFileLocation()
+    {
+        static const QString about = QDir::cleanPath(CBuildConfig::getLegalDir() + QDir::separator() + "about.html");
+        return about;
+    }
+
     QString getTestFilesDirImpl()
     {
-        const QString d(CBuildConfig::getSwiftResourceDir());
+        const QString d(CBuildConfig::getSwiftShareDir());
         if (d.isEmpty()) { return ""; }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "test"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
@@ -370,7 +390,7 @@ namespace BlackConfig
 
     QList<int> CVersion::getVersionParts(const QString &versionString)
     {
-        QStringList parts = versionString.split('.');
+        const QStringList parts = versionString.split('.');
         QList<int> partsInt;
         for (const QString &p : parts)
         {

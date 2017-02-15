@@ -92,6 +92,9 @@ namespace BlackCore
             //! Help page URL
             BlackMisc::Network::CUrl getHelpPageUrl() const;
 
+            //! Legal directory URL
+            BlackMisc::Network::CUrl getLegalDirectoryUrl() const;
+
             //! Login service
             BlackMisc::Network::CUrl getDbLoginServiceUrl() const;
 

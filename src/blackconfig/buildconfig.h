@@ -91,7 +91,8 @@ namespace BlackConfig
         static const QString &getApplicationDir();
 
         //! Where resource files (static DB files, ...) etc are located
-        static const QString &getSwiftResourceDir();
+        //! \remark share not shared (do no mix)
+        static const QString &getSwiftShareDir();
 
         //! Bootstrap resource directory
         static const QString &getBootstrapResourceFile();
@@ -110,6 +111,12 @@ namespace BlackConfig
 
         //! Where HTML files are located
         static const QString &getHtmlDir();
+
+        //! Where Legal files are located
+        static const QString &getLegalDir();
+
+        //! The about document file location
+        static const QString &getAboutFileLocation();
 
         //! Where test files are located
         static const QString &getTestFilesDir();
