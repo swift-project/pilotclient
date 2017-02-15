@@ -69,9 +69,9 @@ namespace BlackGui
 
         void CNavigatorDialog::buildNavigator(int columns)
         {
-            if (m_firstBuild)
+            if (this->m_firstBuild)
             {
-                m_firstBuild = false;
+                this->m_firstBuild = false;
                 this->insertOwnActions();
             }
 
@@ -238,15 +238,22 @@ namespace BlackGui
                 this->insertAction(this->actions().first(), a);
             }
 
-            // close
-            QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarCloseButton), Qt::white, QSize(16, 16)));
-            a = new QAction(i, "Close", this);
-            connect(a, &QAction::triggered, this, &CNavigatorDialog::close);
+            a = new QAction(BlackMisc::CIcons::swiftLauncher16(), "Start launcher", this);
+            bool c = connect(a, &QAction::triggered, sGui, &CGuiApplication::startLauncher);
+            Q_ASSERT(c);
             this->addAction(a);
 
             // save
             a = new QAction(CIcons::save16(), "Save state", this);
-            connect(a, &QAction::triggered, this, &CNavigatorDialog::saveToSettings);
+            c = connect(a, &QAction::triggered, this, &CNavigatorDialog::saveToSettings);
+            Q_ASSERT(c);
+            this->addAction(a);
+
+            // close
+            const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarCloseButton), Qt::white, QSize(16, 16)));
+            a = new QAction(i, "Close", this);
+            c = connect(a, &QAction::triggered, this, &CNavigatorDialog::close);
+            Q_ASSERT(c);
             this->addAction(a);
         }
 

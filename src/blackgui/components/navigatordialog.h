@@ -50,7 +50,7 @@ namespace BlackGui
             CNavigatorDialog(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CNavigatorDialog();
+            virtual ~CNavigatorDialog();
 
             //! Navigator
             void buildNavigator(int columns);
@@ -121,9 +121,9 @@ namespace BlackGui
             void adjustNavigatorSize(QGridLayout *layout = nullptr);
 
             QScopedPointer<Ui::CNavigatorDialog> ui;
-            bool m_firstBuild  = true;
+            bool m_firstBuild = true;
             int  m_currentColumns = 1;
-            QWidgetAction *m_marginMenuAction  = nullptr; //!< menu widget(!) action for margin widget
+            QWidgetAction *m_marginMenuAction = nullptr; //!< menu widget(!) action for margin widget
             CMarginsInput *m_input = nullptr; //!< margins widget
             BlackMisc::CSetting<BlackGui::Settings::TNavigator> m_settings { this, &CNavigatorDialog::ps_settingsChanged };
         };

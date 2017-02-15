@@ -38,6 +38,7 @@
 #include <QKeySequence>
 #include <QMenu>
 #include <QMessageBox>
+#include <QProcess>
 #include <QRegExp>
 #include <QSplashScreen>
 #include <QStyleFactory>
@@ -401,11 +402,20 @@ namespace BlackGui
     {
         addMenuForSettingsAndCache(menu);
         addMenuForStyleSheets(menu);
+        QAction *a = nullptr;
+        bool c = false;
+        if (this->getApplicationInfo().application() != CApplicationInfo::Laucher)
+        {
+            menu.addSeparator();
+            a = menu.addAction(CIcons::swiftLauncher24(), "Start swift launcher");
+            c = connect(a, &QAction::triggered, this, &CGuiApplication::startLauncher);
+            Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        }
 
         menu.addSeparator();
-        QAction *a = menu.addAction("E&xit");
+        a = menu.addAction("E&xit");
         a->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
-        bool c = connect(a, &QAction::triggered, this, [a, this]()
+        c = connect(a, &QAction::triggered, this, [a, this]()
         {
             // a close event might already trigger a shutdown
             this->mainApplicationWindow()->close();
