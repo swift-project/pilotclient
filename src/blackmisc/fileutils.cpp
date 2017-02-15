@@ -306,4 +306,17 @@ namespace BlackMisc
         });
         return it->filePath();
     }
+
+    QStringList getSwiftExecutablesImpl()
+    {
+        static const QFileInfo mySelf = QFileInfo(QCoreApplication::applicationFilePath()); // path + dir
+        static const QStringList filter("*." + mySelf.suffix());
+        return mySelf.dir().entryList(filter);
+    }
+
+    const QStringList &CFileUtils::getSwiftExecutables()
+    {
+        static const QStringList executables(getSwiftExecutablesImpl());
+        return executables;
+    }
 } // ns

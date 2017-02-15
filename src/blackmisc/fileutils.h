@@ -112,6 +112,9 @@ namespace BlackMisc
 
         //! Returns path to the newest file in dir, optionally matching a wildcard, or empty string.
         static QString findNewestFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+
+        //! Get all swift executables
+        static const QStringList &getSwiftExecutables();
     };
 } // ns
 

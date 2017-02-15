@@ -13,5 +13,12 @@ namespace BlackMisc
 {
     CApplicationInfoList::CApplicationInfoList() = default;
 
-    CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other) : CSequence<CApplicationInfo>(other) {}
+    CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other) :
+        CSequence<CApplicationInfo>(other)
+    {}
+
+    bool CApplicationInfoList::containsApplication(CApplicationInfo::Application application) const
+    {
+        return this->contains(&CApplicationInfo::application, application);
+    }
 }

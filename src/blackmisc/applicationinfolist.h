@@ -33,6 +33,9 @@ namespace BlackMisc
 
         //! Construct from base class object.
         CApplicationInfoList(const CSequence<CApplicationInfo> &other);
+
+        //! List containing entry for CApplicationInfo::Application ?
+        bool containsApplication(CApplicationInfo::Application application) const;
     };
 }
 
