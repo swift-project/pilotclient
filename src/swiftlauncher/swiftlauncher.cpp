@@ -193,7 +193,6 @@ void CSwiftLauncher::loadAbout()
 
 void CSwiftLauncher::initDBusGui()
 {
-    ui->cb_DBusServerAddress->addItem("127.0.0.1");
     ui->cb_DBusServerAddress->addItems(CNetworkUtils::getKnownLocalIpV4Addresses());
     ui->cb_DBusServerAddress->setCurrentIndex(0);
 

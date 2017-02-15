@@ -94,17 +94,14 @@ namespace BlackMisc
         QStringList CNetworkUtils::getKnownLocalIpV4Addresses()
         {
             QStringList ips;
-            if (!CNetworkUtils::hasConnectedInterface(false)) {return ips; }
-            for (const QHostAddress &address : QNetworkInterface::allAddresses())
+            const QList<QHostAddress> allAddresses = QNetworkInterface::allAddresses();
+            for (const QHostAddress &address : allAddresses)
             {
-                if (address.isLoopback() || address.isNull()) continue;
-                if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
+                if (address.isNull()) { continue; }
+                if (address.protocol() == QAbstractSocket::IPv4Protocol)
                 {
                     QString a = address.toString();
-                    if (CNetworkUtils::isValidIPv4Address(a))
-                    {
-                        ips.append(a);
-                    }
+                    ips.append(a);
                 }
             }
             ips.sort();

@@ -86,7 +86,7 @@ namespace BlackMisc
             //! Can connect to URL?
             static bool canConnect(const BlackMisc::Network::CUrl &url, int timeoutMs = getTimeoutMs());
 
-            //! Find out my IPv4 address, empty if not possible
+            //! Find out my IPv4 addresses including loopback, empty if not possible
             static QStringList getKnownLocalIpV4Addresses();
 
             //! Valid IPv4 address
