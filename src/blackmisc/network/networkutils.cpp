@@ -48,30 +48,6 @@ namespace BlackMisc
             return 2000;
         }
 
-        bool CNetworkUtils::hasConnectedInterface(bool withDebugOutput)
-        {
-            // http://stackoverflow.com/questions/2475266/verfiying-the-network-connection-using-qt-4-4
-            const QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
-            for (const QNetworkInterface &interface : interfaces)
-            {
-                // details of connection
-                if (withDebugOutput) qDebug() << "name:" << interface.name() << endl << "ip addresses:" << endl << "mac:" << interface.hardwareAddress() << endl;
-                if (interface.flags().testFlag(QNetworkInterface::IsUp) && !interface.flags().testFlag(QNetworkInterface::IsLoopBack))
-                {
-                    // this loop is important to check if there are addresses
-                    for (const QNetworkAddressEntry &entry : interface.addressEntries())
-                    {
-                        if (withDebugOutput) qDebug() << entry.ip().toString() << " / " << entry.netmask().toString() << endl;
-
-                        // we have an interface that is up, and has an ip address, therefore the link is present
-                        // we will only enable this check on first positive, all later results are incorrect
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
         bool CNetworkUtils::canPing(const QString &hostAddress)
         {
             if (hostAddress.isEmpty()) { return false; }
@@ -110,12 +86,6 @@ namespace BlackMisc
 
         bool CNetworkUtils::canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs)
         {
-            if (!CNetworkUtils::hasConnectedInterface(false))
-            {
-                message = QObject::tr("No connected network interface", "BlackMisc");
-                return false;
-            }
-
             // KB: I have had an issue with QTcpSocket. It was stuck in HostLookupState and did
             // only recover after a reboot for no obvious reason.
             // Currently trying the ping alternative

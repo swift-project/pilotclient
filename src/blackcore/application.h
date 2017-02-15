@@ -154,12 +154,6 @@ namespace BlackCore
         //! Network accessible?
         bool isNetworkAccessible() const;
 
-        //! Network connected (at startup time)
-        bool isNetworkConnected() const;
-
-        //! Network connected and also accessible
-        bool isNetworkConnectedAndAccessible() const;
-
         //! Setup already synchronized
         bool isSetupAvailable() const;
 

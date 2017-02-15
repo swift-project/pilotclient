@@ -50,10 +50,6 @@ namespace BlackMisc
             //! Default for timeout
             static int getTimeoutMs();
 
-            //! Is a connected interface available?
-            //! \param withDebugOutput enables some debugging output
-            static bool hasConnectedInterface(bool withDebugOutput = false);
-
             //! Can ping the address?
             //! \note uses OS ping
             static bool canPing(const QString &hostAddress);

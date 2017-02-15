@@ -574,17 +574,6 @@ namespace BlackCore
         return this->m_accessManager.networkAccessible() == QNetworkAccessManager::Accessible;
     }
 
-    bool CApplication::isNetworkConnected() const
-    {
-        static bool con = CNetworkUtils::hasConnectedInterface();
-        return con;
-    }
-
-    bool CApplication::isNetworkConnectedAndAccessible() const
-    {
-        return this->isNetworkConnected() && this->isNetworkAccessible();
-    }
-
     void CApplication::exit(int retcode)
     {
         if (instance())
