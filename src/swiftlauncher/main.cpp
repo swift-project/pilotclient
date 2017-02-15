@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
 {
     //! [SwiftApplicationDemo]
     CGuiApplication::highDpiScreenSupport();
-    QApplication qa(argc, argv);
+    QApplication qa(argc, argv); // needed
+    Q_UNUSED(qa);
     CGuiApplication a("swift launcher", CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup."), "installer"});
     if (!a.parse()) { return EXIT_FAILURE; }
@@ -44,6 +45,7 @@ int main(int argc, char *argv[])
 
     // Dialog to decide external or internal core
     CSwiftLauncher launcher;
+    CGuiApplication::registerAsRunning(); // needed because own exec is called
     if (launcher.exec() == QDialog::Rejected) { return EXIT_SUCCESS; }
     launcher.close();
 

@@ -43,6 +43,7 @@
 #include <QFileInfo>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QProcess>
 #include <QSslSocket>
 #include <QStandardPaths>
 #include <QStringBuilder>
@@ -149,15 +150,20 @@ namespace BlackCore
         }
     }
 
+    bool CApplication::registerAsRunning()
+    {
+        CApplicationInfoList apps = getRunningApplications();
+        const CApplicationInfo myself = instance()->getApplicationInfo();
+        if (!apps.contains(myself)) { apps.insert(myself); }
+        const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
+        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
+        return ok;
+    }
+
     int CApplication::exec()
     {
         Q_ASSERT_X(instance(), Q_FUNC_INFO, "missing application");
-
-        CApplicationInfoList apps = getRunningApplications();
-        apps.push_back(instance()->getApplicationInfo());
-        bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), swiftDataRoot() + "apps.json");
-        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
-
+        CApplication::registerAsRunning();
         return QCoreApplication::exec();
     }
 
@@ -180,6 +186,12 @@ namespace BlackCore
         apps.convertFromJsonNoThrow(CFileUtils::readLockedFileToString(swiftDataRoot() + "apps.json"), {}, {});
         apps.removeIf([](const CApplicationInfo & info) { return !info.processInfo().exists(); });
         return apps;
+    }
+
+    bool CApplication::isApplicationRunning(CApplicationInfo::Application application)
+    {
+        const CApplicationInfoList running = CApplication::getRunningApplications();
+        return running.containsApplication(application);
     }
 
     bool CApplication::isAlreadyRunning() const
@@ -212,6 +224,34 @@ namespace BlackCore
         if (a.contains("gui"))      { return CApplicationInfo::PilotClientGui; }
         if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
         return CApplicationInfo::Unknown;
+    }
+
+    QString CApplication::getExecutableForApplication(CApplicationInfo::Application application) const
+    {
+        QString search;
+        switch (application)
+        {
+        case CApplicationInfo::PilotClientCore: search = "core"; break;
+        case CApplicationInfo::Laucher: search = "launcher"; break;
+        case CApplicationInfo::MappingTool: search = "data"; break;
+        case CApplicationInfo::PilotClientGui: search = "gui"; break;
+        default:
+            break;
+        }
+        if (search.isEmpty()) return "";
+        for (const QString &executable : CFileUtils::getSwiftExecutables())
+        {
+            if (!executable.contains("swift", Qt::CaseInsensitive)) { continue; }
+            if (executable.contains(search, Qt::CaseInsensitive)) { return executable; }
+        }
+        return "";
+    }
+
+    bool CApplication::startLauncher()
+    {
+        static const QString launcher = CApplication::getExecutableForApplication(CApplicationInfo::Application::Laucher);
+        if (launcher.isEmpty() || CApplication::isApplicationRunning(CApplicationInfo::Laucher)) { return false; }
+        return QProcess::startDetached(launcher);
     }
 
     bool CApplication::isUnitTest() const

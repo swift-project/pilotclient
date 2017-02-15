@@ -113,6 +113,9 @@ namespace BlackCore
         //! Information about all running apps (including this one only if exec() has already been called)
         static BlackMisc::CApplicationInfoList getRunningApplications();
 
+        //! Is application running?
+        static bool isApplicationRunning(BlackMisc::CApplicationInfo::Application application);
+
         //! True if this swift application is already running (including different versions)
         bool isAlreadyRunning() const;
 
@@ -124,6 +127,12 @@ namespace BlackCore
 
         //! swift application running
         BlackMisc::CApplicationInfo::Application getSwiftApplication() const;
+
+        //! Executable names for the given applications
+        QString getExecutableForApplication(BlackMisc::CApplicationInfo::Application application) const;
+
+        //! Start the launcher
+        bool startLauncher();
 
         //! Unit test?
         bool isUnitTest() const;
@@ -198,6 +207,10 @@ namespace BlackCore
 
         //! Directory for temporary files
         QString getTemporaryDirectory() const;
+
+        //! Register as running
+        //! \note Normally done automatically when CApplication::exec is called
+        static bool registerAsRunning();
 
         //! Run event loop
         static int exec();
@@ -474,11 +487,11 @@ namespace BlackCore
         BlackMisc::CStatusMessageList initCrashHandler();
         void crashDumpUploadEnabledChanged();
 
-        #ifdef BLACK_USE_CRASHPAD
+#ifdef BLACK_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
         BlackMisc::CSettingReadOnly<BlackCore::Application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::crashDumpUploadEnabledChanged };
-        #endif
+#endif
     };
 } // namespace
 
