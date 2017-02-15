@@ -116,7 +116,7 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
     {
         const QString html = nwReply->readAll().trimmed();
         if (html.isEmpty()) { return; }
-        ui->te_LatestNews->setHtml(html);
+        ui->tbr_LatestNews->setHtml(html);
         constexpr qint64 newNews = 72 * 3600 * 1000;
         const qint64 deltaT = CNetworkUtils::lastModifiedSinceNow(nwReply.data());
         if (deltaT > 0 && deltaT < newNews)
@@ -173,6 +173,19 @@ void CSwiftLauncher::loadLatestNews()
     const CUrl newsUrl(newsUrls.obtainNextWorkingUrl());
     if (newsUrl.isEmpty()) { return; }
     sGui->getFromNetwork(newsUrl, { this, &CSwiftLauncher::ps_displayLatestNews});
+}
+
+void CSwiftLauncher::loadAbout()
+{
+    // workaround:
+    // 1) Only reading as HTML gives proper formatting
+    // 2) Reading the file resource fails (likely because of the style sheet)
+    static const QString html = CFileUtils::readFileToString(CBuildConfig::getAboutFileLocation());
+    static const QString legalDir = sGui->getGlobalSetup().getLegalDirectoryUrl().getFullUrl();
+    // make links absolute
+    static const QString htmlFixed = QString(html).
+                                     replace(QLatin1Literal("href=\"./"), "href=\"" + legalDir);
+    ui->tbr_About->setHtml(htmlFixed);
 }
 
 void CSwiftLauncher::initDBusGui()
@@ -348,6 +361,7 @@ void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
     }
 
     this->loadLatestNews();
+    this->loadAbout();
 }
 
 void CSwiftLauncher::ps_changedUpdateInfoCache()

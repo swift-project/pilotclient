@@ -73,6 +73,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 
 private slots:
+    //! Display latest news
     void ps_displayLatestNews(QNetworkReply *reply);
 
 private:
@@ -110,8 +111,12 @@ private:
     //! Log display
     void initLogDisplay();
 
-    //! latest news
+    //! Latest news
+    //! \sa CSwiftLauncher::ps_displayLatestNews
     void loadLatestNews();
+
+    //! Load credits and legal info
+    void loadAbout();
 
     //! Start the core
     void startSwiftCore();

@@ -78,7 +78,7 @@
           <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>2</number>
+             <number>4</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -93,11 +93,11 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Latest news</string>
+              <string>Latest &amp;news</string>
              </attribute>
              <layout class="QVBoxLayout" name="vl_LatestNews">
               <item>
-               <widget class="QTextEdit" name="te_LatestNews">
+               <widget class="QTextBrowser" name="tbr_LatestNews">
                 <property name="documentTitle">
                  <string>Latest news</string>
                 </property>
@@ -106,6 +106,9 @@
                 </property>
                 <property name="placeholderText">
                  <string>Latest news will go here</string>
+                </property>
+                <property name="openExternalLinks">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -121,7 +124,7 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Window type</string>
+              <string>&amp;Window type</string>
              </attribute>
              <layout class="QGridLayout" name="gl_WindowType">
               <item row="1" column="1" alignment="Qt::AlignHCenter">
@@ -186,7 +189,7 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Core mode</string>
+              <string>&amp;Core mode</string>
              </attribute>
              <layout class="QGridLayout" name="gl_CoreMode" columnstretch="10,14,14">
               <property name="leftMargin">
@@ -430,7 +433,7 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Check for updates</string>
+              <string>Check for &amp;updates</string>
              </attribute>
              <layout class="QVBoxLayout" name="vl_Updates">
               <property name="leftMargin">
@@ -591,7 +594,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="pg_CreditsLicense">
+            <widget class="QWidget" name="pg_About">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -601,20 +604,26 @@
               </rect>
              </property>
              <attribute name="label">
-              <string>Credits and License</string>
+              <string>&amp;About (credits and license)</string>
              </attribute>
              <layout class="QVBoxLayout" name="vl_Credits">
               <item>
-               <widget class="QTextEdit" name="te_CreditsLicense">
+               <widget class="QTextBrowser" name="tbr_About">
+                <property name="documentTitle">
+                 <string>About swift</string>
+                </property>
                 <property name="readOnly">
                  <bool>true</bool>
                 </property>
                 <property name="html">
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;About swift&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:7.875pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8.25pt;&quot;&gt;Credits will go here&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="openExternalLinks">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
