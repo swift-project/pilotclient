@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
     if (launcher.exec() == QDialog::Rejected) { return EXIT_SUCCESS; }
     launcher.close();
 
-    QString exe(launcher.getExecutable());
-    QStringList exeArgs(launcher.getExecutableArgs());
+    const QString exe(launcher.getExecutable());
+    const QStringList exeArgs(launcher.getExecutableArgs());
     Q_ASSERT_X(!exe.isEmpty(), Q_FUNC_INFO, "Missing executable");
     CLogMessage(QCoreApplication::instance()).info(launcher.getCmdLine());
     QProcess::startDetached(exe, exeArgs);

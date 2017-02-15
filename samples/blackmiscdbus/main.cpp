@@ -19,6 +19,7 @@
 #include <QCoreApplication>
 #include <QDBusServer>
 #include <QDebug>
+#include <QProcess>
 #include <QRegExp>
 #include <QString>
 #include <QStringList>
@@ -180,7 +181,7 @@ int main(int argc, char *argv[])
         }
 
         // testing in new process
-        BlackSample::ServiceTool::startNewProcess(executable, args, &a);
+        QProcess::startDetached(executable, args);
 
         // testing in same process
         // BlackSample::ServiceTool::dataTransferTestClient(address);

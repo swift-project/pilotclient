@@ -40,9 +40,6 @@ namespace BlackSample
         //! Server side of data transfer test
         static void dataTransferTestServer(BlackMisc::CDBusServer *dBusServer, bool verbose);
 
-        //! Start a new process
-        static QProcess *startNewProcess(const QString &executable, const QStringList &arguments = QStringList(), QObject *parent = 0);
-
         //! Loop to send data to test service (slots on server)
         static void sendDataToTestservice(const QDBusConnection &connection);
 

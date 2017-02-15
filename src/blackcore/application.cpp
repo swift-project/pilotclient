@@ -45,6 +45,7 @@
 #include <QNetworkRequest>
 #include <QSslSocket>
 #include <QStandardPaths>
+#include <QStringBuilder>
 #include <QTemporaryDir>
 #include <QThread>
 #include <QTime>
@@ -420,11 +421,14 @@ namespace BlackCore
 
     QString CApplication::getEnvironmentInfoString(const QString &separator) const
     {
-        QString env("Beta: ");
-        env.append(boolToYesNo(CBuildConfig::isBetaTest()));
-        env = env.append(" dev.env,: ").append(boolToYesNo(isRunningInDeveloperEnvironment()));
-        env = env.append(separator);
-        env.append("Windows: ").append(boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()));
+        const QString env =
+            QLatin1Literal("Beta: ") %
+            boolToYesNo(CBuildConfig::isBetaTest()) %
+            QLatin1Literal(" dev.env,: ") %
+            boolToYesNo(isRunningInDeveloperEnvironment()) %
+            separator %
+            QLatin1Literal("Windows: ") %
+            boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform());
         return env;
     }
 
@@ -465,12 +469,13 @@ namespace BlackCore
 
     QString CApplication::getInfoString(const QString &separator) const
     {
-        QString str(CVersion::version());
-        str = str.append(" ").append(CBuildConfig::isReleaseBuild() ? "Release build" : "Debug build");
-        str = str.append(separator);
-        str = str.append(getEnvironmentInfoString(separator));
-        str = str.append(separator);
-        str.append(CBuildConfig::compiledWithInfo(false));
+        const QString str =
+            CVersion::version() %
+            QLatin1Char(' ') % (CBuildConfig::isReleaseBuild() ? QLatin1Literal("Release build") : QLatin1Literal("Debug build")) %
+            separator %
+            getEnvironmentInfoString(separator) %
+            separator %
+            CBuildConfig::compiledWithInfo(false);
         return str;
     }
 
@@ -1077,13 +1082,13 @@ namespace BlackCore
         if (isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
 
         static const QString extension = CBuildConfig::isRunningOnWindowsNtPlatform() ? ".exe" : QString();
-        static const QString handler = CDirectoryUtils::applicationDirectoryPath() + "/" + "swift_crashpad_handler" + extension;
-        static const QString crashpadPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-                                            "/org.swift-project/" +
-                                            CDirectoryUtils::normalizedApplicationDirectory() +
-                                            "/crashpad";
-        static const QString database = crashpadPath + "/database";
-        static const QString metrics = crashpadPath + "/metrics";
+        static const QString handler = CDirectoryUtils::applicationDirectoryPath() % QLatin1Char('/') % "swift_crashpad_handler" + extension;
+        static const QString crashpadPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) %
+                                            QLatin1Literal("/org.swift-project/") %
+                                            CDirectoryUtils::normalizedApplicationDirectory() %
+                                            QLatin1Literal("/crashpad");
+        static const QString database = crashpadPath % QLatin1Literal("/database");
+        static const QString metrics = crashpadPath % QLatin1Literal("/metrics");
 
         if (!QFileInfo::exists(handler))
         {

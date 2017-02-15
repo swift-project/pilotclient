@@ -56,13 +56,6 @@ using namespace BlackCore;
 
 namespace BlackSample
 {
-    QProcess *ServiceTool::startNewProcess(const QString &executable, const QStringList &arguments, QObject *parent)
-    {
-        QProcess *process = new QProcess(parent);
-        process->startDetached(executable, arguments);
-        return process;
-    }
-
     void ServiceTool::dataTransferTestServer(BlackMisc::CDBusServer *dBusServer, bool verbose)
     {
         QDBusConnection sessionBusConnection = QDBusConnection::sessionBus();

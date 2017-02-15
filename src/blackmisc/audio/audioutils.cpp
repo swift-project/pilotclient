@@ -22,8 +22,7 @@ namespace BlackMisc
         bool startWindowsMixer()
         {
             if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
-            QStringList parameterlist;
-            return QProcess::startDetached("SndVol.exe", parameterlist);
+            return QProcess::startDetached("SndVol.exe");
         }
     } // ns
 } // ns

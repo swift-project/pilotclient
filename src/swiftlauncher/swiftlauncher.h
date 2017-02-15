@@ -41,7 +41,6 @@ class CSwiftLauncher :
     Q_INTERFACES(BlackGui::IMainWindowAccess)
 
 public:
-
     //! Pages
     enum Pages
     {
