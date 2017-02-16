@@ -52,7 +52,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(sGui, &CApplication::updateInfoAvailable, this, &CSwiftLauncher::ps_loadedUpdateInfo);
     QTimer::singleShot(10 * 1000, this, [ = ]
     {
-        if (this->m_updateInfoLoaded) { return; }
+        if (m_updateInfoLoaded) { return; }
         this->ps_loadedUpdateInfo(true); // failover
     });
 
@@ -60,13 +60,13 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
 
     // default from settings
-    const QString dbus(this->m_dbusServerAddress.getThreadLocal());
+    const QString dbus(m_dbusServerAddress.getThreadLocal());
     this->setDefault(dbus);
 
     // periodically check
-    connect(&this->m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::ps_checkRunningApplications);
-    this->m_checkTimer.setInterval(5000);
-    this->m_checkTimer.start();
+    connect(&m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::ps_checkRunningApplications);
+    m_checkTimer.setInterval(5000);
+    m_checkTimer.start();
 }
 
 
@@ -75,7 +75,7 @@ CSwiftLauncher::~CSwiftLauncher()
 
 QString CSwiftLauncher::getCmdLine() const
 {
-    return toCmdLine(this->m_executable, this->m_executableArgs);
+    return toCmdLine(m_executable, m_executableArgs);
 }
 
 CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
@@ -135,9 +135,9 @@ void CSwiftLauncher::init()
 {
     sGui->initMainApplicationWindow(this);
 
-    this->m_mwaOverlayFrame = ui->fr_SwiftLauncherMain;
-    this->m_mwaStatusBar = nullptr;
-    this->m_mwaLogComponent = ui->fr_SwiftLauncherLog;
+    m_mwaOverlayFrame = ui->fr_SwiftLauncherMain;
+    m_mwaStatusBar = nullptr;
+    m_mwaLogComponent = ui->fr_SwiftLauncherLog;
 
     ui->lbl_NewVersionUrl->setTextFormat(Qt::RichText);
     ui->lbl_NewVersionUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -151,6 +151,7 @@ void CSwiftLauncher::init()
     this->initDBusGui();
     this->initVersion();
 
+    ui->lbl_HeaderInfo->setVisible(false);
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
     ui->tb_Launcher->setCurrentWidget(ui->pg_CoreMode);
 }
@@ -218,7 +219,7 @@ void CSwiftLauncher::initLogDisplay()
 void CSwiftLauncher::startSwiftCore()
 {
     const QString dBus(this->getDBusAddress());
-    this->m_dbusServerAddress.setAndSave(dBus);
+    m_dbusServerAddress.setAndSave(dBus);
     QStringList args(
     {
         "--start",
@@ -238,7 +239,7 @@ void CSwiftLauncher::startSwiftCore()
     CLogMessage(this).info(this->getCmdLine());
 
     // start
-    QProcess::startDetached(this->m_executable, this->m_executableArgs);
+    QProcess::startDetached(m_executable, m_executableArgs);
 }
 
 void CSwiftLauncher::setSwiftDataExecutable()
@@ -265,7 +266,7 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
         if (!this->isStandaloneGuiSelected())
         {
             const QString dBus(this->getDBusAddress());
-            this->m_dbusServerAddress.setAndSave(dBus);
+            m_dbusServerAddress.setAndSave(dBus);
 
             args.append("--dbus");
             args.append(dBus); // already converted
@@ -342,22 +343,26 @@ void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
         return;
     }
 
-    this->m_updateInfoLoaded = true;
-    const CUpdateInfo updateInfo(this->m_updateInfo.get());
+    m_updateInfoLoaded = true;
+    const CUpdateInfo updateInfo(m_updateInfo.get());
     const QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
     CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
-    bool newVersionAvailable = CVersion::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
+    const bool newVersionAvailable = CVersion::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
     ui->wi_NewVersionAvailable->setVisible(newVersionAvailable);
     ui->wi_NoNewVersion->setVisible(!newVersionAvailable);
     ui->le_LatestVersion->setText(latestVersion);
     ui->le_Channel->setText(updateInfo.getChannel());
+    ui->lbl_HeaderInfo->setVisible(newVersionAvailable);
+    ui->lbl_HeaderInfo->setText("New version " + latestVersion + " available");
+    ui->lbl_HeaderInfo->setStyleSheet("background: red; color: yellow;");
 
     if (!downloadUrls.isEmpty())
     {
         const CUrl downloadUrl(downloadUrls.obtainNextUrl());
         const QString urlStr(downloadUrl.toQString());
-        QString hl("<a href=\"%1\">%2 %3</a>");
-        ui->lbl_NewVersionUrl->setText(hl.arg(urlStr).arg(urlStr).arg(latestVersion));
+        const QString hl("<a href=\"%1\"><img src=\":/own/icons/own/drophere16.png\"></a>");
+        ui->lbl_NewVersionUrl->setText(hl.arg(urlStr));
+        ui->lbl_NewVersionUrl->setToolTip("Download " + latestVersion);
     }
 
     this->loadLatestNews();
@@ -382,7 +387,7 @@ void CSwiftLauncher::ps_startButtonPressed()
     else if (sender == ui->tb_SwiftMappingTool)
     {
         ui->tb_SwiftMappingTool->setEnabled(false);
-        this->m_startMappingToolWaitCycles = 2;
+        m_startMappingToolWaitCycles = 2;
         this->setSwiftDataExecutable();
         this->accept();
     }
@@ -390,7 +395,7 @@ void CSwiftLauncher::ps_startButtonPressed()
     {
         if (this->isStandaloneGuiSelected()) { ui->rb_SwiftCoreGuiAudio->setChecked(true); }
         ui->tb_SwiftCore->setEnabled(false);
-        this->m_startCoreWaitCycles = 2;
+        m_startCoreWaitCycles = 2;
         this->startSwiftCore();
     }
     else if (sender == ui->tb_Database)
@@ -461,9 +466,9 @@ void CSwiftLauncher::ps_showLogPage()
 void CSwiftLauncher::ps_checkRunningApplications()
 {
     const CApplicationInfoList runningApps = sGui->getRunningApplications();
-    if (this->m_startCoreWaitCycles > 0) { this->m_startCoreWaitCycles--; }
+    if (m_startCoreWaitCycles > 0) { m_startCoreWaitCycles--; }
     else { ui->tb_SwiftCore->setEnabled(true); }
-    if (this->m_startMappingToolWaitCycles > 0) { this->m_startMappingToolWaitCycles--; }
+    if (m_startMappingToolWaitCycles > 0) { m_startMappingToolWaitCycles--; }
     else { ui->tb_SwiftMappingTool->setEnabled(true); }
 
     for (const CApplicationInfo &info : runningApps)

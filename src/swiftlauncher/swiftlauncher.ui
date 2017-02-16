@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>650</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,6 +37,9 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="pg_SwiftLauncherMain">
       <layout class="QVBoxLayout" name="wl_SwiftLauncherMainPage">
        <property name="spacing">
@@ -56,15 +59,9 @@
        </property>
        <item>
         <widget class="BlackGui::COverlayMessagesFrame" name="fr_SwiftLauncherMain">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
          <layout class="QVBoxLayout" name="vl_SwiftLauncherMain">
           <property name="spacing">
-           <number>25</number>
+           <number>20</number>
           </property>
           <property name="leftMargin">
            <number>0</number>
@@ -76,9 +73,16 @@
            <number>0</number>
           </property>
           <item>
+           <widget class="QLabel" name="lbl_HeaderInfo">
+            <property name="text">
+             <string>header info goes here</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QToolBox" name="tb_Launcher">
             <property name="currentIndex">
-             <number>4</number>
+             <number>3</number>
             </property>
             <property name="tabSpacing">
              <number>6</number>
@@ -88,8 +92,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>390</width>
-               <height>326</height>
+               <width>392</width>
+               <height>349</height>
               </rect>
              </property>
              <attribute name="label">
@@ -119,8 +123,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>390</width>
-               <height>326</height>
+               <width>392</width>
+               <height>349</height>
               </rect>
              </property>
              <attribute name="label">
@@ -184,8 +188,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>376</width>
-               <height>331</height>
+               <width>392</width>
+               <height>349</height>
               </rect>
              </property>
              <attribute name="label">
@@ -428,37 +432,18 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>390</width>
-               <height>326</height>
+               <width>392</width>
+               <height>349</height>
               </rect>
              </property>
              <attribute name="label">
               <string>Check for &amp;updates</string>
              </attribute>
              <layout class="QVBoxLayout" name="vl_Updates">
-              <property name="leftMargin">
-               <number>9</number>
-              </property>
-              <property name="topMargin">
-               <number>9</number>
-              </property>
               <item>
-               <widget class="BlackGui::Components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QFrame" name="fr_SoftwareUpdates">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
+               <widget class="QGroupBox" name="gb_SoftwareUpdates">
+                <property name="title">
+                 <string>Software</string>
                 </property>
                 <layout class="QGridLayout" name="gl_Version">
                  <property name="leftMargin">
@@ -473,48 +458,6 @@
                  <property name="bottomMargin">
                   <number>2</number>
                  </property>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="lbl_Channel">
-                   <property name="text">
-                    <string>Channel:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="le_Channel">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="le_CurrentVersion">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="lbl_LatestVersion">
-                   <property name="text">
-                    <string>Latest version:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="lbl_CurrentVersion">
-                   <property name="text">
-                    <string>This version:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QLineEdit" name="le_LatestVersion">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="3" column="1" colspan="3">
                   <widget class="QWidget" name="wi_NoNewVersion" native="true">
                    <layout class="QVBoxLayout" name="vl_NoNewVersion">
@@ -562,14 +505,49 @@
                       </property>
                      </widget>
                     </item>
-                    <item>
-                     <widget class="QLabel" name="lbl_NewVersionUrl">
-                      <property name="text">
-                       <string>URL goes here</string>
-                      </property>
-                     </widget>
-                    </item>
                    </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="le_Channel">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lbl_CurrentVersion">
+                   <property name="text">
+                    <string>This version:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="lbl_LatestVersion">
+                   <property name="text">
+                    <string>Latest version:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="lbl_Channel">
+                   <property name="text">
+                    <string>Channel:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLineEdit" name="le_CurrentVersion">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QLineEdit" name="le_LatestVersion">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
                   </widget>
                  </item>
                  <item row="1" column="2">
@@ -579,17 +557,99 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="1" column="3">
+                  <widget class="QLabel" name="lbl_NewVersionUrl">
+                   <property name="text">
+                    <string>URL goes here</string>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="comp_DataUpdates">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
+               <widget class="QGroupBox" name="gb_DataUpdates">
+                <property name="title">
+                 <string>Data</string>
                 </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
+                <layout class="QVBoxLayout" name="vl_DataUpdates">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QScrollArea" name="sa_DataUpdates">
+                   <property name="styleSheet">
+                    <string notr="true">border: 0px;</string>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Plain</enum>
+                   </property>
+                   <property name="lineWidth">
+                    <number>0</number>
+                   </property>
+                   <property name="widgetResizable">
+                    <bool>true</bool>
+                   </property>
+                   <widget class="QWidget" name="qw_DataUpdates">
+                    <property name="geometry">
+                     <rect>
+                      <x>0</x>
+                      <y>0</y>
+                      <width>368</width>
+                      <height>185</height>
+                     </rect>
+                    </property>
+                    <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
+                     <property name="leftMargin">
+                      <number>3</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>3</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>3</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>3</number>
+                     </property>
+                     <item>
+                      <widget class="BlackGui::Components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="BlackGui::Components::CDbLoadOverviewComponent" name="comp_DataUpdates">
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
+                       </property>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
+                       </property>
+                       <zorder>comp_InfoBar</zorder>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -599,8 +659,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>390</width>
-               <height>326</height>
+               <width>392</width>
+               <height>349</height>
               </rect>
              </property>
              <attribute name="label">
@@ -653,7 +713,7 @@ p, li { white-space: pre-wrap; }
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>390</width>
+               <width>392</width>
                <height>112</height>
               </rect>
              </property>
