@@ -44,68 +44,30 @@ namespace BlackCore
             friend class IContextApplication;
 
         public slots:
-            //! \copydoc IContextApplication::logMessage
+            //! @{
+            //! \publicsection
             virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::CIdentifier &origin) override;
-
-            //! \copydoc IContextApplication::addLogSubscription
             virtual void addLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override;
-
-            //! \copydoc IContextApplication::removeLogSubscription
             virtual void removeLogSubscription(const BlackMisc::CIdentifier &subscriber, const BlackMisc::CLogPattern &pattern) override;
-
-            //! \copydoc IContextApplication::getAllLogSubscriptions
             virtual CLogSubscriptionHash getAllLogSubscriptions() const override;
-
-            //! \copydoc IContextApplication::synchronizeLogSubscriptions
             virtual void synchronizeLogSubscriptions() override;
-
-            //! \copydoc IContextApplication::changeSettings
             virtual void changeSettings(const BlackMisc::CValueCachePacket &settings, const BlackMisc::CIdentifier &origin) override;
-
-            //! \copydoc IContextApplication::getAllSettings
             virtual BlackMisc::CValueCachePacket getAllSettings() const override;
-
-            //! \copydoc IContextApplication::getUnsavedSettingsKeys
             virtual QStringList getUnsavedSettingsKeys() const override;
-
-            //! \copydoc IContextApplication::synchronizeLocalSettings
             virtual void synchronizeLocalSettings() override;
-
-            //! \copydoc IContextApplication::saveSettings
             virtual BlackMisc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
-
-            //! \copydoc IContextApplication::saveSettingsByKey
             virtual BlackMisc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
-
-            //! \copydoc IContextApplication::loadSettings
             virtual BlackMisc::CStatusMessage loadSettings() override;
-
-            //! \copydoc IContextApplication::registerHotkeyActions
             virtual void registerHotkeyActions(const QStringList &actions, const BlackMisc::CIdentifier &origin) override;
-
-            //! \copydoc IContextApplication::callHotkeyAction
             virtual void callHotkeyAction(const QString &action, bool argument, const BlackMisc::CIdentifier &origin) override;
-
-            //! \copydoc IContextApplication::writeToFile
             virtual bool writeToFile(const QString &fileName, const QString &content) override;
-
-            //! \copydoc IContextApplication::registerApplication
             virtual BlackMisc::CIdentifier registerApplication(const BlackMisc::CIdentifier &application) override;
-
-            //! \copydoc IContextApplication::unregisterApplication
             virtual void unregisterApplication(const BlackMisc::CIdentifier &application) override;
-
-            //! \copydoc IContextApplication::getRegisteredApplications
             virtual BlackMisc::CIdentifierList getRegisteredApplications() const override;
-
-            //! \copydoc IContextApplication::readFromFile
             virtual QString readFromFile(const QString &fileName) const override;
-
-            //! \copydoc IContextApplication::removeFile
             virtual bool removeFile(const QString &fileName) override;
-
-            //! \copydoc IContextApplication::existsFile
             virtual bool existsFile(const QString &fileName) const override;
+            //! @}
 
         protected:
             //! Constructor
