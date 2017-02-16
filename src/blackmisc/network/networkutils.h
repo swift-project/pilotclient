@@ -54,6 +54,10 @@ namespace BlackMisc
             //! \param withDebugOutput enables some debugging output
             static bool hasConnectedInterface(bool withDebugOutput = false);
 
+            //! Can ping the address?
+            //! \note uses OS ping
+            static bool canPing(const QString &hostAddress);
+
             //! Can connect?
             //! \param hostAddress   130.4.20.3, or myserver.com
             //! \param port          80, 1234

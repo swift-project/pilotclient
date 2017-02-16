@@ -16,6 +16,7 @@
 #include <QHostAddress>
 #include <QJsonDocument>
 #include <QList>
+#include <QProcess>
 #include <QNetworkAddressEntry>
 #include <QNetworkInterface>
 #include <QNetworkReply>
@@ -28,6 +29,7 @@
 #include <QTextStream>
 #include <QUrl>
 #include <QUrlQuery>
+#include <QEventLoop>
 #include <QVariant>
 #include <QtDebug>
 #include <QRegularExpression>
@@ -49,32 +51,43 @@ namespace BlackMisc
         {
             // http://stackoverflow.com/questions/2475266/verfiying-the-network-connection-using-qt-4-4
             const QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
-            bool result = false;
-
-            for (int i = 0; i < interfaces.count(); i++)
+            for (const QNetworkInterface &interface : interfaces)
             {
-                QNetworkInterface interface = interfaces.at(i);
-
                 // details of connection
                 if (withDebugOutput) qDebug() << "name:" << interface.name() << endl << "ip addresses:" << endl << "mac:" << interface.hardwareAddress() << endl;
                 if (interface.flags().testFlag(QNetworkInterface::IsUp) && !interface.flags().testFlag(QNetworkInterface::IsLoopBack))
                 {
-                    // this loop is important
-                    for (int j = 0; j < interface.addressEntries().count(); j++)
+                    // this loop is important to check if there are addresses
+                    for (const QNetworkAddressEntry &entry : interface.addressEntries())
                     {
-                        if (withDebugOutput) qDebug() << interface.addressEntries().at(j).ip().toString() << " / " << interface.addressEntries().at(j).netmask().toString() << endl;
+                        if (withDebugOutput) qDebug() << entry.ip().toString() << " / " << entry.netmask().toString() << endl;
 
                         // we have an interface that is up, and has an ip address, therefore the link is present
                         // we will only enable this check on first positive, all later results are incorrect
-                        if (!result)
-                        {
-                            result = true;
-                            break;
-                        }
+                        return true;
                     }
                 }
             }
-            return result;
+            return false;
+        }
+
+        bool CNetworkUtils::canPing(const QString &hostAddress)
+        {
+            if (hostAddress.isEmpty()) { return false; }
+            QStringList params;
+            if (CBuildConfig::isRunningOnWindowsNtPlatform())
+            {
+                params << "-n" << "1";
+            }
+            else
+            {
+                // all UNIX alike
+                params << "-c" << "1";
+            }
+            params << hostAddress;
+
+            const int exitCode = QProcess::execute("ping", params);
+            return exitCode == 0;
         }
 
         QStringList CNetworkUtils::getKnownLocalIpV4Addresses()
@@ -93,6 +106,7 @@ namespace BlackMisc
                     }
                 }
             }
+            ips.sort();
             return ips;
         }
 
