@@ -9,11 +9,12 @@
 
 #include "blackcore/registermetadata.h"
 #include "blackcore/context/contextapplication.h"
-#include "blackcore/db/databasereader.h"
-#include "blackcore/vatsim/vatsimsettings.h"
+#include "blackcore/data/launchersetup.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
 #include "blackcore/data/vatsimsetup.h"
+#include "blackcore/db/databasereader.h"
+#include "blackcore/vatsim/vatsimsettings.h"
 #include "blackcore/network.h"
 #include "blackcore/voicechannel.h"
 #include "blackcore/webreaderflags.h"
@@ -38,11 +39,10 @@ namespace BlackCore
 
         BlackCore::Db::CDatabaseReaderConfig::registerMetadata();
         BlackCore::Db::CDatabaseReaderConfigList::registerMetadata();
-
         BlackCore::Data::CGlobalSetup::registerMetadata();
         BlackCore::Data::CUpdateInfo::registerMetadata();
         BlackCore::Data::CVatsimSetup::registerMetadata();
-
+        BlackCore::Data::CLauncherSetup::registerMetadata();
         BlackCore::Vatsim::CReaderSettings::registerMetadata();
     }
 } // namespace

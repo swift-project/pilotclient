@@ -13,7 +13,7 @@
 #define BLACKCORE_COREFACADE_H
 
 #include "blackcore/blackcoreexport.h"
-#include "blackcore/application/applicationsettings.h"
+#include "blackcore/data/launchersetup.h"
 #include "blackcore/vatsim/vatsimsettings.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/settingscache.h"
@@ -165,12 +165,12 @@ namespace BlackCore
     private:
         bool m_initalized = false;   //!< flag if already initialized
         bool m_shuttingDown = false; //!< flag if shutting down
-        BlackMisc::CSetting<Application::TDBusServerAddress> m_dbusServerAddress { this };
+        BlackMisc::CData<Data::TLauncherSetup> m_launcherSetup { this };
 
         // DBus
         BlackMisc::CDBusServer *m_dbusServer = nullptr;
-        QDBusConnection m_dbusConnection     = QDBusConnection("default");
         bool m_initDBusConnection            = false;
+        QDBusConnection m_dbusConnection { "default" };
 
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted

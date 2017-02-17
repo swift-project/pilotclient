@@ -17,6 +17,7 @@
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackcore/context/contextsimulatorimpl.h"
+#include "blackcore/data/launchersetup.h"
 #include "blackcore/corefacade.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/registermetadata.h"
@@ -42,6 +43,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Data;
 using namespace BlackCore::Context;
 
 namespace BlackCore
@@ -64,11 +66,12 @@ namespace BlackCore
         if (config.hasDBusAddress())
         {
             dbusAddress = config.getDBusAddress();
-            m_dbusServerAddress.set(dbusAddress);
+            m_launcherSetup.setProperty(CLauncherSetup::IndexDBusAddress, dbusAddress);
         }
         else
         {
-            dbusAddress = m_dbusServerAddress.getThreadLocal();
+            CLauncherSetup setup = m_launcherSetup.get();
+            dbusAddress = setup.getDBusAddress();
         }
 
         // DBus

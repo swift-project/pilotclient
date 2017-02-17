@@ -18,7 +18,6 @@ namespace BlackCore
 {
     //! Register all relevant metadata in BlackCore
     BLACKCORE_EXPORT void registerMetadata();
-
 } // ns
 
 #endif // guard

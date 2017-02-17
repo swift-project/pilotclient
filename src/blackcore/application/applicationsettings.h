@@ -21,16 +21,6 @@ namespace BlackCore
 {
     namespace Application
     {
-        //! DBus server address
-        struct TDBusServerAddress : public BlackMisc::TSettingTrait<QString>
-        {
-            //! \copydoc BlackMisc::TSettingTrait::key
-            static const char *key() { return "network/dbusserver"; }
-
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const QString &defaultValue() { static const QString dv("session"); return dv; }
-        };
-
         //! User configured hotkeys
         struct TActionHotkeys : public BlackMisc::TSettingTrait<BlackMisc::Input::CActionHotkeyList>
         {
@@ -101,7 +91,6 @@ namespace BlackCore
             //! \copydoc BlackCore::TSettingTrait::defaultValue
             static bool defaultValue() { return true; }
         };
-
     } // ns
 } // ns
 

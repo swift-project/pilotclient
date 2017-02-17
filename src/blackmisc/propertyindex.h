@@ -138,6 +138,7 @@ namespace BlackMisc
             GlobalIndexCGlobalSetup                     = 12000,
             GlobalIndexCUpdateInfo                      = 12100,
             GlobalIndexCVatsimSetup                     = 12200,
+            GlobalIndexCLauncherSetup                   = 12300,
             GlobalIndexCGuiStateDbOwnModelsComponent    = 14000,
             GlobalIndexCGuiStateDbOwnModelSetComponent  = 14100,
             GlobalIndexCDockWidgetSettings              = 14200,
@@ -149,6 +150,9 @@ namespace BlackMisc
             GlobalIndexCAtcStationsSettings             = 14800,
             GlobalIndexCInterpolatioRenderingSetup      = 16000,
             GlobalIndexCInterpolationHints              = 16100,
+            GlobalIndexSwiftPilotClient                 = 17000,
+            GlobalIndexSwiftCore                        = 17100,
+            GlobalIndexSwiftLauncher                    = 17200,
             GlobalIndexLineNumber                       = 20000, //!< pseudo index for line numbers
         };
 
