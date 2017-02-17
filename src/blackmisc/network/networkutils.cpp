@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackmisc/eventloop.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/network/server.h"
 #include "blackconfig/buildconfig.h"
@@ -86,32 +87,20 @@ namespace BlackMisc
 
         bool CNetworkUtils::canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs)
         {
-            // KB: I have had an issue with QTcpSocket. It was stuck in HostLookupState and did
-            // only recover after a reboot for no obvious reason.
-            // Currently trying the ping alternative
-            bool ping = CNetworkUtils::canPing(hostAddress);
-            if (ping) { return true; }
-
-            // http://qt-project.org/forums/viewthread/9346
-            // socket.waitForConnected() unrelaiable under Windows, see Qt docu
             QTcpSocket socket;
-            QTcpSocket::SocketState socketState;
-            socket.connectToHost(hostAddress, static_cast<quint16>(port), QTcpSocket::ReadOnly);
-            socketState = socket.state();
-            bool connected = (socketState == QTcpSocket::ConnectedState);
+            bool connected = CEventLoop::processEventsUntil(&socket, &QTcpSocket::connected, timeoutMs, [&]
+            {
+                socket.connectToHost(hostAddress, static_cast<quint16>(port));
+            });
+
             if (!connected)
             {
-                QEventLoop eventLoop;
-                QObject::connect(&socket, &QTcpSocket::connected, &eventLoop, &QEventLoop::quit);
-                QTimer::singleShot(timeoutMs, &eventLoop, &QEventLoop::quit);
-                eventLoop.exec();
+                message = QObject::tr("Connection failed : %1", "BlackMisc").arg(socket.errorString());
             }
-            socketState = socket.state();
-            connected = (socketState == QTcpSocket::ConnectedState);
-            message = connected ?
-                      QObject::tr("OK, connected", "BlackMisc") :
-                      QObject::tr("Connection failed : '%1'", "BlackMisc").arg(socket.errorString());
-            socket.close();
+            else
+            {
+                message = QObject::tr("OK, connected", "BlackMisc");
+            }
             return connected;
         }
 

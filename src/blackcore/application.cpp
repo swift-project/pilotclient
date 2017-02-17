@@ -20,6 +20,7 @@
 #include "blackmisc/datacache.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/directoryutils.h"
+#include "blackmisc/eventloop.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -349,13 +350,10 @@ namespace BlackCore
     CStatusMessageList CApplication::waitForSetup()
     {
         if (!this->m_setupReader) { return CStatusMessage(this).error("No setup reader"); }
-        if (!this->m_setupReader->isSetupAvailable())
+        CEventLoop::processEventsUntil(this, &CApplication::setupHandlingCompleted, 5000, [this]
         {
-            QEventLoop eventLoop;
-            QTimer::singleShot(5000, &eventLoop, &QEventLoop::quit);
-            connect(this, &CApplication::setupHandlingCompleted, &eventLoop, &QEventLoop::quit);
-            eventLoop.exec();
-        }
+            return this->m_setupReader->isSetupAvailable();
+        });
 
         // setup handling completed with success or failure, or we run into time out
         if (this->m_setupReader->isSetupAvailable()) { return CStatusMessage(this).info("Setup available"); }
