@@ -4,7 +4,7 @@ QT       += network dbus gui svg widgets
 
 TARGET = blackgui
 TEMPLATE = lib
-CONFIG += blackconfig blackmisc blackcore
+CONFIG += blackconfig blackmisc blackcore precompile_header
 
 contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib
@@ -13,10 +13,7 @@ contains(BLACK_CONFIG, Static) {
 INCLUDEPATH += ..
 DEPENDPATH += . ..
 
-# PRECOMPILED_HEADER = stdpch.h
-precompile_header:!isEmpty(PRECOMPILED_HEADER) {
-    DEFINES += USING_PCH
-}
+PRECOMPILED_HEADER = pch/pch.h
 
 DEFINES += LOG_IN_FILE BUILD_BLACKGUI_LIB
 

@@ -4,7 +4,7 @@ QT       += network dbus xml
 
 TARGET = blackmisc
 TEMPLATE = lib
-CONFIG += blackconfig
+CONFIG += blackconfig precompile_header
 
 contains(BLACK_CONFIG, Static) {
     CONFIG += staticlib
@@ -12,10 +12,8 @@ contains(BLACK_CONFIG, Static) {
 
 INCLUDEPATH += ..
 # DEPENDPATH += . .. // BlackMisc should be independent
-# PRECOMPILED_HEADER = stdpch.h
-precompile_header:!isEmpty(PRECOMPILED_HEADER) {
-    DEFINES += USING_PCH
-}
+
+PRECOMPILED_HEADER = pch/pch.h
 
 DEFINES += LOG_IN_FILE BUILD_BLACKMISC_LIB
 RESOURCES += blackmisc.qrc

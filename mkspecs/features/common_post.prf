@@ -43,6 +43,16 @@ macx:staticlib:isEmpty(SOURCES) {
 }
 
 ################################
+# Precompiled header
+################################
+
+# only MSVC gains any build time improvement
+!msvc: CONFIG -= precompile_header
+
+# not supported by clang_cl
+clang_cl: CONFIG -= precompile_header
+
+################################
 # Black libs
 ################################
 

@@ -4,6 +4,7 @@ msvc:DEFINES *= _SCL_SECURE_NO_WARNINGS
 msvc:QMAKE_CXXFLAGS_WARN_ON *= /wd4351 /wd4661
 clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra -Wno-unknown-pragmas
 gcc:QMAKE_CXXFLAGS_WARN_ON *= -Woverloaded-virtual
+gcc:QMAKE_CXXFLAGS_USE_PRECOMPILE = -Winvalid-pch $$QMAKE_CXXFLAGS_USE_PRECOMPILE
 
 # elevated warnings
 contains(BLACK_CONFIG, AllowNoisyWarnings) {
