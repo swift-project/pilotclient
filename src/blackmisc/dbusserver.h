@@ -85,10 +85,19 @@ namespace BlackMisc
         //! Address denoting a system bus server
         static const QString &systemBusAddress();
 
+        //! Connect to DBus
+        static QDBusConnection connectToDBus(const QString &dbusAddress, const QString &name = {});
+
+        //! Disconnect from Bus/Peer to peer
+        static void disconnectFromDBus(const QDBusConnection &connection, const QString &dBusAddress);
+
         //! Address denoting a P2P server at the given host and port.
         //! \remarks Port number may be embedding in the host string after a colon.
         //! \return p2p address like "tcp:host=foo.bar.com,port=1234"
         static QString p2pAddress(const QString &host, const QString &port = "");
+
+        //! P2P connection name
+        static const QString &p2pConnectionName();
 
         //! Turn something like 127.0.0.1:45000 into "tcp:host=127.0.0.1,port=45000"
         //! \note Handles also "session" and "system" as valid address while CDBusServer::p2pAddress is for
@@ -110,11 +119,15 @@ namespace BlackMisc
         //! Extract host and port from a DBus address
         static bool dBusAddressToHostAndPort(QString dbusAddress, QString &o_host, int &o_port);
 
+        //! Is the given connection one of the default connections?
+        static bool isQtDefaultConnection(const QDBusConnection &connection);
+
         //! Is there a DBus server running at the given address?
+        //! \note This is an incomplete test showing too optimistic results for session DBus
         //! @{
         static bool isDBusAvailable(const QString &host, int port, int timeoutMs = 1500);
-        static bool isDBusAvailable(const QString &host, int port, QString &o_message, int timeoutMs = 1500);
-        static bool isDBusAvailable(const QString &dbusAddress, QString &o_message, int timeoutMs = 1500);
+        static bool isDBusAvailable(const QString &host, int port, QString &message, int timeoutMs = 1500);
+        static bool isDBusAvailable(const QString &dbusAddress, QString &message, int timeoutMs = 1500);
         static bool isDBusAvailable(const QString &dbusAddress, int timeoutMs = 1500);
         //! @}
 

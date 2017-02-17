@@ -74,6 +74,11 @@ namespace BlackCore
             virtual bool existsFile(const QString &fileName) const override;
             //! @}
 
+            //! Used to test if there is a core running?
+            //! \note creates and connects via proxy object, so not meant for very frequent tests
+            //! \sa CDBusServer::isDBusAvailable as lightweight, but less accurate alternative
+            static bool isContextResponsive(const QString &dbusAddress, QString &msg, int timeoutMs = 1500);
+
         protected:
             //! Constructor
             CContextApplicationProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}

@@ -9,10 +9,10 @@
 
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/identifierlist.h"
 #include "blackmisc/loghandler.h"
-#include "blackmisc/settingscache.h"
 
 #include <QDBusConnection>
 #include <QLatin1Literal>
@@ -20,6 +20,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+
 namespace BlackCore
 {
     namespace Context
@@ -178,6 +179,29 @@ namespace BlackCore
         {
             if (fileName.isEmpty()) { return false; }
             return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("existsFile"), fileName);
+        }
+
+        bool CContextApplicationProxy::isContextResponsive(const QString &dBusAddress, QString &msg, int timeoutMs)
+        {
+            const bool connected = CDBusServer::isDBusAvailable(dBusAddress, msg, timeoutMs);
+            if (!connected) { return false; }
+
+            static const QString dBusName("contexttest");
+            QDBusConnection connection = CDBusServer::connectToDBus(dBusAddress, dBusName);
+            CContextApplicationProxy proxy(BlackMisc::CDBusServer::coreServiceName(), connection, CCoreFacadeConfig::Remote, nullptr);
+            const CIdentifier id("swift proxy test");
+            const CIdentifier pingId = proxy.registerApplication(id);
+            const bool ok = (id == pingId);
+            if (ok)
+            {
+                proxy.unregisterApplication(id);
+            }
+            else
+            {
+                msg = "Mismatch in proxy ping, context not ready.";
+            }
+            CDBusServer::disconnectFromDBus(connection, dBusAddress);
+            return ok;
         }
     } // namespace
 } // namespace

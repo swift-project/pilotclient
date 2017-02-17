@@ -36,7 +36,7 @@ namespace BlackMisc
                 testConnection.disconnectFromBus(coreServiceName());
 
                 // Sleep for 200 ms in order for dbus-daemon to finish loading.
-                // FIXME: Dirty workaround. Instead poll the the server up to x times every 50 ms until it connection is accepted.
+                // FIXME: Dirty workaround. Instead polling the server up to x times every 50 ms until its connection is accepted.
                 QThread::msleep(200);
 
                 QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
@@ -122,7 +122,7 @@ namespace BlackMisc
         if (address.contains("host=") || address.contains("port="))
         {
             // "tcp:host=foo.com,port=123"
-            QStringList parts(address.split(','));
+            const QStringList parts(address.split(','));
             for (const QString &part : parts)
             {
                 if (part.startsWith("host="))
@@ -146,6 +146,12 @@ namespace BlackMisc
             port = -1;
             return false;
         }
+    }
+
+    bool CDBusServer::isQtDefaultConnection(const QDBusConnection &connection)
+    {
+        return connection.name() == QDBusConnection::sessionBus().name() ||
+               connection.name() == QDBusConnection::systemBus().name();
     }
 
     bool CDBusServer::isQtDBusAddress(const QString &address)
@@ -300,6 +306,39 @@ namespace BlackMisc
         return system;
     }
 
+    QDBusConnection CDBusServer::connectToDBus(const QString &dBusAddress, const QString &name)
+    {
+        if (dBusAddress == sessionBusAddress())
+        {
+            if (name.isEmpty()) return QDBusConnection::sessionBus();
+            return QDBusConnection::connectToBus(QDBusConnection::SessionBus, name);
+        }
+        else if (dBusAddress == systemBusAddress())
+        {
+            if (name.isEmpty()) return QDBusConnection::systemBus();
+            return QDBusConnection::connectToBus(QDBusConnection::SystemBus, name);
+        }
+        else if (isP2PAddress(dBusAddress))
+        {
+            return QDBusConnection::connectToPeer(dBusAddress,
+                                                  name.isEmpty() ? CDBusServer::p2pConnectionName() : name);
+        }
+        return QDBusConnection("invalid");
+    }
+
+    void CDBusServer::disconnectFromDBus(const QDBusConnection &connection, const QString &dBusAddress)
+    {
+        if (CDBusServer::isQtDefaultConnection(connection)) return; // do not touch the default connections
+        if (CDBusServer::isP2PAddress(dBusAddress))
+        {
+            QDBusConnection::disconnectFromPeer(connection.name());
+        }
+        else
+        {
+            QDBusConnection::disconnectFromBus(connection.name());
+        }
+    }
+
     QString CDBusServer::p2pAddress(const QString &host, const QString &port)
     {
         QString h = host.trimmed().toLower().remove(' ');
@@ -329,7 +368,7 @@ namespace BlackMisc
             // 192.168.5.3:9300 style
             if (h.contains(":"))
             {
-                QStringList parts = h.split(":");
+                const QStringList parts = h.split(":");
                 h = parts.at(0).trimmed();
                 p = parts.at(1).trimmed();
             }
@@ -344,6 +383,12 @@ namespace BlackMisc
         return QString("tcp:host=%1,port=%2").arg(h).arg(p);
     }
 
+    const QString &CDBusServer::p2pConnectionName()
+    {
+        static const QString n("p2pConnection");
+        return n;
+    }
+
     QString CDBusServer::normalizeAddress(const QString &address)
     {
         const QString lc(address.toLower().trimmed());
@@ -355,7 +400,7 @@ namespace BlackMisc
         if (lc.startsWith("sys")) { return systemBusAddress(); }
         if (lc.startsWith("ses")) { return sessionBusAddress(); }
 
-        // Qt / p2p
+        // Qt / P2P
         if (isQtDBusAddress(address)) { return address; }
         return p2pAddress(address);
     }
@@ -374,41 +419,28 @@ namespace BlackMisc
         return CNetworkUtils::canConnect(address, port, unused, timeoutMs);
     }
 
-    bool CDBusServer::isDBusAvailable(const QString &address, int port, QString &o_message, int timeoutMs)
+    bool CDBusServer::isDBusAvailable(const QString &address, int port, QString &message, int timeoutMs)
     {
-        return CNetworkUtils::canConnect(address, port, o_message, timeoutMs);
+        return CNetworkUtils::canConnect(address, port, message, timeoutMs);
     }
 
-    bool CDBusServer::isDBusAvailable(const QString &dbusAddress, QString &o_message, int timeoutMs)
+    bool CDBusServer::isDBusAvailable(const QString &dBusAddress, QString &message, int timeoutMs)
     {
-        if (dbusAddress.isEmpty()) { o_message = "no address"; return false; }
-        if (isP2PAddress(dbusAddress))
+        if (dBusAddress.isEmpty()) { message = "No address."; return false; }
+        if (isP2PAddress(dBusAddress))
         {
             QString host;
             int port = -1;
-            if (dBusAddressToHostAndPort(dbusAddress, host, port))
-            {
-                return isDBusAvailable(host, port, o_message, timeoutMs);
-            }
-            else
-            {
-                return false;
-            }
+            return CDBusServer::dBusAddressToHostAndPort(dBusAddress, host, port) ?
+                   CDBusServer::isDBusAvailable(host, port, message, timeoutMs) :
+                   false;
         }
         else
         {
-            QString name = coreServiceName();
-            QDBusConnection connection = dbusAddress == systemBusAddress() ?
-                                         QDBusConnection::connectToBus(QDBusConnection::SystemBus, name) :
-                                         QDBusConnection::connectToBus(QDBusConnection::SessionBus, name);
-
-            // todo: further checks would need to go here
-            // failing session bus not detected yet
-
-            o_message = connection.lastError().message();
-            bool isConnected = connection.isConnected();
-
-            QDBusConnection::disconnectFromBus(name);
+            QDBusConnection connection = CDBusServer::connectToDBus(dBusAddress);
+            const bool isConnected = connection.isConnected();
+            message = connection.lastError().message();
+            CDBusServer::disconnectFromDBus(connection, dBusAddress);
             return isConnected;
         }
     }
@@ -416,6 +448,6 @@ namespace BlackMisc
     bool CDBusServer::isDBusAvailable(const QString &dbusAddress, int timeoutMs)
     {
         QString unused;
-        return isDBusAvailable(dbusAddress, unused, timeoutMs);
+        return CDBusServer::isDBusAvailable(dbusAddress, unused, timeoutMs);
     }
 } // namespace
