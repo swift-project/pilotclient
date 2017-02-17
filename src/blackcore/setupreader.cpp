@@ -160,7 +160,7 @@ namespace BlackCore
             QFile f(this->m_localSetupFileValue);
             if (!f.exists())
             {
-                sApp->cmdLineErrorMessage("File " + this->m_localSetupFileValue + " does not exist");
+                sApp->cmdLineErrorMessage(QString("File '%1' does not exist)").arg(this->m_localSetupFileValue));
                 return false;
             }
         }
@@ -172,7 +172,7 @@ namespace BlackCore
             {
                 if (!CNetworkUtils::canConnect(url))
                 {
-                    sApp->cmdLineErrorMessage("URL " + urlString + " not reachable");
+                    sApp->cmdLineErrorMessage(QString("URL '%1' not reachable").arg(urlString));
                     return false;
                 }
             }

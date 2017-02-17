@@ -14,13 +14,13 @@
    <string>swiftcore</string>
   </property>
   <widget class="QWidget" name="qw_MainWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gl_Main">
     <item row="1" column="2">
      <widget class="QGroupBox" name="gb_Controls">
       <property name="title">
        <string>Controls</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="gl_Controls">
        <item row="0" column="1">
         <widget class="QPushButton" name="pb_StartCore">
          <property name="styleSheet">
@@ -86,7 +86,7 @@ QTextEdit {
       <property name="title">
        <string>DBus Mode</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="gl_DBusMode">
        <item row="0" column="0">
         <widget class="QRadioButton" name="rb_SessionBus">
          <property name="text">

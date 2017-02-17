@@ -307,12 +307,15 @@ namespace BlackMisc
         return it->filePath();
     }
 
+    //! \privatesection
+    //! @{
     QStringList getSwiftExecutablesImpl()
     {
         static const QFileInfo mySelf = QFileInfo(QCoreApplication::applicationFilePath()); // path + dir
         static const QStringList filter("*." + mySelf.suffix());
         return mySelf.dir().entryList(filter);
     }
+    //! @}
 
     const QStringList &CFileUtils::getSwiftExecutables()
     {

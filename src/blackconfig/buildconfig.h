@@ -63,7 +63,7 @@ namespace BlackConfig
         //! Beta test?
         static bool isBetaTest();
 
-        //! Can run in dev. environment
+        //! Can run in dev. environment?
         static bool canRunInDeveloperEnvironment();
 
         //! Shipped version?

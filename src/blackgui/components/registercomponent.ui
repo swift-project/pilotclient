@@ -34,6 +34,9 @@
    </property>
    <item>
     <widget class="BlackGui::Views::CIdentifierView" name="tvp_RegisteredComponents">
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>

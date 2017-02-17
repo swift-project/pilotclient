@@ -35,7 +35,7 @@ namespace BlackGui
 
     void CDockWidgetInfoBar::ps_onStyleSheetsChanged()
     {
-        QString st = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameInfoBar());
+        const QString st = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameInfoBar());
         this->setStyleSheet(st);
     }
 }
