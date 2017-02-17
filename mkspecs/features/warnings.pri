@@ -3,6 +3,7 @@ msvc:DEFINES *= _SCL_SECURE_NO_WARNINGS
 # swift standard warnings
 msvc:QMAKE_CXXFLAGS_WARN_ON *= /wd4351 /wd4661
 clang_cl:QMAKE_CXXFLAGS_WARN_ON *= -Wall -Wextra -Wno-unknown-pragmas
+gcc:QMAKE_CXXFLAGS_WARN_ON *= -Woverloaded-virtual
 
 # elevated warnings
 contains(BLACK_CONFIG, AllowNoisyWarnings) {
@@ -23,7 +24,7 @@ contains(BLACK_CONFIG, AllowNoisyWarnings) {
 }
 
 # gcc 5 can warn about missing override keyword
-g++ {
+gcc {
     GCC_VERSION = $$system($$QMAKE_CXX -dumpversion)
     GCC_MAJOR = $$section(GCC_VERSION, ., 0, 0)
     greaterThan(GCC_MAJOR, 4) {
