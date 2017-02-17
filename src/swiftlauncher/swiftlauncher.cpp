@@ -12,6 +12,7 @@
 #include "blackconfig/buildconfig.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/setupreader.h"
 #include "blackmisc/dbusserver.h"
 #include "blackmisc/network/networkutils.h"
@@ -29,6 +30,8 @@
 using namespace BlackConfig;
 using namespace BlackGui;
 using namespace BlackCore;
+using namespace BlackCore::Application;
+using namespace BlackCore::Context;
 using namespace BlackCore::Data;
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -36,6 +39,7 @@ using namespace BlackMisc::Network;
 CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     QDialog(parent, CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowNormal)),
     CEnableForFramelessWindow(CEnableForFramelessWindow::WindowFrameless, true, "framelessMainWindow", this),
+    CIdentifiable(this),
     ui(new Ui::CSwiftLauncher)
 {
     ui->setupUi(this);
@@ -60,15 +64,13 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
 
     // default from settings
-    const QString dbus(m_dbusServerAddress.getThreadLocal());
-    this->setDefault(dbus);
+    this->setDefaults();
 
     // periodically check
-    connect(&m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::ps_checkRunningApplications);
-    m_checkTimer.setInterval(5000);
+    connect(&m_checkTimer, &QTimer::timeout, this, &CSwiftLauncher::ps_checkRunningApplicationsAndCore);
+    m_checkTimer.setInterval(2500);
     m_checkTimer.start();
 }
-
 
 CSwiftLauncher::~CSwiftLauncher()
 { }
@@ -87,8 +89,8 @@ CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
 CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 {
     if (ui->rb_SwiftStandalone->isChecked()) { return CoreModes::CoreInGuiProcess; }
-    if (ui->rb_SwiftCoreAudio->isChecked()) { return CoreModes::CoreExternalCoreAudio; }
-    if (ui->rb_SwiftCoreGuiAudio->isChecked()) { return CoreModes::CoreExternalAudioGui; }
+    if (ui->rb_SwiftCoreAudioOnCore->isChecked()) { return CoreModes::CoreExternalCoreAudio; }
+    if (ui->rb_SwiftCoreAudioOnGui->isChecked()) { return CoreModes::CoreExternalAudioGui; }
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
     return CoreModes::CoreInGuiProcess;
@@ -199,6 +201,12 @@ void CSwiftLauncher::initDBusGui()
     connect(ui->rb_DBusP2P, &QRadioButton::clicked, this, &CSwiftLauncher::ps_dbusServerModeSelected);
     connect(ui->rb_DBusSession, &QRadioButton::clicked, this, &CSwiftLauncher::ps_dbusServerModeSelected);
     connect(ui->rb_DBusSystem, &QRadioButton::clicked, this, &CSwiftLauncher::ps_dbusServerModeSelected);
+
+    // normally no system Bus on Windows
+    if (CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::isShippedVersion())
+    {
+        ui->rb_DBusSystem->setEnabled(false);
+    }
 }
 
 void CSwiftLauncher::initVersion()
@@ -218,15 +226,16 @@ void CSwiftLauncher::initLogDisplay()
 
 void CSwiftLauncher::startSwiftCore()
 {
+    this->saveSetup();
     const QString dBus(this->getDBusAddress());
-    m_dbusServerAddress.setAndSave(dBus);
+
     QStringList args(
     {
         "--start",
         "--dbus", dBus
     });
 
-    if (ui->rb_SwiftCoreAudio->isChecked())
+    if (ui->rb_SwiftCoreAudioOnCore->isChecked())
     {
         args.append("--coreaudio");
     }
@@ -252,44 +261,43 @@ void CSwiftLauncher::setSwiftDataExecutable()
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
-    QString msg;
-    if (this->isStandaloneGuiSelected() || this->canConnectDBusServer(msg))
+    m_executable.clear();
+    if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
+    m_executable += CBuildConfig::swiftGuiExecutableName();
+    QStringList args
     {
-        m_executable.clear();
-        if (CBuildConfig::isRunningOnUnixPlatform()) { m_executable += "./"; }
-        m_executable += CBuildConfig::swiftGuiExecutableName();
-        QStringList args
-        {
-            "--core", CoreModes::coreModeToString(getCoreMode()),
-            "--window", CEnableForFramelessWindow::windowModeToString(getWindowMode())
-        };
-        if (!this->isStandaloneGuiSelected())
-        {
-            const QString dBus(this->getDBusAddress());
-            m_dbusServerAddress.setAndSave(dBus);
+        "--core", CoreModes::coreModeToString(getCoreMode()),
+        "--window", CEnableForFramelessWindow::windowModeToString(getWindowMode())
+    };
 
-            args.append("--dbus");
-            args.append(dBus); // already converted
-        }
-        m_executableArgs = args;
-        return true;
-    }
-    else
+    this->saveSetup();
+    if (!this->isStandaloneGuiSelected())
     {
-        m_executable = CBuildConfig::swiftGuiExecutableName();
-        m_executableArgs.clear();
-        static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
-        CStatusMessage m(cats, CStatusMessage::SeverityError,
-                         "DBus server for " + getDBusAddress() + " can not be connected: " + msg);
-        this->ps_showStatusMessage(m);
-        return false;
+        const QString dBus(this->getDBusAddress());
+        this->saveSetup();
+        args.append("--dbus");
+        args.append(dBus); // already converted
+
+        QString msg;
+        if (!CSwiftLauncher::canConnectSwiftOnDBusServer(dBus, msg))
+        {
+            static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::validation() }));
+            const CStatusMessage m(cats, CStatusMessage::SeverityError,
+                                   "DBus server for '" + this->getDBusAddress() + "' can not be connected.\n\n" +
+                                   "Likely the core is not running or is not reachable.\n\n" +
+                                   "Details: " + msg);
+            this->ps_showStatusMessage(m);
+            return false;
+        }
     }
+    m_executableArgs = args;
+    return true;
 }
 
-bool CSwiftLauncher::canConnectDBusServer(QString &msg) const
+bool CSwiftLauncher::canConnectSwiftOnDBusServer(const QString &dBusAddress, QString &msg) const
 {
     if (this->isStandaloneGuiSelected()) { return true; } // do not mind here
-    return CDBusServer::isDBusAvailable(getDBusAddress(), msg);
+    return CContextApplicationProxy::isContextResponsive(dBusAddress, msg);
 }
 
 bool CSwiftLauncher::isStandaloneGuiSelected() const
@@ -297,14 +305,15 @@ bool CSwiftLauncher::isStandaloneGuiSelected() const
     return ui->rb_SwiftStandalone->isChecked();
 }
 
-void CSwiftLauncher::setDefault(const QString &value)
+void CSwiftLauncher::setDefaults()
 {
-    QString v(value.toLower().trimmed());
-    if (v.isEmpty() || v.startsWith("session"))
+    const CLauncherSetup setup(m_setup.get());
+    const QString dbus(setup.getDBusAddress().toLower().trimmed());
+    if (dbus.isEmpty() || dbus.startsWith("session"))
     {
         ui->rb_DBusSession->setChecked(true);
     }
-    else if (v.startsWith("sys"))
+    else if (dbus.startsWith("sys"))
     {
         ui->rb_DBusSystem->setChecked(true);
     }
@@ -312,6 +321,40 @@ void CSwiftLauncher::setDefault(const QString &value)
     {
         ui->rb_DBusP2P->setChecked(true);
     }
+    if (setup.useFramelessWindow())
+    {
+        ui->rb_WindowFrameless->setChecked(true);
+    }
+    else
+    {
+        ui->rb_WindowNormal->setChecked(true);
+    }
+    switch (setup.getCoreMode())
+    {
+    case CLauncherSetup::Standalone: ui->rb_SwiftStandalone->setChecked(true); break;
+    case CLauncherSetup::CoreWithAudioOnCore: ui->rb_SwiftCoreAudioOnCore->setChecked(true); break;
+    case CLauncherSetup::CoreWithAudioOnGui: ui->rb_SwiftCoreAudioOnGui->setChecked(true); break;
+    default:
+        break;
+    }
+}
+
+void CSwiftLauncher::saveSetup()
+{
+    CLauncherSetup setup = m_setup.get();
+    const QString dBus(this->getDBusAddress());
+    if (!dBus.isEmpty()) { setup.setDBusAddress(dBus); }
+    setup.setFramelessWindow(ui->rb_WindowFrameless->isChecked());
+    setup.setCoreMode(CLauncherSetup::Standalone);
+    if (ui->rb_SwiftCoreAudioOnCore->isChecked())
+    {
+        setup.setCoreMode(CLauncherSetup::CoreWithAudioOnCore);
+    }
+    else if (ui->rb_SwiftCoreAudioOnGui->isChecked())
+    {
+        setup.setCoreMode(CLauncherSetup::CoreWithAudioOnGui);
+    }
+    m_setup.set(setup);
 }
 
 QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs)
@@ -393,7 +436,7 @@ void CSwiftLauncher::ps_startButtonPressed()
     }
     else if (sender == ui->tb_SwiftCore)
     {
-        if (this->isStandaloneGuiSelected()) { ui->rb_SwiftCoreGuiAudio->setChecked(true); }
+        if (this->isStandaloneGuiSelected()) { ui->rb_SwiftCoreAudioOnGui->setChecked(true); }
         ui->tb_SwiftCore->setEnabled(false);
         m_startCoreWaitCycles = 2;
         this->startSwiftCore();
@@ -410,7 +453,7 @@ void CSwiftLauncher::ps_dbusServerAddressSelectionChanged(const QString &current
     Q_UNUSED(currentText);
     if (this->isStandaloneGuiSelected())
     {
-        ui->rb_SwiftCoreGuiAudio->setChecked(true);
+        ui->rb_SwiftCoreAudioOnGui->setChecked(true);
     }
     ui->rb_DBusP2P->setChecked(true);
 }
@@ -419,7 +462,7 @@ void CSwiftLauncher::ps_dbusServerModeSelected(bool selected)
 {
     if (!selected) { return; }
     if (!this->isStandaloneGuiSelected()) { return; }
-    ui->rb_SwiftCoreGuiAudio->setChecked(true);
+    ui->rb_SwiftCoreAudioOnGui->setChecked(true);
 }
 
 void CSwiftLauncher::ps_showStatusMessage(const CStatusMessage &msg)
@@ -463,26 +506,19 @@ void CSwiftLauncher::ps_showLogPage()
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherLog);
 }
 
-void CSwiftLauncher::ps_checkRunningApplications()
+void CSwiftLauncher::ps_checkRunningApplicationsAndCore()
 {
-    const CApplicationInfoList runningApps = sGui->getRunningApplications();
+    // wait some time before buttons are enabled (allows startup)
     if (m_startCoreWaitCycles > 0) { m_startCoreWaitCycles--; }
-    else { ui->tb_SwiftCore->setEnabled(true); }
     if (m_startMappingToolWaitCycles > 0) { m_startMappingToolWaitCycles--; }
-    else { ui->tb_SwiftMappingTool->setEnabled(true); }
+    if (m_startGuiWaitCycles > 0) { m_startGuiWaitCycles--; }
 
-    for (const CApplicationInfo &info : runningApps)
-    {
-        switch (info.application())
-        {
-        case CApplicationInfo::PilotClientCore :
-            ui->tb_SwiftCore->setEnabled(false);
-            break;
-        case CApplicationInfo::MappingTool :
-            ui->tb_SwiftMappingTool->setEnabled(false);
-            break;
-        default:
-            break;
-        }
-    }
+    const CApplicationInfoList runningApps = sGui->getRunningApplications();
+    const bool foundLocalCore = runningApps.containsApplication(CApplicationInfo::PilotClientCore);
+    const bool foundLocalMappingTool = runningApps.containsApplication(CApplicationInfo::MappingTool);
+    const bool foundLocalPilotClientGui = runningApps.containsApplication(CApplicationInfo::PilotClientGui);
+
+    ui->tb_SwiftCore->setEnabled(!foundLocalCore && m_startCoreWaitCycles < 1);
+    ui->tb_SwiftMappingTool->setEnabled(!foundLocalMappingTool && m_startMappingToolWaitCycles < 1);
+    ui->tb_SwiftGui->setEnabled(!foundLocalPilotClientGui && m_startGuiWaitCycles < 1);
 }

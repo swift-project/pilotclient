@@ -17,8 +17,9 @@
 #include "blackgui/mainwindowaccess.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/data/updateinfo.h"
+#include "blackcore/data/launchersetup.h"
 #include "blackcore/coremodeenums.h"
-#include "blackcore/application/applicationsettings.h"
+#include "blackmisc/identifiable.h"
 #include <QDialog>
 #include <QTimer>
 #include <QScopedPointer>
@@ -35,7 +36,8 @@ namespace Ui { class CSwiftLauncher; }
 class CSwiftLauncher :
     public QDialog,
     public BlackGui::CEnableForFramelessWindow,
-    public BlackGui::IMainWindowAccess
+    public BlackGui::IMainWindowAccess,
+    public BlackMisc::CIdentifiable
 {
     Q_OBJECT
     Q_INTERFACES(BlackGui::IMainWindowAccess)
@@ -56,7 +58,7 @@ public:
     //! Destructor
     virtual ~CSwiftLauncher();
 
-    //! Executable
+    //! Executable (to be started)
     const QString &getExecutable() const { return m_executable; }
 
     //! Arguments
@@ -72,19 +74,16 @@ protected:
     //! \copydoc QDialog::mouseMoveEvent
     void mouseMoveEvent(QMouseEvent *event) override;
 
-private slots:
-    //! Display latest news
-    void ps_displayLatestNews(QNetworkReply *reply);
-
 private:
-    QScopedPointer<Ui::CSwiftLauncher>             ui;
+    QScopedPointer<Ui::CSwiftLauncher> ui;
     BlackMisc::CData<BlackCore::Data::TUpdateInfo> m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
-    BlackMisc::CSetting<BlackCore::Application::TDBusServerAddress> m_dbusServerAddress { this };      //!< DBus address
+    BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //! setup, ie last user selection
     QString     m_executable;
     QStringList m_executableArgs;
     QTimer      m_checkTimer { this };
     int         m_startCoreWaitCycles = 0;
     int         m_startMappingToolWaitCycles = 0;
+    int         m_startGuiWaitCycles = 0;
     bool        m_updateInfoLoaded = false;
 
     //! Get core mode
@@ -128,13 +127,16 @@ private:
     bool setSwiftGuiExecutable();
 
     //! Can DBus server be connected
-    bool canConnectDBusServer(QString &msg) const;
+    bool canConnectSwiftOnDBusServer(const QString &dbusAddress, QString &msg) const;
 
     //! Standalone GUI selected
     bool isStandaloneGuiSelected() const;
 
     //! Set default
-    void setDefault(const QString &value);
+    void setDefaults();
+
+    //! Save state
+    void saveSetup();
 
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
@@ -145,6 +147,9 @@ private slots:
 
     //! Loaded latest version
     void ps_loadedUpdateInfo(bool success);
+
+    //! Display latest news
+    void ps_displayLatestNews(QNetworkReply *reply);
 
     //! Cache values have been changed
     void ps_changedUpdateInfoCache();
@@ -177,7 +182,7 @@ private slots:
     void ps_showLogPage();
 
     //! Check if applicationas are already running
-    void ps_checkRunningApplications();
+    void ps_checkRunningApplicationsAndCore();
 };
 
 #endif // guard

@@ -212,7 +212,7 @@
                <number>4</number>
               </property>
               <item row="0" column="1" alignment="Qt::AlignHCenter">
-               <widget class="QRadioButton" name="rb_SwiftCoreGuiAudio">
+               <widget class="QRadioButton" name="rb_SwiftCoreAudioOnGui">
                 <property name="text">
                  <string>GUI and core</string>
                 </property>
@@ -222,7 +222,7 @@
                </widget>
               </item>
               <item row="0" column="2" alignment="Qt::AlignHCenter">
-               <widget class="QRadioButton" name="rb_SwiftCoreAudio">
+               <widget class="QRadioButton" name="rb_SwiftCoreAudioOnCore">
                 <property name="text">
                  <string>GUI and core</string>
                 </property>
@@ -440,6 +440,18 @@
               <string>Check for &amp;updates</string>
              </attribute>
              <layout class="QVBoxLayout" name="vl_Updates">
+              <property name="leftMargin">
+               <number>3</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>3</number>
+              </property>
+              <property name="bottomMargin">
+               <number>3</number>
+              </property>
               <item>
                <widget class="QGroupBox" name="gb_SoftwareUpdates">
                 <property name="title">
@@ -447,16 +459,16 @@
                 </property>
                 <layout class="QGridLayout" name="gl_Version">
                  <property name="leftMargin">
-                  <number>2</number>
+                  <number>4</number>
                  </property>
                  <property name="topMargin">
-                  <number>2</number>
+                  <number>4</number>
                  </property>
                  <property name="rightMargin">
-                  <number>2</number>
+                  <number>4</number>
                  </property>
                  <property name="bottomMargin">
-                  <number>2</number>
+                  <number>4</number>
                  </property>
                  <item row="3" column="1" colspan="3">
                   <widget class="QWidget" name="wi_NoNewVersion" native="true">
@@ -588,16 +600,7 @@
                  <item>
                   <widget class="QScrollArea" name="sa_DataUpdates">
                    <property name="styleSheet">
-                    <string notr="true">border: 0px;</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::NoFrame</enum>
-                   </property>
-                   <property name="frameShadow">
-                    <enum>QFrame::Plain</enum>
-                   </property>
-                   <property name="lineWidth">
-                    <number>0</number>
+                    <string notr="true">border: 0px; padding: 2px;</string>
                    </property>
                    <property name="widgetResizable">
                     <bool>true</bool>
@@ -607,8 +610,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>368</width>
-                      <height>185</height>
+                      <width>376</width>
+                      <height>189</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -642,7 +645,6 @@
                        <property name="frameShadow">
                         <enum>QFrame::Raised</enum>
                        </property>
-                       <zorder>comp_InfoBar</zorder>
                       </widget>
                      </item>
                     </layout>
