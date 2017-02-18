@@ -108,6 +108,7 @@ namespace BlackCore
             QCoreApplication::setApplicationName(this->m_applicationName);
             QCoreApplication::setApplicationVersion(CVersion::version());
             this->setObjectName(this->m_applicationName);
+            this->m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::CApplication::getSwiftApplication());
             const QString executable = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
             if (executable.startsWith("test"))
             {
@@ -123,7 +124,7 @@ namespace BlackCore
             //
 
             // Translations
-            QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
+            const QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
             CLogMessage(this).debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
             QTranslator translator;
             if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/")) { CLogMessage(this).debug() << "Translator loaded"; }
@@ -152,8 +153,8 @@ namespace BlackCore
 
     bool CApplication::registerAsRunning()
     {
-        CApplicationInfoList apps = getRunningApplications();
-        const CApplicationInfo myself = instance()->getApplicationInfo();
+        CApplicationInfoList apps = CApplication::getRunningApplications();
+        const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
         if (!apps.contains(myself)) { apps.insert(myself); }
         const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
         if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error("Failed to write to application list file"); }
@@ -177,7 +178,7 @@ namespace BlackCore
         CApplicationInfo::ApplicationMode mode;
         if (isRunningInDeveloperEnvironment()) { mode |= CApplicationInfo::Developer; }
         if (CBuildConfig::isBetaTest()) { mode |= CApplicationInfo::BetaTest; }
-        return { getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CVersion::version(), CProcessInfo::currentProcess() };
+        return { CApplication::getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CVersion::version(), CProcessInfo::currentProcess() };
     }
 
     CApplicationInfoList CApplication::getRunningApplications()
@@ -209,6 +210,11 @@ namespace BlackCore
     {
         static const QString s(QCoreApplication::instance()->applicationName() + " " + this->versionStringDevBetaInfo());
         return s;
+    }
+
+    void CApplication::setSingleApplication(bool singleApplication)
+    {
+        this->m_singleApplication = singleApplication;
     }
 
     CApplicationInfo::Application CApplication::getSwiftApplication() const
@@ -300,11 +306,8 @@ namespace BlackCore
             if (this->m_startSetupReader && !this->m_setupReader->isSetupAvailable())
             {
                 msgs = this->requestReloadOfSetupAndVersion();
-                if (msgs.isSuccess())
-                {
-                    msgs.push_back(this->waitForSetup());
-                }
                 if (msgs.isFailure()) { break; }
+                if (msgs.isSuccess()) { msgs.push_back(this->waitForSetup()); }
             }
 
             // start hookin
@@ -934,6 +937,12 @@ namespace BlackCore
         if (CBuildConfig::isLifetimeExpired())
         {
             this->cmdLineErrorMessage("Program exired " + CBuildConfig::getEol().toString());
+            return false;
+        }
+
+        if (this->m_singleApplication && this->m_alreadyRunning)
+        {
+            this->cmdLineErrorMessage("Program must only run once");
             return false;
         }
 

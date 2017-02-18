@@ -125,6 +125,9 @@ namespace BlackCore
         //! Version, name beta and dev info
         const QString &getApplicationNameVersionBetaDev() const;
 
+        //! Force single application (only one instance)
+        void setSingleApplication(bool singleApplication);
+
         //! swift application running
         BlackMisc::CApplicationInfo::Application getSwiftApplication() const;
 
@@ -437,12 +440,14 @@ namespace BlackCore
         QCommandLineOption m_cmdHelp {"help"};             //!< help option
         QCommandLineOption m_cmdVersion {"version"};       //!< version option
         QCommandLineOption m_cmdDBusAddress {"empty"};     //!< DBus address
-        QCommandLineOption m_cmdDevelopment {"dev"};       //!< Dev. flag
+        QCommandLineOption m_cmdDevelopment {"dev"};       //!< Development flag
         QCommandLineOption m_cmdSharedDir {"shared"};      //!< Shared directory
         QCommandLineOption m_cmdClearCache {"clearcache"}; //!< Clear cache
         bool               m_parsed  = false;              //!< Parsing accomplished?
         bool               m_started = false;              //!< started with success?
         bool               m_startSetupReader = false;     //!< start the setup reader
+        bool               m_singleApplication = true;     //!< only one instance of that application
+        bool               m_alreadyRunning = false;       //!< Application already running
 
     private:
         //! init logging system
