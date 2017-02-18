@@ -71,8 +71,9 @@ namespace BlackGui
 
         //! Create a list of actions to select the info areas.
         //! This could be used in a menu or somewhere else.
+        //! \param withShortcut automatically add a shortcut
         //! \param parent which will own the action (deletion)
-        QList<QAction *> getInfoAreaSelectActions(QWidget *parent) const;
+        QList<QAction *> getInfoAreaSelectActions(bool withShortcut, QWidget *parent) const;
 
         //! Create a list of actions to select the info areas and toogle its floating state.
         //! This could be used in a menu or somewhere else.
@@ -272,7 +273,6 @@ namespace BlackGui
 
         //! Tab bar index changed
         void ps_onTabBarIndexChanged(int tabBarIndex);
-
     };
 } // namespace
 

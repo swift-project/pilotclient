@@ -89,12 +89,12 @@
    </widget>
    <widget class="QMenu" name="menu_InfoAreas">
     <property name="title">
-     <string>Info areas</string>
+     <string>&amp;Info areas</string>
     </property>
    </widget>
    <widget class="QMenu" name="menu_Mapping">
     <property name="title">
-     <string>Mapping</string>
+     <string>&amp;Mapping</string>
     </property>
     <addaction name="menu_MappingMaxData"/>
     <addaction name="menu_MappingMaxMapping"/>

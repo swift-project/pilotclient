@@ -105,7 +105,7 @@ namespace BlackGui
             subMenuRestore->setIcon(CIcons::load16());
             subMenuResetPositions->setIcon(CIcons::refresh16());
             subMenuRestore->addActions(this->getInfoAreaRestoreActions(subMenuRestore));
-            subMenuDisplay->addActions(this->getInfoAreaSelectActions(subMenuDisplay));
+            subMenuDisplay->addActions(this->getInfoAreaSelectActions(false, subMenuDisplay));
             subMenuResetPositions->addActions(this->getInfoAreaResetPositionActions(subMenuResetPositions));
 
             QSignalMapper *signalMapperToggleFloating = new QSignalMapper(menu);
@@ -205,7 +205,7 @@ namespace BlackGui
         return constDockWidgets;
     }
 
-    QList<QAction *> CInfoArea::getInfoAreaSelectActions(QWidget *parent) const
+    QList<QAction *> CInfoArea::getInfoAreaSelectActions(bool withShortcut, QWidget *parent) const
     {
         Q_ASSERT(parent);
         int i = 0;
@@ -214,9 +214,16 @@ namespace BlackGui
         {
             const QPixmap pm = this->indexToPixmap(i);
             const QString wt(dockWidgetInfoArea->windowTitleBackup());
+            static const QString keys("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");
             QAction *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaSelectActions:").append(wt));
+            if (withShortcut && i < keys.length())
+            {
+                static const QString ks("Ctrl+%1");
+                action->setShortcut(QKeySequence(ks.arg(keys.at(i))));
+            }
+
             connect(action, &QAction::triggered, this, &CInfoArea::selectAreaByAction);
             actions.append(action);
             i++;

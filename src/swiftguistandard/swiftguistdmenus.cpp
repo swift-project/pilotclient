@@ -71,7 +71,7 @@ void SwiftGuiStd::initMenus()
     sGui->addMenuInternals(*ui->menu_Internals);
     sGui->addMenuWindow(*ui->menu_Window);
     sGui->addMenuHelp(*ui->menu_Help);
-    ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(ui->menu_InfoAreas));
+    ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
 
     // for hotkeys
     const QString swift(CGuiActionBindHandler::pathSwiftPilotClient());
