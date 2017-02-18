@@ -32,6 +32,7 @@
 #include <QEventLoop>
 #include <QVariant>
 #include <QtDebug>
+#include <QTimer>
 #include <QRegularExpression>
 
 using namespace BlackConfig;
@@ -118,20 +119,31 @@ namespace BlackMisc
                 return false;
             }
 
+            // KB: I have had an issue with QTcpSocket. It was stuck in HostLookupState and did
+            // only recover after a reboot for no obvious reason.
+            // Currently trying the ping alternative
+            bool ping = CNetworkUtils::canPing(hostAddress);
+            if (ping) { return true; }
+
             // http://qt-project.org/forums/viewthread/9346
+            // socket.waitForConnected() unrelaiable under Windows, see Qt docu
             QTcpSocket socket;
-            bool connected = false;
-            socket.connectToHost(hostAddress, static_cast<quint16>(port));
-            if (!socket.waitForConnected(timeoutMs))
+            QTcpSocket::SocketState socketState;
+            socket.connectToHost(hostAddress, static_cast<quint16>(port), QTcpSocket::ReadOnly);
+            socketState = socket.state();
+            bool connected = (socketState == QTcpSocket::ConnectedState);
+            if (!connected)
             {
-                message = QObject::tr("Connection failed : %1", "BlackMisc").arg(socket.errorString());
-                connected = false;
+                QEventLoop eventLoop;
+                QObject::connect(&socket, &QTcpSocket::connected, &eventLoop, &QEventLoop::quit);
+                QTimer::singleShot(timeoutMs, &eventLoop, &QEventLoop::quit);
+                eventLoop.exec();
             }
-            else
-            {
-                message = QObject::tr("OK, connected", "BlackMisc");
-                connected = true;
-            }
+            socketState = socket.state();
+            connected = (socketState == QTcpSocket::ConnectedState);
+            message = connected ?
+                      QObject::tr("OK, connected", "BlackMisc") :
+                      QObject::tr("Connection failed : '%1'", "BlackMisc").arg(socket.errorString());
             socket.close();
             return connected;
         }
