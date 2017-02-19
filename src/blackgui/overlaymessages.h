@@ -108,6 +108,9 @@ namespace BlackGui
         //! Is awaiting a conformation
         bool hasPendingConfirmation() const;
 
+        //! Add a shadow
+        void addShadow();
+
     signals:
         //! Confirmation completed
         void confirmationCompleted();

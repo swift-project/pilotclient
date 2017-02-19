@@ -114,7 +114,10 @@ namespace BlackGui
         if (!this->m_overlayMessages)
         {
             this->m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
+            this->m_overlayMessages->addShadow();
         }
+
+        Q_ASSERT(this->m_overlayMessages);
 
         const bool isFrameless = CGuiUtility::isMainWindowFrameless();
         const QPoint middle = this->geometry().center();

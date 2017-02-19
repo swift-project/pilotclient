@@ -30,6 +30,7 @@
 #include <QSize>
 #include <QStackedWidget>
 #include <QStyle>
+#include <QGraphicsDropShadowEffect>
 #include <QTextEdit>
 #include <QToolButton>
 #include <Qt>
@@ -380,6 +381,15 @@ namespace BlackGui
     bool COverlayMessages::hasPendingConfirmation() const
     {
         return this->m_awaitingConfirmation;
+    }
+
+    void COverlayMessages::addShadow()
+    {
+        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+        QColor color(Qt::blue);
+        color.setAlpha(96);
+        shadow->setColor(color);
+        this->setGraphicsEffect(shadow);
     }
 
     void COverlayMessages::keyPressEvent(QKeyEvent *event)
