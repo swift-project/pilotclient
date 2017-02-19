@@ -292,6 +292,12 @@ namespace BlackMisc
         if (lock && m_cache->m_revision.isPendingRead())
         {
             CValueCachePacket newValues;
+            if (! m_cache->m_revision.isFound())
+            {
+                m_cache->loadFromFiles(persistentStore(), {}, {}, newValues, {}, true);
+                m_cache->m_revision.regenerate(newValues);
+                newValues.clear();
+            }
             auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues, m_cache->m_revision.timestampsAsString());
             newValues.setTimestamps(m_cache->m_revision.newerTimestamps());
 
@@ -364,7 +370,7 @@ namespace BlackMisc
         m_originalTimestamps.clear();
 
         QFile revisionFile(m_basename + "/.rev");
-        if (revisionFile.exists())
+        if ((m_found = revisionFile.exists()))
         {
             if (! revisionFile.open(QFile::ReadOnly | QFile::Text))
             {
@@ -435,6 +441,7 @@ namespace BlackMisc
                 if (m_pendingWrite) { return guard; }
                 return {};
             }
+            else { m_found = false; }
         }
 
         m_pendingRead = true;
@@ -483,6 +490,16 @@ namespace BlackMisc
         }
     }
 
+    void CDataCacheRevision::regenerate(const CValueCachePacket &keys)
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        Q_ASSERT(m_lockFile.isLocked());
+
+        writeNewRevision(m_originalTimestamps = keys.toTimestampMap());
+    }
+
     void CDataCacheRevision::finishUpdate(bool keepPromises)
     {
         QMutexLocker lock(&m_mutex);
@@ -497,12 +514,20 @@ namespace BlackMisc
         m_lockFile.unlock();
     }
 
+    bool CDataCacheRevision::isFound() const
+    {
+        QMutexLocker lock(&m_mutex);
+
+        Q_ASSERT(m_updateInProgress);
+        return m_found;
+    }
+
     bool CDataCacheRevision::isPendingRead() const
     {
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(m_updateInProgress);
-        return ! m_timestamps.isEmpty();
+        return ! m_timestamps.isEmpty() || ! m_found;
     }
 
     void CDataCacheRevision::notifyPendingWrite()

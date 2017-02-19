@@ -110,9 +110,15 @@ namespace BlackMisc
         //! During update, writes a new revision file with new timestamps.
         void writeNewRevision(const QMap<QString, qint64> &timestamps, const QSet<QString> &excludeKeys = {});
 
+        //! Write a new revision file with keys deduced from the available JSON files.
+        void regenerate(const CValueCachePacket &keys);
+
         //! Release the revision file lock and mark everything up-to-date (called by LockGuard destructor).
         //! \param keepPromises Don't break pending promises.
         void finishUpdate(bool keepPromises = false);
+
+        //! Existing revision file was found.
+        bool isFound() const;
 
         //! True if beginUpdate found some values with timestamps newer than in memory.
         bool isPendingRead() const;
@@ -165,6 +171,7 @@ namespace BlackMisc
     private:
         mutable QMutex m_mutex { QMutex::Recursive };
         bool m_updateInProgress = false;
+        bool m_found = false;
         bool m_pendingRead = false;
         bool m_pendingWrite = false;
         QString m_basename;

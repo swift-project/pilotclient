@@ -402,7 +402,7 @@ namespace BlackMisc
         return status;
     }
 
-    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values, const QString &keysMessage) const
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values, const QString &keysMessage, bool keysOnly) const
     {
         if (! QDir(dir).exists())
         {
@@ -442,15 +442,23 @@ namespace BlackMisc
             {
                 return CStatusMessage(this).error("Invalid JSON format in %1") << file.fileName();
             }
+
             CVariantMap temp;
-            const QString messagePrefix = QStringLiteral("Parsing %1.json").arg(it.key());
-            auto messages = temp.convertFromMemoizedJsonNoThrow(json.object(), it.value(), this, messagePrefix);
-            if (it.value().isEmpty()) { messages.push_back(temp.convertFromMemoizedJsonNoThrow(json.object(), this, messagePrefix)); }
-            if (! messages.isEmpty())
+            if (keysOnly)
             {
-                ok = false;
-                backupFile(file);
-                CLogMessage::preformatted(messages);
+                for (const auto &key : json.object().keys()) { temp.insert(key, {}); }
+            }
+            else
+            {
+                const QString messagePrefix = QStringLiteral("Parsing %1.json").arg(it.key());
+                auto messages = temp.convertFromMemoizedJsonNoThrow(json.object(), it.value(), this, messagePrefix);
+                if (it.value().isEmpty()) { messages.push_back(temp.convertFromMemoizedJsonNoThrow(json.object(), this, messagePrefix)); }
+                if (! messages.isEmpty())
+                {
+                    ok = false;
+                    backupFile(file);
+                    CLogMessage::preformatted(messages);
+                }
             }
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
