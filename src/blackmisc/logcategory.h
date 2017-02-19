@@ -159,6 +159,27 @@ namespace BlackMisc
             return cat;
         }
 
+        //! swift GUI
+        static const CLogCategory &swiftPilotClient()
+        {
+            static const CLogCategory cat { "SwiftGuiStd" };
+            return cat;
+        }
+
+        //! swift data tool (aka mapping tool)
+        static const CLogCategory &swiftDataTool()
+        {
+            static const CLogCategory cat { "CSwiftData" };
+            return cat;
+        }
+
+        //! swift core
+        static const CLogCategory &swiftCore()
+        {
+            static const CLogCategory cat { "CSwiftCore" };
+            return cat;
+        }
+
         //! VATSIM specific
         static const CLogCategory &vatsimSpecific()
         {
@@ -191,6 +212,9 @@ namespace BlackMisc
                 network(),
                 plugin(),
                 swiftDbWebservice(),
+                swiftCore(),
+                swiftDataTool(),
+                swiftPilotClient(),
                 services(),
                 settings(),
                 startup(),
