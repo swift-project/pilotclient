@@ -98,7 +98,7 @@ namespace BlackGui
         void initInnerFrame();
 
         double m_widthFactor = 0.7; //!< inner frame x factor
-        double m_heightFactor = 0.7; //!< inner frame x factor
+        double m_heightFactor = 0.6; //!< inner frame x factor
     };
 } // ns
 

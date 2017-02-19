@@ -54,7 +54,7 @@ namespace BlackGui
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
-        connect(ui->pb_Kill, &QPushButton::clicked, this, &COverlayMessages::ps_killClicked);
+        connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::ps_killClicked);
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAuto);
         ui->fr_Confirmation->setVisible(false);
@@ -134,8 +134,8 @@ namespace BlackGui
 
     void COverlayMessages::showKill(bool show)
     {
-        ui->pb_Kill->setVisible(show);
-        ui->pb_Kill->setEnabled(show);
+        ui->tb_Kill->setVisible(show);
+        ui->tb_Kill->setEnabled(show);
     }
 
     bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
@@ -264,23 +264,23 @@ namespace BlackGui
     {
         if (variant.canConvert<CStatusMessageList>())
         {
-            showOverlayMessages(variant.value<CStatusMessageList>(), timeOutMs);
+            this->showOverlayMessages(variant.value<CStatusMessageList>(), timeOutMs);
         }
         else if (variant.canConvert<CStatusMessage>())
         {
-            showOverlayMessage(variant.value<CStatusMessage>(), timeOutMs);
+            this->showOverlayMessage(variant.value<CStatusMessage>(), timeOutMs);
         }
         else if (variant.canConvert<CTextMessage>())
         {
-            showOverlayTextMessage(variant.value<CTextMessage>(), timeOutMs);
+            this->showOverlayTextMessage(variant.value<CTextMessage>(), timeOutMs);
         }
         else if (variant.canConvert<QPixmap>())
         {
-            showOverlayImage(variant.value<QPixmap>(), timeOutMs);
+            this->showOverlayImage(variant.value<QPixmap>(), timeOutMs);
         }
         else if (variant.canConvert<CPixmap>())
         {
-            showOverlayImage(variant.value<CPixmap>(), timeOutMs);
+            this->showOverlayImage(variant.value<CPixmap>(), timeOutMs);
         }
         else
         {
@@ -361,16 +361,16 @@ namespace BlackGui
             ui->pb_Cancel->setAutoDefault(false);
             ui->pb_Ok->setDefault(true);
             ui->pb_Ok->setAutoDefault(true);
-            this->m_lastConfirmation = QMessageBox::Ok;
             ui->pb_Ok->setFocus();
+            this->m_lastConfirmation = QMessageBox::Ok;
             break;
         case QMessageBox::Cancel:
             ui->pb_Ok->setDefault(false);
             ui->pb_Ok->setAutoDefault(false);
             ui->pb_Cancel->setDefault(true);
             ui->pb_Cancel->setAutoDefault(true);
-            this->m_lastConfirmation = QMessageBox::Cancel;
             ui->pb_Cancel->setFocus();
+            this->m_lastConfirmation = QMessageBox::Cancel;
             break;
         default:
             break;

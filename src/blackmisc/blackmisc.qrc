@@ -522,4 +522,10 @@
         <file>icons/preloaders/FloatingRays16.gif</file>
         <file>icons/preloaders/FloatingRays32.gif</file>
     </qresource>
+    <qresource prefix="/misc">
+        <file>icons/misc/skull64.png</file>
+        <file>icons/misc/skull128.png</file>
+        <file>icons/misc/skull256.png</file>
+        <file>icons/misc/skull512.png</file>
+    </qresource>
 </RCC>

@@ -10,6 +10,7 @@
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/overlaymessages.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/guiutility.h"
 #include "blackmisc/network/textmessage.h"
 
 #include <QKeyEvent>
@@ -98,8 +99,8 @@ namespace BlackGui
 
     QSize COverlayMessagesFrame::innerFrameSize() const
     {
-        int w = this->width();
-        int h = this->height();
+        const int w = this->width();
+        const int h = this->height();
         int wInner = this->m_widthFactor * w;
         int hInner = this->m_heightFactor * h;
         if (wInner > this->maximumWidth()) wInner = this->maximumWidth();
@@ -109,17 +110,19 @@ namespace BlackGui
 
     void COverlayMessagesFrame::initInnerFrame()
     {
-        QSize inner(innerFrameSize());
+        const QSize inner(innerFrameSize());
         if (!this->m_overlayMessages)
         {
             this->m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
         }
 
-        QPoint middle = this->geometry().center();
-        int w = inner.width();
-        int h = inner.height();
-        int x = middle.x() - w / 2;
-        int y = middle.y() - h / 2;
+        const bool isFrameless = CGuiUtility::isMainWindowFrameless();
+        const QPoint middle = this->geometry().center();
+        const double yFactor = isFrameless ? 1.25 : 1.5; // 2 is middle in normal window
+        const int w = inner.width();
+        const int h = inner.height();
+        const int x = middle.x() - w / 2;
+        const int y = middle.y() - h / yFactor;
         this->m_overlayMessages->setGeometry(x, y, w, h);
     }
 } // ns
