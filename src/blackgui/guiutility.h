@@ -27,6 +27,7 @@ class QLayout;
 class QMimeData;
 class QTabWidget;
 class QWidget;
+class QGraphicsOpacityEffect;
 
 namespace BlackGui
 {
@@ -105,6 +106,12 @@ namespace BlackGui
 
         //! Is top level widget?
         static bool isTopLevelWidget(QWidget *widget);
+
+        //! Fade in a widget
+        static QGraphicsOpacityEffect *fadeInWidget(int durationMs, QWidget *widget, double startValue = 0.0, double endValue = 1.0);
+
+        //! Fade out a widget
+        static QGraphicsOpacityEffect *fadeOutWidget(int durationMs, QWidget *widget, double startValue = 1.0, double endValue = 0.0);
 
     private:
         //! Constructor, use static methods only

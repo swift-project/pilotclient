@@ -29,8 +29,11 @@
 #include <QTabWidget>
 #include <QThreadStorage>
 #include <QWidget>
+#include <QTimer>
 #include <Qt>
 #include <QtGlobal>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
 
 using namespace BlackMisc;
 
@@ -344,5 +347,34 @@ namespace BlackGui
     bool CGuiUtility::isTopLevelWidget(QWidget *widget)
     {
         return QApplication::topLevelWidgets().contains(widget);
+    }
+
+    QGraphicsOpacityEffect *CGuiUtility::fadeInWidget(int durationMs, QWidget *widget, double startValue, double endValue)
+    {
+        // http://stackoverflow.com/questions/19087822/how-to-make-qt-widgets-fade-in-or-fade-out#
+        Q_ASSERT(widget);
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(widget);
+        widget->setGraphicsEffect(effect);
+        QPropertyAnimation *a = new QPropertyAnimation(effect, "opacity");
+        a->setDuration(durationMs);
+        a->setStartValue(startValue);
+        a->setEndValue(endValue);
+        a->setEasingCurve(QEasingCurve::InBack);
+        a->start(QPropertyAnimation::DeleteWhenStopped);
+        return effect;
+    }
+
+    QGraphicsOpacityEffect *CGuiUtility::fadeOutWidget(int durationMs, QWidget *widget, double startValue, double endValue)
+    {
+        Q_ASSERT(widget);
+        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(widget);
+        widget->setGraphicsEffect(effect);
+        QPropertyAnimation *a = new QPropertyAnimation(effect, "opacity");
+        a->setDuration(durationMs);
+        a->setStartValue(startValue);
+        a->setEndValue(endValue);
+        a->setEasingCurve(QEasingCurve::OutBack);
+        a->start(QPropertyAnimation::DeleteWhenStopped);
+        return effect;
     }
 } // ns
