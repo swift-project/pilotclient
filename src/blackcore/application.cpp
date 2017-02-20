@@ -1135,8 +1135,7 @@ namespace BlackCore
             return CStatusMessage(this).warning("%1 not found. Cannot init crash handler!") << handler;
         }
 
-        CUrl serverUrl;
-        serverUrl = getGlobalSetup().getCrashReportServerUrl();
+        const CUrl serverUrl = this->getGlobalSetup().getCrashReportServerUrl();
         std::map<std::string, std::string> annotations;
 
         // Caliper (mini-breakpad-server) annotations
@@ -1191,8 +1190,8 @@ namespace BlackCore
             connect(reply, &QNetworkReply::finished, callback.object(), [ = ]
             {
                 // Called when finished!
-                // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect
-                // but we use our approach as it gives us better control
+                // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect, but we use our approach as it gives us better control
+                // \fixme: Check again on Qt 5.9: Added redirects policy to QNetworkAccessManager (ManulRedirectsPolicy, NoLessSafeRedirectsPolicy, SameOriginRedirectsPolicy, UserVerifiedRedirectsPolicy)
                 const bool isRedirect = CNetworkUtils::isHttpStatusRedirect(reply);
                 if (isRedirect && maxRedirects > 0)
                 {
