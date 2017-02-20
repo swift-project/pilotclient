@@ -13,7 +13,7 @@
 #include "blackmisc/genericdbusinterface.h"
 
 #include <QDBusConnection>
-#include <QLatin1Literal>
+#include <QLatin1String>
 #include <QtGlobal>
 
 using namespace BlackMisc;
@@ -64,102 +64,102 @@ namespace BlackCore
 
         void CContextAudioProxy::leaveAllVoiceRooms()
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("leaveAllVoiceRooms"));
+            this->m_dBusInterface->callDBus(QLatin1String("leaveAllVoiceRooms"));
         }
 
         BlackMisc::Aviation::CCallsignSet CContextAudioProxy::getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1Literal("getRoomCallsigns"), comUnitValue);
+            return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignSet>(QLatin1String("getRoomCallsigns"), comUnitValue);
         }
 
         BlackMisc::Network::CUserList CContextAudioProxy::getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getRoomUsers"), comUnitValue);
+            return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1String("getRoomUsers"), comUnitValue);
         }
 
         CAudioDeviceInfoList CContextAudioProxy::getAudioDevices() const
         {
-            return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1Literal("getAudioDevices"));
+            return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1String("getAudioDevices"));
         }
 
         CAudioDeviceInfoList CContextAudioProxy::getCurrentAudioDevices() const
         {
-            return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1Literal("getCurrentAudioDevices"));
+            return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1String("getCurrentAudioDevices"));
         }
 
         void CContextAudioProxy::setCurrentAudioDevice(const CAudioDeviceInfo &audioDevice)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("setCurrentAudioDevice"), audioDevice);
+            this->m_dBusInterface->callDBus(QLatin1String("setCurrentAudioDevice"), audioDevice);
         }
 
         CVoiceRoomList CContextAudioProxy::getComVoiceRoomsWithAudioStatus() const
         {
-            return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRoomsWithAudioStatus"));
+            return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1String("getComVoiceRoomsWithAudioStatus"));
         }
 
         CVoiceRoomList CContextAudioProxy::getComVoiceRooms() const
         {
-            return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRooms"));
+            return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1String("getComVoiceRooms"));
         }
 
         CVoiceRoom CContextAudioProxy::getVoiceRoom(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue, bool withAudioStatus) const
         {
-            return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getVoiceRoom"), comUnitValue, withAudioStatus);
+            return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1String("getVoiceRoom"), comUnitValue, withAudioStatus);
         }
 
         void CContextAudioProxy::setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("setComVoiceRooms"), voiceRooms);
+            this->m_dBusInterface->callDBus(QLatin1String("setComVoiceRooms"), voiceRooms);
         }
 
         void CContextAudioProxy::setOwnCallsignForRooms(const CCallsign &callsign)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("setOwnCallsignForRooms"), callsign);
+            this->m_dBusInterface->callDBus(QLatin1String("setOwnCallsignForRooms"), callsign);
         }
 
         void CContextAudioProxy::playSelcalTone(const CSelcal &selcal) const
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("playSelcalTone"), selcal);
+            this->m_dBusInterface->callDBus(QLatin1String("playSelcalTone"), selcal);
         }
 
         void CContextAudioProxy::playNotification(CNotificationSounds::Notification notification, bool considerSettings) const
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification, considerSettings);
+            this->m_dBusInterface->callDBus(QLatin1String("playNotification"), notification, considerSettings);
         }
 
         void CContextAudioProxy::setVoiceOutputVolume(int volume)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("setVoiceOutputVolume"), volume);
+            this->m_dBusInterface->callDBus(QLatin1String("setVoiceOutputVolume"), volume);
         }
 
         int CContextAudioProxy::getVoiceOutputVolume() const
         {
-            return this->m_dBusInterface->callDBusRet<int>(QLatin1Literal("getVoiceOutputVolume"));
+            return this->m_dBusInterface->callDBusRet<int>(QLatin1String("getVoiceOutputVolume"));
         }
 
         void CContextAudioProxy::setMute(bool muted)
         {
-            return this->m_dBusInterface->callDBus(QLatin1Literal("setMute"), muted);
+            return this->m_dBusInterface->callDBus(QLatin1String("setMute"), muted);
         }
 
         bool CContextAudioProxy::isMuted() const
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isMuted"));
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("isMuted"));
         }
 
         void CContextAudioProxy::enableAudioLoopback(bool enable)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("enableAudioLoopback"), enable);
+            this->m_dBusInterface->callDBus(QLatin1String("enableAudioLoopback"), enable);
         }
 
         bool CContextAudioProxy::isAudioLoopbackEnabled() const
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isAudioLoopbackEnabled"));
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("isAudioLoopbackEnabled"));
         }
 
         bool CContextAudioProxy::parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
         }
     } // namespace
 } // namespace

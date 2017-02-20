@@ -139,7 +139,7 @@ namespace BlackSample
             QVariant tsqv = QVariant::fromValue(trafficServer);
             QDBusVariant tsv(tsqv);
             testServiceInterface.receiveVariant(tsv, tsqv.userType());
-            qtout << "Send server via interface and variant '" << trafficServer << QLatin1Literal("' ") <<  tsqv.userType() << endl;
+            qtout << "Send server via interface and variant '" << trafficServer << QLatin1String("' ") <<  tsqv.userType() << endl;
 
             // Aviation
             const CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(), CPhysicalQuantitiesConstants::FrequencyUnicom());

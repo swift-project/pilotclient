@@ -465,12 +465,12 @@ namespace BlackCore
     QString CApplication::getEnvironmentInfoString(const QString &separator) const
     {
         const QString env =
-            QLatin1Literal("Beta: ") %
+            QLatin1String("Beta: ") %
             boolToYesNo(CBuildConfig::isBetaTest()) %
-            QLatin1Literal(" dev.env,: ") %
+            QLatin1String(" dev.env,: ") %
             boolToYesNo(isRunningInDeveloperEnvironment()) %
             separator %
-            QLatin1Literal("Windows: ") %
+            QLatin1String("Windows: ") %
             boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform());
         return env;
     }
@@ -514,7 +514,7 @@ namespace BlackCore
     {
         const QString str =
             CVersion::version() %
-            QLatin1Char(' ') % (CBuildConfig::isReleaseBuild() ? QLatin1Literal("Release build") : QLatin1Literal("Debug build")) %
+            QLatin1Char(' ') % (CBuildConfig::isReleaseBuild() ? QLatin1String("Release build") : QLatin1String("Debug build")) %
             separator %
             getEnvironmentInfoString(separator) %
             separator %
@@ -1133,11 +1133,11 @@ namespace BlackCore
         static const QString extension = CBuildConfig::isRunningOnWindowsNtPlatform() ? ".exe" : QString();
         static const QString handler = CDirectoryUtils::applicationDirectoryPath() % QLatin1Char('/') % "swift_crashpad_handler" + extension;
         static const QString crashpadPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) %
-                                            QLatin1Literal("/org.swift-project/") %
+                                            QLatin1String("/org.swift-project/") %
                                             CDirectoryUtils::normalizedApplicationDirectory() %
-                                            QLatin1Literal("/crashpad");
-        static const QString database = crashpadPath % QLatin1Literal("/database");
-        static const QString metrics = crashpadPath % QLatin1Literal("/metrics");
+                                            QLatin1String("/crashpad");
+        static const QString database = crashpadPath % QLatin1String("/database");
+        static const QString metrics = crashpadPath % QLatin1String("/metrics");
 
         if (!QFileInfo::exists(handler))
         {

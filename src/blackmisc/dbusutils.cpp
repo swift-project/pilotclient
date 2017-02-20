@@ -37,12 +37,12 @@ namespace BlackMisc
             qv = arg.asVariant(); // this advances in the stream
             if (qv.canConvert<QDBusArgument>())
             {
-                out += indent % type % QLatin1Literal("signature ") % signature % QLatin1Char('\n');
+                out += indent % type % QLatin1String("signature ") % signature % QLatin1Char('\n');
                 out += CDBusUtils::getQDBusArgumentSignature(qv.value<QDBusArgument>(), level + 1) % QLatin1Char('\n');
             }
             else
             {
-                out += indent % QLatin1Literal("type: ") % type % QLatin1Literal("signature ") % signature % QLatin1Literal(" value ") % qv.toString() % QLatin1Char('\n');
+                out += indent % QLatin1String("type: ") % type % QLatin1String("signature ") % signature % QLatin1String(" value ") % qv.toString() % QLatin1Char('\n');
             }
         }
         arg.endArray();
@@ -53,15 +53,15 @@ namespace BlackMisc
     {
         switch (type)
         {
-        case QDBusArgument::BasicType: return QLatin1Literal("BasicType");
-        case QDBusArgument::VariantType: return QLatin1Literal("VariantType");
-        case QDBusArgument::ArrayType: return QLatin1Literal("ArrayType");
-        case QDBusArgument::StructureType: return QLatin1Literal("StructureType");
-        case QDBusArgument::MapType: return QLatin1Literal("MapType");
-        case QDBusArgument::MapEntryType: return QLatin1Literal("MapEntryType");
+        case QDBusArgument::BasicType: return QLatin1String("BasicType");
+        case QDBusArgument::VariantType: return QLatin1String("VariantType");
+        case QDBusArgument::ArrayType: return QLatin1String("ArrayType");
+        case QDBusArgument::StructureType: return QLatin1String("StructureType");
+        case QDBusArgument::MapType: return QLatin1String("MapType");
+        case QDBusArgument::MapEntryType: return QLatin1String("MapEntryType");
         case QDBusArgument::UnknownType:
         default:
-            return QLatin1Literal("Unknown type");
+            return QLatin1String("Unknown type");
         }
     }
 

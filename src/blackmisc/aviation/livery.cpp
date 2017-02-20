@@ -70,7 +70,7 @@ namespace BlackMisc
             QString s(getCombinedCode());
             if (!this->getDescription().isEmpty())
             {
-                s += QLatin1Literal(" (") % this->getDescription() % QLatin1Literal(")");
+                s += QLatin1String(" (") % this->getDescription() % QLatin1String(")");
             }
             return s;
         }
@@ -120,12 +120,12 @@ namespace BlackMisc
             static const QString liveryI18n(QCoreApplication::translate("Aviation", "Livery"));
 
             return (i18n ? liveryI18n : livery) %
-                   QLatin1Literal(" cc: '") % m_combinedCode %
-                   QLatin1Literal("' airline: '") % m_airline.toQString(i18n) %
-                   QLatin1Literal("' desc.: '") % m_description %
-                   QLatin1Literal("' F: '") % m_colorFuselage.hex() %
-                   QLatin1Literal("' T: '") % m_colorTail.hex() %
-                   QLatin1Literal("' Mil: ") % boolToYesNo(this->isMilitary());
+                   QLatin1String(" cc: '") % m_combinedCode %
+                   QLatin1String("' airline: '") % m_airline.toQString(i18n) %
+                   QLatin1String("' desc.: '") % m_description %
+                   QLatin1String("' F: '") % m_colorFuselage.hex() %
+                   QLatin1String("' T: '") % m_colorTail.hex() %
+                   QLatin1String("' Mil: ") % boolToYesNo(this->isMilitary());
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("Aviation", "Livery");

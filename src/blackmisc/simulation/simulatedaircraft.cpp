@@ -552,8 +552,8 @@ namespace BlackMisc
                               QLatin1Char(' ') % this->m_com1system.toQString(i18n) %
                               QLatin1Char(' ') % this->m_com2system.toQString(i18n) %
                               QLatin1Char(' ') % this->m_transponder.toQString(i18n) %
-                              QLatin1Literal(" enabled: ") % BlackMisc::boolToYesNo(this->isEnabled()) %
-                              QLatin1Literal(" rendered: ") % BlackMisc::boolToYesNo(this->isRendered()) %
+                              QLatin1String(" enabled: ") % BlackMisc::boolToYesNo(this->isEnabled()) %
+                              QLatin1String(" rendered: ") % BlackMisc::boolToYesNo(this->isRendered()) %
                               QLatin1Char(' ') % this->getModel().toQString(i18n);
             return s;
         }

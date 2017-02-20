@@ -14,7 +14,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 
 #include <QDBusConnection>
-#include <QLatin1Literal>
+#include <QLatin1String>
 #include <QObject>
 #include <QtGlobal>
 
@@ -80,142 +80,142 @@ namespace BlackCore
 
         CSimulatorPluginInfoList CContextSimulatorProxy::getAvailableSimulatorPlugins() const
         {
-            return m_dBusInterface->callDBusRet<CSimulatorPluginInfoList>(QLatin1Literal("getAvailableSimulatorPlugins"));
+            return m_dBusInterface->callDBusRet<CSimulatorPluginInfoList>(QLatin1String("getAvailableSimulatorPlugins"));
         }
 
         int CContextSimulatorProxy::getSimulatorStatus() const
         {
-            return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getSimulatorStatus"));
+            return m_dBusInterface->callDBusRet<int>(QLatin1String("getSimulatorStatus"));
         }
 
         CAirportList CContextSimulatorProxy::getAirportsInRange() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1Literal("getAirportsInRange"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1String("getAirportsInRange"));
         }
 
         CAircraftModelList CContextSimulatorProxy::getModelSet() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getModelSet"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1String("getModelSet"));
         }
 
         CSimulatorInfo CContextSimulatorProxy::simulatorsWithInitializedModelSet() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInfo>(QLatin1Literal("simulatorsWithInitializedModelSet"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInfo>(QLatin1String("simulatorsWithInitializedModelSet"));
         }
 
         QStringList CContextSimulatorProxy::getModelSetStrings() const
         {
-            return m_dBusInterface->callDBusRet<QStringList>(QLatin1Literal("getModelSetStrings"));
+            return m_dBusInterface->callDBusRet<QStringList>(QLatin1String("getModelSetStrings"));
         }
 
         QStringList CContextSimulatorProxy::getModelSetCompleterStrings(bool sorted) const
         {
-            return m_dBusInterface->callDBusRet<QStringList>(QLatin1Literal("getModelSetCompleterStrings"), sorted);
+            return m_dBusInterface->callDBusRet<QStringList>(QLatin1String("getModelSetCompleterStrings"), sorted);
         }
 
         CAircraftModelList CContextSimulatorProxy::getModelSetModelsStartingWith(const QString modelString) const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1Literal("getModelSetModelsStartingWith"), modelString);
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CAircraftModelList>(QLatin1String("getModelSetModelsStartingWith"), modelString);
         }
 
         int CContextSimulatorProxy::getModelSetCount() const
         {
-            return m_dBusInterface->callDBusRet<int>(QLatin1Literal("getModelSetCount"));
+            return m_dBusInterface->callDBusRet<int>(QLatin1String("getModelSetCount"));
         }
 
         BlackMisc::Simulation::CSimulatorPluginInfo CContextSimulatorProxy::getSimulatorPluginInfo() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1Literal("getSimulatorPluginInfo"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorPluginInfo>(QLatin1String("getSimulatorPluginInfo"));
         }
 
         CSimulatorInternals CContextSimulatorProxy::getSimulatorInternals() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInternals>(QLatin1Literal("getSimulatorInternals"));
+            return m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatorInternals>(QLatin1String("getSimulatorInternals"));
         }
 
         bool CContextSimulatorProxy::setTimeSynchronization(bool enable, const CTime &offset)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("setTimeSynchronization"), enable, offset);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("setTimeSynchronization"), enable, offset);
         }
 
         bool CContextSimulatorProxy::isTimeSynchronized() const
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isTimeSynchronized"));
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isTimeSynchronized"));
         }
 
         CInterpolationAndRenderingSetup CContextSimulatorProxy::getInterpolationAndRenderingSetup() const
         {
-            return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetup>(QLatin1Literal("getInterpolationAndRenderingSetup"));
+            return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetup>(QLatin1String("getInterpolationAndRenderingSetup"));
         }
 
         void CContextSimulatorProxy::setInterpolationAndRenderingSetup(const CInterpolationAndRenderingSetup &setup)
         {
-            m_dBusInterface->callDBus(QLatin1Literal("setInterpolationAndRenderingSetup"), setup);
+            m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetup"), setup);
         }
 
         CTime CContextSimulatorProxy::getTimeSynchronizationOffset() const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1Literal("getTimeSynchronizationOffset"));
+            return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1String("getTimeSynchronizationOffset"));
         }
 
         bool CContextSimulatorProxy::startSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("startSimulatorPlugin"), simulatorInfo);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("startSimulatorPlugin"), simulatorInfo);
         }
 
         void CContextSimulatorProxy::stopSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo)
         {
-            m_dBusInterface->callDBus(QLatin1Literal("stopSimulatorPlugin"), simulatorInfo);
+            m_dBusInterface->callDBus(QLatin1String("stopSimulatorPlugin"), simulatorInfo);
         }
 
         CPixmap CContextSimulatorProxy::iconForModel(const QString &modelString) const
         {
-            return m_dBusInterface->callDBusRet<CPixmap>(QLatin1Literal("iconForModel"), modelString);
+            return m_dBusInterface->callDBusRet<CPixmap>(QLatin1String("iconForModel"), modelString);
         }
 
         void CContextSimulatorProxy::highlightAircraft(const CSimulatedAircraft &aircraftToHighlight, bool enableHighlight, const CTime &displayTime)
         {
-            m_dBusInterface->callDBus(QLatin1Literal("highlightAircraft"), aircraftToHighlight, enableHighlight, displayTime);
+            m_dBusInterface->callDBus(QLatin1String("highlightAircraft"), aircraftToHighlight, enableHighlight, displayTime);
         }
 
         bool CContextSimulatorProxy::resetToModelMatchingAircraft(const CCallsign &callsign)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("resetToModelMatchingAircraft"), callsign, callsign);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("resetToModelMatchingAircraft"), callsign, callsign);
         }
 
         void CContextSimulatorProxy::setWeatherActivated(bool activated)
         {
-            m_dBusInterface->callDBus(QLatin1Literal("setWeatherActivated"), activated);
+            m_dBusInterface->callDBus(QLatin1String("setWeatherActivated"), activated);
         }
 
         void CContextSimulatorProxy::requestWeatherGrid(const Weather::CWeatherGrid &weatherGrid, const CIdentifier &identifier)
         {
-            m_dBusInterface->callDBus(QLatin1Literal("requestWeatherGrid"), weatherGrid, identifier);
+            m_dBusInterface->callDBus(QLatin1String("requestWeatherGrid"), weatherGrid, identifier);
         }
 
         CStatusMessageList CContextSimulatorProxy::getMatchingMessages(const BlackMisc::Aviation::CCallsign &callsign) const
         {
-            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("getMatchingMessages"), callsign);
+            return m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1String("getMatchingMessages"), callsign);
         }
 
         bool CContextSimulatorProxy::isMatchingMessagesEnabled() const
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isMatchingMessagesEnabled"));
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("isMatchingMessagesEnabled"));
         }
 
         void CContextSimulatorProxy::enableMatchingMessages(bool enabled)
         {
-            m_dBusInterface->callDBus(QLatin1Literal("enableMatchingMessages"), enabled);
+            m_dBusInterface->callDBus(QLatin1String("enableMatchingMessages"), enabled);
         }
 
         bool CContextSimulatorProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
-            return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
+            return m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
         }
 
         CMatchingStatistics CContextSimulatorProxy::getCurrentMatchingStatistics(bool missingOnly) const
         {
-            return m_dBusInterface->callDBusRet<CMatchingStatistics>(QLatin1Literal("getCurrentMatchingStatistics"), missingOnly);
+            return m_dBusInterface->callDBusRet<CMatchingStatistics>(QLatin1String("getCurrentMatchingStatistics"), missingOnly);
         }
     } // namespace
 } // namespace

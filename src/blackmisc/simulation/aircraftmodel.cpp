@@ -59,10 +59,10 @@ namespace BlackMisc
         {
             const QString s =
                 this->m_modelString %
-                QLatin1Literal(" type: '") % this->getModelTypeAsString() %
-                QLatin1Literal("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
-                QLatin1Literal("' {") % this->m_livery.toQString(i18n) %
-                QLatin1Literal("} file: '") % this->m_fileName % QLatin1Literal("'");
+                QLatin1String(" type: '") % this->getModelTypeAsString() %
+                QLatin1String("' ICAO: '") % this->getAircraftIcaoCode().toQString(i18n) %
+                QLatin1String("' {") % this->m_livery.toQString(i18n) %
+                QLatin1String("} file: '") % this->m_fileName % QLatin1String("'");
             return s;
         }
 

@@ -179,12 +179,12 @@ namespace BlackMisc
             QString rowHtml;
             if (withLineNumbers)
             {
-                rowHtml = QLatin1Literal("<td>") % QString::number(line++) % QLatin1Literal("</td>");
+                rowHtml = QLatin1String("<td>") % QString::number(line++) % QLatin1String("</td>");
             }
 
             for (const CPropertyIndex &index : usedIndexes)
             {
-                rowHtml += QLatin1Literal("<td>") % statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped() % QLatin1Literal("</td>");
+                rowHtml += QLatin1String("<td>") % statusMessage.propertyByIndex(index).toQString(true).toHtmlEscaped() % QLatin1String("</td>");
             }
 
             const QString severityClass = statusMessage.getSeverityAsString();
@@ -207,10 +207,10 @@ namespace BlackMisc
 
     const QString htmlStyleSheetImpl()
     {
-        const QString style = QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % QLatin1Literal(" { color: lightgreen; } ") %
-                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % QLatin1Literal(" { color: lightgreen; } ") %
-                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityWarning) % QLatin1Literal(" { color: yellow; } ") %
-                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityError) % QLatin1Literal(" { color: red; }");
+        const QString style = QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % QLatin1String(" { color: lightgreen; } ") %
+                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % QLatin1String(" { color: lightgreen; } ") %
+                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityWarning) % QLatin1String(" { color: yellow; } ") %
+                              QLatin1Char('.') % CStatusMessage::severityToString(CStatusMessage::SeverityError) % QLatin1String(" { color: red; }");
         return style;
     }
 

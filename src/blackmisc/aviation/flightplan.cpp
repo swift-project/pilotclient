@@ -49,10 +49,10 @@ namespace BlackMisc
         {
             switch (rule)
             {
-            case VFR:   return QLatin1Literal("VFR");
-            case IFR:   return QLatin1Literal("IFR");
-            case SVFR:  return QLatin1Literal("SVFR");
-            default:    return QLatin1Literal("???");
+            case VFR:   return QLatin1String("VFR");
+            case IFR:   return QLatin1String("IFR");
+            case SVFR:  return QLatin1String("SVFR");
+            default:    return QLatin1String("???");
             }
         }
 

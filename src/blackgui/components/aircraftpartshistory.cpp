@@ -115,36 +115,36 @@ namespace BlackGui
             QString html;
             if (currentAircraftParts == CAircraftParts() && aircraftPartsHistory.isEmpty())
             {
-                html = cs.toQString() % QLatin1Literal(" does not support aircraft parts or nothing received yet.");
+                html = cs.toQString() % QLatin1String(" does not support aircraft parts or nothing received yet.");
             }
             else
             {
                 const QString s =
-                    QLatin1Literal("lights on:") %
-                    QLatin1Literal("<br>") %
-                    QLatin1Literal("&nbsp;&nbsp;&nbsp;&nbsp;") %
+                    QLatin1String("lights on:") %
+                    QLatin1String("<br>") %
+                    QLatin1String("&nbsp;&nbsp;&nbsp;&nbsp;") %
                     currentAircraftParts.getLights().toQString() %
-                    QLatin1Literal("<br>") %
-                    QLatin1Literal("gear down: ") %
+                    QLatin1String("<br>") %
+                    QLatin1String("gear down: ") %
                     BlackMisc::boolToYesNo(currentAircraftParts.isGearDown()) %
-                    QLatin1Literal("<br>") %
-                    QLatin1Literal("flaps pct: ") %
+                    QLatin1String("<br>") %
+                    QLatin1String("flaps pct: ") %
                     QString::number(currentAircraftParts.getFlapsPercent()) %
-                    QLatin1Literal("<br>") %
-                    QLatin1Literal("spoilers out: ") %
+                    QLatin1String("<br>") %
+                    QLatin1String("spoilers out: ") %
                     BlackMisc::boolToYesNo(currentAircraftParts.isSpoilersOut()) %
-                    QLatin1Literal("<br>") %
-                    QLatin1Literal("engines on: ") %
-                    QLatin1Literal("<br>") %
-                    QLatin1Literal("&nbsp;&nbsp;&nbsp;&nbsp;") %
+                    QLatin1String("<br>") %
+                    QLatin1String("engines on: ") %
+                    QLatin1String("<br>") %
+                    QLatin1String("&nbsp;&nbsp;&nbsp;&nbsp;") %
                     currentAircraftParts.getEngines().toQString() %
-                    QLatin1Literal("<br>") %
-                    QLatin1Literal(" on ground: ") %
+                    QLatin1String("<br>") %
+                    QLatin1String(" on ground: ") %
                     BlackMisc::boolToYesNo(currentAircraftParts.isOnGround());
                 html += s;
                 if (ui->cb_PartsHistoryEnabled->isChecked())
                 {
-                    html += QLatin1Literal("<hr>") %
+                    html += QLatin1String("<hr>") %
                             aircraftPartsHistory.toHtml(CStatusMessageList::timestampHtmlOutput());
                 }
             }

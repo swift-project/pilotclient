@@ -43,12 +43,12 @@ namespace BlackMisc
         QString CAircraftSituation::convertToQString(bool i18n) const
         {
             const QString s = (this->m_position.toQString(i18n)) %
-                              QLatin1Literal(" bank: ") % (this->m_bank.toQString(i18n)) %
-                              QLatin1Literal(" pitch: ") % (this->m_pitch.toQString(i18n)) %
-                              QLatin1Literal(" gs: ") % (this->m_groundSpeed.toQString(i18n)) %
-                              QLatin1Literal(" elevation: ") % (this->m_groundElevation.toQString(i18n)) %
-                              QLatin1Literal(" heading: ") % (this->m_heading.toQString(i18n)) %
-                              QLatin1Literal(" timestamp: ") % (this->hasValidTimestamp() ? this->getFormattedUtcTimestampDhms() : QStringLiteral("-"));
+                              QLatin1String(" bank: ") % (this->m_bank.toQString(i18n)) %
+                              QLatin1String(" pitch: ") % (this->m_pitch.toQString(i18n)) %
+                              QLatin1String(" gs: ") % (this->m_groundSpeed.toQString(i18n)) %
+                              QLatin1String(" elevation: ") % (this->m_groundElevation.toQString(i18n)) %
+                              QLatin1String(" heading: ") % (this->m_heading.toQString(i18n)) %
+                              QLatin1String(" timestamp: ") % (this->hasValidTimestamp() ? this->getFormattedUtcTimestampDhms() : QStringLiteral("-"));
             return s;
         }
 

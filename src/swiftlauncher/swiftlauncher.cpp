@@ -187,7 +187,7 @@ void CSwiftLauncher::loadAbout()
     static const QString legalDir = sGui->getGlobalSetup().getLegalDirectoryUrl().getFullUrl();
     // make links absolute
     static const QString htmlFixed = QString(html).
-                                     replace(QLatin1Literal("href=\"./"), "href=\"" + legalDir);
+                                     replace(QLatin1String("href=\"./"), "href=\"" + legalDir);
     ui->tbr_About->setHtml(htmlFixed);
 }
 

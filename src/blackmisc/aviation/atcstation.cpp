@@ -90,7 +90,7 @@ namespace BlackMisc
             static const QString fromUtcI18n(QCoreApplication::translate("Aviation", "from(UTC)"));
             static const QString untilUtcI18n(QCoreApplication::translate("Aviation", "until(UTC)"));
 
-            const QString s = (i18n ? atcI18n : QLatin1Literal("ATC station")) %
+            const QString s = (i18n ? atcI18n : QLatin1String("ATC station")) %
                               QLatin1Char(' ') % this->m_callsign.toQString(i18n) %
                               QLatin1Char(' ') % this->m_position.toQString(i18n) %
                               QLatin1String(" online: ") % boolToYesNo(m_isOnline) %
@@ -111,7 +111,7 @@ namespace BlackMisc
                                QStringLiteral(" ") % this->m_metar.toQString(i18n)) %
 
                               // range
-                              QLatin1Char(' ') % (i18n ? rangeI18n : QLatin1Literal("range")) %
+                              QLatin1Char(' ') % (i18n ? rangeI18n : QLatin1String("range")) %
                               QLatin1Char(' ') % this->m_range.toQString(i18n) %
 
                               // distance / bearing
@@ -119,12 +119,12 @@ namespace BlackMisc
 
                               // booking from/until
                               QLatin1Char(' ') %
-                              (i18n ? fromUtcI18n : QLatin1Literal("from(UTC)")) %
+                              (i18n ? fromUtcI18n : QLatin1String("from(UTC)")) %
                               QLatin1Char(' ') %
                               (this->m_bookedFromUtc.isNull() ? QLatin1String("-") : this->m_bookedFromUtc.toString("yy-MM-dd HH:mm")) %
 
                               QLatin1Char(' ') %
-                              (i18n ? untilUtcI18n : QLatin1Literal("until(UTC)")) %
+                              (i18n ? untilUtcI18n : QLatin1String("until(UTC)")) %
                               QLatin1Char(' ') %
                               (this->m_bookedUntilUtc.isNull() ? QLatin1String("-") : this->m_bookedUntilUtc.toString("yy-MM-dd HH:mm"));
 

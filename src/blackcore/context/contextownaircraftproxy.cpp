@@ -13,7 +13,7 @@
 #include "blackmisc/genericdbusinterface.h"
 
 #include <QDBusConnection>
-#include <QLatin1Literal>
+#include <QLatin1String>
 #include <QObject>
 #include <QtGlobal>
 
@@ -52,62 +52,62 @@ namespace BlackCore
 
         BlackMisc::Simulation::CSimulatedAircraft CContextOwnAircraftProxy::getOwnAircraft() const
         {
-            return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1Literal("getOwnAircraft"));
+            return this->m_dBusInterface->callDBusRet<BlackMisc::Simulation::CSimulatedAircraft>(QLatin1String("getOwnAircraft"));
         }
 
         bool CContextOwnAircraftProxy::updateCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateCockpit"), com1, com2, transponder, originator);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateCockpit"), com1, com2, transponder, originator);
         }
 
         bool CContextOwnAircraftProxy::updateActiveComFrequency(const PhysicalQuantities::CFrequency &frequency, BlackMisc::Aviation::CComSystem::ComUnit comUnit, const CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateActiveComFrequency"), frequency, comUnit, originator);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateActiveComFrequency"), frequency, comUnit, originator);
         }
 
         bool CContextOwnAircraftProxy::updateOwnAircraftPilot(const BlackMisc::Network::CUser &pilot)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnAircraftPilot"), pilot);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnAircraftPilot"), pilot);
         }
 
         bool CContextOwnAircraftProxy::updateSelcal(const CSelcal &selcal, const CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateSelcal"), selcal, originator);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateSelcal"), selcal, originator);
         }
 
         bool CContextOwnAircraftProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnPosition"), position, altitude);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnPosition"), position, altitude);
         }
 
         bool CContextOwnAircraftProxy::updateOwnCallsign(const CCallsign &callsign)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnCallsign"), callsign);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnCallsign"), callsign);
         }
 
         bool CContextOwnAircraftProxy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnIcaoCodes"), aircraftIcaoCode, airlineIcaoCode);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnIcaoCodes"), aircraftIcaoCode, airlineIcaoCode);
         }
 
         void CContextOwnAircraftProxy::setAudioOutputVolume(int outputVolume)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("setAudioOutputVolume"), outputVolume);
+            this->m_dBusInterface->callDBus(QLatin1String("setAudioOutputVolume"), outputVolume);
         }
 
         void CContextOwnAircraftProxy::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("setAudioVoiceRoomOverrideUrls"), voiceRoom1Url, voiceRoom2Url);
+            this->m_dBusInterface->callDBus(QLatin1String("setAudioVoiceRoomOverrideUrls"), voiceRoom1Url, voiceRoom2Url);
         }
 
         void CContextOwnAircraftProxy::enableAutomaticVoiceRoomResolution(bool enable)
         {
-            this->m_dBusInterface->callDBus(QLatin1Literal("enableAutomaticVoiceRoomResolution"), enable);
+            this->m_dBusInterface->callDBus(QLatin1String("enableAutomaticVoiceRoomResolution"), enable);
         }
 
         bool CContextOwnAircraftProxy::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
         {
-            return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine, originator);
+            return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
         }
     } // namespace
 } // namespace

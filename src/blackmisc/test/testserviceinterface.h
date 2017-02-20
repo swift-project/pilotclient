@@ -40,7 +40,7 @@
 #include <QDBusAbstractInterface>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
-#include <QLatin1Literal>
+#include <QLatin1String>
 #include <QList>
 #include <QObject>
 #include <QString>
@@ -81,293 +81,293 @@ namespace BlackMisc
             QDBusPendingReply<BlackMisc::Aviation::CAtcStation> getAtcStation()
             {
                 QList<QVariant> argumentList;
-                return asyncCallWithArgumentList(QLatin1Literal("getAtcStation"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("getAtcStation"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Simulation::FsCommon::CAircraftCfgEntriesList> getAircraftCfgEntriesList(int number)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(number);
-                return asyncCallWithArgumentList(QLatin1Literal("getAircraftCfgEntriesList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("getAircraftCfgEntriesList"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> getAtcStationList(int number)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(number);
-                return asyncCallWithArgumentList(QLatin1Literal("getAtcStationList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("getAtcStationList"), argumentList);
             }
 
             QDBusPendingReply<QList<QDBusObjectPath>> getObjectPaths(int number)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(number);
-                return asyncCallWithArgumentList(QLatin1Literal("getObjectPaths"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("getObjectPaths"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::PhysicalQuantities::CSpeed> getSpeed()
             {
                 QList<QVariant> argumentList;
-                return asyncCallWithArgumentList(QLatin1Literal("getSpeed"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("getSpeed"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAltitude> pingAltitude(const BlackMisc::Aviation::CAltitude &altitude)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(altitude);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAltitude"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAltitude"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAircraftSituation> pingSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(situation);
-                return asyncCallWithArgumentList(QLatin1Literal("pingSituation"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingSituation"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Network::CUser> pingUser(const BlackMisc::Network::CUser &user)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(user);
-                return asyncCallWithArgumentList(QLatin1Literal("pingUser"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingUser"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CTransponder> pingTransponder(const BlackMisc::Aviation::CTransponder &transponder)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(transponder);
-                return asyncCallWithArgumentList(QLatin1Literal("pingTransponder"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingTransponder"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAtcStation> pingAtcStation(const BlackMisc::Aviation::CAtcStation &station)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(station);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAtcStation"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAtcStation"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAircraftIcaoCode> pingAircraftIcaoData(const BlackMisc::Aviation::CAircraftIcaoCode &icaoData)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(icaoData);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAircraftIcaoData"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAircraftIcaoData"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAircraftLights> pingAircraftLights(const BlackMisc::Aviation::CAircraftLights &lights)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(lights);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAircraftLights"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAircraftLights"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAircraftParts> pingAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(parts);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAircraftParts"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAircraftParts"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAircraftEngine> pingAircraftEngine(const BlackMisc::Aviation::CAircraftEngine &engine)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(engine);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAircraftEngine"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAircraftEngine"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Simulation::CAircraftModel> pingAircraftModel(const BlackMisc::Simulation::CAircraftModel &model)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(model);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAircraftModel"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAircraftModel"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Simulation::CAircraftModelList> pingAircraftModelList(const BlackMisc::Simulation::CAircraftModelList &model)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(model);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAircraftModelList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAircraftModelList"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraft> pingSimulatedAircraft(BlackMisc::Simulation::CSimulatedAircraft aircraft)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(aircraft);
-                return asyncCallWithArgumentList(QLatin1Literal("pingSimulatedAircraft"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingSimulatedAircraft"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Simulation::CSimulatorPluginInfo> pingPluginInfo(BlackMisc::Simulation::CSimulatorPluginInfo info)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(info);
-                return asyncCallWithArgumentList(QLatin1Literal("pingPluginInfo"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingPluginInfo"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> pingAtcStationList(BlackMisc::Aviation::CAtcStationList atcStationList)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(atcStationList);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAtcStationList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAtcStationList"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::PhysicalQuantities::CSpeed> pingSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(speed);
-                return asyncCallWithArgumentList(QLatin1Literal("pingSpeed"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingSpeed"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Simulation::CSimulatedAircraftList> pingAircraftList(const BlackMisc::Simulation::CSimulatedAircraftList &aircraftList)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(aircraftList);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAircraftList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAircraftList"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAirportList> pingAirportList(const BlackMisc::Aviation::CAirportList &airportList)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(airportList);
-                return asyncCallWithArgumentList(QLatin1Literal("pingAirportList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingAirportList"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Network::CClientList> pingClientList(const BlackMisc::Network::CClientList &clientList)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(clientList);
-                return asyncCallWithArgumentList(QLatin1Literal("pingClientList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingClientList"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Network::CClient> pingClient(const BlackMisc::Network::CClient &client)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(client);
-                return asyncCallWithArgumentList(QLatin1Literal("pingClient"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingClient"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::CVariant> pingCVariant(const BlackMisc::CVariant &variant)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(variant);
-                return asyncCallWithArgumentList(QLatin1Literal("pingCVariant"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingCVariant"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::CPropertyIndex> pingPropertyIndex(const BlackMisc::CPropertyIndex &index)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(index);
-                return asyncCallWithArgumentList(QLatin1Literal("pingPropertyIndex"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingPropertyIndex"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::CPropertyIndexVariantMap> pingIndexVariantMap(BlackMisc::CPropertyIndexVariantMap indexVariantMap)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(indexVariantMap);
-                return asyncCallWithArgumentList(QLatin1Literal("pingIndexVariantMap"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("pingIndexVariantMap"), argumentList);
             }
 
             QDBusPendingReply<BlackMisc::Aviation::CAltitude> receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(altitude);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveAltitude"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveAltitude"), argumentList);
             }
 
             QDBusPendingReply<> receiveAtcStation(const BlackMisc::Aviation::CAtcStation &station)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(station);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveAtcStation"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveAtcStation"), argumentList);
             }
 
             QDBusPendingReply<> receiveAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(atcStationList);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveAtcStationList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveAtcStationList"), argumentList);
             }
 
             QDBusPendingReply<> receiveCallsign(const BlackMisc::Aviation::CCallsign &callsign)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(callsign);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveCallsign"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveCallsign"), argumentList);
             }
 
             QDBusPendingReply<> receiveComUnit(const BlackMisc::Aviation::CComSystem &comUnit)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(comUnit);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveComUnit"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveComUnit"), argumentList);
             }
 
             QDBusPendingReply<> receiveGeoPosition(const BlackMisc::Geo::CCoordinateGeodetic &geo)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(geo);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveGeoPosition"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveGeoPosition"), argumentList);
             }
 
             QDBusPendingReply<> receiveLength(const BlackMisc::PhysicalQuantities::CLength &length)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(length);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveLength"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveLength"), argumentList);
             }
 
             QDBusPendingReply<> receiveVariantList(const BlackMisc::CVariantList &list)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(list);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveVariantList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveVariantList"), argumentList);
             }
 
             QDBusPendingReply<> receiveList(const QList<double> &list)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(list);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveList"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveList"), argumentList);
             }
 
             QDBusPendingReply<> receiveSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(speed);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveSpeed"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveSpeed"), argumentList);
             }
 
             QDBusPendingReply<> receiveStringMessage(const QString &message)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(message);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveStringMessage"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveStringMessage"), argumentList);
             }
 
             QDBusPendingReply<> receiveTrack(BlackMisc::Aviation::CTrack track)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(track);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveTrack"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveTrack"), argumentList);
             }
 
             QDBusPendingReply<> receiveTransponder(const BlackMisc::Aviation::CTransponder &transponder)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(transponder);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveTransponder"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveTransponder"), argumentList);
             }
 
             QDBusPendingReply<> receiveValueMap(const BlackMisc::CPropertyIndexVariantMap &valueMap)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(valueMap);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveValueMap"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveValueMap"), argumentList);
             }
 
             QDBusPendingReply<> receiveVariant(const QDBusVariant &variant, int localMetyType)
             {
                 QList<QVariant> argumentList;
                 argumentList << QVariant::fromValue(variant) << QVariant::fromValue(localMetyType);
-                return asyncCallWithArgumentList(QLatin1Literal("receiveVariant"), argumentList);
+                return asyncCallWithArgumentList(QLatin1String("receiveVariant"), argumentList);
             }
             //! @}
 
