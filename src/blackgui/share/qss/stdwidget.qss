@@ -68,6 +68,12 @@ QDialog::separator:hover {
   background: transparent;
 }
 
+/* selector QWizard not working, so using individual components */
+BlackGui--Components--CCopyConfigurationComponent {
+  background: black; /* background is background color here */
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
 QFileDialog #sidebar {
   background: black;
 }
