@@ -9,12 +9,10 @@ defineReplace(fileCopyDestination) {
 
 win32:isEmpty(MINGW_IN_SHELL) {
     copy_files.commands = copy /y ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
-    TOUCH = copy /y nul
 }
 else {
     copy_files.commands = mkdir -p `dirname ${QMAKE_FILE_OUT}` && \
                           cp ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
-    TOUCH = touch
 }
 
 QMAKE_EXTRA_COMPILERS += copy_files
@@ -25,6 +23,7 @@ QMAKE_EXTRA_COMPILERS += copy_files
 # with PRE_TARGETDEPS instead.
 #copy_files.CONFIG += target_predeps
 
+load(touch)
 copy_files_cookie.depends = compiler_copy_files_make_all
 copy_files_cookie.target = copy_files.cookie
 win32:!mingw: copy_files_cookie.commands = $$TOUCH $** && $$TOUCH $@

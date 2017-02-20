@@ -53,6 +53,12 @@ macx:staticlib:isEmpty(SOURCES) {
 clang_cl: CONFIG -= precompile_header
 
 ################################
+# Templight (template analysis tool)
+################################
+
+include(templight.pri)
+
+################################
 # Black libs
 ################################
 
