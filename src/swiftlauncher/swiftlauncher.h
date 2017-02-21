@@ -26,6 +26,7 @@
 #include <QNetworkReply>
 
 namespace Ui { class CSwiftLauncher; }
+namespace BlackGui { namespace Components { class CConfigurationWizard; }}
 
 /*!
  * swift launcher tool
@@ -76,6 +77,7 @@ protected:
 
 private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
+    QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
     BlackMisc::CData<BlackCore::Data::TUpdateInfo> m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
     BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //! setup, ie last user selection
     QString     m_executable;
@@ -183,6 +185,9 @@ private slots:
 
     //! Check if applicationas are already running
     void ps_checkRunningApplicationsAndCore();
+
+    //! Start the configuration wizard
+    void ps_startWizard();
 };
 
 #endif // guard

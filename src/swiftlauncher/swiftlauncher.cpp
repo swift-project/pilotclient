@@ -10,6 +10,7 @@
 #include "swiftlauncher.h"
 #include "ui_swiftlauncher.h"
 #include "blackconfig/buildconfig.h"
+#include "blackgui/components/configurationwizard.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplicationproxy.h"
@@ -29,6 +30,7 @@
 
 using namespace BlackConfig;
 using namespace BlackGui;
+using namespace BlackGui::Components;
 using namespace BlackCore;
 using namespace BlackCore::Application;
 using namespace BlackCore::Context;
@@ -50,6 +52,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_Database, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
+    connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::ps_startWizard);
     connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::ps_tabChanged);
 
     // use version signal as trigger for completion
@@ -520,4 +523,13 @@ void CSwiftLauncher::ps_checkRunningApplicationsAndCore()
     ui->tb_SwiftCore->setEnabled(!foundLocalCore && m_startCoreWaitCycles < 1);
     ui->tb_SwiftMappingTool->setEnabled(!foundLocalMappingTool && m_startMappingToolWaitCycles < 1);
     ui->tb_SwiftGui->setEnabled(!foundLocalPilotClientGui && m_startGuiWaitCycles < 1);
+}
+
+void CSwiftLauncher::ps_startWizard()
+{
+    if (!m_wizard)
+    {
+        m_wizard.reset(new CConfigurationWizard(this));
+    }
+    m_wizard->show();
 }
