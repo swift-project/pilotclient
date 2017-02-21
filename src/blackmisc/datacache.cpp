@@ -326,7 +326,7 @@ namespace BlackMisc
 
     void CDataCacheSerializer::deliverPromises(std::vector<std::promise<void>> i_promises)
     {
-        QTimer::singleShot(0, Qt::PreciseTimer, this, [this, promises = std::make_shared<decltype(i_promises)>(std::move(i_promises))]()
+        QTimer::singleShot(0, Qt::PreciseTimer, this, [promises = std::make_shared<decltype(i_promises)>(std::move(i_promises))]()
         {
             for (auto &promise : *promises)
             {

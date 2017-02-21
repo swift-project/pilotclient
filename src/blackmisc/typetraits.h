@@ -57,6 +57,14 @@ namespace BlackMisc
             }
             static constexpr bool value = impl();
         };
+
+        //! \private Dummy that derives from T if T is a class.
+        template <typename T, bool = std::is_class<T>::value>
+        struct SyntheticDerived : public T {};
+        //! \cond
+        template <typename T>
+        struct SyntheticDerived<T, false> {};
+        //! \endcond
     }
 
     /*!
@@ -213,7 +221,7 @@ namespace BlackMisc
     struct TIsQPrivateSignal : public std::false_type {};
     //! \cond
     template <typename T>
-    struct TIsQPrivateSignal<T, void_t<typename T::QPrivateSignal>> : public std::is_same<T, typename T::QPrivateSignal> {};
+    struct TIsQPrivateSignal<T, void_t<typename Private::SyntheticDerived<T>::QPrivateSignal>> : public std::is_same<T, typename Private::SyntheticDerived<T>::QPrivateSignal> {};
     //! \endcond
 
 }
