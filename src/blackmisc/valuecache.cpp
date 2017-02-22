@@ -50,8 +50,7 @@ namespace BlackMisc
     //! \private
     std::pair<QString &, std::atomic<bool> &> getCacheRootDirectoryMutable()
     {
-        static QString dir = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) +
-            "/org.swift-project/" + CDirectoryUtils::normalizedApplicationDirectory();
+        static QString dir = CDirectoryUtils::swiftNormalizedApplicationDataDirectory();
         static std::atomic<bool> frozen { false };
         return { dir, frozen };
     }

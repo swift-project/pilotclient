@@ -285,6 +285,9 @@ namespace BlackMisc
         //! Method used for implementing session values.
         void sessionValue(const QString &key);
 
+        //! Relative file path in application data directory
+        static const QString relativeFilePath();
+
     private:
         CDataCache();
 

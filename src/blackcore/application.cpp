@@ -1121,14 +1121,11 @@ namespace BlackCore
         // No crash handling for unit tests
         if (isUnitTest()) { return CStatusMessage(this).info("No crash handler for unit tests"); }
 
-        static const QString extension = CBuildConfig::isRunningOnWindowsNtPlatform() ? ".exe" : QString();
-        static const QString handler = CDirectoryUtils::applicationDirectoryPath() % QLatin1Char('/') % "swift_crashpad_handler" + extension;
-        static const QString crashpadPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) %
-                                            QLatin1String("/org.swift-project/") %
-                                            CDirectoryUtils::normalizedApplicationDirectory() %
-                                            QLatin1String("/crashpad");
-        static const QString database = crashpadPath % QLatin1String("/database");
-        static const QString metrics = crashpadPath % QLatin1String("/metrics");
+        static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
+        static const QString handler = CFileUtils::appendFilePaths(CDirectoryUtils::applicationDirectoryPath(), crashpadHandler);
+        static const QString crashpadPath = CDirectoryUtils::getCrashpadDirectory();
+        static const QString database = CFileUtils::appendFilePaths(crashpadPath, "/database");
+        static const QString metrics = CFileUtils::appendFilePaths(crashpadPath, "/metrics");
 
         if (!QFileInfo::exists(handler))
         {

@@ -103,13 +103,13 @@ namespace BlackMisc
 
     const QString &CDataCache::persistentStore()
     {
-        static const QString dir = getCacheRootDirectory() + "/data/cache/core";
+        static const QString dir = CFileUtils::appendFilePaths(getCacheRootDirectory(), relativeFilePath());
         return dir;
     }
 
     QString CDataCache::filenameForKey(const QString &key)
     {
-        return persistentStore() + "/" + CValueCache::filenameForKey(key);
+        return CFileUtils::appendFilePaths(persistentStore(), CValueCache::filenameForKey(key));
     }
 
     QStringList CDataCache::enumerateStore() const
@@ -172,6 +172,12 @@ namespace BlackMisc
     void CDataCache::sessionValue(const QString &key)
     {
         singleShot(0, &m_serializer, [this, key] { m_revision.sessionValue(key); });
+    }
+
+    const QString CDataCache::relativeFilePath()
+    {
+        static const QString p("/data/cache/core");
+        return p;
     }
 
     QString lockFileError(const QLockFile &lock)

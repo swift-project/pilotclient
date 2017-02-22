@@ -26,7 +26,7 @@ namespace BlackMisc
 
     const QString &CSettingsCache::persistentStore()
     {
-        static const QString dir = getCacheRootDirectory() + "/settings/core";
+        static const QString dir = CFileUtils::appendFilePaths(getCacheRootDirectory(), relativeFilePath());
         return dir;
     }
 
@@ -58,7 +58,13 @@ namespace BlackMisc
 
     QString CSettingsCache::filenameForKey(const QString &key)
     {
-        return persistentStore() + "/" + CValueCache::filenameForKey(key);
+        return CFileUtils::appendFilePaths(persistentStore(), CValueCache::filenameForKey(key));
+    }
+
+    const QString CSettingsCache::relativeFilePath()
+    {
+        static const QString p("/settings/core");
+        return p;
     }
 
     QStringList CSettingsCache::enumerateStore() const

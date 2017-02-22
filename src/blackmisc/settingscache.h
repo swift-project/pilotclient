@@ -53,6 +53,9 @@ namespace BlackMisc
         //! Return the filename where the value with the given key may be stored.
         static QString filenameForKey(const QString &key);
 
+        //! Relative file path in application data directory
+        static const QString relativeFilePath();
+
         //! Return all files where settings may be stored.
         QStringList enumerateStore() const;
 
