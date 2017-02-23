@@ -26,6 +26,12 @@ namespace BlackMisc
             return a < b ? -10 : 10;
         }
 
+        int compare(uint a, uint b)
+        {
+            if (a == b) return 0;
+            return a < b ? -10 : 10;
+        }
+
         int compare(qint64 a, qint64 b)
         {
             if (a == b) return 0;

@@ -26,6 +26,9 @@ namespace BlackMisc
         //! Compare int
         BLACKMISC_EXPORT int compare(int a, int b);
 
+        //! Compare uint
+        BLACKMISC_EXPORT int compare(uint a, uint b);
+
         //! Compare qint64
         BLACKMISC_EXPORT int compare(qint64 a, qint64 b);
 
