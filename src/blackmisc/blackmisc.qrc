@@ -530,4 +530,10 @@
         <file>icons/misc/toolWizard64.png</file>
         <file>icons/misc/toolWizard128.png</file>
     </qresource>
+    <qresource prefix="/simulators">
+        <file>icons/simulators/FS9.png</file>
+        <file>icons/simulators/FSX.png</file>
+        <file>icons/simulators/Prepar3D.png</file>
+        <file>icons/simulators/XPlane.png</file>
+    </qresource>
 </RCC>
