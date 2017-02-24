@@ -19,9 +19,33 @@ namespace BlackGui
             ui(new Ui::CConfigurationWizard)
         {
             ui->setupUi(this);
+
+            connect(ui->wp_CopyCaches, &QWizardPage::completeChanged, ui->comp_CopyCaches, &CCopyConfigurationComponent::copySelectedFiles);
+            connect(ui->wp_CopySettings, &QWizardPage::completeChanged, ui->comp_CopySettings, &CCopyConfigurationComponent::copySelectedFiles);
+            connect(this, &QWizard::currentIdChanged, this, &CConfigurationWizard::wizardCurrentIdChanged);
         }
 
         CConfigurationWizard::~CConfigurationWizard()
         { }
+
+        void CConfigurationWizard::wizardCurrentIdChanged(int id)
+        {
+            Q_UNUSED(id);
+            const QWizardPage *page = this->currentPage();
+            if (page == ui->wp_Simulator)
+            {
+                //
+            }
+            else if (page == ui->wp_CopyCaches)
+            {
+                ui->comp_CopyCaches->setCacheMode();
+                ui->comp_CopyCaches->initCurrentDirectories();
+            }
+            else if (page == ui->wp_CopySettings)
+            {
+                ui->comp_CopySettings->setSettingsMode();
+                ui->comp_CopySettings->initCurrentDirectories();
+            }
+        }
     } // ns
 } // ns

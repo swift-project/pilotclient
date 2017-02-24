@@ -36,6 +36,9 @@ namespace BlackGui
             virtual ~CConfigurationWizard();
 
         private:
+            //! The current page has changed
+            void wizardCurrentIdChanged(int id);
+
             QScopedPointer<Ui::CConfigurationWizard> ui;
         };
     } // ns
