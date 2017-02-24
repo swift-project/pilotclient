@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include <QFrame>
+#include <QDir>
 
 namespace Ui { class CCopyConfigurationComponent; }
 namespace BlackGui
@@ -21,7 +22,7 @@ namespace BlackGui
     namespace Components
     {
         /**
-         * Copy configuration (ie settings and cache files)
+         * Copy configuration (i.e. settings and cache files)
          */
         class BLACKGUI_EXPORT CCopyConfigurationComponent : public QFrame
         {
@@ -34,7 +35,38 @@ namespace BlackGui
             //! Destructor
             virtual ~CCopyConfigurationComponent();
 
+            //! Cache mode
+            void setCacheMode();
+
+            //! Settings mode
+            void setSettingsMode();
+
+            //! Selected files are copied
+            void copySelectedFiles();
+
+            //! Preselect newer files
+            void preselectMissingOurOutdated();
+
+            //! Init file content
+            void initCurrentDirectories();
+
         private:
+            //! The current version changed
+            void currentVersionChanged(const QString &text);
+
+            //! This version's directory (cache or setting)
+            const QString &getThisVersionDirectory() const;
+
+            //! Get the selected directory
+            QString getOtherVersionsSelectedDirectory() const;
+
+            //! Get the selected files
+            QStringList getSelectedFiles() const;
+
+            //! Combobox width
+            void setComboBoxWidth();
+
+            QStringList m_versionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
         };
     } // ns
