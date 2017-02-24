@@ -152,7 +152,7 @@ namespace BlackMisc
 
         signals:
             //! Parsing is finished or cache has been loaded
-            void loadingFinished(bool success, const BlackMisc::Simulation::CSimulatorInfo &simulator);
+            void loadingFinished(const BlackMisc::CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
         protected:
             //! Constructor
@@ -178,7 +178,7 @@ namespace BlackMisc
 
         protected slots:
             //! Loading finished, also logs messages
-            void ps_loadFinished(bool success);
+            void ps_loadFinished(const CStatusMessage &status, const CSimulatorInfo &simulator);
 
             //! A cache has been changed
             void ps_cacheChanged(const CSimulatorInfo &simInfo);

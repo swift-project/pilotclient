@@ -80,7 +80,7 @@ namespace BlackMisc
                 if (modelDirectory.isEmpty())
                 {
                     this->clearCache();
-                    emit loadingFinished(false, simulator);
+                    emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, "Model directory '%1' is empty") << modelDirectory, simulator);
                     return;
                 }
 
@@ -123,7 +123,7 @@ namespace BlackMisc
             void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
             {
                 this->setCachedModels(models);
-                emit loadingFinished(true, this->getSimulator());
+                emit loadingFinished(CStatusMessage(this, CStatusMessage::SeverityInfo, "Updated '%1' models") << models.size(), this->getSimulator());
             }
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const

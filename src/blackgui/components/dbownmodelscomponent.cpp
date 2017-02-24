@@ -439,10 +439,10 @@ namespace BlackGui
             this->m_modelLoader->startLoading(mode, &CDatabaseUtils::consolidateModelsWithDbData, directory);
         }
 
-        void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(bool success, const CSimulatorInfo &simulator)
+        void CDbOwnModelsComponent::ps_onOwnModelsLoadingFinished(const CStatusMessage &status, const CSimulatorInfo &simulator)
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
-            if (success && this->m_modelLoader)
+            if (status.isSuccess() && this->m_modelLoader)
             {
                 const CAircraftModelList models(this->m_modelLoader->getAircraftModels());
                 const int modelsLoaded = models.size();
@@ -456,7 +456,7 @@ namespace BlackGui
             else
             {
                 ui->tvp_OwnAircraftModels->clear();
-                CLogMessage(this).error("Loading of models failed, simulator %1") << simulator.toQString();
+                CLogMessage(this).error("Loading of models failed, simulator '%1', details: %2") << simulator.toQString() << status.getMessage();
             }
             ui->le_Simulator->setText(simulator.toQString());
             ui->comp_SimulatorSelector->setValue(simulator);

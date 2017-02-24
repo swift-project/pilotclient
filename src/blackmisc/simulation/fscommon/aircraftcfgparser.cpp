@@ -65,6 +65,9 @@ namespace BlackMisc
 
             void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidation &modelConsolidation, const QString &directory)
             {
+                static const CStatusMessage statusLoadingOk(this, CStatusMessage::SeverityInfo, "Aircraft config parser loaded data");
+                static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, "Aircraft config parser did not load data");
+
                 const CSimulatorInfo simulator = this->getSimulator();
                 const QString modelDirectory(!directory.isEmpty() ? directory : this->m_settings.getFirstModelDirectoryOrDefault(simulator)); // expect only one directory
                 const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
@@ -100,11 +103,13 @@ namespace BlackMisc
                                 this->setCachedModels(models, simulator); // not thread safe
                             }
                             // currently I treat no data as error
-                            emit this->loadingFinished(hasData, simulator);
+                            emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator);
                         }
                         else
                         {
-                            emit this->loadingFinished(false, simulator);
+                            CStatusMessage status = this->m_loadingMessages.toSingleMessage();
+                            status.setSeverity(CStatusMessage::SeverityError);
+                            emit this->loadingFinished(status, simulator);
                         }
                     });
                 }
@@ -121,7 +126,7 @@ namespace BlackMisc
                         this->setCachedModels(models); // not thread safe
                     }
                     // currently I treat no data as error
-                    emit this->loadingFinished(hasData, simulator);
+                    emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator);
                 }
             }
 

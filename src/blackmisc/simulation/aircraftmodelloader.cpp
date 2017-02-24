@@ -63,8 +63,10 @@ namespace BlackMisc
             }
         }
 
-        void IAircraftModelLoader::ps_loadFinished(bool success)
+        void IAircraftModelLoader::ps_loadFinished(const CStatusMessage &status, const BlackMisc::Simulation::CSimulatorInfo &simulator)
         {
+            // remark: in the past status used to be bool, now it is CStatusMessage
+            // so there is some redundancy here between status and m_loadingMessages
             this->m_loadingInProgress = false;
             if (this->m_loadingMessages.hasWarningOrErrorMessages())
             {
@@ -72,13 +74,14 @@ namespace BlackMisc
             }
             else
             {
-                CLogMessage(this).info("Loading finished, success %1") << boolToYesNo(success);
+                CLogMessage(this).info("Loading finished, success '%1' for '%2'") << status.getMessage() << simulator.toQString();
             }
         }
 
         void IAircraftModelLoader::ps_cacheChanged(const CSimulatorInfo &simInfo)
         {
-            emit this->loadingFinished(true, simInfo);
+            static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Cached changed");
+            emit this->loadingFinished(status, simInfo);
         }
 
         QStringList IAircraftModelLoader::getModelDirectoriesOrDefault() const
@@ -130,7 +133,8 @@ namespace BlackMisc
             const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
             if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
             {
-                emit loadingFinished(true, this->getSimulator());
+                static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "Using cached data");
+                emit loadingFinished(status, this->getSimulator());
                 return;
             }
             else if (useCachedData && mode.testFlag(CacheUntilNewer))
@@ -138,7 +142,8 @@ namespace BlackMisc
                 //! \todo currently too slow with remote files, does not make sense with that overhead
                 if (!this->areModelFilesUpdated())
                 {
-                    emit loadingFinished(true, this->getSimulator());
+                    static const CStatusMessage status(this, CStatusMessage::SeverityInfo, "No updated model files");
+                    emit loadingFinished(status, this->getSimulator());
                     return;
                 }
             }
