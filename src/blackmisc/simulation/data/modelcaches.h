@@ -158,7 +158,7 @@ namespace BlackMisc
                 //! \threadsafe
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
-                //! Initilaized caches for which simulator
+                //! Initialized caches for which simulator?
                 //! \threadsafe
                 BlackMisc::Simulation::CSimulatorInfo simulatorsWithInitializedCache() const;
 

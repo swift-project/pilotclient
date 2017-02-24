@@ -71,7 +71,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="lbl_SimulatorDirectory">
      <property name="text">
-      <string>Simulator directory;</string>
+      <string>Simulator directory:</string>
      </property>
     </widget>
    </item>

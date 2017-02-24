@@ -74,6 +74,7 @@ namespace BlackMisc
                 });
                 if (!CBuildConfig::isShippedVersion())
                 {
+                    // developer directories
                     someDefaultDirs.push_back("P:/FSX (MSI)");
                 }
                 return CFileUtils::findFirstExisting(someDefaultDirs);

@@ -12,6 +12,7 @@
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QHostInfo>
+#include <QStringBuilder>
 
 namespace BlackMisc
 {
@@ -76,11 +77,11 @@ namespace BlackMisc
     QString CIdentifier::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        QString s(m_name);
-        s.append(" ").append(m_machineIdBase64);
-        s.append(" ").append(m_machineName);
-        s.append(" ").append(QString::number(m_processId));
-        s.append(" ").append(m_processName);
+        const QString s = m_name %
+                          QLatin1Char(' ') % m_machineIdBase64 %
+                          QLatin1Char(' ') % m_machineName %
+                          QLatin1Char(' ') % QString::number(m_processId) %
+                          QLatin1Char(' ') % m_processName;
         return s;
     }
 
@@ -120,5 +121,4 @@ namespace BlackMisc
     {
         CValueObject::setPropertyByIndex(index, variant);
     }
-
 } // ns

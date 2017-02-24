@@ -34,6 +34,7 @@
 #include <QMap>
 #include <QRegularExpression>
 #include <QTextStream>
+#include <QStringBuilder>
 #include <algorithm>
 #include <functional>
 
@@ -127,11 +128,10 @@ namespace BlackMisc
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
             {
-                QString modelName = dirNames.join(' ');
-                modelName += " ";
-                modelName += objectName;
-                modelName += " ";
-                modelName += textureName;
+                const QString modelName =
+                    dirNames.join(' ') %
+                    QLatin1Char(' ') % objectName %
+                    QLatin1Char(' ') % textureName;
                 return modelName;
             }
 
