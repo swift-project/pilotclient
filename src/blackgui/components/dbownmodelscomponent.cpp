@@ -76,6 +76,12 @@ namespace BlackGui
             // void
         }
 
+        const CLogCategoryList &CDbOwnModelsComponent::getLogCategories()
+        {
+            static const CLogCategoryList l({ CLogCategory::modelGui(), CLogCategory::guiComponent() });
+            return l;
+        }
+
         CAircraftModelView *CDbOwnModelsComponent::view() const
         {
             return ui->tvp_OwnAircraftModels;

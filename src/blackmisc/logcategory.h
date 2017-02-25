@@ -131,6 +131,34 @@ namespace BlackMisc
             return cat;
         }
 
+        //! Model loader
+        static const CLogCategory &modelLoader()
+        {
+            static const CLogCategory cat { "swift.modelloader" };
+            return cat;
+        }
+
+        //! Model cache
+        static const CLogCategory &modelCache()
+        {
+            static const CLogCategory cat { "swift.modelcache" };
+            return cat;
+        }
+
+        //! Model set cache
+        static const CLogCategory &modelSetCache()
+        {
+            static const CLogCategory cat { "swift.modelsetcache" };
+            return cat;
+        }
+
+        //! Model UI
+        static const CLogCategory &modelGui()
+        {
+            static const CLogCategory cat { "swift.modelui" };
+            return cat;
+        }
+
         //! Plugin
         static const CLogCategory &plugin()
         {
@@ -209,6 +237,10 @@ namespace BlackMisc
                 guiComponent(),
                 mapping(),
                 matching(),
+                modelLoader(),
+                modelCache(),
+                modelSetCache(),
+                modelGui(),
                 network(),
                 plugin(),
                 swiftDbWebservice(),

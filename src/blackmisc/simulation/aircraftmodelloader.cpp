@@ -41,6 +41,12 @@ namespace BlackMisc
             this->gracefulShutdown();
         }
 
+        const CLogCategoryList &IAircraftModelLoader::getLogCategories()
+        {
+            static const CLogCategoryList cats({ CLogCategory::modelLoader() });
+            return cats;
+        }
+
         CStatusMessage IAircraftModelLoader::setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
         {
             const CSimulatorInfo sim = simulator.isSingleSimulator() ? simulator : this->getSimulator(); // support default value

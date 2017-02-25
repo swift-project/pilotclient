@@ -234,6 +234,9 @@ namespace BlackMisc
                 //! Construtor
                 CModelCaches(bool synchronizeCache, QObject *parent = nullptr);
 
+                //! Log categories
+                static const BlackMisc::CLogCategoryList &getLogCategories();
+
                 //! \name Interface implementations
                 //! @{
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
@@ -269,6 +272,9 @@ namespace BlackMisc
             public:
                 //! Construtor
                 CModelSetCaches(bool synchronizeCache, QObject *parent = nullptr);
+
+                //! Log categories
+                static const BlackMisc::CLogCategoryList &getLogCategories();
 
                 //! \name Interface implementations
                 //! @{

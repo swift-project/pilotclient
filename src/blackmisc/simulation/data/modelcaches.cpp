@@ -126,6 +126,12 @@ namespace BlackMisc
                 }
             }
 
+            const CLogCategoryList &CModelCaches::getLogCategories()
+            {
+                static const CLogCategoryList l({ CLogCategory::modelCache() });
+                return l;
+            }
+
             CAircraftModelList CModelCaches::getCachedModels(const CSimulatorInfo &simulator) const
             {
                 Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
@@ -251,6 +257,12 @@ namespace BlackMisc
                     this->admitCacheImpl(sim);
                     CLogMessage(this).info("Admit model caches to %1") << simStr;
                 }
+            }
+
+            const CLogCategoryList &CModelSetCaches::getLogCategories()
+            {
+                static const CLogCategoryList l({ CLogCategory::modelSetCache() });
+                return l;
             }
 
             CAircraftModelList CModelSetCaches::getCachedModels(const CSimulatorInfo &simulator) const

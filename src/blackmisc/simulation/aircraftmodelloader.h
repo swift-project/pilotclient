@@ -73,6 +73,9 @@ namespace BlackMisc
             //! \remark this has to be a abstarct, as DB handling is subject of BlackCore
             using ModelConsolidation = std::function<int (BlackMisc::Simulation::CAircraftModelList &, bool)>;
 
+            //! Log categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
             //! Start the loading process from disk.
             //! Optional DB models can be passed and used for data consolidation.
             void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidation &modelConsolidation = {}, const QString &directory = {});
