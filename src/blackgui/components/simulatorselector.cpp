@@ -29,15 +29,15 @@ namespace BlackGui
             ui->setupUi(this);
             this->setMode(CheckBoxes);
 
-            connect(ui->rb_FS9, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
-            connect(ui->rb_FSX, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
-            connect(ui->rb_P3D, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
-            connect(ui->rb_XPlane, &QRadioButton::clicked, this, &CSimulatorSelector::ps_RadioButtonChanged);
+            connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
+            connect(ui->rb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
+            connect(ui->rb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
+            connect(ui->rb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::ps_RadioButtonChanged);
 
-            connect(ui->cb_FS9, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
-            connect(ui->cb_FSX, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
-            connect(ui->cb_P3D, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
-            connect(ui->cb_XPlane, &QRadioButton::clicked, this, &CSimulatorSelector::ps_CheckBoxChanged);
+            connect(ui->cb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
+            connect(ui->cb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
+            connect(ui->cb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
+            connect(ui->cb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::ps_CheckBoxChanged);
         }
 
         CSimulatorSelector::~CSimulatorSelector()

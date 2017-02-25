@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>170</width>
-    <height>36</height>
+    <width>184</width>
+    <height>42</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -54,9 +54,9 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QCheckBox" name="cb_FS9">
+       <widget class="QCheckBox" name="cb_P3D">
         <property name="text">
-         <string>FS9</string>
+         <string>P3D</string>
         </property>
        </widget>
       </item>
@@ -68,9 +68,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_P3D">
+       <widget class="QCheckBox" name="cb_FS9">
         <property name="text">
-         <string>P3D</string>
+         <string>FS9</string>
         </property>
        </widget>
       </item>
@@ -106,12 +106,9 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QRadioButton" name="rb_FS9">
+       <widget class="QRadioButton" name="rb_P3D">
         <property name="text">
-         <string>FS9</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <string>P3D</string>
         </property>
        </widget>
       </item>
@@ -126,9 +123,12 @@
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="rb_P3D">
+       <widget class="QRadioButton" name="rb_FS9">
         <property name="text">
-         <string>P3D</string>
+         <string>FS9</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
