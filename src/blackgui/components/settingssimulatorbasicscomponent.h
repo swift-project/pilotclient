@@ -42,6 +42,9 @@ namespace BlackGui
             //! Simulator
             void setSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
+            //! Save data
+            void save();
+
         private slots:
             void ps_modelFileDialog();
             void ps_excludeFileDialog();

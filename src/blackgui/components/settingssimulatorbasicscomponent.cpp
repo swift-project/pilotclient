@@ -35,11 +35,10 @@ namespace BlackGui
             connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_save);
             connect(ui->pb_Reset, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_reset);
             connect(ui->pb_CopyDefaults, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_copyDefaults);
-            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorChanged);
             connect(ui->le_SimulatorDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered);
+            connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorChanged);
 
-            const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
-            this->displayDefaultValuesAsPlaceholder(simulator);
+            this->ps_simulatorChanged();
         }
 
         CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent()
@@ -54,6 +53,11 @@ namespace BlackGui
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             ui->comp_SimulatorSelector->setValue(simulator);
+        }
+
+        void CSettingsSimulatorBasicsComponent::save()
+        {
+            this->ps_save();
         }
 
         void CSettingsSimulatorBasicsComponent::setSmallLayout(bool small)
@@ -95,8 +99,8 @@ namespace BlackGui
         void CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
-            const QString sd = CFileUtils::normalizeFilePathToQtStandard(ui->le_SimulatorDirectory->text().trimmed());
-            ui->le_SimulatorDirectory->setText(sd);
+            const QString simDir = CFileUtils::normalizeFilePathToQtStandard(ui->le_SimulatorDirectory->text().trimmed());
+            ui->le_SimulatorDirectory->setText(simDir);
             this->displayDefaultValuesAsPlaceholder(simulator);
         }
 
@@ -104,13 +108,13 @@ namespace BlackGui
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             CSimulatorSettings s = this->getSettings(simulator);
-            const QString sd(ui->le_SimulatorDirectory->text().trimmed());
-            const QStringList md(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
-            const QStringList ed(this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText()));
-            const QStringList red = CFileUtils::makeDirectoriesRelative(ed, this->getFileBrowserModelDirectory(), this->m_fileCaseSensitivity);
-            s.setSimulatorDirectory(sd);
-            s.setModelDirectories(md);
-            s.setModelExcludeDirectories(red);
+            const QString simulatorDir(ui->le_SimulatorDirectory->text().trimmed());
+            const QStringList modelDirs(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
+            const QStringList excludeDirs(this->parseDirectories(ui->pte_ExcludeDirectories->toPlainText()));
+            const QStringList relativeDirs = CFileUtils::makeDirectoriesRelative(excludeDirs, this->getFileBrowserModelDirectory(), this->m_fileCaseSensitivity);
+            s.setSimulatorDirectory(simulatorDir);
+            s.setModelDirectories(modelDirs);
+            s.setModelExcludeDirectories(relativeDirs);
             const CStatusMessage m = this->m_settings.setAndSaveSettings(s, simulator);
             if (!m.isEmpty())
             {
@@ -219,8 +223,17 @@ namespace BlackGui
             }
             else
             {
-                const QString ms(m.join('\n'));
-                ui->pte_ModelDirectories->setPlaceholderText(ms);
+                const QString ms(m.join("<br>"));
+                if (m.size() > 1)
+                {
+                    //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
+                    ui->pte_ModelDirectories->setToolTip(ms);
+                    ui->pte_ModelDirectories->setPlaceholderText("See tooltip for defaults");
+                }
+                else
+                {
+                    ui->pte_ModelDirectories->setPlaceholderText(ms);
+                }
             }
 
             const QStringList e = this->m_settings.getDefaultModelExcludeDirectoryPatterns(simulator);
@@ -230,14 +243,16 @@ namespace BlackGui
             }
             else
             {
-                //! \todo correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
-                // const QString es(e.join('\n'));
-                // ui->pte_ExcludeDirectories->setPlaceholderText(es);
-
-                // workaround
-                if (!e.empty())
+                const QString es(e.join("<br>"));
+                if (e.size() > 1)
                 {
-                    ui->pte_ExcludeDirectories->setPlaceholderText(e.first());
+                    //! \fixme correct version when Qt multiline placeholder is fixed https://bugreports.qt.io/browse/QTBUG-43817
+                    ui->pte_ExcludeDirectories->setToolTip(es);
+                    ui->pte_ExcludeDirectories->setPlaceholderText("See tooltip for defaults");
+                }
+                else
+                {
+                    ui->pte_ExcludeDirectories->setPlaceholderText(es);
                 }
             }
         }
