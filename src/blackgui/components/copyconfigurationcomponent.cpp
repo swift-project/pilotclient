@@ -181,5 +181,18 @@ namespace BlackGui
             const int width = this->width() * 0.45;
             ui->cb_OtherVersions->setFixedWidth(width);
         }
+
+        void CCopyConfigurationWizardPage::initializePage()
+        {
+            Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
+            m_config->initCurrentDirectories();
+        }
+
+        bool CCopyConfigurationWizardPage::validatePage()
+        {
+            Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
+            m_config->copySelectedFiles();
+            return true;
+        }
     } // ns
 } // ns

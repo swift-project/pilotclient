@@ -14,6 +14,7 @@
 
 #include "blackgui/blackguiexport.h"
 #include <QFrame>
+#include <QWizardPage>
 #include <QDir>
 
 namespace Ui { class CCopyConfigurationComponent; }
@@ -68,6 +69,28 @@ namespace BlackGui
 
             QStringList m_versionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
+        };
+
+        /**
+         * Wizard page for CCopyConfigurationComponent
+         */
+        class CCopyConfigurationWizardPage : public QWizardPage
+        {
+        public:
+            //! Constructors
+            using QWizardPage::QWizardPage;
+
+            //! Set config
+            void setConfigComponent(CCopyConfigurationComponent *config) { m_config = config; }
+
+            //! \copydoc QWizardPage::initializePage
+            virtual void initializePage() override;
+
+            //! \copydoc QWizardPage::validatePage
+            virtual bool validatePage() override;
+
+        private:
+            CCopyConfigurationComponent *m_config = nullptr;
         };
     } // ns
 } // ns
