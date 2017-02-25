@@ -50,7 +50,6 @@ namespace BlackGui
             void ps_excludeFileDialog();
             void ps_simulatorFileDialog();
             void ps_simulatorDirectoryEntered();
-            void ps_save();
             void ps_copyDefaults();
             void ps_reset();
             void ps_simulatorChanged();

@@ -32,7 +32,7 @@ namespace BlackGui
             connect(ui->pb_ExcludeFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_excludeFileDialog);
             connect(ui->pb_ModelFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_modelFileDialog);
             connect(ui->pb_SimulatorFileDialog, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_simulatorFileDialog);
-            connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_save);
+            connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::save);
             connect(ui->pb_Reset, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_reset);
             connect(ui->pb_CopyDefaults, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_copyDefaults);
             connect(ui->le_SimulatorDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered);
@@ -53,11 +53,6 @@ namespace BlackGui
         {
             Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
             ui->comp_SimulatorSelector->setValue(simulator);
-        }
-
-        void CSettingsSimulatorBasicsComponent::save()
-        {
-            this->ps_save();
         }
 
         void CSettingsSimulatorBasicsComponent::setSmallLayout(bool small)
@@ -104,7 +99,7 @@ namespace BlackGui
             this->displayDefaultValuesAsPlaceholder(simulator);
         }
 
-        void CSettingsSimulatorBasicsComponent::ps_save()
+        void CSettingsSimulatorBasicsComponent::save()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
             CSimulatorSettings s = this->getSettings(simulator);

@@ -44,16 +44,6 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" alignment="Qt::AlignTop">
-    <widget class="QLabel" name="lbl_ExcludeDirectories">
-     <property name="toolTip">
-      <string>Excluded from model loading</string>
-     </property>
-     <property name="text">
-      <string>Exclude directory patterns:</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" alignment="Qt::AlignTop">
     <widget class="QLabel" name="lbl_ModelDirectory">
      <property name="text">
@@ -126,6 +116,16 @@
      </property>
      <property name="lineWidth">
       <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" rowspan="4" alignment="Qt::AlignTop">
+    <widget class="QLabel" name="lbl_ExcludeDirectories">
+     <property name="toolTip">
+      <string>Excluded from model loading</string>
+     </property>
+     <property name="text">
+      <string>Exclude directory patterns:</string>
      </property>
     </widget>
    </item>
