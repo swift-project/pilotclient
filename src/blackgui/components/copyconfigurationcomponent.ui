@@ -110,6 +110,27 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="pb_SelectAll">
+        <property name="text">
+         <string>select all</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_ClearSelection">
+        <property name="text">
+         <string>clear selection</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_CopyOver">
+        <property name="text">
+         <string>copy over</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="hs_Mode">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

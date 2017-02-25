@@ -29,6 +29,14 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+            //! Page ids
+            enum Pages
+            {
+                CopySettings,
+                CopyCaches,
+                ConfigSimulator
+            };
+
             //! Constructor
             explicit CConfigurationWizard(QWidget *parent = nullptr);
 
@@ -40,6 +48,7 @@ namespace BlackGui
             void wizardCurrentIdChanged(int id);
 
             QScopedPointer<Ui::CConfigurationWizard> ui;
+            int m_lastId = -1;
         };
     } // ns
 } // ns

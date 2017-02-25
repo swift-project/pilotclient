@@ -32,13 +32,16 @@ namespace BlackGui
             ui->setupUi(this);
             ui->cb_OtherVersions->clear();
             ui->cb_OtherVersions->addItems(CDirectoryUtils::swiftApplicationDataDirectoryList(true, true));
-            m_versionDirs = CDirectoryUtils::swiftApplicationDataDirectoryList(true, false); // not beautified
+            m_otherVersionDirs = CDirectoryUtils::swiftApplicationDataDirectoryList(true, false); // not beautified
 
             this->initCurrentDirectories();
             this->preselectMissingOurOutdated();
 
             connect(ui->rb_Cache, &QRadioButton::toggled, this, &CCopyConfigurationComponent::initCurrentDirectories);
             connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, this, &CCopyConfigurationComponent::initCurrentDirectories);
+            connect(ui->pb_SelectAll, &QPushButton::clicked, ui->tv_Source, &QTreeView::selectAll);
+            connect(ui->pb_ClearSelection, &QPushButton::clicked, ui->tv_Source, &QTreeView::clearSelection);
+            connect(ui->pb_CopyOver, &QPushButton::clicked, this, &CCopyConfigurationComponent::copySelectedFiles);
         }
 
         CCopyConfigurationComponent::~CCopyConfigurationComponent()
@@ -65,15 +68,20 @@ namespace BlackGui
             const QString dirOther = this->getOtherVersionsSelectedDirectory();
             const QString dirCurrent = this->getThisVersionDirectory();
 
+            ui->tv_Source->clearSelection();
             ui->tv_Destination->clearSelection();
+
             const CDirectoryUtils::DirComparison comp = CDirectoryUtils::compareTwoDirectories(dirOther, dirCurrent);
             const QFileSystemModel *model = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
+            if (!model) { return; }
 
             QStringList select = comp.missingInTarget.toList();
             select.append(comp.newerInSource.toList());
             for (const QString &file : as_const(comp.missingInTarget))
             {
-                ui->tv_Destination->setCurrentIndex(model->index(file));
+                const QModelIndex index = model->index(file);
+                if (!index.isValid()) continue;
+                ui->tv_Destination->setCurrentIndex(index);
             }
         }
 
@@ -82,7 +90,6 @@ namespace BlackGui
             ui->le_CurrentVersion->setText(CDirectoryUtils::applicationDirectoryPath());
             this->setComboBoxWidth();
             const QString dir = this->getOtherVersionsSelectedDirectory();
-            if (dir.isEmpty()) { return; }
 
             // source
             QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
@@ -99,9 +106,13 @@ namespace BlackGui
                     ui->tv_Source->resizeColumnToContents(0);
                 });
             }
-            const QModelIndex sourceIndex = sourceModel->setRootPath(dir);
-            ui->tv_Source->setRootIndex(sourceIndex);
-            ui->tv_Source->setSortingEnabled(true);
+
+            if (!dir.isEmpty())
+            {
+                const QModelIndex sourceIndex = sourceModel->setRootPath(dir);
+                ui->tv_Source->setRootIndex(sourceIndex);
+                ui->tv_Source->setSortingEnabled(true);
+            }
 
             // destination
             QFileSystemModel *destinationModel = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
@@ -125,6 +136,11 @@ namespace BlackGui
             ui->tv_Destination->resizeColumnToContents(0);
         }
 
+        bool CCopyConfigurationComponent::hasOtherVersionData() const
+        {
+            return !m_otherVersionDirs.isEmpty();
+        }
+
         void CCopyConfigurationComponent::currentVersionChanged(const QString &text)
         {
             Q_UNUSED(text);
@@ -138,9 +154,10 @@ namespace BlackGui
 
         QString CCopyConfigurationComponent::getOtherVersionsSelectedDirectory() const
         {
-            const QString s = m_versionDirs.at(ui->cb_OtherVersions->currentIndex());
+            if (ui->cb_OtherVersions->count() < 1) { return ""; }
             const QFileInfoList dirs(CDirectoryUtils::swiftApplicationDataDirectories());
             if (dirs.isEmpty()) { return ""; }
+            const QString s = m_otherVersionDirs.at(ui->cb_OtherVersions->currentIndex());
             QString dir;
             for (const QFileInfo &info : dirs)
             {

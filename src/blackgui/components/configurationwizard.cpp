@@ -19,6 +19,12 @@ namespace BlackGui
             ui(new Ui::CConfigurationWizard)
         {
             ui->setupUi(this);
+
+            // no other versions, skip copy pages
+            if (!ui->comp_CopySettings->hasOtherVersionData())
+            {
+                this->setStartId(ConfigSimulator);
+            }
             ui->wp_CopyCaches->setConfigComponent(ui->comp_CopyCaches);
             ui->wp_CopySettings->setConfigComponent(ui->comp_CopySettings);
             ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
@@ -30,7 +36,11 @@ namespace BlackGui
 
         void CConfigurationWizard::wizardCurrentIdChanged(int id)
         {
-            Q_UNUSED(id);
+            const int lastId = m_lastId;
+            m_lastId = id; // update
+            const bool backward = id < lastId;
+            Q_UNUSED(backward);
+
             const QWizardPage *page = this->currentPage();
             if (page == ui->wp_CopyCaches)
             {

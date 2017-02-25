@@ -51,6 +51,9 @@ namespace BlackGui
             //! Init file content
             void initCurrentDirectories();
 
+            //! Are there other versions to copy from
+            bool hasOtherVersionData() const;
+
         private:
             //! The current version changed
             void currentVersionChanged(const QString &text);
@@ -64,10 +67,10 @@ namespace BlackGui
             //! Get the selected files
             QStringList getSelectedFiles() const;
 
-            //! Combobox width
+            //! Set calculated combobox width
             void setComboBoxWidth();
 
-            QStringList m_versionDirs;
+            QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
         };
 
