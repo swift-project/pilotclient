@@ -298,13 +298,13 @@ namespace BlackGui
         void CSettingsSimulatorComponent::ps_showPluginConfig(const QString &identifier)
         {
             CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
-            auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
-                                         [&identifier](const CSimulatorPluginInfo & info)
+            const auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
+                                               [&identifier](const CSimulatorPluginInfo & info)
             {
                 return info.getIdentifier() == identifier;
             });
 
-            QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
+            const QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
             IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
             if (!config)
             {

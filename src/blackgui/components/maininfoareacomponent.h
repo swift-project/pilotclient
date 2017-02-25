@@ -41,7 +41,6 @@ namespace BlackGui
         class CUserComponent;
         class CWeatherComponent;
 
-
         //! Main info area of pilot client
         class BLACKGUI_EXPORT CMainInfoAreaComponent : public BlackGui::CInfoArea
         {

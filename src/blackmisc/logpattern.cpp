@@ -147,7 +147,7 @@ namespace BlackMisc
         result.m_severities.clear();
         switch (minimumSeverity)
         {
-            // there are deliberately no break statements in this switch block
+        // there are deliberately no break statements in this switch block
         default:
         case CStatusMessage::SeverityDebug:     result.m_severities.insert(CStatusMessage::SeverityDebug);
         case CStatusMessage::SeverityInfo:      result.m_severities.insert(CStatusMessage::SeverityInfo);
@@ -191,18 +191,18 @@ namespace BlackMisc
         default:
         case Everything:    return true;
         case ExactMatch:    return message.getCategories().contains(getString());
-        case AnyOf:         return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return message.getCategories().contains(s); });
-        case AllOf:         return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return message.getCategories().contains(s); });
-        case StartsWith:    return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.startsWith(getPrefix()); });
-        case EndsWith:      return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.endsWith(getSuffix()); });
-        case Contains:      return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.contains(getSubstring()); });
+        case AnyOf:         return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return message.getCategories().contains(s); });
+        case AllOf:         return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return message.getCategories().contains(s); });
+        case StartsWith:    return message.getCategories().containsBy([this](const CLogCategory & cat) { return cat.startsWith(getPrefix()); });
+        case EndsWith:      return message.getCategories().containsBy([this](const CLogCategory & cat) { return cat.endsWith(getSuffix()); });
+        case Contains:      return message.getCategories().containsBy([this](const CLogCategory & cat) { return cat.contains(getSubstring()); });
         case Nothing:       return message.getCategories().isEmpty();
         }
     }
 
     bool CLogPattern::isProperSubsetOf(const CLogPattern &other) const
     {
-        if (! (checkInvariants() && other.checkInvariants()))
+        if (!(checkInvariants() && other.checkInvariants()))
         {
             Q_ASSERT(false);
             return false;
@@ -264,20 +264,20 @@ namespace BlackMisc
             switch (other.m_strategy)
             {
             case AnyOf:         return other.m_strings.contains(m_strings) && other.m_strings.size() > m_strings.size();
-            case StartsWith:    return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.startsWith(other.getPrefix()); });
-            case EndsWith:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.endsWith(other.getSuffix()); });
-            case Contains:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.contains(other.getSubstring()); });
+            case StartsWith:    return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.startsWith(other.getPrefix()); });
+            case EndsWith:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.endsWith(other.getSuffix()); });
+            case Contains:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.contains(other.getSubstring()); });
             default:            ;
             }
         case AllOf:
             switch (other.m_strategy)
             {
             case ExactMatch:    return m_strings.contains(other.getString());
-            case AnyOf:         return ! (m_strings & other.m_strings).isEmpty();
+            case AnyOf:         return !(m_strings & other.m_strings).isEmpty();
             case AllOf:         return m_strings.contains(other.m_strings) && m_strings.size() > other.m_strings.size();
-            case StartsWith:    return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.startsWith(other.getPrefix()); });
-            case EndsWith:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.endsWith(other.getSuffix()); });
-            case Contains:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.contains(other.getSubstring()); });
+            case StartsWith:    return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.startsWith(other.getPrefix()); });
+            case EndsWith:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.endsWith(other.getSuffix()); });
+            case Contains:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString & s) { return s.contains(other.getSubstring()); });
             default:            ;
             }
         case StartsWith:

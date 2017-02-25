@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CSettingsSimulatorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CSettingsSimulatorComponent();
+            virtual ~CSettingsSimulatorComponent();
 
         private slots:
             //! Driver plugin enabled/disabled
@@ -87,7 +87,6 @@ namespace BlackGui
             bool m_pluginLoaded = false; //!< plugin loaded
             BlackCore::CPluginManagerSimulator* m_plugins = nullptr;
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::ps_reloadPluginConfig };
-
         };
     }
 } // namespace

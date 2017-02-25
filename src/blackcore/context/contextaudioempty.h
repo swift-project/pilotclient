@@ -21,7 +21,6 @@ namespace BlackCore
     class IVoiceChannel;
     namespace Context
     {
-
         //! Audio context implementation
         class BLACKCORE_EXPORT CContextAudioEmpty : public IContextAudio
         {
