@@ -79,7 +79,7 @@ private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
     BlackMisc::CData<BlackCore::Data::TUpdateInfo> m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
-    BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //! setup, ie last user selection
+    BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
     QString     m_executable;
     QStringList m_executableArgs;
     QTimer      m_checkTimer { this };
@@ -140,6 +140,9 @@ private:
     //! Save state
     void saveSetup();
 
+    //! Check for other swift applications, if so show message box
+    bool warnAboutOtherSwiftApplications();
+
     //! Command line
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
 
@@ -183,7 +186,7 @@ private slots:
     //! Show the log page
     void ps_showLogPage();
 
-    //! Check if applicationas are already running
+    //! Check if applications are already running
     void ps_checkRunningApplicationsAndCore();
 
     //! Start the configuration wizard

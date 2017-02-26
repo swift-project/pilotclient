@@ -36,6 +36,12 @@ namespace BlackMisc
 
         //! List containing entry for CApplicationInfo::Application ?
         bool containsApplication(CApplicationInfo::Application application) const;
+
+        //! Remove given application
+        int removeApplication(CApplicationInfo::Application application);
+
+        //! Running application names
+        QStringList runningProcessNames() const;
     };
 }
 

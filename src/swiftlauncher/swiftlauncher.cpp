@@ -24,6 +24,7 @@
 #include <QBitmap>
 #include <QTimer>
 #include <QProcess>
+#include <QStringBuilder>
 #include <QDesktopServices>
 #include <QShortcut>
 #include <qcompilerdetection.h>
@@ -359,6 +360,20 @@ void CSwiftLauncher::saveSetup()
     m_setup.set(setup);
 }
 
+bool CSwiftLauncher::warnAboutOtherSwiftApplications()
+{
+    CApplicationInfoList running = CGuiApplication::getRunningApplications();
+    running.removeApplication(CApplicationInfo::Laucher);
+    if (running.isEmpty()) { return true; }
+
+    // getting here means another application is running
+    const QString msg =
+        QStringLiteral("While using the wizard no other application should run.\nClose applications and try again.\nCurrently running: ") %
+        running.runningProcessNames().join(',');
+    QMessageBox::question(this, "Wizard", msg, QMessageBox::Close);
+    return false;
+}
+
 QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs)
 {
     if (exeArgs.isEmpty()) { return exe; }
@@ -527,6 +542,8 @@ void CSwiftLauncher::ps_checkRunningApplicationsAndCore()
 
 void CSwiftLauncher::ps_startWizard()
 {
+    const bool show = this->warnAboutOtherSwiftApplications();
+    if (!show) { return; }
     if (!m_wizard)
     {
         m_wizard.reset(new CConfigurationWizard(this));
