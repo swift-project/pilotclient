@@ -50,6 +50,18 @@ namespace BlackGui
             //! Showing load indicator?
             bool isShowingLoadIndicator() const;
 
+            //! Loading in progress?
+            bool isLoadInProgress() const;
+
+            //! Show load all buttons
+            void showLoadAllButtons(bool shared, bool db);
+
+            //! Load all from DB
+            void loadAllFromDb();
+
+            //! Load all from shared
+            void loadAllFromShared();
+
         signals:
             //! Trigger GUI update
             //! \private
@@ -65,8 +77,14 @@ namespace BlackGui
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
             BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if needed
-            bool m_reloading = false;
             BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, &CDbLoadOverviewComponent::ps_setValues, 750, 4 };
+            bool m_loadInProgress = false; //!< data loading in progress
+
+            //! Trigger loading from DB
+            void triggerLoadingFromDb(BlackMisc::Network::CEntityFlags::Entity entities);
+
+            //! Trigger loading from shared files
+            void triggerLoadingFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
 
             //! Show loading
             void showLoading();

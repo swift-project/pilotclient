@@ -56,6 +56,9 @@ namespace BlackGui
             connect(ui->tb_SharedReloadModels, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
             connect(ui->tb_SharedReloadDistributors, &QToolButton::pressed, this, &CDbLoadOverviewComponent::ps_refreshSharedPressed);
 
+            connect(ui->pb_LoadAllFromDB, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
+            connect(ui->pb_LoadAllFromShared, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
+
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
             connect(this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, this, &CDbLoadOverviewComponent::ps_setValues);
         }
@@ -105,6 +108,29 @@ namespace BlackGui
         bool CDbLoadOverviewComponent::isShowingLoadIndicator() const
         {
             return m_loadIndicator && this->isVisible() && m_loadIndicator->isAnimated();
+        }
+
+        bool CDbLoadOverviewComponent::isLoadInProgress() const
+        {
+            return m_loadInProgress;
+        }
+
+        void CDbLoadOverviewComponent::showLoadAllButtons(bool shared, bool db)
+        {
+            const bool widget = shared || db;
+            ui->wi_LoadAllButtons->setVisible(widget);
+            ui->pb_LoadAllFromDB->setVisible(db);
+            ui->pb_LoadAllFromShared->setVisible(shared);
+        }
+
+        void CDbLoadOverviewComponent::loadAllFromDb()
+        {
+            this->triggerLoadingFromDb(CEntityFlags::AllDbEntitiesNoInfoObjects);
+        }
+
+        void CDbLoadOverviewComponent::loadAllFromShared()
+        {
+            this->triggerLoadingFromSharedFiles(CEntityFlags::AllDbEntitiesNoInfoObjects);
         }
 
         void CDbLoadOverviewComponent::centerLoadIndicator()
@@ -247,31 +273,43 @@ namespace BlackGui
 
         void CDbLoadOverviewComponent::ps_refreshDbPressed()
         {
-            if (this->m_reloading) { return; }
+            if (this->m_loadInProgress) { return; }
             const QObject *sender = QObject::sender();
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
+            this->triggerLoadingFromDb(entity);
+        }
+
+        void CDbLoadOverviewComponent::triggerLoadingFromDb(CEntityFlags::Entity entities)
+        {
+            if (this->m_loadInProgress) { return; }
 
             // DB entities
-            const CEntityFlags::Entity triggeredEntity = sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(entity);
-            if (triggeredEntity == CEntityFlags::NoEntity) { return; }
-            this->m_reloading = true;
+            const CEntityFlags::Entity triggeredEntities = sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(entities);
+            if (triggeredEntities == CEntityFlags::NoEntity) { return; }
+            this->m_loadInProgress = true;
             this->showLoading();
 
             // shared files ts
-            sGui->getWebDataServices()->triggerLoadingOfSharedFilesHeaders(entity);
+            sGui->getWebDataServices()->triggerLoadingOfSharedFilesHeaders(entities);
             sGui->getWebDataServices()->triggerReadOfInfoObjects();
         }
 
         void CDbLoadOverviewComponent::ps_refreshSharedPressed()
         {
-            if (this->m_reloading) { return; }
+            if (this->m_loadInProgress) { return; }
             const QObject *sender = QObject::sender();
             const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
+            this->triggerLoadingFromSharedFiles(entity);
+        }
+
+        void CDbLoadOverviewComponent::triggerLoadingFromSharedFiles(CEntityFlags::Entity entities)
+        {
+            if (this->m_loadInProgress) { return; }
 
             // DB entities
-            const CEntityFlags::Entity triggeredEntity = sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(entity, true);
-            if (triggeredEntity == CEntityFlags::NoEntity) { return; }
-            this->m_reloading = true;
+            const CEntityFlags::Entity triggeredEntities = sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(entities, true);
+            if (triggeredEntities == CEntityFlags::NoEntity) { return; }
+            this->m_loadInProgress = true;
             this->showLoading();
 
             // shared files ts
@@ -284,7 +322,7 @@ namespace BlackGui
             if (!entities.testFlag(CEntityFlags::InfoObjectEntity) && !CEntityFlags::anySwiftDbEntity(entities)) { return; }
             if (state == CEntityFlags::ReadFinished || state == CEntityFlags::ReadFinishedRestricted)
             {
-                this->m_reloading = false;
+                this->m_loadInProgress = false;
                 emit this->ps_triggerDigestGuiUpdate();
             }
         }

@@ -19,15 +19,16 @@ namespace BlackGui
             ui(new Ui::CConfigurationWizard)
         {
             ui->setupUi(this);
+            ui->wp_CopyCaches->setConfigComponent(ui->comp_CopyCaches);
+            ui->wp_CopySettings->setConfigComponent(ui->comp_CopySettings);
+            ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
+            ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
 
             // no other versions, skip copy pages
             if (!ui->comp_CopySettings->hasOtherVersionData())
             {
                 this->setStartId(ConfigSimulator);
             }
-            ui->wp_CopyCaches->setConfigComponent(ui->comp_CopyCaches);
-            ui->wp_CopySettings->setConfigComponent(ui->comp_CopySettings);
-            ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
             connect(this, &QWizard::currentIdChanged, this, &CConfigurationWizard::wizardCurrentIdChanged);
         }
 

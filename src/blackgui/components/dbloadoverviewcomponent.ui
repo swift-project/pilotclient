@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>279</height>
+    <width>630</width>
+    <height>307</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Loading from shared/DB</string>
   </property>
   <layout class="QGridLayout" name="gl_DbLoadOverview">
    <property name="leftMargin">
@@ -29,20 +29,463 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="10" column="2" colspan="9">
-    <widget class="QLabel" name="lbl_SharedUrls">
-     <property name="minimumSize">
+   <item row="8" column="4">
+    <widget class="QToolButton" name="tb_DbReloadDistributors">
+     <property name="maximumSize">
       <size>
-       <width>0</width>
-       <height>50</height>
+       <width>48</width>
+       <height>16777215</height>
       </size>
      </property>
+     <property name="toolTip">
+      <string>refresh from database</string>
+     </property>
      <property name="text">
-      <string>Shared URLs will go here</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
      </property>
     </widget>
    </item>
-   <item row="9" column="2" colspan="9">
+   <item row="3" column="0">
+    <widget class="QLabel" name="lbl_Airports">
+     <property name="text">
+      <string>Airports:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="10">
+    <widget class="QLabel" name="lbl_SharedFilesTs">
+     <property name="text">
+      <string>Shared ts:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0" alignment="Qt::AlignTop">
+    <widget class="QLabel" name="lbl_SharedUrl">
+     <property name="text">
+      <string>Shared:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="5">
+    <widget class="QLineEdit" name="le_AirportsCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3" alignment="Qt::AlignHCenter">
+    <widget class="QToolButton" name="tb_SharedReloadAircraft">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from shared files</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3" alignment="Qt::AlignHCenter">
+    <widget class="QToolButton" name="tb_SharedReloadModels">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from shared files</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3" alignment="Qt::AlignHCenter">
+    <widget class="QToolButton" name="tb_SharedReloadAirports">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from shared files</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="3" alignment="Qt::AlignHCenter">
+    <widget class="QToolButton" name="tb_SharedReloadDistributors">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from shared files</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3" alignment="Qt::AlignHCenter">
+    <widget class="QToolButton" name="tb_SharedReloadAirlines">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from shared files</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3" alignment="Qt::AlignHCenter">
+    <widget class="QToolButton" name="tb_SharedReloadLiveries">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from shared files</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLabel" name="lbl_SharedRefresh">
+     <property name="toolTip">
+      <string>Shared</string>
+     </property>
+     <property name="text">
+      <string>Shr.:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLabel" name="lbl_DbRefresh">
+     <property name="text">
+      <string>DB:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3" alignment="Qt::AlignHCenter">
+    <widget class="QToolButton" name="tb_SharedReloadCountries">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from shared files</string>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QToolButton" name="tb_DbReloadAirports">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from database</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QToolButton" name="tb_DbReloadAircraft">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from database</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QToolButton" name="tb_DbReloadAirlines">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from database</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QToolButton" name="tb_DbReloadModels">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from database</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QToolButton" name="tb_DbReloadLiveries">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from database</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="4">
+    <widget class="QToolButton" name="tb_DbReloadCountries">
+     <property name="maximumSize">
+      <size>
+       <width>48</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>refresh from database</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="10">
+    <widget class="QLineEdit" name="le_AirlinesSharedFileTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>File ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="6">
+    <widget class="QLineEdit" name="le_AirlinesIcaoDbCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="6">
+    <widget class="QLineEdit" name="le_ModelsDbCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QLabel" name="lbl_DbCount">
+     <property name="toolTip">
+      <string>DB count</string>
+     </property>
+     <property name="text">
+      <string>DB#:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="9">
+    <widget class="QLineEdit" name="le_LiveriesDbTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>DB ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="6">
+    <widget class="QLineEdit" name="le_CountriesDbCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="10">
+    <widget class="QLineEdit" name="le_AircraftSharedFileTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>File ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QLineEdit" name="le_AirlinesIcaoCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QLabel" name="lbl_CacheTs">
+     <property name="text">
+      <string>Cache ts:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="10">
+    <widget class="QLineEdit" name="le_CountriesSharedFileTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>File ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="6">
+    <widget class="QLineEdit" name="le_LiveriesDbCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="2" colspan="9">
     <widget class="QLabel" name="lbl_DatabaseUrl">
      <property name="text">
       <string>DB URL will go here .....</string>
@@ -66,18 +509,60 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="5">
-    <widget class="QLineEdit" name="le_DistributorsCacheCount">
+   <item row="11" column="2" colspan="9">
+    <widget class="QLabel" name="lbl_SharedUrls">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Shared URLs will go here</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="9">
+    <widget class="QLineEdit" name="le_CountriesDbTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
      <property name="placeholderText">
-      <string>count</string>
+      <string>DB ts</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="7">
-    <widget class="QLineEdit" name="le_AircraftIcaoCacheTs">
+   <item row="5" column="9">
+    <widget class="QLineEdit" name="le_ModelsDbTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>DB ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="9">
+    <widget class="QLabel" name="lbl_DbTs">
+     <property name="text">
+      <string>DB ts:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="QLineEdit" name="le_AirlinesIcaoCacheTs">
      <property name="minimumSize">
       <size>
        <width>100</width>
@@ -89,6 +574,170 @@
      </property>
      <property name="placeholderText">
       <string>cache ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="7">
+    <widget class="QLineEdit" name="le_LiveriesCacheTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>cache ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="5">
+    <widget class="QLineEdit" name="le_LiveriesCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QLabel" name="lbl_CacheCount">
+     <property name="toolTip">
+      <string>Cache count</string>
+     </property>
+     <property name="text">
+      <string>C#:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="5">
+    <widget class="QLineEdit" name="le_CountriesCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="6">
+    <widget class="QLineEdit" name="le_AircraftIcaoDbCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="lbl_AirlineIcao">
+     <property name="text">
+      <string>Airlines:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="10">
+    <widget class="QLineEdit" name="le_AirportsSharedFileTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>File ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="lbl_DbUrl">
+     <property name="text">
+      <string>DB URL:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="10">
+    <widget class="QLineEdit" name="le_DistributorsSharedFileTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>File ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="10">
+    <widget class="QLineEdit" name="le_ModelsSharedFileTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>File ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="lbl_Distributors">
+     <property name="text">
+      <string>Distributors:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="7">
+    <widget class="QLineEdit" name="le_AirportsCacheTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>cache ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="10">
+    <widget class="QLineEdit" name="le_LiveriesSharedFileTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>File ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="lbl_Models">
+     <property name="text">
+      <string>Models:</string>
      </property>
     </widget>
    </item>
@@ -115,6 +764,32 @@
      </property>
      <property name="placeholderText">
       <string>DB ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="7">
+    <widget class="QLineEdit" name="le_AircraftIcaoCacheTs">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>cache ts</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="5">
+    <widget class="QLineEdit" name="le_DistributorsCacheCount">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>count</string>
      </property>
     </widget>
    </item>
@@ -248,673 +923,57 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="lbl_Models">
-     <property name="text">
-      <string>Models:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="9">
-    <widget class="QLabel" name="lbl_DbTs">
-     <property name="text">
-      <string>DB ts:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="9">
-    <widget class="QLineEdit" name="le_ModelsDbTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>DB ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="7">
-    <widget class="QLineEdit" name="le_AirlinesIcaoCacheTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>cache ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="9">
-    <widget class="QLineEdit" name="le_CountriesDbTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>DB ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="5">
-    <widget class="QLineEdit" name="le_LiveriesCacheCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="7">
-    <widget class="QLineEdit" name="le_LiveriesCacheTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>cache ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QLabel" name="lbl_CacheCount">
-     <property name="text">
-      <string>Cache #:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="5">
-    <widget class="QLineEdit" name="le_CountriesCacheCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lbl_AirlineIcao">
-     <property name="text">
-      <string>Airlines:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="6">
-    <widget class="QLineEdit" name="le_AircraftIcaoDbCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="6">
-    <widget class="QLineEdit" name="le_ModelsDbCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="6">
-    <widget class="QLineEdit" name="le_AirlinesIcaoDbCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6">
-    <widget class="QLabel" name="lbl_DbCount">
-     <property name="text">
-      <string>DB #:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="9">
-    <widget class="QLineEdit" name="le_LiveriesDbTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>DB ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="7">
-    <widget class="QLabel" name="lbl_CacheTs">
-     <property name="text">
-      <string>Cache ts:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="5">
-    <widget class="QLineEdit" name="le_AirlinesIcaoCacheCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="10">
-    <widget class="QLineEdit" name="le_AircraftSharedFileTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>File ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="6">
-    <widget class="QLineEdit" name="le_CountriesDbCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="6">
-    <widget class="QLineEdit" name="le_LiveriesDbCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="10">
-    <widget class="QLineEdit" name="le_CountriesSharedFileTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>File ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="10">
-    <widget class="QLineEdit" name="le_AirlinesSharedFileTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>File ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="10">
-    <widget class="QLineEdit" name="le_DistributorsSharedFileTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>File ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="10">
-    <widget class="QLineEdit" name="le_ModelsSharedFileTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>File ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="lbl_Distributors">
-     <property name="text">
-      <string>Distributors:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="10">
-    <widget class="QLineEdit" name="le_LiveriesSharedFileTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>File ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="7">
-    <widget class="QLineEdit" name="le_AirportsCacheTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>cache ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="10">
-    <widget class="QLineEdit" name="le_AirportsSharedFileTs">
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>File ts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="lbl_DbUrl">
-     <property name="text">
-      <string>DB URL:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="5">
-    <widget class="QLineEdit" name="le_AirportsCacheCount">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="placeholderText">
-      <string>count</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="10">
-    <widget class="QLabel" name="lbl_SharedFilesTs">
-     <property name="text">
-      <string>Shared ts:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0" alignment="Qt::AlignTop">
-    <widget class="QLabel" name="lbl_SharedUrl">
-     <property name="text">
-      <string>Shared:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="lbl_Airports">
-     <property name="text">
-      <string>Airports:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3" alignment="Qt::AlignHCenter">
-    <widget class="QToolButton" name="tb_SharedReloadAircraft">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from shared files</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="3" alignment="Qt::AlignHCenter">
-    <widget class="QToolButton" name="tb_SharedReloadDistributors">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from shared files</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="3" alignment="Qt::AlignHCenter">
-    <widget class="QToolButton" name="tb_SharedReloadModels">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from shared files</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3" alignment="Qt::AlignHCenter">
-    <widget class="QToolButton" name="tb_SharedReloadAirports">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from shared files</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3" alignment="Qt::AlignHCenter">
-    <widget class="QToolButton" name="tb_SharedReloadAirlines">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from shared files</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="3" alignment="Qt::AlignHCenter">
-    <widget class="QToolButton" name="tb_SharedReloadCountries">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from shared files</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3">
-    <widget class="QLabel" name="lbl_SharedRefresh">
-     <property name="toolTip">
-      <string>Shared</string>
-     </property>
-     <property name="text">
-      <string>Shr.:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="3" alignment="Qt::AlignHCenter">
-    <widget class="QToolButton" name="tb_SharedReloadLiveries">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from shared files</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="4">
-    <widget class="QLabel" name="lbl_DbRefresh">
-     <property name="text">
-      <string>DB:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="4">
-    <widget class="QToolButton" name="tb_DbReloadAircraft">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from database</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="4">
-    <widget class="QToolButton" name="tb_DbReloadAirlines">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from database</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="4">
-    <widget class="QToolButton" name="tb_DbReloadAirports">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from database</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="4">
-    <widget class="QToolButton" name="tb_DbReloadLiveries">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from database</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="4">
-    <widget class="QToolButton" name="tb_DbReloadModels">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from database</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="4">
-    <widget class="QToolButton" name="tb_DbReloadCountries">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from database</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="4">
-    <widget class="QToolButton" name="tb_DbReloadDistributors">
-     <property name="maximumSize">
-      <size>
-       <width>48</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>refresh from database</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset resource="../../blackmisc/blackmisc.qrc">
-       <normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</normaloff>:/pastel/icons/pastel/16/arrow-refresh.png</iconset>
-     </property>
+   <item row="9" column="3" colspan="8">
+    <widget class="QWidget" name="wi_LoadAllButtons" native="true">
+     <layout class="QHBoxLayout" name="hl_LoadAllButtons">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pb_LoadAllFromShared">
+        <property name="text">
+         <string>load from shared</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/disk.png</normaloff>:/pastel/icons/pastel/16/disk.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_LoadAllFromDB">
+        <property name="text">
+         <string>load from DB</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../blackmisc/blackmisc.qrc">
+          <normaloff>:/pastel/icons/pastel/16/database.png</normaloff>:/pastel/icons/pastel/16/database.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
