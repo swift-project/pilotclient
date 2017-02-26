@@ -67,6 +67,9 @@ namespace BlackMisc
             CSimulatorInfo(const QString &identifierString);
 
             //! Constructor
+            CSimulatorInfo(const QStringList &simulators);
+
+            //! Constructor
             CSimulatorInfo(Simulator s);
 
             //! Constructor

@@ -28,8 +28,14 @@ namespace BlackMisc
         CSimulatorInfo::CSimulatorInfo()
         { }
 
-        CSimulatorInfo::CSimulatorInfo(const QString &identifierString) :  m_simulator(identifierToFlag(identifierString))
+        CSimulatorInfo::CSimulatorInfo(const QString &identifierString) : m_simulator(identifierToFlag(identifierString))
         { }
+
+        CSimulatorInfo::CSimulatorInfo(const QStringList &simulators)
+        {
+            const QString identifier = simulators.join(' ');
+            m_simulator = identifierToFlag(identifier);
+        }
 
         CSimulatorInfo::CSimulatorInfo(Simulator simulator) : m_simulator(static_cast<int>(simulator))
         { }
