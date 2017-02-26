@@ -98,7 +98,7 @@ namespace BlackMisc
     {
         if (path1.isEmpty()) { return QDir::cleanPath(path2); }
         if (path2.isEmpty()) { return QDir::cleanPath(path1); }
-        return QDir::cleanPath(path1 + QDir::separator() + path2);
+        return QDir::cleanPath(path1 + QChar('/') + path2);
     }
 
     bool CFileUtils::copyRecursively(const QString &sourceDir, const QString &destinationDir)

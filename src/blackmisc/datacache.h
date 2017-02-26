@@ -297,7 +297,7 @@ namespace BlackMisc
         virtual void connectPage(Private::CValuePage *page) override;
 
         QFileSystemWatcher m_watcher;
-        const QString m_revisionFileName { persistentStore() + "/.rev" };
+        const QString m_revisionFileName { CFileUtils::appendFilePaths(persistentStore(), ".rev") };
 
         CDataCacheSerializer m_serializer { this, m_revisionFileName };
         CDataCacheRevision m_revision { persistentStore() + "/" };
