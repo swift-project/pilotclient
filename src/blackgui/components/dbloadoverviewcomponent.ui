@@ -392,6 +392,12 @@
    </item>
    <item row="0" column="6">
     <widget class="QLabel" name="lbl_DbCount">
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>DB count</string>
      </property>
@@ -605,6 +611,12 @@
    </item>
    <item row="0" column="5">
     <widget class="QLabel" name="lbl_CacheCount">
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Cache count</string>
      </property>

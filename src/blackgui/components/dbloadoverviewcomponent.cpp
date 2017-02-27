@@ -71,7 +71,7 @@ namespace BlackGui
             this->ps_setValues();
         }
 
-        void CDbLoadOverviewComponent::setVisibleDbRefreshButtons(bool visible)
+        void CDbLoadOverviewComponent::showVisibleDbRefreshButtons(bool visible)
         {
             ui->lbl_DbRefresh->setVisible(visible);
             ui->tb_DbReloadAircraft->setVisible(visible);
@@ -83,7 +83,7 @@ namespace BlackGui
             ui->tb_DbReloadDistributors->setVisible(visible);
         }
 
-        void CDbLoadOverviewComponent::setVisibleSharedRefreshButtons(bool visible)
+        void CDbLoadOverviewComponent::showVisibleSharedRefreshButtons(bool visible)
         {
             ui->lbl_SharedRefresh->setVisible(visible);
             ui->tb_SharedReloadAircraft->setVisible(visible);
@@ -115,7 +115,7 @@ namespace BlackGui
             return m_loadInProgress;
         }
 
-        void CDbLoadOverviewComponent::showLoadAllButtons(bool shared, bool db)
+        void CDbLoadOverviewComponent::showVisibleLoadAllButtons(bool shared, bool db)
         {
             const bool widget = shared || db;
             ui->wi_LoadAllButtons->setVisible(widget);

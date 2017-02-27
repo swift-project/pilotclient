@@ -42,19 +42,19 @@ namespace BlackGui
             void display();
 
             //! Visible DB refresh buttons
-            void setVisibleDbRefreshButtons(bool visible);
+            void showVisibleDbRefreshButtons(bool visible);
 
             //! Visible shared refresh buttons
-            void setVisibleSharedRefreshButtons(bool visible);
+            void showVisibleSharedRefreshButtons(bool visible);
+
+            //! Show load all buttons
+            void showVisibleLoadAllButtons(bool shared, bool db);
 
             //! Showing load indicator?
             bool isShowingLoadIndicator() const;
 
             //! Loading in progress?
             bool isLoadInProgress() const;
-
-            //! Show load all buttons
-            void showLoadAllButtons(bool shared, bool db);
 
             //! Load all from DB
             void loadAllFromDb();

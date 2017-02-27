@@ -19,7 +19,7 @@ namespace BlackGui
             ui(new Ui::CInitialDataLoadComponent)
         {
             ui->setupUi(this);
-            ui->comp_DataUpdates->showLoadAllButtons(true, false);
+            ui->comp_DataUpdates->showVisibleLoadAllButtons(true, false);
         }
 
         CInitialDataLoadComponent::~CInitialDataLoadComponent()
