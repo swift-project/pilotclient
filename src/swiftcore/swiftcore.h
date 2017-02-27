@@ -22,7 +22,7 @@
 #include <QString>
 
 class QWidget;
-
+namespace BlackGui { namespace Components { class CCoreSettingsDialog; }}
 namespace Ui { class CSwiftCore; }
 
 /*!
@@ -52,6 +52,9 @@ private slots:
     void ps_p2pModeToggled(bool checked);
     //! @}
 
+    //! Show the settings dialog
+    void ps_showSettingsDialog();
+
     //! Style sheet has changed
     virtual void ps_onStyleSheetsChanged();
 
@@ -69,6 +72,7 @@ private:
     void stopCore();
     QString getDBusAddress() const;
 
+    QScopedPointer<BlackGui::Components::CCoreSettingsDialog> m_settingsDialog;
     QScopedPointer<Ui::CSwiftCore> ui;
 };
 

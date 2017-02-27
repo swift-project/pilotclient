@@ -11,6 +11,7 @@
 #include "blackcore/corefacade.h"
 #include "blackgui/components/commandinput.h"
 #include "blackgui/components/coreinfoareacomponent.h"
+#include "blackgui/components/coresettingsdialog.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/stylesheetutility.h"
@@ -120,6 +121,15 @@ void CSwiftCore::ps_p2pModeToggled(bool checked)
     }
 }
 
+void CSwiftCore::ps_showSettingsDialog()
+{
+    if (!m_settingsDialog)
+    {
+        m_settingsDialog.reset(new CCoreSettingsDialog(this));
+    }
+    m_settingsDialog->show();
+}
+
 void CSwiftCore::ps_onStyleSheetsChanged()
 {
     this->initStyleSheet();
@@ -150,6 +160,7 @@ void CSwiftCore::initMenus()
     sGui->addMenuFile(*ui->menu_File);
     sGui->addMenuWindow(*ui->menu_Window);
     sGui->addMenuHelp(*ui->menu_Help);
+    connect(ui->menu_SettingsDialog, &QAction::triggered, this, &CSwiftCore::ps_showSettingsDialog);
 }
 
 void CSwiftCore::startCore(const QString &dBusAdress)

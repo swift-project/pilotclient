@@ -156,10 +156,26 @@ QTextEdit {
      <string>&amp;Window</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu_Settings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="menu_SettingsDialog"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Window"/>
    <addaction name="menu_Help"/>
+   <addaction name="menu_Settings"/>
   </widget>
+  <action name="menu_SettingsDialog">
+   <property name="icon">
+    <iconset resource="../blackmisc/blackmisc.qrc">
+     <normaloff>:/pastel/icons/pastel/16/wrench-orange.png</normaloff>:/pastel/icons/pastel/16/wrench-orange.png</iconset>
+   </property>
+   <property name="text">
+    <string>Modify settings</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -188,6 +204,8 @@ QTextEdit {
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>
