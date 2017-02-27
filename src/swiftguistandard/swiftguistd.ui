@@ -503,15 +503,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::Components::CInfoBarStatusComponent</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/infobarstatuscomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::COverlayMessagesFrame</class>
    <extends>QFrame</extends>
    <header>blackgui/overlaymessagesframe.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInfoBarStatusComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/infobarstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
