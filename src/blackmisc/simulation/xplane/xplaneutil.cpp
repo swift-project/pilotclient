@@ -95,9 +95,24 @@ namespace BlackMisc
                 return getLastExistingPathFromFile(xplaneInstallFilePath);
             }
 
+            QString CXPlaneUtil::xplane11Dir()
+            {
+                QString xplaneInstallFilePath;
+                QString xplaneInstallFile = QStringLiteral("/x-plane_install_11.txt");
+#if defined(Q_OS_WIN)
+                xplaneInstallFilePath = getWindowsLocalAppDataPath() + xplaneInstallFile;
+#elif defined (Q_OS_LINUX)
+                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/.x-plane") + xplaneInstallFile;
+#elif defined (Q_OS_OSX)
+                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/Library/Preferences") + xplaneInstallFile;
+#endif
+                return getLastExistingPathFromFile(xplaneInstallFilePath);
+            }
+
             QString CXPlaneUtil::xplaneRootDir()
             {
-                if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
+                if (!xplane11Dir().isEmpty()) { return xplane11Dir(); }
+                else if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
                 else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
                 else { return {}; }
             }

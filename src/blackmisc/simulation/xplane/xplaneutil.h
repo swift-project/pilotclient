@@ -35,6 +35,9 @@ namespace BlackMisc
                 //! XPlane 10 directory
                 static QString xplane10Dir();
 
+                //! XPlane 11 directory
+                static QString xplane11Dir();
+
                 //! XPlane root directory
                 //! In case more then one XPlane version is found, the path to the highest version is used
                 static QString xplaneRootDir();
