@@ -125,8 +125,9 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   border-color: blue;
 }
 
-#le_CommandLineInput {
+#lep_CommandLineInput {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background: black;
   margin-bottom: 5px;
   padding: 3px;
   border-radius: 5px;
