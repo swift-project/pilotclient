@@ -167,6 +167,14 @@ namespace BlackCore
             m_unusedVoiceChannels.push_back(m_channel2);
         }
 
+        CIdentifier CContextAudio::audioRunsWhere() const
+        {
+            Q_ASSERT(this->m_voice);
+            if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO; }
+            static const BlackMisc::CIdentifier i("CContextAudio");
+            return i;
+        }
+
         CAudioDeviceInfoList CContextAudio::getAudioDevices() const
         {
             Q_ASSERT(this->m_voice);

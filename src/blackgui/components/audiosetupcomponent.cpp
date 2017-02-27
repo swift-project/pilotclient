@@ -39,14 +39,35 @@ namespace BlackGui
         {
             ui->setupUi(this);
 
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+            Q_ASSERT_X(sGui->getIContextAudio(), Q_FUNC_INFO, "Missing Audio context");
+
+            // audio is optional
+            const bool audio = this->hasAudio();
+            this->setEnabled(audio);
+            if (!audio)
+            {
+                ui->lbl_ExtraInfo->setText("No audio, cannot change.");
+            }
+            else if (sGui->getIContextAudio()->isUsingImplementingObject())
+            {
+                const CIdentifier i = sGui->getIContextAudio()->audioRunsWhere();
+                const QString info = QString("Local audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName());
+                ui->lbl_ExtraInfo->setText(info);
+            }
+            else
+            {
+                const CIdentifier i = sGui->getIContextAudio()->audioRunsWhere();
+                const QString info = QString("Remote audio on '%1', '%2'.").arg(i.getMachineName(), i.getProcessName());
+                ui->lbl_ExtraInfo->setText(info);
+            }
+
             bool c = connect(ui->tb_ExpandNotificationSounds, &QToolButton::toggled, this, &CAudioSetupComponent::ps_onToggleNotificationSoundsVisibility);
             Q_ASSERT(c);
-            Q_UNUSED(c);
             c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioSetupComponent::ps_onLoopbackToggled);
             Q_ASSERT(c);
-            Q_UNUSED(c);
 
-            if (sGui->getIContextAudio())
+            if (audio)
             {
                 this->initAudioDeviceLists();
 
@@ -56,18 +77,18 @@ namespace BlackGui
                 // the connects depend on initAudioDeviceLists
                 c = this->connect(ui->cb_SetupAudioInputDevice,  static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
                 Q_ASSERT(c);
-                Q_UNUSED(c);
-
                 c = this->connect(ui->cb_SetupAudioOutputDevice, static_cast<void (QComboBox::*)(int)> (&QComboBox::currentIndexChanged), this, &CAudioSetupComponent::ps_audioDeviceSelected);
                 Q_ASSERT(c);
-                Q_UNUSED(c);
 
                 // context
-                this->connect(sGui->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
-                this->connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
+                c = this->connect(sGui->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
+                Q_ASSERT(c);
+                c = this->connect(sGui->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
+                Q_ASSERT(c);
             }
             this->ps_reloadSettings();
             ui->tb_ExpandNotificationSounds->setChecked(false); // collapse
+            Q_UNUSED(c);
         }
 
         CAudioSetupComponent::~CAudioSetupComponent()
@@ -88,9 +109,14 @@ namespace BlackGui
 
         void CAudioSetupComponent::initAudioDeviceLists()
         {
-            if (!sGui->getIContextAudio()) { return; }
+            if (!this->hasAudio()) { return; }
             this->ps_onAudioDevicesChanged(sGui->getIContextAudio()->getAudioDevices());
             this->ps_onCurrentAudioDevicesChanged(sGui->getIContextAudio()->getCurrentAudioDevices());
+        }
+
+        bool CAudioSetupComponent::hasAudio() const
+        {
+            return sGui && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
         }
 
         bool CAudioSetupComponent::playNotificationSounds() const
@@ -162,6 +188,5 @@ namespace BlackGui
             if (sGui->getIContextAudio()->isAudioLoopbackEnabled() == loopback) { return; }
             sGui->getIContextAudio()->enableAudioLoopback(loopback);
         }
-
     } // namespace
 } // namespace

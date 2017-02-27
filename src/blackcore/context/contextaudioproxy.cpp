@@ -82,6 +82,11 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1String("getAudioDevices"));
         }
 
+        CIdentifier CContextAudioProxy::audioRunsWhere() const
+        {
+            return this->m_dBusInterface->callDBusRet<CIdentifier>(QLatin1String("audioRunsWhere"));
+        }
+
         CAudioDeviceInfoList CContextAudioProxy::getCurrentAudioDevices() const
         {
             return this->m_dBusInterface->callDBusRet<CAudioDeviceInfoList>(QLatin1String("getCurrentAudioDevices"));

@@ -88,6 +88,14 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
+            //! \copydoc IContextAudio::audioRunsWhere()
+            virtual BlackMisc::CIdentifier audioRunsWhere() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                static const BlackMisc::CIdentifier i("CContextAudioEmpty");
+                return i;
+            }
+
             //! \copydoc IContextAudio::getAudioDevices()
             virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override
             {

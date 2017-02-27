@@ -24,7 +24,6 @@
 class QWidget;
 
 namespace Ui { class CAudioSetupComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -40,7 +39,7 @@ namespace BlackGui
             explicit CAudioSetupComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAudioSetupComponent();
+            virtual ~CAudioSetupComponent();
 
             //! Play notification sounds (at all)
             bool playNotificationSounds() const;
@@ -49,10 +48,8 @@ namespace BlackGui
             //! Reload settings
             void ps_reloadSettings();
 
-            /*!
-             * \brief Audio device selected
-             * \param index audio device index (COM1, COM2)
-             */
+            //! Audio device selected
+            //! \param index audio device index (COM1, COM2)
             void ps_audioDeviceSelected(int index);
 
             //! Current audio devices changed
@@ -70,6 +67,9 @@ namespace BlackGui
         private:
             //! Audio device lists from settings
             void initAudioDeviceLists();
+
+            //! Audio is optional, check if available
+            bool hasAudio() const;
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
             BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };

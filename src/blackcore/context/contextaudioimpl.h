@@ -81,6 +81,7 @@ namespace BlackCore
             virtual BlackMisc::Aviation::CCallsignSet getRoomCallsigns(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
             virtual BlackMisc::Network::CUserList getRoomUsers(BlackMisc::Aviation::CComSystem::ComUnit comUnitValue) const override;
             virtual void leaveAllVoiceRooms() override;
+            virtual BlackMisc::CIdentifier audioRunsWhere() const override;
             virtual BlackMisc::Audio::CAudioDeviceInfoList getAudioDevices() const override;
             virtual BlackMisc::Audio::CAudioDeviceInfoList getCurrentAudioDevices() const override;
             virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDeviceInfo &audioDevice) override;
