@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>346</height>
+    <width>261</width>
+    <height>248</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -234,7 +234,7 @@
         <item alignment="Qt::AlignRight">
          <widget class="QLabel" name="lbl_RestrictionText">
           <property name="text">
-           <string>rest.text goes here</string>
+           <string>restriction info</string>
           </property>
          </widget>
         </item>
@@ -358,7 +358,7 @@
        </layout>
       </item>
       <item row="0" column="0" colspan="2">
-       <widget class="BlackGui::CPluginSelector" name="ps_EnabledSimulators" native="true"/>
+       <widget class="BlackGui::CPluginSelector" name="pluginSelector_EnabledSimulators" native="true"/>
       </item>
      </layout>
     </widget>

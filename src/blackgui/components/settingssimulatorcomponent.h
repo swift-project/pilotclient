@@ -84,7 +84,7 @@ namespace BlackGui
             BlackMisc::Simulation::CSimulatorPluginInfoList getAvailablePlugins() const;
 
             QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
-            bool m_pluginLoaded = false; //!< plugin loaded
+            bool m_pluginLoaded = false; //!< plugin loaded?
             BlackCore::CPluginManagerSimulator* m_plugins = nullptr;
             BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::ps_reloadPluginConfig };
         };

@@ -55,6 +55,9 @@ namespace BlackGui
             ui(new Ui::CSettingsSimulatorComponent),
             m_plugins(new CPluginManagerSimulator(this))
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+            Q_ASSERT_X(sGui->getIContextSimulator(), Q_FUNC_INFO, "Missing context");
+
             m_plugins->collectPlugins();
             ui->setupUi(this);
             CLedWidget::LedShape shape = CLedWidget::Circle;
@@ -66,9 +69,9 @@ namespace BlackGui
 
             // connects
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::ps_simulatorPluginChanged);
-            connect(ui->ps_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
-            connect(ui->ps_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::ps_showPluginDetails);
-            connect(ui->ps_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::ps_showPluginConfig);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::ps_pluginStateChanged);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginDetailsRequested, this, &CSettingsSimulatorComponent::ps_showPluginDetails);
+            connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::ps_showPluginConfig);
             connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedAircraft);
             connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyTimeSync);
             connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::ps_onApplyMaxRenderedDistance);
@@ -83,11 +86,14 @@ namespace BlackGui
             for (const auto &p : getAvailablePlugins())
             {
                 const QString config = m_plugins->getPluginConfigId(p.getIdentifier());
-                ui->ps_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
+                ui->pluginSelector_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
             }
 
             // config
             ps_reloadPluginConfig();
+
+            // init
+            ps_simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
         }
 
         CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
@@ -115,9 +121,9 @@ namespace BlackGui
 
             if (m_pluginLoaded)
             {
-                bool timeSynced = sGui->getIContextSimulator()->isTimeSynchronized();
+                const bool timeSynced = sGui->getIContextSimulator()->isTimeSynchronized();
                 ui->cb_TimeSync->setChecked(timeSynced);
-                CTime timeOffset = sGui->getIContextSimulator()->getTimeSynchronizationOffset();
+                const CTime timeOffset = sGui->getIContextSimulator()->getTimeSynchronizationOffset();
                 ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
 
                 const int maxAircraft = setup.getMaxRenderedAircraft();
@@ -151,7 +157,7 @@ namespace BlackGui
 
             if (selected->isUnspecified())
             {
-                CLogMessage(this).error("Simulator plugin does not exist: %1") << identifier;
+                CLogMessage(this).error("Simulator plugin does not exist: '%1'") << identifier;
                 return;
             }
 
@@ -258,8 +264,8 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_simulatorPluginChanged(const CSimulatorPluginInfo &info)
         {
-            // I intentionally to not set the selected plugin combobox here
-            // as this would cause undesired rountrips
+            // I intentionally do not set the selected plugin combobox here
+            // as this would cause undesired roundtrips
 
             // other GUI values
             if (!info.isUnspecified())
@@ -322,7 +328,7 @@ namespace BlackGui
             auto enabledSimulators = m_enabledSimulators.getThreadLocal();
             for (const auto &p : getAvailablePlugins())
             {
-                ui->ps_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));
+                ui->pluginSelector_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));
             }
         }
     }
