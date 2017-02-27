@@ -31,7 +31,6 @@ namespace BlackGui
             Q_OBJECT
 
         public:
-
             //! Tabs
             //! \remark needs to be in sync with tab order
             enum SettingTab
@@ -82,7 +81,13 @@ namespace BlackGui
             //! An overview button was clicked
             void ps_overviewButtonClicked();
 
+            //! Action triggered
+            void ps_actionTriggered();
+
         private:
+            //! Init actions
+            void initActions();
+
             QScopedPointer<Ui::CSettingsComponent> ui;
         };
     }
