@@ -12,9 +12,8 @@ INCLUDEPATH += . $$SourceRoot/src
 
 SOURCES += *.cpp
 HEADERS += *.h
-FORMS += *.ui
 DISTFILES += simulatorfsxconfig.json
-
+LIBS +=  -lsimulatorfsxcommon
 DESTDIR = $$DestRoot/bin/plugins/simulator
 
 win32 {
