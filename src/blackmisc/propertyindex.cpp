@@ -144,4 +144,9 @@ namespace BlackMisc
         return f;
     }
 
+    bool CPropertyIndex::startsWith(int index) const
+    {
+        if (this->isEmpty()) { return false; }
+        return this->frontToInt() == index;
+    }
 } // namespace

@@ -93,8 +93,9 @@ namespace BlackMisc
             GlobalIndexCAircraftParts                   =  1400,
             GlobalIndexCAircraftLights                  =  1500,
             GlobalIndexCLivery                          =  1600,
-            GlobalIndexCModulator                       =  2000,
-            GlobalIndexCTransponder                     =  2100,
+            GlobalIndexCComSystem                       =  2000,
+            GlobalIndexCModulator                       =  2100,
+            GlobalIndexCTransponder                     =  2200,
             GlobalIndexCAircraftIcaoData                =  2500,
             GlobalIndexCAircraftIcaoCode                =  2600,
             GlobalIndexCAirlineIcaoCode                 =  2700,
@@ -202,6 +203,9 @@ namespace BlackMisc
         //! Front to integer
         int frontToInt() const;
 
+        //! Starts with given index?
+        bool startsWith(int index) const;
+
         //! First element casted to given type, usually the PropertIndex enum
         template<class CastType> CastType frontCasted() const
         {
@@ -210,12 +214,10 @@ namespace BlackMisc
         }
 
         //! Compare with index given by enum
-        template<class EnumType> bool equalsPropertyIndexEnum(EnumType ev)
+        template<class EnumType> bool startsWithPropertyIndexEnum(EnumType ev) const
         {
             static_assert(std::is_enum<EnumType>::value, "Argument must be an enum");
-            QList<int> l = indexList();
-            if (l.size() != 1) { return false; }
-            return static_cast<int>(ev) == l.first();
+            return this->startsWith(static_cast<int>(ev));
         }
 
         //! Return a predicate function which can compare two objects based on this index
