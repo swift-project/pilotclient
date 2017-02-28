@@ -21,11 +21,6 @@
 
 namespace BlackConfig
 {
-    bool CBuildConfig::isCompiledWithP3DSupport()
-    {
-        return CBuildConfig::isCompiledWithFsxSupport();
-    }
-
     bool CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
     {
         return CBuildConfig::isCompiledWithFs9Support() || CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithP3DSupport();

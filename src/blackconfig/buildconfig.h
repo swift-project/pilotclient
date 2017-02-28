@@ -25,34 +25,34 @@ namespace BlackConfig
     {
     public:
         //! with BlackCore?
-        static bool isCompiledWithBlackCore();
+        static bool isCompiledWithBlackCore(); // defined in buildconfig_gen.cpp.in
 
         //! with BlackSound?
-        static bool isCompiledWithBlackSound();
+        static bool isCompiledWithBlackSound(); // defined in buildconfig_gen.cpp.in
 
         //! with BlackInput?
-        static bool isCompiledWithBlackInput();
+        static bool isCompiledWithBlackInput(); // defined in buildconfig_gen.cpp.in
 
         //! with FS9 support?
-        static bool isCompiledWithFs9Support();
+        static bool isCompiledWithFs9Support(); // defined in buildconfig_gen.cpp.in
 
         //! with FSX support?
-        static bool isCompiledWithFsxSupport();
+        static bool isCompiledWithFsxSupport(); // defined in buildconfig_gen.cpp.in
 
-        //! with P3D support
-        static bool isCompiledWithP3DSupport();
+        //! with P3D support?
+        static bool isCompiledWithP3DSupport(); // defined in buildconfig_gen.cpp.in
 
         //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9)
         static bool isCompiledWithMsFlightSimulatorSupport();
 
         //! with XPlane support?
-        static bool isCompiledWithXPlaneSupport();
+        static bool isCompiledWithXPlaneSupport(); // defined in buildconfig_gen.cpp.in
 
         //! with any simulator libraries
         static bool isCompiledWithFlightSimulatorSupport();
 
         //! with GUI?
-        static bool isCompiledWithGui();
+        static bool isCompiledWithGui(); // defined in buildconfig_gen.cpp.in
 
         //! Debug build?
         static bool isDebugBuild();
@@ -61,16 +61,16 @@ namespace BlackConfig
         static bool isReleaseBuild();
 
         //! Beta test?
-        static bool isBetaTest();
+        static bool isBetaTest(); // defined in buildconfig_gen.cpp.in
 
         //! Can run in dev. environment?
         static bool canRunInDeveloperEnvironment();
 
         //! Shipped version?
-        static bool isShippedVersion();
+        static bool isShippedVersion(); // defined in buildconfig_gen.cpp.in
 
         //! Vatsim enabled version?
-        static bool isVatsimVersion();
+        static bool isVatsimVersion(); // defined in buildconfig_gen.cpp.in
 
         //! Running on Windows NT platform?
         static bool isRunningOnWindowsNtPlatform();
@@ -140,16 +140,16 @@ namespace BlackConfig
         static const QString &swiftDataExecutableName();
 
         //! End of lifetime
-        static const QDateTime &getEol();
+        static const QDateTime &getEol(); // defined in buildconfig_gen.cpp.in
 
         //! Lifetime ended?
         static bool isLifetimeExpired();
 
         //! Vatsim client id
-        static int vatsimClientId();
+        static int vatsimClientId(); // defined in buildconfig_gen.cpp.in
 
         //! Vatsim client key
-        static const QString &vatsimPrivateKey();
+        static const QString &vatsimPrivateKey(); // defined in buildconfig_gen.cpp.in
     };
 
     //! Version
@@ -157,7 +157,7 @@ namespace BlackConfig
     {
     public:
         //! Version info
-        static const QString &version();
+        static const QString &version(); // defined in buildconfig_gen.cpp.in
 
         //! Version major
         static int versionMajor();

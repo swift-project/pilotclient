@@ -12,6 +12,7 @@ BLACK_CONFIG    *= SwiftGui
 BLACK_CONFIG    *= SwiftLauncher
 BLACK_CONFIG    *= FS9
 BLACK_CONFIG    *= FSX
+BLACK_CONFIG    *= P3D
 BLACK_CONFIG    *= XPlane
 BLACK_CONFIG    *= ProfileRelease
 BLACK_CONFIG    *= AssertsInRelease
@@ -30,6 +31,7 @@ isEmpty(BLACK_EOL): BLACK_EOL = "20180101"
 include(vatsim.pri)
 
 # Header based compiler macros
+# DEFINES correspond with buildconfig_gen.cpp.in
 !contains(BLACK_CONFIG, BlackSound) { DEFINE_WITH_BLACKSOUND = "//" }
 !contains(BLACK_CONFIG, BlackInput) { DEFINE_WITH_BLACKINPUT = "//" }
 !contains(BLACK_CONFIG, BlackCore) { DEFINE_WITH_BLACKCORE = "//" }
@@ -37,6 +39,7 @@ include(vatsim.pri)
 !contains(BLACK_CONFIG, SwiftData) { DEFINE_WITH_SWIFTDATA = "//" }
 !contains(BLACK_CONFIG, SwiftGui) { DEFINE_WITH_SWIFTGUI = "//" }
 !contains(BLACK_CONFIG, SwiftCore) { DEFINE_WITH_SWIFTCORE = "//" }
+!contains(BLACK_CONFIG, P3D) { DEFINE_WITH_P3D = "//" }
 !contains(BLACK_CONFIG, FSX) { DEFINE_WITH_FSX = "//" }
 !contains(BLACK_CONFIG, FS9) { DEFINE_WITH_FS9 = "//" }
 !contains(BLACK_CONFIG, XPlane) { DEFINE_WITH_XPLANE = "//" }
