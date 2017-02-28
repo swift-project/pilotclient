@@ -11,6 +11,7 @@
 #include "ui_applicationclosedialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
+#include "blackcore/context/contextapplication.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/logmessage.h"
 #include <QStringListModel>
@@ -73,7 +74,7 @@ namespace BlackGui
 
         void CApplicationCloseDialog::initSettingsView()
         {
-            QStringList settings(CSettingsCache::instance()->getAllUnsavedKeys());
+            QStringList settings(sApp->getIContextApplication()->getUnsavedSettingsKeys());
             settings.sort();
             QStringListModel *model = new QStringListModel(settings, this);
             ui->lv_UnsavedSettings->setModel(model);
