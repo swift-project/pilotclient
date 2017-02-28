@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSimulatorFsxConfigWindow</class>
+ <widget class="QWidget" name="CSimulatorFsxConfigWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>FSX plugin settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="vl_FsxConfigWindow">
+   <item>
+    <widget class="BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent" name="fr_simConnectSettings">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_OkCancel">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackSimPlugin::FsxCommon::CSimConnectSettingsComponent</class>
+   <extends>QFrame</extends>
+   <header>simconnectsettingscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
