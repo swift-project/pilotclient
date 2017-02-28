@@ -5,8 +5,8 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 buildconfig_gen.input = buildconfig_gen.cpp.in
-buildconfig_gen.output = $$DestRoot/buildconfig_gen.cpp
-GENERATED_SOURCES += $$DestRoot/buildconfig_gen.cpp
+buildconfig_gen.output = $$BuildRoot/buildconfig_gen.cpp
+GENERATED_SOURCES += $$BuildRoot/buildconfig_gen.cpp
 QMAKE_SUBSTITUTES += buildconfig_gen
 
 INCLUDEPATH += ..
