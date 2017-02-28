@@ -163,10 +163,10 @@ namespace BlackMisc
         int typeId = QMetaType::type(qPrintable(typeName));
 
         QJsonValue value = json.value("value");
-        if (value.isUndefined() && typeId != QVariant::Invalid) { throw CJsonException("Missing 'value'"); }
+        if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
         switch (typeId)
         {
-        case QVariant::Invalid:     CLogMessage(this).warning("Invalid type for fromJson: %1") << typeName; m_v.clear(); break;
+        case QVariant::Invalid:     throw CJsonException("Type not recognized by QMetaType");
         case QVariant::Int:         m_v.setValue(value.toInt()); break;
         case QVariant::UInt:        m_v.setValue<uint>(value.toInt()); break;
         case QVariant::Bool:        m_v.setValue(value.toBool()); break;
@@ -195,17 +195,17 @@ namespace BlackMisc
                     m_v.setValue(value.toString());
                     if (! m_v.convert(typeId))
                     {
-                        CLogMessage(this).warning("Failed to convert from JSON string");
+                        throw CJsonException("Failed to convert from JSON string");
                     }
                 }
                 else
                 {
-                    CLogMessage(this).warning("Unsupported CVariant type for fromJson: %1 (%2)") << typeName << typeId;
+                    throw CJsonException("Type not supported by convertFromJson");
                 }
             }
             catch (const Private::CVariantException &ex)
             {
-                CLogMessage(this).debug() << ex.what();
+                throw CJsonException(ex.what());
             }
         }
     }
@@ -258,12 +258,19 @@ namespace BlackMisc
         auto *meta = Private::getValueObjectMetaInfo(typeId);
         if (meta)
         {
-            QJsonValue value = json.value("value");
-            if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
+            try
+            {
+                QJsonValue value = json.value("value");
+                if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
 
-            CJsonScope scope("value");
-            m_v = QVariant(typeId, nullptr);
-            meta->convertFromMemoizedJson(value.toObject(), data());
+                CJsonScope scope("value");
+                m_v = QVariant(typeId, nullptr);
+                meta->convertFromMemoizedJson(value.toObject(), data());
+            }
+            catch (const Private::CVariantException &ex)
+            {
+                throw CJsonException(ex.what());
+            }
         }
         else
         {
