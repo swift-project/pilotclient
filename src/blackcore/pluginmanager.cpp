@@ -26,11 +26,8 @@ using namespace BlackMisc;
 
 namespace BlackCore
 {
-
     IPluginManager::IPluginManager(QObject *parent) : QObject(parent)
-    {
-
-    }
+    { }
 
     void IPluginManager::collectPlugins()
     {
@@ -103,21 +100,24 @@ namespace BlackCore
 
         CLogMessage(this).debug() << "Loading plugin: " << path;
         QPluginLoader loader(path);
-        QJsonObject json = loader.metaData();
+        const QJsonObject json = loader.metaData();
         if (!isValid(json))
         {
             CLogMessage(this).warning("Plugin %1 invalid, not loading it") << path;
             return false;
         }
 
-        QString identifier = pluginIdentifier(json);
+        const QString identifier = pluginIdentifier(json);
         m_paths.insert(identifier, path);
-        m_metadatas.push_back(json);
+        m_metadata.push_back(json);
 
-        if (json.value("MetaData").toObject().contains("config")) {
-            QString configId = json.value("MetaData").toObject().value("config").toString();
+        if (json.value("MetaData").toObject().contains("config"))
+        {
+            const QString configId = json.value("MetaData").toObject().value("config").toString();
             if (!configId.isEmpty())
+            {
                 m_configs.insert(identifier, configId);
+            }
         }
 
         return true;
@@ -151,6 +151,4 @@ namespace BlackCore
             return nullptr;
         }
     }
-
-
 } // namespace

@@ -31,14 +31,12 @@ namespace BlackGui
      */
     class BLACKGUI_EXPORT IPluginConfig
     {
-
     public:
         //! Dtor.
         virtual ~IPluginConfig() {}
 
         //! Creates a new config window and returns its pointer.
         virtual CPluginConfigWindow *createConfigWindow(QWidget *parent) = 0;
-
     };
 }
 

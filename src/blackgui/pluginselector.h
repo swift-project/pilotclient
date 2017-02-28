@@ -23,8 +23,8 @@ class QSignalMapper;
 namespace BlackGui
 {
     /*!
-     * Shows all available plugins in nice list and lets user enable, disable and configure
-     * each of them.
+     * Shows all available plugins in a nice list and lets
+     * user enable, disable and configure each of them.
      */
     class BLACKGUI_EXPORT CPluginSelector : public QWidget
     {

@@ -21,7 +21,6 @@
 class QWidget;
 
 namespace BlackGui { class CPluginConfigWindow; }
-
 namespace BlackSimPlugin
 {
     namespace XPlane

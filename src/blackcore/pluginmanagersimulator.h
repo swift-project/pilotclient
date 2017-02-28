@@ -77,9 +77,7 @@ namespace BlackCore
         };
 
         QMap<QString, PluginExtended> m_plugins; //!< Id <-> extended data pairs
-
     };
-
 } // namespace
 
-#endif // BLACKCORE_PLUGIN_MANAGER_SIMULATOR_H
+#endif // guard

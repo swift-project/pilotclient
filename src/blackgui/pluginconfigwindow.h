@@ -34,8 +34,7 @@ namespace BlackGui
     protected:
         //! \copydoc QWidget::showEvent()
         virtual void showEvent(QShowEvent *event) override;
-
     };
 }
 
-#endif // CPLUGINCONFIGWINDOW_H
+#endif // guard

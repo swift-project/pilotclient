@@ -22,7 +22,6 @@
 
 namespace BlackCore
 {
-
     /*!
      * Base class for all contexts that provide plugin support.
      * It is responsible for locating, validating and loading plugins.
@@ -73,9 +72,9 @@ namespace BlackCore
         QString getIdByPlugin(const QObject *instance) const;
 
         //! Gets direct access to all plugins' metadata
-        const BlackMisc::CSequence<QJsonObject> &getPlugins()
+        const BlackMisc::CSequence<QJsonObject> &getPlugins() const
         {
-            return m_metadatas;
+            return m_metadata;
         }
 
     private:
@@ -86,12 +85,11 @@ namespace BlackCore
         //! Returns `nullptr` on failure.
         QObject *getPluginByIdImpl(const QString &identifier);
 
-        BlackMisc::CSequence<QJsonObject> m_metadatas;
+        BlackMisc::CSequence<QJsonObject> m_metadata; //!< plugin metadata
         QMap<QString, QString> m_paths; //!< identifier <-> file path pairs
         QMap<QString, QObject *> m_instances; //!< identifier <-> instance pairs
         QMap<QString, QString> m_configs; //!< identifier <-> identifier pairs
         QMap<const QObject *, QString> m_instanceIds; //!< instance <-> identifier pairs
-
     };
 }
 

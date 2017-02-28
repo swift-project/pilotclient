@@ -470,8 +470,7 @@ namespace BlackSimPlugin
         }
 
         CSimulatorFs9Factory::~CSimulatorFs9Factory()
-        {
-        }
+        { }
 
         BlackCore::ISimulator *CSimulatorFs9Factory::create(
             const CSimulatorPluginInfo &info,

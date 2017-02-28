@@ -35,5 +35,4 @@ namespace BlackGui {
 
         Q_UNUSED(event);
     }
-
 }
