@@ -13,11 +13,6 @@ contains(BLACK_CONFIG, Static) {
 INCLUDEPATH += ..
 DEPENDPATH += . ..
 
-# PRECOMPILED_HEADER = stdpch.h
-precompile_header:!isEmpty(PRECOMPILED_HEADER) {
-    DEFINES += USING_PCH
-}
-
 DEFINES += LOG_IN_FILE BUILD_BLACKINPUT_LIB
 
 HEADERS += *.h
