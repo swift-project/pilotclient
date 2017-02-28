@@ -119,18 +119,6 @@ namespace BlackMisc
             //! Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
-            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
-            BlackMisc::CIcon toIcon() const { return convertToIcon(*this); }
-
-            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
-            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
-
-            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
-            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
-
-            //! Compare for index
-            int comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const;
-
             //! Valid callsign?
             bool isValid() const;
 
@@ -157,6 +145,18 @@ namespace BlackMisc
 
             //! Representing icon
             static const CIcon &convertToIcon(const CCallsign &callsign);
+
+            //! \copydoc BlackMisc::Mixin::Icon::toIcon()
+            BlackMisc::CIcon toIcon() const { return convertToIcon(*this); }
+
+            //! \copydoc BlackMisc::Mixin::Index::propertyByIndex
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
+            //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
+            void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
+
+            //! Compare for index
+            int comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const;
 
             //! \copydoc BlackMisc::Mixin::String::toQString()
             QString convertToQString(bool i18n = false) const;

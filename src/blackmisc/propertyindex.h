@@ -186,7 +186,7 @@ namespace BlackMisc
         //! Index list
         QList<int> indexList() const;
 
-        //! Shif existing indexes to right and insert given index at front
+        //! Shift existing indexes to right and insert given index at front
         void prepend(int newLeftIndex);
 
         //! Contains index?
@@ -196,7 +196,7 @@ namespace BlackMisc
         template<class EnumType> bool contains(EnumType ev) const
         {
             static_assert(std::is_enum<EnumType>::value, "Argument must be an enum");
-            return contains(static_cast<int>(ev));
+            return this->contains(static_cast<int>(ev));
         }
 
         //! Front to integer
@@ -221,7 +221,7 @@ namespace BlackMisc
         //! Return a predicate function which can compare two objects based on this index
         auto comparator() const
         {
-            return [index = *this](const auto &a, const auto &b)
+            return [index = *this](const auto & a, const auto & b)
             {
                 using T = std::decay_t<decltype(a)>;
                 return Private::compareByProperty(a, b, index, THasCompareByPropertyIndex<T>(), THasPropertyByIndex<T>());

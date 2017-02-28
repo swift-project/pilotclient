@@ -139,7 +139,7 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
             int m_volumeInput = 0;  //!< volume input
             int m_volumeOutput = 0; //!< volume output
-            bool m_enabled = true;     //!< is enabled, used e.g. for mute etc.
+            bool m_enabled = true;  //!< is enabled, used e.g. for mute etc.
 
             //! Easy access to derived class (CRTP template parameter)
             AVIO const *derived() const;

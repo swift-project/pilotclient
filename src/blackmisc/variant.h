@@ -39,7 +39,6 @@ namespace BlackMisc
 
     namespace Mixin
     {
-
         /*!
          * CRTP class template from which a derived class can inherit common methods dealing with the metatype of the class.
          *

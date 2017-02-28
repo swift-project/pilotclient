@@ -22,7 +22,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         void CComSystem::registerMetadata()
         {
             Mixin::MetaType<CComSystem>::registerMetadata();
@@ -68,6 +67,67 @@ namespace BlackMisc
             this->CModulator::setFrequencyStandby(fRounded);
         }
 
+        bool CComSystem::isActiveFrequencyWithin8_33kHzChannel(const CFrequency &comFrequency) const
+        {
+            return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
+        }
+
+        bool CComSystem::isActiveFrequencyWithin25kHzChannel(const CFrequency &comFrequency) const
+        {
+            return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing25KHz);
+        }
+
+        void CComSystem::setActiveUnicom()
+        {
+            this->toggleActiveStandby();
+            this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
+        }
+
+        void CComSystem::setActiveInternationalAirDistress()
+        {
+            this->toggleActiveStandby();
+            this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
+        }
+
+        CComSystem CComSystem::getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz)
+        {
+            return CComSystem(CModulator::NameCom1(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
+        }
+
+        CComSystem CComSystem::getCom1System(CFrequency activeFrequency, CFrequency standbyFrequency)
+        {
+            return CComSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
+        }
+
+        CComSystem CComSystem::getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz)
+        {
+            return CComSystem(CModulator::NameCom2(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
+        }
+
+        CComSystem CComSystem::getCom2System(CFrequency activeFrequency, CFrequency standbyFrequency)
+        {
+            return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
+        }
+
+        bool CComSystem::isValidCivilAviationFrequency(const CFrequency &f)
+        {
+            if (f.isNull()) return false;
+            double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
+            return fr >= 118.0 && fr <= 136.975;
+        }
+
+        bool CComSystem::isValidMilitaryFrequency(const CFrequency &f)
+        {
+            if (f.isNull()) return false;
+            double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
+            return fr >= 220.0 && fr <= 399.95;
+        }
+
+        bool CComSystem::isValidComFrequency(const CFrequency &f)
+        {
+            return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
+        }
+
         void CComSystem::roundToChannelSpacing(PhysicalQuantities::CFrequency &frequency, ChannelSpacing channelSpacing)
         {
             double channelSpacingKHz = CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
@@ -101,6 +161,5 @@ namespace BlackMisc
             default: qFatal("Wrong channel spacing"); return 0.0; // return just supressing compiler warning
             }
         }
-
     } // namespace
 } // namespace

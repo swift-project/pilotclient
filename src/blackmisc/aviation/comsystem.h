@@ -34,7 +34,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         //! COM system (aka "radio")
         class BLACKMISC_EXPORT CComSystem :
             public CModulator<CComSystem>,
@@ -64,9 +63,6 @@ namespace BlackMisc
                 Com2
             };
 
-            //! \copydoc BlackMisc::CValueObject::registerMetadata
-            static void registerMetadata();
-
             //! Default constructor
             CComSystem() {}
 
@@ -92,76 +88,37 @@ namespace BlackMisc
             virtual void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency) override;
 
             //! Is active frequency within 8.3383kHz channel?
-            bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
-            {
-                return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
-            }
+            bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const;
 
             //! Is active frequency within 25kHz channel?
-            bool isActiveFrequencyWithin25kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
-            {
-                return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing25KHz);
-            }
+            bool isActiveFrequencyWithin25kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const;
 
             //! Set UNICOM frequency as active
-            void setActiveUnicom()
-            {
-                this->toggleActiveStandby();
-                this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
-            }
+            void setActiveUnicom();
 
             //! Set International Air Distress 121.5MHz
-            void setActiveInternationalAirDistress()
-            {
-                this->toggleActiveStandby();
-                this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
-            }
+            void setActiveInternationalAirDistress();
 
             //! COM1 unit
-            static CComSystem getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CComSystem(CModulator::NameCom1(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-            }
+            static CComSystem getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1);
 
             //! COM1 unit
-            static CComSystem getCom1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CComSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
-            }
+            static CComSystem getCom1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet());
 
             //! COM2 unit
-            static CComSystem getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CComSystem(CModulator::NameCom2(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-            }
+            static CComSystem getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1);
 
             //! COM2 unit
-            static CComSystem getCom2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
-            }
+            static CComSystem getCom2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet());
 
             //! Valid civil aviation frequency?
-            static bool isValidCivilAviationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
-            {
-                if (f.isNull()) return false;
-                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
-                return fr >= 118.0 && fr <= 136.975;
-            }
+            static bool isValidCivilAviationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f);
 
             //! Valid military aviation frequency?
-            static bool isValidMilitaryFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
-            {
-                if (f.isNull()) return false;
-                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
-                return fr >= 220.0 && fr <= 399.95;
-            }
+            static bool isValidMilitaryFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f);
 
             //! Valid COM frequency (either civil or military)
-            static bool isValidComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
-            {
-                return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
-            }
+            static bool isValidComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f);
 
             //! Round to channel spacing, set MHz as unit
             //! \see ChannelSpacing
@@ -169,6 +126,9 @@ namespace BlackMisc
 
             //! Is compareFrequency within channel spacing of setFrequency
             static bool isWithinChannelSpacing(const BlackMisc::PhysicalQuantities::CFrequency &setFrequency, const BlackMisc::PhysicalQuantities::CFrequency &compareFrequency, ChannelSpacing channelSpacing);
+
+            //! \copydoc BlackMisc::CValueObject::registerMetadata
+            static void registerMetadata();
 
         protected:
             //! \copydoc CModulator::validValues
@@ -186,7 +146,6 @@ namespace BlackMisc
                 BLACK_METAMEMBER(channelSpacing)
             );
         };
-
     } // namespace
 } // namespace
 

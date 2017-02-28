@@ -149,7 +149,7 @@ namespace BlackMisc
         CVariant CCallsign::propertyByIndex(const CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsignString:
@@ -168,7 +168,7 @@ namespace BlackMisc
         void CCallsign::setPropertyByIndex(const CPropertyIndex &index, const CVariant &variant)
         {
             if (index.isMyself()) { (*this) = variant.to<CCallsign>(); return; }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsignString:
@@ -188,7 +188,7 @@ namespace BlackMisc
         int CCallsign::comparePropertyByIndex(const CPropertyIndex &index, const CCallsign &compareValue) const
         {
             if (index.isMyself()) { return this->m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsignString:
