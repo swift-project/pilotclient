@@ -171,8 +171,8 @@ namespace BlackMisc
         case QVariant::UInt:        m_v.setValue<uint>(value.toInt()); break;
         case QVariant::Bool:        m_v.setValue(value.toBool()); break;
         case QVariant::Double:      m_v.setValue(value.toDouble()); break;
-        case QVariant::LongLong:    m_v.setValue<qlonglong>(value.toInt()); break; // QJsonValue has no toLongLong() method???
-        case QVariant::ULongLong:   m_v.setValue<qulonglong>(value.toInt()); break;
+        case QVariant::LongLong:    m_v.setValue(static_cast<qlonglong>(value.toDouble())); break;
+        case QVariant::ULongLong:   m_v.setValue(static_cast<qulonglong>(value.toDouble())); break;
         case QVariant::String:      m_v.setValue(value.toString()); break;
         case QVariant::Char:        m_v.setValue(value.toString().size() > 0 ? value.toString().at(0) : '\0'); break;
         case QVariant::ByteArray:   m_v.setValue(value.toString().toLatin1()); break;
