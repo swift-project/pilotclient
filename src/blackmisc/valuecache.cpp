@@ -205,6 +205,7 @@ namespace BlackMisc
         CVariantMap map;
         for (const auto &element : elementsStartingWith(keyPrefix))
         {
+            if (! element->m_value.isValid()) { continue; }
             implementationOf(map).insert(map.cend(), element->m_key, element->m_value);
         }
         return map;
@@ -217,7 +218,9 @@ namespace BlackMisc
         for (const auto &key : keys)
         {
             auto it = m_elements.constFind(key);
-            if (it != m_elements.cend()) { map.insert(key, (*it)->m_value); }
+            if (it == m_elements.cend()) { continue; }
+            if (! (*it)->m_value.isValid()) { continue; }
+            map.insert(key, (*it)->m_value);
         }
         return map;
     }
@@ -228,6 +231,7 @@ namespace BlackMisc
         CValueCachePacket map;
         for (const auto &element : elementsStartingWith(keyPrefix))
         {
+            if (! element->m_value.isValid()) { continue; }
             map.insert(element->m_key, element->m_value, element->m_timestamp);
         }
         return map;
