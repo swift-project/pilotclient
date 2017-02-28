@@ -12,7 +12,7 @@
 #endif
 
 #include "fsuipc.h"
-#include <Windows.h>
+#include <windows.h>
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 #include "FSUIPC/FSUIPC_User.h"
 #include "FSUIPC/NewWeather.h"
@@ -241,7 +241,6 @@ namespace BlackSimPlugin
             qint32 flapsControlRaw = 0, gearControlRaw = 0, spoilersControlRaw = 0;
             qint16 numberOfEngines = 0;
             qint16 engine1CombustionFlag = 0, engine2CombustionFlag = 0, engine3CombustionFlag = 0, engine4CombustionFlag = 0;
-
 
             // http://www.projectmagenta.com/all-fsuipc-offsets/
             // https://www.ivao.aero/softdev/ivap/fsuipc_sdk.asp

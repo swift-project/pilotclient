@@ -32,7 +32,7 @@ template <class T> class QSharedPointer;
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 namespace BlackCore
