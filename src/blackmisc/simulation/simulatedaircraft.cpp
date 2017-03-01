@@ -420,9 +420,9 @@ namespace BlackMisc
             case IndexRelativeDistance:
                 return this->m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
             case IndexCom1System:
-                return m_com1system.getFrequencyActive().comparePropertyByIndex(CPropertyIndex(), compareValue.getCom1System().getFrequencyActive());
+                return this->m_com1system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System());
             case IndexCom2System:
-                return m_com2system.getFrequencyActive().comparePropertyByIndex(CPropertyIndex(), compareValue.getCom2System().getFrequencyActive());
+                return this->m_com2system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom2System());
             case IndexTransponder:
                 return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
             case IndexLivery:

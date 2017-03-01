@@ -8,14 +8,14 @@
  */
 
 #include "blackmisc/aviation/modulator.h"
+#include "blackmisc/aviation/comsystem.h"
+#include "blackmisc/aviation/navsystem.h"
+#include "blackmisc/aviation/adfsystem.h"
 #include "blackmisc/math/mathutils.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/variant.h"
-#include "blackmisc/aviation/comsystem.h"
-#include "blackmisc/aviation/navsystem.h"
-#include "blackmisc/aviation/adfsystem.h"
-
+#include "blackmisc/comparefunctions.h"
 #include <QtGlobal>
 
 using BlackMisc::PhysicalQuantities::CFrequency;
@@ -156,6 +156,30 @@ namespace BlackMisc
         }
 
         template <class AVIO>
+        int CModulator<AVIO>::comparePropertyByIndex(const CPropertyIndex &index, const AVIO &compareValue) const
+        {
+            if (index.isMyself()) { return this->m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive); }
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexActiveFrequency:
+                return this->m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
+            case IndexStandbyFrequency:
+                return this->m_frequencyStandby.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyStandby);
+            case IndexEnabled:
+                return Compare::compare(this->isEnabled(), compareValue.isEnabled());
+            case IndexInputVolume:
+                return Compare::compare(this->getVolumeInput(), compareValue.getVolumeInput());
+            case IndexOutputVolume:
+                return Compare::compare(this->getVolumeOutput(), compareValue.getVolumeOutput());
+            default:
+                break;
+            }
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
+            return 0;
+        }
+
+        template <class AVIO>
         CModulator<AVIO>::CModulator() :
             m_name("default") {}
 
@@ -265,19 +289,7 @@ namespace BlackMisc
             return f;
         }
 
-        template <class AVIO>
-        AVIO const *CModulator<AVIO>::derived() const
-        {
-            return static_cast<AVIO const *>(this);
-        }
-
-        template <class AVIO>
-        AVIO *CModulator<AVIO>::derived()
-        {
-            return static_cast<AVIO *>(this);
-        }
-
-        // see here for the reason of thess forward instantiations
+        // see here for the reason of the forward instantiations
         // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
         //! \cond PRIVATE
         template class BLACKMISC_EXPORT_DEFINE_TEMPLATE CModulator<CComSystem>;

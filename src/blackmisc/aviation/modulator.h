@@ -81,6 +81,9 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::Index::setPropertyByIndex
             void setPropertyByIndex(const BlackMisc::CPropertyIndex &index, const CVariant &variant);
 
+            //! Compare by property index
+            int comparePropertyByIndex(const BlackMisc::CPropertyIndex &index, const AVIO &compareValue) const;
+
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
@@ -142,10 +145,16 @@ namespace BlackMisc
             bool m_enabled = true;  //!< is enabled, used e.g. for mute etc.
 
             //! Easy access to derived class (CRTP template parameter)
-            AVIO const *derived() const;
+            AVIO const *derived() const
+            {
+                return static_cast<AVIO const *>(this);
+            }
 
             //! Easy access to derived class (CRTP template parameter)
-            AVIO *derived();
+            AVIO *derived()
+            {
+                return static_cast<AVIO *>(this);
+            }
 
             BLACK_METACLASS(
                 CModulator,
