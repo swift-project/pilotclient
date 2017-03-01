@@ -83,7 +83,6 @@ namespace BlackCore
             virtual void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void sendIpQuery() override;
             virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
-            virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) override;
             virtual void sendCustomFsinnQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void sendCustomFsinnReponse(const BlackMisc::Aviation::CCallsign &callsign) override;
             virtual void broadcastAircraftConfig(const QJsonObject &config) override;
@@ -175,6 +174,7 @@ namespace BlackCore
             static QString convertToUnicodeEscaped(const QString &str);
             static VatSimType convertToSimType(BlackMisc::Simulation::CSimulatorPluginInfo &simInfo);
             static void networkLogHandler(SeverityLevel severity, const char *message);
+            void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
             inline QString defaultModelString()
             {

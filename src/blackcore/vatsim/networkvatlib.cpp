@@ -80,7 +80,6 @@ namespace BlackCore
               m_tokenBucket(10, CTime(5, CTimeUnit::s()), 1)
         {
             connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);
-            connect(this, &INetwork::customPacketReceived, this, &CNetworkVatlib::customPacketDispatcher);
 
             Q_ASSERT_X(Vat_GetVersion() == VAT_LIBVATLIB_VERSION, "swift.network", "Wrong vatlib shared library installed");
 
@@ -949,7 +948,7 @@ namespace BlackCore
 
         void CNetworkVatlib::onCustomPacketReceived(VatSessionID, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar)
         {
-            emit cbvar_cast(cbvar)->customPacketReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(packetId), cbvar_cast(cbvar)->fromFSD(data, dataSize));
+            emit cbvar_cast(cbvar)->customPacketDispatcher(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(packetId), cbvar_cast(cbvar)->fromFSD(data, dataSize));
         }
 
         void CNetworkVatlib::customPacketDispatcher(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data)
@@ -980,6 +979,10 @@ namespace BlackCore
                     // is the same for both.
                     emit customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
                 }
+            }
+            else
+            {
+                CLogMessage(this).warning("Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
             }
         }
 

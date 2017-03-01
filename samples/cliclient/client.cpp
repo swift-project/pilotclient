@@ -75,7 +75,6 @@ namespace BlackSample
         connect(m_net, &INetwork::icaoCodesReplyReceived,           this, &Client::icaoCodesReplyReceived);
         connect(m_net, &INetwork::pongReceived,                     this, &Client::pongReceived);
         connect(m_net, &INetwork::textMessagesReceived,             this, &Client::textMessagesReceived);
-        connect(m_net, &INetwork::customPacketReceived,             this, &Client::customPacketReceived);
 
         connect(this, &Client::presetServer,                        m_net, &INetwork::presetServer);
         connect(this, &Client::presetCallsign,                      m_net, &INetwork::presetCallsign);
@@ -97,7 +96,6 @@ namespace BlackSample
         connect(this, &Client::setOwnAircraftCockpit,               COwnAircraftProviderDummy::instance(), &COwnAircraftProviderDummy::updateCockpit);
         connect(this, &Client::sendPing,                            m_net, &INetwork::sendPing);
         connect(this, &Client::sendMetarQuery,                      m_net, &INetwork::sendMetarQuery);
-        connect(this, &Client::sendCustomPacket,                    m_net, &INetwork::sendCustomPacket);
 
         using namespace std::placeholders;
         m_commands["help"]              = std::bind(&Client::help, this, _1);
@@ -127,7 +125,6 @@ namespace BlackSample
         m_commands["setcockpit"]        = std::bind(&Client::setOwnAircraftCockpitCmd, this, _1);
         m_commands["ping"]              = std::bind(&Client::sendPingCmd, this, _1);
         m_commands["metar"]             = std::bind(&Client::sendMetarQueryCmd, this, _1);
-        m_commands["custom"]            = std::bind(&Client::sendCustomPacketCmd, this, _1);
     }
 
     void Client::command(QString line)
@@ -427,21 +424,6 @@ namespace BlackSample
         QString airportICAO;
         args >> airportICAO;
         emit sendMetarQuery(airportICAO);
-    }
-
-    void Client::sendCustomPacketCmd(QTextStream &args)
-    {
-        QString callsign;
-        QString packetId;
-        args >> callsign >> packetId;
-        QStringList data;
-        while (!args.atEnd())
-        {
-            QString field;
-            args >> field;
-            data.push_back(field);
-        }
-        emit sendCustomPacket(callsign, packetId, data);
     }
 
     /****************************************************************************/

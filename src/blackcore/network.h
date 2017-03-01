@@ -252,13 +252,6 @@ namespace BlackCore
         ////////////////////////////////////////////////////////////////
 
         /*!
-         * Send a custom packet.
-         * \pre Network must be connected when calling this function.
-         * \deprecated As a short cut you can use this slot directly, but it is better to implement the encoding in INetwork and add a new signal.
-         */
-        virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) = 0;
-
-        /*!
          * Send a FSInn custom packet.
          * \details FSIPI(R) queries, some example data below:
          * <BLOCKQUOTE>
@@ -516,13 +509,6 @@ namespace BlackCore
          * We have sent a text message.
          */
         void textMessageSent(const BlackMisc::Network::CTextMessage &sentMessage);
-
-        /*!
-         * We received a custom packet.
-         * \deprecated As a short cut you can use this signal directly, but it is better to implement the decoding in INetwork and add a new signal.
-         * \sa CNetworkVatlib::customPacketDispatcher
-         */
-        void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
         /*!
          * We received a FSInn custom packet.
