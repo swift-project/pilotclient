@@ -38,9 +38,6 @@ using namespace BlackMisc::Network;
 
 namespace BlackMiscTest
 {
-    /*
-     * Variant tests
-     */
     void CTestVariantAndMap::variant()
     {
         // ATC station
@@ -89,9 +86,6 @@ namespace BlackMiscTest
         QVERIFY2(compare(station1, station3) != 0, "Station should not be equal");
     }
 
-    /*
-     * Variant map tests
-     */
     void CTestVariantAndMap::valueMap()
     {
         // ATC station
@@ -128,7 +122,6 @@ namespace BlackMiscTest
         vmCopy.setWildcard(!vm.isWildcard());
         QVERIFY2(qHash(vm) != qHash(vmCopy), "Hashs should not be equal (detailed)");
     }
-
 } // namespace
 
 //! \endcond

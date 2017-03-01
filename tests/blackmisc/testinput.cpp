@@ -8,11 +8,8 @@
  */
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 #include "testinput.h"
 #include "blackmisc/compare.h"
@@ -32,10 +29,6 @@ using namespace BlackMisc::Input;
 
 namespace BlackMiscTest
 {
-
-    /*
-     * Constructor
-     */
     CTestInput::CTestInput(QObject *parent): QObject(parent)
     {
         // void
@@ -58,7 +51,6 @@ namespace BlackMiscTest
 
         CKeyboardKey key3(Key_AltRight);
         QVERIFY2(key3.isModifier(), "RightAlt is a modifier");
-
     }
 
     void CTestInput::hotkeyCombination()
@@ -186,7 +178,6 @@ namespace BlackMiscTest
         QVERIFY2(!list1.findSubsetsOf(actionHotkey2).isEmpty(), "CTRL+F is a subset of CTRL");
         QVERIFY2(list1.findSubsetsOf(actionHotkey3).isEmpty(), "Shift+F is not a subset of CTRL");
     }
-
 } // namespace
 
 //! \endcond

@@ -11,11 +11,8 @@
 #define BLACKMISCTEST_TESTVARIANTANDMAP_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 #include <QObject>
 
@@ -33,10 +30,10 @@ namespace BlackMiscTest
     private slots:
         //! Basic unit tests for value objects and variants
         void variant();
+
         //! Unit tests for value maps and value objects
         void valueMap();
     };
-
 } // namespace
 
 //! \endcond

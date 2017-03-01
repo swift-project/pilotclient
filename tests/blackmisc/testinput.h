@@ -11,11 +11,8 @@
 #define BLACKMISCTEST_TESTINPUT_H
 
 //! \cond PRIVATE_TESTS
-
-/*!
- * \file
- * \ingroup testblackmisc
- */
+//! \file
+//! \ingroup testblackmisc
 
 #include <QObject>
 
@@ -25,14 +22,12 @@ namespace BlackMiscTest
     class CTestInput : public QObject
     {
         Q_OBJECT
+
     public:
         //! Standard test case constructor
         explicit CTestInput(QObject *parent = nullptr);
 
-    signals:
-
     private slots:
-
         //! CKeyboardKey basic tests
         void keyboardKey();
 
