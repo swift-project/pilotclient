@@ -47,9 +47,9 @@ else:unix: {
     QT5_LIBRARIES *= libQt5Xml.so.5
     QT5_LIBRARIES *= libqgsttools_p.so.1
 
-    QT5_LIBRARIES *= libicui18n.so.56
-    QT5_LIBRARIES *= libicuuc.so.56
-    QT5_LIBRARIES *= libicudata.so.56
+    ICU_LIBRARIES *= libicui18n.so.56
+    ICU_LIBRARIES *= libicuuc.so.56
+    ICU_LIBRARIES *= libicudata.so.56
 
     qt5_target.path = $${PREFIX}/lib
     QT5_LIBRARY_DIR = $$[QT_INSTALL_LIBS]
@@ -59,6 +59,11 @@ for (LIBRARY, QT5_LIBRARIES) {
     LIBRARY_PATH = $${QT5_LIBRARY_DIR}/$${LIBRARY}
     !exists($$LIBRARY_PATH): error("Cannot find $${LIBRARY_PATH}")
     qt5_target.files *= $${LIBRARY_PATH}
+}
+
+for (LIBRARY, ICU_LIBRARIES) {
+    LIBRARY_PATH = $${QT5_LIBRARY_DIR}/$${LIBRARY}
+    exists($$LIBRARY_PATH): qt5_target.files *= $${LIBRARY_PATH}
 }
 
 INSTALLS += qt5_target
