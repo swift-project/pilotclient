@@ -92,9 +92,14 @@ namespace BlackMisc
             void baseSetPropertyByIndex(T *base, const CVariant &var, const CPropertyIndex &index) { base->setPropertyByIndex(index, var); }
 
             CVariant basePropertyByIndex(const void *, const CPropertyIndex &index) const
-            { qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {}; }
+            {
+                qFatal("%s", qPrintable("Property by index not found, index: " + index.toQString())); return {};
+            }
+
             void baseSetPropertyByIndex(void *, const CVariant &, const CPropertyIndex &index)
-            { qFatal("%s", qPrintable("Property by index not found (setter), index: " + index.toQString())); }
+            {
+                qFatal("%s", qPrintable("Property by index not found (setter), index: " + index.toQString()));
+            }
         };
 
         /*!
