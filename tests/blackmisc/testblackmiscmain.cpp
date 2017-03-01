@@ -22,6 +22,7 @@
 #include "testmath.h"
 #include "testphysicalquantities.h"
 #include "testprocess.h"
+#include "testpropertyindex.h"
 #include "testslot.h"
 #include "teststringutils.h"
 #include "testvaluecache.h"
@@ -50,6 +51,10 @@ namespace BlackMiscTest
         {
             CTestAviation avBaseTests;
             status |= test.exec(&avBaseTests, "blackmisc_aviation");
+        }
+        {
+            CTestPropertyIndex piTests;
+            status |= test.exec(&piTests, "blackmisc_propertyindex");
         }
         {
             CTestGeo geoTests;
