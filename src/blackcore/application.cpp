@@ -109,7 +109,6 @@ namespace BlackCore
             QCoreApplication::setApplicationName(this->m_applicationName);
             QCoreApplication::setApplicationVersion(CVersion::version());
             this->setObjectName(this->m_applicationName);
-            this->m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::CApplication::getSwiftApplication());
             const QString executable = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
             if (executable.startsWith("test"))
             {
@@ -117,6 +116,7 @@ namespace BlackCore
                 const QString tempPath(this->getTemporaryDirectory());
                 BlackMisc::setMockCacheRootDirectory(tempPath);
             }
+            this->m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getSwiftApplication());
             this->initParser();
             this->initLogging();
 
