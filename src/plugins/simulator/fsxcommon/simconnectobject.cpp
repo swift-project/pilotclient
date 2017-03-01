@@ -9,6 +9,7 @@
 
 #include "simconnectobject.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatorspline.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -20,10 +21,11 @@ namespace BlackSimPlugin
         CSimConnectObject::CSimConnectObject()
         { }
 
-        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, DWORD requestId,
+        CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
+                                             DWORD requestId,
                                              BlackMisc::Simulation::CInterpolationLogger *logger) :
             m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
-            m_interpolator(QSharedPointer<BlackMisc::Simulation::CInterpolatorLinear>::create(aircraft.getCallsign()))
+            m_interpolator(QSharedPointer<BlackMisc::Simulation::CInterpolatorSpline>::create(aircraft.getCallsign()))
         {
             m_interpolator->attachLogger(logger);
         }

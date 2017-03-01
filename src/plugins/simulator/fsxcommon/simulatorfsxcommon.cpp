@@ -14,6 +14,7 @@
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
+#include "blackmisc/simulation/interpolatorspline.h"
 #include "blackmisc/simulation/interpolationhints.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/aviation/airportlist.h"
