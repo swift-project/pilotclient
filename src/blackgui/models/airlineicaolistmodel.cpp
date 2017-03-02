@@ -35,12 +35,12 @@ namespace BlackGui
             CColumn col("airline", CAirlineIcaoCode::IndexIcon);
             col.setSortPropertyIndex(CAirlineIcaoCode::IndexAirlineDesignator);
             this->m_columns.addColumn(col);
-
             this->m_columns.addColumn(CColumn("VA", "virtual airline", CAirlineIcaoCode::IndexIsVirtualAirline, new CBoolIconFormatter("VA", "real airline")));
             this->m_columns.addColumn(CColumn("mil.", "military (air force)", CAirlineIcaoCode::IndexIsMilitary, new CBoolIconFormatter("military", "civilian")));
             this->m_columns.addColumn(CColumn("op.", "operating", CAirlineIcaoCode::IndexIsOperating, new CBoolIconFormatter("operating", "ceased")));
             this->m_columns.addColumn(CColumn::standardValueObject("name", CAirlineIcaoCode::IndexAirlineName));
-
+            this->m_columns.addColumn(CColumn::standardValueObject("gr.des.", "group designator", CAirlineIcaoCode::IndexGroupDesignator));
+            this->m_columns.addColumn(CColumn::standardValueObject("groupname", CAirlineIcaoCode::IndexGroupName));
             col = CColumn("country", {CAirlineIcaoCode::IndexAirlineCountry, CCountry::IndexIcon});
             col.setSortPropertyIndex(CAirlineIcaoCode::IndexAirlineDesignator);
             this->m_columns.addColumn(col);

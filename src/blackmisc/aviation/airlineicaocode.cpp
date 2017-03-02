@@ -23,6 +23,7 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QThreadStorage>
+#include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
 
@@ -43,7 +44,7 @@ namespace BlackMisc
         }
 
         CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const BlackMisc::CCountry &country, const QString &telephony, bool virtualAirline, bool operating)
-            : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_country(country), m_telephonyDesignator(telephony), m_isVa(virtualAirline), m_isOperating(operating)
+            : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_telephonyDesignator(telephony), m_country(country), m_isVa(virtualAirline), m_isOperating(operating)
         {
             if (this->m_designator.length() == 4)
             {
@@ -54,14 +55,14 @@ namespace BlackMisc
         const QString CAirlineIcaoCode::getVDesignator() const
         {
             if (!isVirtualAirline()) { return this->m_designator; }
-            return QString("V").append(this->m_designator);
+            return QLatin1Char('V') % this->m_designator;
         }
 
         QString CAirlineIcaoCode::getVDesignatorDbKey() const
         {
             if (this->isLoadedFromDb())
             {
-                return this->getVDesignator() + " " + this->getDbKeyAsStringInParentheses();
+                return this->getVDesignator() % QLatin1Char(' ') % this->getDbKeyAsStringInParentheses();
             }
             else
             {
@@ -168,7 +169,7 @@ namespace BlackMisc
             if (hasValidDesignator())
             {
                 // relative to images
-                return CIcon("airlines/" + m_designator.toLower() + ".png", this->convertToQString());
+                return CIcon(QLatin1String("airlines/") % m_designator.toLower() % QLatin1String(".png"), this->convertToQString());
             }
             else
             {
@@ -217,6 +218,12 @@ namespace BlackMisc
                 return CVariant::fromValue(this->m_isMilitary);
             case IndexDesignatorNameCountry:
                 return CVariant::fromValue(this->getDesignatorNameCountry());
+            case IndexGroupDesignator:
+                return CVariant::fromValue(this->getGroupDesignator());
+            case IndexGroupName:
+                return CVariant::fromValue(this->getGroupName());
+            case IndexGroupId:
+                return CVariant::fromValue(this->getGroupId());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -253,6 +260,15 @@ namespace BlackMisc
             case IndexIsMilitary:
                 this->setMilitary(variant.toBool());
                 break;
+            case IndexGroupDesignator:
+                this->setGroupDesignator(variant.toQString());
+                break;
+            case IndexGroupName:
+                this->setGroupName(variant.toQString());
+                break;
+            case IndexGroupId:
+                this->setGroupId(variant.toInt());
+                break;
             default:
                 CValueObject::setPropertyByIndex(index, variant);
                 break;
@@ -284,6 +300,12 @@ namespace BlackMisc
                 return Compare::compare(this->isOperating(), compareValue.isOperating());
             case IndexIsMilitary:
                 return Compare::compare(this->isMilitary(), compareValue.isMilitary());
+            case IndexGroupDesignator:
+                return this->m_groupDesignator.compare(compareValue.getGroupDesignator(), Qt::CaseInsensitive);
+            case IndexGroupName:
+                return this->m_groupName.compare(compareValue.getGroupName(), Qt::CaseInsensitive);
+            case IndexGroupId:
+                return Compare::compare(this->m_groupId, compareValue.getGroupId());
             default:
                 break;
             }
@@ -305,7 +327,7 @@ namespace BlackMisc
         {
             // allow 2 chars for IATA
             if (airline.length() < 2 || airline.length() > 5) { return false; }
-            auto chars = makeRange(airline.begin(), airline.end());
+            const auto chars = makeRange(airline.begin(), airline.end());
             if (chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); })) { return false; }
             return true;
         }
@@ -436,20 +458,23 @@ namespace BlackMisc
                 return CAirlineIcaoCode();
             }
 
-            QString designator(json.value(prefix + "designator").toString());
+            QString designator(json.value(prefix % QLatin1String("designator")).toString());
             if (!CAirlineIcaoCode::isValidAirlineDesignator(designator))
             {
                 designator = CAirlineIcaoCode::normalizeDesignator(designator);
             }
 
-            const QString iata(json.value(prefix + "iata").toString());
-            const QString telephony(json.value(prefix + "callsign").toString());
-            const QString name(json.value(prefix + "name").toString());
-            const QString countryIso(json.value(prefix + "country").toString());
-            const QString countryName(json.value(prefix + "countryname").toString());
-            const bool va = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "va").toString());
-            const bool operating = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "operating").toString());
-            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix + "military").toString());
+            const QString iata(json.value(prefix % QLatin1String("iata")).toString());
+            const QString telephony(json.value(prefix % QLatin1String("callsign")).toString());
+            const QString name(json.value(prefix % QLatin1String("name")).toString());
+            const QString countryIso(json.value(prefix % QLatin1String("country")).toString());
+            const QString countryName(json.value(prefix % QLatin1String("countryname")).toString());
+            const QString groupName(json.value(prefix % QLatin1String("groupname")).toString());
+            const QString groupDesignator(json.value(prefix % QLatin1String("groupdesignator")).toString());
+            const int groupId(json.value(prefix % QLatin1String("groupid")).toInt(-1));
+            const bool va = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QLatin1String("va")).toString());
+            const bool operating = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QLatin1String("operating")).toString());
+            const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % QLatin1String("military")).toString());
 
             CAirlineIcaoCode code(
                 designator, name,
@@ -458,6 +483,9 @@ namespace BlackMisc
             );
             code.setIataCode(iata);
             code.setMilitary(military);
+            code.setGroupDesignator(groupDesignator);
+            code.setGroupId(groupId);
+            code.setGroupName(groupName);
             code.setKeyAndTimestampFromDatabaseJson(json, prefix);
             return code;
         }

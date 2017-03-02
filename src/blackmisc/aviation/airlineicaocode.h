@@ -47,6 +47,9 @@ namespace BlackMisc
                 IndexAirlineCountryIso,
                 IndexAirlineCountry,
                 IndexTelephonyDesignator,
+                IndexGroupId,
+                IndexGroupName,
+                IndexGroupDesignator,
                 IndexIsVirtualAirline,
                 IndexIsOperating,
                 IndexIsMilitary,
@@ -109,6 +112,24 @@ namespace BlackMisc
 
             //! Telephony designator such as "Speedbird"
             void setTelephonyDesignator(const QString &telephony) { this->m_telephonyDesignator = telephony.trimmed().toUpper(); }
+
+            //! Group designator
+            const QString &getGroupDesignator() const { return m_groupDesignator; }
+
+            //! Group designator
+            void setGroupDesignator(const QString &designator) { m_groupDesignator = designator.trimmed().toUpper(); }
+
+            //! Group name
+            const QString &getGroupName() const { return m_groupName; }
+
+            //! Group name
+            void setGroupName(const QString &name) { m_groupName = name.trimmed(); }
+
+            //! Group id
+            int getGroupId() const { return m_groupId; }
+
+            //! Group id
+            void setGroupId(int id) { m_groupId = id; }
 
             //! Virtual airline
             bool isVirtualAirline() const { return m_isVa; }
@@ -198,7 +219,7 @@ namespace BlackMisc
             void updateMissingParts(const CAirlineIcaoCode &otherIcaoCode);
 
             //! As a brief HTML summary (e.g. used in tooltips)
-            QString asHtmlSummary () const;
+            QString asHtmlSummary() const;
 
             //! Score against other code 0..100
             int calculateScore(const CAirlineIcaoCode &otherCode) const;
@@ -219,11 +240,14 @@ namespace BlackMisc
             QString m_designator;           //!< "DLH"
             QString m_iataCode;             //!< "LH"
             QString m_name;                 //!< "Lufthansa"
-            BlackMisc::CCountry m_country;  //!< Country
             QString m_telephonyDesignator;  //!< "Speedbird"
+            QString m_groupDesignator;      //!< Group designator
+            QString m_groupName;            //!< Group name
+            BlackMisc::CCountry m_country;  //!< Country
+            int m_groupId = -1;             //!< Group id
             bool m_isVa = false;            //!< virtual airline
             bool m_isOperating = true;      //!< still operating?
-            bool m_isMilitary = false;      //!< air force or such
+            bool m_isMilitary = false;      //!< Air Force or such
 
             BLACK_METACLASS(
                 CAirlineIcaoCode,
@@ -233,6 +257,9 @@ namespace BlackMisc
                 BLACK_METAMEMBER(name),
                 BLACK_METAMEMBER(country),
                 BLACK_METAMEMBER(telephonyDesignator),
+                BLACK_METAMEMBER(groupDesignator),
+                BLACK_METAMEMBER(groupName),
+                BLACK_METAMEMBER(groupId),
                 BLACK_METAMEMBER(isVa),
                 BLACK_METAMEMBER(isOperating),
                 BLACK_METAMEMBER(isMilitary)
