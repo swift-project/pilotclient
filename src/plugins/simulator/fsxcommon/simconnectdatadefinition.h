@@ -75,7 +75,7 @@ namespace BlackSimPlugin
         };
 
         //! Data struct of remote aircraft parts
-        struct DataDefinitionRemoteAircraftParts
+        struct DataDefinitionRemoteAircraftPartsWithoutLights
         {
             double flapsLeadingEdgeLeftPercent;   //!< Leading edge left in percent
             double flapsLeadingEdgeRightPercent;  //!< Leading edge right in percent
@@ -89,7 +89,7 @@ namespace BlackSimPlugin
             double engine4Combustion;             //!< Engine 4 combustion flag
 
             //! Equal to other parts
-            bool operator==(const DataDefinitionRemoteAircraftParts &rhs) const;
+            bool operator==(const DataDefinitionRemoteAircraftPartsWithoutLights &rhs) const;
 
             //! All engines on/off
             void setAllEngines(bool on);

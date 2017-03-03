@@ -63,10 +63,10 @@ namespace BlackSimPlugin
             void setCurrentLightsInSimulator(const BlackMisc::Aviation::CAircraftLights &lights) { m_currentLightsInSim = lights; }
 
             //! Parts as sent to simulator
-            const DataDefinitionRemoteAircraftParts &getPartsAsSent() const { return m_partsAsSent; }
+            const DataDefinitionRemoteAircraftPartsWithoutLights &getPartsAsSent() const { return m_partsAsSent; }
 
             //! Parts as sent to simulator
-            void setPartsAsSent(const DataDefinitionRemoteAircraftParts &parts) { m_partsAsSent = parts; }
+            void setPartsAsSent(const DataDefinitionRemoteAircraftPartsWithoutLights &parts) { m_partsAsSent = parts; }
 
             //! Lights as sent to simulator
             const BlackMisc::Aviation::CAircraftLights &getLightsAsSent() const { return m_lightsAsSent; }
@@ -128,7 +128,7 @@ namespace BlackSimPlugin
             bool m_confirmedAdded = false;
             bool m_pendingRemoved = false;
             int m_lightsRequestedAt = -1;
-            DataDefinitionRemoteAircraftParts m_partsAsSent {}; //!< parts as sent
+            DataDefinitionRemoteAircraftPartsWithoutLights m_partsAsSent {}; //!< parts as sent
             BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
             BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };       //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;    //!< how often do we query ground elevation

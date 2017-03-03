@@ -184,7 +184,7 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        bool DataDefinitionRemoteAircraftParts::operator==(const DataDefinitionRemoteAircraftParts &rhs) const
+        bool DataDefinitionRemoteAircraftPartsWithoutLights::operator==(const DataDefinitionRemoteAircraftPartsWithoutLights &rhs) const
         {
             return std::tie(flapsLeadingEdgeLeftPercent, flapsLeadingEdgeRightPercent, flapsTrailingEdgeLeftPercent, flapsTrailingEdgeRightPercent,
                             gearHandlePosition, spoilersHandlePosition,
@@ -194,7 +194,7 @@ namespace BlackSimPlugin
                             rhs.engine1Combustion, rhs.engine2Combustion, rhs.engine3Combustion, rhs.engine4Combustion);
         }
 
-        void DataDefinitionRemoteAircraftParts::setAllEngines(bool on)
+        void DataDefinitionRemoteAircraftPartsWithoutLights::setAllEngines(bool on)
         {
             engine1Combustion = on ? 1 : 0;
             engine2Combustion = on ? 1 : 0;
@@ -202,7 +202,7 @@ namespace BlackSimPlugin
             engine4Combustion = on ? 1 : 0;
         }
 
-        void DataDefinitionRemoteAircraftParts::resetAllFlaps()
+        void DataDefinitionRemoteAircraftPartsWithoutLights::resetAllFlaps()
         {
             flapsLeadingEdgeLeftPercent = 0;
             flapsLeadingEdgeRightPercent = 0;
@@ -210,7 +210,7 @@ namespace BlackSimPlugin
             flapsTrailingEdgeRightPercent = 0;
         }
 
-        void DataDefinitionRemoteAircraftParts::resetSpoilers()
+        void DataDefinitionRemoteAircraftPartsWithoutLights::resetSpoilers()
         {
             spoilersHandlePosition = 0;
         }

@@ -43,10 +43,10 @@ namespace BlackSimPlugin
     namespace FsxCommon
     {
         CSimulatorFsxCommon::CSimulatorFsxCommon(const CSimulatorPluginInfo &info,
-                                     IOwnAircraftProvider *ownAircraftProvider,
-                                     IRemoteAircraftProvider *remoteAircraftProvider,
-                                     IWeatherGridProvider *weatherGridProvider,
-                                     QObject *parent) :
+                IOwnAircraftProvider *ownAircraftProvider,
+                IRemoteAircraftProvider *remoteAircraftProvider,
+                IWeatherGridProvider *weatherGridProvider,
+                QObject *parent) :
             CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, weatherGridProvider, parent)
         {
             Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
@@ -868,7 +868,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::updateRemoteAircraft()
         {
-            static_assert(sizeof(DataDefinitionRemoteAircraftParts) == sizeof(double) * 10, "DataDefinitionRemoteAircraftParts has an incorrect size.");
+            static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10, "DataDefinitionRemoteAircraftParts has an incorrect size.");
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
@@ -953,17 +953,17 @@ namespace BlackSimPlugin
             if (!interpolationStatus.didInterpolationSucceed()) { return false; }
 
             CAircraftLights lights;
-            DataDefinitionRemoteAircraftParts ddRemoteAircraftParts = {}; // init members
+            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWintoutLights = {}; // init members
             const bool isOnGround = interpolatedSituation.isOnGround() == CAircraftSituation::OnGround;
             const double gsKts = interpolatedSituation.getGroundSpeed().value(CSpeedUnit::kts());
-            ddRemoteAircraftParts.setAllEngines(true);
+            ddRemoteAircraftPartsWintoutLights.setAllEngines(true);
             lights.setCabinOn(true);
             lights.setRecognitionOn(true);
 
             // when first detected moving, lights on
             if (isOnGround)
             {
-                ddRemoteAircraftParts.gearHandlePosition = 1;
+                ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 1;
                 lights.setTaxiOn(true);
                 lights.setBeaconOn(true);
                 lights.setNavOn(true);
@@ -985,13 +985,13 @@ namespace BlackSimPlugin
                     // slow movements or parking
                     lights.setTaxiOn(false);
                     lights.setLandingOn(false);
-                    ddRemoteAircraftParts.setAllEngines(false);
+                    ddRemoteAircraftPartsWintoutLights.setAllEngines(false);
                 }
             }
             else
             {
                 // not on ground
-                ddRemoteAircraftParts.gearHandlePosition = 0;
+                ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 0;
                 lights.setTaxiOn(false);
                 lights.setBeaconOn(true);
                 lights.setNavOn(true);
@@ -1002,20 +1002,20 @@ namespace BlackSimPlugin
                 {
                     if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 1000)
                     {
-                        ddRemoteAircraftParts.gearHandlePosition = 1;
-                        ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = 25;
-                        ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = 25;
+                        ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 1;
+                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeRightPercent = 25;
+                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeLeftPercent = 25;
                     }
                     else if (interpolatedSituation.getHeightAboveGround().value(CLengthUnit::ft()) < 2000)
                     {
-                        ddRemoteAircraftParts.gearHandlePosition = 1;
-                        ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = 10;
-                        ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = 10;
+                        ddRemoteAircraftPartsWintoutLights.gearHandlePosition = 1;
+                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeRightPercent = 10;
+                        ddRemoteAircraftPartsWintoutLights.flapsTrailingEdgeLeftPercent = 10;
                     }
                 }
             }
 
-            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftParts, lights);
+            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWintoutLights, lights);
         }
 
         bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObj, const CAircraftParts &parts, const CPartsStatus &partsStatus)
@@ -1023,44 +1023,44 @@ namespace BlackSimPlugin
             if (!simObj.hasValidRequestAndObjectId()) { return false; }
             if (!partsStatus.isSupportingParts()) { return false; }
 
-            DataDefinitionRemoteAircraftParts ddRemoteAircraftParts; // no init, all values will be set
-            ddRemoteAircraftParts.flapsLeadingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftParts.flapsLeadingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftParts.flapsTrailingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftParts.flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
-            ddRemoteAircraftParts.spoilersHandlePosition = parts.isSpoilersOut() ? 1 : 0;
-            ddRemoteAircraftParts.gearHandlePosition = parts.isGearDown() ? 1 : 0;
-            ddRemoteAircraftParts.engine1Combustion = parts.isEngineOn(1) ? 1 : 0;
-            ddRemoteAircraftParts.engine2Combustion = parts.isEngineOn(2) ? 1 : 0;
-            ddRemoteAircraftParts.engine3Combustion = parts.isEngineOn(3) ? 1 : 0;
-            ddRemoteAircraftParts.engine4Combustion = parts.isEngineOn(4) ? 1 : 0;
+            DataDefinitionRemoteAircraftPartsWithoutLights ddRemoteAircraftPartsWithoutLights; // no init, all values will be set
+            ddRemoteAircraftPartsWithoutLights.flapsLeadingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
+            ddRemoteAircraftPartsWithoutLights.flapsLeadingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
+            ddRemoteAircraftPartsWithoutLights.flapsTrailingEdgeLeftPercent = parts.getFlapsPercent() / 100.0;
+            ddRemoteAircraftPartsWithoutLights.flapsTrailingEdgeRightPercent = parts.getFlapsPercent() / 100.0;
+            ddRemoteAircraftPartsWithoutLights.spoilersHandlePosition = parts.isSpoilersOut() ? 1 : 0;
+            ddRemoteAircraftPartsWithoutLights.gearHandlePosition = parts.isGearDown() ? 1 : 0;
+            ddRemoteAircraftPartsWithoutLights.engine1Combustion = parts.isEngineOn(1) ? 1 : 0;
+            ddRemoteAircraftPartsWithoutLights.engine2Combustion = parts.isEngineOn(2) ? 1 : 0;
+            ddRemoteAircraftPartsWithoutLights.engine3Combustion = parts.isEngineOn(3) ? 1 : 0;
+            ddRemoteAircraftPartsWithoutLights.engine4Combustion = parts.isEngineOn(4) ? 1 : 0;
 
             CAircraftLights lights = parts.getLights();
             lights.setRecognitionOn(parts.isAnyEngineOn());
             lights.setCabinOn(parts.isAnyEngineOn());
 
-            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftParts, parts.getLights());
+            return this->sendRemoteAircraftPartsToSimulator(simObj, ddRemoteAircraftPartsWithoutLights, parts.getLights());
         }
 
-        bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftParts &ddRemoteAircraftParts, const CAircraftLights &lights)
+        bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObj, DataDefinitionRemoteAircraftPartsWithoutLights &ddRemoteAircraftPartsWithoutLights, const CAircraftLights &lights)
         {
             Q_ASSERT(m_hSimConnect);
             const DWORD objectId = simObj.getObjectId();
 
             // same as in simulator or same as already send to simulator?
             const CAircraftLights sentLights(simObj.getLightsAsSent());
-            if (simObj.getPartsAsSent() == ddRemoteAircraftParts && sentLights == lights) { return true; }
+            if (simObj.getPartsAsSent() == ddRemoteAircraftPartsWithoutLights && sentLights == lights) { return true; }
 
             // in case we sent, we sent everything
             const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
                                objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
-                               sizeof(DataDefinitionRemoteAircraftParts), &ddRemoteAircraftParts);
+                               sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights);
 
             if (hr == S_OK)
             {
                 // Update data
                 CSimConnectObject &objUdpate = m_simConnectObjects[simObj.getCallsign()];
-                objUdpate.setPartsAsSent(ddRemoteAircraftParts);
+                objUdpate.setPartsAsSent(ddRemoteAircraftPartsWithoutLights);
             }
             else
             {
