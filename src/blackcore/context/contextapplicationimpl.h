@@ -67,6 +67,7 @@ namespace BlackCore
             virtual QString readFromFile(const QString &fileName) const override;
             virtual bool removeFile(const QString &fileName) override;
             virtual bool existsFile(const QString &fileName) const override;
+            virtual QString dotCommandsHtmlHelp() const override;
             //! @}
 
         protected:

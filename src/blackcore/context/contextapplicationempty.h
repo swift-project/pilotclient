@@ -190,6 +190,13 @@ namespace BlackCore
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return false;
             }
+
+            //! \copydoc IContextApplication::dotCommandsHtmlHelp
+            virtual QString dotCommandsHtmlHelp() const override
+            {
+                logEmptyContextWarning(Q_FUNC_INFO);
+                return QString();
+            }
         };
     } // namespace
 } // namespace

@@ -181,6 +181,11 @@ namespace BlackCore
             return this->m_dBusInterface->callDBusRet<bool>(QLatin1String("existsFile"), fileName);
         }
 
+        QString CContextApplicationProxy::dotCommandsHtmlHelp() const
+        {
+            return this->m_dBusInterface->callDBusRet<QString>(QLatin1String("dotCommandsHtmlHelp"));
+        }
+
         bool CContextApplicationProxy::isContextResponsive(const QString &dBusAddress, QString &msg, int timeoutMs)
         {
             const bool connected = CDBusServer::isDBusAvailable(dBusAddress, msg, timeoutMs);

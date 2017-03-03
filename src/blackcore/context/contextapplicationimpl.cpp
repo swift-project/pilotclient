@@ -14,6 +14,7 @@
 #include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingscache.h"
+#include "blackmisc/simplecommandparser.h"
 
 #include <QFile>
 #include <QFlags>
@@ -200,6 +201,11 @@ namespace BlackCore
             if (m_debugEnabled) { CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName; }
             if (fileName.isEmpty()) return false;
             return QFile::exists(fileName);
+        }
+
+        QString CContextApplication::dotCommandsHtmlHelp() const
+        {
+            return CSimpleCommandParser::commandsHtmlHelp();
         }
     } // ns
 } // ns

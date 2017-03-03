@@ -194,6 +194,10 @@ namespace BlackCore
 
             //!  Remote enabled version of file exists
             virtual bool existsFile(const QString &fileName) const = 0;
+
+            //! The HTML help for dot commands
+            virtual QString dotCommandsHtmlHelp() const = 0;
+
         protected:
             //! Constructor
             IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
