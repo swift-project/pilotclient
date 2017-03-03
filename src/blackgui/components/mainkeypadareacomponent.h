@@ -45,7 +45,7 @@ namespace BlackGui
             explicit CMainKeypadAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CMainKeypadAreaComponent();
+            virtual ~CMainKeypadAreaComponent();
 
             //! Identifier
             BlackMisc::CIdentifier keypadIdentifier();
@@ -75,11 +75,14 @@ namespace BlackGui
             //! Button was clicked
             void ps_buttonSelected();
 
-            //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
-            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
-
             //! Command line entered
             void ps_commandEntered();
+
+            //! Display help as HTML
+            void ps_setCommandTooltip();
+
+            //! \copydoc BlackCore::Context::IContextNetwork::connectionStatusChanged
+            void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
             //! \copydoc BlackCore::Context::IContextOwnAircraft::changedAircraftCockpit
             void ps_ownAircraftCockpitChanged(const BlackMisc::Simulation::CSimulatedAircraft &aircraft, const BlackMisc::CIdentifier &originator);
@@ -100,7 +103,6 @@ namespace BlackGui
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
             BlackMisc::CIdentifier m_identifier;
         };
-
     } // namespace
 } // namespace
 

@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextaudio.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/context/contextownaircraft.h"
@@ -67,6 +68,9 @@ namespace BlackGui
             connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged);
             connect(sGui->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::ps_muteChanged);
             connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
+
+            this->ps_setCommandTooltip();
+            QTimer::singleShot(15000, this, &CMainKeypadAreaComponent::ps_setCommandTooltip);
         }
 
         CMainKeypadAreaComponent::~CMainKeypadAreaComponent()
@@ -88,7 +92,7 @@ namespace BlackGui
             foreach (int floatingIndex, floatingIndexes)
             {
                 QPushButton *pb = this->mainInfoAreaToButton(static_cast<CMainInfoAreaComponent::InfoArea>(floatingIndex));
-                if (pb) {pb->setChecked(true); }
+                if (pb) { pb->setChecked(true); }
             }
 
             Q_UNUSED(dockedIndexes);
@@ -99,7 +103,7 @@ namespace BlackGui
             QPushButton *senderButton = static_cast<QPushButton *>(QObject::sender());
             Q_ASSERT(senderButton);
             if (!senderButton) { return; }
-            CMainInfoAreaComponent::InfoArea ia = buttonToMainInfoArea(senderButton);
+            const CMainInfoAreaComponent::InfoArea ia = buttonToMainInfoArea(senderButton);
             if (ia != CMainInfoAreaComponent::InfoAreaNone)
             {
                 Q_ASSERT(senderButton->isCheckable());
@@ -155,7 +159,17 @@ namespace BlackGui
         {
             QString c(ui->lep_CommandLineInput->getLastEnteredLineFormatted());
             if (c.isEmpty()) { return; }
+            if (c.toLower().trimmed().contains("help"))
+            {
+                this->ps_setCommandTooltip();
+                return;
+            }
             emit this->commandEntered(c, keypadIdentifier());
+        }
+
+        void CMainKeypadAreaComponent::ps_setCommandTooltip()
+        {
+            ui->lep_CommandLineInput->setToolTip(sGui->getIContextApplication()->dotCommandsHtmlHelp());
         }
 
         void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
