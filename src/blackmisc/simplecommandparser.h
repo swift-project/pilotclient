@@ -76,6 +76,33 @@ namespace BlackMisc
         //! Matches given part
         bool matchesPart(int index, const QString &toMatch, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
 
+        //! Help info
+        struct CommandHtmlHelp
+        {
+            QString command; //!< command
+            QString help;    //!< help text
+
+            //! Constructor
+            CommandHtmlHelp(const QString &command, const QString &help) : command(command), help(help)
+            { }
+
+            //! Compare by command
+            static bool less(const CommandHtmlHelp &a, const CommandHtmlHelp &b)
+            {
+                // may want to check that the pointers aren't zero...
+                return a.command < b.command;
+            }
+        };
+
+        //! Register a command
+        static void registerCommand(const CommandHtmlHelp &command);
+
+        //! Help already registered
+        static bool registered(const QString &helpContext);
+
+        //! HTML commans HELP
+        static QString commandsHtmlHelp();
+
     private:
         QString m_originalLine;      //!< line as entered by user
         QString m_cleanedLine;       //!< trimmed, no double spaces etc.
@@ -83,6 +110,9 @@ namespace BlackMisc
         QStringList m_splitParts;    //!< split parts (split by " ")
         QStringList m_knownCommands; //!< known / handled commands
         bool m_knownCommand = false; //!< known command
+
+        static QList<CommandHtmlHelp> s_commands; //!< all registered commands
+        static QSet<QString> s_registered; //!< registered commands
 
         //! Avoid wrong usage
         void setCheckedCommandList(const QStringList &commands);
