@@ -12,6 +12,7 @@
 #include "blackmisc/simplecommandparser.h"
 
 #include <QList>
+#include <QSet>
 #include <Qt>
 #include <QtGlobal>
 
@@ -19,8 +20,8 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
-    QList<CSimpleCommandParser::CommandHtmlHelp> CSimpleCommandParser::s_commands = QList<CSimpleCommandParser::CommandHtmlHelp>();
-    QSet<QString> CSimpleCommandParser::s_registered = QSet<QString>();
+    QList<CSimpleCommandParser::CommandHtmlHelp> CSimpleCommandParser::s_commands;
+    QSet<QString> CSimpleCommandParser::s_registered;
 
     CSimpleCommandParser::CSimpleCommandParser(const QStringList &knownCommands)
     {
@@ -135,30 +136,30 @@ namespace BlackMisc
 
     void CSimpleCommandParser::registerCommand(const CSimpleCommandParser::CommandHtmlHelp &command)
     {
-        for (const CommandHtmlHelp &help : as_const(CSimpleCommandParser::s_commands))
+        for (const CommandHtmlHelp &help : as_const(s_commands))
         {
             // avoid duplicates
             if (help.command == command.command) { return; }
         }
-        CSimpleCommandParser::s_commands.append(command);
+        s_commands.append(command);
     }
 
     bool CSimpleCommandParser::registered(const QString &helpContext)
     {
-        if (CSimpleCommandParser::s_registered.contains(helpContext)) { return true; };
-        CSimpleCommandParser::s_registered.insert(helpContext);
+        if (s_registered.contains(helpContext)) { return true; };
+        s_registered.insert(helpContext);
         return false;
     }
 
     QString CSimpleCommandParser::commandsHtmlHelp()
     {
-        if (CSimpleCommandParser::s_commands.isEmpty()) { return ""; }
+        if (s_commands.isEmpty()) { return ""; }
 
         static const QString html("<table style=\"font-size: 8pt; white-space: nowrap;\">\n%1\n</table>");
         static const QString row("<td>%1</td><td>%2</td>");
 
         QString rows;
-        QList<CommandHtmlHelp> cmds(CSimpleCommandParser::s_commands);
+        QList<CommandHtmlHelp> cmds(s_commands);
         qSort(cmds.begin(), cmds.end(), CommandHtmlHelp::less);
         for (int i = 0; i < cmds.size(); i++)
         {

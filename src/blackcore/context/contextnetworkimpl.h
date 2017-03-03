@@ -48,6 +48,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/digestsignal.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/simplecommandparser.h"
 
 class QTimer;
 
@@ -140,6 +141,15 @@ namespace BlackCore
             //! @}
             //! \copydoc IContextNetwork::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+            //! Register help
+            static void registerHelp()
+            {
+                if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CContextNetwork")) { return; }
+                BlackMisc::CSimpleCommandParser::registerCommand({".m", "alias: .msg"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".m message <text>", "send text message"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".m callsign message <text>", "send text message"});
+            }
 
             //! \publicsection
             //! @{

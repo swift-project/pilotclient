@@ -88,15 +88,27 @@ namespace BlackCore
         //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
-        //! .plugin unload              unload plugin                           BlackCore::CSimulatorCommon
-        //! .plugin logint  callsign    log interpolator for callsign           BlackCore::CSimulatorCommon
-        //! .plugin logint  off         no log information for interpolator     BlackCore::CSimulatorCommon
-        //! .plugin logint  write       write interpolator log to file          BlackCore::CSimulatorCommon
-        //! .plugin logint  clear       clear current log                       BlackCore::CSimulatorCommon
+        //! .drv unload              unload plugin                           BlackCore::CSimulatorCommon
+        //! .drv logint  callsign    log interpolator for callsign           BlackCore::CSimulatorCommon
+        //! .drv logint  off         no log information for interpolator     BlackCore::CSimulatorCommon
+        //! .drv logint  write       write interpolator log to file          BlackCore::CSimulatorCommon
+        //! .drv logint  clear       clear current log                       BlackCore::CSimulatorCommon
         //! </pre>
         //! @}
         //! \copydoc ISimulator::parseCommandLine
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+        //! Register help
+        static void registerHelp()
+        {
+            if (BlackMisc::CSimpleCommandParser::registered("BlackCore::CSimulatorCommon")) { return; }
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint callsign", "log interpolator for callsign"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
+        }
+
         // --------- ISimulator implementations ------------
 
     protected slots:

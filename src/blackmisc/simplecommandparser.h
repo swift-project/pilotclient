@@ -89,7 +89,6 @@ namespace BlackMisc
             //! Compare by command
             static bool less(const CommandHtmlHelp &a, const CommandHtmlHelp &b)
             {
-                // may want to check that the pointers aren't zero...
                 return a.command < b.command;
             }
         };

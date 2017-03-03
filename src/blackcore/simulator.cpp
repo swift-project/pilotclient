@@ -51,6 +51,13 @@ namespace BlackCore
         return static_cast<SimulatorStatus>(status);
     }
 
+    ISimulator::ISimulator(QObject *parent) :
+        QObject(parent),
+        BlackMisc::CIdentifiable(this)
+    {
+        ISimulator::registerHelp();
+    }
+
     void ISimulator::emitSimulatorCombinedStatus(int oldStatus)
     {
         int newStatus = getSimulatorStatus();

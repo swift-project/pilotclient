@@ -53,6 +53,7 @@ namespace BlackCore
           m_simulatorPluginInfo(info)
     {
         this->setObjectName("Simulator: " + info.getIdentifier());
+        CSimulatorCommon::registerHelp();
 
         // provider signals, hook up with remote aircraft provider
         m_remoteAircraftProviderConnections.append(

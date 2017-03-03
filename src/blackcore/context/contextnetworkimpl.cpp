@@ -62,6 +62,7 @@ namespace BlackCore
             Q_ASSERT(this->getRuntime());
             Q_ASSERT(this->getIContextOwnAircraft());
             Q_ASSERT(this->getIContextOwnAircraft()->isUsingImplementingObject());
+            CContextNetwork::registerHelp();
 
             // 1. Init by "network driver"
             this->m_network = new CNetworkVatlib(this->getRuntime()->getCContextOwnAircraft(), this);

@@ -31,6 +31,7 @@
 #include "blackmisc/settingscache.h"
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
+#include "blackmisc/simplecommandparser.h"
 
 #include <QObject>
 #include <QReadWriteLock>
@@ -141,12 +142,25 @@ namespace BlackCore
             //! @{
             //! <pre>
             //! .x    .xpdr  code       set transponder code    BlackCore::Context::CContextOwnAircraft
+            //! .x    .xpdr  mode       set transponder mode    BlackCore::Context::CContextOwnAircraft
             //! .com1 .com2  frequency  set COM1/2 frequency    BlackCore::Context::CContextOwnAircraft
             //! .selcal      code       set SELCAL code         BlackCore::Context::CContextOwnAircraft
             //! </pre>
             //! @}
             //! \copydoc IContextOwnAircraft::parseCommandLine
             virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) override;
+
+            //! Register help
+            static void registerHelp()
+            {
+                if (BlackMisc::CSimpleCommandParser::registered("BlackCore::Context::CContextOwnAircraft")) { return; }
+                BlackMisc::CSimpleCommandParser::registerCommand({".x", "alias: .xpdr"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".x code|mode", "set XPDR code or mode"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".selcal code", "set SELCAL code"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".com1", "alias .c1"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".com1 frequency", "set COM1 frequency"});
+                BlackMisc::CSimpleCommandParser::registerCommand({".com2 frequency", "set COM2 frequency"});
+            }
 
         protected:
             //! Constructor, with link to runtime

@@ -58,6 +58,7 @@ namespace BlackCore
         {
             Q_ASSERT(this->getRuntime());
             this->setObjectName("CContextOwnAircraft");
+            CContextOwnAircraft::registerHelp();
 
             if (sApp && sApp->getWebDataServices())
             {

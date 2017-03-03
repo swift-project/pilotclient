@@ -34,7 +34,9 @@ namespace BlackSimPlugin
             QObject *parent) :
             CSimulatorCommon(info, ownAircraftProvider, renderedAircraftProvider, weatherGridProvider, parent),
             m_fsuipc(new CFsuipc())
-        { }
+        {
+            CSimulatorFsCommon::registerHelp();
+        }
 
         CSimulatorFsCommon::~CSimulatorFsCommon() { }
 

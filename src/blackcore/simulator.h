@@ -25,6 +25,7 @@
 #include "blackmisc/identifiable.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/pixmap.h"
+#include "blackmisc/simplecommandparser.h"
 
 #include <QFlags>
 #include <QObject>
@@ -159,6 +160,15 @@ namespace BlackCore
         //! Parse command line
         virtual bool parseCommandLine(const QString &commandLine, const BlackMisc::CIdentifier &originator) = 0;
 
+        //! Register help
+        static void registerHelp()
+        {
+            if (BlackMisc::CSimpleCommandParser::registered("BlackCore::ISimulator")) { return; }
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv", "alias: .driver .plugin"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv unload", "unload driver"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)"});
+        }
+
         //! Status to string
         static QString statusToString(int status);
 
@@ -188,10 +198,7 @@ namespace BlackCore
 
     protected:
         //! Default constructor
-        ISimulator(QObject *parent = nullptr) :
-            QObject(parent),
-            BlackMisc::CIdentifiable(this)
-        {}
+        ISimulator(QObject *parent = nullptr);
 
         //! Are we connected to the simulator?
         virtual bool isConnected() const = 0;
