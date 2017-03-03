@@ -15,16 +15,16 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/aviation/callsignset.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
-#include "blackmisc/pixmap.h"
-#include "blackmisc/pq/length.h"
-#include "blackmisc/pq/time.h"
 #include "blackmisc/simulation/aircraftmodellist.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/pq/length.h"
+#include "blackmisc/pq/time.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
+#include "blackmisc/pixmap.h"
 
 #include <QFlags>
 #include <QObject>

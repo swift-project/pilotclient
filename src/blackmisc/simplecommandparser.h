@@ -93,7 +93,7 @@ namespace BlackMisc
         //! Clean up a command string
         static QString formatCommand(const QString &command);
 
-        //! Command, aka as starts with dot
+        //! Command, starts with dot
         static bool isCommand(const QString &candidate);
     };
 }

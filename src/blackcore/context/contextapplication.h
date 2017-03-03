@@ -66,10 +66,6 @@ namespace BlackCore
             Q_OBJECT
             Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
 
-        protected:
-            //! Constructor
-            IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
-
         public:
             //! Service name
             static const QString &InterfaceName()
@@ -124,13 +120,6 @@ namespace BlackCore
 
             //! Work around for audio context, #382
             void fakedSetComVoiceRoom(const BlackMisc::Audio::CVoiceRoomList &requestedRooms);
-
-        protected:
-            //! Compute which process' subscriptions match a given log message.
-            BlackMisc::CIdentifierList subscribersOf(const BlackMisc::CStatusMessage &message) const;
-
-            //! Tracks which processes are subscribed to which patterns of log messages.
-            CLogSubscriptionHash m_logSubscriptions;
 
         public slots:
             //! Log a log message
@@ -205,6 +194,15 @@ namespace BlackCore
 
             //!  Remote enabled version of file exists
             virtual bool existsFile(const QString &fileName) const = 0;
+        protected:
+            //! Constructor
+            IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+
+            //! Compute which process' subscriptions match a given log message.
+            BlackMisc::CIdentifierList subscribersOf(const BlackMisc::CStatusMessage &message) const;
+
+            //! Tracks which processes are subscribed to which patterns of log messages.
+            CLogSubscriptionHash m_logSubscriptions;
         };
     } // ns
 } // ns

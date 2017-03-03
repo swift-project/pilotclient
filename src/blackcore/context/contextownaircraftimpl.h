@@ -22,15 +22,15 @@
 #include "blackmisc/aviation/comsystem.h"
 #include "blackmisc/aviation/selcal.h"
 #include "blackmisc/geo/coordinategeodetic.h"
-#include "blackmisc/identifiable.h"
-#include "blackmisc/identifier.h"
 #include "blackmisc/network/user.h"
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/length.h"
-#include "blackmisc/settingscache.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/ownaircraftprovider.h"
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/settingscache.h"
+#include "blackmisc/identifiable.h"
+#include "blackmisc/identifier.h"
 
 #include <QObject>
 #include <QReadWriteLock>
