@@ -68,6 +68,9 @@ namespace BlackSimPlugin
             //! Parts as sent to simulator
             void setPartsAsSent(const DataDefinitionRemoteAircraftPartsWithoutLights &parts) { m_partsAsSent = parts; }
 
+            //! Invalidate parts as sent
+            void invalidatePartsAsSent();
+
             //! Lights as sent to simulator
             const BlackMisc::Aviation::CAircraftLights &getLightsAsSent() const { return m_lightsAsSent; }
 
@@ -141,7 +144,7 @@ namespace BlackSimPlugin
         {
         public:
             //! Set ID of a SimConnect object, so far we only have an request id in the object
-            bool setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId);
+            bool setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts = false);
 
             //! Find which callsign belongs to the object id
             BlackMisc::Aviation::CCallsign getCallsignForObjectId(DWORD objectId) const;

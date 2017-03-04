@@ -30,6 +30,13 @@ namespace BlackSimPlugin
             m_interpolator->attachLogger(logger);
         }
 
+        void CSimConnectObject::invalidatePartsAsSent()
+        {
+            DataDefinitionRemoteAircraftPartsWithoutLights dd;
+            dd.resetToInvalid();
+            m_partsAsSent = dd;
+        }
+
         bool CSimConnectObject::isPendingAdded() const
         {
             return !this->hasValidRequestAndObjectId() || !this->m_confirmedAdded;
@@ -58,7 +65,7 @@ namespace BlackSimPlugin
             return this->hasValidRequestId() && this->hasValidObjectId();
         }
 
-        bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId)
+        bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)
         {
             // First check, if this request id belongs to us
             auto it = std::find_if(this->begin(), this->end(), [requestId](const CSimConnectObject & obj) { return obj.getRequestId() == requestId; });
@@ -66,6 +73,7 @@ namespace BlackSimPlugin
 
             // belongs to us
             it->setObjectId(objectId);
+            if (resetSentParts) { it->invalidatePartsAsSent(); }
             return true;
         }
 

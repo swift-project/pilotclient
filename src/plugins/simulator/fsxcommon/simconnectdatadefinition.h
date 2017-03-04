@@ -99,6 +99,9 @@ namespace BlackSimPlugin
 
             //! Reset spoilers
             void resetSpoilers();
+
+            //! Reset to invalid values
+            void resetToInvalid();
         };
 
         //! Data for aircraft lighs

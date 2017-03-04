@@ -215,6 +215,20 @@ namespace BlackSimPlugin
             spoilersHandlePosition = 0;
         }
 
+        void DataDefinitionRemoteAircraftPartsWithoutLights::resetToInvalid()
+        {
+            flapsLeadingEdgeLeftPercent = -1;
+            flapsLeadingEdgeRightPercent = -1;
+            flapsTrailingEdgeLeftPercent = -1;
+            flapsTrailingEdgeRightPercent = -1;
+            gearHandlePosition = -1;
+            spoilersHandlePosition = -1;
+            engine1Combustion = -1;
+            engine2Combustion = -1;
+            engine3Combustion = -1;
+            engine4Combustion = -1;
+        }
+
         CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
         {
             return CAircraftLights(lightStrobe, lightLanding, lightTaxi, lightBeacon, lightNav, lightLogo, lightRecognition, lightCabin);

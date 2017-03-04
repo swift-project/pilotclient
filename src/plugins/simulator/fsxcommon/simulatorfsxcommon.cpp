@@ -659,7 +659,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestID, DWORD objectID)
         {
-            return this->m_simConnectObjects.setSimConnectObjectIdForRequestId(requestID, objectID);
+            return this->m_simConnectObjects.setSimConnectObjectIdForRequestId(requestID, objectID, true);
         }
 
         bool CSimulatorFsxCommon::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
@@ -868,7 +868,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommon::updateRemoteAircraft()
         {
-            static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10, "DataDefinitionRemoteAircraftParts has an incorrect size.");
+            static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10, "DataDefinitionRemoteAircraftPartsWithoutLights has an incorrect size.");
             Q_ASSERT_X(CThreadUtils::isCurrentThreadObjectThread(this), Q_FUNC_INFO, "thread");
 
             // nothing to do, reset request id and exit
@@ -1049,7 +1049,10 @@ namespace BlackSimPlugin
 
             // same as in simulator or same as already send to simulator?
             const CAircraftLights sentLights(simObj.getLightsAsSent());
-            if (simObj.getPartsAsSent() == ddRemoteAircraftPartsWithoutLights && sentLights == lights) { return true; }
+            if (simObj.getPartsAsSent() == ddRemoteAircraftPartsWithoutLights && sentLights == lights)
+            {
+                return true;
+            }
 
             // in case we sent, we sent everything
             const HRESULT hr = SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftParts,
