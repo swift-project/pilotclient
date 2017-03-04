@@ -63,6 +63,10 @@ namespace BlackMisc
         //! \sa CNetworkUtils::buildUrl for URLs
         static QString appendFilePaths(const QString &path1, const QString &path2);
 
+        //! Append file paths
+        //! \sa CNetworkUtils::buildUrl for URLs
+        static QString appendFilePaths(const QString &path1, const QString &path2, const QString &path3);
+
         //! If `sourceDir` is a directory, copies it recursively, so that `sourceDir` becomes `destinationDir`.
         //! If it is a file, just copies the file.
         static bool copyRecursively(const QString &sourceDir, const QString &destinationDir);
