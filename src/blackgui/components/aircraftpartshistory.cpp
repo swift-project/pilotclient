@@ -19,6 +19,7 @@
 #include <QCompleter>
 #include <QStringBuilder>
 #include <QStringListModel>
+#include <QHash>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -106,7 +107,8 @@ namespace BlackGui
         void CAircraftPartsHistory::updatePartsHistory()
         {
             if (!this->hasContexts()) { return; }
-            if (isBeingModified) { return; }
+            if (!this->isVisible()) { return; }
+            if (m_isBeingModified) { return; }
             const CCallsign cs(ui->le_Callsign->text().trimmed().toUpper());
             if (cs.isEmpty()) { return; }
             const auto currentAircraftParts = sGui->getIContextNetwork()->getRemoteAircraftParts(cs, -1).frontOrDefault();
@@ -149,6 +151,9 @@ namespace BlackGui
                 }
             }
 
+            uint hash = qHash(html);
+            if (hash == m_htmlHash) { return; } // avoid to always scroll to the end when there is no update
+            m_htmlHash = hash;
             this->m_text.setHtml(html);
             ui->te_Messages->setDocument(&this->m_text);
 
@@ -162,14 +167,14 @@ namespace BlackGui
 
         void CAircraftPartsHistory::callsignEntered()
         {
-            isBeingModified = false;
+            m_isBeingModified = false;
             updatePartsHistory();
             m_timerUpdateHistory.start();
         }
 
         void CAircraftPartsHistory::callsignModified()
         {
-            isBeingModified = true;
+            m_isBeingModified = true;
         }
 
         void CAircraftPartsHistory::valuesChanged()

@@ -42,7 +42,8 @@ namespace BlackGui
             QTimer m_timerCallsignUpdate { this };
             QTimer m_timerUpdateHistory { this };
             QTextDocument m_text { this };
-            bool isBeingModified = false;
+            uint m_htmlHash = 0;
+            bool m_isBeingModified = false;
 
             //! Init
             void initGui();
