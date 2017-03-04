@@ -54,8 +54,14 @@ namespace BlackMisc
             //! Add a new aircraft situation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
+            //! Any aircraft situations?
+            bool hasAircraftSituations() const { return !m_aircraftSituations.isEmpty(); }
+
             //! Add a new aircraft parts
             void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
+
+            //! Any aircraft parts?
+            bool hasAircraftParts() const { return !m_aircraftParts.isEmpty(); }
 
             //! Takes input between 0 and 1 and returns output between 0 and 1 smoothed with an S-shaped curve.
             //!

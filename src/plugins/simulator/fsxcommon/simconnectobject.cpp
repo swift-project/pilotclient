@@ -30,6 +30,16 @@ namespace BlackSimPlugin
             m_interpolator->attachLogger(logger);
         }
 
+        void CSimConnectObject::addAircraftParts(const CAircraftParts &parts)
+        {
+            m_interpolator->addAircraftParts(parts);
+        }
+
+        void CSimConnectObject::addAircraftSituation(const CAircraftSituation &situation)
+        {
+            m_interpolator->addAircraftSituation(situation);
+        }
+
         void CSimConnectObject::invalidatePartsAsSent()
         {
             DataDefinitionRemoteAircraftPartsWithoutLights dd;

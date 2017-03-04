@@ -175,7 +175,8 @@ namespace BlackSimPlugin
                     // we will request a new aircraft by request ID, later we will receive its object id
                     // so far this object id is -1
                     addedAircraft.setRendered(false);
-                    const CSimConnectObject simObject(addedAircraft, requestId, &m_interpolationLogger);
+                    CSimConnectObject simObject(addedAircraft, requestId, &m_interpolationLogger);
+                    if (addedAircraft.isPartsSynchronized()) { simObject.addAircraftParts(addedAircraft.getParts()); }
                     m_simConnectObjects.insert(callsign, simObject);
                     adding = true;
                 }
@@ -906,7 +907,7 @@ namespace BlackSimPlugin
 
                 // get interpolated situation
                 CInterpolationStatus interpolatorStatus;
-                CInterpolationHints hints(m_hints[simObj.getCallsign()]);
+                CInterpolationHints hints(m_hints[callsign]);
                 hints.setAircraftParts(useAircraftParts ? parts : CAircraftParts(), useAircraftParts);
                 hints.setLoggingInterpolation(logInterpolationAndParts);
                 const CAircraftSituation interpolatedSituation = simObj.getInterpolator()->getInterpolatedSituation(currentTimestamp, setup, hints, interpolatorStatus);
@@ -1274,13 +1275,13 @@ namespace BlackSimPlugin
         void CSimulatorFsxCommon::ps_remoteProviderAddAircraftSituation(const CAircraftSituation &situation)
         {
             if (!m_simConnectObjects.contains(situation.getCallsign())) { return; }
-            m_simConnectObjects[situation.getCallsign()].getInterpolator()->addAircraftSituation(situation);
+            m_simConnectObjects[situation.getCallsign()].addAircraftSituation(situation);
         }
 
         void CSimulatorFsxCommon::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const CAircraftParts &parts)
         {
             if (!m_simConnectObjects.contains(callsign)) { return; }
-            m_simConnectObjects[callsign].getInterpolator()->addAircraftParts(parts);
+            m_simConnectObjects[callsign].addAircraftParts(parts);
         }
 
         QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
