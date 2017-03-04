@@ -201,6 +201,11 @@ namespace BlackCore
         return getRunningApplications().containsBy([this](const CApplicationInfo & info) { return info.application() == getSwiftApplication(); });
     }
 
+    bool CApplication::isShuttingDown() const
+    {
+        return m_shutdown;
+    }
+
     const QString &CApplication::getApplicationNameAndVersion() const
     {
         static const QString s(QCoreApplication::instance()->applicationName() + " " + CVersion::version());

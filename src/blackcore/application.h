@@ -119,6 +119,9 @@ namespace BlackCore
         //! True if this swift application is already running (including different versions)
         bool isAlreadyRunning() const;
 
+        //! Is application shutting down?
+        bool isShuttingDown() const;
+
         //! Application name and version
         const QString &getApplicationNameAndVersion() const;
 
