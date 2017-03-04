@@ -288,19 +288,22 @@ void SwiftGuiStd::ps_handleTimerBasedUpdates()
 
 void SwiftGuiStd::setContextAvailability()
 {
-    bool corePreviouslyAvailable = this->m_coreAvailable;
-    if (sGui && sGui->getIContextApplication()->isUsingImplementingObject())
+    const bool corePreviouslyAvailable = this->m_coreAvailable;
+    if (sGui &&
+            !sGui->isShuttingDown() &&
+            sGui->getIContextApplication() &&
+            sGui->getIContextApplication()->isUsingImplementingObject())
     {
-        this->m_coreAvailable = true;
+        // ping to check if core is still alive
+        this->m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
     }
     else
     {
-        // ping to check if core is still alive
-        this->m_coreAvailable = sGui &&
-                                this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
+        this->m_coreAvailable = false;
     }
-    this->m_contextNetworkAvailable = this->m_coreAvailable || (sGui && sGui->getIContextNetwork()->isUsingImplementingObject());
-    this->m_contextAudioAvailable = this->m_coreAvailable || (sGui && sGui->getIContextAudio()->isUsingImplementingObject());
+
+    this->m_contextNetworkAvailable = this->m_coreAvailable && sGui->getIContextNetwork() && sGui->getIContextNetwork()->isUsingImplementingObject();
+    this->m_contextAudioAvailable = this->m_coreAvailable && sGui->getIContextAudio() && sGui->getIContextAudio()->isUsingImplementingObject();
 
     // react to a change in core's availability
     if (this->m_coreAvailable != corePreviouslyAvailable)
