@@ -27,7 +27,7 @@ namespace BlackMisc
         return this->removeIf(&CApplicationInfo::application, application);
     }
 
-    QStringList CApplicationInfoList::runningProcessNames() const
+    QStringList CApplicationInfoList::processNames() const
     {
         QStringList names;
         for (const CApplicationInfo &info : *this)

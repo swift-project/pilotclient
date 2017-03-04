@@ -41,7 +41,7 @@ namespace BlackMisc
         int removeApplication(CApplicationInfo::Application application);
 
         //! Running application names
-        QStringList runningProcessNames() const;
+        QStringList processNames() const;
     };
 }
 
