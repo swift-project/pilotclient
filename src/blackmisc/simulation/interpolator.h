@@ -71,8 +71,8 @@ namespace BlackMisc
             void attachLogger(CInterpolationLogger *logger) { m_logger = logger; }
 
         protected:
-            BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations
-            BlackMisc::Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts
+            BlackMisc::Aviation::CAircraftSituationList m_aircraftSituations; //!< recent situations for one aircraft
+            BlackMisc::Aviation::CAircraftPartsList m_aircraftParts;          //!< recent parts for one aircraft
             BlackMisc::Aviation::CCallsign m_callsign;                        //!< callsign
             bool m_isFirstInterpolation = true;                               //!< set to false after the first successful interpolation
 

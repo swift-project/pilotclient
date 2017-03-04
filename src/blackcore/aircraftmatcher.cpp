@@ -590,7 +590,7 @@ namespace BlackCore
         {
             const int maxScore = map.lastKey();
             const CAircraftModelList maxScoreAircraft(map.values(maxScore));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Scores:<br>%1").arg(scoresToString(map).replace("\n", "<br>")), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Scores: %1").arg(scoresToString(map).replace("\n", "<br>")), getLogCategories());
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Scoring with score %1 out of %2 models yielded %3 models").arg(maxScore).arg(map.size()).arg(maxScoreAircraft.size()), getLogCategories());
 
             const CAircraftModel pickedModel = (maxScoreAircraft.size() > 1) ?
