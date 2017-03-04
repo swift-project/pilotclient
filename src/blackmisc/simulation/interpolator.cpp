@@ -249,6 +249,10 @@ namespace BlackMisc
         {
             m_aircraftParts.push_front(parts);
             IRemoteAircraftProvider::removeOutdatedParts(m_aircraftParts);
+
+            qint64 offset = 6000; //! \fixme copied from CNetworkVatlib::c_positionTimeOffsetMsec
+            if (!m_aircraftSituations.isEmpty()) { offset = m_aircraftSituations.front().getTimeOffsetMs(); }
+            m_aircraftParts.front().setTimeOffsetMs(offset);
         }
 
         template <typename Derived>
