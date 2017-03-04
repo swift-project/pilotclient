@@ -182,6 +182,14 @@ namespace BlackMisc
             partsStatus.reset();
             if (currentTimeMsSinceEpoch < 0) { currentTimeMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
 
+            // log for empty parts aircraft parts
+            if (m_aircraftParts.isEmpty())
+            {
+                static const CAircraftParts emptyParts;
+                this->logParts(currentTimeMsSinceEpoch, emptyParts, true, log);
+                emptyParts;
+            }
+
             // find the first parts not in the correct order, keep only the parts before that one
             const auto end = std::is_sorted_until(m_aircraftParts.begin(), m_aircraftParts.end(), [](auto && a, auto && b) { return b.getAdjustedMSecsSinceEpoch() < a.getAdjustedMSecsSinceEpoch(); });
             const auto validParts = makeRange(m_aircraftParts.begin(), end);
@@ -226,16 +234,20 @@ namespace BlackMisc
             }
             while (false);
 
-            if (m_logger && log)
-            {
-                CInterpolationLogger::PartsLog log;
-                log.callsign = m_callsign;
-                log.timestamp = currentTimeMsSinceEpoch;
-                log.parts = currentParts;
-                m_logger->logParts(log);
-            }
-
+            this->logParts(currentTimeMsSinceEpoch, currentParts, false, log);
             return currentParts;
+        }
+
+        template<typename Derived>
+        void CInterpolator<Derived>::logParts(qint64 timestamp, const CAircraftParts &parts, bool empty, bool log)
+        {
+            if (!log || !m_logger) { return; }
+            CInterpolationLogger::PartsLog logInfo;
+            logInfo.callsign = m_callsign;
+            logInfo.timestamp = timestamp;
+            logInfo.parts = parts;
+            logInfo.empty = empty;
+            m_logger->logParts(logInfo);
         }
 
         template <typename Derived>

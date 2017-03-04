@@ -78,6 +78,7 @@ namespace BlackMisc
                 qint64 timestamp = -1; //!< current timestamp
                 BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
                 BlackMisc::Aviation::CAircraftParts parts; //!< parts to be logged
+                bool empty = false;
             };
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons

@@ -228,7 +228,7 @@ namespace BlackMisc
                     QLatin1String("<td>") % log.callsign.asString() % QLatin1String("</td>") %
                     QLatin1String("<td>") % msSinceEpochToTime(log.timestamp) % QLatin1String("</td>") %
                     (changedParts ? QLatin1String("<td class=\"changed\">*</td>") : QLatin1String("<td></td>")) %
-                    QLatin1String("<td>") % log.parts.toQString() % QLatin1String("</td>");
+                    QLatin1String("<td>") % (log.empty ? QLatin1String("empty") : log.parts.toQString()) % QLatin1String("</td>");
             }
             tableRows += QLatin1String("</tbody>\n");
             return QLatin1String("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1String("</table>\n");
