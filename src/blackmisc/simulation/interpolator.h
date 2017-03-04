@@ -168,8 +168,14 @@ namespace BlackMisc
             //! Reset to default values
             void reset();
 
+            //! Ctor
+            CPartsStatus() {}
+
+            //! Ctor
+            CPartsStatus(bool supportsParts) : m_supportsParts(supportsParts) {}
+
         private:
-            bool m_supportsParts = false;   //!< supports parts for given callsign
+            bool m_supportsParts = false; //!< supports parts for given callsign
         };
 
         //! \cond PRIVATE

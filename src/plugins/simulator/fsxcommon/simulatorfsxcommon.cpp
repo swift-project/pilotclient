@@ -900,10 +900,8 @@ namespace BlackSimPlugin
                 // fetch parts, as they are needed for ground interpolation
                 const bool useAircraftParts = enableAircraftParts && aircraftWithParts.contains(callsign);
                 const bool logInterpolationAndParts = callsignsToLog.contains(callsign);
-                CPartsStatus partsStatus;
-                partsStatus.setSupportsParts(useAircraftParts);
-
                 const CInterpolationAndRenderingSetup setup(getInterpolationAndRenderingSetup());
+                CPartsStatus partsStatus(useAircraftParts);
                 const CAircraftParts parts = useAircraftParts ? simObj.getInterpolator()->getInterpolatedParts(-1, setup, partsStatus, logInterpolationAndParts) : CAircraftParts();
 
                 // get interpolated situation
