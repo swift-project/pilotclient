@@ -67,16 +67,13 @@ namespace BlackGui
 
         public:
             //! Constructor
-            CHotkeyDialog(const BlackMisc::Input::CActionHotkey &actionHotkey, QWidget *parent = nullptr);
+            CHotkeyDialog(const BlackMisc::Input::CActionHotkey &actionHotkey, const BlackMisc::CIdentifierList &applications, QWidget *parent = nullptr);
 
             //! Destructor
             virtual ~CHotkeyDialog();
 
             //! Get hotkey selected by user
             BlackMisc::Input::CActionHotkey getSelectedActionHotkey() const { return m_actionHotkey; }
-
-            //! Set registered applications
-            void setRegisteredApplications(const BlackMisc::CIdentifierList &applications);
 
             //! Init style sheet
             void initStyleSheet();

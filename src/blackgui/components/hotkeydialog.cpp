@@ -63,7 +63,7 @@ namespace BlackGui
             m_oldIndex = index;
         }
 
-        CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, QWidget *parent) :
+        CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const BlackMisc::CIdentifierList &applications, QWidget *parent) :
             QDialog(parent),
             ui(new Ui::CHotkeyDialog),
             m_actionHotkey(actionHotkey),
@@ -80,6 +80,19 @@ namespace BlackGui
 
             if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
 
+            CIdentifierList machinesUnique = applications.getMachinesUnique();
+            int index = -1;
+            for (const auto &app : machinesUnique)
+            {
+                ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
+                if (m_actionHotkey.getApplicableMachine().isFromSameMachine(app)) { index = ui->cb_Identifier->count() - 1; }
+            }
+
+            if (index != ui->cb_Identifier->currentIndex())
+            {
+                ui->cb_Identifier->setCurrentIndex(index);
+            }
+
             connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::ps_advancedModeChanged);
             connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::ps_selectHotkey);
             connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::ps_accept);
@@ -94,15 +107,6 @@ namespace BlackGui
         CHotkeyDialog::~CHotkeyDialog()
         { }
 
-        void CHotkeyDialog::setRegisteredApplications(const CIdentifierList &applications)
-        {
-            const QStringList machines = applications.getMachineNames();
-            for (const QString &machine : machines)
-            {
-                ui->cb_Identifier->addItem(machine);
-            }
-        }
-
         void CHotkeyDialog::initStyleSheet()
         {
             const QString s = sGui->getStyleSheetUtility().styles(
@@ -116,10 +120,8 @@ namespace BlackGui
 
         CActionHotkey CHotkeyDialog::getActionHotkey(const CActionHotkey &initial, const CIdentifierList &applications, QWidget *parent)
         {
-            CHotkeyDialog editDialog(initial, parent);
+            CHotkeyDialog editDialog(initial, applications, parent);
             editDialog.setWindowModality(Qt::WindowModal);
-            // add local application
-            editDialog.setRegisteredApplications(applications);
             if (editDialog.exec()) { return editDialog.getSelectedActionHotkey(); }
             return {};
         }
