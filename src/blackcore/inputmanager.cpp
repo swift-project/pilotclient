@@ -72,6 +72,7 @@ namespace BlackCore
         m_configuredActions.clear();
         for (CActionHotkey actionHotkey : m_actionHotkeys.getThreadLocal())
         {
+            if (!actionHotkey.getApplicableMachine().isFromLocalMachine()) { continue; }
             CHotkeyCombination combination = actionHotkey.getCombination();
             if (combination.isEmpty()) continue;
 
