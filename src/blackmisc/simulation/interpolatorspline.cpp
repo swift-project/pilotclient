@@ -115,7 +115,7 @@ namespace BlackMisc
                 x = {{ normals[0][0], normals[1][0], normals[2][0] }};
                 y = {{ normals[0][1], normals[1][1], normals[2][1] }};
                 z = {{ normals[0][2], normals[1][2], normals[2][2] }};
-                a = {{ s[0].getAltitude().value(), s[1].getAltitude().value(), s[2].getAltitude().value() }};
+                a = {{ s[0].getCorrectedAltitude().value(), s[1].getCorrectedAltitude().value(), s[2].getCorrectedAltitude().value() }};
                 t = {{ static_cast<double>(s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(s[2].getAdjustedMSecsSinceEpoch()) }};
 
                 dx = getDerivatives(t, x);
