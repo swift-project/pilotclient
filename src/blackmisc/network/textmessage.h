@@ -150,6 +150,7 @@ namespace BlackMisc
             bool wasSent() const;
 
             //! Mark as sent
+            //! \remark also sets current timestamp if there is no valid timestamp
             void markAsSent();
 
             //! Get SELCAL code (if applicable, e.g. ABCD), otherwise ""

@@ -82,7 +82,7 @@ namespace BlackGui
 
         BlackMisc::Network::CTextMessageList m_messages;
         QTextDocument *m_textDocument = nullptr;
-        int m_keepMaxMessages = 10;
+        int m_keepMaxMessages = -1; //!< max number of messages to keep, or -1 to keep all messages
         bool m_withSender = true;
         bool m_withRecipient = false;
         bool m_wordWrap = true;

@@ -59,6 +59,10 @@ namespace BlackMisc
         void CTextMessage::markAsSent()
         {
             m_wasSent = true;
+            if (!this->hasValidTimestamp())
+            {
+                this->setCurrentUtcTime();
+            }
         }
 
         QString CTextMessage::getRecipientCallsignOrFrequency() const
