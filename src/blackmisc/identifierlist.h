@@ -43,6 +43,10 @@ namespace BlackMisc
         //! This list contains an identifier which is not contained in other.
         bool containsAnyNotIn(const CIdentifierList &other) const;
 
+        //! Get a list of identifiers reduced to maximum one per machine.
+        //! If there is more than one per machine, it is undefined which one will be added.
+        CIdentifierList getMachinesUnique() const;
+
         //! Get machine names
         QStringList getMachineNames(bool unique = true, bool sort = true) const;
 

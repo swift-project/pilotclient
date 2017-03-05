@@ -26,6 +26,20 @@ namespace BlackMisc
         return containsBy([&other](const CIdentifier & id) { return ! other.contains(id); });
     }
 
+    CIdentifierList CIdentifierList::getMachinesUnique() const
+    {
+        CIdentifierList il;
+        for (const CIdentifier &identifier : *this)
+        {
+            bool contained = il.containsBy([ = ] (const CIdentifier &ident)
+            {
+                return identifier.isFromSameMachine(ident);
+            });
+            if (!contained) { il.push_back(identifier); }
+        }
+        return il;
+    }
+
     QStringList CIdentifierList::getMachineNames(bool unique, bool sort) const
     {
         QStringList codes = this->transform(Predicates::MemberTransform(&CIdentifier::getMachineName));
