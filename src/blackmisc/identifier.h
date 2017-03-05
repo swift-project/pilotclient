@@ -55,6 +55,9 @@ namespace BlackMisc
         //! Returns an anonymous identifier.
         static CIdentifier anonymous();
 
+        //! Returns a fake identifier.
+        static CIdentifier fake();
+
         //! Produces a UUID generated from the identifier.
         QUuid toUuid() const;
 
@@ -81,6 +84,9 @@ namespace BlackMisc
 
         //! Check if originating from the same local machine
         bool isFromLocalMachine() const;
+
+        //! Check if other identifier is from the same machine
+        bool isFromSameMachine(const CIdentifier &other) const;
 
         //! Check if originating from the same process id
         bool isFromSameProcess() const;

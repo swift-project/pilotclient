@@ -38,6 +38,19 @@ namespace BlackMisc
         return id;
     }
 
+    CIdentifier CIdentifier::fake()
+    {
+        static CIdentifier id;
+        if (id.m_processId)
+        {
+            id.m_processId = 0;
+            id.m_processName = "fake process";
+            id.m_machineName = "fake machine";
+            id.m_machineIdBase64 = QByteArrayLiteral("0").repeated(32).toBase64();
+        }
+        return id;
+    }
+
     QUuid CIdentifier::toUuid() const
     {
         static const QUuid ns = QUuid::createUuid();
@@ -57,6 +70,11 @@ namespace BlackMisc
     bool CIdentifier::isFromLocalMachine() const
     {
         return QDBusConnection::localMachineId() == getMachineId();
+    }
+
+    bool CIdentifier::isFromSameMachine(const CIdentifier &other) const
+    {
+        return getMachineIdBase64() == other.getMachineIdBase64();
     }
 
     bool CIdentifier::isFromSameProcess() const
