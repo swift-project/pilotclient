@@ -110,10 +110,10 @@ namespace BlackMisc
             CInterpolatorPbh()
             {}
             CInterpolatorPbh(const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) :
-                oldSituation(older), newSituation(newer)
+                m_oldSituation(older), m_newSituation(newer)
             {}
             CInterpolatorPbh(double time, const Aviation::CAircraftSituation &older, const Aviation::CAircraftSituation &newer) :
-                simulationTimeFraction(time), oldSituation(older), newSituation(newer)
+                m_simulationTimeFraction(time), m_oldSituation(older), m_newSituation(newer)
             {}
             //! @}
 
@@ -123,17 +123,17 @@ namespace BlackMisc
             PhysicalQuantities::CAngle getPitch() const;
             PhysicalQuantities::CAngle getBank() const;
             PhysicalQuantities::CSpeed getGroundSpeed() const;
-            Aviation::CAircraftSituation getOldSituation() const { return oldSituation; }
-            Aviation::CAircraftSituation getNewSituation() const { return newSituation; }
+            Aviation::CAircraftSituation getOldSituation() const { return m_oldSituation; }
+            Aviation::CAircraftSituation getNewSituation() const { return m_newSituation; }
             //! @}
 
             //! Change time fraction
-            void setTimeFraction(double tf) { simulationTimeFraction = tf; }
+            void setTimeFraction(double tf) { m_simulationTimeFraction = tf; }
 
         private:
-            double simulationTimeFraction = 0.0;
-            Aviation::CAircraftSituation oldSituation;
-            Aviation::CAircraftSituation newSituation;
+            double m_simulationTimeFraction = 0.0;
+            Aviation::CAircraftSituation m_oldSituation;
+            Aviation::CAircraftSituation m_newSituation;
         };
 
         //! Status of interpolation

@@ -48,11 +48,11 @@ namespace BlackMisc
                 //! @}
 
                 //! Interpolator for pitch, bank, heading, groundspeed
-                CInterpolatorPbh pbh() const { return i.pbh; }
+                CInterpolatorPbh pbh() const { return i.m_pbh; }
 
             private:
-               const CInterpolatorSpline &i;
-               qint64 currentTimeMsSinceEpoc = 0;
+                const CInterpolatorSpline &i;
+                qint64 currentTimeMsSinceEpoc = 0;
             };
 
             //! Strategy used by CInterpolator::getInterpolatedSituation
@@ -67,7 +67,7 @@ namespace BlackMisc
             qint64 m_nextSampleTime = 0;
             PhysicalQuantities::CLengthUnit m_altitudeUnit;
             std::array<double, 3> x, y, z, a, t, dx, dy, dz, da;
-            CInterpolatorPbh pbh;
+            CInterpolatorPbh m_pbh;
         };
     }
 }

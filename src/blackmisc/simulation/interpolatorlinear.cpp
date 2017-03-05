@@ -127,14 +127,14 @@ namespace BlackMisc
             Q_UNUSED(setup);
             Q_UNUSED(hints);
 
-            const std::array<double, 3> oldVec(oldSituation.getPosition().normalVectorDouble());
-            const std::array<double, 3> newVec(newSituation.getPosition().normalVectorDouble());
+            const std::array<double, 3> oldVec(m_oldSituation.getPosition().normalVectorDouble());
+            const std::array<double, 3> newVec(m_newSituation.getPosition().normalVectorDouble());
 
             // Interpolate position: pos = (posB - posA) * t + posA
             CCoordinateGeodetic currentPosition;
-            currentPosition.setNormalVector((newVec[0] - oldVec[0]) * simulationTimeFraction + oldVec[0],
-                                            (newVec[1] - oldVec[1]) * simulationTimeFraction + oldVec[1],
-                                            (newVec[2] - oldVec[2]) * simulationTimeFraction + oldVec[2]);
+            currentPosition.setNormalVector((newVec[0] - oldVec[0]) * m_simulationTimeFraction + oldVec[0],
+                                            (newVec[1] - oldVec[1]) * m_simulationTimeFraction + oldVec[1],
+                                            (newVec[2] - oldVec[2]) * m_simulationTimeFraction + oldVec[2]);
             return currentPosition;
         }
 
@@ -145,11 +145,11 @@ namespace BlackMisc
 
             // Interpolate altitude: Alt = (AltB - AltA) * t + AltA
             // avoid underflow below ground elevation by using getCorrectedAltitude
-            const CAltitude oldAlt(oldSituation.getCorrectedAltitude());
-            const CAltitude newAlt(newSituation.getCorrectedAltitude());
+            const CAltitude oldAlt(m_oldSituation.getCorrectedAltitude());
+            const CAltitude newAlt(m_newSituation.getCorrectedAltitude());
             Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
             return CAltitude((newAlt - oldAlt)
-                             * simulationTimeFraction
+                             * m_simulationTimeFraction
                              + oldAlt,
                              oldAlt.getReferenceDatum());
         }

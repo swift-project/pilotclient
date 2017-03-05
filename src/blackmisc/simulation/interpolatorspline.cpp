@@ -126,14 +126,14 @@ namespace BlackMisc
                 m_prevSampleTime = situationsOlder.begin()->getAdjustedMSecsSinceEpoch();
                 m_nextSampleTime = (situationsNewer.end() - 1)->getAdjustedMSecsSinceEpoch();
                 m_altitudeUnit = situationsOlder.begin()->getAltitude().getUnit();
-                pbh = { *situationsOlder.begin(), *(situationsNewer.end() - 1) };
+                m_pbh = { *situationsOlder.begin(), *(situationsNewer.end() - 1) };
             }
-            log.oldSituation = pbh.getOldSituation();
-            log.newSituation = pbh.getNewSituation();
+            log.oldSituation = m_pbh.getOldSituation();
+            log.newSituation = m_pbh.getNewSituation();
 
             status.setInterpolationSucceeded(true);
             status.setChangedPosition(true);
-            pbh.setTimeFraction(static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime) / static_cast<double>(m_nextSampleTime - m_prevSampleTime));
+            m_pbh.setTimeFraction(static_cast<double>(currentTimeMsSinceEpoc - m_prevSampleTime) / static_cast<double>(m_nextSampleTime - m_prevSampleTime));
 
             return { *this, currentTimeMsSinceEpoc };
         }

@@ -131,8 +131,8 @@ namespace BlackMisc
         {
             // HINT: VTOL aircraft can change pitch/bank without changing position, planes cannot
             // Interpolate heading: HDG = (HdgB - HdgA) * t + HdgA
-            const CHeading headingBegin = oldSituation.getHeading();
-            CHeading headingEnd = newSituation.getHeading();
+            const CHeading headingBegin = m_oldSituation.getHeading();
+            CHeading headingEnd = m_newSituation.getHeading();
 
             if ((headingEnd - headingBegin).value(CAngleUnit::deg()) < -180)
             {
@@ -145,7 +145,7 @@ namespace BlackMisc
             }
 
             return CHeading((headingEnd - headingBegin)
-                            * simulationTimeFraction
+                            * m_simulationTimeFraction
                             + headingBegin,
                             headingBegin.getReferenceNorth());
         }
@@ -153,26 +153,26 @@ namespace BlackMisc
         CAngle CInterpolatorPbh::getPitch() const
         {
             // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
-            const CAngle pitchBegin = oldSituation.getPitch();
-            const CAngle pitchEnd = newSituation.getPitch();
-            const CAngle pitch = (pitchEnd - pitchBegin) * simulationTimeFraction + pitchBegin;
+            const CAngle pitchBegin = m_oldSituation.getPitch();
+            const CAngle pitchEnd = m_newSituation.getPitch();
+            const CAngle pitch = (pitchEnd - pitchBegin) * m_simulationTimeFraction + pitchBegin;
             return pitch;
         }
 
         CAngle CInterpolatorPbh::getBank() const
         {
             // Interpolate bank: Bank = (BankB - BankA) * t + BankA
-            const CAngle bankBegin = oldSituation.getBank();
-            const CAngle bankEnd = newSituation.getBank();
-            const CAngle bank = (bankEnd - bankBegin) * simulationTimeFraction + bankBegin;
+            const CAngle bankBegin = m_oldSituation.getBank();
+            const CAngle bankEnd = m_newSituation.getBank();
+            const CAngle bank = (bankEnd - bankBegin) * m_simulationTimeFraction + bankBegin;
             return bank;
         }
 
         CSpeed CInterpolatorPbh::getGroundSpeed() const
         {
-            return (newSituation.getGroundSpeed() - oldSituation.getGroundSpeed())
-                   * simulationTimeFraction
-                   + oldSituation.getGroundSpeed();
+            return (m_newSituation.getGroundSpeed() - m_oldSituation.getGroundSpeed())
+                   * m_simulationTimeFraction
+                   + m_oldSituation.getGroundSpeed();
         }
 
         template <typename Derived>
