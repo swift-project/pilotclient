@@ -213,5 +213,10 @@ namespace BlackGui
                 ui->led_MapperReady->setToolTip(m);
             }
         }
+
+        void CInfoBarStatusComponent::ps_onPttChanged(bool enabled)
+        {
+            ui->led_Ptt->setOn(enabled);
+        }
     } // namespace
 } // namespace

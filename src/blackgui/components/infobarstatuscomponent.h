@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_INFOBARSTATUSCOMPONENT_H
 #define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
+#include "blackcore/actionbind.h"
 #include "blackcore/network.h"
 #include "blackgui/blackguiexport.h"
 
@@ -53,6 +54,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CInfoBarStatusComponent> ui;
+            BlackCore::CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CInfoBarStatusComponent::ps_onPttChanged };
 
         private slots:
             //! Simulator connection has been changed
@@ -69,6 +71,9 @@ namespace BlackGui
 
             //! Mapper is ready
             void ps_onMapperReady();
+
+            //! Ptt button changed
+            void ps_onPttChanged(bool enabled);
         };
     }
 }
