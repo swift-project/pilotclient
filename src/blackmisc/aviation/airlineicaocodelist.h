@@ -34,7 +34,6 @@ namespace BlackMisc
         class BLACKMISC_EXPORT CAirlineIcaoCodeList :
             public CSequence<CAirlineIcaoCode>,
             public BlackMisc::Db::IDatastoreObjectList<CAirlineIcaoCode, CAirlineIcaoCodeList, int>,
-
             public BlackMisc::Mixin::MetaType<CAirlineIcaoCodeList>
         {
         public:

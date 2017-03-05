@@ -130,7 +130,7 @@ namespace BlackGui
                 if (message.isSelcalMessage() && ownAircraft.isSelcalSelected(message.getSelcalCode()))
                 {
                     // this is SELCAL for me
-                    if (sGui->getIContextAudio())
+                    if (sGui && sGui->getIContextAudio())
                     {
                         sGui->getIContextAudio()->playSelcalTone(message.getSelcalCode());
                     }
@@ -275,11 +275,11 @@ namespace BlackGui
             layout->addWidget(closeButton);
             newTab->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
-            int index = ui->tw_TextMessages->addTab(newTab, tabName);
+            const int index = ui->tw_TextMessages->addTab(newTab, tabName);
             this->connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::ps_closeTextMessageTab);
             ui->tw_TextMessages->setCurrentIndex(index);
 
-            if (sGui->getIContextNetwork())
+            if (sGui && sGui->getIContextNetwork())
             {
                 QString realName = sGui->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
                 if (!realName.isEmpty()) ui->tw_TextMessages->setTabToolTip(index, realName);
@@ -301,7 +301,7 @@ namespace BlackGui
             textEdit->insertTextMessage(textMessage);
 
             // sound
-            if (sGui->getIContextAudio())
+            if (sGui && sGui->getIContextAudio())
             {
                 sGui->getIContextAudio()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
             }
@@ -309,7 +309,7 @@ namespace BlackGui
 
         CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
         {
-            Q_ASSERT(sGui->getIContextOwnAircraft());
+            Q_ASSERT(sGui && sGui->getIContextOwnAircraft());
             return sGui->getIContextOwnAircraft()->getOwnAircraft();
         }
 
@@ -320,7 +320,7 @@ namespace BlackGui
             if (!callsignResolution) { return nullptr; }
 
             // resolve callsign
-            CAtcStation station(sGui->getIContextNetwork()->getOnlineStationForCallsign(callsign));
+            const CAtcStation station(sGui->getIContextNetwork()->getOnlineStationForCallsign(callsign));
             if (!station.getCallsign().isEmpty())
             {
                 const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
@@ -339,7 +339,7 @@ namespace BlackGui
         QWidget *CTextMessageComponent::findTextMessageTabByName(const QString &name) const
         {
             if (name.isEmpty()) { return nullptr; }
-            QString n = name.trimmed();
+            const QString n = name.trimmed();
             for (int index = 0; index < ui->tw_TextMessages->count(); index++)
             {
                 QString tabName = ui->tw_TextMessages->tabText(index);
@@ -377,7 +377,7 @@ namespace BlackGui
             if (!ui->le_textMessages->isVisible()) { return; }
             if (!this->isVisible()) { return; }
 
-            QString cl(ui->le_textMessages->text().trimmed().simplified());
+            const QString cl(ui->le_textMessages->text().trimmed().simplified());
             ui->le_textMessages->clear();
             this->handleEnteredTextMessage(cl);
         }
@@ -406,7 +406,7 @@ namespace BlackGui
             // only if visible
             if (enteredLine.isEmpty()) { return ""; }
 
-            int index = ui->tw_TextMessages->currentIndex();
+            const int index = ui->tw_TextMessages->currentIndex();
             QString cmd(".msg ");
             if (index < 0 || index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesAll))
             {
