@@ -88,6 +88,7 @@ namespace BlackGui
             void ps_combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
             void ps_combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
             void ps_changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
+            void changeApplicableMachine(int index);
             void ps_accept();
 
             void synchronize();

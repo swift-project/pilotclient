@@ -100,6 +100,7 @@ namespace BlackGui
             connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::ps_combinationSelectionChanged);
             connect(m_inputManager, &BlackCore::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::ps_combinationSelectionFinished);
             connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::ps_changeSelectedAction);
+            connect(ui->cb_Identifier, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
 
             initStyleSheet();
         }
@@ -167,6 +168,14 @@ namespace BlackGui
             if (selected.indexes().isEmpty()) { return; }
             const auto index = selected.indexes().first();
             m_actionHotkey.setAction(index.data(Models::CActionModel::ActionRole).toString());
+        }
+
+        void CHotkeyDialog::changeApplicableMachine(int index)
+        {
+            Q_UNUSED(index);
+            QVariant userData = ui->cb_Identifier->currentData(Qt::UserRole);
+            Q_ASSERT(userData.canConvert<CIdentifier>());
+            m_actionHotkey.setApplicableMachine(userData.value<CIdentifier>());
         }
 
         void CHotkeyDialog::ps_accept()
