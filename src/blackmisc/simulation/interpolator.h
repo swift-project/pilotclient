@@ -123,6 +123,8 @@ namespace BlackMisc
             PhysicalQuantities::CAngle getPitch() const;
             PhysicalQuantities::CAngle getBank() const;
             PhysicalQuantities::CSpeed getGroundSpeed() const;
+            Aviation::CAircraftSituation getOldSituation() const { return oldSituation; }
+            Aviation::CAircraftSituation getNewSituation() const { return newSituation; }
             //! @}
 
             //! Change time fraction

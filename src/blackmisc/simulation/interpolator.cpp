@@ -58,7 +58,7 @@ namespace BlackMisc
             if (currentTimeMsSinceEpoc < 0) { currentTimeMsSinceEpoc = QDateTime::currentMSecsSinceEpoch(); }
 
             // interpolant function from derived class
-            auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, hints, status, log);
+            const auto interpolant = derived()->getInterpolant(currentTimeMsSinceEpoc, setup, hints, status, log);
 
             // succeeded so far?
             if (!status.didInterpolationSucceed()) { return currentSituation; }
@@ -84,8 +84,8 @@ namespace BlackMisc
                     if (!currentGroundElevation.isNull())
                     {
                         Q_ASSERT_X(currentGroundElevation.getReferenceDatum() == CAltitude::MeanSeaLevel, Q_FUNC_INFO, "Need MSL value");
-                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor)
-                                                               + currentGroundElevation * groundFactor,
+                        currentSituation.setAltitude(CAltitude(currentSituation.getAltitude() * (1.0 - groundFactor) +
+                                                               currentGroundElevation * groundFactor,
                                                                currentSituation.getAltitude().getReferenceDatum()));
                     }
                 }
@@ -116,6 +116,7 @@ namespace BlackMisc
             {
                 log.timestamp = currentTimeMsSinceEpoc;
                 log.callsign = m_callsign;
+                log.cgAboveGround = hints.getCGAboveGround();
                 log.vtolAircraft = hints.isVtolAircraft();
                 log.currentSituation = currentSituation;
                 log.useParts = hints.hasAircraftParts();
@@ -187,7 +188,7 @@ namespace BlackMisc
             {
                 static const CAircraftParts emptyParts;
                 this->logParts(currentTimeMsSinceEpoch, emptyParts, true, log);
-                emptyParts;
+                return emptyParts;
             }
 
             // find the first parts not in the correct order, keep only the parts before that one

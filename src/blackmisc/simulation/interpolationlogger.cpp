@@ -132,7 +132,7 @@ namespace BlackMisc
             if (logs.isEmpty()) { return {}; }
             const QString tableHeader =
                 QLatin1String("<thead><tr>") %
-                QLatin1String("<th>c.</th><th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>") %
+                QLatin1String("<th title=\"changed situation\">cs.</th><th>CS</th><th>VTOL</th><th>timestamp</th><th>since</th>") %
                 QLatin1String("<th>ts old</th><th>ts new</th><th>ts cur</th>") %
                 QLatin1String("<th>&Delta;t</th><th>&Delta;t fr.</th><th>fraction</th>") %
                 QLatin1String("<th>lat.old</th><th>lat.new</th><th>lat.cur</th>") %
@@ -141,7 +141,8 @@ namespace BlackMisc
                 QLatin1String("<th>elv.old</th><th>elv.new</th><th>elv.cur</th>") %
                 QLatin1String("<th>gnd.factor</th>") %
                 QLatin1String("<th>onGnd.old</th><th>onGnd.new</th><th>onGnd.cur</th>") %
-                QLatin1String("<th>parts</th><th>c.</th><th>parts details</th>") %
+                QLatin1String("<th>CG</th>") %
+                QLatin1String("<th>parts</th><th title=\"changed parts\">cp.</th><th>parts details</th>") %
                 QLatin1String("</tr></thead>\n");
 
             static const CLengthUnit ft = CLengthUnit::ft();
@@ -198,11 +199,13 @@ namespace BlackMisc
                     QLatin1String("<td class=\"cur\">") % log.currentSituation.getOnGroundInfo() % QLatin1String("</td>");
 
                 tableRows +=
+                    QLatin1String("<td>") % log.cgAboveGround.valueRoundedWithUnit(CLengthUnit::ft(), 0) % QLatin1String("</td>") %
                     QLatin1String("<td>") % boolToYesNo(log.useParts) % QLatin1String("</td>") %
-                    (changedParts ? QLatin1String("<td>*</td>") : QLatin1String("<td></td>")) %
+                    (changedParts ? QLatin1String("<td class=\"changed\">*</td>") : QLatin1String("<td></td>")) %
                     QLatin1String("<td>") % (log.useParts ? log.parts.toQString(true) : QLatin1String("")) % QLatin1String("</td>") %
                     QLatin1String("</tr>\n");
             }
+
             tableRows += QLatin1String("</tbody>\n");
             return QLatin1String("<table class=\"small\">\n") % tableHeader % tableRows % QLatin1String("</table>\n");
         }

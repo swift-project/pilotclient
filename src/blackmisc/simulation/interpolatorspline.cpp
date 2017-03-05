@@ -94,7 +94,6 @@ namespace BlackMisc
         {
             Q_UNUSED(hints);
             Q_UNUSED(setup);
-            Q_UNUSED(log);
 
             // recalculate derivatives only if they changed
             if (currentTimeMsSinceEpoc > m_nextSampleTime)
@@ -129,6 +128,8 @@ namespace BlackMisc
                 m_altitudeUnit = situationsOlder.begin()->getAltitude().getUnit();
                 pbh = { *situationsOlder.begin(), *(situationsNewer.end() - 1) };
             }
+            log.oldSituation = pbh.getOldSituation();
+            log.newSituation = pbh.getNewSituation();
 
             status.setInterpolationSucceeded(true);
             status.setChangedPosition(true);

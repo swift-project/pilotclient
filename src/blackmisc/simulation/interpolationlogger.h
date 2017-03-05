@@ -70,15 +70,16 @@ namespace BlackMisc
                 BlackMisc::Aviation::CAircraftSituation oldSituation;     //!< old situation
                 BlackMisc::Aviation::CAircraftSituation newSituation;     //!< new situation
                 BlackMisc::Aviation::CAircraftSituation currentSituation; //!< interpolated situation
+                BlackMisc::PhysicalQuantities::CLength cgAboveGround;     //!< center of gravity
             };
 
             //! Log entry for parts interpolation
             struct PartsLog
             {
                 qint64 timestamp = -1; //!< current timestamp
+                bool empty = false;    //!< empty parts?
                 BlackMisc::Aviation::CCallsign callsign;   //!< current callsign
                 BlackMisc::Aviation::CAircraftParts parts; //!< parts to be logged
-                bool empty = false;
             };
 
             //! Log current interpolation cycle, only stores in memory, for performance reasons
