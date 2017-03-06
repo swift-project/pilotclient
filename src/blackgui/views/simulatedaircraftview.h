@@ -13,8 +13,8 @@
 #define BLACKGUI_VIEWS_SIMULATEDAIRCRAFTVIEW_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/views/viewcallsignobjects.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"
-#include "blackgui/views/viewbase.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
 #include <QObject>
@@ -34,7 +34,7 @@ namespace BlackGui
     namespace Views
     {
         //! Aircraft view
-        class BLACKGUI_EXPORT CSimulatedAircraftView : public CViewBase<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
+        class BLACKGUI_EXPORT CSimulatedAircraftView : public CViewWithCallsignObjects<Models::CSimulatedAircraftListModel, BlackMisc::Simulation::CSimulatedAircraftList, BlackMisc::Simulation::CSimulatedAircraft>
         {
             Q_OBJECT
 

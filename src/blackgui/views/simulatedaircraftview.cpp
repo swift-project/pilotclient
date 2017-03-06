@@ -26,7 +26,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CSimulatedAircraftView::CSimulatedAircraftView(QWidget *parent) : CViewBase(parent)
+        CSimulatedAircraftView::CSimulatedAircraftView(QWidget *parent) : CViewWithCallsignObjects(parent)
         {
             this->standardInit(new CSimulatedAircraftListModel(this));
             this->m_menus |= MenuRefresh;

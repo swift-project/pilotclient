@@ -13,8 +13,8 @@
 #define BLACKGUI_ATCSTATIONVIEW_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackgui/views/viewcallsignobjects.h"
 #include "blackgui/models/atcstationlistmodel.h"
-#include "blackgui/views/viewbase.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 #include "blackmisc/aviation/comsystem.h"
@@ -33,7 +33,7 @@ namespace BlackGui
     namespace Views
     {
         //! ATC stations view
-        class BLACKGUI_EXPORT CAtcStationView : public CViewBase<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
+        class BLACKGUI_EXPORT CAtcStationView : public CViewWithCallsignObjects<BlackGui::Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList, BlackMisc::Aviation::CAtcStation>
         {
             Q_OBJECT
 

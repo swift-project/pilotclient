@@ -27,7 +27,7 @@ namespace BlackGui
 {
     namespace Views
     {
-        CAtcStationView::CAtcStationView(QWidget *parent) : CViewBase(parent)
+        CAtcStationView::CAtcStationView(QWidget *parent) : CViewWithCallsignObjects(parent)
         {
             this->standardInit(new CAtcStationListModel(CAtcStationListModel::StationsOnline, this));
             this->m_menus |= (MenuClear | MenuRefresh);
