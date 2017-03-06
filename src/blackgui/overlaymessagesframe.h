@@ -52,6 +52,9 @@ namespace BlackGui
         //! Show the inner frame
         void showStatusMessagesFrame();
 
+        //! Show kill button
+        void showKillButton(bool killButton);
+
         //! Hide the inner frame
         void hideStatusMessagesFrame();
 

@@ -33,6 +33,14 @@ namespace BlackGui
         this->initInnerFrame();
     }
 
+    void COverlayMessagesFrame::showKillButton(bool killButton)
+    {
+        if (m_overlayMessages)
+        {
+            m_overlayMessages->showKillButton(killButton);
+        }
+    }
+
     void COverlayMessagesFrame::hideStatusMessagesFrame()
     {
         if (!m_overlayMessages) { return; }

@@ -99,6 +99,9 @@ namespace BlackGui
         //! Display one of the supported types
         void showOverlayVariant(const BlackMisc::CVariant &variant, int timeOutMs = -1);
 
+        //! Allows to globally enable/disable kill button
+        void showKillButton(bool killButton);
+
         //! Close button clicked
         void close();
 
@@ -141,6 +144,7 @@ namespace BlackGui
         QString                              m_header;
         int                                  m_lastConfirmation = QMessageBox::Cancel;
         bool                                 m_awaitingConfirmation = false;
+        bool                                 m_hasKillButton = false;
         std::function<void()>                m_okLambda;
         QTimer                               m_autoCloseTimer { this };
         QList<std::function<void()>> m_pendingMessageCalls;
@@ -154,7 +158,8 @@ namespace BlackGui
         //! Small
         bool useSmall() const;
 
-        //! Show kill button
+        //! Show kill button?
+        //! \sa COverlayMessages::showKillButton globally enable/disable kill button
         void showKill(bool show);
 
         //! Display this message (use settings to decide)

@@ -135,8 +135,8 @@ namespace BlackGui
 
     void COverlayMessages::showKill(bool show)
     {
-        ui->tb_Kill->setVisible(show);
-        ui->tb_Kill->setEnabled(show);
+        ui->tb_Kill->setVisible(m_hasKillButton && show);
+        ui->tb_Kill->setEnabled(m_hasKillButton && show);
     }
 
     bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
@@ -287,6 +287,11 @@ namespace BlackGui
         {
             Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type");
         }
+    }
+
+    void COverlayMessages::showKillButton(bool killButton)
+    {
+        this->m_hasKillButton = killButton;
     }
 
     void COverlayMessages::setModeToMessages(bool withKillButton)
