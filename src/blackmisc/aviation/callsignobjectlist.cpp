@@ -173,6 +173,24 @@ namespace BlackMisc
             return result;
         }
 
+        template<class OBJ, class CONTAINER>
+        int ICallsignObjectList<OBJ, CONTAINER>::replaceOrAddObjectsByCallsign(const CONTAINER &others)
+        {
+            if (others.isEmpty()) { return 0; }
+            int c = 0;
+            CONTAINER copy(this->container());
+            for (const OBJ &obj : others)
+            {
+                const CCallsign cs(obj.getCallsign());
+                if (cs.isEmpty()) continue;
+                copy.removeByCallsign(cs);
+                copy.push_back(obj);
+                c++;
+            }
+            *this = copy;
+            return c;
+        }
+
         template <class OBJ, class CONTAINER>
         void ICallsignObjectList<OBJ, CONTAINER>::sortByCallsign()
         {

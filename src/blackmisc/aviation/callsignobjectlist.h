@@ -87,6 +87,8 @@ namespace BlackMisc
             //! Split into 0..n containers as per callsign
             QHash<BlackMisc::Aviation::CCallsign, CONTAINER> splitPerCallsign() const;
 
+            //! Replace or add objects by callsign
+            int replaceOrAddObjectsByCallsign(const CONTAINER &others);
 
             //! Incremental update or add object
             int incrementalUpdateOrAdd(const OBJ &objectBeforeChanged, const BlackMisc::CPropertyIndexVariantMap &changedValues);
