@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_SIMULATEDAIRCRAFTLISTMODEL_H
-#define BLACKGUI_SIMULATEDAIRCRAFTLISTMODEL_H
+#ifndef BLACKGUI_MODELS_SIMULATEDAIRCRAFTLISTMODEL_H
+#define BLACKGUI_MODELS_SIMULATEDAIRCRAFTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/listmodelbase.h"
@@ -19,12 +19,10 @@
 class QObject;
 
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
-
 namespace BlackGui
 {
     namespace Models
     {
-
         //! Aircraft list model
         class BLACKGUI_EXPORT CSimulatedAircraftListModel :
             public CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>

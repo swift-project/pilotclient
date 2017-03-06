@@ -9,22 +9,10 @@
 
 //! \file
 
-#ifndef BLACKGUI_LISTMODELDBOBJECTS_H
-#define BLACKGUI_LISTMODELDBOBJECTS_H
+#ifndef BLACKGUI_MODELS_LISTMODELDBOBJECTS_H
+#define BLACKGUI_MODELS_LISTMODELDBOBJECTS_H
 
 #include "blackgui/models/listmodelbase.h"
-#include "blackmisc/aviation/aircrafticaocode.h"
-#include "blackmisc/aviation/aircrafticaocodelist.h"
-#include "blackmisc/aviation/airlineicaocode.h"
-#include "blackmisc/aviation/airlineicaocodelist.h"
-#include "blackmisc/aviation/livery.h"
-#include "blackmisc/aviation/liverylist.h"
-#include "blackmisc/country.h"
-#include "blackmisc/countrylist.h"
-#include "blackmisc/simulation/aircraftmodel.h"
-#include "blackmisc/simulation/aircraftmodellist.h"
-#include "blackmisc/simulation/distributor.h"
-#include "blackmisc/simulation/distributorlist.h"
 
 #include <QColor>
 #include <QList>
@@ -48,15 +36,15 @@ namespace BlackGui
             virtual ~CListModelDbObjects() {}
 
             //! Keys to be highlighted
-            void setHighlightDbKeys(const QList<KeyType> &keys) { m_highlightKeys = keys; }
+            void setHighlightedDbKeys(const QList<KeyType> &keys) { m_highlightKeys = keys; }
 
             //! Clear the highlighted keys
-            void clearHighlightingDbKeys() { m_highlightKeys.clear(); }
+            void clearHighlightedDbKeys() { m_highlightKeys.clear(); }
 
             //! \copydoc BlackGui::Models::CListModelBaseNonTemplate::clearHighlighting
             virtual void clearHighlighting() override
             {
-                this->clearHighlightingDbKeys();
+                this->clearHighlightedDbKeys();
                 CListModelBase<ObjectType, ContainerType, UseCompare>::clearHighlighting();
             }
 
@@ -70,7 +58,7 @@ namespace BlackGui
             KeyType dbKeyForIndex(const QModelIndex &index) const;
 
             //! Highlight index
-            bool isHighlightIndex(const QModelIndex &index) const;
+            bool isHighlightedIndex(const QModelIndex &index) const;
 
         protected:
             //! Constructor

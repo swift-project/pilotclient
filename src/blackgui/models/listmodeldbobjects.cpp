@@ -10,6 +10,18 @@
 #include "listmodeldbobjects.h"
 #include "allmodelcontainers.h"
 #include "blackmisc/db/datastoreobjectlist.h"
+#include "blackmisc/simulation/aircraftmodel.h"
+#include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/distributor.h"
+#include "blackmisc/simulation/distributorlist.h"
+#include "blackmisc/aviation/aircrafticaocode.h"
+#include "blackmisc/aviation/aircrafticaocodelist.h"
+#include "blackmisc/aviation/airlineicaocode.h"
+#include "blackmisc/aviation/airlineicaocodelist.h"
+#include "blackmisc/aviation/livery.h"
+#include "blackmisc/aviation/liverylist.h"
+#include "blackmisc/country.h"
+#include "blackmisc/countrylist.h"
 #include "blackmisc/orderable.h"
 
 #include <QBrush>
@@ -37,7 +49,7 @@ namespace BlackGui
         QVariant CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::data(const QModelIndex &index, int role) const
         {
             if (role != Qt::BackgroundRole) { return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role); }
-            if (isHighlightIndex(index)) { return QBrush(m_highlightColor); }
+            if (isHighlightedIndex(index)) { return QBrush(m_highlightColor); }
             return CListModelBase<ObjectType, ContainerType, UseCompare>::data(index, role);
         }
 
@@ -49,7 +61,7 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, typename KeyType, bool UseCompare>
-        bool CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::isHighlightIndex(const QModelIndex &index) const
+        bool CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::isHighlightedIndex(const QModelIndex &index) const
         {
             if (!index.isValid()) { return false; }
             if (m_highlightKeys.isEmpty()) { return false; }
@@ -97,8 +109,6 @@ namespace BlackGui
             return CListModelDbObjects<ObjectType, ContainerType, KeyType, UseCompare>::update(container, sort);
         }
 
-        // see here for the reason of thess forward instantiations
-        // https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
         template class CListModelDbObjects<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList, int, true>;
         template class CListModelDbObjects<BlackMisc::CCountry, BlackMisc::CCountryList, QString, true>;
         template class CListModelDbObjects<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, int, true>;

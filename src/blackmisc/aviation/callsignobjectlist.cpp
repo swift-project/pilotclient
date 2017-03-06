@@ -122,7 +122,7 @@ namespace BlackMisc
         template <class OBJ, class CONTAINER>
         int ICallsignObjectList<OBJ, CONTAINER>::removeByCallsigns(const CCallsignSet &callsigns)
         {
-            return this->container().removeIf([ & ](const OBJ &obj) { return callsigns.contains(obj.getCallsign()); });
+            return this->container().removeIf([ & ](const OBJ & obj) { return callsigns.contains(obj.getCallsign()); });
         }
 
         template <class OBJ, class CONTAINER>

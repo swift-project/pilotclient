@@ -94,6 +94,5 @@ namespace BlackGui
             if (aircraft.getCallsign().isEmpty()) { return; }
             emit requestHighlightInSimulator(aircraft);
         }
-
     } // ns
 } // ns

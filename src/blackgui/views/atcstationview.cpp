@@ -73,21 +73,21 @@ namespace BlackGui
 
         void CAtcStationView::ps_tuneInAtcCom1()
         {
-            CAtcStation s(this->selectedObject());
+            const CAtcStation s(this->selectedObject());
             if (s.getCallsign().isEmpty()) { return; }
             emit this->requestComFrequency(s.getFrequency(), CComSystem::Com1);
         }
 
         void CAtcStationView::ps_tuneInAtcCom2()
         {
-            CAtcStation s(this->selectedObject());
+            const CAtcStation s(this->selectedObject());
             if (s.getCallsign().isEmpty()) { return; }
             emit this->requestComFrequency(s.getFrequency(), CComSystem::Com2);
         }
 
         void CAtcStationView::ps_requestTextMessage()
         {
-            CAtcStation s(this->selectedObject());
+            const CAtcStation s(this->selectedObject());
             if (s.getCallsign().isEmpty()) { return; }
             emit this->requestTextMessageWidget(s.getCallsign());
         }

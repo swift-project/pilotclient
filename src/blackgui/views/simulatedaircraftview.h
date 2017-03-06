@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_SIMULATEDAIRCRAFTVIEW_H
-#define BLACKGUI_SIMULATEDAIRCRAFTVIEW_H
+#ifndef BLACKGUI_VIEWS_SIMULATEDAIRCRAFTVIEW_H
+#define BLACKGUI_VIEWS_SIMULATEDAIRCRAFTVIEW_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/simulatedaircraftlistmodel.h"

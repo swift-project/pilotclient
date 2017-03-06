@@ -27,11 +27,9 @@ class QAction;
 class QWidget;
 
 namespace BlackMisc { namespace Aviation { class CCallsign; } }
-
 namespace BlackGui
 {
     namespace Menus { class CMenuActions; }
-
     namespace Views
     {
         //! ATC stations view

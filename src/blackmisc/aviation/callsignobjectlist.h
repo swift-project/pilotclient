@@ -48,7 +48,6 @@ namespace BlackMisc
         class ICallsignObjectList
         {
         public:
-
             //! Contains callsign?
             bool containsCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
 
@@ -88,11 +87,12 @@ namespace BlackMisc
             //! Split into 0..n containers as per callsign
             QHash<BlackMisc::Aviation::CCallsign, CONTAINER> splitPerCallsign() const;
 
-            //! Sort by callsign
-            void sortByCallsign();
 
             //! Incremental update or add object
             int incrementalUpdateOrAdd(const OBJ &objectBeforeChanged, const BlackMisc::CPropertyIndexVariantMap &changedValues);
+
+            //! Sort by callsign
+            void sortByCallsign();
 
         protected:
             //! Constructor
