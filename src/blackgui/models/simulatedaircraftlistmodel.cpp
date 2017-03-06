@@ -32,7 +32,7 @@ namespace BlackGui
 {
     namespace Models
     {
-        CSimulatedAircraftListModel::CSimulatedAircraftListModel(QObject *parent) : CListModelBase("ModelSimulatedAircraftList", parent)
+        CSimulatedAircraftListModel::CSimulatedAircraftListModel(QObject *parent) : CListModelCallsignObjects("ModelSimulatedAircraftList", parent)
         {
             this->setAircraftMode(NetworkMode);
 

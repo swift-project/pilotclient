@@ -13,7 +13,7 @@
 #define BLACKGUI_MODELS_ATCLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/models/listmodelbase.h"
+#include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackmisc/aviation/atcstation.h"
 #include "blackmisc/aviation/atcstationlist.h"
 
@@ -26,7 +26,7 @@ namespace BlackGui
     namespace Models
     {
         //! ATC list model
-        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>
+        class BLACKGUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList, true>
         {
         public:
             //! What kind of stations

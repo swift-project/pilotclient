@@ -13,7 +13,7 @@
 #define BLACKGUI_MODELS_SIMULATEDAIRCRAFTLISTMODEL_H
 
 #include "blackgui/blackguiexport.h"
-#include "blackgui/models/listmodelbase.h"
+#include "blackgui/models/listmodelcallsignobjects.h"
 #include "blackmisc/simulation/simulatedaircraftlist.h"
 
 class QObject;
@@ -25,7 +25,7 @@ namespace BlackGui
     {
         //! Aircraft list model
         class BLACKGUI_EXPORT CSimulatedAircraftListModel :
-            public CListModelBase<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>
+            public CListModelCallsignObjects<BlackMisc::Simulation::CSimulatedAircraft, BlackMisc::Simulation::CSimulatedAircraftList, true>
         {
         public:
             //! Model modes
