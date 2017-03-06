@@ -105,7 +105,7 @@ namespace BlackGui
         {
             if (status > 0 && (status & ISimulator::Connected))
             {
-                QString s(
+                const QString s(
                     sGui->getIContextSimulator()->getSimulatorPluginInfo().getDescription() + ": " +
                     ISimulator::statusToString(status));
 
@@ -131,6 +131,9 @@ namespace BlackGui
             {
                 ui->led_Simulator->setOn(false);
             }
+
+            // simulator status has impact on model set available
+            this->ps_onMapperReady();
         }
 
         void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to)
@@ -195,14 +198,14 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::ps_onMapperReady()
         {
-            if (!sGui->getIContextSimulator())
+            if (!sGui || !sGui->getIContextSimulator())
             {
                 ui->led_MapperReady->setOn(false);
                 return;
             }
 
-            int models = sGui->getIContextSimulator()->getModelSetCount();
-            bool on = (models > 0);
+            const int models = sGui->getIContextSimulator()->getModelSetCount();
+            const bool on = (models > 0);
             ui->led_MapperReady->setOn(on);
             if (on)
             {

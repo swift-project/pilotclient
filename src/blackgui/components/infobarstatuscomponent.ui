@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>184</width>
+    <width>191</width>
     <height>20</height>
    </rect>
   </property>
@@ -18,19 +18,6 @@
   </property>
   <property name="windowTitle">
    <string>Info status bar</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="../../blackmisc/blackmisc.qrc">
-    <normaloff>:/own/icons/own/swift/swift24.png</normaloff>:/own/icons/own/swift/swift24.png</iconset>
-  </property>
-  <property name="frameShape">
-   <enum>QFrame::NoFrame</enum>
-  </property>
-  <property name="frameShadow">
-   <enum>QFrame::Plain</enum>
-  </property>
-  <property name="lineWidth">
-   <number>0</number>
   </property>
   <layout class="QHBoxLayout" name="hl_InfoBarStatus">
    <property name="spacing">
@@ -50,12 +37,6 @@
    </property>
    <item>
     <widget class="QLabel" name="lbl_Network">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="toolTip">
       <string>Network</string>
      </property>
@@ -82,7 +63,7 @@
       <string>sim</string>
      </property>
      <property name="indent">
-      <number>6</number>
+      <number>4</number>
      </property>
     </widget>
    </item>
@@ -105,7 +86,7 @@
       <string>map</string>
      </property>
      <property name="indent">
-      <number>6</number>
+      <number>4</number>
      </property>
     </widget>
    </item>
@@ -121,10 +102,10 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>DB</string>
+      <string>DBus</string>
      </property>
      <property name="indent">
-      <number>6</number>
+      <number>4</number>
      </property>
     </widget>
    </item>
@@ -153,7 +134,7 @@
       <string>ptt</string>
      </property>
      <property name="indent">
-      <number>6</number>
+      <number>4</number>
      </property>
     </widget>
    </item>
@@ -165,14 +146,11 @@
      <property name="toolTip">
       <string>Audio</string>
      </property>
-     <property name="lineWidth">
-      <number>0</number>
-     </property>
      <property name="text">
-      <string>au.</string>
+      <string>au</string>
      </property>
      <property name="indent">
-      <number>6</number>
+      <number>4</number>
      </property>
     </widget>
    </item>
@@ -189,8 +167,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../blackmisc/blackmisc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
