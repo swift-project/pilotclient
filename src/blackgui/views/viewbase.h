@@ -549,7 +549,7 @@ namespace BlackGui
             const ContainerType &container() const;
 
             //! \copydoc BlackGui::Models::CListModelBase::containerOrFilteredContainer
-            const ContainerType &containerOrFilteredContainer() const;
+            const ContainerType &containerOrFilteredContainer(bool *filtered = nullptr) const;
 
             //! \name Selection model interface
             //! @{

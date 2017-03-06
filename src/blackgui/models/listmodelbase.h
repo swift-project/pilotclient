@@ -205,7 +205,7 @@ namespace BlackGui
             const ContainerType &containerFiltered() const;
 
             //! Full container or cached filtered container as approproiate
-            const ContainerType &containerOrFilteredContainer() const;
+            const ContainerType &containerOrFilteredContainer(bool *filtered = nullptr) const;
 
             //! Simple set of data in container, using class is responsible for firing signals etc.
             //! \sa sendDataChanged

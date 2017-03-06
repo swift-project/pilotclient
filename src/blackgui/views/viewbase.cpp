@@ -936,10 +936,10 @@ namespace BlackGui
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>
-        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::containerOrFilteredContainer() const
+        const ContainerType &CViewBase<ModelClass, ContainerType, ObjectType>::containerOrFilteredContainer(bool *filtered) const
         {
             Q_ASSERT(this->m_model);
-            return this->m_model->containerOrFilteredContainer();
+            return this->m_model->containerOrFilteredContainer(filtered);
         }
 
         template <class ModelClass, class ContainerType, class ObjectType>

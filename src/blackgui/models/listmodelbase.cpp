@@ -519,14 +519,16 @@ namespace BlackGui
         }
 
         template <typename ObjectType, typename ContainerType, bool UseCompare>
-        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerOrFilteredContainer() const
+        const ContainerType &CListModelBase<ObjectType, ContainerType, UseCompare>::containerOrFilteredContainer(bool *filtered) const
         {
             if (this->hasFilter())
             {
+                if (filtered) { *filtered = true; }
                 return this->m_containerFiltered;
             }
             else
             {
+                if (filtered) { *filtered = false; }
                 return this->m_container;
             }
         }
