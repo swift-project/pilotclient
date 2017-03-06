@@ -136,9 +136,6 @@ namespace BlackGui
             void ps_connectionStatusChanged(BlackCore::INetwork::ConnectionStatus from, BlackCore::INetwork::ConnectionStatus to);
 
         private:
-            //! Token bucket based update
-            void tokenBucketUpdate(bool markForUpdate);
-
             //! Identifier for data send from this component
             BlackMisc::CIdentifier mappingIdentifier();
 

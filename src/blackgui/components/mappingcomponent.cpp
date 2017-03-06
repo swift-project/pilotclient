@@ -100,9 +100,9 @@ namespace BlackGui
             ui->completer_ModelStrings->selectSource(CAircraftModelStringCompleter::ModelSet);
 
             // Updates
+            connect(&m_updateTimer, &QTimer::timeout, this, &CMappingComponent::ps_timerUpdate);
             ui->tvp_AircraftModels->setDisplayAutomatically(false);
             this->ps_settingsChanged();
-            connect(&m_updateTimer, &QTimer::timeout, this, &CMappingComponent::ps_timerUpdate);
 
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelSetChanged, this, &CMappingComponent::ps_onModelSetChanged);
             connect(sGui->getIContextSimulator(), &IContextSimulator::modelMatchingCompleted, this, &CMappingComponent::ps_tokenBucketUpdateAircraft);
@@ -358,7 +358,7 @@ namespace BlackGui
             Q_UNUSED(from);
             if (INetwork::isDisconnectedStatus(to))
             {
-                this->tokenBucketUpdate(true);
+                this->ps_tokenBucketUpdate();
                 ui->tvp_RenderedAircraft->clear();
             }
         }
@@ -381,7 +381,7 @@ namespace BlackGui
 
         void CMappingComponent::ps_addingRemoteAircraftFailed(const CSimulatedAircraft &aircraft, const CStatusMessage &message)
         {
-            this->tokenBucketUpdate(true);
+            this->ps_tokenBucketUpdate();
             Q_UNUSED(aircraft);
             Q_UNUSED(message);
         }
@@ -413,6 +413,7 @@ namespace BlackGui
             }
 
             m_missedRenderedAircraftUpdate = false;
+            m_updateTimer.start(); // restart
             if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
             {
                 const CSimulatedAircraftList aircraft(sGui->getIContextNetwork()->getAircraftInRange());
@@ -424,31 +425,22 @@ namespace BlackGui
             }
         }
 
+        void CMappingComponent::ps_timerUpdate()
+        {
+            // timer update to update position, speed ...
+            this->updateRenderedAircraftView(false); // unforced
+        }
+
         void CMappingComponent::ps_tokenBucketUpdateAircraft(const CSimulatedAircraft &aircraft)
         {
             Q_UNUSED(aircraft);
-            this->tokenBucketUpdate(true);
-        }
-
-        void CMappingComponent::ps_timerUpdate()
-        {
-            this->tokenBucketUpdate(false);
+            this->ps_tokenBucketUpdate();
         }
 
         void CMappingComponent::ps_tokenBucketUpdate()
         {
-            this->tokenBucketUpdate(true);
-        }
-
-        void CMappingComponent::tokenBucketUpdate(bool markForUpdate)
-        {
-            if (markForUpdate) { this->m_missedRenderedAircraftUpdate = true; }
-            if (!this->m_missedRenderedAircraftUpdate) { return; }
             if (!this->m_bucket.tryConsume()) { return; }
-
-            // update, normally when view is invisible,
-            // but we want an update from time to have some data when user switches to view
-            this->updateRenderedAircraftView(true);
+            this->updateRenderedAircraftView(true); // forced update
         }
 
         void CMappingComponent::ps_settingsChanged()
