@@ -73,7 +73,6 @@ namespace BlackGui
     bool CGuiUtility::isMainWindowFrameless()
     {
         CEnableForFramelessWindow *mw = mainFramelessEnabledApplicationWindow();
-        Q_ASSERT(mw); // there should be a main window
         return (mw && mw->isFrameless());
     }
 
