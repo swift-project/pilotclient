@@ -30,6 +30,12 @@ namespace BlackGui
 {
     namespace Menus
     {
+        const CLogCategoryList &IAircraftModelViewMenu::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::guiComponent() };
+            return cats;
+        }
+
         CAircraftModelView *IAircraftModelViewMenu::modelView() const
         {
             CAircraftModelView *mv = qobject_cast<CAircraftModelView *>(parent());
@@ -44,11 +50,11 @@ namespace BlackGui
             return mv->container();
         }
 
-        const CAircraftModelList &IAircraftModelViewMenu::getAllOrAllFilteredAircraftModels() const
+        const CAircraftModelList &IAircraftModelViewMenu::getAllOrAllFilteredAircraftModels(bool *filtered) const
         {
             const CAircraftModelView *mv = modelView();
             Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
-            return mv->containerOrFilteredContainer();
+            return mv->containerOrFilteredContainer(filtered);
         }
 
         CAircraftModelList IAircraftModelViewMenu::getSelectedAircraftModels() const
@@ -61,6 +67,12 @@ namespace BlackGui
         CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame, bool separator) :
             IAircraftModelViewMenu(modelView, separator), m_messageFrame(messageFrame)
         { }
+
+        const CLogCategoryList &CShowSimulatorFileMenu::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::guiComponent() };
+            return cats;
+        }
 
         void CShowSimulatorFileMenu::customMenu(CMenuActions &menuActions)
         {
@@ -130,6 +142,12 @@ namespace BlackGui
             }
         }
 
+        const CLogCategoryList &CConsolidateWithDbDataMenu::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
+            return cats;
+        }
+
         void CConsolidateWithDbDataMenu::customMenu(CMenuActions &menuActions)
         {
             const CAircraftModelView *mv = modelView();
@@ -155,38 +173,36 @@ namespace BlackGui
             const CAircraftModelList dbModels(sGui->getWebDataServices()->getModels());
             if (dbModels.isEmpty())
             {
-                CLogMessage().warning("No DB models to consolidate with");
+                CLogMessage(this).warning("No DB models to consolidate with");
                 return;
             }
             if (!this->modelsTargetSetable())
             {
-                CLogMessage().warning("No setable target");
+                CLogMessage(this).warning("No setable target");
                 return;
             }
 
             this->modelView()->showLoadIndicator();
-            CAircraftModelList models(this->getAllOrAllFilteredAircraftModels());
-            const int unfilteredSize = this->modelView()->rowCount();
-            const int modelSize = models.size();
-            const bool filtered = unfilteredSize > modelSize;
+            bool filtered = false;
+            CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
 
-            int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
+            const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
             if (c > 0 && this->modelsTargetSetable() && this->modelsTargetUpdatable())
             {
                 if (filtered)
                 {
                     this->modelsTargetUpdatable()->updateModels(models);
-                    CLogMessage().info("Consolidated filtered %1/%2 models with DB") << c << models.size();
+                    CLogMessage(this).info("Consolidated %1/%2 filtered models with DB") << c << models.size();
                 }
                 else
                 {
                     this->modelsTargetSetable()->setModels(models);
-                    CLogMessage().info("Consolidated %1/%2 models with DB") << c << models.size();
+                    CLogMessage(this).info("Consolidated %1/%2 models with DB") << c << models.size();
                 }
             }
             else
             {
-                CLogMessage().info("No data consolidated with DB");
+                CLogMessage(this).info("No data consolidated with DB");
                 this->modelView()->hideLoadIndicator();
             }
         }
@@ -200,7 +216,7 @@ namespace BlackGui
             if (models.isEmpty()) { return; }
             if (!this->modelsTargetUpdatable())
             {
-                CLogMessage().warning("No updatable target");
+                CLogMessage(this).warning("No updatable target");
                 return;
             }
             int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
