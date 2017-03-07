@@ -100,8 +100,9 @@ namespace BlackGui
         //! Init the inner frame (if not yet initialized)
         void initInnerFrame();
 
-        double m_widthFactor = 0.7; //!< inner frame x factor
-        double m_heightFactor = 0.6; //!< inner frame x factor
+        bool m_showKillButton = false; //!< show kill button
+        double m_widthFactor  = 0.7;   //!< inner frame x factor
+        double m_heightFactor = 0.6;   //!< inner frame x factor
     };
 } // ns
 

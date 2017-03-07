@@ -134,9 +134,6 @@ namespace BlackGui
             // vPilot
             this->initVPilotLoading();
 
-            // overlay
-            this->showKillButton(false);
-
             // user changes
             m_swiftDbUser.setNotifySlot(&CDbMappingComponent::ps_userChanged);
         }

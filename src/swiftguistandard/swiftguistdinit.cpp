@@ -145,6 +145,9 @@ void SwiftGuiStd::init()
     ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(sGui->swiftVersionString());
     ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CBuildConfig::compiledWithInfo());
 
+    // Show kill button
+    ui->fr_CentralFrameInside->showKillButton(true);
+
     // do this as last statement, so it can be used as flag
     // whether init has been completed
     this->setVisible(true);

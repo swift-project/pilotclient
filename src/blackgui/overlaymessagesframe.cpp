@@ -35,6 +35,7 @@ namespace BlackGui
 
     void COverlayMessagesFrame::showKillButton(bool killButton)
     {
+        m_showKillButton = killButton;
         if (m_overlayMessages)
         {
             m_overlayMessages->showKillButton(killButton);
@@ -123,6 +124,7 @@ namespace BlackGui
         {
             this->m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
             this->m_overlayMessages->addShadow();
+            this->m_overlayMessages->showKillButton(m_showKillButton);
         }
 
         Q_ASSERT(this->m_overlayMessages);
