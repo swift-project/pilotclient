@@ -83,9 +83,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneConfigWindow::ps_installXBus()
         {
-            QString xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplane10Dir();
-            if (xPlaneLocation.isEmpty())
-                xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplane9Dir();
+            QString xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplaneRootDir();
 
             QString path = QFileDialog::getExistingDirectory(parentWidget(),
                            tr("Choose your X-Plane install directory"),

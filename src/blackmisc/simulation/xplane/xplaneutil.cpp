@@ -140,17 +140,9 @@ namespace BlackMisc
                         return xbusLegacy;
                     }
                 }
-                if (!xplane10Dir().isEmpty())
-                {
-                    QString xbusLegacy = xplane10Dir() + legacyPath;
-                    if (QDir(xbusLegacy).exists())
-                    {
-                        return xbusLegacy;
-                    }
-                }
-                if (!xplane9Dir().isEmpty())
-                {
-                    QString xbusLegacy = xplane9Dir() + legacyPath;
+
+                for (auto func: {&CXPlaneUtil::xplane11Dir, &CXPlaneUtil::xplane10Dir, &CXPlaneUtil::xplane9Dir}) {
+                    QString xbusLegacy = func() + legacyPath;
                     if (QDir(xbusLegacy).exists())
                     {
                         return xbusLegacy;
