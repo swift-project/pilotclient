@@ -50,6 +50,10 @@ namespace BlackMisc
 
                 //! XBus legacy directory
                 static QString xbusLegacyDir(const QString &rootDir);
+
+            private:
+                //! Concatenates dirs for used OS
+                static QString xplaneDir(const QString &xplaneInstallFile);
             };
         } // namespace
     } // namespace

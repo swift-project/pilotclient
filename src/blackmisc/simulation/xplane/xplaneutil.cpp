@@ -8,8 +8,8 @@
  */
 
 #include "blackmisc/simulation/xplane/xplaneutil.h"
+#include "blackmisc/fileutils.h"
 #include "qsystemdetection.h"
-
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -28,11 +28,10 @@ namespace BlackMisc
     {
         namespace XPlane
         {
-
             // Returns the last path from filePath, which does exist on the file system
             QString getLastExistingPathFromFile(const QString &filePath)
             {
-                QFileInfo fileInfo(filePath);
+                const QFileInfo fileInfo(filePath);
                 if (!fileInfo.exists()) { return {}; }
                 QFile file(fileInfo.absoluteFilePath());
                 if (!file.open(QIODevice::ReadOnly))
@@ -69,44 +68,36 @@ namespace BlackMisc
 
             QString CXPlaneUtil::xplane9Dir()
             {
-                QString xplaneInstallFilePath;
-                QString xplaneInstallFile = QStringLiteral("/x-plane_install.txt");
-#if defined(Q_OS_WIN)
-                xplaneInstallFilePath = getWindowsLocalAppDataPath() + xplaneInstallFile;
-#elif defined (Q_OS_LINUX)
-                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/.x-plane") + xplaneInstallFile;
-#elif defined (Q_OS_OSX)
-                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/Library/Preferences") + xplaneInstallFile;
-#endif
+                static const QString xplaneInstallFile("x-plane_install.txt");
+                const QString xplaneInstallFilePath = xplaneDir(xplaneInstallFile);
                 return getLastExistingPathFromFile(xplaneInstallFilePath);
             }
 
             QString CXPlaneUtil::xplane10Dir()
             {
-                QString xplaneInstallFilePath;
-                QString xplaneInstallFile = QStringLiteral("/x-plane_install_10.txt");
-#if defined(Q_OS_WIN)
-                xplaneInstallFilePath = getWindowsLocalAppDataPath() + xplaneInstallFile;
-#elif defined (Q_OS_LINUX)
-                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/.x-plane") + xplaneInstallFile;
-#elif defined (Q_OS_OSX)
-                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/Library/Preferences") + xplaneInstallFile;
-#endif
+                static const QString xplaneInstallFile("x-plane_install_10.txt");
+                const QString xplaneInstallFilePath = xplaneDir(xplaneInstallFile);
                 return getLastExistingPathFromFile(xplaneInstallFilePath);
             }
 
             QString CXPlaneUtil::xplane11Dir()
             {
-                QString xplaneInstallFilePath;
-                QString xplaneInstallFile = QStringLiteral("/x-plane_install_11.txt");
-#if defined(Q_OS_WIN)
-                xplaneInstallFilePath = getWindowsLocalAppDataPath() + xplaneInstallFile;
-#elif defined (Q_OS_LINUX)
-                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/.x-plane") + xplaneInstallFile;
-#elif defined (Q_OS_OSX)
-                xplaneInstallFilePath = QDir::homePath() + QStringLiteral("/Library/Preferences") + xplaneInstallFile;
-#endif
+                static const QString xplaneInstallFile("x-plane_install_11.txt");
+                const QString xplaneInstallFilePath = xplaneDir(xplaneInstallFile);
                 return getLastExistingPathFromFile(xplaneInstallFilePath);
+            }
+
+            QString CXPlaneUtil::xplaneDir(const QString &xplaneInstallFile)
+            {
+#if defined(Q_OS_WIN)
+                return CFileUtils::appendFilePaths(getWindowsLocalAppDataPath(), xplaneInstallFile);
+#elif defined (Q_OS_LINUX)
+                static const QString xp(".x-plane");
+                return CFileUtils::appendFilePaths(QDir::homePath(), xp, xplaneInstallFile);
+#elif defined (Q_OS_OSX)
+                static const QString lib("Library/Preferences");
+                return CFileUtils::appendFilePaths(QDir::homePath(), lib, xplaneInstallFile);
+#endif
             }
 
             QString CXPlaneUtil::xplaneRootDir()
@@ -130,19 +121,20 @@ namespace BlackMisc
 
             QString CXPlaneUtil::xbusLegacyDir(const QString &rootDir)
             {
-                QString legacyPath("/Resources/plugins/xbus/LegacyData");
+                static const QString legacyPath("/Resources/plugins/xbus/LegacyData");
                 // Return the first non empty path, we can find.
                 if (!rootDir.isEmpty())
                 {
-                    QString xbusLegacy = rootDir + legacyPath;
+                    const QString xbusLegacy = CFileUtils::appendFilePaths(rootDir, legacyPath);
                     if (QDir(xbusLegacy).exists())
                     {
                         return xbusLegacy;
                     }
                 }
 
-                for (auto func: {&CXPlaneUtil::xplane11Dir, &CXPlaneUtil::xplane10Dir, &CXPlaneUtil::xplane9Dir}) {
-                    QString xbusLegacy = func() + legacyPath;
+                for (auto func : {&CXPlaneUtil::xplane11Dir, &CXPlaneUtil::xplane10Dir, &CXPlaneUtil::xplane9Dir})
+                {
+                    const QString xbusLegacy = CFileUtils::appendFilePaths(func(), legacyPath);
                     if (QDir(xbusLegacy).exists())
                     {
                         return xbusLegacy;
