@@ -282,6 +282,10 @@ QGroupBox {
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
+QGroupBox::disabled {
+  background: rgba(4, 105, 105, 105);
+}
+
 QGroupBox::title {
   top: 2px;
   left: 5px;

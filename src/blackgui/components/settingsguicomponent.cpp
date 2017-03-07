@@ -27,6 +27,7 @@ namespace BlackGui
     {
         CSettingsGuiComponent::CSettingsGuiComponent(QWidget *parent) :
             QFrame(parent),
+            BlackGui::CSingleApplicationUi(this),
             ui(new Ui::CSettingsGuiComponent)
         {
             ui->setupUi(this);

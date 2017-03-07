@@ -12,6 +12,7 @@
 #ifndef BLACKGUI_COMPONENTS_SETTINGSGUICOMPONENT_H
 #define BLACKGUI_COMPONENTS_SETTINGSGUICOMPONENT_H
 
+#include "blackgui/singleapplicationui.h"
 #include "blackgui/settings/guisettings.h"
 #include <QFrame>
 #include <QScopedPointer>
@@ -24,7 +25,8 @@ namespace BlackGui
         /*!
          * General GUI settings
          */
-        class CSettingsGuiComponent : public QFrame
+        class CSettingsGuiComponent :
+            public QFrame, BlackGui::CSingleApplicationUi
         {
             Q_OBJECT
 
