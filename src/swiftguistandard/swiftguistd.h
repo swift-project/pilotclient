@@ -182,7 +182,7 @@ private slots:
     bool ps_reloadOwnAircraft();
 
     //! Display status message
-    void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &);
+    void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &statusMessage);
 
     //! Connection status changed
     //! \param from  old status, as int so it is compliant with DBus

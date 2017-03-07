@@ -163,7 +163,7 @@ QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
 
 QAction *SwiftGuiStd::getWindowNormalAction(QObject *parent)
 {
-    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarNormalButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarNormalButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Window normal", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_showNormal);
     return a;
@@ -171,7 +171,7 @@ QAction *SwiftGuiStd::getWindowNormalAction(QObject *parent)
 
 QAction *SwiftGuiStd::getToggleWindowVisibilityAction(QObject *parent)
 {
-    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarShadeButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarShadeButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Toogle main window visibility", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_toggleWindowVisibility);
     return a;
@@ -179,7 +179,7 @@ QAction *SwiftGuiStd::getToggleWindowVisibilityAction(QObject *parent)
 
 QAction *SwiftGuiStd::getToggleStayOnTopAction(QObject *parent)
 {
-    QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton), Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Toogle main window on top", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::ps_toogleWindowStayOnTop);
     return a;
@@ -290,9 +290,9 @@ void SwiftGuiStd::setContextAvailability()
 {
     const bool corePreviouslyAvailable = this->m_coreAvailable;
     if (sGui &&
-            !sGui->isShuttingDown() &&
             sGui->getIContextApplication() &&
-            sGui->getIContextApplication()->isUsingImplementingObject())
+            !sGui->isShuttingDown() &&
+            !sGui->getIContextApplication()->isEmptyObject())
     {
         // ping to check if core is still alive
         this->m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(getCurrentTimestampIdentifier()));
@@ -302,8 +302,8 @@ void SwiftGuiStd::setContextAvailability()
         this->m_coreAvailable = false;
     }
 
-    this->m_contextNetworkAvailable = this->m_coreAvailable && sGui->getIContextNetwork() && sGui->getIContextNetwork()->isUsingImplementingObject();
-    this->m_contextAudioAvailable = this->m_coreAvailable && sGui->getIContextAudio() && sGui->getIContextAudio()->isUsingImplementingObject();
+    this->m_contextNetworkAvailable = this->m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
+    this->m_contextAudioAvailable = this->m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
 
     // react to a change in core's availability
     if (this->m_coreAvailable != corePreviouslyAvailable)
