@@ -62,7 +62,7 @@ namespace BlackGui
 
             connect(ui->pb_Unstash, &QPushButton::pressed, this, &CDbStashComponent::ps_onUnstashPressed);
             connect(ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::ps_onValidatePressed);
-            connect(ui->pb_RemoveInvald, &QPushButton::pressed, this, &CDbStashComponent::ps_onRemoveInvalidPressed);
+            connect(ui->pb_RemoveInvalid, &QPushButton::pressed, this, &CDbStashComponent::ps_onRemoveInvalidPressed);
             connect(ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::ps_onPublishPressed);
             connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
             connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::ps_onRowCountChanged);
@@ -359,13 +359,15 @@ namespace BlackGui
 
         void CDbStashComponent::enableButtonRow()
         {
-            bool e = !ui->tvp_StashAircraftModels->isEmpty();
+            const bool e = !ui->tvp_StashAircraftModels->isEmpty();
             ui->pb_AircraftIcao->setEnabled(e);
             ui->pb_AirlineIcao->setEnabled(e);
             ui->pb_Distributor->setEnabled(e);
             ui->pb_Livery->setEnabled(e);
             ui->pb_Unstash->setEnabled(e);
             ui->pb_Validate->setEnabled(e);
+            ui->pb_RemoveInvalid->setEnabled(e);
+            ui->pb_Model->setEnabled(e);
             this->ps_userChanged();
         }
 
@@ -377,7 +379,7 @@ namespace BlackGui
 
         CAircraftModelList CDbStashComponent::getSelectedOrAllModels() const
         {
-            bool selectedOnly = ui->cb_SelectedOnly->isChecked();
+            const bool selectedOnly = ui->cb_SelectedOnly->isChecked();
             const CAircraftModelList models(selectedOnly ? ui->tvp_StashAircraftModels->selectedObjects() : ui->tvp_StashAircraftModels->containerOrFilteredContainer());
             return models;
         }
@@ -406,7 +408,7 @@ namespace BlackGui
         CAircraftModel CDbStashComponent::consolidateModel(const CAircraftModel &model) const
         {
             CAircraftModel stashModel(model);
-            bool ownModel = stashModel.getModelType() == CAircraftModel::TypeOwnSimulatorModel;
+            const bool ownModel = stashModel.getModelType() == CAircraftModel::TypeOwnSimulatorModel;
 
             // merge with DB data if any
             if (!stashModel.hasValidDbKey())

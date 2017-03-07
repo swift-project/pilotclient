@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>773</width>
+    <width>859</width>
     <height>221</height>
    </rect>
   </property>
@@ -91,7 +91,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pb_RemoveInvald">
+       <widget class="QPushButton" name="pb_RemoveInvalid">
         <property name="toolTip">
          <string>Remove invalid models</string>
         </property>
@@ -175,7 +175,7 @@
   <tabstop>tvp_StashAircraftModels</tabstop>
   <tabstop>pb_Unstash</tabstop>
   <tabstop>pb_Validate</tabstop>
-  <tabstop>pb_RemoveInvald</tabstop>
+  <tabstop>pb_RemoveInvalid</tabstop>
   <tabstop>pb_Publish</tabstop>
   <tabstop>cb_SelectedOnly</tabstop>
   <tabstop>pb_Model</tabstop>
