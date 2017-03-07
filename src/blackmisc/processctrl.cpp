@@ -23,33 +23,36 @@ namespace BlackMisc
     { }
 
     #ifdef Q_OS_WIN
-    bool CProcessCtrl::startDetachedWithoutConsole(const QString &program, const QStringList &arguments)
+    bool startDetachedWithConsoleWindow(const QString &program, const QStringList &arguments)
     {
+        bool inherit = false;
+
         PROCESS_INFORMATION processInfo;
-        STARTUPINFOW startupInfo;
-        bool inherit = true;
-        DWORD flags = 0;
+        memset (&processInfo, 0, sizeof (processInfo));
+
+        STARTUPINFO startupInfo;
+        memset (&startupInfo, 0, sizeof (startupInfo));
+        startupInfo.cb = sizeof (startupInfo);
 
         QString command;
         command += program;
         command += ' ';
         command += arguments.join(' ').replace('/', '\\');
 
-        memset (&processInfo, 0, sizeof (processInfo));
-        memset (&startupInfo, 0, sizeof (startupInfo));
-        startupInfo.cb = sizeof (startupInfo);
-
+        DWORD flags = 0;
         flags |= NORMAL_PRIORITY_CLASS;
-        flags |= DETACHED_PROCESS;
+        flags |= CREATE_UNICODE_ENVIRONMENT;
+        flags |= CREATE_NEW_CONSOLE;
 
         Q_ASSERT(command.length() <= MAX_PATH);
         std::array<WCHAR, MAX_PATH> wszCommandLine = {{}};
         command.toWCharArray(wszCommandLine.data());
+
         int result = CreateProcess (nullptr, wszCommandLine.data(), 0, 0, inherit, flags, nullptr, nullptr, &startupInfo, &processInfo);
 
         if (result == 0)
         {
-            CLogMessage(static_cast<CProcessCtrl*>(nullptr)).warning("Failed to manually launch %1: %2") << program << GetLastError();
+            CLogMessage(static_cast<CProcessCtrl*>(nullptr)).warning("Failed to start %1: %2") << program << GetLastError();
             return false;
         }
 
@@ -58,11 +61,17 @@ namespace BlackMisc
         return true;
     }
     #else
-    bool CProcessCtrl::startDetachedWithoutConsole(const QString &program, const QStringList &arguments)
+    bool startDetachedWithConsoleWindow(const QString &program, const QStringList &arguments)
     {
+        //! \fixme Handle Linux and OS X here
         return QProcess::startDetached(program, arguments);
     }
     #endif
 
+    bool CProcessCtrl::startDetached(const QString &program, const QStringList &arguments, bool withConsoleWindow)
+    {
+        if (withConsoleWindow) { return startDetachedWithConsoleWindow(program, arguments); }
+        else { return QProcess::startDetached(program, arguments); }
+    }
 
 } // ns

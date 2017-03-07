@@ -30,7 +30,7 @@ namespace BlackMisc
         CProcessCtrl(QObject *parent = nullptr);
 
         //! Start a programm detached and without any console window
-        static bool startDetachedWithoutConsole(const QString &program, const QStringList &arguments);
+        static bool startDetached(const QString &program, const QStringList &arguments, bool withConsoleWindow);
     };
 } // ns
 
