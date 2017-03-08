@@ -43,13 +43,16 @@ namespace BlackGui
             void setSettingsMode();
 
             //! Selected files are copied
-            void copySelectedFiles();
+            int copySelectedFiles();
 
             //! Preselect newer files
             void preselectMissingOurOutdated();
 
             //! Init file content
             void initCurrentDirectories();
+
+            //! Init and preselect directories
+            void initAndPreselectDirectories();
 
             //! Are there other versions to copy from
             bool hasOtherVersionData() const;

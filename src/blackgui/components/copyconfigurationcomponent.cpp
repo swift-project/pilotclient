@@ -34,9 +34,6 @@ namespace BlackGui
             ui->cb_OtherVersions->addItems(CDirectoryUtils::swiftApplicationDataDirectoryList(true, true));
             m_otherVersionDirs = CDirectoryUtils::swiftApplicationDataDirectoryList(true, false); // not beautified
 
-            this->initCurrentDirectories();
-            this->preselectMissingOurOutdated();
-
             connect(ui->rb_Cache, &QRadioButton::toggled, this, &CCopyConfigurationComponent::initCurrentDirectories);
             connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, this, &CCopyConfigurationComponent::initCurrentDirectories);
             connect(ui->pb_SelectAll, &QPushButton::clicked, ui->tv_Source, &QTreeView::selectAll);
@@ -57,10 +54,25 @@ namespace BlackGui
             ui->rb_Settings->setChecked(true);
         }
 
-        void CCopyConfigurationComponent::copySelectedFiles()
+        int CCopyConfigurationComponent::copySelectedFiles()
         {
             const QStringList files = this->getSelectedFiles();
-            if (files.isEmpty()) { return; }
+            if (files.isEmpty()) { return 0; }
+
+            const QString destinationDir = this->getThisVersionDirectory();
+            if (destinationDir.isEmpty()) { return 0; }
+            const QDir d(destinationDir);
+            if (!d.exists()) { return 0; }
+
+            int c = 0;
+            for (const QString &file : files)
+            {
+                const QFileInfo fileInfo(file);
+                const QString target = CFileUtils::appendFilePaths(destinationDir, fileInfo.fileName());
+                const bool s = QFile::copy(file, target);
+                if (s) { c++; }
+            }
+            return c;
         }
 
         void CCopyConfigurationComponent::preselectMissingOurOutdated()
@@ -72,16 +84,16 @@ namespace BlackGui
             ui->tv_Destination->clearSelection();
 
             const CDirectoryUtils::DirComparison comp = CDirectoryUtils::compareTwoDirectories(dirOther, dirCurrent);
-            const QFileSystemModel *model = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
-            if (!model) { return; }
+            const QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
+            if (!sourceModel) { return; }
 
             QStringList select = comp.missingInTarget.toList();
             select.append(comp.newerInSource.toList());
             for (const QString &file : as_const(comp.missingInTarget))
             {
-                const QModelIndex index = model->index(file);
+                const QModelIndex index = sourceModel->index(file);
                 if (!index.isValid()) continue;
-                ui->tv_Destination->setCurrentIndex(index);
+                ui->tv_Source->setCurrentIndex(index);
             }
         }
 
@@ -96,8 +108,8 @@ namespace BlackGui
             if (!sourceModel)
             {
                 sourceModel = new QFileSystemModel(this);
+                sourceModel->setNameFilterDisables(true); // hide/disable only
                 sourceModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
-                sourceModel->setNameFilterDisables(false);
                 sourceModel->setNameFilters(QStringList("*.json"));
                 ui->tv_Source->setModel(sourceModel);
                 connect(sourceModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
@@ -107,20 +119,18 @@ namespace BlackGui
                 });
             }
 
-            if (!dir.isEmpty())
-            {
-                const QModelIndex sourceIndex = sourceModel->setRootPath(dir);
-                ui->tv_Source->setRootIndex(sourceIndex);
-                ui->tv_Source->setSortingEnabled(true);
-            }
+            const QModelIndex sourceIndex = sourceModel->setRootPath(dir);
+            ui->tv_Source->setRootIndex(sourceIndex);
+            ui->tv_Source->setSortingEnabled(true); // hide/disable only
+            ui->tv_Source->resizeColumnToContents(0);
 
             // destination
             QFileSystemModel *destinationModel = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
             if (!destinationModel)
             {
                 destinationModel = new QFileSystemModel(this);
+                destinationModel->setNameFilterDisables(true);
                 destinationModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
-                destinationModel->setNameFilterDisables(false);
                 destinationModel->setNameFilters(QStringList("*.json"));
                 ui->tv_Destination->setModel(destinationModel);
                 connect(destinationModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
@@ -134,6 +144,12 @@ namespace BlackGui
             ui->tv_Destination->setRootIndex(destinationIndex);
             ui->tv_Destination->setSortingEnabled(true);
             ui->tv_Destination->resizeColumnToContents(0);
+        }
+
+        void CCopyConfigurationComponent::initAndPreselectDirectories()
+        {
+            this->initCurrentDirectories();
+            this->preselectMissingOurOutdated();
         }
 
         bool CCopyConfigurationComponent::hasOtherVersionData() const
