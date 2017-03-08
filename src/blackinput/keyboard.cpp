@@ -21,7 +21,6 @@
 
 namespace BlackInput
 {
-
     IKeyboard::IKeyboard(QObject *parent) : QObject(parent) {}
 
     std::unique_ptr<IKeyboard> IKeyboard::create(QObject *parent)
@@ -37,4 +36,4 @@ namespace BlackInput
         return ptr;
     }
 
-} // BlackInput
+} // ns

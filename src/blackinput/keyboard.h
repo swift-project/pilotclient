@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKINPUT_KEYBOARD_H
 #define BLACKINPUT_KEYBOARD_H
