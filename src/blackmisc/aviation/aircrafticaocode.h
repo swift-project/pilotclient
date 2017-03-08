@@ -251,7 +251,7 @@ namespace BlackMisc
             //! As a brief HTML summary (e.g. used in tooltips)
             QString asHtmlSummary() const;
 
-            //! Considers rank, manufacturer and family 0..90
+            //! Considers rank, manufacturer and family 0..100
             //! \remark normally used with a selected set of ICAO codes or combined types
             int calculateScore(const CAircraftIcaoCode &otherCode) const;
 

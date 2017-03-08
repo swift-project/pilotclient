@@ -24,6 +24,7 @@
 #include <QList>
 #include <QStringList>
 #include <QtGlobal>
+#include <QStringBuilder>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
@@ -239,8 +240,7 @@ namespace BlackCore
             CMatchingUtils::addLogDetailsToList(log, callsign, QString("Using model: ICAO '%1', livery '%2', model '%3', type '%4'").
                                                 arg(model.getAircraftIcaoCode().getCombinedIcaoStringWithKey(),
                                                     model.getLivery().getCombinedCodePlusInfo(),
-                                                    model.getModelString(), model.getModelTypeAsString())
-                                               );
+                                                    model.getModelString(), model.getModelTypeAsString()));
         }
         return model;
     }
@@ -852,16 +852,16 @@ namespace BlackCore
             {
                 str += '\n';
             }
-            str += QString::number(c);
-            str += ": score: ";
-            str += QString::number(i.key());
-            str += " model: '";
-            str += m.getModelString();
-            str += "' aircraft: '";
-            str += m.getAircraftIcaoCodeDesignator();
-            str += "' livery: '";
-            str += m.getLivery().getCombinedCodePlusInfo();
-            str += "'";
+            str += QString::number(c) %
+                   QLatin1String(": score: ") %
+                   QString::number(i.key()) %
+                   QLatin1String(" model: '") %
+                   m.getModelString() %
+                   QLatin1String("' aircraft: '") %
+                   m.getAircraftIcaoCodeDesignator() %
+                   QLatin1String("' livery: '") %
+                   m.getLivery().getCombinedCodePlusInfo() %
+                   QLatin1Char('\'');
         }
         return str;
     }

@@ -126,7 +126,7 @@ namespace BlackMisc
 
         QString CAircraftModel::asHtmlSummary(const QString &separator) const
         {
-            const QString html = "Model: %1%2Aircraft ICAO: %3%4Livery: %5";
+            static const QString html = "Model: %1%2Aircraft ICAO: %3%4Livery: %5";
             return html.arg(this->getModelStringAndDbKey(), separator,
                             this->getAircraftIcaoCode().asHtmlSummary(), separator,
                             this->getLivery().asHtmlSummary());

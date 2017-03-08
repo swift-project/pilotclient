@@ -405,7 +405,7 @@ namespace BlackMisc
             if (score == 0) { return 0; }
             if (this->isAirlineStandardLivery() && !preferColorLiveries) { score += 10; }
 
-            // overrate non airline liveries
+            // overrate non airline liveries / color liveries
             if (preferColorLiveries)
             {
                 if (this->isColorLivery() || !this->hasValidAirlineDesignator())
