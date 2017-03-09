@@ -101,6 +101,30 @@ namespace BlackCore
             return CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, force, false);
         }
 
+        CAircraftModelList CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const CAircraftModelList &models, const CAircraftModelList &simulatorModels, bool processEvents)
+        {
+            QTime timer;
+            timer.start();
+            if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
+
+            const QSet<QString> allOwnModelsModelStrings = simulatorModels.getModelStringSet();
+            CAircraftModelList consolidatedModels;
+
+            int c = 0;
+            for (const CAircraftModel &model : models)
+            {
+                c++;
+                if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
+
+                const QString ms(model.getModelString());
+                if (ms.isEmpty()) { continue; }
+                if (!allOwnModelsModelStrings.contains(ms)) { continue; }
+                consolidatedModels.push_back(model);
+            }
+            CLogMessage().debug() << "Consolidated " << models.size() << " vs. " << simulatorModels.size() << " in " << timer.elapsed() << "ms";
+            return consolidatedModels;
+        }
+
         int CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(CAircraftModelList &models, bool force, bool processEvents)
         {
             QTime timer;

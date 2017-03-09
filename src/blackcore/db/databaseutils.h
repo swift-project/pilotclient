@@ -36,6 +36,10 @@ namespace BlackCore
             //! Consolidate models with DB data
             static int consolidateModelsWithDbData(BlackMisc::Simulation::CAircraftModelList &models, bool force);
 
+            //! Consolidate models with simulator model data (aka "models on disk")
+            //! \remark kept here with the other consolidate functions, but actually DB independent
+            static BlackMisc::Simulation::CAircraftModelList consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CAircraftModelList &simulatorModels, bool processEvents);
+
             //! Consolidate models with DB data
             static int consolidateModelsWithDbDataAllowsGuiRefresh(BlackMisc::Simulation::CAircraftModelList &models, bool force, bool processEvents);
 
