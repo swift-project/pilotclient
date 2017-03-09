@@ -22,6 +22,7 @@
 #include <QCoreApplication>
 #include <QDBusMetaType>
 #include <QDir>
+#include <QDirIterator>
 #include <QFileInfo>
 #include <QFlags>
 #include <QIODevice>
@@ -162,8 +163,9 @@ namespace BlackMisc
         return cats;
     }
 
-    CValueCache::CValueCache(QObject *parent) : QObject(parent)
+    CValueCache::CValueCache(int fileSplitDepth, QObject *parent) : QObject(parent), m_fileSplitDepth(fileSplitDepth)
     {
+        Q_ASSERT_X(fileSplitDepth >= 0, Q_FUNC_INFO, "Negative value not allowed, use 0 for maximum split depth");
         Q_ASSERT_X(QThread::currentThread() == qApp->thread(), Q_FUNC_INFO, "Cache constructed in wrong thread");
     }
 
@@ -365,7 +367,7 @@ namespace BlackMisc
         QMap<QString, CVariantMap> namespaces;
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
-            namespaces[it.key().section('/', 0, 0)].insert(it.key(), it.value());
+            namespaces[it.key().section('/', 0, m_fileSplitDepth - 1)].insert(it.key(), it.value());
         }
         if (! QDir::root().mkpath(dir))
         {
@@ -374,6 +376,10 @@ namespace BlackMisc
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
             CAtomicFile file(dir + "/" + it.key() + ".json");
+            if (! QDir::root().mkpath(QFileInfo(file).path()))
+            {
+                return CStatusMessage(this).error("Failed to create directory '%1'") << QFileInfo(file).path();
+            }
             if (! file.open(QFile::ReadWrite | QFile::Text))
             {
                 return CStatusMessage(this).error("Failed to open %1: %2") << file.fileName() << file.errorString();
@@ -419,19 +425,20 @@ namespace BlackMisc
         QMap<QString, QStringList> keysInFiles;
         for (const auto &key : keys)
         {
-            keysInFiles[key.section('/', 0, 0)].push_back(key);
+            keysInFiles[key.section('/', 0, m_fileSplitDepth - 1) + ".json"].push_back(key);
         }
         if (keys.isEmpty())
         {
-            for (const auto &filename : QDir(dir).entryInfoList({ "*.json" }, QDir::Files))
+            QDirIterator iter(dir, { "*.json" }, QDir::Files, QDirIterator::Subdirectories);
+            while (iter.hasNext())
             {
-                keysInFiles.insert(filename.completeBaseName(), {});
+                keysInFiles.insert(QDir(dir).relativeFilePath(iter.next()), {});
             }
         }
         bool ok = true;
         for (auto it = keysInFiles.cbegin(); it != keysInFiles.cend(); ++it)
         {
-            QFile file(dir + "/" + it.key() + ".json");
+            QFile file(QDir(dir).absoluteFilePath(it.key()));
             if (! file.exists())
             {
                 continue;
@@ -453,7 +460,7 @@ namespace BlackMisc
             }
             else
             {
-                const QString messagePrefix = QStringLiteral("Parsing %1.json").arg(it.key());
+                const QString messagePrefix = QStringLiteral("Parsing %1").arg(it.key());
                 auto messages = temp.convertFromMemoizedJsonNoThrow(json.object(), it.value(), this, messagePrefix);
                 if (it.value().isEmpty()) { messages.push_back(temp.convertFromMemoizedJsonNoThrow(json.object(), this, messagePrefix)); }
                 if (! messages.isEmpty())
@@ -508,9 +515,9 @@ namespace BlackMisc
         }
     }
 
-    QString CValueCache::filenameForKey(const QString &key)
+    QString CValueCache::filenameForKey(const QString &key) const
     {
-        return key.section('/', 0, 0) + ".json";
+        return key.section('/', 0, m_fileSplitDepth - 1) + ".json";
     }
 
     QStringList CValueCache::enumerateFiles(const QString &dir) const

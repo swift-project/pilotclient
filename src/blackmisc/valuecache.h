@@ -163,7 +163,7 @@ namespace BlackMisc
         static const CLogCategoryList &getLogCategories();
 
         //! Constructor.
-        explicit CValueCache(QObject *parent = nullptr);
+        explicit CValueCache(int fileSplitDepth, QObject *parent = nullptr);
 
         //! Return map containing all values in the cache.
         //! If prefix is provided then only those values whose keys start with that prefix.
@@ -219,7 +219,7 @@ namespace BlackMisc
         //! Return the (relative) filename that may is (or would be) used to save the value with the given key.
         //! The file may or may not exist (because it might not have been saved yet).
         //! \threadsafe
-        static QString filenameForKey(const QString &key);
+        QString filenameForKey(const QString &key) const;
 
         //! List the Json files which are (or would be) used to save the current values.
         //! The files may or may not exist (because they might not have been saved yet).
@@ -317,6 +317,7 @@ namespace BlackMisc
 
         QMap<QString, ElementPtr> m_elements;
         QMap<QString, QString> m_humanReadable;
+        const int m_fileSplitDepth = 1; //!< How many levels of subdirectories to split JSON files
 
         Element &getElement(const QString &key);
         Element &getElement(const QString &key, QMap<QString, ElementPtr>::const_iterator pos);

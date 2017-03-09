@@ -69,7 +69,7 @@ namespace BlackMisc
         CDataCacheRevision *m_rev = nullptr;
     };
 
-    CDataCache::CDataCache()
+    CDataCache::CDataCache() : CValueCache(1)
     {
         if (! QDir::root().mkpath(persistentStore()))
         {
@@ -109,7 +109,7 @@ namespace BlackMisc
 
     QString CDataCache::filenameForKey(const QString &key)
     {
-        return CFileUtils::appendFilePaths(persistentStore(), CValueCache::filenameForKey(key));
+        return CFileUtils::appendFilePaths(persistentStore(), instance()->CValueCache::filenameForKey(key));
     }
 
     QStringList CDataCache::enumerateStore() const

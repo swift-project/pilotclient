@@ -15,7 +15,7 @@
 
 namespace BlackMisc
 {
-    CSettingsCache::CSettingsCache()
+    CSettingsCache::CSettingsCache() : CValueCache(0)
     {}
 
     CSettingsCache *CSettingsCache::instance()
@@ -58,7 +58,7 @@ namespace BlackMisc
 
     QString CSettingsCache::filenameForKey(const QString &key)
     {
-        return CFileUtils::appendFilePaths(persistentStore(), CValueCache::filenameForKey(key));
+        return CFileUtils::appendFilePaths(persistentStore(), instance()->CValueCache::filenameForKey(key));
     }
 
     const QString CSettingsCache::relativeFilePath()
