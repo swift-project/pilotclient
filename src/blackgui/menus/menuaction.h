@@ -149,29 +149,29 @@ namespace BlackGui
             //! Database
             static const QString &pathViewDatabase()  { static const QString p("View.10.Database/Database"); return p; }
 
-            //! Database consolidation
-            static const QString &pathViewDatabaseConsolidate()  { static const QString p("View.10.Database/Database/Consolidate"); return p; }
+            //! Consolidate
+            static const QString &pathViewModelsConsolidate()  { static const QString p("View.11.Models/Consolidate"); return p; }
 
             //! Select add remove
-            static const QString &pathViewAddRemove()  { static const QString p("View.11.AddRemove"); return p; }
+            static const QString &pathViewAddRemove()  { static const QString p("View.12.AddRemove"); return p; }
 
             //! View selection mode
-            static const QString &pathViewSelection()  { static const QString p("View.12.Selection/Selection"); return p; }
+            static const QString &pathViewSelection()  { static const QString p("View.13.Selection/Selection"); return p; }
 
             //! Order submenus
-            static const QString &pathViewOrder()  { static const QString p("View.13.Order/Order"); return p; }
+            static const QString &pathViewOrder()  { static const QString p("View.14.Order/Order"); return p; }
 
             //! View resizing
-            static const QString &pathViewResize()  { static const QString p("View.14.Resize"); return p; }
+            static const QString &pathViewResize()  { static const QString p("View.15.Resize"); return p; }
 
             //! View clear highlighting
-            static const QString &pathViewClearHighlighting()  { static const QString p("View.15.ClearHighlight"); return p; }
+            static const QString &pathViewClearHighlighting()  { static const QString p("View.16.ClearHighlight"); return p; }
 
             //! View filter
-            static const QString &pathViewFilter()  { static const QString p("View.16.Filter"); return p; }
+            static const QString &pathViewFilter()  { static const QString p("View.17.Filter"); return p; }
 
             //! View update
-            static const QString &pathViewUpdates()  { static const QString p("View.17.Updates"); return p; }
+            static const QString &pathViewUpdates()  { static const QString p("View.18.Updates"); return p; }
 
             //! View load/save
             static const QString &pathViewLoadSave()  { static const QString p("View.18.LoadSave"); return p; }
@@ -186,15 +186,16 @@ namespace BlackGui
             //! @{
             static const CMenuAction &subMenuDatabase();
             static const CMenuAction &subMenuSimulator();
+            static const CMenuAction &subMenuConsolidateModels();
             //! @}
 
         private:
-            QAction *m_action = nullptr;        //!< the action
-            QIcon    m_icon;                    //!< icon
-            QString  m_title;                   //!< title
-            QString  m_path;                    //!< path in menu
-            bool     m_separator = false;       //!< separator
-            bool     m_isMenu = false;          //!< is menu?
+            QAction *m_action = nullptr;    //!< the action
+            QIcon    m_icon;                //!< icon
+            QString  m_title;               //!< title
+            QString  m_path;                //!< path in menu
+            bool     m_separator = false;   //!< separator
+            bool     m_isMenu = false;      //!< is menu?
         };
 
         /*!
@@ -316,6 +317,9 @@ namespace BlackGui
 
             //! Database menu
             CMenuAction addMenuDatabase();
+
+            //! Consolidate models menu
+            CMenuAction addMenuConsolidateModels();
 
             //! Model set menu
             CMenuAction addMenuModelSet();

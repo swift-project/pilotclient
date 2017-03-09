@@ -13,23 +13,16 @@
 #include "blackgui/menus/menudelegate.h"
 #include "blackgui/overlaymessagesframe.h"
 #include "blackgui/views/aircraftmodelview.h"
+#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 
 #include <QMenu>
 #include <QObject>
 
 class QAction;
 
-namespace BlackMisc
-{
-    namespace Simulation
-    {
-        class IModelsSetable;
-        class IModelsUpdatable;
-    }
-}
-
 namespace BlackGui
 {
+    namespace Components { class CDbMappingComponent; }
     namespace Menus
     {
         //! Menu base for aircraft model view menus
@@ -111,6 +104,48 @@ namespace BlackGui
         private:
             BlackMisc::Simulation::IModelsSetable   *modelsTargetSetable() const;
             BlackMisc::Simulation::IModelsUpdatable *modelsTargetUpdatable() const;
+            QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
+            QAction *m_consolidateAll      = nullptr; //!< consolidate data with DB (all)
+            QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)
+        };
+
+        //! Merge with simulator models (e.g. remove no longer existing models)
+        class CConsolidateWithSimulatorModels : public IAircraftModelViewMenu
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            using IAircraftModelViewMenu::IAircraftModelViewMenu;
+
+            //! Constructor
+            CConsolidateWithSimulatorModels(BlackGui::Views::CAircraftModelView *modelView, QObject *modelsTarget, bool separator = true);
+
+            //! Log.categories
+            static const BlackMisc::CLogCategoryList &getLogCategories();
+
+            //! \copydoc IMenuDelegate::customMenu
+            virtual void customMenu(CMenuActions &menuActions) override;
+
+            //! Change target
+            void setModelsTarget(QObject *target) { this->m_modelsTarget = target; }
+
+        private slots:
+            void ps_consolidateData();
+            void ps_consolidateSelectedData();
+
+        private:
+            //! Get models
+            BlackMisc::Simulation::CAircraftModelList getSimulatorModels() const;
+
+            //! Simulator
+            BlackMisc::Simulation::CSimulatorInfo getSimulator() const;
+
+            BlackMisc::Simulation::IModelsPerSimulatorSetable   *modelsTargetSetable() const;
+            BlackMisc::Simulation::IModelsPerSimulatorUpdatable *modelsTargetUpdatable() const;
+            BlackMisc::Simulation::ISimulatorSelectable *simulatorSelectable() const;
+            BlackGui::Components::CDbMappingComponent *getMappingComponent() const;
+
             QObject *m_modelsTarget        = nullptr; //!< optional target for setting/updating the models
             QAction *m_consolidateAll      = nullptr; //!< consolidate data with DB (all)
             QAction *m_consolidateSelected = nullptr; //!< consolidate data with DB (selected)

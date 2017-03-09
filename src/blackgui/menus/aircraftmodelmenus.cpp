@@ -9,12 +9,13 @@
 
 #include "aircraftmodelmenus.h"
 #include "blackgui/guiapplication.h"
+#include "blackgui/components/dbmappingcomponent.h"
+#include "blackgui/components/dbmappingcomponentaware.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/db/databaseutils.h"
 #include "blackmisc/verify.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/aircraftmodelinterfaces.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
 
 #include <QDesktopServices>
@@ -24,6 +25,7 @@ using namespace BlackMisc::Simulation;
 using namespace BlackGui;
 using namespace BlackGui::Views;
 using namespace BlackGui::Models;
+using namespace BlackGui::Components;
 using namespace BlackCore::Db;
 
 namespace BlackGui
@@ -130,6 +132,8 @@ namespace BlackGui
             }
         }
 
+        // --------------------------------- with DB data ---------------------------------
+
         CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget, bool separator) :
             IAircraftModelViewMenu(modelView, separator), m_modelsTarget(modelsTarget)
         {
@@ -154,13 +158,12 @@ namespace BlackGui
             if (mv->isEmpty()) { this->nestedCustomMenu(menuActions); return; }
             if (!sGui->hasWebDataServices()) { this->nestedCustomMenu(menuActions); return; }
 
-            menuActions.addMenuDatabase();
-            menuActions.addMenu(CIcons::databaseEdit16(), "Consolidate with DB data", CMenuAction::pathViewDatabaseConsolidate());
+            menuActions.addMenuConsolidateModels();
 
-            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, "All", CMenuAction::pathViewDatabaseConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateData });
+            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateData });
             if (mv->hasSelection())
             {
-                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, "Selected only", CMenuAction::pathViewDatabaseConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateSelectedData });
+                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithDbDataMenu::ps_consolidateSelectedData });
             }
             this->nestedCustomMenu(menuActions);
         }
@@ -234,6 +237,137 @@ namespace BlackGui
         IModelsUpdatable *CConsolidateWithDbDataMenu::modelsTargetUpdatable() const
         {
             return qobject_cast<IModelsUpdatable *>(this->m_modelsTarget);
+        }
+
+        // --------------------------------- with simulator models ---------------------------------
+
+        CConsolidateWithSimulatorModels::CConsolidateWithSimulatorModels(CAircraftModelView *modelView, QObject *modelsTarget, bool separator) :
+            IAircraftModelViewMenu(modelView, separator), m_modelsTarget(modelsTarget)
+        {
+            // it can be the target is not yet known
+            if (modelsTarget)
+            {
+                bool ok = modelsTargetSetable() || modelsTargetUpdatable();
+                Q_ASSERT_X(ok, Q_FUNC_INFO, "Neither setable nor updatable");
+                Q_UNUSED(ok);
+            }
+        }
+
+        const CLogCategoryList &CConsolidateWithSimulatorModels::getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
+            return cats;
+        }
+
+        void CConsolidateWithSimulatorModels::customMenu(CMenuActions &menuActions)
+        {
+            const CAircraftModelView *mv = modelView();
+            if (mv->isEmpty()) { this->nestedCustomMenu(menuActions); return; }
+            if (!sGui->hasWebDataServices()) { this->nestedCustomMenu(menuActions); return; }
+
+            menuActions.addMenuConsolidateModels();
+
+            this->m_consolidateAll = menuActions.addAction(this->m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::ps_consolidateData });
+            if (mv->hasSelection())
+            {
+                this->m_consolidateSelected = menuActions.addAction(this->m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathViewModelsConsolidate(), { this, &CConsolidateWithSimulatorModels::ps_consolidateSelectedData });
+            }
+            this->nestedCustomMenu(menuActions);
+        }
+
+        void CConsolidateWithSimulatorModels::ps_consolidateData()
+        {
+            bool filtered = false;
+            const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
+            if (models.isEmpty()) { return; }
+            const int i = this->modelView()->showLoadIndicator();
+            const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), true);
+            const CSimulatorInfo sim(this->getSimulator());
+
+            if (!filtered)
+            {
+                this->modelsTargetSetable()->setModels(consolidated, sim);
+            }
+            else
+            {
+                if (!this->modelsTargetUpdatable())
+                {
+                    CLogMessage(this).warning("No updatable target");
+                }
+                else
+                {
+                    this->modelsTargetUpdatable()->updateModels(consolidated, sim);
+                }
+            }
+            this->modelView()->hideLoadIndicator(i);
+        }
+
+        void CConsolidateWithSimulatorModels::ps_consolidateSelectedData()
+        {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
+            const CAircraftModelList models(this->getSelectedAircraftModels());
+            if (models.isEmpty()) { return; }
+            if (!this->modelsTargetUpdatable())
+            {
+                CLogMessage(this).warning("No updatable target");
+                return;
+            }
+
+            const int i = this->modelView()->showLoadIndicator();
+            const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), true);
+            const CSimulatorInfo sim(this->getSimulator());
+
+            this->modelsTargetUpdatable()->updateModels(consolidated, sim);
+            this->modelView()->hideLoadIndicator(i);
+        }
+
+        CAircraftModelList CConsolidateWithSimulatorModels::getSimulatorModels() const
+        {
+            CDbMappingComponent *mc = this->getMappingComponent();
+            Q_ASSERT_X(mc, Q_FUNC_INFO, "No mapping component");
+            const CSimulatorInfo sim = this->getSimulator();
+            mc->setOwnModelsSimulator(sim);
+            return mc->getOwnModels();
+        }
+
+        CSimulatorInfo CConsolidateWithSimulatorModels::getSimulator() const
+        {
+            const ISimulatorSelectable *s = this->simulatorSelectable();
+            Q_ASSERT_X(s, Q_FUNC_INFO, "No ISimulatorSelectable");
+            const CSimulatorInfo sim = s->getSelectedSimulator();
+            Q_ASSERT_X(sim.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
+            return sim;
+        }
+
+        IModelsPerSimulatorSetable *CConsolidateWithSimulatorModels::modelsTargetSetable() const
+        {
+            return qobject_cast<IModelsPerSimulatorSetable *>(this->m_modelsTarget);
+        }
+
+        IModelsPerSimulatorUpdatable *CConsolidateWithSimulatorModels::modelsTargetUpdatable() const
+        {
+            return qobject_cast<IModelsPerSimulatorUpdatable *>(this->m_modelsTarget);
+        }
+
+        ISimulatorSelectable *CConsolidateWithSimulatorModels::simulatorSelectable() const
+        {
+            return qobject_cast<ISimulatorSelectable *>(this->m_modelsTarget);
+        }
+
+        Components::CDbMappingComponent *CConsolidateWithSimulatorModels::getMappingComponent() const
+        {
+            // try to cast target
+            CDbMappingComponent *mc = nullptr;
+            CDbMappingComponentAware *mca = qobject_cast<CDbMappingComponentAware *>(this->m_modelsTarget);
+            if (mca)
+            {
+                mc = mca->getMappingComponent();
+            }
+            if (!mc)
+            {
+                mc = qobject_cast<CDbMappingComponent *>(this->m_modelsTarget);
+            }
+            return mc;
         }
     } // ns
 } // ns

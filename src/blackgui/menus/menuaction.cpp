@@ -90,6 +90,12 @@ namespace BlackGui
             return subdir;
         }
 
+        const CMenuAction &CMenuAction::subMenuConsolidateModels()
+        {
+            static const CMenuAction subdir(CIcons::appModels16(), "Consolidate models", CMenuAction::pathViewModelsConsolidate());
+            return subdir;
+        }
+
         const CMenuAction &CMenuAction::subMenuSimulator()
         {
             static const CMenuAction subdir(CIcons::appSimulator16(), "Simulator", CMenuAction::pathSimulator());
@@ -420,6 +426,12 @@ namespace BlackGui
         {
             if (this->containsMenu(CMenuAction::pathViewDatabase())) { CMenuAction(); }
             return this->addMenu(CMenuAction::subMenuDatabase());
+        }
+
+        CMenuAction CMenuActions::addMenuConsolidateModels()
+        {
+            if (this->containsMenu(CMenuAction::pathViewModelsConsolidate())) { CMenuAction(); }
+            return this->addMenu(CMenuAction::subMenuConsolidateModels());
         }
 
         CMenuAction CMenuActions::addMenuModelSet()
