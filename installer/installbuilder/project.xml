@@ -70,7 +70,7 @@ check_for_updates = 1
         <runProgram>
             <program>${installdir}/bin/swiftlauncher</program>
             <programArguments>-i --bootstrapurl https://datastore.swift-project.org/shared/</programArguments>
-            <progressText>Run swift launcher</progressText>
+            <progressText>Run swift launcher wizard</progressText>
             <ruleList>
                 <platformTest>
                     <negate>1</negate>
@@ -81,13 +81,17 @@ check_for_updates = 1
         <runProgram>
             <program>${Installdir}/bin/swiftlauncher.app/Contents/MacOS/swiftlauncher</program>
             <programArguments>-i --bootstrapurl https://datastore.swift-project.org/shared/</programArguments>
-            <progressText>Run swift launcher</progressText>
+            <progressText>Run swift launcher wizard</progressText>
             <ruleList>
                 <platformTest>
                     <type>osx</type>
                 </platformTest>
             </ruleList>
         </runProgram>
+        <launchBrowser>
+            <url>http://www.swift-project.org</url>
+            <progressText>Visit the swift project page</progressText>
+        </launchBrowser>
     </finalPageActionList>
     <licenseFileList>
         <licenseFile>
