@@ -308,7 +308,8 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     }
     create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} $${INSTALLER_PLATFORM} \
                                     --setvars project.outputDirectory=$$shell_path($${PREFIX}/..) \
-                                    project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT}
+                                              project.installerFilename=$${INSTALLER_BASENAME}.$${INSTALLER_EXT} \
+                                              project.version=$${BLACK_VERSION}
     QMAKE_EXTRA_TARGETS += create_installer
 }
 

@@ -1,7 +1,7 @@
 <project>
     <shortName>swift</shortName>
     <fullName>swift</fullName>
-    <version>0.7.0</version>
+    <!-- <version>0.7.0</version> -->
     <readmeFile>../../dist/bin/README.md</readmeFile>
     <licenseFile>../../dist/bin/LICENSE</licenseFile>
     <leftImage>../images/leftimage.png</leftImage>
