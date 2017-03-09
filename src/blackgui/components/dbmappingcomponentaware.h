@@ -13,8 +13,7 @@
 #define BLACKGUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 
 #include "blackgui/blackguiexport.h"
-
-class QObject;
+#include <QObject>
 
 namespace BlackGui
 {
@@ -29,16 +28,19 @@ namespace BlackGui
             //! Set the corresponding component
             virtual void setMappingComponent(CDbMappingComponent *component);
 
+            //! Get the mapping component
+            CDbMappingComponent *getMappingComponent() const { return m_mappingComponent; }
+
         protected:
             //! Constructor
             CDbMappingComponentAware(QObject *parent);
-
-            //! Get the mapping component
-            CDbMappingComponent *getMappingComponent() const { return m_mappingComponent; }
 
         private :
             CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component
         };
     } // ns
 } // ns
+
+Q_DECLARE_INTERFACE(BlackGui::Components::CDbMappingComponentAware, "org.swift-project.blackgui.components.dbmappingcomponentaware")
+
 #endif // guard

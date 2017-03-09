@@ -49,13 +49,16 @@ namespace BlackGui
             public BlackMisc::Simulation::IModelsSetable,
             public BlackMisc::Simulation::IModelsUpdatable,
             public BlackMisc::Simulation::IModelsPerSimulatorSetable,
-            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable
+            public BlackMisc::Simulation::IModelsPerSimulatorUpdatable,
+            public BlackMisc::Simulation::ISimulatorSelectable
         {
             Q_OBJECT
+            Q_INTERFACES(BlackGui::Components::CDbMappingComponentAware)
             Q_INTERFACES(BlackMisc::Simulation::IModelsSetable)
             Q_INTERFACES(BlackMisc::Simulation::IModelsUpdatable)
             Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorSetable)
             Q_INTERFACES(BlackMisc::Simulation::IModelsPerSimulatorUpdatable)
+            Q_INTERFACES(BlackMisc::Simulation::ISimulatorSelectable)
 
         public:
             //! Constructor
@@ -91,6 +94,7 @@ namespace BlackGui
             virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models) override  { this->replaceOrAddModelSet(models, this->getModelSetSimulator()); }
             virtual void setModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->setModelSet(models, simulator); }
             virtual void updateModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override  { this->replaceOrAddModelSet(models, simulator); }
+            virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const override { return this->getModelSetSimulator(); }
             //! @}
 
         public slots:

@@ -50,6 +50,14 @@ namespace BlackMisc
             //! Set models
             virtual void updateModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) = 0;
         };
+
+        //! Interface to "something" allowing a simulator selection
+        class BLACKMISC_EXPORT ISimulatorSelectable
+        {
+        public:
+            //! Simulator
+            virtual BlackMisc::Simulation::CSimulatorInfo getSelectedSimulator() const = 0;
+        };
     } // namespace
 } // namespace
 
@@ -57,5 +65,6 @@ Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsSetable, "org.swift-project.bl
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsUpdatable, "org.swift-project.blackmisc.simulation.imodelsupdateable")
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsPerSimulatorSetable, "org.swift-project.blackmisc.simulation.imodelspersimulatorsetable")
 Q_DECLARE_INTERFACE(BlackMisc::Simulation::IModelsPerSimulatorUpdatable, "org.swift-project.blackmisc.simulation.imodelspersimulatorupdatabale")
+Q_DECLARE_INTERFACE(BlackMisc::Simulation::ISimulatorSelectable, "org.swift-project.blackmisc.simulation.isimulatorselectable")
 
 #endif // guard

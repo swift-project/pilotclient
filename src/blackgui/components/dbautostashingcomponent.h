@@ -45,6 +45,7 @@ namespace BlackGui
             public BlackCore::IProgressIndicator
         {
             Q_OBJECT
+            Q_INTERFACES(BlackGui::Components::CDbMappingComponentAware)
 
         public:
             //! Current state of this component
@@ -62,7 +63,7 @@ namespace BlackGui
             explicit CDbAutoStashingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbAutoStashingComponent();
+            virtual ~CDbAutoStashingComponent();
 
             //! At least run once and completed
             bool isCompleted() const { return m_state == Completed; }
