@@ -1145,6 +1145,7 @@ namespace BlackCore
         annotations["prod"] = executable().toStdString();
         annotations["ver"] = CVersion::version().toStdString();
 
+        QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
         auto settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(CBuildConfig::isReleaseBuild() && m_crashDumpUploadEnabled.getThreadLocal());
