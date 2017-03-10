@@ -155,7 +155,7 @@ namespace BlackGui
                 return info.getIdentifier() == identifier;
             });
 
-            if (selected->isUnspecified())
+            if (selected == simDrivers.end() || selected->isUnspecified())
             {
                 CLogMessage(this).error("Simulator plugin does not exist: '%1'") << identifier;
                 return;
