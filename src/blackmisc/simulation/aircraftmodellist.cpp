@@ -586,12 +586,9 @@ namespace BlackMisc
             }
         }
 
-        ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores, CStatusMessageList *log) const
+        ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries, bool ignoreZeroScores, CStatusMessageList *log) const
         {
             ScoredModels scoreMap;
-            // prefer colors if there is no airline
-            const bool hasAirlineDesignator = remoteModel.hasAirlineDesignator() && this->contains(&CAircraftModel::getAirlineIcaoCodeDesignator, remoteModel.getAirlineIcaoCodeDesignator());
-            const bool preferColorLiveries = !hasAirlineDesignator;
 
             // prefer colors if there is no airline
             CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: %1, airline: '%2'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator()));

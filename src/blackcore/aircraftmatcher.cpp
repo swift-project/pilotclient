@@ -542,6 +542,9 @@ namespace BlackCore
     {
         Q_UNUSED(mode);
         CAircraftModelList usedModelSet;
+        static const bool NoZeroScores = true;
+        static const bool PreferColorLiveries = true;
+        static const bool DoNotMindAboutColorLiveries = false;
 
         // VTOL
         ScoredModels map;
@@ -560,25 +563,34 @@ namespace BlackCore
             // Aircraft and airline ICAO
             const CAircraftModelList byAircraftAndAirline(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft/airline ICAOs '%2'/'%3' for scoring").arg(byAircraftAndAirline.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey()), getLogCategories());
-            map = byAircraftAndAirline.scoreFull(remoteAircraft.getModel());
+
+            // we have airline and aircraft ICAO, so use airline liveries
+            map = byAircraftAndAirline.scoreFull(remoteAircraft.getModel(), DoNotMindAboutColorLiveries, NoZeroScores, log);
         }
         else if (remoteAircraft.hasAircraftDesignator() && usedModelSet.contains(&CAircraftModel::getAircraftIcaoCodeDesignator, remoteAircraft.getAircraftIcaoCodeDesignator()))
         {
             // Aircraft ICAO only
             const CAircraftModelList byAircraft(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' (no airline) for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
-            map = byAircraft.scoreFull(remoteAircraft.getModel());
+
+            // we do not have an airline for that aircraft, prefer color liveries
+            // this could also become a setting
+            map = byAircraft.scoreFull(remoteAircraft.getModel(), PreferColorLiveries, NoZeroScores, log);
         }
         else if (remoteAircraft.getAircraftIcaoCode().hasValidCombinedType() && usedModelSet.containsCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()))
         {
             const CAircraftModelList byAircraft(usedModelSet.findByCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by combined type '%2' for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getCombinedType()), getLogCategories());
-            map = byAircraft.scoreFull(remoteAircraft.getModel());
+
+            // No aircraft / airline ICAO, we prefer color liveries
+            map = byAircraft.scoreFull(remoteAircraft.getModel(), PreferColorLiveries, NoZeroScores, log);
         }
         else
         {
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using set with %1 models").arg(usedModelSet.size()), getLogCategories());
-            map = usedModelSet.scoreFull(remoteAircraft.getModel());
+
+            // Poor men`s matching
+            map = usedModelSet.scoreFull(remoteAircraft.getModel(), PreferColorLiveries, NoZeroScores, log);
         }
 
         CAircraftModel matchedModel;
