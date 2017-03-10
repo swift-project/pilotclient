@@ -8,12 +8,10 @@ OTHER_FILES += Doxyfile.qmake
 OTHER_FILES += src/*.dox
 OTHER_FILES += src/wiki/*.dox
 
-win32: DOXYGEN_BIN = $$system($$(SYSTEMROOT)\system32\where doxygen)
-else: DOXYGEN_BIN = $$system(which doxygen)
+win32: DOXYGEN_BIN = $$system($$(SYSTEMROOT)\system32\where doxygen 2> nul)
+else: DOXYGEN_BIN = $$system(which doxygen 2> /dev/null)
 
-isEmpty(DOXYGEN_BIN) {
-        message("Doxygen not found")
-} else {
+!isEmpty(DOXYGEN_BIN) {
     DOXYFILE = Doxyfile.qmake
 
     DOXY_INPUT = .
