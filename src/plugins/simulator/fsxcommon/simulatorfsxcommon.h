@@ -298,12 +298,22 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorListener::stop
             virtual void stop() override;
 
-        protected slots:
+        protected:
             //! Test if connection can be established
-            void ps_checkConnection();
+            void checkConnection();
+
+            //! Check simulator version and type
+            bool checkVersionAndSimulator() const;
 
         private:
             QTimer *m_timer { nullptr };
+            QString m_simulatorVersion;
+            QString m_simConnectVersion;
+            QString m_simulatorName;
+            QString m_simulatorDetails;
+
+            //! SimConnect Callback
+            static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
         };
     }
 } // namespace

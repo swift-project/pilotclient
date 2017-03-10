@@ -1317,7 +1317,7 @@ namespace BlackSimPlugin
             constexpr int QueryInterval = 5 * 1000; // 5 seconds
             m_timer->setInterval(QueryInterval);
             m_timer->setObjectName(this->objectName().append(":m_timer"));
-            connect(m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::ps_checkConnection);
+            connect(m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
         }
 
         void CSimulatorFsxCommonListener::start()
@@ -1330,15 +1330,69 @@ namespace BlackSimPlugin
             m_timer->stop();
         }
 
-        void CSimulatorFsxCommonListener::ps_checkConnection()
+        void CSimulatorFsxCommonListener::checkConnection()
         {
+            Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing sApp");
             Q_ASSERT_X(!CThreadUtils::isCurrentThreadApplicationThread(), Q_FUNC_INFO, "Expect to run in background");
             HANDLE hSimConnect;
             HRESULT result = SimConnect_Open(&hSimConnect, sApp->swiftVersionChar(), nullptr, 0, 0, 0);
-            SimConnect_Close(hSimConnect);
+            bool check = false;
             if (result == S_OK)
             {
+                for (int i = 0; !check && i < 3; i++)
+                {
+                    // result not always in first dispatch
+                    result = SimConnect_CallDispatch(hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
+                    if (result != S_OK) { break; } // means serious failure
+                    check = this->checkVersionAndSimulator();
+                    sApp->processEventsFor(500);
+                }
+            }
+            SimConnect_Close(hSimConnect);
+
+            if (check)
+            {
                 emit simulatorStarted(this->getPluginInfo());
+            }
+        }
+
+        bool CSimulatorFsxCommonListener::checkVersionAndSimulator() const
+        {
+            const CSimulatorInfo sim(getPluginInfo().getIdentifier());
+            const QString simName = m_simulatorName.toLower().trimmed();
+
+            if (simName.isEmpty()) { return false; }
+            if (sim.p3d())
+            {
+                return simName.contains("lockheed") || simName.contains("martin") || simName.contains("p3d") || simName.contains("prepar");
+            }
+            else if (sim.fsx())
+            {
+                return simName.contains("fsx") || simName.contains("microsoft") || simName.contains("simulator x");
+            }
+            return false;
+        }
+
+        void CSimulatorFsxCommonListener::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
+        {
+            Q_UNUSED(cbData);
+            CSimulatorFsxCommonListener *simListener = static_cast<CSimulatorFsxCommonListener *>(pContext);
+            switch (pData->dwID)
+            {
+            case SIMCONNECT_RECV_ID_OPEN:
+                {
+                    SIMCONNECT_RECV_OPEN *event = (SIMCONNECT_RECV_OPEN *)pData;
+                    simListener->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
+                    simListener->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    simListener->m_simulatorName = QString(event->szApplicationName);
+                    simListener->m_simulatorDetails = QString("Open: AppName=\"%1\" AppVersion=%2  SimConnectVersion=%3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
+                    CLogMessage(static_cast<CSimulatorFsxCommonListener *>(nullptr)).info("Connect to FSX/P3D: %1") << sApp->swiftVersionString();
+                    break;
+                }
+            case SIMCONNECT_RECV_ID_EXCEPTION:
+                break;
+            default:
+                break;
             }
         }
     } // namespace
