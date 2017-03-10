@@ -8,9 +8,10 @@
  */
 
 #include "blackcore/aircraftmatcher.h"
-#include "blackcore/matchingutils.h"
 #include "blackcore/application.h"
 #include "blackcore/webdataservices.h"
+#include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/airlineicaocode.h"
 #include "blackmisc/aviation/callsign.h"
@@ -18,7 +19,6 @@
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
 #include "blackmisc/logmessage.h"
-#include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QList>
@@ -30,7 +30,6 @@ using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
-using namespace BlackCore;
 
 namespace BlackCore
 {
@@ -54,7 +53,7 @@ namespace BlackCore
         const MatchingMode mode = this->m_matchingMode;
 
         static const QString format("hh:mm:ss.zzz");
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching: %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Matching uses model set of %1 models").arg(modelSet.size()), getLogCategories());
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Input model: '%1' '%2'").arg(remoteAircraft.getCallsignAsString(), remoteAircraft.getModel().toQString()), getLogCategories());
 
@@ -111,7 +110,7 @@ namespace BlackCore
         Q_ASSERT_X(matchedModel.hasModelString(), Q_FUNC_INFO, "Missing model string");
         Q_ASSERT_X(matchedModel.getModelType() != CAircraftModel::TypeUnknown, Q_FUNC_INFO, "Missing model type");
 
-        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching end: %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
+        CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("--- Matching end: UTC %1 ---").arg(QDateTime::currentDateTimeUtc().toString(format)));
         return matchedModel;
     }
 
@@ -558,14 +557,16 @@ namespace BlackCore
         // first decide what set to use for scoring, it should not be too large
         if (remoteAircraft.hasAircraftAndAirlineDesignator() && usedModelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(remoteAircraft.getAircraftIcaoCodeDesignator(), remoteAircraft.getAirlineIcaoCodeDesignator()))
         {
+            // Aircraft and airline ICAO
             const CAircraftModelList byAircraftAndAirline(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), remoteAircraft.getAirlineIcaoCode()));
             CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft/airline ICAOs '%2'/'%3' for scoring").arg(byAircraftAndAirline.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey()), getLogCategories());
             map = byAircraftAndAirline.scoreFull(remoteAircraft.getModel());
         }
         else if (remoteAircraft.hasAircraftDesignator() && usedModelSet.contains(&CAircraftModel::getAircraftIcaoCodeDesignator, remoteAircraft.getAircraftIcaoCodeDesignator()))
         {
+            // Aircraft ICAO only
             const CAircraftModelList byAircraft(usedModelSet.findByIcaoDesignators(remoteAircraft.getAircraftIcaoCode(), CAirlineIcaoCode()));
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QString("Using reduced set of %1 models by aircraft ICAO '%2' (no airline) for scoring").arg(byAircraft.size()).arg(remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey()), getLogCategories());
             map = byAircraft.scoreFull(remoteAircraft.getModel());
         }
         else if (remoteAircraft.getAircraftIcaoCode().hasValidCombinedType() && usedModelSet.containsCombinedType(remoteAircraft.getAircraftIcaoCode().getCombinedType()))

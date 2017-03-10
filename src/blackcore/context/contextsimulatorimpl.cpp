@@ -14,11 +14,10 @@
 #include "blackcore/context/contextownaircraftimpl.h"
 #include "blackcore/context/contextsimulatorimpl.h"
 #include "blackcore/corefacade.h"
-#include "blackcore/matchingutils.h"
 #include "blackcore/application.h"
 #include "blackcore/pluginmanagersimulator.h"
 #include "blackcore/simulator.h"
-#include "blackmisc/verify.h"
+#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/dbusserver.h"
@@ -30,6 +29,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/threadutils.h"
+#include "blackmisc/verify.h"
 
 #include <QMetaObject>
 #include <QStringList>
