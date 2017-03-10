@@ -367,6 +367,12 @@ namespace BlackConfig
         }
     }
 
+    const QString &BlackConfig::CBuildConfig::buildDateAndTime()
+    {
+        static const QString buildDateAndTime( __DATE__ " "  __TIME__ );
+        return buildDateAndTime;
+    }
+
     bool CVersion::isNewerVersion(const QString &versionString)
     {
         if (versionString.isEmpty()) { return false; }

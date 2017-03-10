@@ -150,6 +150,12 @@ namespace BlackConfig
 
         //! Vatsim client key
         static const QString &vatsimPrivateKey(); // defined in buildconfig_gen.cpp.in
+
+        //! Returns SHA-1 of git HEAD at build time
+        static const QString &gitHeadSha1();
+
+        //! Returns the build date and time as string
+        static const QString &buildDateAndTime();
     };
 
     //! Version
