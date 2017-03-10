@@ -37,8 +37,11 @@ namespace BlackGui
             ui->setupUi(this);
             ui->le_Callsign->setValidator(new CUpperCaseValidator(this));
             ui->le_Callsign->setCompleter(new QCompleter(ui->le_Callsign));
+            ui->cb_PartsHistoryEnabled->setChecked(sApp && sApp->isRunningInDeveloperEnvironment()); // default
+
             this->m_timerCallsignUpdate.setInterval(20 * 1000);
             this->m_timerUpdateHistory.setInterval(2 * 1000);
+
             this->initGui();
             this->m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
             connect(ui->le_Callsign, &QLineEdit::textEdited, this, &CAircraftPartsHistory::callsignModified);
