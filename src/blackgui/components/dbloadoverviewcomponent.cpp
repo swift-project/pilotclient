@@ -205,6 +205,7 @@ namespace BlackGui
             {
                 canConnect = CNetworkUtils::canConnect(sharedUrl);
                 allRowsHtml += rowHtml.arg(canConnect ? imgOk : imgFailed, urlLinkHtml.arg(sharedUrl.getFullUrl(), sharedUrl.getHost()));
+                if (!sGui || sGui->isShuttingDown()) { return; } // shutdown during connect test
             }
             ui->lbl_SharedUrls->setText(tableHtml.arg(allRowsHtml.trimmed()));
             ui->lbl_SharedUrls->setToolTip(sGui->getWebDataServices()->getDbReaderCurrentSharedDbDataUrl().toQString());

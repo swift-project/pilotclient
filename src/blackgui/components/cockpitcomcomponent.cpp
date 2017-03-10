@@ -27,6 +27,7 @@
 #include "blackmisc/pq/frequency.h"
 #include "blackmisc/pq/units.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/verify.h"
 #include "ui_cockpitcomcomponent.h"
 
 #include <QDoubleSpinBox>
@@ -251,13 +252,17 @@ namespace BlackGui
 
         CSimulatedAircraft CCockpitComComponent::getOwnAircraft() const
         {
-            Q_ASSERT(sGui->getIContextOwnAircraft());
-            if (!sGui->getIContextOwnAircraft()) return CSimulatedAircraft();
+            // unavailable context during shutdown possible
+            // mostly when client runs with DBus, but DBus is down
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
             return sGui->getIContextOwnAircraft()->getOwnAircraft();
         }
 
         bool CCockpitComComponent::updateOwnCockpitInContext(const CSimulatedAircraft &ownAircraft)
         {
+            // unavailable context during shutdown possible
+            // mostly when client runs with DBus, but DBus is down
+            if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return false; }
             return sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), identifier());
         }
 

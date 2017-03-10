@@ -396,6 +396,7 @@ namespace BlackCore
 
     bool CApplication::hasWebDataServices() const
     {
+        if (this->isShuttingDown()) { return false; } // service will not survive for long
         return this->m_webDataServices;
     }
 
