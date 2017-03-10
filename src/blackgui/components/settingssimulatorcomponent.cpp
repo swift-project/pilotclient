@@ -162,14 +162,16 @@ namespace BlackGui
             }
 
             auto e = m_enabledSimulators.getThreadLocal();
-            if (enabled && !e.contains(selected->getIdentifier()))
+            if (enabled != e.contains(selected->getIdentifier()))
             {
-                e << selected->getIdentifier();
-                m_enabledSimulators.set(e);
-            }
-            else if (!enabled)
-            {
-                e.removeAll(selected->getIdentifier());
+                if (enabled)
+                {
+                    e << selected->getIdentifier();
+                }
+                else
+                {
+                    e.removeAll(selected->getIdentifier());
+                }
                 m_enabledSimulators.set(e);
             }
 
