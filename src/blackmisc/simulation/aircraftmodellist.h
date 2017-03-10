@@ -226,7 +226,7 @@ namespace BlackMisc
             void normalizeFileNamesForDb();
 
             //! Score by aircraft ICAO code
-            ScoredModels scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores = true) const;
+            ScoredModels scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores = true, CStatusMessageList *log = nullptr) const;
 
             //! Completer strings
             QStringList toCompleterStrings(bool sorted = true) const;

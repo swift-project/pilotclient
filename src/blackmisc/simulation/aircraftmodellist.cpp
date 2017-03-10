@@ -8,6 +8,7 @@
  */
 
 #include "blackmisc/simulation/aircraftmodellist.h"
+#include "blackmisc/simulation/matchingutils.h"
 #include "blackmisc/aviation/aircrafticaocode.h"
 #include "blackmisc/aviation/callsign.h"
 #include "blackmisc/aviation/livery.h"
@@ -15,6 +16,7 @@
 #include "blackmisc/iterator.h"
 #include "blackmisc/range.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/stringutils.h"
 
 #include <QJsonValue>
 #include <QList>
@@ -584,12 +586,16 @@ namespace BlackMisc
             }
         }
 
-        ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores) const
+        ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool ignoreZeroScores, CStatusMessageList *log) const
         {
             ScoredModels scoreMap;
             // prefer colors if there is no airline
             const bool hasAirlineDesignator = remoteModel.hasAirlineDesignator() && this->contains(&CAircraftModel::getAirlineIcaoCodeDesignator, remoteModel.getAirlineIcaoCodeDesignator());
             const bool preferColorLiveries = !hasAirlineDesignator;
+
+            // prefer colors if there is no airline
+            CMatchingUtils::addLogDetailsToList(log, remoteModel.getCallsign(), QString("Prefer color liveries: %1, airline: '%2'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator()));
+
             for (const CAircraftModel &model : *this)
             {
                 const int score = model.calculateScore(remoteModel, preferColorLiveries);
