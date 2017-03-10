@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/filelogger.h"
 #include "blackmisc/loghandler.h"
 
@@ -115,8 +116,19 @@ namespace BlackMisc
 
     void CFileLogger::writeHeaderToFile()
     {
-        QString header(QStringLiteral("Application started."));
-        writeContentToFile(header);
+        m_stream << "This is " << m_applicationName;
+        m_stream << " version " << BlackConfig::CVersion::version();
+        m_stream << " running on " << QSysInfo::prettyProductName();
+        m_stream << " " << QSysInfo::currentCpuArchitecture() << endl;
+
+        m_stream << "Built from revision " << BlackConfig::CBuildConfig::gitHeadSha1();
+        m_stream << " on " << BlackConfig::CBuildConfig::buildDateAndTime() << endl;
+
+        m_stream << "Built with Qt " << QT_VERSION_STR;
+        m_stream << " and running with Qt " << qVersion();
+        m_stream << " " << QSysInfo::buildAbi() << endl;
+
+        m_stream << "Application started." << endl;
     }
 
     void CFileLogger::writeContentToFile(const QString &content)
