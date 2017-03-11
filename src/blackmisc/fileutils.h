@@ -63,6 +63,9 @@ namespace BlackMisc
         //! \sa CNetworkUtils::buildUrl for URLs
         static QString appendFilePaths(const QString &path1, const QString &path2);
 
+        //! Strip file from path a/b/c.json a/b
+        static QString stripFileFromPath(const QString &path);
+
         //! Append file paths
         //! \sa CNetworkUtils::buildUrl for URLs
         static QString appendFilePaths(const QString &path1, const QString &path2, const QString &path3);

@@ -46,13 +46,10 @@ namespace BlackGui
             int copySelectedFiles();
 
             //! Preselect newer files
-            void preselectMissingOurOutdated();
+            void preselectMissingOrOutdated();
 
             //! Init file content
-            void initCurrentDirectories();
-
-            //! Init and preselect directories
-            void initAndPreselectDirectories();
+            void initCurrentDirectories(bool preselectMissingOrOutdated = false);
 
             //! Are there other versions to copy from
             bool hasOtherVersionData() const;
@@ -69,9 +66,6 @@ namespace BlackGui
 
             //! Get the selected files
             QStringList getSelectedFiles() const;
-
-            //! Set calculated combobox width
-            void setComboBoxWidth();
 
             QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;

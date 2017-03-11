@@ -20,65 +20,111 @@
    <enum>QFrame::Raised</enum>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0">
-    <widget class="QGroupBox" name="gb_Source">
-     <property name="title">
-      <string>Source (other versions)</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item row="1" column="0" colspan="2">
+    <widget class="QFrame" name="fr_Directories">
+     <layout class="QHBoxLayout" name="hl_Directories">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
-       <widget class="QTreeView" name="tv_Source">
-        <property name="alternatingRowColors">
-         <bool>true</bool>
+       <widget class="QGroupBox" name="gb_Source">
+        <property name="title">
+         <string>Source (other versions)</string>
         </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
+        <layout class="QVBoxLayout" name="vl_Source">
+         <property name="leftMargin">
+          <number>4</number>
+         </property>
+         <property name="topMargin">
+          <number>4</number>
+         </property>
+         <property name="rightMargin">
+          <number>4</number>
+         </property>
+         <property name="bottomMargin">
+          <number>4</number>
+         </property>
+         <item>
+          <widget class="QComboBox" name="cb_OtherVersions">
+           <property name="frame">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTreeView" name="tv_Source">
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::MultiSelection</enum>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="animated">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="gb_Destination">
+        <property name="title">
+         <string>Destination (this version)</string>
         </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="animated">
-         <bool>true</bool>
-        </property>
+        <layout class="QVBoxLayout" name="vl_Destination">
+         <property name="leftMargin">
+          <number>4</number>
+         </property>
+         <property name="topMargin">
+          <number>4</number>
+         </property>
+         <property name="rightMargin">
+          <number>4</number>
+         </property>
+         <property name="bottomMargin">
+          <number>4</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="le_CurrentVersion">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTreeView" name="tv_Destination">
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::NoSelection</enum>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="animated">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
     </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QGroupBox" name="gb_Destination">
-     <property name="title">
-      <string>Destination (this version)</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QTreeView" name="tv_Destination">
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::NoSelection</enum>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="animated">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="le_CurrentVersion">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QComboBox" name="cb_OtherVersions"/>
    </item>
    <item row="0" column="0" colspan="2">
     <widget class="QWidget" name="wi_Mode" native="true">

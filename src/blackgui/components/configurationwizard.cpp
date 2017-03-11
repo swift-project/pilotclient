@@ -46,12 +46,12 @@ namespace BlackGui
             if (page == ui->wp_CopyCaches)
             {
                 ui->comp_CopyCaches->setCacheMode();
-                ui->comp_CopyCaches->initAndPreselectDirectories();
+                ui->comp_CopyCaches->initCurrentDirectories(true);
             }
             else if (page == ui->wp_CopySettings)
             {
                 ui->comp_CopySettings->setSettingsMode();
-                ui->comp_CopySettings->initAndPreselectDirectories();
+                ui->comp_CopySettings->initCurrentDirectories(true);
             }
         }
     } // ns

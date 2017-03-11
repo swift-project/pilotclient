@@ -101,6 +101,13 @@ namespace BlackMisc
         return QDir::cleanPath(path1 + QChar('/') + path2);
     }
 
+    QString CFileUtils::stripFileFromPath(const QString &path)
+    {
+        if (path.endsWith('/'))  { return path; }
+        if (!path.contains('/')) { return path; }
+        return path.left(path.lastIndexOf('/'));
+    }
+
     QString CFileUtils::appendFilePaths(const QString &path1, const QString &path2, const QString &path3)
     {
         return CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);

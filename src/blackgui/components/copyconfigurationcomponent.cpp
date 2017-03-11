@@ -7,10 +7,11 @@
  * contained in the LICENSE file.
  */
 
+#include "ui_copyconfigurationcomponent.h"
 #include "copyconfigurationcomponent.h"
+#include "configurationwizard.h"
 #include "blackconfig/buildconfig.h"
 #include "blackmisc/directoryutils.h"
-#include "ui_copyconfigurationcomponent.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
 
@@ -34,8 +35,8 @@ namespace BlackGui
             ui->cb_OtherVersions->addItems(CDirectoryUtils::swiftApplicationDataDirectoryList(true, true));
             m_otherVersionDirs = CDirectoryUtils::swiftApplicationDataDirectoryList(true, false); // not beautified
 
-            connect(ui->rb_Cache, &QRadioButton::toggled, this, &CCopyConfigurationComponent::initCurrentDirectories);
-            connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, this, &CCopyConfigurationComponent::initCurrentDirectories);
+            connect(ui->rb_Cache, &QRadioButton::toggled, [ = ](bool) { this->initCurrentDirectories(true); });
+            connect(ui->cb_OtherVersions, &QComboBox::currentTextChanged, [ = ] { this->initCurrentDirectories(true); });
             connect(ui->pb_SelectAll, &QPushButton::clicked, ui->tv_Source, &QTreeView::selectAll);
             connect(ui->pb_ClearSelection, &QPushButton::clicked, ui->tv_Source, &QTreeView::clearSelection);
             connect(ui->pb_CopyOver, &QPushButton::clicked, this, &CCopyConfigurationComponent::copySelectedFiles);
@@ -60,22 +61,31 @@ namespace BlackGui
             if (files.isEmpty()) { return 0; }
 
             const QString destinationDir = this->getThisVersionDirectory();
+            const QString sourceDir = this->getOtherVersionsSelectedDirectory();
             if (destinationDir.isEmpty()) { return 0; }
-            const QDir d(destinationDir);
-            if (!d.exists()) { return 0; }
+            const QDir source(sourceDir);
+            const QDir destination(destinationDir);
+            if (!destination.exists()) { return 0; }
 
             int c = 0;
             for (const QString &file : files)
             {
-                const QFileInfo fileInfo(file);
-                const QString target = CFileUtils::appendFilePaths(destinationDir, fileInfo.fileName());
+                const QString relativePath = source.relativeFilePath(file);
+                const QString target = CFileUtils::appendFilePaths(destinationDir, relativePath);
+                if (relativePath.contains('/'))
+                {
+                    const QString targetDir = CFileUtils::stripFileFromPath(target);
+                    const bool dirOk = destination.mkpath(targetDir);
+                    if (!dirOk) { continue; }
+                }
+                QFile::remove(target); // copy does not overwrite
                 const bool s = QFile::copy(file, target);
                 if (s) { c++; }
             }
             return c;
         }
 
-        void CCopyConfigurationComponent::preselectMissingOurOutdated()
+        void CCopyConfigurationComponent::preselectMissingOrOutdated()
         {
             const QString dirOther = this->getOtherVersionsSelectedDirectory();
             const QString dirCurrent = this->getThisVersionDirectory();
@@ -83,7 +93,7 @@ namespace BlackGui
             ui->tv_Source->clearSelection();
             ui->tv_Destination->clearSelection();
 
-            const CDirectoryUtils::DirComparison comp = CDirectoryUtils::compareTwoDirectories(dirOther, dirCurrent);
+            const CDirectoryUtils::DirComparison comp = CDirectoryUtils::compareTwoDirectories(dirOther, dirCurrent, true);
             const QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
             if (!sourceModel) { return; }
 
@@ -97,11 +107,20 @@ namespace BlackGui
             }
         }
 
-        void CCopyConfigurationComponent::initCurrentDirectories()
+        void CCopyConfigurationComponent::initCurrentDirectories(bool preselectMissingOrOutdated)
         {
-            ui->le_CurrentVersion->setText(CDirectoryUtils::applicationDirectoryPath());
-            this->setComboBoxWidth();
-            const QString dir = this->getOtherVersionsSelectedDirectory();
+            const QString thisVersionDir = this->getThisVersionDirectory(); // cache or settings dir
+            const QDir thisVersionDirectory(thisVersionDir);
+            if (!thisVersionDirectory.exists())
+            {
+                const bool hasDir = thisVersionDirectory.mkpath(thisVersionDir);
+                if (!hasDir)
+                {
+                    ui->le_CurrentVersion->setText("No swift target dir");
+                    return;
+                }
+            }
+            ui->le_CurrentVersion->setText(thisVersionDir);
 
             // source
             QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
@@ -116,13 +135,22 @@ namespace BlackGui
                 {
                     Q_UNUSED(path);
                     ui->tv_Source->resizeColumnToContents(0);
+                    ui->tv_Source->expandAll();
+                    if (preselectMissingOrOutdated)
+                    {
+                        this->preselectMissingOrOutdated();
+                    }
                 });
             }
+            else
+            {
+                this->preselectMissingOrOutdated();
+            }
 
+            const QString dir = this->getOtherVersionsSelectedDirectory();
             const QModelIndex sourceIndex = sourceModel->setRootPath(dir);
             ui->tv_Source->setRootIndex(sourceIndex);
             ui->tv_Source->setSortingEnabled(true); // hide/disable only
-            ui->tv_Source->resizeColumnToContents(0);
 
             // destination
             QFileSystemModel *destinationModel = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
@@ -137,19 +165,13 @@ namespace BlackGui
                 {
                     Q_UNUSED(path);
                     ui->tv_Destination->resizeColumnToContents(0);
+                    ui->tv_Destination->expandAll();
                 });
             }
             const QString destinationDir = this->getThisVersionDirectory();
             const QModelIndex destinationIndex = destinationModel->setRootPath(destinationDir);
             ui->tv_Destination->setRootIndex(destinationIndex);
             ui->tv_Destination->setSortingEnabled(true);
-            ui->tv_Destination->resizeColumnToContents(0);
-        }
-
-        void CCopyConfigurationComponent::initAndPreselectDirectories()
-        {
-            this->initCurrentDirectories();
-            this->preselectMissingOurOutdated();
         }
 
         bool CCopyConfigurationComponent::hasOtherVersionData() const
@@ -173,11 +195,11 @@ namespace BlackGui
             if (ui->cb_OtherVersions->count() < 1) { return ""; }
             const QFileInfoList dirs(CDirectoryUtils::swiftApplicationDataDirectories());
             if (dirs.isEmpty()) { return ""; }
-            const QString s = m_otherVersionDirs.at(ui->cb_OtherVersions->currentIndex());
+            const QString otherVersionDir = m_otherVersionDirs.at(ui->cb_OtherVersions->currentIndex());
             QString dir;
             for (const QFileInfo &info : dirs)
             {
-                if (info.absoluteFilePath().contains(s))
+                if (info.absoluteFilePath().contains(otherVersionDir))
                 {
                     dir = info.absoluteFilePath();
                     break;
@@ -209,21 +231,19 @@ namespace BlackGui
             return files;
         }
 
-        void CCopyConfigurationComponent::setComboBoxWidth()
-        {
-            const int width = this->width() * 0.45;
-            ui->cb_OtherVersions->setFixedWidth(width);
-        }
-
         void CCopyConfigurationWizardPage::initializePage()
         {
             Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
-            m_config->initCurrentDirectories();
+            m_config->initCurrentDirectories(true);
         }
 
         bool CCopyConfigurationWizardPage::validatePage()
         {
+            CConfigurationWizard *wizard = qobject_cast<CConfigurationWizard *>(this->wizard());
             Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
+            Q_ASSERT_X(wizard, Q_FUNC_INFO, "No wizard");
+
+            if (wizard->lastStepSkipped()) { return true; }
             m_config->copySelectedFiles();
             return true;
         }
