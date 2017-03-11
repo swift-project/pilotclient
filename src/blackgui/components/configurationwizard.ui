@@ -25,6 +25,9 @@
   <property name="wizardStyle">
    <enum>QWizard::ClassicStyle</enum>
   </property>
+  <property name="options">
+   <set>QWizard::HaveCustomButton1</set>
+  </property>
   <widget class="BlackGui::Components::CCopyConfigurationWizardPage" name="wp_CopySettings">
    <property name="title">
     <string>Copy configuration from another installation</string>

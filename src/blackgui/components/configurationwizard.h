@@ -43,12 +43,21 @@ namespace BlackGui
             //! Destructor
             virtual ~CConfigurationWizard();
 
+            //! Was the last step skipped?
+            bool lastStepSkipped() const;
+
         private:
             //! The current page has changed
             void wizardCurrentIdChanged(int id);
 
+            //! Custom button was clicked
+            void clickedCustomButton(int which);
+
             QScopedPointer<Ui::CConfigurationWizard> ui;
-            int m_lastId = -1;
+            int m_previousId = -1;
+            int m_minId = -1;
+            int m_maxId = -1;
+            bool m_skipped = false;
         };
     } // ns
 } // ns
