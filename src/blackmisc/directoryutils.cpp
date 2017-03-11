@@ -100,6 +100,13 @@ namespace BlackMisc
         return QUrl::fromPercentEncoding(directory.toUtf8());
     }
 
+    QStringList CDirectoryUtils::getSubDirectories(const QString &rootDir)
+    {
+        QDir dir(rootDir);
+        if (!dir.exists()) { return QStringList(); }
+        return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
+    }
+
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         QSet<QString> sl;
@@ -136,15 +143,16 @@ namespace BlackMisc
         return found;
     }
 
-    CDirectoryUtils::DirComparison CDirectoryUtils::compareTwoDirectories(const QString &dirSource, const QString &dirTarget)
+    CDirectoryUtils::DirComparison CDirectoryUtils::compareTwoDirectories(const QString &dirSource, const QString &dirTarget, bool nestedDirs)
     {
         DirComparison comp;
         const QDir d1(dirSource);
         const QDir d2(dirTarget);
 
-        if (!d1.exists() || !d2.exists()) { return comp; }
-        const QFileInfoList dSourceList = d1.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
-        const QFileInfoList dTargetList = d2.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
+        QFileInfoList dSourceList;
+        QFileInfoList dTargetList;
+        if (d1.exists()) { dSourceList = d1.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name); }
+        if (d2.exists()) { dTargetList = d2.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name); }
 
         // only names
         const QSet<QString> sSourceFiles = CDirectoryUtils::fileNamesToQSet(dSourceList);
@@ -187,8 +195,35 @@ namespace BlackMisc
                 comp.newerInSource.insert(source.canonicalFilePath());
             }
         }
+
+        if (nestedDirs)
+        {
+            const QStringList relativeSubdirs = CDirectoryUtils::getSubDirectories(dirSource);
+            if (!relativeSubdirs.isEmpty())
+            {
+                for (const QString relativeSubdir : relativeSubdirs)
+                {
+                    const QString sourceSubdir = CFileUtils::appendFilePaths(dirSource, relativeSubdir);
+                    const QString targetSubdir = CFileUtils::appendFilePaths(dirTarget, relativeSubdir);
+                    const DirComparison subComparison = CDirectoryUtils::compareTwoDirectories(sourceSubdir, targetSubdir, true);
+                    comp.insert(subComparison);
+                }
+            }
+        }
+
         comp.ok = true;
         return comp;
+    }
+
+    void CDirectoryUtils::DirComparison::insert(const CDirectoryUtils::DirComparison &otherComparison)
+    {
+        source           += otherComparison.source;
+        missingInSource  += otherComparison.missingInSource;
+        missingInTarget  += otherComparison.missingInTarget;
+        newerInSource    += otherComparison.newerInSource;
+        newerInTarget    += otherComparison.newerInTarget;
+        sameNameInSource += otherComparison.sameNameInSource;
+        sameNameInTarget += otherComparison.sameNameInTarget;
     }
 } // ns
 

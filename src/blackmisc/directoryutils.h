@@ -51,6 +51,9 @@ namespace BlackMisc
         //! Virtually the inverse operation of CDirectoryUtils::normalizedApplicationDirectory
         static QString decodeNormalizedDirectory(const QString &directory);
 
+        //! All sub directories of given dir
+        static QStringList getSubDirectories(const QString &rootDir);
+
         //! Result of directory comparison
         struct DirComparison
         {
@@ -62,10 +65,13 @@ namespace BlackMisc
             QSet<QString> newerInTarget;     //!< file in target is newer
             QSet<QString> sameNameInSource;  //!< file exists in source and target, source name
             QSet<QString> sameNameInTarget;  //!< file exists in source and target, target name
+
+            //! Insert values of another comparison
+            void insert(const DirComparison &otherComparison);
         };
 
-        //! Compare 2 directories (only files, not subdirectories
-        static DirComparison compareTwoDirectories(const QString &dirSource, const QString &dirTarget);
+        //! Compare 2 directories (only files, but with hierarchy)
+        static DirComparison compareTwoDirectories(const QString &dirSource, const QString &dirTarget, bool nestedDirs);
 
     private:
         //! Returns the application directory of the calling executable as normalized string.
