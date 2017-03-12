@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     // I use CGuiApplication and not core application
     // otherwise no QPixmap metadata (metadata sample)
     QCoreApplication qa(argc, argv);
-    CApplication a;
+    CApplication a(CApplicationInfo::Sample);
     Q_UNUSED(qa);
     Q_UNUSED(a);
     QTextStream qtout(stdout);

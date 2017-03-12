@@ -88,6 +88,10 @@ static const QString &swiftDataRoot()
 
 namespace BlackCore
 {
+    CApplication::CApplication(CApplicationInfo::Application application, bool init) :
+        CApplication(executable(), application, init)
+    { }
+
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) :
         m_cookieManager( {}, this), m_applicationName(applicationName), m_application(application), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
@@ -234,6 +238,8 @@ namespace BlackCore
         if (a.contains("core"))     { return CApplicationInfo::PilotClientCore; }
         if (a.contains("launcher")) { return CApplicationInfo::Laucher; }
         if (a.contains("gui"))      { return CApplicationInfo::PilotClientGui; }
+        if (a.contains("test"))     { return CApplicationInfo::UnitTest; }
+        if (a.contains("sample"))   { return CApplicationInfo::Sample; }
         if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
         return CApplicationInfo::Unknown;
     }

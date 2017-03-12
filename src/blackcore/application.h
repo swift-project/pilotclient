@@ -102,6 +102,9 @@ namespace BlackCore
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
         //! Constructor
+        CApplication(BlackMisc::CApplicationInfo::Application application, bool init = true);
+
+        //! Constructor
         CApplication(const QString &applicationName = executable(), BlackMisc::CApplicationInfo::Application application = BlackMisc::CApplicationInfo::Unknown, bool init = true);
 
         //! Destructor
