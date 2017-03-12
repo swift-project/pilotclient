@@ -59,7 +59,7 @@ SOURCES +=  *.cpp \
             $$PWD/weather/*.cpp
 
 win32 {
-    LIBS *= -lShell32 -lDbghelp
+    LIBS *= -lShell32 -lDbghelp -lversion
 }
 win32-g++ {
     LIBS *= -lpsapi
