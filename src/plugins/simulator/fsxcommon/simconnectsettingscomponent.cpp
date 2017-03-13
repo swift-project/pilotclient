@@ -13,8 +13,8 @@
 #include "blackcore/context/contextapplication.h"
 #include "blackcore/context/contextsimulator.h"
 #include "blackmisc/network/networkutils.h"
-#include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/logmessage.h"
 #include <QFileInfo>
 #include <QDesktopServices>
 #include <QMessageBox>
@@ -40,6 +40,8 @@ namespace BlackSimPlugin
             connect(ui->pb_SettingsFsxExistsSimconncetCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::checkSimConnectCfgFile);
             connect(ui->pb_SettingsFsxSaveSimconnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectCfgFile);
             connect(ui->pb_SettingsFsxTestConnection, &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSimConnectConnection);
+
+            this->setSimConnectInfo();
         }
 
         CSimConnectSettingsComponent::~CSimConnectSettingsComponent()
@@ -50,8 +52,7 @@ namespace BlackSimPlugin
         void CSimConnectSettingsComponent::openSimConnectCfgFile()
         {
             const QFileInfo info(CSimConnectUtilities::getLocalSimConnectCfgFilename());
-            const QString path = QDir::toNativeSeparators(info.absolutePath());
-            QDesktopServices::openUrl(QUrl(QStringLiteral("file:///") % path));
+            QDesktopServices::openUrl(QUrl::fromLocalFile(info.absoluteFilePath()));
         }
 
         void CSimConnectSettingsComponent::deleteSimConnectCfgFile()
@@ -138,7 +139,7 @@ namespace BlackSimPlugin
                 return;
             }
 
-            int p = port.toInt();
+            const int p = port.toInt();
             QString fileName;
 
             if (sGui->getIContextSimulator())
@@ -170,6 +171,12 @@ namespace BlackSimPlugin
                 QMessageBox::warning(qApp->activeWindow(), tr("Failed writing simConnect.cfg"),
                                      tr("Failed writing '%1'!").arg(fileName));
             }
+        }
+
+        void CSimConnectSettingsComponent::setSimConnectInfo()
+        {
+            const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
+            ui->lbl_SimConnectInfo->setText(simConnectInfo.summary());
         }
     } // ns
 } // ns

@@ -52,6 +52,9 @@ namespace BlackSimPlugin
 
         private:
             QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
+
+            //! Set the simconnect info
+            void setSimConnectInfo();
         };
     } // ns
 } // ns
