@@ -15,6 +15,7 @@
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/weather/gridpoint.h"
 #include "blackmisc/blackmiscexport.h"
+#include "blackmisc/windllutils.h"
 
 #include <QMetaType>
 #include <QObject>
@@ -168,6 +169,9 @@ namespace BlackMisc
 
                 //! Converts the weather at gridPoint to a SimConnect METAR string
                 static QString convertToSimConnectMetar(const BlackMisc::Weather::CGridPoint &gridPoint);
+
+                //! Get info about SimConnect DLL
+                static BlackMisc::CWinDllUtils::DLLInfo simConnectDllInfo();
 
                 //! Register metadata
                 static void registerMetadata();

@@ -339,6 +339,18 @@ namespace BlackMisc
                 }
                 return simconnectTemperatures;
             }
+
+            CWinDllUtils::DLLInfo CSimConnectUtilities::simConnectDllInfo()
+            {
+                const QList<CWinDllUtils::ProcessModule> modules = CWinDllUtils::getModules(-1, "simconnect");
+                if (modules.isEmpty())
+                {
+                    CWinDllUtils::DLLInfo info;
+                    info.errorMsg = "No SimConnect.dll loaded";
+                    return info;
+                }
+                return CWinDllUtils::getDllInfo(modules.first().executable);
+            }
         } // namespace
     } // namespace
 } // namespace
