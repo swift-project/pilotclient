@@ -10,8 +10,9 @@
 #include "simulatorfsxcommon.h"
 #include "blackcore/application.h"
 #include "blackmisc/network/textmessage.h"
-#include "blackmisc/simulation/fscommon/bcdconversions.h"
 #include "blackmisc/simulation/fsx/simconnectutilities.h"
+#include "blackmisc/simulation/fscommon/bcdconversions.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/aircraftmodel.h"
 #include "blackmisc/simulation/interpolatorlinear.h"
 #include "blackmisc/simulation/interpolatorspline.h"
@@ -22,7 +23,6 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/threadutils.h"
 #include "blackmisc/verify.h"
-#include "blackmisc/simulation/fscommon/fscommonutil.h"
 
 #include <QTimer>
 #include <type_traits>

@@ -12,9 +12,9 @@
 #ifndef BLACKMISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 #define BLACKMISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 
-#include "blackmisc/blackmiscexport.h"
 #include "blackmisc/aviation/aircraftlights.h"
 #include "blackmisc/weather/gridpoint.h"
+#include "blackmisc/blackmiscexport.h"
 
 #include <QMetaType>
 #include <QObject>

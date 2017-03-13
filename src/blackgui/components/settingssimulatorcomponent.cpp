@@ -17,13 +17,13 @@
 #include "blackgui/pluginconfigwindow.h"
 #include "blackgui/plugindetailswindow.h"
 #include "blackgui/pluginselector.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
+#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/iterator.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/pq/units.h"
-#include "blackmisc/simulation/simulatorplugininfo.h"
-#include "blackmisc/simulation/simulatorplugininfolist.h"
 #include "blackmisc/statusmessage.h"
 #include "ui_settingssimulatorcomponent.h"
 
@@ -285,9 +285,10 @@ namespace BlackGui
 
         void CSettingsSimulatorComponent::ps_showPluginDetails(const QString &identifier)
         {
-            CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
-            auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
-                                         [&identifier](const CSimulatorPluginInfo & info)
+            const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
+            const auto selected = std::find_if(
+                                      simDrivers.begin(), simDrivers.end(),
+                                      [&identifier](const CSimulatorPluginInfo & info)
             {
                 return info.getIdentifier() == identifier;
             });

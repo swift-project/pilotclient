@@ -162,13 +162,13 @@ namespace BlackSimPlugin
             if (sGui->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p)))
             {
                 QMessageBox::information(qApp->activeWindow(), tr("File saved"),
-                                         tr("File %1 saved.").arg(fileName));
+                                         tr("File '%1' saved.").arg(fileName));
                 checkSimConnectCfgFile();
             }
             else
             {
                 QMessageBox::warning(qApp->activeWindow(), tr("Failed writing simConnect.cfg"),
-                                     tr("Failed writing %1!").arg(fileName));
+                                     tr("Failed writing '%1'!").arg(fileName));
             }
         }
     } // ns

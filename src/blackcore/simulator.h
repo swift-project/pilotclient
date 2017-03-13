@@ -236,7 +236,6 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-
         //! Constructor
         //! \sa ISimulatorFactory::createListener().
         //! \note msvc2015: use inherited constructor

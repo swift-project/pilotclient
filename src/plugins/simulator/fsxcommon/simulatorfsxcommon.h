@@ -312,7 +312,8 @@ namespace BlackSimPlugin
             QString m_simulatorName;
             QString m_simulatorDetails;
 
-            //! SimConnect Callback
+            //! SimConnect Callback (simplified version for listener)
+            //! \sa CSimConnectObjects::SimConnectProc
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
         };
     }

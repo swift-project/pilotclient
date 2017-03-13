@@ -7,9 +7,7 @@
  * contained in the LICENSE file.
  */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_ITERATOR_H
 #define BLACKMISC_ITERATOR_H
