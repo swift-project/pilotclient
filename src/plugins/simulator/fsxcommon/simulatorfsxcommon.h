@@ -305,6 +305,9 @@ namespace BlackSimPlugin
             //! Check simulator version and type
             bool checkVersionAndSimulator() const;
 
+            //! Check the simconnect.dll
+            bool checkSimConnectDll() const;
+
         private:
             QTimer *m_timer { nullptr };
             QString m_simulatorVersion;

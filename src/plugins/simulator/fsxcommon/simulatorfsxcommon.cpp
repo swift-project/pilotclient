@@ -1373,6 +1373,13 @@ namespace BlackSimPlugin
             return false;
         }
 
+        bool CSimulatorFsxCommonListener::checkSimConnectDll() const
+        {
+            static const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
+            if (!simConnectInfo.errorMsg.isEmpty()) { return false; }
+            return true;
+        }
+
         void CSimulatorFsxCommonListener::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
         {
             Q_UNUSED(cbData);
