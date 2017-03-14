@@ -69,9 +69,9 @@ This plugin acts as the interface between swift and FSX.</detailedDescription>
         </component>
         <component>
             <name>p3d</name>
-            <description>Prepare 3D</description>
+            <description>PREPAR3D</description>
             <canBeEdited>1</canBeEdited>
-            <detailedDescription>LM Prepare3D Simulator Plugin
+            <detailedDescription>LM Prepar3D Simulator Plugin
 This plugin acts as the interface between swift and P3D.</detailedDescription>
             <selected>1</selected>
             <show>1</show>
