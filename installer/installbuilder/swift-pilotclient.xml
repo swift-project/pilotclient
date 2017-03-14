@@ -1,8 +1,8 @@
 <component>
-    <name>pilotclient</name>
-    <description>Pilot Client</description>
+    <name>swiftsuite</name>
+    <description>swift Software Suite</description>
     <canBeEdited>1</canBeEdited>
-    <detailedDescription>swift pilot client binaries.
+    <detailedDescription>swift software suite.
 This installs the binaries to run all swift applications.</detailedDescription>
     <selected>1</selected>
     <show>1</show>
