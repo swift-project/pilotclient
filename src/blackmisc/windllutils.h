@@ -35,7 +35,7 @@ namespace BlackMisc
             QString productVersionName; //!< version and name
             QString productName;        //!< product name
             QString originalFilename;   //!< original filename
-            QString fullFilename;       //!< full filename
+            QString fullFilename;       //!< full filename and path
 
             //! Product or file version
             const QString &productOrFileVersion() const

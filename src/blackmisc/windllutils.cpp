@@ -61,7 +61,7 @@ namespace BlackMisc
     CWinDllUtils::DLLInfo CWinDllUtils::getDllInfo(const QString &dllFile)
     {
         // http://stackoverflow.com/questions/940707/how-do-i-programatically-get-the-version-of-a-dll-or-exe-file
-        DLLInfo result = {};
+        DLLInfo result;
         const QFile dllQFile(dllFile);
         if (!dllQFile.exists())
         {
@@ -198,7 +198,7 @@ namespace BlackMisc
     CWinDllUtils::DLLInfo CWinDllUtils::getDllInfo(const QString &dllFile)
     {
         Q_UNUSED(dllFile);
-        DLLInfo result = {};
+        DLLInfo result;
         result.errorMsg = QString("Only works on Windows");
         return result;
     }
