@@ -192,7 +192,5 @@ namespace BlackMisc
 Q_DECLARE_METATYPE(BlackMisc::Db::DbKeyState)
 Q_DECLARE_METATYPE(BlackMisc::Db::DbKeyStateFilter)
 Q_DECLARE_OPERATORS_FOR_FLAGS(BlackMisc::Db::DbKeyStateFilter)
-Q_DECLARE_INTERFACE(BlackMisc::Db::IDatastoreObjectWithIntegerKey, "org.swift-project.blackmisc.db.idatastoreobjectwithintegerkey")
-Q_DECLARE_INTERFACE(BlackMisc::Db::IDatastoreObjectWithStringKey, "org.swift-project.blackmisc.db.idatastoreobjectwithstringkey")
 
 #endif // guard
