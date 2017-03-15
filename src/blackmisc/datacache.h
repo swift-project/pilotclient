@@ -255,6 +255,9 @@ namespace BlackMisc
         //! The directory where core data are stored.
         static const QString &persistentStore();
 
+        //! Revision file name
+        static const QString &revisionFileName();
+
         //! Return the filename where the value with the given key may be stored.
         static QString filenameForKey(const QString &key);
 
@@ -297,9 +300,8 @@ namespace BlackMisc
         virtual void connectPage(Private::CValuePage *page) override;
 
         QFileSystemWatcher m_watcher;
-        const QString m_revisionFileName { CFileUtils::appendFilePaths(persistentStore(), ".rev") };
 
-        CDataCacheSerializer m_serializer { this, m_revisionFileName };
+        CDataCacheSerializer m_serializer { this, revisionFileName() };
         CDataCacheRevision m_revision { persistentStore() + "/" };
         friend class CDataCacheSerializer; // to access m_revision and protected members of CValueCache
     };

@@ -85,12 +85,12 @@ namespace BlackMisc
         connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, &CDataCache::loadFromStoreAsync);
         connect(&m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote, Qt::DirectConnection);
 
-        if (! QFile::exists(m_revisionFileName)) { QFile(m_revisionFileName).open(QFile::WriteOnly); }
+        if (! QFile::exists(revisionFileName())) { QFile(revisionFileName()).open(QFile::WriteOnly); }
         m_serializer.loadFromStore({}, false, true); // load pinned values
         singleShot(0, this, [this] // only start the serializer if the main thread event loop runs
         {
             m_serializer.start();
-            m_watcher.addPath(m_revisionFileName);
+            m_watcher.addPath(revisionFileName());
             loadFromStoreAsync();
         });
     }
@@ -105,6 +105,12 @@ namespace BlackMisc
     {
         static const QString dir = CFileUtils::appendFilePaths(getCacheRootDirectory(), relativeFilePath());
         return dir;
+    }
+
+    const QString &CDataCache::revisionFileName()
+    {
+        static const QString rev = CFileUtils::appendFilePaths(persistentStore(), ".rev");
+        return rev;
     }
 
     QString CDataCache::filenameForKey(const QString &key)
@@ -781,7 +787,7 @@ namespace BlackMisc
         QUuid uuid(json.value("uuid").toString());
         CSequence<CProcessInfo> apps;
         auto status = apps.convertFromJsonNoThrow(json.value("apps").toObject(), this, QStringLiteral("Error in %1 apps object").arg(m_filename));
-        apps.removeIf([](const CProcessInfo &pi) { return ! pi.exists(); });
+        apps.removeIf([](const CProcessInfo & pi) { return ! pi.exists(); });
 
         if (apps.isEmpty()) { uuid = CIdentifier().toUuid(); }
         m_uuid = uuid;
