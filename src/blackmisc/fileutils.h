@@ -17,6 +17,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFileInfoList>
+#include <QLockFile>
 #include <QString>
 #include <QStringList>
 #include <Qt>
@@ -122,6 +123,9 @@ namespace BlackMisc
 
         //! Get all swift executables
         static const QStringList &getSwiftExecutables();
+
+        //! Error message explaining why a QLockFile failed to lock.
+        static QString lockFileError(const QLockFile &lockFile);
     };
 } // ns
 

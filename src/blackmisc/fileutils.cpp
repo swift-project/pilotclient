@@ -328,4 +328,22 @@ namespace BlackMisc
         );
         return executables;
     }
+
+    QString CFileUtils::lockFileError(const QLockFile &lockFile)
+    {
+        switch (lockFile.error())
+        {
+        case QLockFile::NoError: return QStringLiteral("No error");
+        case QLockFile::PermissionError: return QStringLiteral("Insufficient permission");
+        case QLockFile::UnknownError: return QStringLiteral("Unknown error");
+        case QLockFile::LockFailedError:
+            {
+                QString hostname, appname;
+                qint64 pid = 0;
+                lockFile.getLockInfo(&pid, &hostname, &appname);
+                return QStringLiteral("Lock open in another process (%1 %2 on %3)").arg(hostname, QString::number(pid), appname);
+            }
+        default: return QStringLiteral("Bad error number");
+        }
+    }
 } // ns

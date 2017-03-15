@@ -180,24 +180,6 @@ namespace BlackMisc
         return p;
     }
 
-    QString lockFileError(const QLockFile &lock)
-    {
-        switch (lock.error())
-        {
-        case QLockFile::NoError: return "No error";
-        case QLockFile::PermissionError: return "Insufficient permission";
-        case QLockFile::UnknownError: return "Unknown filesystem error";
-        case QLockFile::LockFailedError:
-            {
-                QString hostname, appname;
-                qint64 pid = 0;
-                lock.getLockInfo(&pid, &hostname, &appname);
-                return QString("Lock open in another process (%1 %2 on %3)").arg(hostname, QString::number(pid), appname);
-            }
-        default: return "Bad error number";
-        }
-    }
-
     void CDataCache::saveToStoreAsync(const BlackMisc::CValueCachePacket &values)
     {
         singleShot(0, &m_serializer, [this, values]
@@ -370,7 +352,7 @@ namespace BlackMisc
 
         if (! m_lockFile.lock())
         {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << lockFileError(m_lockFile);
+            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             return {};
         }
         m_updateInProgress = true;
@@ -636,7 +618,7 @@ namespace BlackMisc
 
         if (! m_lockFile.lock())
         {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << lockFileError(m_lockFile);
+            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             m_lockFile.unlock();
             return;
         }
@@ -672,7 +654,7 @@ namespace BlackMisc
 
         if (! m_lockFile.lock())
         {
-            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << lockFileError(m_lockFile);
+            CLogMessage(this).error("Failed to lock %1: %2") << m_basename << CFileUtils::lockFileError(m_lockFile);
             m_lockFile.unlock();
             return 0;
         }
