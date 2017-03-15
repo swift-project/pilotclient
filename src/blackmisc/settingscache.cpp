@@ -30,13 +30,41 @@ namespace BlackMisc
         return dir;
     }
 
+    const QString &CSettingsCache::lockFileName()
+    {
+        static const QString file = CFileUtils::appendFilePaths(persistentStore(), ".lock");
+        return file;
+    }
+
+    CStatusMessage CSettingsCache::lockFile(QLockFile &lock)
+    {
+        Q_ASSERT(!lock.isLocked());
+        if (!QDir::root().mkpath(persistentStore()))
+        {
+            return CStatusMessage(this).error("Failed to create %1") << persistentStore();
+        }
+        if (!lock.lock())
+        {
+            return CStatusMessage(this).error("Failed to lock %1: %2") << lockFileName() << CFileUtils::lockFileError(lock);
+        }
+        return {};
+    }
+
     BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QString &keyPrefix)
     {
+        QLockFile lock(lockFileName());
+        const CStatusMessage lockStatus = lockFile(lock);
+        if (lockStatus.isFailure()) { return lockStatus; }
+
         return saveToFiles(persistentStore(), keyPrefix);
     }
 
     BlackMisc::CStatusMessage CSettingsCache::saveToStore(const QStringList &keys)
     {
+        QLockFile lock(lockFileName());
+        const CStatusMessage lockStatus = lockFile(lock);
+        if (lockStatus.isFailure()) { return lockStatus; }
+
         return saveToFiles(persistentStore(), keys);
     }
 
@@ -47,12 +75,24 @@ namespace BlackMisc
 
     void CSettingsCache::saveToStoreByPacket(const CValueCachePacket &values)
     {
+        QLockFile lock(lockFileName());
+        const CStatusMessage lockStatus = lockFile(lock);
+        if (lockStatus.isFailure())
+        {
+            CLogMessage::preformatted(lockStatus);
+            return;
+        }
+
         CStatusMessage status = saveToFiles(persistentStore(), values.toVariantMap());
         CLogMessage::preformatted(status);
     }
 
     BlackMisc::CStatusMessage CSettingsCache::loadFromStore()
     {
+        QLockFile lock(lockFileName());
+        const CStatusMessage lockStatus = lockFile(lock);
+        if (lockStatus.isFailure()) { return lockStatus; }
+
         return loadFromFiles(persistentStore());
     }
 

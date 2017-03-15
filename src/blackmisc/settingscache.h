@@ -62,6 +62,8 @@ namespace BlackMisc
     private:
         CSettingsCache();
         void saveToStoreByPacket(const CValueCachePacket &values);
+        static const QString &lockFileName();
+        CStatusMessage lockFile(QLockFile &);
     };
 
     /*!

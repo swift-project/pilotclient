@@ -511,9 +511,6 @@ namespace BlackCore
         {
             return this->getIContextApplication()->saveSettingsByKey(keys);
         }
-        //! \todo If contexts have shut down then we already missed the opportunity to save settings.
-        //! Saving without contexts is not safe.
-        BLACK_VERIFY(false);
         return CSettingsCache::instance()->saveToStore(keys);
     }
 
