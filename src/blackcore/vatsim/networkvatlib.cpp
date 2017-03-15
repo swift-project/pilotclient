@@ -980,6 +980,10 @@ namespace BlackCore
                     emit customFSInnPacketReceived(callsign, data[1], data[2], data[7], data[8]);
                 }
             }
+            else if (packetId.compare("FSIP2PR", Qt::CaseInsensitive) == 0)
+            {
+                // FSInn peer2peer protocol - ignore, not supported
+            }
             else
             {
                 CLogMessage(this).warning("Unknown custom packet from %1 - id: %2") << callsign.toQString() << packetId;
