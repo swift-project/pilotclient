@@ -82,6 +82,11 @@ namespace BlackGui
                 const bool s = QFile::copy(file, target);
                 if (s) { c++; }
             }
+
+            // delete revision file in target if required
+            this->deleteRevisionFile();
+
+            // bye
             return c;
         }
 
@@ -229,6 +234,14 @@ namespace BlackGui
                 }
             }
             return files;
+        }
+
+        void CCopyConfigurationComponent::deleteRevisionFile() const
+        {
+            if (!ui->rb_Cache->isChecked()) { return; } // only for cache, no .rev file for settigs
+            QFile rev(CDataCache::revisionFileName());
+            if (!rev.exists()) { return; }
+            rev.remove();
         }
 
         void CCopyConfigurationWizardPage::initializePage()

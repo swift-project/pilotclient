@@ -67,6 +67,9 @@ namespace BlackGui
             //! Get the selected files
             QStringList getSelectedFiles() const;
 
+            //! Delete the .rev file (caches)
+            void deleteRevisionFile() const;
+
             QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
         };
