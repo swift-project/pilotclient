@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Simulation
     {
         class CInterpolatorLinear;
-        class CInterpolatorSpline;
+        class CInterpolatorMulti;
         class CInterpolationLogger;
     }
 }
@@ -54,7 +54,7 @@ namespace BlackSimPlugin
             const QString &getAircraftModelString() const { return m_aircraft.getModelString(); }
 
             //! Interpolator
-            BlackMisc::Simulation::CInterpolatorSpline *getInterpolator() const { return m_interpolator.data(); }
+            BlackMisc::Simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 
             //! Add parts for interpolator
             void addAircraftParts(const BlackMisc::Aviation::CAircraftParts &parts);
@@ -142,7 +142,7 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };       //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;    //!< how often do we query ground elevation
             // QSharedPointer<BlackMisc::Simulation::CInterpolatorLinear> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
-            QSharedPointer<BlackMisc::Simulation::CInterpolatorSpline> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
+            QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
         };
 
         //! Simulator objects (aka AI aircraft)
