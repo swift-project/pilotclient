@@ -14,6 +14,7 @@
 
 #include "datarefs.h"
 #include "terrainprobe.h"
+#include "command.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/simulation/interpolatormulti.h"
@@ -140,6 +141,9 @@ namespace XBus
         };
         QHash<QString, Plane *> m_planesByCallsign;
         QHash<void *, Plane *> m_planesById;
+        BlackMisc::Simulation::CInterpolatorMulti::Mode m_interpolatorMode = BlackMisc::Simulation::CInterpolatorMulti::ModeSpline;
+        CCommand m_interpolatorModeCommand { "org/swift-project/xbus/toggle_lerp_mode", "Toggle interpolation mode", [this] { toggleInterpolatorMode(); } };
+        void toggleInterpolatorMode();
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

@@ -223,6 +223,7 @@ namespace XBus
         if (id)
         {
             auto plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery);
+            plane->interpolator.setMode(m_interpolatorMode);
             m_planesByCallsign[callsign] = plane;
             m_planesById[id] = plane;
         }
@@ -387,6 +388,19 @@ namespace XBus
             else { return xpmpData_Unavailable; }
 
         default: return xpmpData_Unavailable;
+        }
+    }
+
+    void CTraffic::toggleInterpolatorMode()
+    {
+        switch (m_interpolatorMode)
+        {
+        case BlackMisc::Simulation::CInterpolatorMulti::ModeLinear: m_interpolatorMode = BlackMisc::Simulation::CInterpolatorMulti::ModeSpline; break;
+        case BlackMisc::Simulation::CInterpolatorMulti::ModeSpline: m_interpolatorMode = BlackMisc::Simulation::CInterpolatorMulti::ModeLinear; break;
+        }
+        for (auto plane : m_planesByCallsign)
+        {
+            plane->interpolator.setMode(m_interpolatorMode);
         }
     }
 
