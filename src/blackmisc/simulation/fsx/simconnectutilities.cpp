@@ -30,9 +30,42 @@ namespace BlackMisc
         {
             CSimConnectUtilities::CSimConnectUtilities() { }
 
+            const QString &CSimConnectUtilities::simConnectFilename()
+            {
+                static const QString fn("SimConnect.cfg");
+                return fn;
+            }
+
             QString CSimConnectUtilities::getLocalSimConnectCfgFilename()
             {
-                return QCoreApplication::applicationDirPath() + "/SimConnect.cfg";
+                return CFileUtils::appendFilePaths(QCoreApplication::applicationDirPath(), simConnectFilename());
+            }
+
+            bool CSimConnectUtilities::hasLocalSimConnectCfgFilename()
+            {
+                const QFile f(getLocalSimConnectCfgFilename());
+                return f.exists();
+            }
+
+            QSharedPointer<QSettings> CSimConnectUtilities::simConnectFileAsSettings(const QString &fileName)
+            {
+                QSharedPointer<QSettings> sp;
+                const QFile file(fileName);
+                if (!file.exists()) { return sp; }
+                sp.reset(new QSettings(fileName, QSettings::IniFormat));
+                return sp;
+            }
+
+            QString CSimConnectUtilities::ipAddress(const QSettings *simConnectSettings)
+            {
+                if (!simConnectSettings) { return QString(""); }
+                return simConnectSettings->value("SimConnect/Address").toString();
+            }
+
+            int CSimConnectUtilities::ipPort(const QSettings *simConnectSettings)
+            {
+                if (!simConnectSettings) { return -1; }
+                return simConnectSettings->value("SimConnect/Port", QVariant::fromValue(-1)).toInt();
             }
 
             bool CSimConnectUtilities::writeSimConnectCfg(const QString &fileName, const QString &ip, int port)
@@ -58,7 +91,7 @@ namespace BlackMisc
 
             const QString CSimConnectUtilities::resolveEnumToString(const DWORD id, const char *enumName)
             {
-                int i = CSimConnectUtilities::staticMetaObject.indexOfEnumerator(enumName);
+                const int i = CSimConnectUtilities::staticMetaObject.indexOfEnumerator(enumName);
                 if (i < 0) return QString("No enumerator for %1").arg(enumName);
                 const QMetaEnum m = CSimConnectUtilities::staticMetaObject.enumerator(i);
                 const char *k = m.valueToKey(id);

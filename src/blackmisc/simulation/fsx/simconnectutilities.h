@@ -20,6 +20,8 @@
 #include <QMetaType>
 #include <QObject>
 #include <QString>
+#include <QSettings>
+#include <QSharedPointer>
 
 // Apart from the below definitions, the following code is OS independent,
 // though it does not make sense to be used on non WIN machines.
@@ -47,8 +49,23 @@ namespace BlackMisc
                 Q_ENUMS(SIMCONNECT_SURFACE)
 
             public:
+                //! Filename of the file
+                static const QString &simConnectFilename();
+
                 //! Path to local config file
                 static QString getLocalSimConnectCfgFilename();
+
+                //! Path to local config file
+                static bool hasLocalSimConnectCfgFilename();
+
+                //! The simconnect.cfg as settings (or nullptr settings if no such file)
+                static QSharedPointer<QSettings> simConnectFileAsSettings(const QString &fileName = getLocalSimConnectCfgFilename());
+
+                //! IP address from settings (of simconnect.cfg), "" if not available
+                static QString ipAddress(const QSettings *simConnectSettings);
+
+                //! IP port from settings (of simconnect.cfg), -1 if not available
+                static int ipPort(const QSettings *simConnectSettings);
 
                 //! Content for FSX simconnect.cfg file
                 //! \param ip IP address of FSX
