@@ -45,7 +45,7 @@ namespace BlackSimPlugin
             void checkSimConnectCfgFile();
 
             //! Test the SimConnect connectivity
-            void testSimConnectConnection();
+            void testConnection();
 
             //! Save a simconnect.cfg file for FSX
             void saveSimConnectCfgFile();

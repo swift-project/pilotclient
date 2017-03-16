@@ -39,7 +39,7 @@ namespace BlackSimPlugin
             connect(ui->pb_SettingsFsxDeleteSimconnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::deleteSimConnectCfgFile);
             connect(ui->pb_SettingsFsxExistsSimconncetCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::checkSimConnectCfgFile);
             connect(ui->pb_SettingsFsxSaveSimconnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectCfgFile);
-            connect(ui->pb_SettingsFsxTestConnection, &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSimConnectConnection);
+            connect(ui->pb_SettingsFsxTestConnection, &QPushButton::clicked, this, &CSimConnectSettingsComponent::testConnection);
 
             this->setSimConnectInfo();
         }
@@ -58,49 +58,56 @@ namespace BlackSimPlugin
         void CSimConnectSettingsComponent::deleteSimConnectCfgFile()
         {
             const QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
-            const bool result = sGui->getIContextApplication()->removeFile(fileName);
+            QFile file(fileName);
+            const bool result = file.exists() && file.remove();
             if (result)
             {
-                QMessageBox::information(qApp->activeWindow(), tr("File deleted"),
-                                         tr("File %1 deleted successfully.").arg(fileName));
+                QMessageBox::information(qApp->activeWindow(), tr("File deleted"), tr("File %1 deleted successfully.").arg(fileName));
             }
             checkSimConnectCfgFile();
         }
 
         void CSimConnectSettingsComponent::checkSimConnectCfgFile()
         {
+            // this works for local files only
             const QString fileName = CSimConnectUtilities::getLocalSimConnectCfgFilename();
-            if (sGui->getIContextApplication()->existsFile(fileName))
+            const QFile file(fileName);
+            ui->le_SettingsFsxExistsSimconncetCfg->setText(file.exists() ? fileName : "no file");
+
+            // only works for local file (which the simconnect file normally is)
+            if (!CSimConnectUtilities::hasLocalSimConnectCfgFilename()) { return; }
+            const QSharedPointer<QSettings> settings = CSimConnectUtilities::simConnectFileAsSettings();
+            if (!settings) { return; }
+            const QString address = CSimConnectUtilities::ipAddress(settings.data());
+            const int port = CSimConnectUtilities::ipPort(settings.data());
+            if (!address.isEmpty())
             {
-                ui->le_SettingsFsxExistsSimconncetCfg->setText(fileName);
+                ui->le_SettingsFsxAddress->setText(address);
             }
-            else
+            if (port > 0)
             {
-                ui->le_SettingsFsxExistsSimconncetCfg->setText("no file");
+                ui->le_SettingsFsxPort->setText(QString::number(port));
             }
         }
 
-        void CSimConnectSettingsComponent::testSimConnectConnection()
+        void CSimConnectSettingsComponent::testConnection()
         {
             const QString address = ui->le_SettingsFsxAddress->text().trimmed();
             const QString port = ui->le_SettingsFsxPort->text().trimmed();
 
             if (address.isEmpty() || port.isEmpty())
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
-                                     tr("Address and/or port not specified!"));
+                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Address and/or port not specified!"));
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
-                                     tr("Wrong IPv4 address!"));
+                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Wrong IPv4 address!"));
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
-                                     tr("Invalid port!"));
+                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Invalid port!"));
                 return;
             }
             int p = port.toInt();
@@ -111,8 +118,7 @@ namespace BlackSimPlugin
                 return;
             }
 
-            QMessageBox::information(qApp->activeWindow(), tr("Connection successful"),
-                                     tr("Connected to %1:%2.").arg(address, port));
+            QMessageBox::information(qApp->activeWindow(), tr("Connection successful"), tr("Connected to %1:%2.").arg(address, port));
         }
 
         void CSimConnectSettingsComponent::saveSimConnectCfgFile()
@@ -122,20 +128,17 @@ namespace BlackSimPlugin
 
             if (address.isEmpty() || port.isEmpty())
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
-                                     tr("Address and/or port not specified!"));
+                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Address and/or port not specified!"));
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
-                                     tr("Wrong IPv4 address!"));
+                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Wrong IPv4 address!"));
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
-                                     tr("Invalid port!"));
+                QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Invalid port!"));
                 return;
             }
 
@@ -155,21 +158,18 @@ namespace BlackSimPlugin
 
             if (fileName.isEmpty())
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Failed writing simConnect.cfg"),
-                                     tr("No file name specified!"));
+                QMessageBox::warning(qApp->activeWindow(), tr("Failed writing simConnect.cfg"), tr("No file name specified!"));
                 return;
             }
 
             if (sGui->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p)))
             {
-                QMessageBox::information(qApp->activeWindow(), tr("File saved"),
-                                         tr("File '%1' saved.").arg(fileName));
+                QMessageBox::information(qApp->activeWindow(), tr("File saved"), tr("File '%1' saved.").arg(fileName));
                 checkSimConnectCfgFile();
             }
             else
             {
-                QMessageBox::warning(qApp->activeWindow(), tr("Failed writing simConnect.cfg"),
-                                     tr("Failed writing '%1'!").arg(fileName));
+                QMessageBox::warning(qApp->activeWindow(), tr("Failed writing simConnect.cfg"), tr("Failed writing '%1'!").arg(fileName));
             }
         }
 
@@ -177,6 +177,7 @@ namespace BlackSimPlugin
         {
             const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
             ui->lbl_SimConnectInfo->setText(simConnectInfo.summary());
+            this->checkSimConnectCfgFile();
         }
     } // ns
 } // ns
