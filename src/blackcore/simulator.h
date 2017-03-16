@@ -238,7 +238,6 @@ namespace BlackCore
     public:
         //! Constructor
         //! \sa ISimulatorFactory::createListener().
-        //! \note msvc2015: use inherited constructor
         ISimulatorListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
         //! Destructor
@@ -269,7 +268,6 @@ namespace BlackCore
     class BLACKCORE_EXPORT ISimulatorFactory
     {
     public:
-
         //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
 

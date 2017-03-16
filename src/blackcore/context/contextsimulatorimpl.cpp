@@ -377,7 +377,7 @@ namespace BlackCore
             Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
             Q_UNUSED(s);
 
-            CLogMessage(this).info("Listening for simulator %1") << simulatorInfo.getIdentifier();
+            CLogMessage(this).info("Listening for simulator '%1'") << simulatorInfo.getIdentifier();
         }
 
         void CContextSimulator::listenForAllSimulators()
