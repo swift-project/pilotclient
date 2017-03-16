@@ -42,8 +42,8 @@ namespace BlackSimPlugin
                     simulatorFsx->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
                     simulatorFsx->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     simulatorFsx->m_simulatorName = QString(event->szApplicationName);
-                    simulatorFsx->m_simulatorDetails = QString("Open: AppName=\"%1\" AppVersion=%2  SimConnectVersion=%3").arg(simulatorFsx->m_simulatorName, simulatorFsx->m_simulatorVersion, simulatorFsx->m_simConnectVersion);
-                    CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connect to FSX/P3D: %1") << sApp->swiftVersionString();
+                    simulatorFsx->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simulatorFsx->m_simulatorName, simulatorFsx->m_simulatorVersion, simulatorFsx->m_simConnectVersion);
+                    CLogMessage(static_cast<CSimulatorFsxCommon *>(nullptr)).info("Connect to FSX/P3D: '%1'") << simulatorFsx->m_simulatorDetails;
                     simulatorFsx->setSimConnected();
                     break;
                 }

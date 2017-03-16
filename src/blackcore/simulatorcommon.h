@@ -189,18 +189,18 @@ namespace BlackCore
         //! Parse driver specific details for ISimulator::parseCommandLine
         virtual bool parseDetails(const BlackMisc::CSimpleCommandParser &parser);
 
-        bool m_pausedSimFreezesInterpolation = false;                    //!< paused simulator will also pause interpolation (so AI aircraft will hold)
-        BlackMisc::Simulation::CAircraftModel m_defaultModel;            //!< default model
-        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                     //!< statistics update time
-        qint64 m_statsUpdateAircraftTimeAvgMs = 0;                       //!< statistics update time
-        int    m_statsUpdateAircraftCountMs = 0;                         //!< statistics update time
-        BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals; //!< setup object
-        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
-        mutable QReadWriteLock m_interpolationRenderingSetupMutex;       //!< mutex protecting setup object
+        bool m_pausedSimFreezesInterpolation = false;                      //!< paused simulator will also pause interpolation (so AI aircraft will hold)
+        BlackMisc::Simulation::CAircraftModel m_defaultModel;              //!< default model
+        int    m_statsUpdateAircraftCountMs = 0;                           //!< statistics update count
+        qint64 m_statsUpdateAircraftTimeTotalMs = 0;                       //!< statistics update time
+        qint64 m_statsUpdateAircraftTimeAvgMs = 0;                         //!< statistics update time
+        BlackMisc::Simulation::CSimulatorInternals m_simulatorInternals;   //!< setup object
         BlackMisc::Simulation::CInterpolationLogger m_interpolationLogger; //!< log interpolation
+        BlackMisc::Simulation::CInterpolationAndRenderingSetup m_interpolationRenderingSetup; //!< logging, rendering etc.
+        mutable QReadWriteLock m_interpolationRenderingSetupMutex;         //!< mutex protecting setup object
 
         // some optional functionality which can be used by the sims as needed
-        BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved; //!< add this model again when removed, normally used to change model
+        BlackMisc::Simulation::CSimulatedAircraftList m_aircraftToAddAgainWhenRemoved;             //!< add this model again when removed, normally used to change model
         QHash<BlackMisc::Aviation::CCallsign, BlackMisc::Simulation::CInterpolationHints> m_hints; //!< last ground elevation fetched
 
         bool m_isWeatherActivated = false;                               //!< Is simulator weather activated?
