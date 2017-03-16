@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>FSX plugin settings</string>
+   <string>FSX/P3D plugin settings</string>
   </property>
   <layout class="QVBoxLayout" name="vl_FsxConfigWindow">
    <item>

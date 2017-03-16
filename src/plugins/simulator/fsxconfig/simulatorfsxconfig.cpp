@@ -21,7 +21,7 @@ namespace BlackSimPlugin
 
         BlackGui::CPluginConfigWindow *CSimulatorFsxConfig::createConfigWindow(QWidget *parent)
         {
-            return new FsxCommon::CSimulatorFsxConfigWindow("P3D", parent);
+            return new FsxCommon::CSimulatorFsxConfigWindow("FSX", parent);
         }
     }
 }
