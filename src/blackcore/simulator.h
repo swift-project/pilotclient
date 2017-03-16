@@ -247,6 +247,9 @@ namespace BlackCore
         //! Corresponding info
         const BlackMisc::Simulation::CSimulatorPluginInfo &getPluginInfo() const { return m_info; }
 
+        //! Info about the backend system (if available)
+        virtual QString backendInfo() const;
+
     public slots:
         //! Start listening for the simulator to start.
         virtual void start() = 0;

@@ -291,6 +291,9 @@ namespace BlackSimPlugin
             //! Constructor
             CSimulatorFsxCommonListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
+            //! \copydoc BlackCore::ISimulatorListener::backendInfo
+            virtual QString backendInfo() const override;
+
         public slots:
             //! \copydoc BlackCore::ISimulatorListener::start
             virtual void start() override;

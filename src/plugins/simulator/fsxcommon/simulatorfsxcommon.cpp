@@ -1321,12 +1321,22 @@ namespace BlackSimPlugin
 
         void CSimulatorFsxCommonListener::start()
         {
+            m_simulatorVersion.clear();
+            m_simConnectVersion.clear();
+            m_simulatorName.clear();
+            m_simulatorDetails.clear();
             m_timer->start();
         }
 
         void CSimulatorFsxCommonListener::stop()
         {
             m_timer->stop();
+        }
+
+        QString CSimulatorFsxCommonListener::backendInfo() const
+        {
+            if (m_simulatorName.isEmpty()) { return ISimulatorListener::backendInfo(); }
+            return m_simulatorDetails;
         }
 
         void CSimulatorFsxCommonListener::checkConnection()
@@ -1391,8 +1401,8 @@ namespace BlackSimPlugin
                     simListener->m_simulatorVersion = QString("%1.%2.%3.%4").arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor);
                     simListener->m_simConnectVersion = QString("%1.%2.%3.%4").arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
                     simListener->m_simulatorName = QString(event->szApplicationName);
-                    simListener->m_simulatorDetails = QString("Open: AppName=\"%1\" AppVersion=%2  SimConnectVersion=%3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
-                    CLogMessage(static_cast<CSimulatorFsxCommonListener *>(nullptr)).info("Connect to FSX/P3D: %1") << sApp->swiftVersionString();
+                    simListener->m_simulatorDetails = QString("Name: '%1' Version: %2 SimConnect: %3").arg(simListener->m_simulatorName, simListener->m_simulatorVersion, simListener->m_simConnectVersion);
+                    CLogMessage(static_cast<CSimulatorFsxCommonListener *>(nullptr)).info("Connect to FSX/P3D: '%1'") << simListener->backendInfo();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:

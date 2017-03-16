@@ -78,4 +78,9 @@ namespace BlackCore
         Q_UNUSED(s)
     }
 
+    QString ISimulatorListener::backendInfo() const
+    {
+        return m_info.toQString();
+    }
+
 } // namespace
