@@ -25,15 +25,8 @@
 namespace BlackMisc
 {
     class CWorker;
-    namespace Aviation { class CCallsign; }
     namespace Simulation
     {
-        class CInterpolationHints;
-        class CInterpolatorLinear;
-        class CInterpolatorSpline;
-        struct CInterpolationStatus;
-        struct CPartsStatus;
-
         //! Record internal state of interpolator for debugging
         class BLACKMISC_EXPORT CInterpolationLogger : public QObject
         {
