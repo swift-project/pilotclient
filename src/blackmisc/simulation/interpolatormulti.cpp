@@ -30,6 +30,8 @@ namespace BlackMisc
                 return m_linear.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
             case ModeSpline:
                 return m_spline.getInterpolatedSituation(currentTimeSinceEpoc, setup, hints, status);
+            default:
+                break;
             }
             return {};
         }
@@ -43,6 +45,8 @@ namespace BlackMisc
                 return m_linear.getInterpolatedParts(cutoffTime, setup, partsStatus, log);
             case ModeSpline:
                 return m_spline.getInterpolatedParts(cutoffTime, setup, partsStatus, log);
+            default:
+                break;
             }
             return {};
         }
@@ -59,6 +63,7 @@ namespace BlackMisc
             {
             case ModeLinear: return m_linear.hasAircraftSituations();
             case ModeSpline: return m_spline.hasAircraftSituations();
+            default: break;
             }
             return false;
         }
@@ -75,6 +80,7 @@ namespace BlackMisc
             {
             case ModeLinear: return m_linear.hasAircraftParts();
             case ModeSpline: return m_spline.hasAircraftParts();
+            default: break;
             }
             return false;
         }
@@ -97,6 +103,45 @@ namespace BlackMisc
             Q_UNUSED(mode);
 #endif
             return false;
+        }
+
+        bool CInterpolatorMulti::setMode(const QString &mode)
+        {
+            Mode m = modeFromString(mode);
+            if (m == ModeUnkown) { return false; }
+            return setMode(m);
+        }
+
+        void CInterpolatorMulti::toggleMode()
+        {
+            switch (m_mode)
+            {
+            case ModeSpline: m_mode = ModeLinear; break;
+            case ModeLinear: m_mode = ModeSpline; break;
+            default: m_mode = ModeSpline; break;
+            }
+        }
+
+        CInterpolatorMulti::Mode CInterpolatorMulti::modeFromString(const QString &mode)
+        {
+            if (mode.contains("spli"), Qt::CaseInsensitive) { return ModeSpline; }
+            if (mode.contains("lin"), Qt::CaseInsensitive) { return ModeLinear; }
+            return ModeUnkown;
+        }
+
+        const QString &CInterpolatorMulti::modeToString(CInterpolatorMulti::Mode mode)
+        {
+            static const QString l("linear");
+            static const QString s("spline");
+            static const QString u("unknown");
+
+            switch (mode)
+            {
+            case ModeLinear: return l;
+            case ModeSpline: return s;
+            case ModeUnkown:
+            default: return u;
+            }
         }
     }
 }

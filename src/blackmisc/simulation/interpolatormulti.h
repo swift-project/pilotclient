@@ -56,14 +56,27 @@ namespace BlackMisc
             enum Mode
             {
                 ModeSpline, //!< spline interpolation mode
-                ModeLinear  //!< linear interpolation mode
+                ModeLinear, //!< linear interpolation mode
+                ModeUnkown
             };
 
             //! Set interpolation mode. Return true if mode was changed. Mode will not be changed in release build.
             bool setMode(Mode mode);
 
+            //! Set interpolation mode. Return true if mode was changed. Mode will not be changed in release build.
+            bool setMode(const QString &mode);
+
             //! Get active interpolation mode.
             Mode getMode() const { return m_mode; }
+
+            //! Toogle interpolator Mode
+            void toggleMode();
+
+            //! Mode from string
+            static Mode modeFromString(const QString &mode);
+
+            //! Mode to string
+            static const QString &modeToString(Mode mode);
 
         private:
             Mode m_mode = ModeSpline;
