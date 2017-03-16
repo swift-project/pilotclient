@@ -199,7 +199,21 @@ namespace BlackMisc
 
             const QStringList &CFsCommonUtil::p3dSimObjectsExcludeDirectoryPatterns()
             {
-                return fsxSimObjectsExcludeDirectoryPatterns();
+                static const QStringList exclude
+                {
+                    // FSX
+                    "SimObjects/Animals",
+                    "SimObjects/Misc",
+                    "SimObjects/GroundVehicles",
+                    "SimObjects/Boats",
+
+                    // P3D new
+                    "SimObjects/Avatars",
+                    "SimObjects/Countermeasures",
+                    "SimObjects/Submersible",
+                    "SimObjects/Weapons",
+                };
+                return exclude;
             }
 
             QString fs9DirFromRegistryImpl()
