@@ -13,18 +13,10 @@
 #define BLACKSIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 
 #include "blackmisc/simulation/simulatedaircraft.h"
+#include "blackmisc/simulation/interpolatormulti.h"
 #include "simconnectdatadefinition.h"
 #include <QSharedPointer>
 
-namespace BlackMisc
-{
-    namespace Simulation
-    {
-        class CInterpolatorLinear;
-        class CInterpolatorMulti;
-        class CInterpolationLogger;
-    }
-}
 namespace BlackSimPlugin
 {
     namespace FsxCommon
@@ -128,12 +120,18 @@ namespace BlackSimPlugin
             //! Was the object really added to SIM
             bool hasValidRequestAndObjectId() const;
 
+            //! Toggle interpolator mode
+            void toggleInterpolatorMode();
+
+            //! Set interpolator mode
+            bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
+
         private:
             BlackMisc::Simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
             DWORD m_requestId = 0;
             DWORD m_objectId  = 0;
             bool m_validRequestId = false;
-            bool m_validObjectId = false;
+            bool m_validObjectId  = false;
             bool m_confirmedAdded = false;
             bool m_pendingRemoved = false;
             int m_lightsRequestedAt = -1;
@@ -141,7 +139,6 @@ namespace BlackSimPlugin
             BlackMisc::Aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
             BlackMisc::Aviation::CAircraftLights m_lightsAsSent { nullptr };       //!< lights as sent to simulator
             SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER;    //!< how often do we query ground elevation
-            // QSharedPointer<BlackMisc::Simulation::CInterpolatorLinear> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
             QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
         };
 
@@ -166,6 +163,15 @@ namespace BlackSimPlugin
 
             //! Pending add condition
             bool containsPendingAdd() const;
+
+            //! Toggle interpolator modes
+            void toggleInterpolatorModes();
+
+            //! Toggle interpolator modes
+            void toggleInterpolatorMode(const BlackMisc::Aviation::CCallsign &callsign);
+
+            //! Set interpolator modes
+            int setInterpolatorModes(BlackMisc::Simulation::CInterpolatorMulti::Mode mode);
         };
     } // namespace
 } // namespace

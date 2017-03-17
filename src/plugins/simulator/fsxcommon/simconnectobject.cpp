@@ -22,9 +22,9 @@ namespace BlackSimPlugin
 
         CSimConnectObject::CSimConnectObject(const BlackMisc::Simulation::CSimulatedAircraft &aircraft,
                                              DWORD requestId,
-                                             BlackMisc::Simulation::CInterpolationLogger *logger) :
+                                             CInterpolationLogger *logger) :
             m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
-            m_interpolator(QSharedPointer<BlackMisc::Simulation::CInterpolatorMulti>::create(aircraft.getCallsign()))
+            m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign()))
         {
             m_interpolator->attachLogger(logger);
         }
@@ -72,6 +72,16 @@ namespace BlackSimPlugin
         bool CSimConnectObject::hasValidRequestAndObjectId() const
         {
             return this->hasValidRequestId() && this->hasValidObjectId();
+        }
+
+        void CSimConnectObject::toggleInterpolatorMode()
+        {
+            this->m_interpolator->toggleMode();
+        }
+
+        bool CSimConnectObject::setInterpolatorMode(CInterpolatorMulti::Mode mode)
+        {
+            return this->m_interpolator->setMode(mode);
         }
 
         bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId, bool resetSentParts)
@@ -122,6 +132,30 @@ namespace BlackSimPlugin
                 if (simObject.isPendingAdded()) { return true; }
             }
             return false;
+        }
+
+        void CSimConnectObjects::toggleInterpolatorModes()
+        {
+            for (const CCallsign &cs : this->keys())
+            {
+                (*this)[cs].toggleInterpolatorMode();
+            }
+        }
+
+        void CSimConnectObjects::toggleInterpolatorMode(const CCallsign &callsign)
+        {
+            if (!this->contains(callsign)) { return; }
+            (*this)[callsign].toggleInterpolatorMode();
+        }
+
+        int CSimConnectObjects::setInterpolatorModes(CInterpolatorMulti::Mode mode)
+        {
+            int c = 0;
+            for (const CCallsign &cs : this->keys())
+            {
+                if ((*this)[cs].setInterpolatorMode(mode)) c++;
+            }
+            return c;
         }
     } // namespace
 } // namespace
