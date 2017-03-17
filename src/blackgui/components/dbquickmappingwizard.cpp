@@ -53,6 +53,8 @@ namespace BlackGui
             connect(ui->selector_AirlineIcaoCode, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::ps_airlineSelected);
             connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::ps_airlineSelected);
 
+            ui->comp_Log->showFilterDialog(); // filter for log normally not needed, so dialog (not bar)
+
             // init if data already available
             this->ps_webDataRead();
         }
@@ -64,6 +66,20 @@ namespace BlackGui
         {
             static const BlackMisc::CLogCategoryList cats { CLogCategory::mapping(), CLogCategory::guiComponent() };
             return cats;
+        }
+
+        void CDbQuickMappingWizard::keyPressEvent(QKeyEvent *event)
+        {
+            Qt::Key key = static_cast<Qt::Key>(event->key());
+            if (key == Qt::Key_Enter || key == Qt::Key_Return)
+            {
+                // disable enter, interferes with filter returnPressed
+                event->accept();
+            }
+            else
+            {
+                QWizard::keyPressEvent(event);
+            }
         }
 
         void CDbQuickMappingWizard::presetAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao)
@@ -78,9 +94,7 @@ namespace BlackGui
             QString ms = model.getModelString();
             if (!model.getDescription().isEmpty())
             {
-                ms += " (";
-                ms += model.getDescription();
-                ms += ")";
+                ms += " (" + model.getDescription() + ")";
             }
 
             this->presetAircraftIcao(model.getAircraftIcaoCode());
@@ -232,7 +246,7 @@ namespace BlackGui
                 break;
             case PageSendStatus:
                 {
-                    this->writeModeltoDb();
+                    this->writeModelToDb();
                 }
                 break;
             default:
@@ -287,7 +301,7 @@ namespace BlackGui
             this->m_model = model;
         }
 
-        void CDbQuickMappingWizard::writeModeltoDb()
+        void CDbQuickMappingWizard::writeModelToDb()
         {
             this->consolidateModel();
             const CStatusMessageList msgs = sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(this->m_model);

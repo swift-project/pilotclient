@@ -47,7 +47,7 @@ namespace BlackGui
             explicit CDbQuickMappingWizard(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbQuickMappingWizard();
+            virtual ~CDbQuickMappingWizard();
 
             //! Preset values
             void presetAircraftIcao(const BlackMisc::Aviation::CAircraftIcaoCode &aircraftIcao);
@@ -63,6 +63,10 @@ namespace BlackGui
 
             //! Log categories
             static const BlackMisc::CLogCategoryList &getLogCategories();
+
+        protected:
+            //! \copydoc QWizard::keyPressEvent
+            virtual void keyPressEvent(QKeyEvent *event) override;
 
         private:
             QScopedPointer<Ui::CDbQuickMappingWizard> ui;
@@ -94,7 +98,7 @@ namespace BlackGui
             void consolidateModel();
 
             //! Write the model to DB
-            void writeModeltoDb();
+            void writeModelToDb();
 
         private slots:
             //! Web data have been read
