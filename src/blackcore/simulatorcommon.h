@@ -88,11 +88,12 @@ namespace BlackCore
         //! \addtogroup swiftdotcommands
         //! @{
         //! <pre>
-        //! .drv unload              unload plugin                           BlackCore::CSimulatorCommon
-        //! .drv logint  callsign    log interpolator for callsign           BlackCore::CSimulatorCommon
-        //! .drv logint  off         no log information for interpolator     BlackCore::CSimulatorCommon
-        //! .drv logint  write       write interpolator log to file          BlackCore::CSimulatorCommon
-        //! .drv logint  clear       clear current log                       BlackCore::CSimulatorCommon
+        //! .drv unload                    unload plugin                           BlackCore::CSimulatorCommon
+        //! .drv logint callsign           log interpolator for callsign           BlackCore::CSimulatorCommon
+        //! .drv logint off                no log information for interpolator     BlackCore::CSimulatorCommon
+        //! .drv logint write              write interpolator log to file          BlackCore::CSimulatorCommon
+        //! .drv logint clear              clear current log                       BlackCore::CSimulatorCommon
+        //! .drv spline|linear callsign    interpolator spline                     BlackCore::CSimulatorCommon
         //! </pre>
         //! @}
         //! \copydoc ISimulator::parseCommandLine
@@ -107,6 +108,7 @@ namespace BlackCore
             BlackMisc::CSimpleCommandParser::registerCommand({".drv logint off", "no log information for interpolator"});
             BlackMisc::CSimpleCommandParser::registerCommand({".drv logint write", "write interpolator log to file"});
             BlackMisc::CSimpleCommandParser::registerCommand({".drv logint clear", "clear current log"});
+            BlackMisc::CSimpleCommandParser::registerCommand({".drv spline|linear <callsign>", "set spline/linear interpolator for one/all callsign(s)"});
         }
 
         // --------- ISimulator implementations ------------

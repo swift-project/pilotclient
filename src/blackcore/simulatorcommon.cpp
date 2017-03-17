@@ -352,23 +352,24 @@ namespace BlackCore
             return true;
         }
 
-        // .plugin loginterpolator etc.
-        if (parser.part(1).startsWith("logint") && parser.hasPart(2))
+        // .plugin log interpolator
+        const QString part1(parser.part(1).toLower().trimmed());
+        if (part1.startsWith("logint") && parser.hasPart(2))
         {
-            const QString p = parser.part(2).toLower();
-            if (p == "off" || p == "false")
+            const QString part2 = parser.part(2).toLower();
+            if (part2 == "off" || part2 == "false")
             {
                 this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
                 CStatusMessage(this).info("Disabled interpolation logging");
                 return true;
             }
-            if (p == "clear" || p == "clr")
+            if (part2 == "clear" || part2 == "clr")
             {
                 this->m_interpolationLogger.clearLog();
                 CStatusMessage(this).info("Cleared interpolation logging");
                 return true;
             }
-            if (p == "write" || p == "save")
+            if (part2 == "write" || part2 == "save")
             {
                 // stop logging
                 this->m_interpolationRenderingSetup.clearInterpolatorLogCallsigns();
@@ -379,7 +380,7 @@ namespace BlackCore
                 return true;
             }
 
-            const QString cs = p.toUpper();
+            const QString cs = part2.toUpper();
             if (!CCallsign::isValidAircraftCallsign(cs)) { return false; }
             if (this->getAircraftInRangeCallsigns().contains(cs))
             {
@@ -392,6 +393,21 @@ namespace BlackCore
                 CLogMessage(this).warning("Cannot log interpolation for '%1', no aircraft in range") << cs;
                 return false;
             }
+        }
+
+        if (part1.startsWith("spline") || part1.startsWith("linear"))
+        {
+            CCallsign cs(parser.hasPart(2) ? parser.part(2) : "");
+            const bool changed = this->setInterpolatorMode(CInterpolatorMulti::modeFromString(part1), cs);
+            if (changed)
+            {
+                CLogMessage(this).info("Changed interpolation mode");
+            }
+            else
+            {
+                CLogMessage(this).info("Unchanged interpolation mode");
+            }
+            return true;
         }
 
         // driver specific cmd line arguments

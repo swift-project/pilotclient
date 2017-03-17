@@ -19,6 +19,7 @@
 #include "blackmisc/simulation/simulatedaircraft.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/interpolationrenderingsetup.h"
+#include "blackmisc/simulation/interpolatormulti.h"
 #include "blackmisc/pq/length.h"
 #include "blackmisc/pq/time.h"
 #include "blackmisc/statusmessage.h"
@@ -149,6 +150,9 @@ namespace BlackCore
 
         //! Driver will be unloaded
         virtual void unload() = 0;
+
+        //! Set interpolation mode, empty callsign applies to all know callsigns
+        virtual bool setInterpolatorMode(BlackMisc::Simulation::CInterpolatorMulti::Mode mode, const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! \addtogroup swiftdotcommands
         //! @{
