@@ -14,7 +14,6 @@
 
 #include "datarefs.h"
 #include "terrainprobe.h"
-#include "command.h"
 #include "blackmisc/aviation/aircraftsituationlist.h"
 #include "blackmisc/aviation/aircraftpartslist.h"
 #include "blackmisc/simulation/interpolatormulti.h"
@@ -115,6 +114,9 @@ namespace XBus
         //! Set the transponder of a traffic aircraft
         void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
 
+        //! Set interpolation mode for a traffic aircraft
+        void setInterpolatorMode(const QString &callsign, bool spline);
+
     private:
         bool m_initialized = false;
         bool m_enabled = false;
@@ -141,9 +143,6 @@ namespace XBus
         };
         QHash<QString, Plane *> m_planesByCallsign;
         QHash<void *, Plane *> m_planesById;
-        BlackMisc::Simulation::CInterpolatorMulti::Mode m_interpolatorMode = BlackMisc::Simulation::CInterpolatorMulti::ModeSpline;
-        CCommand m_interpolatorModeCommand { "org/swift-project/xbus/toggle_lerp_mode", "Toggle interpolation mode", [this] { toggleInterpolatorMode(); } };
-        void toggleInterpolatorMode();
 
         int getPlaneData(void *id, int dataType, void *io_data);
         static int getPlaneData(void *id, int dataType, void *io_data, void *self)

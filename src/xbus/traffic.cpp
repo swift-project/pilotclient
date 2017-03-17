@@ -223,7 +223,6 @@ namespace XBus
         if (id)
         {
             auto plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery);
-            plane->interpolator.setMode(m_interpolatorMode);
             m_planesByCallsign[callsign] = plane;
             m_planesById[id] = plane;
         }
@@ -315,6 +314,20 @@ namespace XBus
         }
     }
 
+    void CTraffic::setInterpolatorMode(const QString &callsign, bool spline)
+    {
+        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        if (plane)
+        {
+            plane->interpolator.setMode(spline ? BlackMisc::Simulation::CInterpolatorMulti::ModeSpline
+                                               : BlackMisc::Simulation::CInterpolatorMulti::ModeLinear);
+        }
+        else if (callsign.isEmpty())
+        {
+            for (const auto &callsign : m_planesByCallsign.keys()) { setInterpolatorMode(callsign, spline); }
+        }
+    }
+
     //! memcmp function which ignores the header ("size" member) and compares only the payload (the rest of the struct)
     template <typename T>
     int memcmpPayload(T *dst, T *src)
@@ -388,19 +401,6 @@ namespace XBus
             else { return xpmpData_Unavailable; }
 
         default: return xpmpData_Unavailable;
-        }
-    }
-
-    void CTraffic::toggleInterpolatorMode()
-    {
-        switch (m_interpolatorMode)
-        {
-        case BlackMisc::Simulation::CInterpolatorMulti::ModeLinear: m_interpolatorMode = BlackMisc::Simulation::CInterpolatorMulti::ModeSpline; break;
-        case BlackMisc::Simulation::CInterpolatorMulti::ModeSpline: m_interpolatorMode = BlackMisc::Simulation::CInterpolatorMulti::ModeLinear; break;
-        }
-        for (auto plane : m_planesByCallsign)
-        {
-            plane->interpolator.setMode(m_interpolatorMode);
         }
     }
 

@@ -111,6 +111,9 @@ namespace BlackSimPlugin
 
             //! \copydoc XBus::CTraffic::setPlaneTransponder
             void setPlaneTransponder(const QString &callsign, int code, bool modeC, bool ident);
+
+            //! \copydoc XBus::CTraffic::setInterpolatorMode
+            void setInterpolatorMode(const QString &callsign, bool spline);
         };
 
     }

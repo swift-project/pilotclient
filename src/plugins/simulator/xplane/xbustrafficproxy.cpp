@@ -103,5 +103,10 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBus(QLatin1String("setPlaneTransponder"), callsign, code, modeC, ident);
         }
 
+        void CXBusTrafficProxy::setInterpolatorMode(const QString &callsign, bool spline)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setInterpolatorMode"), callsign, spline);
+        }
+
     }
 }

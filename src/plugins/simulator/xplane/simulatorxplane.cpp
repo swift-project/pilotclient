@@ -381,9 +381,17 @@ namespace BlackSimPlugin
             Q_UNUSED(offset);
             if (enable)
             {
-                CLogMessage(this).info("X-Plane provides real time synchronization, use this on");
+                CLogMessage(this).info("X-Plane provides real time synchronization, use this one");
             }
             return false;
+        }
+
+        bool CSimulatorXPlane::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
+        {
+            if (!isConnected()) { return false; }
+
+            m_traffic->setInterpolatorMode(callsign.asString(), mode == CInterpolatorMulti::ModeSpline);
+            return true;
         }
 
         QDBusConnection CSimulatorXPlane::connectionFromString(const QString &str)
