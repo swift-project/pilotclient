@@ -286,6 +286,14 @@ namespace BlackSimPlugin
             this->displayStatusMessage(message.asStatusMessage(true, true));
         }
 
+        bool CSimulatorFs9::setInterpolatorMode(CInterpolatorMulti::Mode mode, const CCallsign &callsign)
+        {
+            //! \todo (added by KWB 3/17) interpolator mode for FS9 needs implementation
+            Q_UNUSED(mode);
+            Q_UNUSED(callsign);
+            return false;
+        }
+
         bool CSimulatorFs9::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
             return m_hashFs9Clients.contains(callsign);
