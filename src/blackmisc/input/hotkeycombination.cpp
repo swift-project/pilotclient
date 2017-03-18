@@ -20,6 +20,12 @@ namespace BlackMisc
 {
     namespace Input
     {
+        CHotkeyCombination::CHotkeyCombination(const CKeyboardKey &key) : CHotkeyCombination(CKeyboardKeyList(key))
+        { }
+
+        CHotkeyCombination::CHotkeyCombination(const CKeyboardKeyList &keys) : m_keyboardKeys(keys)
+        { }
+
         void CHotkeyCombination::addKeyboardKey(const CKeyboardKey &key)
         {
             if (m_keyboardKeys.contains(key)) { return; }
@@ -61,12 +67,13 @@ namespace BlackMisc
 
         bool CHotkeyCombination::isSubsetOf(const CHotkeyCombination &other) const
         {
-            return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(), [&other](const CKeyboardKey &k) { return other.m_keyboardKeys.contains(k); }) &&
-                    std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(), [&other](const CJoystickButton &b) { return other.m_joystickButtons.contains(b); });
+            return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(), [&other](const CKeyboardKey & k) { return other.m_keyboardKeys.contains(k); }) &&
+            std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(), [&other](const CJoystickButton & b) { return other.m_joystickButtons.contains(b); });
         }
 
-        QString CHotkeyCombination::convertToQString(bool /* i18n */) const
+        QString CHotkeyCombination::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
             QStringList sl;
             for (const auto &key : m_keyboardKeys)
             {
@@ -78,6 +85,5 @@ namespace BlackMisc
             }
             return sl.join('+');
         }
-
-    }
-}
+    } // ns
+} // ns

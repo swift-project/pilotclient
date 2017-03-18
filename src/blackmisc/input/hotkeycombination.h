@@ -34,8 +34,14 @@ namespace BlackMisc
             //! Default constructor
             CHotkeyCombination() = default;
 
+            //! Init with key
+            CHotkeyCombination(const CKeyboardKey &key);
+
+            //! Init with list of keys
+            CHotkeyCombination(const CKeyboardKeyList &keys);
+
             //! Set keyboard keys
-            void setKeyboardKeys(const CKeyboardKeyList &list) { m_keyboardKeys = list; }
+            void setKeyboardKeys(const CKeyboardKeyList &keys) { m_keyboardKeys = keys; }
 
             //! Get keyboard keys
             CKeyboardKeyList getKeyboardKeys() const { return m_keyboardKeys; }
@@ -87,8 +93,8 @@ namespace BlackMisc
                 BLACK_METAMEMBER(joystickButtons)
             );
         };
-    }
-}
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CHotkeyCombination)
 

@@ -37,6 +37,9 @@ namespace BlackMisc
             //! Default constructor
             CKeyboardKeyList();
 
+            //! Init by single key
+            CKeyboardKeyList(const CKeyboardKey &key);
+
             //! Construct from a base class object.
             CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
 
@@ -45,9 +48,7 @@ namespace BlackMisc
 
             //! Get all supported keys
             static const CKeyboardKeyList &allSupportedKeys();
-
         };
-
     } //namespace
 } // namespace
 

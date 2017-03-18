@@ -14,8 +14,12 @@ namespace BlackMisc
 {
     namespace Input
     {
-
         CKeyboardKeyList::CKeyboardKeyList() { }
+
+        CKeyboardKeyList::CKeyboardKeyList(const CKeyboardKey &key)
+        {
+            this->push_back(key);
+        }
 
         CKeyboardKeyList::CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass) :
             CSequence<CKeyboardKey>(baseClass)
@@ -23,7 +27,8 @@ namespace BlackMisc
 
         const CKeyboardKeyList &CKeyboardKeyList::allSupportedKeys()
         {
-            static CKeyboardKeyList allKeys = {
+            static const CKeyboardKeyList allKeys =
+            {
                 CKeyboardKey(Key_ControlLeft),
                 CKeyboardKey(Key_ControlRight),
                 CKeyboardKey(Key_AltLeft),
@@ -70,6 +75,5 @@ namespace BlackMisc
 
             return allKeys;
         }
-
-    } // namespace
-} // namespace
+    } // ns
+} // ns
