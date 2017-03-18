@@ -26,6 +26,7 @@ namespace BlackGui
             connect(ui->tb_ClearForm, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
             connect(ui->tb_Filter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
             connect(ui->tb_RemoveFilter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
+            connect(ui->pb_New, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
         }
 
         CFilterBarButtons::~CFilterBarButtons()
@@ -38,10 +39,15 @@ namespace BlackGui
 
         void CFilterBarButtons::ps_buttonClicked()
         {
-            QObject *sender = QObject::sender();
+            const QObject *sender = QObject::sender();
             if (sender == ui->tb_ClearForm) { emit buttonClicked(ClearForm); }
             else if (sender == ui->tb_Filter) { emit buttonClicked(Filter); }
             else if (sender == ui->tb_RemoveFilter) { emit buttonClicked(RemoveFilter); }
+            else if (sender == ui->pb_New)
+            {
+                emit buttonClicked(RemoveFilter);
+                emit buttonClicked(ClearForm);
+            }
         }
 
         void CFilterBarButtons::onRowCountChanged(int count, bool withFilter)
