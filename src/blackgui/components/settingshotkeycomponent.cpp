@@ -32,6 +32,8 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Input;
 using namespace BlackGui::Models;
+using namespace BlackCore;
+using namespace BlackCore::Context;
 
 namespace BlackGui
 {
@@ -55,13 +57,25 @@ namespace BlackGui
         CSettingsHotkeyComponent::~CSettingsHotkeyComponent()
         { }
 
+        void CSettingsHotkeyComponent::saveSettings()
+        {
+            const CStatusMessage msg = m_actionHotkeys.save();
+            CLogMessage(this).preformatted(msg);
+        }
+
+        void CSettingsHotkeyComponent::registerDummyPttEntry()
+        {
+            CInputManager::instance()->registerAction(IContextAudio::pttHotkeyAction(), IContextAudio::pttHotkeyIcon());
+        }
+
         void CSettingsHotkeyComponent::ps_addEntry()
         {
             BlackMisc::CIdentifierList registeredApps;
             if (sGui->getIContextApplication()) registeredApps = sGui->getIContextApplication()->getRegisteredApplications();
+
             // add local application
             registeredApps.push_back(CIdentifier());
-            auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(CActionHotkey(), registeredApps, this);
+            const auto selectedActionHotkey = CHotkeyDialog::getActionHotkey(CActionHotkey(), registeredApps, this);
             if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey))
             {
                 addHotkeytoSettings(selectedActionHotkey);
@@ -74,7 +88,7 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::ps_editEntry()
         {
-            auto index = ui->tv_Hotkeys->selectionModel()->currentIndex();
+            const auto index = ui->tv_Hotkeys->selectionModel()->currentIndex();
             if (!index.isValid()) return;
 
             const auto model = ui->tv_Hotkeys->model();
@@ -97,7 +111,7 @@ namespace BlackGui
 
         void CSettingsHotkeyComponent::ps_removeEntry()
         {
-            QModelIndexList indexes = ui->tv_Hotkeys->selectionModel()->selectedRows();
+            const QModelIndexList indexes = ui->tv_Hotkeys->selectionModel()->selectedRows();
             for (const auto &index : indexes)
             {
                 CActionHotkey actionHotkey = index.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
@@ -129,7 +143,7 @@ namespace BlackGui
 
         bool CSettingsHotkeyComponent::checkAndConfirmConflicts(const CActionHotkey &actionHotkey, const CActionHotkeyList &ignore)
         {
-            auto configuredHotkeys = m_actionHotkeys.getThreadLocal();
+            const auto configuredHotkeys = m_actionHotkeys.getThreadLocal();
             CActionHotkeyList conflicts = configuredHotkeys.findSupersetsOf(actionHotkey);
             conflicts.push_back(configuredHotkeys.findSubsetsOf(actionHotkey));
             conflicts.removeIfIn(ignore);
@@ -143,9 +157,7 @@ namespace BlackGui
                     message += "\n";
                 }
                 message += "\n Do you want to use it anway?";
-                auto reply = QMessageBox::warning(this, "SettingsHotkeyComponent",
-                                                  message,
-                                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+                const auto reply = QMessageBox::warning(this, "SettingsHotkeyComponent", message, QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
                 if (reply == QMessageBox::No) { return false; }
             }
             return true;
@@ -155,11 +167,13 @@ namespace BlackGui
         {
             const CActionHotkeyList hotkeys = m_actionHotkeys.getThreadLocal();
             m_model.clear();
-            for (const auto &hotkey : hotkeys)
+
+            // list of all defined hotkeys (not the dialog)
+            for (const CActionHotkey &hotkey : hotkeys)
             {
                 const int position = m_model.rowCount();
                 m_model.insertRows(position, 1, QModelIndex());
-                QModelIndex index = m_model.index(position, 0, QModelIndex());
+                const QModelIndex index = m_model.index(position, 0, QModelIndex());
                 m_model.setData(index, QVariant::fromValue(hotkey), CActionHotkeyListModel::ActionHotkeyRole);
             }
         }
@@ -167,6 +181,13 @@ namespace BlackGui
         void CSettingsHotkeyComponent::ps_hotkeySlot(bool keyDown)
         {
             if (keyDown) { QMessageBox::information(this, "Test", "Hotkey test"); }
+        }
+
+        bool CConfigHotkeyWizardPage::validatePage()
+        {
+            if (CConfigurationWizard::lastWizardStepSkipped(this->wizard())) { return true; }
+            m_config->saveSettings();
+            return true;
         }
     } // ns
 } // ns

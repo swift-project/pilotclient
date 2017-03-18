@@ -16,13 +16,12 @@
 #include "blackcore/application/applicationsettings.h"
 #include "blackgui/blackguiexport.h"
 #include "blackgui/models/actionhotkeylistmodel.h"
-#include "blackmisc/input/actionhotkey.h"
-#include "blackmisc/input/actionhotkeylist.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/icons.h"
 
 #include <QFrame>
 #include <QObject>
+#include <QWizardPage>
 #include <QScopedPointer>
 
 class QWidget;
@@ -45,6 +44,12 @@ namespace BlackGui
             //! Destructor
             virtual ~CSettingsHotkeyComponent();
 
+            //! Save settings
+            void saveSettings();
+
+            //! Create dummy/emtpy Ptt entry for wizard
+            void registerDummyPttEntry();
+
         private slots:
             void ps_addEntry();
             void ps_editEntry();
@@ -62,6 +67,25 @@ namespace BlackGui
             BlackGui::Models::CActionHotkeyListModel m_model;
             BlackMisc::CSetting<BlackCore::Application::TActionHotkeys> m_actionHotkeys { this };
             BlackCore::CActionBind m_action { "/Test/Message", BlackMisc::CIcons::wrench16(), this, &CSettingsHotkeyComponent::ps_hotkeySlot };
+        };
+
+        /**
+         * Wizard page for CConfigSimulatorComponent
+         */
+        class CConfigHotkeyWizardPage : public QWizardPage
+        {
+        public:
+            //! Constructors
+            using QWizardPage::QWizardPage;
+
+            //! Set config
+            void setConfigComponent(CSettingsHotkeyComponent *config) { m_config = config; }
+
+            //! \copydoc QWizardPage::validatePage
+            virtual bool validatePage() override;
+
+        private:
+            CSettingsHotkeyComponent *m_config = nullptr;
         };
     } // ns
 } // ns
