@@ -88,7 +88,6 @@ namespace BlackCore
             virtual ~IContextAudio() {}
 
         signals:
-
             //! Voice rooms changed
             //! \details the flag indicates, whether a room got connected or disconnected
             void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms, bool connected);

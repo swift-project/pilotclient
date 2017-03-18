@@ -61,7 +61,7 @@ namespace BlackCore
         //! Register action
         static QString registerAction(const QString &action, const QPixmap &icon);
 
-        int m_index = -1; //!< action indexx (unique)
+        int m_index = -1; //!< action index (unique)
         std::function<void()> m_deleteCallback; //!< called when deleted
     };
 

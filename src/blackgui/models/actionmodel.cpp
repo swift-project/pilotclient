@@ -127,5 +127,5 @@ namespace BlackGui
                 }
             }
         }
-    }
-}
+    } // ns
+} // ns

@@ -413,7 +413,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
         {
-            //! \todo XP implement isRenderedAircraft correctly. This work around, but not really telling me if callsign is really(!) visible in SIM
+            //! \todo XP implement isRenderedAircraft correctly. This is a workaround, but not telling me if a callsign is really(!) visible in simulator
             return getAircraftInRangeForCallsign(callsign).isRendered();
         }
 

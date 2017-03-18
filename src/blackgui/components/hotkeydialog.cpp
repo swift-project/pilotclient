@@ -14,7 +14,6 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/identifier.h"
 #include "blackmisc/input/hotkeycombination.h"
-#include "blackmisc/input/keyboardkey.h"
 #include "blackmisc/input/keyboardkeylist.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/statusmessage.h"
@@ -80,8 +79,8 @@ namespace BlackGui
 
             if (!actionHotkey.getCombination().isEmpty()) { ui->pb_SelectedHotkey->setText(actionHotkey.getCombination().toQString()); }
 
-            CIdentifierList machinesUnique = applications.getMachinesUnique();
             int index = -1;
+            const CIdentifierList machinesUnique = applications.getMachinesUnique();
             for (const auto &app : machinesUnique)
             {
                 ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
@@ -240,7 +239,7 @@ namespace BlackGui
                 }
                 ksb->setSelectedIndex(currentIndex);
                 ui->qf_Advanced->layout()->addWidget(ksb);
-                int position = ui->qf_Advanced->layout()->count() - 1;
+                const int position = ui->qf_Advanced->layout()->count() - 1;
                 ksb->setProperty("position", position);
                 connect(ksb, &CKeySelectionBox::keySelectionChanged, this, &CHotkeyDialog::advancedKeyChanged);
             }

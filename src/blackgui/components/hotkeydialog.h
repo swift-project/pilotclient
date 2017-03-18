@@ -79,8 +79,10 @@ namespace BlackGui
             void initStyleSheet();
 
             //! Runs the hotkey dialog and returns the result
-            static BlackMisc::Input::CActionHotkey getActionHotkey(const BlackMisc::Input::CActionHotkey &initial, const BlackMisc::CIdentifierList &applications,
-                    QWidget *parent = nullptr);
+            static BlackMisc::Input::CActionHotkey getActionHotkey(
+                const BlackMisc::Input::CActionHotkey &initial,
+                const BlackMisc::CIdentifierList &applications,
+                QWidget *parent = nullptr);
 
         private:
             void ps_advancedModeChanged();
@@ -88,9 +90,9 @@ namespace BlackGui
             void ps_combinationSelectionChanged(const BlackMisc::Input::CHotkeyCombination &combination);
             void ps_combinationSelectionFinished(const BlackMisc::Input::CHotkeyCombination &combination);
             void ps_changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
-            void changeApplicableMachine(int index);
             void ps_accept();
 
+            void changeApplicableMachine(int index);
             void synchronize();
             void synchronizeSimpleSelection();
             void synchronizeAdvancedSelection();
@@ -102,7 +104,7 @@ namespace BlackGui
             QScopedPointer<Ui::CHotkeyDialog> ui;
             BlackMisc::Input::CActionHotkey m_actionHotkey;
             BlackGui::Models::CActionModel m_actionModel;
-            BlackCore::CInputManager *m_inputManager;
+            BlackCore::CInputManager *m_inputManager = nullptr;
         };
     } // ns
 } // ns

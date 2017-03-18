@@ -24,7 +24,7 @@ namespace BlackMisc
     {
         namespace FsCommon
         {
-            //! FS9/X utils
+            //! FS9/X/P3D utils
             class BLACKMISC_EXPORT CFsCommonUtil
             {
             public:

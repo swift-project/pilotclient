@@ -114,7 +114,6 @@ namespace BlackCore
             CContextAudio *registerWithDBus(BlackMisc::CDBusServer *server);
 
         private slots:
-
             //! \copydoc IVoice::connectionStatusChanged
             //! \sa IContextAudio::changedVoiceRooms
             void ps_connectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
@@ -122,6 +121,7 @@ namespace BlackCore
             //! Init notification sounds
             void ps_initNotificationSounds();
 
+            //! Enable/disable voice transmission
             void ps_setVoiceTransmission(bool enable);
 
             //! User joined the room
@@ -137,10 +137,11 @@ namespace BlackCore
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
-            const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
-            CActionBind m_actionPtt { "/Voice/Activate push-to-talk", BlackMisc::CIcons::radio16(), this, &CContextAudio::ps_setVoiceTransmission };
+            CActionBind m_actionPtt { pttHotkeyIdentifier(), pttHotkeyIcon(), this, &CContextAudio::ps_setVoiceTransmission };
+
             std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
             std::unique_ptr<IAudioMixer> m_audioMixer;
+            const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
             int m_outVolumeBeforeMute = 90;
 
             // For easy access.

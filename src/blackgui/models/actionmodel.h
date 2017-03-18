@@ -29,6 +29,7 @@ namespace BlackGui
 
         /*!
          * Action tree model, used with hotkey actions
+         * \remark data from CInputManager::instance()
          */
         class BLACKGUI_EXPORT CActionModel : public QAbstractItemModel
         {
