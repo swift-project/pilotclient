@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "blackconfig/buildconfig.h"
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include <QJsonValue>
 #include <QtGlobal>
@@ -49,5 +50,44 @@ namespace BlackMisc
             return QString("%1 (%2)").arg(m_name, m_identifier);
         }
 
+        const QString &CSimulatorPluginInfo::fsxPluginIndentifier()
+        {
+            static const QString s("org.swift-project.plugins.simulator.fsx");
+            return s;
+        }
+
+        const QString &CSimulatorPluginInfo::p3dPluginIndentifier()
+        {
+            static const QString s("org.swift-project.plugins.simulator.p3d");
+            return s;
+        }
+
+        const QString &CSimulatorPluginInfo::fs9PluginIndentifier()
+        {
+            static const QString s("org.swift-project.plugins.simulator.fs9");
+            return s;
+        }
+
+        const QString &CSimulatorPluginInfo::xplanePluginIndentifier()
+        {
+            static const QString s("org.swift-project.plugins.simulator.xplane");
+            return s;
+        }
+
+        QStringList CSimulatorPluginInfo::guessDefaultPlugins()
+        {
+            if (BlackConfig::CBuildConfig::isRunningOnUnixPlatform())
+            {
+                // On UNIX we likely run XP
+                return QStringList { xplanePluginIndentifier() };
+            }
+
+            return QStringList
+            {
+                fsxPluginIndentifier(),
+                p3dPluginIndentifier(),
+                xplanePluginIndentifier()
+            };
+        }
     } // ns
 } // ns

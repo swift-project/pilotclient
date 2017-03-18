@@ -62,7 +62,7 @@ namespace BlackGui
             ui->cb_P3D->setChecked(p3d);
             ui->cb_FSX->setChecked(fsx);
             ui->cb_FS9->setChecked(fs9);
-            ui->cb_XP->setChecked(xp); // \fixme some default for XP?
+            ui->cb_XP->setChecked(xp);
 
             ui->cb_P3D->setEnabled(CBuildConfig::isCompiledWithP3DSupport());
             ui->cb_FSX->setEnabled(CBuildConfig::isCompiledWithFsxSupport());
@@ -79,11 +79,11 @@ namespace BlackGui
         {
             QStringList ids;
 
-            // have to match ids from swift-plugin-simulators.xml
-            if (ui->cb_FS9->isChecked()) { ids << "fs2004"; }
-            if (ui->cb_FSX->isChecked()) { ids << "fsx"; }
-            if (ui->cb_P3D->isChecked()) { ids << "p3d"; }
-            if (ui->cb_XP->isChecked())  { ids << "xplane"; }
+            // have to match full canonical ids from swift-plugin-simulators.xml
+            if (ui->cb_FS9->isChecked()) { ids << CSimulatorPluginInfo::fs9PluginIndentifier(); }
+            if (ui->cb_FSX->isChecked()) { ids << CSimulatorPluginInfo::fsxPluginIndentifier(); }
+            if (ui->cb_P3D->isChecked()) { ids << CSimulatorPluginInfo::p3dPluginIndentifier(); }
+            if (ui->cb_XP->isChecked())  { ids << CSimulatorPluginInfo::xplanePluginIndentifier(); }
 
             return ids;
         }

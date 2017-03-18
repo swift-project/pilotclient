@@ -150,6 +150,9 @@ namespace BlackMisc
             //! As a set of single simulator info objects
             QSet<CSimulatorInfo> asSingleSimulatorSet() const;
 
+            //! To plugin indentifier, empty string if not single simulator
+            const QString &toPluginIdentifier() const;
+
             //! Bool flags to enum
             static Simulator boolToFlag(bool fsx, bool fs9, bool xp, bool p3d);
 

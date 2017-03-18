@@ -64,6 +64,21 @@ namespace BlackMisc
             //! \copydoc BlackMisc::Mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
 
+            //! Plugin identifier (FSX)
+            static const QString &fsxPluginIndentifier();
+
+            //! Plugin identifier (P3D)
+            static const QString &p3dPluginIndentifier();
+
+            //! Plugin identifier (FS9)
+            static const QString &fs9PluginIndentifier();
+
+            //! Plugin identifier (XPlane)
+            static const QString &xplanePluginIndentifier();
+
+            //! Guess default plugins
+            static QStringList guessDefaultPlugins();
+
         private:
             QString m_identifier;
             QString m_name;

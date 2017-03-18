@@ -12,9 +12,10 @@
 #ifndef BLACKCORE_APPLICATION_SETTINGS_H
 #define BLACKCORE_APPLICATION_SETTINGS_H
 
-#include "blackmisc/settingscache.h"
 #include "blackconfig/buildconfig.h"
+#include "blackmisc/settingscache.h"
 #include "blackmisc/input/actionhotkeylist.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include <QStringList>
 
 namespace BlackCore
@@ -50,35 +51,8 @@ namespace BlackCore
             static const QStringList &defaultValue()
             {
                 // All default simulators
-                static const QStringList enabledSimulators(defaultValueImpl());
+                static const QStringList enabledSimulators(BlackMisc::Simulation::CSimulatorPluginInfo::guessDefaultPlugins());
                 return enabledSimulators;
-            }
-
-        private:
-            //! Determine default value
-            static QStringList defaultValueImpl()
-            {
-                if (BlackConfig::CBuildConfig::isRunningOnWindows10())
-                {
-                    // On WIN10 we have no direct play, so disable FS9 as per default
-                    return QStringList
-                    {
-                        QStringLiteral("org.swift-project.plugins.simulator.fsx"),
-                        QStringLiteral("org.swift-project.plugins.simulator.xplane")
-                    };
-                }
-                else if (BlackConfig::CBuildConfig::isRunningOnUnixPlatform())
-                {
-                    // On UNIX we likely run XP
-                    return QStringList { QStringLiteral("org.swift-project.plugins.simulator.xplane") };
-                }
-
-                return QStringList
-                {
-                    QStringLiteral("org.swift-project.plugins.simulator.fs9"),
-                    QStringLiteral("org.swift-project.plugins.simulator.fsx"),
-                    QStringLiteral("org.swift-project.plugins.simulator.xplane")
-                };
             }
         };
 

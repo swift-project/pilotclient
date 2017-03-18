@@ -8,10 +8,11 @@
  */
 
 #include "blackconfig/buildconfig.h"
-#include "blackmisc/comparefunctions.h"
 #include "blackmisc/db/datastoreutility.h"
+#include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/comparefunctions.h"
 #include <QJsonValue>
 #include <QtGlobal>
 #include <algorithm>
@@ -136,7 +137,7 @@ namespace BlackMisc
         QString CSimulatorInfo::convertToQString(bool i18n) const
         {
             Q_UNUSED(i18n);
-            Simulator s = getSimulator();
+            const Simulator s = getSimulator();
             QString str;
             if (s.testFlag(FSX)) { str.append("FSX "); }
             if (s.testFlag(FS9)) { str.append("FS9 "); }
@@ -159,6 +160,18 @@ namespace BlackMisc
             if (this->m_simulator & P3D) { set.insert(CSimulatorInfo(P3D)); }
             if (this->m_simulator & XPLANE) { set.insert(CSimulatorInfo(XPLANE)); }
             return set;
+        }
+
+        const QString &CSimulatorInfo::toPluginIdentifier() const
+        {
+            static const QString e;
+            if (!this->isSingleSimulator()) { return e; }
+            const Simulator s = getSimulator();
+            if (s.testFlag(FSX)) { return CSimulatorPluginInfo::fsxPluginIndentifier(); }
+            if (s.testFlag(FS9)) { return CSimulatorPluginInfo::fs9PluginIndentifier(); }
+            if (s.testFlag(P3D)) { return CSimulatorPluginInfo::p3dPluginIndentifier(); }
+            if (s.testFlag(XPLANE)) { return CSimulatorPluginInfo::xplanePluginIndentifier(); }
+            return e;
         }
 
         CSimulatorInfo::Simulator CSimulatorInfo::boolToFlag(bool fsx, bool fs9, bool xp, bool p3d)
@@ -188,7 +201,7 @@ namespace BlackMisc
             {
                 s |= XPLANE;
             }
-            if (i.contains("3d")  || i.contains("prepare") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
+            if (i.contains("3d")  || i.contains("prepar") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
             {
                 s |= P3D;
             }
@@ -259,7 +272,6 @@ namespace BlackMisc
             static const CSimulatorInfo sim(guessDefaultSimulatorImpl());
             return sim;
         }
-
 
         CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString prefix)
         {
