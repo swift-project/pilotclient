@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa);
-    CGuiApplication a("swift launcher", CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
+    CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Laucher, CIcons::swiftLauncher1024());
     a.addParserOption({{"i", "installer"}, QCoreApplication::translate("main", "Installer setup.") });
     if (!a.parse()) { return EXIT_FAILURE; }
     a.useWebDataServices(BlackCore::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());

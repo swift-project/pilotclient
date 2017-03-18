@@ -27,4 +27,28 @@ namespace BlackMisc
     {
         return QString("{ %1, %2, %3, %4, %5 }").arg(QString::number(m_app), QString::number(m_mode), m_exePath, m_version, m_process.convertToQString(i18n));
     }
+
+    const QString &CApplicationInfo::swiftPilotClientGui()
+    {
+        static const QString s("swift pilot client GUI");
+        return s;
+    }
+
+    const QString &CApplicationInfo::swiftLauncher()
+    {
+        static const QString s("swift launcher");
+        return s;
+    }
+
+    const QString &CApplicationInfo::swiftMappingTool()
+    {
+        static const QString s("swift mapping tool");
+        return s;
+    }
+
+    const QString &CApplicationInfo::swiftCore()
+    {
+        static const QString s("swift core");
+        return s;
+    }
 }

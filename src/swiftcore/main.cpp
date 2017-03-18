@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     Q_UNUSED(qa); // init of qa is required, but qa not used
-    CGuiApplication a("swift core", CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
+    CGuiApplication a(CApplicationInfo::swiftCore(), CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
     a.addVatlibOptions();

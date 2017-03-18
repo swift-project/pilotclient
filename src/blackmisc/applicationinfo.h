@@ -83,6 +83,18 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
+        //! Name of pilot client GUI
+        static const QString &swiftPilotClientGui();
+
+        //! Name of swift launcher
+        static const QString &swiftLauncher();
+
+        //! Name of swift mapping tool
+        static const QString &swiftMappingTool();
+
+        //! Name of swift core
+        static const QString &swiftCore();
+
     private:
         int m_app = static_cast<int>(Unknown);
         int m_mode = 0;
