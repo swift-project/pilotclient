@@ -65,18 +65,16 @@ namespace BlackCore
 
         public:
             //! Interface name
-            static const QString &InterfaceName()
-            {
-                static QString s(BLACKCORE_CONTEXTAUDIO_INTERFACENAME);
-                return s;
-            }
+            static const QString &InterfaceName();
 
             //! Object path
-            static const QString &ObjectPath()
-            {
-                static QString s(BLACKCORE_CONTEXTAUDIO_OBJECTPATH);
-                return s;
-            }
+            static const QString &ObjectPath();
+
+            //! Hotkey identifier for PTT (push to talk)
+            static const QString &pttHotkeyAction();
+
+            //! Hotkey icon for PTT (push to talk)
+            static const QPixmap &pttHotkeyIcon();
 
             //! \copydoc CContext::getPathAndContextId()
             virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }

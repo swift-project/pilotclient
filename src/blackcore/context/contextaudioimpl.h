@@ -137,7 +137,7 @@ namespace BlackCore
             //! Voice channel by room
             QSharedPointer<IVoiceChannel> getVoiceChannelBy(const BlackMisc::Audio::CVoiceRoom &voiceRoom);
 
-            CActionBind m_actionPtt { pttHotkeyIdentifier(), pttHotkeyIcon(), this, &CContextAudio::ps_setVoiceTransmission };
+            CActionBind m_actionPtt { pttHotkeyAction(), pttHotkeyIcon(), this, &CContextAudio::ps_setVoiceTransmission };
 
             std::unique_ptr<IVoice> m_voice; //!< underlying voice lib
             std::unique_ptr<IAudioMixer> m_audioMixer;

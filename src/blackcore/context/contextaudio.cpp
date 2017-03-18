@@ -14,11 +14,37 @@
 #include "blackcore/context/contextaudioimpl.h"
 #include "blackcore/context/contextaudioproxy.h"
 #include "blackmisc/dbusserver.h"
+#include "blackmisc/icons.h"
+
+using namespace BlackMisc;
 
 namespace BlackCore
 {
     namespace Context
     {
+        const QString &IContextAudio::InterfaceName()
+        {
+            static const QString s(BLACKCORE_CONTEXTAUDIO_INTERFACENAME);
+            return s;
+        }
+
+        const QString &IContextAudio::ObjectPath()
+        {
+            static const QString s(BLACKCORE_CONTEXTAUDIO_OBJECTPATH);
+            return s;
+        }
+
+        const QString &IContextAudio::pttHotkeyAction()
+        {
+            static const QString s("/Voice/Activate push-to-talk");
+            return s;
+        }
+
+        const QPixmap &IContextAudio::pttHotkeyIcon()
+        {
+            return CIcons::radio16();
+        }
+
         IContextAudio *IContextAudio::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, BlackMisc::CDBusServer *server, QDBusConnection &conn)
         {
             switch (mode)
