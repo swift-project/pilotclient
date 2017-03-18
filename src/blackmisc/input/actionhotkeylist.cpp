@@ -20,7 +20,7 @@ namespace BlackMisc
             CSequence<CActionHotkey>(baseClass)
         { }
 
-        CActionHotkeyList CActionHotkeyList::findSubsetsOf(const CActionHotkey &other)
+        CActionHotkeyList CActionHotkeyList::findSubsetsOf(const CActionHotkey &other) const
         {
             CActionHotkeyList subsets;
             for (const auto &actionHotkey : *this)
@@ -33,7 +33,7 @@ namespace BlackMisc
             return subsets;
         }
 
-        CActionHotkeyList CActionHotkeyList::findSupersetsOf(const CActionHotkey &other)
+        CActionHotkeyList CActionHotkeyList::findSupersetsOf(const CActionHotkey &other) const
         {
             CActionHotkeyList supersets;
             for (const auto &actionHotkey : *this)
@@ -45,5 +45,10 @@ namespace BlackMisc
             }
             return supersets;
         }
-    }
-}
+
+        bool CActionHotkeyList::containsAction(const QString &action) const
+        {
+            return this->contains(&CActionHotkey::getAction, action);
+        }
+    } // ns
+} // ns

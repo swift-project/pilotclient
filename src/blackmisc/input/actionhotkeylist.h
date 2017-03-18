@@ -47,16 +47,18 @@ namespace BlackMisc
             //! Returns true if this list has a action hotkey with a combination which is a subset of other
             //! Example:
             //! List contains CTRL and other has combination CTRL-F
-            CActionHotkeyList findSubsetsOf(const CActionHotkey &other);
+            CActionHotkeyList findSubsetsOf(const CActionHotkey &other) const;
 
             //! Returns true if this list has a hotkey with a combination for which other is a subset
             //! Example:
             //! List contains CTRL-F and other has combination CTRL
-            CActionHotkeyList findSupersetsOf(const CActionHotkey &other);
-        };
+            CActionHotkeyList findSupersetsOf(const CActionHotkey &other) const;
 
-    }
-} // namespace
+            //! Contains action
+            bool containsAction(const QString &action) const;
+        };
+    } // ns
+} // ns
 
 Q_DECLARE_METATYPE(BlackMisc::Input::CActionHotkeyList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Input::CActionHotkey>)
