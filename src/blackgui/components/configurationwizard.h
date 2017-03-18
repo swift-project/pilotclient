@@ -34,7 +34,9 @@ namespace BlackGui
             {
                 CopySettings,
                 CopyCaches,
-                ConfigSimulator
+                ConfigSimulator,
+                DataLoad,
+                ConfigHotkeys
             };
 
             //! Constructor

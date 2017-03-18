@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>500</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -156,6 +156,31 @@
     </item>
    </layout>
   </widget>
+  <widget class="BlackGui::Components::CConfigHotkeyWizardPage" name="wp_Hotkeys">
+   <property name="title">
+    <string>Hotkeys</string>
+   </property>
+   <property name="subTitle">
+    <string>Configure (at least) your PTT key</string>
+   </property>
+   <layout class="QVBoxLayout" name="vl_Hotkeys">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CSettingsHotkeyComponent" name="comp_Hotkeys"/>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -192,6 +217,18 @@
    <class>BlackGui::Components::CInitialDataLoadComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/initialdataloadcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CSettingsHotkeyComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/settingshotkeycomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CConfigHotkeyWizardPage</class>
+   <extends>QWizardPage</extends>
+   <header>blackgui/components/settingshotkeycomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

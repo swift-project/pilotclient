@@ -23,6 +23,8 @@ namespace BlackGui
             ui->wp_CopySettings->setConfigComponent(ui->comp_CopySettings);
             ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
             ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
+            ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
+            ui->comp_Hotkeys->registerDummyPttEntry();
             this->setButtonText(CustomButton1, "skip");
 
             // no other versions, skip copy pages
