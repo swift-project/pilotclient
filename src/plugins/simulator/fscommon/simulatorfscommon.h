@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKSIMPLUGIN_SIMULATOR_COMMON_H
-#define BLACKSIMPLUGIN_SIMULATOR_COMMON_H
+#ifndef BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
+#define BLACKSIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 
 #include "blackcore/simulatorcommon.h"
 #include "blackmisc/simulation/interpolator.h"
