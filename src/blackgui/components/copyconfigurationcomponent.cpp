@@ -252,11 +252,7 @@ namespace BlackGui
 
         bool CCopyConfigurationWizardPage::validatePage()
         {
-            CConfigurationWizard *wizard = qobject_cast<CConfigurationWizard *>(this->wizard());
-            Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
-            Q_ASSERT_X(wizard, Q_FUNC_INFO, "No wizard");
-
-            if (wizard->lastStepSkipped()) { return true; }
+            if (CConfigurationWizard::lastWizardStepSkipped(this->wizard())) { return true; }
             m_config->copySelectedFiles();
             return true;
         }

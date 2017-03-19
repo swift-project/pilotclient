@@ -50,6 +50,12 @@ namespace BlackGui
             return m_skipped;
         }
 
+        bool CConfigurationWizard::lastWizardStepSkipped(const QWizard *standardWizard)
+        {
+            const CConfigurationWizard *wizard = qobject_cast<const CConfigurationWizard *>(standardWizard);
+            return wizard && wizard->lastStepSkipped();
+        }
+
         void CConfigurationWizard::wizardCurrentIdChanged(int id)
         {
             const int previousId = m_previousId;

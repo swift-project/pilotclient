@@ -48,6 +48,9 @@ namespace BlackGui
             //! Was the last step skipped?
             bool lastStepSkipped() const;
 
+            //! Static version of CConfigurationWizard::lastStepSkipped
+            static bool lastWizardStepSkipped(const QWizard *standardWizard);
+
         private:
             //! The current page has changed
             void wizardCurrentIdChanged(int id);
