@@ -74,6 +74,18 @@ namespace BlackMisc
             return s;
         }
 
+        const QStringList &CSimulatorPluginInfo::allIdentifiers()
+        {
+            static const QStringList identifiers(
+            {
+                fsxPluginIndentifier(),
+                p3dPluginIndentifier(),
+                xplanePluginIndentifier(),
+                fs9PluginIndentifier()
+            });
+            return identifiers;
+        }
+
         QStringList CSimulatorPluginInfo::guessDefaultPlugins()
         {
             if (BlackConfig::CBuildConfig::isRunningOnUnixPlatform())

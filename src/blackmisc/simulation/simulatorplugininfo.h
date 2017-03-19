@@ -76,6 +76,9 @@ namespace BlackMisc
             //! Plugin identifier (XPlane)
             static const QString &xplanePluginIndentifier();
 
+            //! All valid identifiers
+            static const QStringList &allIdentifiers();
+
             //! Guess default plugins
             static QStringList guessDefaultPlugins();
 

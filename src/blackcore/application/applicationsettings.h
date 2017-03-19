@@ -54,6 +54,19 @@ namespace BlackCore
                 static const QStringList enabledSimulators(BlackMisc::Simulation::CSimulatorPluginInfo::guessDefaultPlugins());
                 return enabledSimulators;
             }
+
+            //! Simulator plugin identifiers valid?
+            static bool isValid(const QStringList &pluginIdentifiers)
+            {
+                for (const QString &pluginIdentifier : pluginIdentifiers)
+                {
+                    if (!BlackMisc::Simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
         };
 
         //! Uploading of crash dumps is enabled or disabled
