@@ -148,29 +148,24 @@ namespace BlackGui
         {
             Q_ASSERT(sGui->getIContextSimulator());
 
-            CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
-            auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
-                                         [&identifier](const CSimulatorPluginInfo & info)
-            {
-                return info.getIdentifier() == identifier;
-            });
-
-            if (selected == simDrivers.end() || selected->isUnspecified())
+            const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
+            const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
+            if (selected.isUnspecified())
             {
                 CLogMessage(this).error("Simulator plugin does not exist: '%1'") << identifier;
                 return;
             }
 
-            auto e = m_enabledSimulators.getThreadLocal();
-            if (enabled != e.contains(selected->getIdentifier()))
+            QStringList e = m_enabledSimulators.getThreadLocal();
+            if (enabled != e.contains(selected.getIdentifier()))
             {
                 if (enabled)
                 {
-                    e << selected->getIdentifier();
+                    e << selected.getIdentifier();
                 }
                 else
                 {
-                    e.removeAll(selected->getIdentifier());
+                    e.removeAll(selected.getIdentifier());
                 }
                 m_enabledSimulators.set(e);
             }
@@ -182,7 +177,7 @@ namespace BlackGui
         {
             // get initial aircraft to render
             CInterpolationAndRenderingSetup setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetup();
-            int noRequested = ui->le_MaxAircraft->text().isEmpty() ? setup.InfiniteAircraft() : ui->le_MaxAircraft->text().toInt();
+            const int noRequested = ui->le_MaxAircraft->text().isEmpty() ? setup.InfiniteAircraft() : ui->le_MaxAircraft->text().toInt();
             const int oldValue = setup.getMaxRenderedAircraft();
             if (oldValue == noRequested) { return; }
 
@@ -286,34 +281,25 @@ namespace BlackGui
         void CSettingsSimulatorComponent::ps_showPluginDetails(const QString &identifier)
         {
             const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
-            const auto selected = std::find_if(
-                                      simDrivers.begin(), simDrivers.end(),
-                                      [&identifier](const CSimulatorPluginInfo & info)
-            {
-                return info.getIdentifier() == identifier;
-            });
+            const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
 
             QWidget *aw = qApp->activeWindow();
 
             CPluginDetailsWindow *w = new CPluginDetailsWindow(aw);
             w->setAttribute(Qt::WA_DeleteOnClose);
-            w->setPluginIdentifier(selected->getIdentifier());
-            w->setPluginName(selected->getName());
-            w->setPluginDescription(selected->getDescription());
+            w->setPluginIdentifier(selected.getIdentifier());
+            w->setPluginName(selected.getName());
+            w->setPluginDescription(selected.getDescription());
 
             w->show();
         }
 
         void CSettingsSimulatorComponent::ps_showPluginConfig(const QString &identifier)
         {
-            CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
-            const auto selected = std::find_if(simDrivers.begin(), simDrivers.end(),
-                                               [&identifier](const CSimulatorPluginInfo & info)
-            {
-                return info.getIdentifier() == identifier;
-            });
+            const CSimulatorPluginInfoList simDrivers(getAvailablePlugins());
+            const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
 
-            const QString configId = m_plugins->getPluginConfigId(selected->getIdentifier());
+            const QString configId = m_plugins->getPluginConfigId(selected.getIdentifier());
             IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
             if (!config)
             {
@@ -328,7 +314,7 @@ namespace BlackGui
         void CSettingsSimulatorComponent::ps_reloadPluginConfig()
         {
             // list all available simulators
-            auto enabledSimulators = m_enabledSimulators.getThreadLocal();
+            const auto enabledSimulators = m_enabledSimulators.getThreadLocal();
             for (const auto &p : getAvailablePlugins())
             {
                 ui->pluginSelector_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));

@@ -48,6 +48,8 @@ namespace BlackMisc
             //! String list with meaningful representations
             QStringList toStringList(bool i18n = false) const;
 
+            //! Find by identifier (unique)
+            CSimulatorPluginInfo findByIdentifier(const QString &identifier) const;
         };
     } // ns
 } // ns

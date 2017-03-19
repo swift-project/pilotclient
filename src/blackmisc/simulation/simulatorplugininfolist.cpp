@@ -19,7 +19,6 @@ namespace BlackMisc
 {
     namespace Simulation
     {
-
         CSimulatorPluginInfoList::CSimulatorPluginInfoList() { }
 
         bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator) const
@@ -35,5 +34,9 @@ namespace BlackMisc
             return this->transform([i18n](const CSimulatorPluginInfo & info) { return info.toQString(i18n); });
         }
 
+        CSimulatorPluginInfo CSimulatorPluginInfoList::findByIdentifier(const QString &identifier) const
+        {
+            return this->findFirstByOrDefault(&CSimulatorPluginInfo::getIdentifier, identifier);
+        }
     } // namespace
 } // namespace
