@@ -200,14 +200,14 @@ namespace BlackCore
             CPluginManagerSimulator *m_plugins = nullptr;
             BlackMisc::CRegularThread m_listenersThread; //!< waiting for plugin
             BlackCore::CWeatherManager m_weatherManager { this };
-            BlackMisc::CSetting<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
             BlackCore::CAircraftMatcher m_aircraftMatcher; //!< Model matcher
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
+            BlackMisc::CSettingReadOnly<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
+            QString m_networkSessionId; //! Network session, if not connected empty
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
-            QString m_networkSessionId; //! Network session, if not connected empty
             bool m_isWeatherActivated = false;
         };
     } // namespace
