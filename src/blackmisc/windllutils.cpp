@@ -41,16 +41,16 @@ namespace BlackMisc
             return iso;
         }
 
-        QString queryToQString(const std::vector<BYTE> &pbVersionInfo, const std::vector<TCHAR> &subBlockNameBuffer)
+        QString queryToQString(BYTE *pbVersionInfo, const std::vector<TCHAR> &subBlockNameBuffer)
         {
             UINT dwBytes = 0;
             LPVOID lpBuffer = nullptr;
-            VerQueryValueW(pbVersionInfo.data(), subBlockNameBuffer.data(), &lpBuffer, &dwBytes);
+            VerQueryValueW(pbVersionInfo, subBlockNameBuffer.data(), &lpBuffer, &dwBytes);
             const QString queryString = QString::fromWCharArray((const wchar_t *) lpBuffer, dwBytes);
             return queryString;
         }
 
-        QString queryToQString(const std::vector<BYTE> &pbVersionInfo, const LanguageCodePage &codePage, _In_ LPCTSTR subBlockpSzFormat, std::vector<TCHAR> &subBlockNameBuffer)
+        QString queryToQString(BYTE *pbVersionInfo, const LanguageCodePage &codePage, _In_ LPCTSTR subBlockpSzFormat, std::vector<TCHAR> &subBlockNameBuffer)
         {
             HRESULT hr = StringCchPrintf(subBlockNameBuffer.data(), subBlockNameBuffer.size() - 1, subBlockpSzFormat, codePage.wLanguage, codePage.wCodePage);
             if (FAILED(hr)) { return QString(); }
@@ -129,10 +129,10 @@ namespace BlackMisc
             // Retrieve file description for language and code page "i".
             const PrivateWindows::LanguageCodePage cp = lpTranslate[i];
             result.iso = PrivateWindows::languageToIsoCode(cp);
-            result.fileDescription = PrivateWindows::queryToQString(pbVersionInfo, cp, TEXT("\\StringFileInfo\\%04x%04x\\FileDescription"), subBlockNameBuffer);
-            result.productName = PrivateWindows::queryToQString(pbVersionInfo, cp, TEXT("\\StringFileInfo\\%04x%04x\\ProductName"), subBlockNameBuffer);
-            result.productVersionName = PrivateWindows::queryToQString(pbVersionInfo, cp, TEXT("\\StringFileInfo\\%04x%04x\\ProductVersion"), subBlockNameBuffer);
-            result.originalFilename = PrivateWindows::queryToQString(pbVersionInfo, cp, TEXT("\\StringFileInfo\\%04x%04x\\OriginalFilename"), subBlockNameBuffer);
+            result.fileDescription = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\FileDescription"), subBlockNameBuffer);
+            result.productName = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\ProductName"), subBlockNameBuffer);
+            result.productVersionName = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\ProductVersion"), subBlockNameBuffer);
+            result.originalFilename = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\OriginalFilename"), subBlockNameBuffer);
             result.fullFilename = dllQFile.fileName();
 
             //! \fixme currently stopping at first language, maybe need to change that in future
