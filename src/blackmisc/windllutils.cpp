@@ -34,10 +34,10 @@ namespace BlackMisc
         QString languageToIsoCode(const LanguageCodePage &codePage)
         {
             const LCID locale = codePage.wLanguage;
-            const int nchars = GetLocaleInfoW(locale, LOCALE_SISO639LANGNAME, NULL, 0);
+            const int nchars = GetLocaleInfo(locale, LOCALE_SISO639LANGNAME, NULL, 0);
             std::vector<wchar_t> language(nchars);
-            GetLocaleInfoW(locale, LOCALE_SISO639LANGNAME, &language[0], nchars);
-            const QString iso = QString::fromWCharArray(&language[0], nchars);
+            GetLocaleInfo(locale, LOCALE_SISO639LANGNAME, language.data(), nchars);
+            const QString iso = QString::fromWCharArray(language.data(), nchars);
             return iso;
         }
 
@@ -45,15 +45,15 @@ namespace BlackMisc
         {
             UINT dwBytes = 0;
             LPVOID lpBuffer = nullptr;
-            VerQueryValueW(&pbVersionInfo[0], &subBlockNameBuffer[0], &lpBuffer, &dwBytes);
+            VerQueryValueW(pbVersionInfo.data(), subBlockNameBuffer.data(), &lpBuffer, &dwBytes);
             const QString queryString = QString::fromWCharArray((const wchar_t *) lpBuffer, dwBytes);
             return queryString;
         }
 
         QString queryToQString(const std::vector<BYTE> &pbVersionInfo, const LanguageCodePage &codePage, _In_ LPCTSTR subBlockpSzFormat, std::vector<TCHAR> &subBlockNameBuffer)
         {
-            HRESULT hr = StringCchPrintf(&subBlockNameBuffer[0], subBlockNameBuffer.size() - 1, subBlockpSzFormat, codePage.wLanguage, codePage.wCodePage);
-            if (FAILED(hr)) { return QString(""); }
+            HRESULT hr = StringCchPrintf(subBlockNameBuffer.data(), subBlockNameBuffer.size() - 1, subBlockpSzFormat, codePage.wLanguage, codePage.wCodePage);
+            if (FAILED(hr)) { return QString(); }
             return queryToQString(pbVersionInfo, subBlockNameBuffer);
         }
     } // ns
@@ -87,14 +87,14 @@ namespace BlackMisc
         }
 
         std::vector<BYTE> pbVersionInfo(dwSize);
-        if (!GetFileVersionInfo(pszFilePath, 0, dwSize, &pbVersionInfo[0]))
+        if (!GetFileVersionInfo(pszFilePath, 0, dwSize, pbVersionInfo.data()))
         {
             result.errorMsg.sprintf("Error in GetFileVersionInfo: %d\n", GetLastError());
             return result;
         }
 
         // Language independent version of VerQueryValue
-        if (!VerQueryValue(&pbVersionInfo[0], TEXT("\\"), (LPVOID *) &pFileInfo, &puLenFileInfo))
+        if (!VerQueryValue(pbVersionInfo.data(), TEXT("\\"), reinterpret_cast<LPVOID *>(&pFileInfo), &puLenFileInfo))
         {
             result.errorMsg.sprintf("Error in VerQueryValue: %d\n", GetLastError());
             return result;
@@ -121,7 +121,7 @@ namespace BlackMisc
         PrivateWindows::LanguageCodePage *lpTranslate;
 
         // Read the list of languages and code pages.
-        VerQueryValue(&pbVersionInfo[0], TEXT("\\VarFileInfo\\Translation"), (LPVOID *)&lpTranslate, &puLenFileInfo);
+        VerQueryValue(pbVersionInfo.data(), TEXT("\\VarFileInfo\\Translation"), reinterpret_cast<LPVOID *>(&lpTranslate), &puLenFileInfo);
 
         // Read the file description for each language and code page.
         // All names: https://msdn.microsoft.com/en-us/library/windows/desktop/ms647464(v=vs.85).aspx
