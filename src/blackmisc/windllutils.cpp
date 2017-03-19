@@ -44,9 +44,9 @@ namespace BlackMisc
         QString queryToQString(BYTE *pbVersionInfo, const std::vector<TCHAR> &subBlockNameBuffer)
         {
             UINT dwBytes = 0;
-            LPVOID lpBuffer = nullptr;
-            VerQueryValueW(pbVersionInfo, subBlockNameBuffer.data(), &lpBuffer, &dwBytes);
-            const QString queryString = QString::fromWCharArray((const wchar_t *) lpBuffer, dwBytes);
+            wchar_t *szQueryString = nullptr;
+            VerQueryValue(pbVersionInfo, subBlockNameBuffer.data(), reinterpret_cast<LPVOID *>(&szQueryString), &dwBytes);
+            const QString queryString = QString::fromWCharArray(szQueryString, dwBytes);
             return queryString;
         }
 
