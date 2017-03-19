@@ -82,41 +82,39 @@ namespace BlackMisc
         dwSize = GetFileVersionInfoSize(pszFilePath, NULL);
         if (dwSize == 0)
         {
-            result.errorMsg.sprintf("Error in GetFileVersionInfoSize: %d\n", GetLastError());
+            result.errorMsg = QString("Error in GetFileVersionInfoSize: %1\n").arg(GetLastError());
             return result;
         }
 
         std::vector<BYTE> pbVersionInfo(dwSize);
         if (!GetFileVersionInfo(pszFilePath, 0, dwSize, pbVersionInfo.data()))
         {
-            result.errorMsg.sprintf("Error in GetFileVersionInfo: %d\n", GetLastError());
+            result.errorMsg = QString("Error in GetFileVersionInfo: %1\n").arg(GetLastError());
             return result;
         }
 
         // Language independent version of VerQueryValue
         if (!VerQueryValue(pbVersionInfo.data(), TEXT("\\"), reinterpret_cast<LPVOID *>(&pFileInfo), &puLenFileInfo))
         {
-            result.errorMsg.sprintf("Error in VerQueryValue: %d\n", GetLastError());
+            result.errorMsg = QString("Error in VerQueryValue: %1\n").arg(GetLastError());
             return result;
         }
 
         // pFileInfo->dwFileVersionMS is usually zero.
         // However, you should check this if your version numbers seem to be wrong
-        result.fileVersion.sprintf("%d.%d.%d.%d",
-                                   (pFileInfo->dwFileVersionMS >> 16) & 0xffff,
-                                   (pFileInfo->dwFileVersionMS >>  0) & 0xffff,
-                                   (pFileInfo->dwFileVersionLS >> 16) & 0xffff,
-                                   (pFileInfo->dwFileVersionLS >>  0) & 0xffff
-                                  );
+        result.fileVersion = QString("%1.%2.%3.%4")
+                                   .arg((pFileInfo->dwFileVersionMS >> 16) & 0xffff)
+                                   .arg((pFileInfo->dwFileVersionMS >>  0) & 0xffff)
+                                   .arg((pFileInfo->dwFileVersionLS >> 16) & 0xffff)
+                                   .arg((pFileInfo->dwFileVersionLS >>  0) & 0xffff);
 
         // pFileInfo->dwProductVersionMS is usually zero. However, you should check
         // this if your version numbers seem to be wrong
-        result.productVersion.sprintf("%d.%d.%d.%d",
-                                      (pFileInfo->dwProductVersionMS >> 16) & 0xffff,
-                                      (pFileInfo->dwProductVersionMS >>  0) & 0xffff,
-                                      (pFileInfo->dwProductVersionLS >> 16) & 0xffff,
-                                      (pFileInfo->dwProductVersionLS >>  0) & 0xffff
-                                     );
+        result.productVersion = QString("%1.%2.%3.%4")
+                                      .arg((pFileInfo->dwProductVersionMS >> 16) & 0xffff)
+                                      .arg((pFileInfo->dwProductVersionMS >>  0) & 0xffff)
+                                      .arg((pFileInfo->dwProductVersionLS >> 16) & 0xffff)
+                                      .arg((pFileInfo->dwProductVersionLS >>  0) & 0xffff);
 
         PrivateWindows::LanguageCodePage *lpTranslate;
 
