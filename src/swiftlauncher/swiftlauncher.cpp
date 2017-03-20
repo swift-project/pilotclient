@@ -128,7 +128,7 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
     {
         const QString html = nwReply->readAll().trimmed();
         if (html.isEmpty()) { return; }
-        ui->tbr_LatestNews->setHtml(html);
+        ui->tbr_LatestNews->setHtml(html); // causes QFSFileEngine::open: No file name specified
         constexpr qint64 newNews = 72 * 3600 * 1000;
         const qint64 deltaT = CNetworkUtils::lastModifiedSinceNow(nwReply.data());
         if (deltaT > 0 && deltaT < newNews)
@@ -149,7 +149,7 @@ void CSwiftLauncher::init()
 
     m_mwaOverlayFrame = ui->fr_SwiftLauncherMain;
     m_mwaStatusBar = nullptr;
-    m_mwaLogComponent = ui->fr_SwiftLauncherLog;
+    m_mwaLogComponent = ui->comp_SwiftLauncherLog;
 
     ui->lbl_NewVersionUrl->setTextFormat(Qt::RichText);
     ui->lbl_NewVersionUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -231,6 +231,9 @@ void CSwiftLauncher::initLogDisplay()
                           CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
                       );
     logHandler->subscribe(this, &CSwiftLauncher::ps_appendLogMessage);
+
+    ui->comp_SwiftLauncherLog->showFilterBar();
+    ui->comp_SwiftLauncherLog->filterUseRadioButtonDescriptiveIcons(false);
 }
 
 void CSwiftLauncher::startSwiftCore()
@@ -495,7 +498,7 @@ void CSwiftLauncher::ps_showStatusMessage(const CStatusMessage &msg)
 
 void CSwiftLauncher::ps_appendLogMessage(const CStatusMessage &message)
 {
-    ui->fr_SwiftLauncherLog->appendStatusMessageToList(message);
+    ui->comp_SwiftLauncherLog->appendStatusMessageToList(message);
     if (message.getSeverity() == CStatusMessage::SeverityError)
     {
         this->ps_showStatusMessage(message);
@@ -504,7 +507,7 @@ void CSwiftLauncher::ps_appendLogMessage(const CStatusMessage &message)
 
 void CSwiftLauncher::ps_appendLogMessages(const CStatusMessageList &messages)
 {
-    ui->fr_SwiftLauncherLog->appendStatusMessagesToList(messages);
+    ui->comp_SwiftLauncherLog->appendStatusMessagesToList(messages);
     if (messages.hasErrorMessages())
     {
         this->ps_showStatusMessage(messages.getErrorMessages().toSingleMessage());

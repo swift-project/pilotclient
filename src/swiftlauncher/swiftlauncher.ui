@@ -38,7 +38,7 @@
       <enum>QFrame::Raised</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="pg_SwiftLauncherMain">
       <layout class="QVBoxLayout" name="wl_SwiftLauncherMainPage">
@@ -879,7 +879,7 @@ p, li { white-space: pre-wrap; }
         <number>3</number>
        </property>
        <item>
-        <widget class="BlackGui::Components::CLogComponent" name="fr_SwiftLauncherLog">
+        <widget class="BlackGui::Components::CLogComponent" name="comp_SwiftLauncherLog">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -935,8 +935,8 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="swiftlauncher.qrc"/>
   <include location="../blackmisc/blackmisc.qrc"/>
+  <include location="swiftlauncher.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

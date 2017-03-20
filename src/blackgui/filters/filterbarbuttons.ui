@@ -2,9 +2,17 @@
 <ui version="4.0">
  <class>CFilterBarButtons</class>
  <widget class="QFrame" name="CFilterBarButtons">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>211</width>
+    <height>23</height>
+   </rect>
+  </property>
   <property name="minimumSize">
    <size>
-    <width>140</width>
+    <width>150</width>
     <height>0</height>
    </size>
   </property>
@@ -31,13 +39,13 @@
     <widget class="QLineEdit" name="le_Count">
      <property name="minimumSize">
       <size>
-       <width>40</width>
+       <width>30</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>40</width>
+       <width>75</width>
        <height>16777215</height>
       </size>
      </property>
@@ -49,7 +57,7 @@
      </property>
     </widget>
    </item>
-   <item alignment="Qt::AlignLeft">
+   <item>
     <widget class="QToolButton" name="tb_Filter">
      <property name="toolTip">
       <string>filter</string>
@@ -63,7 +71,7 @@
      </property>
     </widget>
    </item>
-   <item alignment="Qt::AlignLeft">
+   <item>
     <widget class="QToolButton" name="tb_RemoveFilter">
      <property name="toolTip">
       <string>remove filter</string>
@@ -77,7 +85,7 @@
      </property>
     </widget>
    </item>
-   <item alignment="Qt::AlignLeft">
+   <item>
     <widget class="QToolButton" name="tb_ClearForm">
      <property name="toolTip">
       <string>clear form</string>
@@ -95,15 +103,16 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pb_New">
-     <property name="maximumSize">
-      <size>
-       <width>30</width>
-       <height>16777215</height>
-      </size>
+    <widget class="QToolButton" name="tb_New">
+     <property name="toolTip">
+      <string>new (clear + remove filter)</string>
      </property>
      <property name="text">
       <string>new</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../../blackmisc/blackmisc.qrc">
+       <normaloff>:/diagona/icons/diagona/icons/cross-button.png</normaloff>:/diagona/icons/diagona/icons/cross-button.png</iconset>
      </property>
     </widget>
    </item>
@@ -111,9 +120,6 @@
     <spacer name="hs_FilterBarButtons">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>

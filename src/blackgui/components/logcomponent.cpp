@@ -55,6 +55,7 @@ namespace BlackGui
             ui->tvp_StatusMessages->setAutoResizeFrequency(3);
             ui->tvp_StatusMessages->setCustomMenu(new CLogMenu(this));
             ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
+            this->showFilterBar(); // default
         }
 
         CLogComponent::~CLogComponent()
@@ -87,6 +88,11 @@ namespace BlackGui
         {
             ui->tvp_StatusMessages->setFilterWidget(ui->filter_LogMessages);
             ui->filter_LogMessages->show();
+        }
+
+        void CLogComponent::filterUseRadioButtonDescriptiveIcons(bool oneCharacterText)
+        {
+            ui->filter_LogMessages->useRadioButtonDescriptiveIcons(oneCharacterText);
         }
 
         void CLogComponent::clear()

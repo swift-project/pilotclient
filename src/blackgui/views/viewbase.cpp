@@ -136,6 +136,8 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::setFilterWidgetImpl(QWidget *filterWidget)
         {
+            if (filterWidget == this->m_filterWidget) { return; }
+
             // dialog or filter widget
             if (this->m_filterWidget)
             {
@@ -154,6 +156,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::setFilterDialog(CFilterDialog *filterDialog)
         {
+            if (filterDialog == this->m_filterWidget) { return; }
             this->setFilterWidgetImpl(filterDialog);
             if (filterDialog)
             {
@@ -165,6 +168,7 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::setFilterWidget(CFilterWidget *filterWidget)
         {
+            if (filterWidget == this->m_filterWidget) { return; }
             this->setFilterWidgetImpl(filterWidget);
             if (filterWidget)
             {

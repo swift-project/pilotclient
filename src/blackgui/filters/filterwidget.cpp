@@ -20,6 +20,7 @@ namespace BlackGui
     {
         CFilterWidget::CFilterWidget(QWidget *parent) : QFrame(parent)
         {
+            Q_ASSERT_X(sGui, Q_FUNC_INFO, "sGui missing");
             this->setWindowTitle("Filter widget");
             ps_onStyleSheetChanged();
             connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterWidget::ps_onStyleSheetChanged);

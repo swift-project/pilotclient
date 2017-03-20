@@ -29,6 +29,10 @@ namespace BlackGui
             connect(ui->le_Category, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
             connect(ui->le_MessageText, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
+            connect(ui->rb_Error, &QRadioButton::released, this, &CStatusMessageFilterBar::radioButtonChanged);
+            connect(ui->rb_Info, &QRadioButton::released, this, &CStatusMessageFilterBar::radioButtonChanged);
+            connect(ui->rb_Warning, &QRadioButton::released, this, &CStatusMessageFilterBar::radioButtonChanged);
+
             ui->le_Category->setCompleter(new QCompleter(CLogPattern::allHumanReadableNames(), this));
 
             // reset form
@@ -42,6 +46,25 @@ namespace BlackGui
 
         CStatusMessageFilterBar::~CStatusMessageFilterBar()
         { }
+
+        void CStatusMessageFilterBar::useRadioButtonDescriptiveIcons(bool oneCharacterText)
+        {
+            CStatusMessage msg;
+            msg.setSeverity(CStatusMessage::SeverityError);
+            ui->rb_Error->setIcon(msg.toIcon().toQIcon());
+            ui->rb_Error->setToolTip(msg.getSeverityAsString());
+            ui->rb_Error->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
+
+            msg.setSeverity(CStatusMessage::SeverityWarning);
+            ui->rb_Warning->setIcon(msg.toIcon().toQIcon());
+            ui->rb_Warning->setToolTip(msg.getSeverityAsString());
+            ui->rb_Warning->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
+
+            msg.setSeverity(CStatusMessage::SeverityInfo);
+            ui->rb_Info->setIcon(msg.toIcon().toQIcon());
+            ui->rb_Info->setToolTip(msg.getSeverityAsString());
+            ui->rb_Info->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
+        }
 
         std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList> > CStatusMessageFilterBar::createModelFilter() const
         {
@@ -62,6 +85,11 @@ namespace BlackGui
             ui->le_MessageText->clear();
             ui->le_Category->clear();
             ui->rb_Info->setChecked(true);
+        }
+
+        void CStatusMessageFilterBar::radioButtonChanged()
+        {
+            this->triggerFilter();
         }
 
         CStatusMessage::StatusSeverity CStatusMessageFilterBar::getSelectedSeverity() const

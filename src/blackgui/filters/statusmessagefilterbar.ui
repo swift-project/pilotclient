@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>324</width>
+    <width>359</width>
     <height>58</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
        <number>3</number>
       </property>
       <property name="leftMargin">
-       <number>0</number>
+       <number>10</number>
       </property>
       <property name="topMargin">
        <number>0</number>
@@ -75,14 +75,8 @@
     <widget class="BlackGui::Filters::CFilterBarButtons" name="filter_Buttons">
      <property name="minimumSize">
       <size>
-       <width>50</width>
+       <width>75</width>
        <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>100</width>
-       <height>16777215</height>
       </size>
      </property>
     </widget>

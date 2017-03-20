@@ -75,6 +75,9 @@ namespace BlackGui
             //! Show a filter bar
             void showFilterBar();
 
+            //! Set fi
+            void filterUseRadioButtonDescriptiveIcons(bool oneLetterText);
+
             //! Clear
             void clear();
 

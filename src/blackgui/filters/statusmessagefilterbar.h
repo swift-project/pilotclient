@@ -41,6 +41,9 @@ namespace BlackGui
             //! Destructor
             virtual ~CStatusMessageFilterBar();
 
+            //! Use icons with radio buttons
+            void useRadioButtonDescriptiveIcons(bool oneCharacterText);
+
             //! \copydoc Models::IModelFilterProvider::createModelFilter
             virtual std::unique_ptr<BlackGui::Models::IModelFilter<BlackMisc::CStatusMessageList>> createModelFilter() const override;
 
@@ -54,6 +57,9 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CStatusMessageFilterBar> ui;
+
+            //! Radio button was changed
+            void radioButtonChanged();
 
             //! Get the selected severity
             BlackMisc::CStatusMessage::StatusSeverity getSelectedSeverity() const;

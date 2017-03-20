@@ -26,7 +26,7 @@ namespace BlackGui
             connect(ui->tb_ClearForm, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
             connect(ui->tb_Filter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
             connect(ui->tb_RemoveFilter, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
-            connect(ui->pb_New, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
+            connect(ui->tb_New, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
         }
 
         CFilterBarButtons::~CFilterBarButtons()
@@ -43,7 +43,7 @@ namespace BlackGui
             if (sender == ui->tb_ClearForm) { emit buttonClicked(ClearForm); }
             else if (sender == ui->tb_Filter) { emit buttonClicked(Filter); }
             else if (sender == ui->tb_RemoveFilter) { emit buttonClicked(RemoveFilter); }
-            else if (sender == ui->pb_New)
+            else if (sender == ui->tb_New)
             {
                 emit buttonClicked(RemoveFilter);
                 emit buttonClicked(ClearForm);
