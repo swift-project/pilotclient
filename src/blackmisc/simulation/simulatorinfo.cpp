@@ -232,15 +232,12 @@ namespace BlackMisc
             if (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
                 fs9 =
-                    CBuildConfig::isRunningOnWindowsNtPlatform() &&
                     !CFsCommonUtil::fs9AircraftDir().isEmpty() &&
                     !CFsCommonUtil::fs9Dir().isEmpty();
                 fsx =
-                    CBuildConfig::isRunningOnWindowsNtPlatform() &&
                     !CFsCommonUtil::fsxSimObjectsDir().isEmpty() &&
                     !CFsCommonUtil::fsxDir().isEmpty();
                 p3d =
-                    CBuildConfig::isRunningOnWindowsNtPlatform() &&
                     !CFsCommonUtil::p3dDir().isEmpty() &&
                     !CFsCommonUtil::p3dSimObjectsDir().isEmpty();
             }
