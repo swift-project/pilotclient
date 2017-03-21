@@ -13,6 +13,9 @@
 #define BLACKGUI_COMPONENTS_COPYCONFIGURATION_H
 
 #include "blackgui/blackguiexport.h"
+#include "blackcore/data/launchersetup.h"
+#include "blackcore/data/vatsimsetup.h"
+#include "blackmisc/simulation/data/modelcaches.h"
 #include <QFrame>
 #include <QWizardPage>
 #include <QDir>
@@ -45,16 +48,26 @@ namespace BlackGui
             //! Selected files are copied
             int copySelectedFiles();
 
-            //! Preselect newer files
-            void preselectMissingOrOutdated();
-
             //! Init file content
             void initCurrentDirectories(bool preselectMissingOrOutdated = false);
 
-            //! Are there other versions to copy from
+            //! Are there other versions to copy from?
             bool hasOtherVersionData() const;
 
+            //! Allow to toggle cache and settings
+            void allowToggleCacheSettings(bool allow);
+
         private:
+            //! Preselect newer files
+            void preselectMissingOrOutdated();
+
+            //! Filter out items from preselection
+            //! \remark formally newer files are preselected
+            bool preselectActiveFiles(const QString &file) const;
+
+            //! Source file filter
+            const QStringList &getSourceFileFilter();
+
             //! The current version changed
             void currentVersionChanged(const QString &text);
 
@@ -67,11 +80,19 @@ namespace BlackGui
             //! Get the selected files
             QStringList getSelectedFiles() const;
 
-            //! Delete the .rev file (caches)
-            void deleteRevisionFile() const;
+            //! Init model caches if required
+            void initModelCaches(const QStringList &files);
 
             QStringList m_otherVersionDirs;
             QScopedPointer<Ui::CCopyConfigurationComponent> ui;
+            QString m_initializedSourceDir;
+            QString m_initializedDestinationDir;
+            BlackMisc::Simulation::Data::CModelCaches m_modelCaches{false, this};
+            BlackMisc::Simulation::Data::CModelSetCaches m_modelSetCaches{false, this};
+            BlackMisc::CData<BlackMisc::Simulation::Data::TModelSetLastSelection> m_modelSetCurrentSimulator { this };
+            BlackMisc::CData<BlackMisc::Simulation::Data::TModelCacheLastSelection> m_modelsCurrentSimulator { this };
+            BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_launcherSetup { this };
+            BlackMisc::CData<BlackCore::Data::TVatsimSetup> m_vatsimSetup { this };
         };
 
         /**

@@ -14,12 +14,15 @@
 #include "blackmisc/directoryutils.h"
 #include "blackmisc/settingscache.h"
 #include "blackmisc/datacache.h"
+#include "blackmisc/logmessage.h"
 
 #include <QDirIterator>
 #include <QFileInfoList>
 #include <QFileSystemModel>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::Data;
 using namespace BlackConfig;
 
 namespace BlackGui
@@ -40,6 +43,17 @@ namespace BlackGui
             connect(ui->pb_SelectAll, &QPushButton::clicked, ui->tv_Source, &QTreeView::selectAll);
             connect(ui->pb_ClearSelection, &QPushButton::clicked, ui->tv_Source, &QTreeView::clearSelection);
             connect(ui->pb_CopyOver, &QPushButton::clicked, this, &CCopyConfigurationComponent::copySelectedFiles);
+
+            // create default caches with timestamps
+            // possible for small caches, but not the large model sets (too slow)
+            m_modelSetCurrentSimulator.synchronize();
+            m_modelSetCurrentSimulator.set(m_modelSetCurrentSimulator.get());
+            m_modelsCurrentSimulator.synchronize();
+            m_modelsCurrentSimulator.set(m_modelsCurrentSimulator.get());
+            m_launcherSetup.synchronize();
+            m_launcherSetup.set(m_launcherSetup.get());
+            m_vatsimSetup.synchronize();
+            m_vatsimSetup.set(m_vatsimSetup.get());
         }
 
         CCopyConfigurationComponent::~CCopyConfigurationComponent()
@@ -67,6 +81,9 @@ namespace BlackGui
             const QDir destination(destinationDir);
             if (!destination.exists()) { return 0; }
 
+            // init model caches if applicable
+            this->initModelCaches(files);
+
             int c = 0;
             for (const QString &file : files)
             {
@@ -82,9 +99,6 @@ namespace BlackGui
                 const bool s = QFile::copy(file, target);
                 if (s) { c++; }
             }
-
-            // delete revision file in target if required
-            this->deleteRevisionFile();
 
             // bye
             return c;
@@ -112,76 +126,104 @@ namespace BlackGui
             }
         }
 
-        void CCopyConfigurationComponent::initCurrentDirectories(bool preselectMissingOrOutdated)
+        const QStringList &CCopyConfigurationComponent::getSourceFileFilter()
         {
-            const QString thisVersionDir = this->getThisVersionDirectory(); // cache or settings dir
-            const QDir thisVersionDirectory(thisVersionDir);
-            if (!thisVersionDirectory.exists())
+            if (ui->rb_Cache->isChecked())
             {
-                const bool hasDir = thisVersionDirectory.mkpath(thisVersionDir);
-                if (!hasDir)
+                // only copy setup and model caches
+                static const QStringList cacheFilter(
                 {
-                    ui->le_CurrentVersion->setText("No swift target dir");
-                    return;
-                }
-            }
-            ui->le_CurrentVersion->setText(thisVersionDir);
-
-            // source
-            QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
-            if (!sourceModel)
-            {
-                sourceModel = new QFileSystemModel(this);
-                sourceModel->setNameFilterDisables(true); // hide/disable only
-                sourceModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
-                sourceModel->setNameFilters(QStringList("*.json"));
-                ui->tv_Source->setModel(sourceModel);
-                connect(sourceModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
-                {
-                    Q_UNUSED(path);
-                    ui->tv_Source->resizeColumnToContents(0);
-                    ui->tv_Source->expandAll();
-                    if (preselectMissingOrOutdated)
-                    {
-                        this->preselectMissingOrOutdated();
-                    }
+                    "modelset*.json",
+                    "modelcache*.json",
+                    "*setup.json"
                 });
+                return cacheFilter;
             }
             else
             {
-                this->preselectMissingOrOutdated();
+                static const QStringList settingsFilter({ "*.json" });
+                return settingsFilter;
             }
+        }
 
-            const QString dir = this->getOtherVersionsSelectedDirectory();
-            const QModelIndex sourceIndex = sourceModel->setRootPath(dir);
-            ui->tv_Source->setRootIndex(sourceIndex);
-            ui->tv_Source->setSortingEnabled(true); // hide/disable only
-
-            // destination
-            QFileSystemModel *destinationModel = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
-            if (!destinationModel)
+        void CCopyConfigurationComponent::initCurrentDirectories(bool preselectMissingOrOutdated)
+        {
+            const QString destinationDir = this->getThisVersionDirectory(); // cache or settings dir
+            if (this->m_initializedDestinationDir != destinationDir)
             {
-                destinationModel = new QFileSystemModel(this);
-                destinationModel->setNameFilterDisables(true);
-                destinationModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
-                destinationModel->setNameFilters(QStringList("*.json"));
-                ui->tv_Destination->setModel(destinationModel);
-                connect(destinationModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
+                this->m_initializedDestinationDir = destinationDir;
+                const QDir thisVersionDirectory(destinationDir);
+                if (!thisVersionDirectory.exists())
                 {
-                    Q_UNUSED(path);
-                    ui->tv_Destination->resizeColumnToContents(0);
-                    ui->tv_Destination->expandAll();
-                });
+                    const bool hasDir = thisVersionDirectory.mkpath(destinationDir);
+                    if (!hasDir)
+                    {
+                        ui->le_CurrentVersion->setText("No swift target dir");
+                        return;
+                    }
+                }
+                ui->le_CurrentVersion->setText(destinationDir);
+
+                // destination
+                QFileSystemModel *destinationModel = qobject_cast<QFileSystemModel *>(ui->tv_Destination->model());
+                if (!destinationModel)
+                {
+                    destinationModel = new QFileSystemModel(this);
+                    destinationModel->setNameFilterDisables(true);
+                    destinationModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
+                    destinationModel->setNameFilters(this->getSourceFileFilter());
+                    ui->tv_Destination->setModel(destinationModel);
+                    ui->tv_Destination->setSortingEnabled(true);
+                    connect(destinationModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
+                    {
+                        Q_UNUSED(path);
+                        ui->tv_Destination->resizeColumnToContents(0);
+                        ui->tv_Destination->expandAll();
+                    });
+                }
+                const QModelIndex destinationIndex = destinationModel->setRootPath(destinationDir);
+                ui->tv_Destination->setRootIndex(destinationIndex);
             }
-            const QString destinationDir = this->getThisVersionDirectory();
-            const QModelIndex destinationIndex = destinationModel->setRootPath(destinationDir);
-            ui->tv_Destination->setRootIndex(destinationIndex);
-            ui->tv_Destination->setSortingEnabled(true);
+
+            // source
+            const QString sourceDir = this->getOtherVersionsSelectedDirectory();
+            if (this->m_initializedSourceDir != sourceDir)
+            {
+                this->m_initializedSourceDir = sourceDir;
+                QFileSystemModel *sourceModel = qobject_cast<QFileSystemModel *>(ui->tv_Source->model());
+                if (!sourceModel)
+                {
+                    sourceModel = new QFileSystemModel(this);
+                    sourceModel->setNameFilterDisables(true); // hide/disable only
+                    sourceModel->setFilter(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs);
+                    sourceModel->setNameFilters(this->getSourceFileFilter());
+                    ui->tv_Source->setModel(sourceModel);
+                    ui->tv_Source->setSortingEnabled(true); // hide/disable only
+                    connect(sourceModel, &QFileSystemModel::directoryLoaded, this, [ = ](const QString & path)
+                    {
+                        Q_UNUSED(path);
+                        ui->tv_Source->resizeColumnToContents(0);
+                        ui->tv_Source->expandAll();
+                        if (preselectMissingOrOutdated)
+                        {
+                            this->preselectMissingOrOutdated();
+                        }
+                    });
+                }
+                const QModelIndex sourceIndex = sourceModel->setRootPath(sourceDir);
+                ui->tv_Source->setRootIndex(sourceIndex);
+            }
         }
 
         bool CCopyConfigurationComponent::hasOtherVersionData() const
         {
             return !m_otherVersionDirs.isEmpty();
+        }
+
+        void CCopyConfigurationComponent::allowToggleCacheSettings(bool allow)
+        {
+            ui->rb_Cache->setEnabled(allow);
+            ui->rb_Settings->setEnabled(allow);
         }
 
         void CCopyConfigurationComponent::currentVersionChanged(const QString &text)
@@ -236,17 +278,52 @@ namespace BlackGui
             return files;
         }
 
-        void CCopyConfigurationComponent::deleteRevisionFile() const
+        void CCopyConfigurationComponent::initModelCaches(const QStringList &files)
         {
-            if (!ui->rb_Cache->isChecked()) { return; } // only for cache, no .rev file for settigs
-            QFile rev(CDataCache::revisionFileName());
-            if (!rev.exists()) { return; }
-            rev.remove();
+            if (files.isEmpty()) { return; }
+            if (!ui->rb_Cache->isChecked()) { return; }
+            for (const QString &file : files)
+            {
+                CStatusMessage msg;
+                IMultiSimulatorModelCaches *cache = nullptr;
+                if (file.contains("modelset", Qt::CaseInsensitive))
+                {
+                    cache = &m_modelSetCaches;
+                }
+                else if (file.contains("modelcache", Qt::CaseInsensitive))
+                {
+                    cache = &m_modelCaches;
+                }
+                else
+                {
+                    continue;
+                }
+
+                const CSimulatorInfo info = cache->getSimulatorForFilename(file);
+                if (info.isNoSimulator()) continue;
+                if (cache->isSaved(info)) continue; // already a file and hence in .rev
+                const QFileInfo fi(file);
+                msg = cache->setCacheTimestamp(fi.lastModified(), info); // create cache file and timestamp in .rev
+                if (msg.isFailure())
+                {
+                    CLogMessage(this).preformatted(msg);
+                }
+            }
         }
 
         void CCopyConfigurationWizardPage::initializePage()
         {
             Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
+            const QString name = m_config->objectName().toLower();
+            if (name.contains("setting", Qt::CaseInsensitive))
+            {
+                m_config->setSettingsMode();
+            }
+            else
+            {
+                m_config->setCacheMode();
+            }
+            m_config->allowToggleCacheSettings(false);
             m_config->initCurrentDirectories(true);
         }
 
