@@ -54,7 +54,7 @@
       <item>
        <widget class="QLabel" name="lbl_HeaderText">
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;We recommend to download an initial data set. This may some time, but then you can start to use all tool straight away with full functionality.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;We recommend to download an initial data set. This may take some time, but then you can start to use all tools with full functionality.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>

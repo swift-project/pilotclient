@@ -63,16 +63,15 @@ namespace BlackGui
             const bool skipped = m_skipped;
             m_previousId = id; // update
             m_skipped = false; // reset
-            Q_UNUSED(backward);
             Q_UNUSED(skipped);
 
             const QWizardPage *page = this->currentPage();
-            if (page == ui->wp_CopyCaches)
+            if (backward && page == ui->wp_CopyCaches)
             {
                 ui->comp_CopyCaches->setCacheMode();
                 ui->comp_CopyCaches->initCurrentDirectories(true);
             }
-            else if (page == ui->wp_CopySettings)
+            else if (backward && page == ui->wp_CopySettings)
             {
                 ui->comp_CopySettings->setSettingsMode();
                 ui->comp_CopySettings->initCurrentDirectories(true);
