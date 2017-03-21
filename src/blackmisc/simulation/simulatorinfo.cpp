@@ -216,6 +216,12 @@ namespace BlackMisc
             return s;
         }
 
+        const QSet<CSimulatorInfo> &CSimulatorInfo::allSimulatorsSet()
+        {
+            static const QSet<CSimulatorInfo> all(allSimulators().asSingleSimulatorSet());
+            return all;
+        }
+
         const CSimulatorInfo &CSimulatorInfo::allFsFamilySimulators()
         {
             static const CSimulatorInfo s(CSimulatorInfo::AllFsFamily);

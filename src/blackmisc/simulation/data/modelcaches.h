@@ -147,6 +147,12 @@ namespace BlackMisc
                 //! Count of models for simulator
                 int getCachedModelsCount(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
 
+                //! Get filename for simulator cache file
+                virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
+
+                //! Simulator which uses cache with filename
+                BlackMisc::Simulation::CSimulatorInfo getSimulatorForFilename(const QString &filename) const;
+
                 //! Models
                 CAircraftModelList getSynchronizedCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator);
 
@@ -157,6 +163,13 @@ namespace BlackMisc
                 //! Cache timestamp
                 //! \threadsafe
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
+
+                //! Set cache timestamp
+                virtual BlackMisc::CStatusMessage setCacheTimestamp(const QDateTime &ts, const BlackMisc::Simulation::CSimulatorInfo &simulator) = 0;
+
+                //! Cache saved?
+                //! \threadsafe
+                virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const = 0;
 
                 //! Initialized caches for which simulator?
                 //! \threadsafe
@@ -242,10 +255,13 @@ namespace BlackMisc
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual void admitCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
                 //! @}
 
             private:
@@ -281,10 +297,13 @@ namespace BlackMisc
                 virtual CAircraftModelList getCachedModels(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 virtual BlackMisc::CStatusMessage setCachedModels(const BlackMisc::Simulation::CAircraftModelList &models, const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QDateTime getCacheTimestamp(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
                 virtual void synchronizeCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual void admitCache(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
+                virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
+                virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
                 //! @}
 
             private:

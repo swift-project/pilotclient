@@ -162,6 +162,9 @@ namespace BlackMisc
             //! All simulators
             static const CSimulatorInfo &allSimulators();
 
+            //! All simulators as set
+            static const QSet<CSimulatorInfo> &allSimulatorsSet();
+
             //! All simulators of the FS family (P3D FSX, FS9)
             static const CSimulatorInfo &allFsFamilySimulators();
 
