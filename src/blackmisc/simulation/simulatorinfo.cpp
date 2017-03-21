@@ -12,6 +12,7 @@
 #include "blackmisc/simulation/simulatorplugininfo.h"
 #include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include "blackmisc/simulation/simulatorinfo.h"
+#include "blackmisc/simulation/xplane/xplaneutil.h"
 #include "blackmisc/comparefunctions.h"
 #include <QJsonValue>
 #include <QtGlobal>
@@ -21,6 +22,7 @@ using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Simulation::FsCommon;
+using namespace BlackMisc::Simulation::XPlane;
 
 namespace BlackMisc
 {
@@ -226,7 +228,6 @@ namespace BlackMisc
             bool fs9 = false;
             bool fsx = false;
             bool p3d = false;
-            bool xp = false;
 
             if (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
@@ -244,7 +245,7 @@ namespace BlackMisc
                     !CFsCommonUtil::p3dSimObjectsDir().isEmpty();
             }
 
-            xp = true; //! \todo XP resolution for locally installed simulator
+            const bool xp = !CXPlaneUtil::xplaneRootDir().isEmpty();
 
             sim.setSimulator(CSimulatorInfo::boolToFlag(fsx, fs9, xp, p3d));
             return sim;
