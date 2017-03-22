@@ -346,4 +346,12 @@ namespace BlackMisc
         default: return QStringLiteral("Bad error number");
         }
     }
+
+    QString CFileUtils::fixWindowsUncPath(const QString &filePath)
+    {
+        if (!filePath.startsWith('/')) { return filePath; }
+        if (filePath.startsWith("//")) { return filePath; }
+        static const QString f("/%1");
+        return f.arg(filePath);
+    }
 } // ns

@@ -69,7 +69,9 @@ namespace BlackMisc
                 static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, "Aircraft config parser did not load data");
 
                 const CSimulatorInfo simulator = this->getSimulator();
-                const QString modelDirectory(!directory.isEmpty() ? directory : this->m_settings.getFirstModelDirectoryOrDefault(simulator)); // expect only one directory
+                const QString modelDirectory = CFileUtils::fixWindowsUncPath(
+                                                   directory.isEmpty() ? this->m_settings.getFirstModelDirectoryOrDefault(simulator) : directory
+                                               ); // expect only one directory
                 const QStringList excludedDirectoryPatterns(this->m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
                 if (mode.testFlag(LoadInBackground))
@@ -170,7 +172,7 @@ namespace BlackMisc
                     return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
                 }
 
-                QString currentDir = dir.absolutePath();
+                const QString currentDir = dir.absolutePath();
                 CAircraftCfgEntriesList result;
 
                 // Dirs last is crucial,since I will break recursion on "aircraft.cfg" level
