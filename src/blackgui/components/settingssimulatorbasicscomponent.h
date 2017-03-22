@@ -13,6 +13,7 @@
 #define BLACKGUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 
 #include "blackmisc/simulation/simulatorsettings.h"
+#include "blackmisc/simulation/fscommon/fscommonutil.h"
 #include <QFrame>
 #include <QFileDialog>
 
@@ -51,6 +52,7 @@ namespace BlackGui
             void ps_simulatorFileDialog();
             void ps_simulatorDirectoryEntered();
             void ps_copyDefaults();
+            void ps_adjustModelDirectory();
             void ps_reset();
             void ps_simulatorChanged();
 

@@ -90,7 +90,7 @@ namespace BlackMisc
             {
                 const QString fsxPath = CFsCommonUtil::fsxDirFromRegistry();
                 if (fsxPath.isEmpty()) { return ""; }
-                return QDir(fsxPath).filePath("SimObjects");
+                return CFsCommonUtil::fsxSimObjectsDirFromSimDir(fsxPath);
             }
 
             const QString &CFsCommonUtil::fsxSimObjectsDirFromRegistry()
@@ -103,13 +103,19 @@ namespace BlackMisc
             {
                 QString dir(CFsCommonUtil::fsxDir());
                 if (dir.isEmpty()) { return ""; }
-                return QDir(dir).filePath("SimObjects");
+                return CFsCommonUtil::fsxSimObjectsDirFromSimDir(dir);
             }
 
             const QString &CFsCommonUtil::fsxSimObjectsDir()
             {
                 static const QString dir(fsxSimObjectsDirImpl());
                 return dir;
+            }
+
+            QString CFsCommonUtil::fsxSimObjectsDirFromSimDir(const QString &simDir)
+            {
+                Q_ASSERT_X(!simDir.isEmpty(), Q_FUNC_INFO, "missing simulator directory");
+                return CFileUtils::appendFilePaths(simDir, "SimObjects");
             }
 
             const QStringList &CFsCommonUtil::fsxSimObjectsExcludeDirectoryPatterns()
@@ -175,7 +181,7 @@ namespace BlackMisc
             {
                 const QString p3dPath = CFsCommonUtil::p3dDirFromRegistry();
                 if (p3dPath.isEmpty()) { return ""; }
-                return QDir(p3dPath).filePath("SimObjects");
+                return CFsCommonUtil::fsxSimObjectsDirFromSimDir(p3dPath);
             }
 
             const QString &CFsCommonUtil::p3dSimObjectsDirFromRegistry()
@@ -188,7 +194,7 @@ namespace BlackMisc
             {
                 QString dir(CFsCommonUtil::p3dDir());
                 if (dir.isEmpty()) { return ""; }
-                return QDir(dir).filePath("SimObjects");
+                return CFsCommonUtil::fsxSimObjectsDirFromSimDir(dir);
             }
 
             const QString &CFsCommonUtil::p3dSimObjectsDir()
@@ -266,27 +272,32 @@ namespace BlackMisc
             {
                 QString fs9Path = CFsCommonUtil::fs9DirFromRegistry();
                 if (fs9Path.isEmpty()) { return ""; }
-                fs9Path = QDir(fs9Path).filePath("Aircraft");
-                return fs9Path;
+                return CFsCommonUtil::fs9AircraftDirFromSimDir(fs9Path);
             }
 
             const QString &CFsCommonUtil::fs9AircraftDirFromRegistry()
             {
-                static const QString v(fs9AircraftDirFromRegistryImpl());
-                return v;
+                static const QString dir(fs9AircraftDirFromRegistryImpl());
+                return dir;
             }
 
             QString fs9AircraftDirImpl()
             {
                 const QString dir(CFsCommonUtil::fs9Dir());
                 if (dir.isEmpty()) { return ""; }
-                return QDir(dir).filePath("Aircraft");
+                return CFsCommonUtil::fs9AircraftDirFromSimDir(dir);
             }
 
             const QString &CFsCommonUtil::fs9AircraftDir()
             {
                 static const QString dir(fs9AircraftDirImpl());
                 return dir;
+            }
+
+            QString CFsCommonUtil::fs9AircraftDirFromSimDir(const QString &simDir)
+            {
+                Q_ASSERT_X(!simDir.isEmpty(), Q_FUNC_INFO, "missing simulator directory");
+                return CFileUtils::appendFilePaths(simDir, "Aircraft");
             }
 
             const QStringList &CFsCommonUtil::fs9AircraftObjectsExcludeDirectoryPatterns()

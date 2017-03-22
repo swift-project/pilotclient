@@ -111,6 +111,11 @@ namespace BlackMisc
             return isMicrosoftSimulator() || p3d();
         }
 
+        bool CSimulatorInfo::isFsxFamily() const
+        {
+            return fsx() || p3d();
+        }
+
         int CSimulatorInfo::numberSimulators() const
         {
             int c = fs9() ? 1 : 0;

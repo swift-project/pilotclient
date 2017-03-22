@@ -43,6 +43,9 @@ namespace BlackMisc
                 //! FSX's simobject dir, resolved from multiple sources
                 static const QString &fsxSimObjectsDir();
 
+                //! FSX aircraft dir, relative to simulator directory
+                static QString fsxSimObjectsDirFromSimDir(const QString &simDir);
+
                 //! Exclude directories for simObjects
                 static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
 
@@ -72,6 +75,9 @@ namespace BlackMisc
 
                 //! FS9's aircraft directory
                 static const QString &fs9AircraftDir();
+
+                //! FS9 aircraft dir, relative to simulator directory
+                static QString fs9AircraftDirFromSimDir(const QString &simDir);
 
                 //! Exclude directories for aircraft objects
                 static const QStringList &fs9AircraftObjectsExcludeDirectoryPatterns();

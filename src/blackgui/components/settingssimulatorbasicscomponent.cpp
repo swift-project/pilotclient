@@ -15,6 +15,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
+using namespace BlackMisc::Simulation::FsCommon;
 using namespace BlackConfig;
 
 namespace BlackGui
@@ -35,6 +36,7 @@ namespace BlackGui
             connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::save);
             connect(ui->pb_Reset, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_reset);
             connect(ui->pb_CopyDefaults, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_copyDefaults);
+            connect(ui->pb_AdjustModelDirectory, &QPushButton::clicked, this, &CSettingsSimulatorBasicsComponent::ps_adjustModelDirectory);
             connect(ui->le_SimulatorDirectory, &QLineEdit::returnPressed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorDirectoryEntered);
             connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CSettingsSimulatorBasicsComponent::ps_simulatorChanged);
 
@@ -131,6 +133,25 @@ namespace BlackGui
             this->displayExcludeDirectoryPatterns(excludes);
         }
 
+        void CSettingsSimulatorBasicsComponent::ps_adjustModelDirectory()
+        {
+            const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
+            QString simDir = this->getFileBrowserSimulatorDirectory();
+            if (simulator.isFsxFamily())
+            {
+                simDir = CFsCommonUtil::fsxSimObjectsDirFromSimDir(simDir);
+            }
+            else if (simulator.fs9())
+            {
+                simDir = CFsCommonUtil::fs9AircraftDirFromSimDir(simDir);
+            }
+
+            //! \todo counterpart function for XP
+
+            const QStringList newDirs = this->addDirectory(simDir, this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
+            this->displayModelDirectories(newDirs);
+        }
+
         void CSettingsSimulatorBasicsComponent::ps_reset()
         {
             const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
@@ -182,13 +203,19 @@ namespace BlackGui
 
         void CSettingsSimulatorBasicsComponent::displayExcludeDirectoryPatterns(const QStringList &dirs)
         {
-            const QString d = dirs.join("\n");
+            QStringList cleanedDirs(dirs);
+            cleanedDirs.removeDuplicates();
+            cleanedDirs.sort(this->m_fileCaseSensitivity);
+            const QString d = cleanedDirs.join("\n");
             ui->pte_ExcludeDirectories->setPlainText(d);
         }
 
         void CSettingsSimulatorBasicsComponent::displayModelDirectories(const QStringList &dirs)
         {
-            const QString d = dirs.join("\n");
+            QStringList cleanedDirs(dirs);
+            cleanedDirs.removeDuplicates();
+            cleanedDirs.sort(this->m_fileCaseSensitivity);
+            const QString d = cleanedDirs.join("\n");
             ui->pte_ModelDirectories->setPlainText(d);
         }
 
