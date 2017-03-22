@@ -24,7 +24,7 @@ namespace BlackGui
     namespace Components
     {
         CDbLoadOverviewComponent::CDbLoadOverviewComponent(QWidget *parent) :
-            QFrame(parent),
+            QFrame(parent), CLoadIndicatorEnabled(this),
             ui(new Ui::CDbLoadOverviewComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
@@ -105,16 +105,6 @@ namespace BlackGui
             QFrame::resizeEvent(event);
         }
 
-        bool CDbLoadOverviewComponent::isShowingLoadIndicator() const
-        {
-            return m_loadIndicator && this->isVisible() && m_loadIndicator->isAnimated();
-        }
-
-        bool CDbLoadOverviewComponent::isLoadInProgress() const
-        {
-            return m_loadInProgress;
-        }
-
         void CDbLoadOverviewComponent::showVisibleLoadAllButtons(bool shared, bool db)
         {
             const bool widget = shared || db;
@@ -131,13 +121,6 @@ namespace BlackGui
         void CDbLoadOverviewComponent::loadAllFromShared()
         {
             this->triggerLoadingFromSharedFiles(CEntityFlags::AllDbEntitiesNoInfoObjects);
-        }
-
-        void CDbLoadOverviewComponent::centerLoadIndicator()
-        {
-            if (!m_loadIndicator) { return; }
-            const QPoint middle = this->visibleRegion().boundingRect().center();
-            this->m_loadIndicator->centerLoadIndicator(middle);
         }
 
         void CDbLoadOverviewComponent::ps_setValues()
@@ -212,18 +195,7 @@ namespace BlackGui
             ui->lbl_SharedUrls->setMinimumHeight(10 + (18 * sharedUrls.size()));
 
             // Indicator
-            if (this->m_loadIndicator) { this->m_loadIndicator->stopAnimation(); }
-        }
-
-        void CDbLoadOverviewComponent::showLoading()
-        {
-            if (!this->m_loadIndicator)
-            {
-                this->m_loadIndicator = new CLoadIndicator(64, 64, this);
-            }
-
-            this->centerLoadIndicator();
-            this->m_loadIndicator->startAnimation(true);
+            this->hideLoading();
         }
 
         bool CDbLoadOverviewComponent::isInitialized() const

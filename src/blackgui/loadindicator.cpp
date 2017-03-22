@@ -64,6 +64,7 @@ namespace BlackGui
             {
                 // only timeout myself id
                 this->stopAnimation(stopId);
+                emit this->timedOut();
             });
         }
         this->m_pendingIds.push_back(stopId);
@@ -169,5 +170,54 @@ namespace BlackGui
         const int x = middle.x() - w / 2;
         const int y = middle.y() - h / 2;
         this->setGeometry(x, y, w, h);
+    }
+
+    CLoadIndicatorEnabled::CLoadIndicatorEnabled(QWidget *usingWidget) :
+        m_usingWidget(usingWidget)
+    {
+        Q_ASSERT_X(usingWidget, Q_FUNC_INFO, "need widget");
+    }
+
+    bool CLoadIndicatorEnabled::isShowingLoadIndicator() const
+    {
+        return m_loadIndicator && m_usingWidget->isVisible() && m_loadIndicator->isAnimated();
+    }
+
+    bool CLoadIndicatorEnabled::isLoadInProgress() const
+    {
+        return m_loadInProgress;
+    }
+
+    void CLoadIndicatorEnabled::showLoading(int timeoutMs, bool processEvents)
+    {
+        if (!this->m_loadIndicator)
+        {
+            this->m_loadIndicator = new CLoadIndicator(64, 64, m_usingWidget);
+            QObject::connect(this->m_loadIndicator, &CLoadIndicator::timedOut,
+                             [this] { this->indicatorTimedOut(); });
+        }
+
+        this->centerLoadIndicator();
+        m_indicatorId = this->m_loadIndicator->startAnimation(timeoutMs, processEvents);
+    }
+
+    void CLoadIndicatorEnabled::hideLoading()
+    {
+        if (m_loadIndicator)
+        {
+            m_loadIndicator->stopAnimation();
+        }
+    }
+
+    void CLoadIndicatorEnabled::centerLoadIndicator()
+    {
+        if (!m_loadIndicator) { return; }
+        const QPoint middle = this->m_usingWidget->visibleRegion().boundingRect().center();
+        this->m_loadIndicator->centerLoadIndicator(middle);
+    }
+
+    void CLoadIndicatorEnabled::indicatorTimedOut()
+    {
+        // to be overridden
     }
 } // ns

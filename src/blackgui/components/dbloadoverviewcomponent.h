@@ -27,7 +27,8 @@ namespace BlackGui
         /*!
          * Overview about load state of DB data
          */
-        class BLACKGUI_EXPORT CDbLoadOverviewComponent : public QFrame
+        class BLACKGUI_EXPORT CDbLoadOverviewComponent :
+            public QFrame, public BlackGui::CLoadIndicatorEnabled
         {
             Q_OBJECT
 
@@ -50,12 +51,6 @@ namespace BlackGui
             //! Show load all buttons
             void showVisibleLoadAllButtons(bool shared, bool db);
 
-            //! Showing load indicator?
-            bool isShowingLoadIndicator() const;
-
-            //! Loading in progress?
-            bool isLoadInProgress() const;
-
             //! Load all from DB
             void loadAllFromDb();
 
@@ -71,12 +66,8 @@ namespace BlackGui
             //! \copydoc QWidget::resizeEvent
             virtual void resizeEvent(QResizeEvent *event) override;
 
-            //! Center load indicator
-            void centerLoadIndicator();
-
         private:
             QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
-            BlackGui::CLoadIndicator *m_loadIndicator = nullptr; //!< load indicator if needed
             BlackMisc::CDigestSignal m_dsTriggerGuiUpdate  { this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, &CDbLoadOverviewComponent::ps_setValues, 750, 4 };
             bool m_loadInProgress = false; //!< data loading in progress
 
@@ -85,9 +76,6 @@ namespace BlackGui
 
             //! Trigger loading from shared files
             void triggerLoadingFromSharedFiles(BlackMisc::Network::CEntityFlags::Entity entities);
-
-            //! Show loading
-            void showLoading();
 
             //! Values at least set once
             bool isInitialized() const;

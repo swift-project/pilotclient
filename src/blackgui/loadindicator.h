@@ -73,6 +73,10 @@ namespace BlackGui
         //! Center this load indicator
         void centerLoadIndicator(const QPoint &middle);
 
+    signals:
+        //! Timed out
+        void timedOut();
+
     public slots:
         //! Starts the spin animation.
         //! \sa stopAnimation isAnimated
@@ -115,6 +119,41 @@ namespace BlackGui
         QList<int> m_pendingIds;                //!< ids not finished yet
         bool m_displayedWhenStopped = false;
         QColor m_color              = Qt::blue;
+    };
+
+    /**
+     * Enable widgte class for load indicator
+     */
+    class BLACKGUI_EXPORT CLoadIndicatorEnabled
+    {
+    public:
+        //! Ctor
+        CLoadIndicatorEnabled(QWidget *usingWidget);
+
+        //! Showing load indicator?
+        bool isShowingLoadIndicator() const;
+
+        //! Show load indicator
+        void showLoading(int timeoutMs = -1, bool processEvents = true);
+
+        //! Hide load indicator
+        void hideLoading();
+
+        //! Loading in progress?
+        bool isLoadInProgress() const;
+
+    protected:
+        //! Center load indicator
+        void centerLoadIndicator();
+
+        //! Indicator timed out
+        //! \remark override for usage
+        void virtual indicatorTimedOut();
+
+        QWidget *m_usingWidget = nullptr; //!< widget which uses load indicator
+        CLoadIndicator *m_loadIndicator = nullptr; //!< indicator itself
+        bool m_loadInProgress = false; //!< flag indicating loading
+        int m_indicatorId = -1; //!< last indicator id returned
     };
 } // ns
 
