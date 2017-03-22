@@ -24,7 +24,6 @@
 class QWidget;
 
 namespace Ui { class CAircraftIcaoForm; }
-
 namespace BlackGui
 {
     namespace Editors
@@ -42,7 +41,7 @@ namespace BlackGui
             explicit CAircraftIcaoForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAircraftIcaoForm();
+            virtual ~CAircraftIcaoForm();
 
             //! Get value
             BlackMisc::Aviation::CAircraftIcaoCode getValue() const;
@@ -63,6 +62,9 @@ namespace BlackGui
             //! Clear
             void clear();
 
+            //! Reset value to current value
+            void resetValue();
+
         public slots:
             //! Set value
             bool setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
@@ -70,6 +72,9 @@ namespace BlackGui
         private slots:
             //! Variant has been dropped
             void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
+
+            //! Id has been entered
+            void ps_idEntered();
 
         private:
             QScopedPointer<Ui::CAircraftIcaoForm>  ui;

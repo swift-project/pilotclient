@@ -47,9 +47,12 @@ namespace BlackGui
             this->setFocusProxy(ui->le_Id);
             ui->lai_id->set(CIcons::appAircraftIcao16(), "Id:");
             ui->le_Updated->setReadOnly(true);
-            ui->le_Id->setReadOnly(true);
+            ui->le_Id->setValidator(new QIntValidator(0, 999999, ui->le_Id));
             ui->aircraft_Selector->displayWithIcaoDescription(false);
             connect(ui->aircraft_Selector, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CAircraftIcaoForm::setValue);
+
+            // Id
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAircraftIcaoForm::ps_idEntered);
 
             // drag and drop
             connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAircraftIcaoForm::ps_droppedCode);
@@ -155,6 +158,7 @@ namespace BlackGui
             ui->le_ModelDescription->setReadOnly(readOnly);
             ui->le_Family->setReadOnly(readOnly);
             ui->le_Iata->setReadOnly(readOnly);
+            ui->le_Id->setReadOnly(readOnly);
 
             CGuiUtility::checkBoxReadOnly(ui->cb_Legacy, readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
@@ -170,12 +174,18 @@ namespace BlackGui
         {
             this->setReadOnly(true);
             ui->aircraft_Selector->setReadOnly(false);
+            ui->le_Id->setReadOnly(false);
             ui->drop_DropData->setVisible(true);
         }
 
         void CAircraftIcaoForm::clear()
         {
             setValue(CAircraftIcaoCode());
+        }
+
+        void CAircraftIcaoForm::resetValue()
+        {
+            this->setValue(m_originalCode);
         }
 
         void CAircraftIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)
@@ -193,6 +203,24 @@ namespace BlackGui
             }
             else
             {
+                return;
+            }
+            this->setValue(icao);
+        }
+
+        void CAircraftIcaoForm::ps_idEntered()
+        {
+            if (!sGui || !sGui->hasWebDataServices())
+            {
+                ui->le_Id->undo();
+                return;
+            }
+
+            const int id = ui->le_Id->text().toInt();
+            const CAircraftIcaoCode icao = sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(id);
+            if (!icao.isLoadedFromDb())
+            {
+                ui->le_Id->undo();
                 return;
             }
             this->setValue(icao);

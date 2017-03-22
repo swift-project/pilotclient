@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CAirlineIcaoForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAirlineIcaoForm();
+            virtual ~CAirlineIcaoForm();
 
             //! Set value
             void setValue(const BlackMisc::Aviation::CAirlineIcaoCode &icao = BlackMisc::Aviation::CAirlineIcaoCode());
@@ -66,6 +66,9 @@ namespace BlackGui
             //! Clear
             void clear();
 
+            //! Reset value to current value
+            void resetValue();
+
         signals:
             //! Airline has been changed
             void airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
@@ -74,11 +77,13 @@ namespace BlackGui
             //! Variant has been dropped
             void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
 
+            //! Id entered
+            void ps_idEntered();
+
         private:
             QScopedPointer<Ui::CAirlineIcaoForm>  ui;
             BlackMisc::Aviation::CAirlineIcaoCode m_originalCode; //!< object allowing to override values
         };
-
     } // ns
 } //ns
 

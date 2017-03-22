@@ -15,6 +15,8 @@
 #include "blackgui/editors/validationindicator.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/labelandicon.h"
+#include "blackgui/guiapplication.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/airlineicaocodelist.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/icons.h"
@@ -39,12 +41,15 @@ namespace BlackGui
         {
             ui->setupUi(this);
             ui->le_Updated->setReadOnly(true);
-            ui->le_Id->setReadOnly(true);
+            ui->le_Id->setValidator(new QIntValidator(0, 999999, ui->le_Id));
             ui->lai_Id->set(CIcons::appAirlineIcao16(), "Id:");
 
             ui->selector_AirlineDesignator->displayWithIcaoDescription(false);
             connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
             connect(ui->selector_AirlineDesignator, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue);
+
+            // Id
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAirlineIcaoForm::ps_idEntered);
 
             // drag and drop
             connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::ps_droppedCode);
@@ -114,6 +119,7 @@ namespace BlackGui
 
         void CAirlineIcaoForm::setReadOnly(bool readOnly)
         {
+            ui->le_Id->setReadOnly(readOnly);
             ui->selector_AirlineDesignator->setReadOnly(readOnly);
             ui->selector_AirlineName->setReadOnly(readOnly);
             ui->le_TelephonyDesignator->setReadOnly(readOnly);
@@ -127,6 +133,7 @@ namespace BlackGui
         void CAirlineIcaoForm::setSelectOnly()
         {
             this->setReadOnly(true);
+            ui->le_Id->setReadOnly(false);
             ui->selector_AirlineDesignator->setReadOnly(false);
             ui->selector_AirlineName->setReadOnly(false);
             ui->drop_DropData->setVisible(true);
@@ -134,7 +141,12 @@ namespace BlackGui
 
         void CAirlineIcaoForm::clear()
         {
-            setValue(CAirlineIcaoCode());
+            this->setValue(CAirlineIcaoCode());
+        }
+
+        void CAirlineIcaoForm::resetValue()
+        {
+            this->setValue(m_originalCode);
         }
 
         void CAirlineIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)
@@ -152,6 +164,24 @@ namespace BlackGui
             }
             else
             {
+                return;
+            }
+            this->setValue(icao);
+        }
+
+        void CAirlineIcaoForm::ps_idEntered()
+        {
+            if (!sGui || !sGui->hasWebDataServices())
+            {
+                ui->le_Id->undo();
+                return;
+            }
+
+            const int id = ui->le_Id->text().toInt();
+            const CAirlineIcaoCode icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(id);
+            if (!icao.isLoadedFromDb())
+            {
+                ui->le_Id->undo();
                 return;
             }
             this->setValue(icao);
