@@ -63,9 +63,6 @@
           <height>16777215</height>
          </size>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
         <property name="placeholderText">
          <string>Id</string>
         </property>
@@ -118,6 +115,9 @@
       </item>
       <item row="0" column="3">
        <widget class="QPushButton" name="pb_TempLivery">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;set a 'no color' livery, allowing to create a&lt;br/&gt;temp. DB entry which will later be specified.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>temp.</string>
         </property>
@@ -217,6 +217,9 @@
       </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="pb_SearchColor">
+        <property name="toolTip">
+         <string>find a color livery</string>
+        </property>
         <property name="text">
          <string>search color</string>
         </property>

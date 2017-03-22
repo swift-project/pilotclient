@@ -42,7 +42,7 @@ namespace BlackGui
             explicit CLiveryForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CLiveryForm();
+            virtual ~CLiveryForm();
 
             //! Value
             BlackMisc::Aviation::CLivery getValue() const;
@@ -69,6 +69,9 @@ namespace BlackGui
             //! Clear data
             void clear();
 
+            //! Reset value to current value
+            void resetValue();
+
         public slots:
             //! Value
             bool setValue(const BlackMisc::Aviation::CLivery &livery);
@@ -85,6 +88,9 @@ namespace BlackGui
 
             //! Search for color
             void ps_searchForColor();
+
+            //! Id entered
+            void ps_idEntered();
 
         private:
             QScopedPointer<Ui::CLiveryForm> ui;

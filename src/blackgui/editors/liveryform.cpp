@@ -7,7 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "blackcore/webdataservices.h"
+#include "liveryform.h"
+#include "ui_liveryform.h"
 #include "blackgui/components/colorselector.h"
 #include "blackgui/components/dbliveryselectorcomponent.h"
 #include "blackgui/dropsite.h"
@@ -17,11 +18,10 @@
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/labelandicon.h"
+#include "blackcore/webdataservices.h"
 #include "blackmisc/aviation/liverylist.h"
 #include "blackmisc/compare.h"
 #include "blackmisc/icons.h"
-#include "liveryform.h"
-#include "ui_liveryform.h"
 
 #include <QCheckBox>
 #include <QLineEdit>
@@ -41,10 +41,13 @@ namespace BlackGui
             ui(new Ui::CLiveryForm)
         {
             ui->setupUi(this);
-            ui->le_Id->setReadOnly(true);
             ui->le_Updated->setReadOnly(true);
+            ui->le_Id->setValidator(new QIntValidator(0, 999999, ui->le_Id));
             ui->lai_Id->set(CIcons::appLiveries16(), "Id:");
             ui->comp_LiverySelector->withLiveryDescription(false);
+
+            // Id
+            connect(ui->le_Id, &QLineEdit::returnPressed, this, &CLiveryForm::ps_idEntered);
 
             // selector
             connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
@@ -149,6 +152,7 @@ namespace BlackGui
         void CLiveryForm::setReadOnly(bool readOnly)
         {
             this->m_readOnly = readOnly;
+            ui->le_Id->setReadOnly(readOnly);
             ui->comp_LiverySelector->setReadOnly(readOnly);
             ui->le_Description->setReadOnly(readOnly);
             ui->color_Fuselage->setReadOnly(readOnly);
@@ -164,13 +168,21 @@ namespace BlackGui
         {
             this->setReadOnly(true);
             ui->comp_LiverySelector->setReadOnly(false);
+            ui->le_Id->setReadOnly(false);
             ui->editor_AirlineIcao->setSelectOnly();
             ui->drop_DropData->setVisible(true);
+            ui->pb_SearchColor->setVisible(true);
+            ui->pb_TempLivery->setVisible(true);
         }
 
         void CLiveryForm::clear()
         {
             this->setValue(CLivery());
+        }
+
+        void CLiveryForm::resetValue()
+        {
+            this->setValue(m_originalLivery);
         }
 
         void CLiveryForm::ps_droppedLivery(const BlackMisc::CVariant &variantDropped)
@@ -226,6 +238,24 @@ namespace BlackGui
             {
                 this->setValue(found);
             }
+        }
+
+        void CLiveryForm::ps_idEntered()
+        {
+            if (!sGui || !sGui->hasWebDataServices())
+            {
+                ui->le_Id->undo();
+                return;
+            }
+
+            const int id = ui->le_Id->text().toInt();
+            const CLivery livery = sGui->getWebDataServices()->getLiveryForDbKey(id);
+            if (!livery.isLoadedFromDb())
+            {
+                ui->le_Id->undo();
+                return;
+            }
+            this->setValue(livery);
         }
     } // ns
 } // ns
