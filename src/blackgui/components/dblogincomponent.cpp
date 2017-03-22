@@ -40,6 +40,7 @@ namespace BlackGui
     {
         CDbLoginComponent::CDbLoginComponent(QWidget *parent) :
             QFrame(parent),
+            CLoadIndicatorEnabled(this),
             ui(new Ui::CDbLoginComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
@@ -55,7 +56,12 @@ namespace BlackGui
 
             const bool devEnv = sGui->isRunningInDeveloperEnvironment();
             ui->comp_DebugSetup->setVisible(devEnv);
-            ui->lbl_DatabaseName->setText(sGui->getGlobalSetup().getDbHomePageUrl().toQString());
+
+            const QString dbUrl = sGui->getGlobalSetup().getDbHomePageUrl().toQString();
+            ui->lbl_DatabaseName->setText("<a href=\"" + dbUrl + "\">" + dbUrl + "</a>");
+            ui->lbl_DatabaseName->setTextFormat(Qt::RichText);
+            ui->lbl_DatabaseName->setTextInteractionFlags(Qt::TextBrowserInteraction);
+            ui->lbl_DatabaseName->setOpenExternalLinks(true);
 
             connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLoginClicked);
             connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::ps_onLogoffClicked);
@@ -104,6 +110,7 @@ namespace BlackGui
             {
                 CLogMessage::preformatted(msgs);
             }
+            this->showLoading(5000);
         }
 
         void CDbLoginComponent::ps_onLogoffClicked()
@@ -114,6 +121,7 @@ namespace BlackGui
 
         void CDbLoginComponent::ps_authenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &statusMsgs)
         {
+            this->hideLoading();
             this->setUserInfo(user);
             if (statusMsgs.hasWarningOrErrorMessages())
             {

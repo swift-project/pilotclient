@@ -15,6 +15,7 @@
 #include "blackcore/db/databaseauthentication.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackgui/blackguiexport.h"
+#include "blackgui/loadindicator.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QFrame>
@@ -30,7 +31,8 @@ namespace BlackGui
         /**
          * Login to DB
          */
-        class BLACKGUI_EXPORT CDbLoginComponent : public QFrame
+        class BLACKGUI_EXPORT CDbLoginComponent :
+            public QFrame, public BlackGui::CLoadIndicatorEnabled
         {
             Q_OBJECT
 
@@ -39,7 +41,7 @@ namespace BlackGui
             explicit CDbLoginComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbLoginComponent();
+            virtual ~CDbLoginComponent();
 
             //! DB user
             BlackMisc::Network::CAuthenticatedUser getDbUser() const;
