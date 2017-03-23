@@ -292,18 +292,18 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
     create_installer.depends = create_updater
     win32 {
         INSTALLER_PLATFORM = windows
-        INSTALLER_BASENAME = swift-installer-$${BLACK_VERSION}-win-$${WORD_SIZE}
+        INSTALLER_BASENAME = swift-installer-win-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = exe
     }
     else:macx {
         INSTALLER_PLATFORM = osx
-        INSTALLER_BASENAME = swift-installer-$${BLACK_VERSION}-osx-$${WORD_SIZE}
+        INSTALLER_BASENAME = swift-installer-osx-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = app
         INSTALLER_CONTAINER_EXT = dmg
     }
     else:unix {
         INSTALLER_PLATFORM = linux-x$${WORD_SIZE}
-        INSTALLER_BASENAME = swift-installer-$${BLACK_VERSION}-linux-$${WORD_SIZE}
+        INSTALLER_BASENAME = swift-installer-linux-$${WORD_SIZE}-$${BLACK_VERSION}
         INSTALLER_EXT = run
     }
     create_installer.commands = $${bitrock_builder_bin} build $${bitrock_project} $${INSTALLER_PLATFORM} \
