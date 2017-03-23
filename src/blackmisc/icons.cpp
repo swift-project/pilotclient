@@ -25,7 +25,6 @@ using namespace BlackConfig;
 
 namespace BlackMisc
 {
-
     const QPixmap &CIcons::info16()
     {
         static const QPixmap pm(":/pastel/icons/pastel/16/infomation.png");
@@ -394,6 +393,24 @@ namespace BlackMisc
     const QPixmap &CIcons::arrowMediumWest16()
     {
         static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-180-medium.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::copy16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/document-copy.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::paste16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/clipboard-paste.png");
+        return pm;
+    }
+
+    const QPixmap &CIcons::cut16()
+    {
+        static const QPixmap pm(":/diagona/icons/diagona/icons/scissors.png");
         return pm;
     }
 
@@ -951,318 +968,165 @@ namespace BlackMisc
     {
         switch (index)
         {
-        case ApplicationAircraft:
-            return appAircraft16();
-        case ApplicationAircraftIcao:
-            return appAircraftIcao16();
-        case ApplicationAirlineIcao:
-            return appAirlineIcao16();
-        case ApplicationAtc:
-            return appAtc16();
-        case ApplicationAudio:
-            return appAudio16();
-        case ApplicationCockpit:
-            return appCockpit16();
-        case ApplicationCountries:
-            return appCountries16();
-        case ApplicationDatabase:
-            return appDatabase16();
-        case ApplicationDbStash:
-            return appDbStash16();
-        case ApplicationDistributors:
-            return appDistributors16();
-        case ApplicationFlightPlan:
-            return appFlightPlan16();
-        case ApplicationLiveries:
-            return appLiveries16();
-        case ApplicationLog:
-            return appLog16();
-        case ApplicationMappings:
-            return appMappings16();
-        case ApplicationModels:
-            return appModels16();
-        case ApplicationSettings:
-            return appSettings16();
-        case ApplicationSimulator:
-            return appSimulator16();
-        case ApplicationTextMessages:
-            return appTextMessages16();
-        case ApplicationWeather:
-            return appWeather16();
-        case AviationAtis:
-            return atis();
-        case AviationAttitudeIndicator:
-            return attitudeIndicator16();
-        case AviationMetar:
-            return metar();
-        case GeoPosition:
-            return geoPosition16();
-        case ModelExclude:
-            return modelExclude16();
-        case ModelInclude:
-            return modelInclude16();
-        case NetworkCapabilityTextOnly:
-            return capabilityTextOnly();
-        case NetworkCapabilityUnknown:
-            return capabilityUnknown();
-        case NetworkCapabilityVoice:
-            return capabilityVoice();
-        case NetworkCapabilityVoiceBackground:
-            return capabilityVoiceBackground();
-        case NetworkCapabilityVoiceReceiveOnly:
-            return capabilityVoiceReceiveOnly();
-        case NetworkCapabilityVoiceReceiveOnlyBackground:
-            return capabilityVoiceReceiveOnlyBackground();
-        case NetworkRoleApproach:
-            return roleApproach();
-        case NetworkRoleC1:
-            return roleC1();
-        case NetworkRoleC3:
-            return roleC3();
-        case NetworkRoleCenter:
-            return roleCenter();
-        case NetworkRoleDelivery:
-            return roleDelivery();
-        case NetworkRoleFss:
-            return roleFss();
-        case NetworkRoleGround:
-            return roleGround();
-        case NetworkRoleI1:
-            return roleI1();
-        case NetworkRoleI3:
-            return roleI3();
-        case NetworkRoleMnt:
-            return roleMnt();
-        case NetworkRoleObs:
-            return roleObs();
-        case NetworkRolePilot:
-            return rolePilot();
-        case NetworkRoleS1:
-            return roleS1();
-        case NetworkRoleS2:
-            return roleS2();
-        case NetworkRoleS3:
-            return roleS3();
-        case NetworkRoleSup:
-            return roleSup();
-        case NetworkRoleTower:
-            return roleTower();
-        case NetworkRoleUnknown:
-            return roleUnknown();
-        case NetworkVatsimLogo:
-            return vatsimLogo16();
-        case NetworkVatsimLogoWhite:
-            return vatsimLogoWhite16();
-        case NotSet:
-            return empty();
-        case StandardIconAppAircrafts16:
-            return appAircraft16();
-        case StandardIconAppAtc16:
-            return appAtc16();
-        case StandardIconAppFlightPlan16:
-            return appFlightPlan16();
-        case StandardIconAppLog16:
-            return appLog16();
-        case StandardIconAppMappings16:
-            return appMappings16();
-        case StandardIconAppSettings16:
-            return appSettings16();
-        case StandardIconAppSimulator16:
-            return appSimulator16();
-        case StandardIconAppTextMessages16:
-            return appTextMessages16();
-        case StandardIconAppUsers16:
-            return appUsers16();
-        case StandardIconAppWeather16:
-            return appWeather16();
-        case StandardIconArrowMediumEast16:
-            return arrowMediumEast16();
-        case StandardIconArrowMediumNorth16:
-            return arrowMediumNorth16();
-        case StandardIconArrowMediumSouth16:
-            return arrowMediumSouth16();
-        case StandardIconArrowMediumWest16:
-            return arrowMediumWest16();
-        case StandardIconClose16:
-            return close16();
-        case StandardIconColor16:
-            return color16();
-        case StandardIconColorPicker16:
-            return colorPicker16();
-        case StandardIconColorSwatch16:
-            return colorSwatch16();
-        case StandardIconCross16:
-            return cross16();
-        case StandardIconCrossCircle16:
-            return crossCircle16();
-        case StandardIconCrossSmall16:
-            return crossSmall16();
-        case StandardIconCrossWhite16:
-            return crossWhite16();
-        case StandardIconDatabase16:
-            return database16();
-        case StandardIconDatabaseAdd16:
-            return databaseAdd16();
-        case StandardIconDatabaseConnect16:
-            return databaseConnect16();
-        case StandardIconDatabaseDelete16:
-            return databaseDelete16();
-        case StandardIconDatabaseEdit16:
-            return databaseEdit16();
-        case StandardIconDatabaseError16:
-            return databaseError16();
-        case StandardIconDatabaseKey16:
-            return databaseKey16();
-        case StandardIconDatabaseTable16:
-            return databaseTable16();
-        case StandardIconDelete16:
-            return delete16();
-        case StandardIconDockBottom16:
-            return dockBottom16();
-        case StandardIconDockTop16:
-            return dockTop16();
-        case StandardIconDragAndDrop16:
-            return dragAndDrop16();
-        case StandardIconEmpty16:
-            return empty16();
-        case StandardIconEmpty:
-            return empty();
-        case StandardIconError16:
-            return error16();
-        case StandardIconFloatAll16:
-            return floatAll16();
-        case StandardIconFloatOne16:
-            return floatOne16();
-        case StandardIconGlobe16:
-            return globe16();
-        case StandardIconHeadingOne16:
-            return headingOne16();
-        case StandardIconInfo16:
-            return info16();
-        case StandardIconJoystick16:
-            return joystick16();
-        case StandardIconLoad16:
-            return load16();
-        case StandardIconMonitorError16:
-            return monitorError16();
-        case StandardIconPaperPlane16:
-            return paperPlane16();
-        case StandardIconPaintCan16:
-            return paintCan16();
-        case StandardIconPlugin16:
-            return plugin16();
-        case StandardIconRadar16:
-            return radar16();
-        case StandardIconRadio16:
-            return radio16();
-        case StandardIconRefresh16:
-            return refresh16();
-        case StandardIconResize16:
-            return resize16();
-        case StandardIconResizeHorizontal16:
-            return resizeHorizontal16();
-        case StandardIconResizeVertical16:
-            return resizeVertical16();
-        case StandardIconSave16:
-            return save16();
-        case StandardIconSpeakerNetwork16:
-            return speakerNetwork16();
-        case StandardIconStatusBar16:
-            return statusBar16();
-        case StandardIconTableRelationship16:
-            return tableRelationship16();
-        case StandardIconTableSheet16:
-            return tableSheet16();
-        case StandardIconText16:
-            return text16();
-        case StandardIconTick16:
-            return tick16();
-        case StandardIconTickRed16:
-            return tickRed16();
-        case StandardIconTickSmall16:
-            return tickSmall16();
-        case StandardIconTickWhite16:
-            return tickWhite16();
-        case StandardIconUnknown16:
-            return unknown16();
-        case StandardIconUser16:
-            return user16();
-        case StandardIconUsers16:
-            return users16();
-        case StandardIconViewMulticolumn16:
-            return viewMultiColumn();
-        case StandardIconViewTile16:
-            return viewTile();
-        case StandardIconVolumeHigh16:
-            return volumeHigh16();
-        case StandardIconVolumeLow16:
-            return volumeLow16();
-        case StandardIconVolumeMuted16:
-            return volumeMuted16();
-        case StandardIconWarning16:
-            return warning16();
-        case StandardIconWeatherCloudy16:
-            return weatherCloudy16();
-        case StandardIconWrench16:
-            return wrench16();
-        case Swift16:
-            return swift16();
-        case Swift24:
-            return swift24();
-        case Swift48:
-            return swift48();
-        case Swift64:
-            return swift64();
-        case Swift128:
-            return swift128();
-        case Swift256:
-            return swift256();
-        case Swift1024:
-            return swift1024();
-        case SwiftCore16:
-            return swiftCore16();
-        case SwiftCore24:
-            return swiftCore24();
-        case SwiftCore48:
-            return swiftCore48();
-        case SwiftCore64:
-            return swiftCore64();
-        case SwiftCore128:
-            return swiftCore128();
-        case SwiftCore256:
-            return swiftCore256();
-        case SwiftCore1024:
-            return swiftCore1024();
-        case SwiftDatabase16:
-            return swiftDatabase16();
-        case SwiftDatabase24:
-            return swiftDatabase24();
-        case SwiftDatabase48:
-            return swiftDatabase48();
-        case SwiftDatabase64:
-            return swiftDatabase64();
-        case SwiftDatabase128:
-            return swiftDatabase128();
-        case SwiftDatabase256:
-            return swiftDatabase256();
-        case SwiftDatabase1024:
-            return swiftDatabase1024();
-        case SwiftLauncher16:
-            return swiftLauncher16();
-        case SwiftLauncher24:
-            return swiftLauncher24();
-        case SwiftLauncher48:
-            return swiftLauncher48();
-        case SwiftLauncher64:
-            return swiftLauncher64();
-        case SwiftLauncher128:
-            return swiftLauncher128();
-        case SwiftLauncher256:
-            return swiftLauncher256();
-        case SwiftLauncher1024:
-            return swiftLauncher1024();
-        default:
-            return empty();
+        case ApplicationAircraft: return appAircraft16();
+        case ApplicationAircraftIcao: return appAircraftIcao16();
+        case ApplicationAirlineIcao: return appAirlineIcao16();
+        case ApplicationAtc: return appAtc16();
+        case ApplicationAudio: return appAudio16();
+        case ApplicationCockpit: return appCockpit16();
+        case ApplicationCountries: return appCountries16();
+        case ApplicationDatabase: return appDatabase16();
+        case ApplicationDbStash: return appDbStash16();
+        case ApplicationDistributors: return appDistributors16();
+        case ApplicationFlightPlan: return appFlightPlan16();
+        case ApplicationLiveries: return appLiveries16();
+        case ApplicationLog: return appLog16();
+        case ApplicationMappings: return appMappings16();
+        case ApplicationModels: return appModels16();
+        case ApplicationSettings: return appSettings16();
+        case ApplicationSimulator: return appSimulator16();
+        case ApplicationTextMessages: return appTextMessages16();
+        case ApplicationWeather: return appWeather16();
+        case AviationAtis: return atis();
+        case AviationAttitudeIndicator: return attitudeIndicator16();
+        case AviationMetar: return metar();
+        case GeoPosition: return geoPosition16();
+        case ModelExclude: return modelExclude16();
+        case ModelInclude: return modelInclude16();
+        case NetworkCapabilityTextOnly: return capabilityTextOnly();
+        case NetworkCapabilityUnknown: return capabilityUnknown();
+        case NetworkCapabilityVoice: return capabilityVoice();
+        case NetworkCapabilityVoiceBackground: return capabilityVoiceBackground();
+        case NetworkCapabilityVoiceReceiveOnly:           return capabilityVoiceReceiveOnly();
+        case NetworkCapabilityVoiceReceiveOnlyBackground: return capabilityVoiceReceiveOnlyBackground();
+        case NetworkRoleApproach: return roleApproach();
+        case NetworkRoleC1: return roleC1();
+        case NetworkRoleC3: return roleC3();
+        case NetworkRoleCenter: return roleCenter();
+        case NetworkRoleDelivery: return roleDelivery();
+        case NetworkRoleFss: return roleFss();
+        case NetworkRoleGround: return roleGround();
+        case NetworkRoleI1: return roleI1();
+        case NetworkRoleI3: return roleI3();
+        case NetworkRoleMnt: return roleMnt();
+        case NetworkRoleObs: return roleObs();
+        case NetworkRolePilot: return rolePilot();
+        case NetworkRoleS1: return roleS1();
+        case NetworkRoleS2: return roleS2();
+        case NetworkRoleS3: return roleS3();
+        case NetworkRoleSup: return roleSup();
+        case NetworkRoleTower: return roleTower();
+        case NetworkRoleUnknown: return roleUnknown();
+        case NetworkVatsimLogo: return vatsimLogo16();
+        case NetworkVatsimLogoWhite: return vatsimLogoWhite16();
+        case NotSet: return empty();
+        case StandardIconAppAircrafts16: return appAircraft16();
+        case StandardIconAppAtc16: return appAtc16();
+        case StandardIconAppFlightPlan16: return appFlightPlan16();
+        case StandardIconAppLog16: return appLog16();
+        case StandardIconAppMappings16: return appMappings16();
+        case StandardIconAppSettings16: return appSettings16();
+        case StandardIconAppSimulator16: return appSimulator16();
+        case StandardIconAppTextMessages16: return appTextMessages16();
+        case StandardIconAppUsers16: return appUsers16();
+        case StandardIconAppWeather16: return appWeather16();
+        case StandardIconArrowMediumEast16: return arrowMediumEast16();
+        case StandardIconArrowMediumNorth16: return arrowMediumNorth16();
+        case StandardIconArrowMediumSouth16: return arrowMediumSouth16();
+        case StandardIconArrowMediumWest16: return arrowMediumWest16();
+        case StandardIconClose16: return close16();
+        case StandardIconColor16: return color16();
+        case StandardIconColorPicker16: return colorPicker16();
+        case StandardIconColorSwatch16: return colorSwatch16();
+        case StandardIconCopy16: return copy16();
+        case StandardIconCross16: return cross16();
+        case StandardIconCrossCircle16: return crossCircle16();
+        case StandardIconCrossSmall16: return crossSmall16();
+        case StandardIconCrossWhite16: return crossWhite16();
+        case StandardIconCut16: return cut16();
+        case StandardIconDatabase16: return database16();
+        case StandardIconDatabaseAdd16: return databaseAdd16();
+        case StandardIconDatabaseConnect16: return databaseConnect16();
+        case StandardIconDatabaseDelete16: return databaseDelete16();
+        case StandardIconDatabaseEdit16: return databaseEdit16();
+        case StandardIconDatabaseError16: return databaseError16();
+        case StandardIconDatabaseKey16: return databaseKey16();
+        case StandardIconDatabaseTable16: return databaseTable16();
+        case StandardIconDelete16: return delete16();
+        case StandardIconDockBottom16: return dockBottom16();
+        case StandardIconDockTop16: return dockTop16();
+        case StandardIconDragAndDrop16: return dragAndDrop16();
+        case StandardIconEmpty16: return empty16();
+        case StandardIconEmpty: return empty();
+        case StandardIconError16: return error16();
+        case StandardIconFloatAll16: return floatAll16();
+        case StandardIconFloatOne16: return floatOne16();
+        case StandardIconGlobe16: return globe16();
+        case StandardIconHeadingOne16: return headingOne16();
+        case StandardIconInfo16: return info16();
+        case StandardIconJoystick16: return joystick16();
+        case StandardIconLoad16: return load16();
+        case StandardIconMonitorError16: return monitorError16();
+        case StandardIconPaintCan16: return paintCan16();
+        case StandardIconPaperPlane16: return paperPlane16();
+        case StandardIconPaste16: return paste16();
+        case StandardIconPlugin16: return plugin16();
+        case StandardIconRadar16: return radar16();
+        case StandardIconRadio16: return radio16();
+        case StandardIconRefresh16: return refresh16();
+        case StandardIconResize16: return resize16();
+        case StandardIconResizeHorizontal16: return resizeHorizontal16();
+        case StandardIconResizeVertical16: return resizeVertical16();
+        case StandardIconSave16: return save16();
+        case StandardIconSpeakerNetwork16: return speakerNetwork16();
+        case StandardIconStatusBar16: return statusBar16();
+        case StandardIconTableRelationship16: return tableRelationship16();
+        case StandardIconTableSheet16: return tableSheet16();
+        case StandardIconText16: return text16();
+        case StandardIconTick16: return tick16();
+        case StandardIconTickRed16: return tickRed16();
+        case StandardIconTickSmall16: return tickSmall16();
+        case StandardIconTickWhite16: return tickWhite16();
+        case StandardIconUnknown16: return unknown16();
+        case StandardIconUser16: return user16();
+        case StandardIconUsers16: return users16();
+        case StandardIconViewMulticolumn16: return viewMultiColumn();
+        case StandardIconViewTile16: return viewTile();
+        case StandardIconVolumeHigh16: return volumeHigh16();
+        case StandardIconVolumeLow16: return volumeLow16();
+        case StandardIconVolumeMuted16: return volumeMuted16();
+        case StandardIconWarning16: return warning16();
+        case StandardIconWeatherCloudy16: return weatherCloudy16();
+        case StandardIconWrench16: return wrench16();
+        case Swift1024: return swift1024();
+        case Swift128: return swift128();
+        case Swift16: return swift16();
+        case Swift24: return swift24();
+        case Swift256: return swift256();
+        case Swift48: return swift48();
+        case Swift64: return swift64();
+        case SwiftCore1024: return swiftCore1024();
+        case SwiftCore128: return swiftCore128();
+        case SwiftCore16: return swiftCore16();
+        case SwiftCore24: return swiftCore24();
+        case SwiftCore256: return swiftCore256();
+        case SwiftCore48: return swiftCore48();
+        case SwiftCore64: return swiftCore64();
+        case SwiftDatabase1024: return swiftDatabase1024();
+        case SwiftDatabase128: return swiftDatabase128();
+        case SwiftDatabase16: return swiftDatabase16();
+        case SwiftDatabase24: return swiftDatabase24();
+        case SwiftDatabase256: return swiftDatabase256();
+        case SwiftDatabase48: return swiftDatabase48();
+        case SwiftDatabase64: return swiftDatabase64();
+        case SwiftLauncher1024: return swiftLauncher1024();
+        case SwiftLauncher128: return swiftLauncher128();
+        case SwiftLauncher16: return swiftLauncher16();
+        case SwiftLauncher24: return swiftLauncher24();
+        case SwiftLauncher256: return swiftLauncher256();
+        case SwiftLauncher48: return swiftLauncher48();
+        case SwiftLauncher64: return swiftLauncher64();
+        default: return empty();
         }
     }
 
@@ -1277,9 +1141,9 @@ namespace BlackMisc
         Q_ASSERT_X(!fileName.isEmpty(), Q_FUNC_INFO, "missing filename");
         if (!getResourceFileCache().contains(fileName))
         {
-            QString path = CFileUtils::appendFilePaths(CBuildConfig::getImagesDir(), fileName);
+            const QString path = CFileUtils::appendFilePaths(CBuildConfig::getImagesDir(), fileName);
             QPixmap pm;
-            bool s = pm.load(path);
+            const bool s = pm.load(path);
             if (s)
             {
                 getResourceFileCache().insert(fileName, pm);
@@ -1332,7 +1196,6 @@ namespace BlackMisc
         QImage destBackgroundImg(changeImageBackgroundColor(imgSource, backgroundColor));
         return QIcon(QPixmap::fromImage(destBackgroundImg));
     }
-
 } // namespace
 
 //! \endcond

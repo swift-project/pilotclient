@@ -30,7 +30,6 @@ namespace BlackMisc
     class BLACKMISC_EXPORT CIcons
     {
     public:
-
         //! Constructor, use class static only
         CIcons() = delete;
 
@@ -108,10 +107,12 @@ namespace BlackMisc
             StandardIconColor16,
             StandardIconColorPicker16,
             StandardIconColorSwatch16,
+            StandardIconCopy16,
             StandardIconCross16,
             StandardIconCrossCircle16,
             StandardIconCrossSmall16,
             StandardIconCrossWhite16,
+            StandardIconCut16,
             StandardIconDatabase16,
             StandardIconDatabaseAdd16,
             StandardIconDatabaseConnect16,
@@ -140,6 +141,7 @@ namespace BlackMisc
             StandardIconMonitorError16,
             StandardIconPaperPlane16,
             StandardIconPaintCan16,
+            StandardIconPaste16,
             StandardIconPlugin16,
             StandardIconRadar16,
             StandardIconRadio16,
@@ -198,7 +200,6 @@ namespace BlackMisc
             SwiftLauncher256,
             SwiftLauncher512,
             SwiftLauncher1024,
-
 
             // ---------------------------
             // Icon is not from resources, but generated at runtime
@@ -397,6 +398,15 @@ namespace BlackMisc
 
         //! Arrow
         static const QPixmap &arrowMediumWest16();
+
+        //! Copy
+        static const QPixmap &copy16();
+
+        //! Paste
+        static const QPixmap &paste16();
+
+        //! Cut
+        static const QPixmap &cut16();
 
         // --------------------------------------------------
         // -- Database

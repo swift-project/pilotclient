@@ -387,6 +387,10 @@
         <file>icons/diagona/icons/network-ethernet.png</file>
         <file>icons/diagona/icons/network-clouds.png</file>
         <file>icons/diagona/icons/network-cloud.png</file>
+        <file>icons/diagona/icons/scissors.png</file>
+        <file>icons/diagona/icons/clipboard-paste.png</file>
+        <file>icons/diagona/icons/document-copy.png</file>
+        <file>icons/diagona/icons/blue-document-copy.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>
