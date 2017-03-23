@@ -12,7 +12,6 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/variant.h"
-
 #include <QList>
 
 class QMimeData;
