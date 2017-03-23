@@ -76,6 +76,10 @@ namespace BlackGui
             //! Value
             bool setValue(const BlackMisc::Aviation::CLivery &livery);
 
+        protected:
+            //! \copydoc CForm::jsonPasted
+            virtual void jsonPasted(const QString &json) override;
+
         private slots:
             //! Livery dropped
             void ps_droppedLivery(const BlackMisc::CVariant &variantDropped);

@@ -41,7 +41,7 @@ namespace BlackGui
             explicit CDistributorForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDistributorForm();
+            virtual ~CDistributorForm();
 
             //! Get value
             BlackMisc::Simulation::CDistributor getValue() const;
@@ -66,6 +66,10 @@ namespace BlackGui
             //! Set value
             bool setValue(const BlackMisc::Simulation::CDistributor &distributor = BlackMisc::Simulation::CDistributor());
 
+        protected:
+            //! \copydoc CForm::jsonPasted
+            virtual void jsonPasted(const QString &json) override;
+
         private slots:
             //! Variant has been dropped
             void ps_droppedCode(const BlackMisc::CVariant &variantDropped);
@@ -74,7 +78,6 @@ namespace BlackGui
             QScopedPointer<Ui::CDistributorForm> ui;
             bool m_readOnly = false;
         };
-
     } // ns
 } //ns
 

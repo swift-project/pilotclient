@@ -51,7 +51,8 @@ namespace BlackGui
             // Id
             connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAirlineIcaoForm::ps_idEntered);
 
-            // drag and drop
+            // drag and drop, paste
+            connect(ui->tb_Paste, &QToolButton::clicked, this, &CAirlineIcaoForm::ps_pasted);
             connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::ps_droppedCode);
             ui->drop_DropData->setInfoText("<drop airline ICAO code>");
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>()});
@@ -74,6 +75,9 @@ namespace BlackGui
             ui->cb_Military->setChecked(icao.isMilitary());
             ui->country_Selector->setCountry(icao.getCountry());
             ui->lbl_AirlineIcon->setPixmap(icao.toPixmap());
+
+            // sometimes artefacts when icon is displayed
+            this->repaint();
 
             if (this->m_originalCode.hasCompleteData())
             {
@@ -125,6 +129,7 @@ namespace BlackGui
             ui->le_TelephonyDesignator->setReadOnly(readOnly);
             ui->country_Selector->setReadOnly(readOnly);
             ui->drop_DropData->setVisible(!readOnly);
+            ui->tb_Paste->setVisible(!readOnly);
 
             CGuiUtility::checkBoxReadOnly(ui->cb_Va, readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
@@ -137,6 +142,7 @@ namespace BlackGui
             ui->selector_AirlineDesignator->setReadOnly(false);
             ui->selector_AirlineName->setReadOnly(false);
             ui->drop_DropData->setVisible(true);
+            ui->tb_Paste->setVisible(true);
         }
 
         void CAirlineIcaoForm::clear()
@@ -147,6 +153,23 @@ namespace BlackGui
         void CAirlineIcaoForm::resetValue()
         {
             this->setValue(m_originalCode);
+        }
+
+        void CAirlineIcaoForm::jsonPasted(const QString &json)
+        {
+            try
+            {
+                CAirlineIcaoCodeList icaos;
+                icaos.convertFromJson(Json::jsonObjectFromString(json));
+                if (!icaos.isEmpty())
+                {
+                    this->setValue(icaos.front());
+                }
+            }
+            catch (const CJsonException &ex)
+            {
+                Q_UNUSED(ex);
+            }
         }
 
         void CAirlineIcaoForm::ps_droppedCode(const BlackMisc::CVariant &variantDropped)

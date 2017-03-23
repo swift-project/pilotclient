@@ -37,7 +37,7 @@ namespace BlackGui
             explicit CForm(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CForm();
+            virtual ~CForm();
 
             //! Set editable
             virtual void setReadOnly(bool readOnly) = 0;
@@ -56,12 +56,19 @@ namespace BlackGui
             BlackMisc::Network::CAuthenticatedUser getSwiftDbUser() const;
 
         protected:
+            //! JSON string has been pasted
+            //! \remark The JSON string has been pre-checked
+            virtual void jsonPasted(const QString &json);
+
             bool m_readOnly = false; //!< read only
             BlackMisc::CDataReadOnly<BlackCore::Data::TAuthenticatedDbUser> m_swiftDbUser {this, &CForm::ps_userChanged}; //!< authenticated user
 
         protected slots:
             //! User has been changed
             virtual void ps_userChanged();
+
+            //! Pasted from clipboard
+            void ps_pasted();
         };
     } // ns
 } // ns

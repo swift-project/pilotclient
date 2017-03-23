@@ -73,6 +73,10 @@ namespace BlackGui
             //! Airline has been changed
             void airlineChanged(const BlackMisc::Aviation::CAirlineIcaoCode &airlineIcao);
 
+        protected:
+            //! \copydoc CForm::jsonPasted
+            virtual void jsonPasted(const QString &json) override;
+
         private slots:
             //! Variant has been dropped
             void ps_droppedCode(const BlackMisc::CVariant &variantDropped);

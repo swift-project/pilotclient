@@ -8,6 +8,9 @@
  */
 
 #include "blackgui/editors/form.h"
+#include <QApplication>
+#include <QClipboard>
+#include <QShortcut>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
@@ -17,7 +20,7 @@ namespace BlackGui
     namespace Editors
     {
         CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent)
-        {  }
+        { }
 
         CForm::~CForm() { }
 
@@ -37,9 +40,22 @@ namespace BlackGui
             return this->m_swiftDbUser.get();
         }
 
+        void CForm::jsonPasted(const QString &json)
+        {
+            Q_UNUSED(json);
+        }
+
         void CForm::ps_userChanged()
         {
             // void
+        }
+
+        void CForm::ps_pasted()
+        {
+            if (!QApplication::clipboard()) { return; }
+            const QString data = QApplication::clipboard()->text();
+            if (!Json::looksLikeSwiftJson(data)) { return; }
+            this->jsonPasted(data);
         }
     } // ns
 } // ns

@@ -69,6 +69,10 @@ namespace BlackGui
             //! Set value
             bool setValue(const BlackMisc::Aviation::CAircraftIcaoCode &icao);
 
+        protected:
+            //! \copydoc CForm::jsonPasted
+            virtual void jsonPasted(const QString &json) override;
+
         private slots:
             //! Variant has been dropped
             void ps_droppedCode(const BlackMisc::CVariant &variantDropped);

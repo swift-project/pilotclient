@@ -52,7 +52,8 @@ namespace BlackGui
             // selector
             connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue);
 
-            // drag and drop
+            // drag and drop, paste
+            connect(ui->tb_Paste, &QToolButton::clicked, this, &CLiveryForm::ps_pasted);
             connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CLiveryForm::ps_droppedLivery);
             ui->drop_DropData->setInfoText("<drop livery>");
             ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>()});
@@ -112,6 +113,23 @@ namespace BlackGui
             return true;
         }
 
+        void CLiveryForm::jsonPasted(const QString &json)
+        {
+            try
+            {
+                CLiveryList liveries;
+                liveries.convertFromJson(Json::jsonObjectFromString(json));
+                if (!liveries.isEmpty())
+                {
+                    this->setValue(liveries.front());
+                }
+            }
+            catch (const CJsonException &ex)
+            {
+                Q_UNUSED(ex);
+            }
+        }
+
         CStatusMessageList CLiveryForm::validate(bool withNestedForms) const
         {
             CLivery livery(getValue());
@@ -161,6 +179,7 @@ namespace BlackGui
             ui->pb_SearchColor->setVisible(!readOnly);
             ui->pb_TempLivery->setVisible(!readOnly);
             ui->drop_DropData->setVisible(!readOnly);
+            ui->tb_Paste->setVisible(!readOnly);
             CGuiUtility::checkBoxReadOnly(ui->cb_Military, readOnly);
         }
 
@@ -173,6 +192,7 @@ namespace BlackGui
             ui->drop_DropData->setVisible(true);
             ui->pb_SearchColor->setVisible(true);
             ui->pb_TempLivery->setVisible(true);
+            ui->tb_Paste->setVisible(true);
         }
 
         void CLiveryForm::clear()

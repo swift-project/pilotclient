@@ -62,6 +62,11 @@ namespace BlackGui
             return true;
         }
 
+        void CDistributorForm::jsonPasted(const QString &json)
+        {
+            Q_UNUSED(json);
+        }
+
         CDistributor CDistributorForm::getValue() const
         {
             CDistributor distributor(ui->distributor_Selector->getDistributor());
@@ -126,9 +131,9 @@ namespace BlackGui
             }
             else if (variantDropped.canConvert<CDistributorList>())
             {
-                CDistributorList icaoList(variantDropped.value<CDistributorList>());
-                if (icaoList.isEmpty()) { return;  }
-                distributor =  icaoList.front();
+                const CDistributorList icaoList(variantDropped.value<CDistributorList>());
+                if (icaoList.isEmpty()) { return; }
+                distributor = icaoList.front();
             }
             else
             {
@@ -136,6 +141,5 @@ namespace BlackGui
             }
             this->setValue(distributor);
         }
-
     } // ns
 } // ns
