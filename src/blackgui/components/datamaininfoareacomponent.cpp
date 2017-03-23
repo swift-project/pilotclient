@@ -15,8 +15,8 @@
 #include "blackgui/components/dbmodelcomponent.h"
 #include "blackgui/components/logcomponent.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/verify.h"
 #include "ui_datamaininfoareacomponent.h"
-
 #include <QIcon>
 
 using namespace BlackMisc;
@@ -66,12 +66,16 @@ namespace BlackGui
         void CDataMainInfoAreaComponent::displayLog()
         {
             this->selectArea(InfoAreaLog);
+            BLACK_VERIFY_X(this->getLogComponent(), Q_FUNC_INFO, "No log component");
+            if (!this->getLogComponent()) { return; }
             this->getLogComponent()->displayLog();
         }
 
         void CDataMainInfoAreaComponent::displayConsole()
         {
             this->selectArea(InfoAreaLog);
+            BLACK_VERIFY_X(this->getLogComponent(), Q_FUNC_INFO, "No log component");
+            if (!this->getLogComponent()) { return; }
             this->getLogComponent()->displayConsole();
         }
 
