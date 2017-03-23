@@ -37,8 +37,9 @@ namespace BlackGui
             ui->tvp_AirlineIcao->setResizeMode(CAirlineIcaoCodeView::ResizingOff);
             ui->tvp_AirlineIcao->allowDragDrop(true, false);
             ui->tvp_AirlineIcao->setFilterWidget(ui->filter_AirlineIcao);
-            connect(ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::ps_reload);
+            ui->tvp_AirlineIcao->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
+            connect(ui->tvp_AirlineIcao, &CAirlineIcaoCodeView::requestNewBackendData, this, &CDbAirlineIcaoComponent::ps_reload);
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoComponent::ps_icaoRead);
             this->ps_icaoRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAirlineIcaoCodesCount());
         }

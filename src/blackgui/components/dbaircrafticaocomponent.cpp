@@ -40,6 +40,7 @@ namespace BlackGui
 
             ui->tvp_AircraftIcao->allowDragDrop(true, false);
             ui->tvp_AircraftIcao->setFilterWidget(ui->filter_AircraftIcao);
+            ui->tvp_AircraftIcao->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::ps_icaoRead);
             this->ps_icaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftIcaoCodesCount());

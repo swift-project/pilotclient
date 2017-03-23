@@ -42,6 +42,7 @@ namespace BlackGui
             this->setViewWithIndicator(ui->tvp_AircraftModel);
             ui->tvp_AircraftModel->setAircraftModelMode(CAircraftModelListModel::Database);
             ui->tvp_AircraftModel->menuAddItems(CAircraftModelView::MenuStashing);
+            ui->tvp_AircraftModel->menuAddItems(CViewBaseNonTemplate::MenuCopy);
             ui->tvp_AircraftModel->menuRemoveItems(CAircraftModelView::MenuHighlightStashed); // not supported here
             connect(ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::ps_reload);
             connect(ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
