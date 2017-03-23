@@ -250,6 +250,14 @@ namespace BlackMisc
         //! Merges an incremental json object into an existing one
         BLACKMISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
 
+        //! Looks like swift JSON?
+        //! \remark Quick check if the string could be a valid JSON string
+        BLACKMISC_EXPORT bool looksLikeJson(const QString &json);
+
+        //! Looks like swift JSON?
+        //! \remark Quick check if the string could be a valid swift JSON string
+        BLACKMISC_EXPORT bool looksLikeSwiftJson(const QString &json);
+
         /*!
          * Load JSON file and init by that
          */

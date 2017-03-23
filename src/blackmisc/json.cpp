@@ -56,7 +56,7 @@ const QJsonValue &operator >>(const QJsonValue &json, QString &value)
 
 const QJsonValue &operator >>(const QJsonValue &json, QStringList &value)
 {
-    for (auto &&element : json.toArray()) { value << element.toString(); }
+    for (auto && element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
@@ -130,7 +130,7 @@ const QJsonValueRef &operator >>(const QJsonValueRef &json, QString &value)
 
 const QJsonValueRef &operator >>(const QJsonValueRef &json, QStringList &value)
 {
-    for (auto &&element : json.toArray()) { value << element.toString(); }
+    for (auto && element : json.toArray()) { value << element.toString(); }
     return json;
 }
 
@@ -404,7 +404,7 @@ namespace BlackMisc
         {
             if (toBeAppended.isEmpty()) return target;
             QStringList keys = toBeAppended.keys();
-            foreach(const QString & key, keys)
+            foreach (const QString &key, keys)
             {
                 target.insert(key, toBeAppended.value(key));
             }
@@ -448,6 +448,19 @@ namespace BlackMisc
                 }
             }
             return currentObject;
+        }
+
+        bool looksLikeJson(const QString &json)
+        {
+            if (json.isEmpty()) { return false; }
+            const QString t = json.trimmed();
+            return t.startsWith('{') && t.endsWith('}');
+        }
+
+        bool looksLikeSwiftJson(const QString &json)
+        {
+            // further checks would go here
+            return looksLikeJson(json);
         }
     }
 }

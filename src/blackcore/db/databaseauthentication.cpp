@@ -126,7 +126,7 @@ namespace BlackCore
                     CLogMessage(this).error("Authentication failed, no response from %1") << urlString;
                     return;
                 }
-                if (!json.startsWith('{') || !json.endsWith('}'))
+                if (!Json::looksLikeJson(json))
                 {
                     CLogMessage(this).error("Illegal JSON object: %1") << CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(json);
                     return;
