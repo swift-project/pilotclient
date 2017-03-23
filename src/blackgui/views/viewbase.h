@@ -112,6 +112,9 @@ namespace BlackGui
                 MenuLoad                 = 1 << 8,   //!< load from JSON
                 MenuToggleSelectionMode  = 1 << 9,   //!< allow to toggle selection mode
                 MenuOrderable            = 1 << 10,  //!< items can be ordered (if container is BlackMisc::IOrderableList
+                MenuCopy                 = 1 << 11,  //!< copy (for copy/paste)
+                MenuPaste                = 1 << 12,  //!< paste (for copy/paste)
+                MenuCut                  = 1 << 13,  //!< cut (for copy/paste)
                 MenuStandard             = MenuClear | MenuRemoveSelectedRows | MenuRefresh | MenuBackend |
                                            MenuDisplayAutomatically | MenuFilter | MenuSave | MenuLoad | MenuToggleSelectionMode,
                 MenuLoadAndSave          = MenuLoad  | MenuSave,
@@ -120,8 +123,8 @@ namespace BlackGui
                 MenuDefaultDbViews       = MenuToggleSelectionMode | MenuBackend,
                 // special menus, should be in derived classes, but enums cannot be inherited
                 // maybe shifted in the future to elsewhere
-                MenuHighlightStashed     = 1 << 11,  //!< highlight stashed models
-                MenuCanStashModels       = 1 << 12,  //!< stash models
+                MenuHighlightStashed     = 1 << 14,  //!< highlight stashed models
+                MenuCanStashModels       = 1 << 15,  //!< stash models
                 MenuStashing             = MenuHighlightStashed | MenuCanStashModels,
             };
             Q_DECLARE_FLAGS(Menu, MenuFlag)
@@ -469,6 +472,15 @@ namespace BlackGui
             //! Hide load indicator (no parameters)
             void ps_hideLoadIndicator();
 
+            //! Copy
+            virtual void ps_copy() = 0;
+
+            //! Cut
+            virtual void ps_cut() = 0;
+
+            //! Paste
+            virtual void ps_paste() = 0;
+
             // ------------ slots of CViewDbObjects ----------------
             // need to be declared here and overridden, as this is the only part with valid Q_OBJECT
 
@@ -685,6 +697,9 @@ namespace BlackGui
             virtual void ps_rowSelected(const QModelIndex &index) override;
             virtual BlackMisc::CStatusMessage ps_loadJson() override;
             virtual BlackMisc::CStatusMessage ps_saveJson() const override;
+            virtual void ps_copy() override;
+            virtual void ps_cut() override;
+            virtual void ps_paste() override;
             //! @}
         };
     } // namespace

@@ -63,7 +63,9 @@
 #include "blackmisc/weather/windlayerlist.h"
 #include "blackmisc/worker.h"
 
+#include <QApplication>
 #include <QAction>
+#include <QClipboard>
 #include <QDialog>
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
@@ -266,13 +268,35 @@ namespace BlackGui
             case MenuClear: { ma.addAction(BlackMisc::CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::ps_clear }); break; }
             case MenuFilter:
                 {
-                    ma.addAction(CIcons::filter16(), "Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_displayFilterDialog }, CShortcut::keyDisplayFilter());
-                    ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_removeFilter });
+                    if (m_filterWidget)
+                    {
+                        const bool dialog = qobject_cast<QDialog *>(m_filterWidget);
+                        if (dialog) ma.addAction(CIcons::filter16(), "Show filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_displayFilterDialog }, CShortcut::keyDisplayFilter());
+                        ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::ps_removeFilter });
+                    }
                     break;
                 }
             case MenuMaterializeFilter: { ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter }); break; }
             case MenuLoad: { ma.addAction(CIcons::disk16(), "Load from file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_loadJsonAction }); break; }
             case MenuSave: { ma.addAction(CIcons::disk16(), "Save data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::ps_saveJsonAction }, CShortcut::keySaveViews()); break; }
+            case MenuCut:
+                {
+                    if (!QApplication::clipboard()) break;
+                    ma.addAction(CIcons::cut16(), "Cut", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::ps_cut }, QKeySequence(QKeySequence::Paste));
+                    break;
+                }
+            case MenuPaste:
+                {
+                    if (!QApplication::clipboard()) break;
+                    ma.addAction(CIcons::paste16(), "Paste", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::ps_paste }, QKeySequence(QKeySequence::Paste));
+                    break;
+                }
+            case MenuCopy:
+                {
+                    if (!QApplication::clipboard()) break;
+                    ma.addAction(CIcons::copy16(), "Copy", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::ps_copy }, QKeySequence(QKeySequence::Copy));
+                    break;
+                }
             default:
                 break;
             }
@@ -321,7 +345,12 @@ namespace BlackGui
                     menuActions.addActions(this->initMenuActions(MenuRemoveSelectedRows));
                 }
             }
-            if (this->m_menus.testFlag(MenuFilter))
+
+            if (this->m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
+            if (this->m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
+            if (this->m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
+
+            if (this->m_menus.testFlag(MenuFilter) && m_filterWidget)
             {
                 menuActions.addActions(this->initMenuActions(MenuFilter));
                 if (this->m_menus.testFlag(MenuMaterializeFilter))
@@ -1414,6 +1443,49 @@ namespace BlackGui
             else
             {
                 return CStatusMessage(this, CStatusMessage::SeverityError, "Writing " + fileName + " failed", true);
+            }
+        }
+
+        template<class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_copy()
+        {
+            QClipboard *clipboard = QApplication::clipboard();
+            if (!clipboard) { return; }
+            if (!this->hasSelection()) { return; }
+            const ContainerType selection = this->selectedObjects();
+            if (selection.isEmpty()) { return; }
+            const QString json = selection.toJsonString();
+            clipboard->setText(json);
+        }
+
+        template<class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_cut()
+        {
+            if (!QApplication::clipboard()) { return; }
+            this->ps_copy();
+            this->removeSelectedRows();
+        }
+
+        template<class ModelClass, class ContainerType, class ObjectType>
+        void CViewBase<ModelClass, ContainerType, ObjectType>::ps_paste()
+        {
+            const QClipboard *clipboard = QApplication::clipboard();
+            if (!clipboard) { return; }
+            const QString json = clipboard->text();
+            if (json.isEmpty()) { return; }
+            if (!Json::looksLikeSwiftJson(json)) { return; } // no JSON
+            try
+            {
+                ContainerType objects;
+                objects.convertFromJson(json);
+                if (!objects.isEmpty())
+                {
+                    this->insert(objects);
+                }
+            }
+            catch (const CJsonException &ex)
+            {
+                Q_UNUSED(ex);
             }
         }
 
