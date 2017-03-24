@@ -13,8 +13,7 @@
 #include <QCoreApplication>
 
 #ifdef Q_OS_WIN
-#include "Windows.h"
-#include "winver.h"
+#include <Windows.h>
 #include <tlhelp32.h>
 #endif
 
