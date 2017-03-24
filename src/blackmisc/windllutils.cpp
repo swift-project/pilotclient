@@ -15,7 +15,6 @@
 #ifdef Q_OS_WIN
 #include "Windows.h"
 #include "winver.h"
-#include "Strsafe.h"
 #include <tlhelp32.h>
 #endif
 
@@ -41,20 +40,19 @@ namespace BlackMisc
             return iso;
         }
 
-        QString queryToQString(BYTE *pbVersionInfo, const std::vector<TCHAR> &subBlockNameBuffer)
+        QString queryStringFileInfo(BYTE *pbVersionInfo, const LanguageCodePage &codePage, const QString &stringName)
         {
+            constexpr int fieldWidth = 4;
+            constexpr int base = 16;
+            QString subBlockNameBuffer = QString("\\StringFileInfo\\%1%2\\%3")
+                    .arg(codePage.wLanguage, fieldWidth, base, QLatin1Char('0'))
+                    .arg(codePage.wCodePage, fieldWidth, base, QLatin1Char('0'))
+                    .arg(stringName);
             UINT dwBytes = 0;
             wchar_t *szQueryString = nullptr;
-            VerQueryValue(pbVersionInfo, subBlockNameBuffer.data(), reinterpret_cast<LPVOID *>(&szQueryString), &dwBytes);
+            VerQueryValue(pbVersionInfo, subBlockNameBuffer.toStdWString().c_str(), reinterpret_cast<LPVOID *>(&szQueryString), &dwBytes);
             const QString queryString = QString::fromWCharArray(szQueryString, dwBytes);
             return queryString;
-        }
-
-        QString queryToQString(BYTE *pbVersionInfo, const LanguageCodePage &codePage, _In_ LPCTSTR subBlockpSzFormat, std::vector<TCHAR> &subBlockNameBuffer)
-        {
-            HRESULT hr = StringCchPrintf(subBlockNameBuffer.data(), subBlockNameBuffer.size() - 1, subBlockpSzFormat, codePage.wLanguage, codePage.wCodePage);
-            if (FAILED(hr)) { return QString(); }
-            return queryToQString(pbVersionInfo, subBlockNameBuffer);
         }
     } // ns
 
@@ -123,16 +121,15 @@ namespace BlackMisc
 
         // Read the file description for each language and code page.
         // All names: https://msdn.microsoft.com/en-us/library/windows/desktop/ms647464(v=vs.85).aspx
-        std::vector<TCHAR> subBlockNameBuffer(128);
         for (UINT i = 0; i < (puLenFileInfo / sizeof(struct PrivateWindows::LanguageCodePage)); i++)
         {
             // Retrieve file description for language and code page "i".
             const PrivateWindows::LanguageCodePage cp = lpTranslate[i];
             result.iso = PrivateWindows::languageToIsoCode(cp);
-            result.fileDescription = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\FileDescription"), subBlockNameBuffer);
-            result.productName = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\ProductName"), subBlockNameBuffer);
-            result.productVersionName = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\ProductVersion"), subBlockNameBuffer);
-            result.originalFilename = PrivateWindows::queryToQString(pbVersionInfo.data(), cp, TEXT("\\StringFileInfo\\%04x%04x\\OriginalFilename"), subBlockNameBuffer);
+            result.fileDescription = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("FileDescription"));
+            result.productName = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("ProductName"));
+            result.productVersionName = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("ProductVersion"));
+            result.originalFilename = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("OriginalFilename"));
             result.fullFilename = dllQFile.fileName();
 
             //! \fixme currently stopping at first language, maybe need to change that in future
