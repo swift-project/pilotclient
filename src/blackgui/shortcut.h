@@ -52,6 +52,9 @@ namespace BlackGui
 
         //! Escape
         static const QKeySequence &keyEscape();
+
+        //! Copy
+        static const QKeySequence &keyCopy();
     };
 } // ns
 #endif // guard

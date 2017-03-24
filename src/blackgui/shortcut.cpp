@@ -24,7 +24,7 @@ namespace BlackGui
 
     const QKeySequence &CShortcut::keyClearSelection()
     {
-        static const QKeySequence k(Qt::CTRL + Qt::Key_C);
+        static const QKeySequence k(Qt::CTRL + Qt::Key_Space);
         return k;
     }
 
@@ -62,6 +62,12 @@ namespace BlackGui
     const QKeySequence &CShortcut::keyEscape()
     {
         static const QKeySequence k(Qt::Key_Escape);
+        return k;
+    }
+
+    const QKeySequence &CShortcut::keyCopy()
+    {
+        static const QKeySequence k(Qt::CTRL + Qt::Key_C);
         return k;
     }
 } // ns

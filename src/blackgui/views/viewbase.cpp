@@ -123,6 +123,8 @@ namespace BlackGui
             saveJson->setObjectName("Save JSON for " + this->objectName());
             QShortcut *deleteRow = new QShortcut(CShortcut::keyDelete(), this, SLOT(ps_removeSelectedRows()), nullptr, Qt::WidgetShortcut);
             deleteRow->setObjectName("Delete selected rows for " + this->objectName());
+            QShortcut *copy = new QShortcut(CShortcut::keyCopy(), this, SLOT(ps_copy()), nullptr, Qt::WidgetShortcut);
+            copy->setObjectName("Copy rows for " + this->objectName());
         }
 
         bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
