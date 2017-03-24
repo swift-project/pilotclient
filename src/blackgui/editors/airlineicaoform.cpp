@@ -159,8 +159,10 @@ namespace BlackGui
         {
             try
             {
-                CAirlineIcaoCodeList icaos;
-                icaos.convertFromJson(Json::jsonObjectFromString(json));
+                CVariant jsonVariant;
+                jsonVariant.convertFromJson(Json::jsonObjectFromString(json));
+                if (!jsonVariant.canConvert<CAirlineIcaoCodeList>()) { return; }
+                const CAirlineIcaoCodeList icaos = jsonVariant.value<CAirlineIcaoCodeList>();
                 if (!icaos.isEmpty())
                 {
                     this->setValue(icaos.front());

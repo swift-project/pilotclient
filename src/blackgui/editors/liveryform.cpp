@@ -117,8 +117,10 @@ namespace BlackGui
         {
             try
             {
-                CLiveryList liveries;
-                liveries.convertFromJson(Json::jsonObjectFromString(json));
+                CVariant jsonVariant;
+                jsonVariant.convertFromJson(Json::jsonObjectFromString(json));
+                if (!jsonVariant.canConvert<CLiveryList>()) { return; }
+                const CLiveryList liveries = jsonVariant.value<CLiveryList>();
                 if (!liveries.isEmpty())
                 {
                     this->setValue(liveries.front());

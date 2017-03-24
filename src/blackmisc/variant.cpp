@@ -91,7 +91,7 @@ namespace BlackMisc
                 else
                 {
                     CLogMessage(&a).warning("Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
-                        << a.typeName() << a.userType() << b.typeName() << b.userType();
+                            << a.typeName() << a.userType() << b.typeName() << b.userType();
                     return 0;
                 }
             }
@@ -150,6 +150,12 @@ namespace BlackMisc
             }
         }
         return json;
+    }
+
+    QString CVariant::toJsonString(QJsonDocument::JsonFormat format) const
+    {
+        QJsonDocument jsonDoc(toJson());
+        return jsonDoc.toJson(format);
     }
 
     void CVariant::convertFromJson(const QJsonObject &json)

@@ -1454,7 +1454,8 @@ namespace BlackGui
             if (!this->hasSelection()) { return; }
             const ContainerType selection = this->selectedObjects();
             if (selection.isEmpty()) { return; }
-            const QString json = selection.toJsonString();
+            const CVariant copyJson = CVariant::from(selection);
+            const QString json = copyJson.toJsonString();
             clipboard->setText(json);
         }
 

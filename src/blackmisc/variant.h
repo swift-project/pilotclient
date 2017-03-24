@@ -273,6 +273,9 @@ namespace BlackMisc
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const;
 
+        //! Convenience function JSON as string
+        QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented) const;
+
         //! \copydoc BlackMisc::Mixin::JsonByMetaClass::convertFromJson
         void convertFromJson(const QJsonObject &json);
 
