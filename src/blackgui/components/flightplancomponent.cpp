@@ -413,29 +413,34 @@ namespace BlackGui
                 }
 
                 const QString json(CFileUtils::readFileToString(fileName));
-                if (json.isEmpty())
+                if (!Json::looksLikeSwiftJson(json))
                 {
-                    m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading " + fileName + " yields no data", true);
+                    m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Reading '%1' yields no data", true) << fileName;
                     break;
                 }
 
-                CFlightPlan fp;
                 try
                 {
-                    fp.convertFromJson(json);
+                    CVariant variant;
+                    variant.convertFromJson(Json::jsonObjectFromString(json));
+                    if (variant.canConvert<CFlightPlan>())
+                    {
+                        const CFlightPlan fp = variant.value<CFlightPlan>();
+                        this->fillWithFlightPlanData(fp);
+                    }
+                    else
+                    {
+                        m = CStatusMessage(this, CStatusMessage::SeverityWarning, "Wrong format for flight plan in '%1'") << fileName;
+                    }
                 }
                 catch (const CJsonException &ex)
                 {
                     m = ex.toStatusMessage(this, "Parse error in " + fileName);
                     break;
                 }
-                this->fillWithFlightPlanData(fp);
             }
             while (false);
-            if (m.isFailure())
-            {
-                CLogMessage::preformatted(m);
-            }
+            if (m.isFailure()) { CLogMessage::preformatted(m); }
         }
 
         void CFlightPlanComponent::ps_saveToDisk()
@@ -452,9 +457,10 @@ namespace BlackGui
                     break;
                 }
                 CFlightPlan fp;
-                this->validateAndInitializeFlightPlan(fp);
-                const QString json(fp.toJsonString());
-                bool ok = CFileUtils::writeStringToFile(json, fileName);
+                this->validateAndInitializeFlightPlan(fp); // get data
+                const CVariant variantFp = CVariant::fromValue(fp);
+                const QString json(variantFp.toJsonString());
+                const bool ok = CFileUtils::writeStringToFile(json, fileName);
                 if (ok)
                 {
                     m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Written " + fileName, true);
@@ -465,10 +471,7 @@ namespace BlackGui
                 }
             }
             while (false);
-            if (m.isFailure())
-            {
-                CLogMessage::preformatted(m);
-            }
+            if (m.isFailure()) { CLogMessage::preformatted(m); }
         }
 
         void CFlightPlanComponent::ps_setSelcalInOwnAircraft()
@@ -491,8 +494,8 @@ namespace BlackGui
                 return;
             }
 
-            CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-            CFlightPlan loadedPlan = sGui->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
+            const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
+            const CFlightPlan loadedPlan = sGui->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
             if (loadedPlan.wasSentOrLoaded())
             {
                 this->fillWithFlightPlanData(loadedPlan);
