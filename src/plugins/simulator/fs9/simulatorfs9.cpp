@@ -448,13 +448,13 @@ namespace BlackSimPlugin
             });
         }
 
-        void CSimulatorFs9Listener::start()
+        void CSimulatorFs9Listener::startImpl()
         {
             m_isStarted = false;
             m_timer->start();
         }
 
-        void CSimulatorFs9Listener::stop()
+        void CSimulatorFs9Listener::stopImpl()
         {
             m_timer->stop();
         }

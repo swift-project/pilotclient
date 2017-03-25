@@ -83,4 +83,18 @@ namespace BlackCore
         return m_info.toQString();
     }
 
+    void ISimulatorListener::start()
+    {
+        if (m_isRunning) { return; }
+        m_isRunning = true;
+        startImpl();
+    }
+
+    void ISimulatorListener::stop()
+    {
+        if(!m_isRunning) { return; }
+        stopImpl();
+        m_isRunning = false;
+    }
+
 } // namespace

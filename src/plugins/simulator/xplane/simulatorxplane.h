@@ -204,12 +204,12 @@ namespace BlackSimPlugin
             //! Constructor
             CSimulatorXPlaneListener(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
-        public slots:
-            //! \copydoc BlackCore::ISimulatorListener::start
-            virtual void start() override;
+        protected:
+            //! \copydoc BlackCore::ISimulatorListener::startImpl
+            virtual void startImpl() override;
 
-            //! \copydoc BlackCore::ISimulatorListener::stop
-            virtual void stop() override;
+            //! \copydoc BlackCore::ISimulatorListener::stopImpl
+            virtual void stopImpl() override;
 
         private:
             //! \brief Check if XBus service is already registered

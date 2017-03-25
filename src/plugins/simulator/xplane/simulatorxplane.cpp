@@ -707,7 +707,7 @@ namespace BlackSimPlugin
         CSimulatorXPlaneListener::CSimulatorXPlaneListener(const CSimulatorPluginInfo &info): ISimulatorListener(info)
         { }
 
-        void CSimulatorXPlaneListener::start()
+        void CSimulatorXPlaneListener::startImpl()
         {
             if (m_watcher) { return; } // already started
             if (isXBusRunning())
@@ -723,7 +723,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlaneListener::stop()
+        void CSimulatorXPlaneListener::stopImpl()
         {
             if (m_watcher)
             {

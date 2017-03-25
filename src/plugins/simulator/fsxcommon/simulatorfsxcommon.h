@@ -295,12 +295,12 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulatorListener::backendInfo
             virtual QString backendInfo() const override;
 
-        public slots:
-            //! \copydoc BlackCore::ISimulatorListener::start
-            virtual void start() override;
+        protected:
+            //! \copydoc BlackCore::ISimulatorListener::startImpl
+            virtual void startImpl() override;
 
-            //! \copydoc BlackCore::ISimulatorListener::stop
-            virtual void stop() override;
+            //! \copydoc BlackCore::ISimulatorListener::stopImpl
+            virtual void stopImpl() override;
 
         protected:
             //! Test if connection can be established

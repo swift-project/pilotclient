@@ -255,17 +255,25 @@ namespace BlackCore
 
     public slots:
         //! Start listening for the simulator to start.
-        virtual void start() = 0;
+        void start();
 
         //! Stops listening.
-        virtual void stop() = 0;
+        void stop();
 
     signals:
         //! Emitted when the listener discovers the simulator running.
         void simulatorStarted(const BlackMisc::Simulation::CSimulatorPluginInfo &info);
 
+    protected:
+        //! Plugin specific implementation to start listener
+        virtual void startImpl() = 0;
+
+        //! Plugin specific implementation to stop listener
+        virtual void stopImpl() = 0;
+
     private:
         BlackMisc::Simulation::CSimulatorPluginInfo m_info;
+        bool m_isRunning = false;
     };
 
     //! Factory pattern class to create instances of ISimulator

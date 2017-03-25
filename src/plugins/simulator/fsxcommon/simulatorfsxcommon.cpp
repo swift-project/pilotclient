@@ -1334,7 +1334,7 @@ namespace BlackSimPlugin
             connect(m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
         }
 
-        void CSimulatorFsxCommonListener::start()
+        void CSimulatorFsxCommonListener::startImpl()
         {
             m_simulatorVersion.clear();
             m_simConnectVersion.clear();
@@ -1343,7 +1343,7 @@ namespace BlackSimPlugin
             m_timer->start();
         }
 
-        void CSimulatorFsxCommonListener::stop()
+        void CSimulatorFsxCommonListener::stopImpl()
         {
             m_timer->stop();
         }

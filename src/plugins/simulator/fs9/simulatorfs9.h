@@ -117,12 +117,12 @@ namespace BlackSimPlugin
                                   const QSharedPointer<CFs9Host> &fs9Host,
                                   const QSharedPointer<CLobbyClient> &lobbyClient);
 
-        public slots:
-            //! \copydoc BlackCore::ISimulatorListener::start
-            virtual void start() override;
+        protected:
+            //! \copydoc BlackCore::ISimulatorListener::startImpl
+            virtual void startImpl() override;
 
-            //! \copydoc BlackCore::ISimulatorListener::stop
-            virtual void stop() override;
+            //! \copydoc BlackCore::ISimulatorListener::stopImpl
+            virtual void stopImpl() override;
 
         private:
             QTimer *m_timer = nullptr;
