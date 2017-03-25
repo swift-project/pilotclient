@@ -1405,10 +1405,22 @@ namespace BlackGui
                     m = CStatusMessage(this).warning("Reading '%1' yields no data") << fileName;
                     break;
                 }
+                if (!Json::looksLikeSwiftJson(json))
+                {
+                    m = CStatusMessage(this).warning("No swift JSON '%1'") << fileName;
+                    break;
+                }
                 try
                 {
-                    ContainerType container;
-                    container.convertFromJson(json);
+                    CVariant containerVariant;
+                    containerVariant.convertFromJson(Json::jsonObjectFromString(json));
+                    if (!containerVariant.canConvert<ContainerType>())
+                    {
+                        m = CStatusMessage(this).warning("No valid swift JSON '%1'") << fileName;
+                        break;
+                    }
+
+                    ContainerType container = containerVariant.value<ContainerType>();
                     m = this->modifyLoadedJsonData(container);
                     if (m.isFailure()) { break; } // modification error
                     m = this->validateLoadedJsonData(container);
@@ -1436,8 +1448,8 @@ namespace BlackGui
                                      tr("Save data file"), getDefaultFilename(false),
                                      tr("swift (*.json *.txt)"));
             if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, "Save canceled", true); }
-            const QString json(this->toJsonString());
-            bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
+            const QString json(this->toJsonString()); // save as CVariant JSON
+            const bool ok = CFileUtils::writeStringToFileInBackground(json, fileName);
             if (ok)
             {
                 return CStatusMessage(this, CStatusMessage::SeverityInfo, "Writing " + fileName + " in progress", true);
