@@ -92,7 +92,7 @@ namespace BlackCore
 
         bool CContextSimulator::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
         {
-            return this->loadSimulatorPlugin(simulatorInfo, true);
+            return this->listenForSimulator(simulatorInfo);
         }
 
         void CContextSimulator::stopSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
@@ -241,35 +241,22 @@ namespace BlackCore
             return m_simulatorPlugin.second->getTimeSynchronizationOffset();
         }
 
-        bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorPluginInfo, bool withListener)
+        bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorPluginInfo)
         {
             Q_ASSERT(getIContextApplication());
             Q_ASSERT(getIContextApplication()->isUsingImplementingObject());
             Q_ASSERT(!simulatorPluginInfo.isUnspecified());
             Q_ASSERT(CThreadUtils::isCurrentThreadApplicationThread()); // only run in main thread
 
-            if (!simulatorPluginInfo.isValid())
+            // Is a plugin already loaded?
+            if (!m_simulatorPlugin.first.isUnspecified())
             {
-                CLogMessage(this).error("Illegal plugin");
+                // This can happen, if a listener emitted simulatorStarted twice or two different simulators
+                // are running at the same time. In this case, we leave the loaded plugin and just return.
                 return false;
             }
 
-            // Is the plugin already loaded?
-            if (!m_simulatorPlugin.first.isUnspecified())
-            {
-                return true;
-            }
-
-            unloadSimulatorPlugin(); // old plugin unloaded
-
-            // now we have a state where no driver is loaded
-            if (withListener)
-            {
-                this->listenForSimulator(simulatorPluginInfo);
-                return false; // not a plugin yet, just listener
-            }
-
-            if (!simulatorPluginInfo.isValid() || simulatorPluginInfo.isUnspecified())
+            if (!simulatorPluginInfo.isValid())
             {
                 CLogMessage(this).error("Illegal plugin");
                 return false;
@@ -330,25 +317,12 @@ namespace BlackCore
             return true;
         }
 
-        void CContextSimulator::listenForSimulator(const CSimulatorPluginInfo &simulatorInfo)
+        bool CContextSimulator::listenForSimulator(const CSimulatorPluginInfo &simulatorInfo)
         {
             Q_ASSERT(this->getIContextApplication());
             Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
             Q_ASSERT(!simulatorInfo.isUnspecified());
-
-            const ISimulator::SimulatorStatus simStatus = getSimulatorStatusEnum();
-            if (!m_simulatorPlugin.first.isUnspecified() &&
-                    m_simulatorPlugin.first == simulatorInfo && simStatus.testFlag(ISimulator::Connected))
-            {
-                // the simulator is already connected and running
-                return;
-            }
-
-            if (!m_simulatorPlugin.first.isUnspecified())
-            {
-                // wrong or disconnected plugin, we start from the scratch
-                this->unloadSimulatorPlugin();
-            }
+            Q_ASSERT(m_simulatorPlugin.first.isUnspecified());
 
             if (!m_listenersThread.isRunning())
             {
@@ -357,7 +331,7 @@ namespace BlackCore
             }
 
             ISimulatorListener *listener = m_plugins->createListener(simulatorInfo.getIdentifier());
-            if (!listener) { return; }
+            if (!listener) { return false; }
 
             if (listener->thread() != &m_listenersThread)
             {
@@ -365,7 +339,7 @@ namespace BlackCore
                 if (!c)
                 {
                     CLogMessage(this).error("Unable to use '%1'") << simulatorInfo.toQString();
-                    return;
+                    return false;
                 }
 
                 Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
@@ -378,6 +352,7 @@ namespace BlackCore
             Q_UNUSED(s);
 
             CLogMessage(this).info("Listening for simulator '%1'") << simulatorInfo.getIdentifier();
+            return true;
         }
 
         void CContextSimulator::listenForAllSimulators()
@@ -571,8 +546,9 @@ namespace BlackCore
 
         void CContextSimulator::restoreSimulatorPlugins()
         {
-            stopSimulatorListeners();
+            if (!m_simulatorPlugin.first.isUnspecified()) { return; }
 
+            stopSimulatorListeners();
             const auto enabledSimulators = m_enabledSimulators.getThreadLocal();
             const auto allSimulators = m_plugins->getAvailableSimulatorPlugins();
             for (const CSimulatorPluginInfo &s : allSimulators)
@@ -680,7 +656,7 @@ namespace BlackCore
         void CContextSimulator::ps_simulatorStarted(const CSimulatorPluginInfo &info)
         {
             stopSimulatorListeners();
-            loadSimulatorPlugin(info, false);
+            loadSimulatorPlugin(info);
         }
 
         void CContextSimulator::stopSimulatorListeners()

@@ -178,14 +178,14 @@ namespace BlackCore
             //! Reads list of enabled simulators, starts listeners
             void restoreSimulatorPlugins();
 
-            //! Load plugin, if required start listeners before
-            bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorPluginInfo, bool withListeners);
+            //! Load plugin and connect
+            bool loadSimulatorPlugin(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorPluginInfo);
 
             //! Unload plugin, if desired restart listeners
             void unloadSimulatorPlugin();
 
             //! Listen for single simulator
-            void listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo);
+            bool listenForSimulator(const BlackMisc::Simulation::CSimulatorPluginInfo &simulatorInfo);
 
             //! Listen for all simulators
             void listenForAllSimulators();
