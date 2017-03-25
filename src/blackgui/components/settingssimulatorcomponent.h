@@ -46,7 +46,6 @@ namespace BlackGui
 
         private slots:
             //! Driver plugin enabled/disabled
-            //! \todo Unload plugin if user disables it while running
             void ps_pluginStateChanged(const QString &identifier, bool enabled);
 
             //! Apply max.aircraft

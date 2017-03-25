@@ -555,6 +555,20 @@ namespace BlackCore
             }
         }
 
+        void CContextSimulator::changeEnabledSimulators()
+        {
+            CSimulatorPluginInfo currentPluginInfo = m_simulatorPlugin.first;
+            const QStringList enabledSimulators = m_enabledSimulators.getThreadLocal();
+
+            // Unload the current plugin, if it is no longer enabled
+            if (!currentPluginInfo.isUnspecified() && !enabledSimulators.contains(currentPluginInfo.getIdentifier()))
+            {
+                unloadSimulatorPlugin();
+                emit simulatorStatusChanged(ISimulator::Disconnected);
+            }
+            restoreSimulatorPlugins();
+        }
+
         void CContextSimulator::restoreSimulatorPlugins()
         {
             stopSimulatorListeners();

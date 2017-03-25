@@ -172,6 +172,9 @@ namespace BlackCore
             void ps_relayStatusMessageToSimulator(const BlackMisc::CStatusMessage &message);
 
         private:
+            //! Handle a change in enabled simulators
+            void changeEnabledSimulators();
+
             //! Reads list of enabled simulators, starts listeners
             void restoreSimulatorPlugins();
 
@@ -204,7 +207,7 @@ namespace BlackCore
             BlackMisc::Simulation::CAircraftModelSetLoader m_modelSetLoader { this }; //!< load model set from caches
             QMap<BlackMisc::Aviation::CCallsign, BlackMisc::CStatusMessageList> m_matchingMessages;
             BlackMisc::CSettingReadOnly<BlackMisc::Simulation::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages
-            BlackMisc::CSettingReadOnly<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::restoreSimulatorPlugins };
+            BlackMisc::CSettingReadOnly<BlackCore::Application::TEnabledSimulators> m_enabledSimulators { this, &CContextSimulator::changeEnabledSimulators };
             QString m_networkSessionId; //! Network session, if not connected empty
             bool m_initallyAddAircrafts = false;
             bool m_enableMatchingMessages = true;
