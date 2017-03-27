@@ -22,8 +22,8 @@ $$DEFINE_WITH_FSX#define WITH_FSX
 $$DEFINE_WITH_P3D#define WITH_P3D
 $$DEFINE_WITH_FS9#define WITH_FS9
 $$DEFINE_WITH_XPLANE#define WITH_XPLANE
-$$DEFINE_SWIFT_BETA#define SWIFT_BETA
-$$DEFINE_SWIFT_SHIPPED#define SWIFT_SHIPPED
+$$DEFINE_SWIFT_DEV_BRANCH#define SWIFT_DEV_BRANCH
+$$DEFINE_SWIFT_STABLE_BRANCH#define SWIFT_STABLE_BRANCH
 $$DEFINE_SWIFT_VATSIM_SUPPORT#define SWIFT_VATSIM_SUPPORT
 
 bool BlackConfig::CBuildConfig::isCompiledWithBlackCore()
@@ -98,18 +98,18 @@ bool BlackConfig::CBuildConfig::isCompiledWithGui()
 #endif
 }
 
-bool BlackConfig::CBuildConfig::isBetaTest()
+bool BlackConfig::CBuildConfig::isDevBranch()
 {
-#ifdef SWIFT_BETA
+#ifdef SWIFT_DEV_BRANCH
         return true;
 #else
         return false;
 #endif
 }
 
-bool BlackConfig::CBuildConfig::isShippedVersion()
+bool BlackConfig::CBuildConfig::isStableBranch()
 {
-#ifdef SWIFT_SHIPPED
+#ifdef SWIFT_STABLE_BRANCH
     return true;
 #else
     return false;
@@ -151,7 +151,7 @@ const QString &BlackConfig::CBuildConfig::gitHeadSha1()
     return gitHeadSha1;
 }
 
-const QString &BlackConfig::CVersion::version()
+const QString &BlackConfig::CVersion::versionMajorMinorPatch()
 {
     static const QString version(\"$$BLACK_VERSION\");
     Q_ASSERT(!version.isEmpty());

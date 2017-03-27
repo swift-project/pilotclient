@@ -20,8 +20,8 @@ BLACK_CONFIG    *= AssertsInRelease
 BLACK_CONFIG    *= PackageInstaller
 #BLACK_CONFIG    *= Static
 BLACK_CONFIG    *= Doxygen
-#BLACK_CONFIG    *= SwiftBeta
-#BLACK_CONFIG    *= SwiftShipped
+#BLACK_CONFIG    *= SwiftDevBranch
+#BLACK_CONFIG    *= SwiftStableBranch
 
 isEmpty(BLACK_EOL): BLACK_EOL = "20180101"
 
@@ -43,8 +43,8 @@ include(vatsim.pri)
 !contains(BLACK_CONFIG, FSX) { DEFINE_WITH_FSX = "//" }
 !contains(BLACK_CONFIG, FS9) { DEFINE_WITH_FS9 = "//" }
 !contains(BLACK_CONFIG, XPlane) { DEFINE_WITH_XPLANE = "//" }
-!contains(BLACK_CONFIG, SwiftBeta) { DEFINE_SWIFT_BETA = "//" }
-!contains(BLACK_CONFIG, SwiftShipped) { DEFINE_SWIFT_SHIPPED = "//" }
+!contains(BLACK_CONFIG, SwiftDevBranch) { DEFINE_SWIFT_DEV_BRANCH = "//" }
+!contains(BLACK_CONFIG, SwiftStableBranch) { DEFINE_SWIFT_STABLE_BRANCH = "//" }
 !contains(BLACK_CONFIG, SwiftVatsimSupport) { DEFINE_SWIFT_VATSIM_SUPPORT = "//" }
 
 # Global compiler Macros

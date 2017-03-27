@@ -9,12 +9,13 @@
 
 //! \cond PRIVATE
 
-#include "blackconfig/buildconfig.h"
+#include "buildconfig.h"
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QLocale>
 #include <QStandardPaths>
 #include <QStringList>
 #include <QtGlobal>
@@ -302,8 +303,8 @@ namespace BlackConfig
 
     bool CBuildConfig::canRunInDeveloperEnvironment()
     {
-        if (CBuildConfig::isBetaTest()) { return true; }
-        return !CBuildConfig::isShippedVersion();
+        if (CBuildConfig::isDevBranch()) { return true; }
+        return !CBuildConfig::isStableBranch();
     }
 
     QString getDocumentationDirectoryImpl()
@@ -367,29 +368,78 @@ namespace BlackConfig
         }
     }
 
-    const QString &BlackConfig::CBuildConfig::buildDateAndTime()
+    const QString &CBuildConfig::buildDateAndTime()
     {
-        static const QString buildDateAndTime( __DATE__ " "  __TIME__ );
+        // http://en.cppreference.com/w/cpp/preprocessor/replace#Predefined_macros
+        static const QString buildDateAndTime(__DATE__ " "  __TIME__);
         return buildDateAndTime;
+    }
+
+    namespace Private
+    {
+        const QDateTime buildTimestampImpl()
+        {
+            // Mar 27 2017 20:17:06 (needs to be on english locale, otherwise fails - e.g.
+            QDateTime dt = QLocale(QLocale::English).toDateTime(CBuildConfig::buildDateAndTime(), "MMM dd yyyy hh:mm:ss");
+            dt.setUtcOffset(0);
+            return dt;
+        }
+    }
+
+    const QDateTime &CBuildConfig::buildTimestamp()
+    {
+        // Mar 27 2017 20:17:06
+        static const QDateTime dt = Private::buildTimestampImpl();
+        return dt;
+    }
+
+    const QString &CVersion::version()
+    {
+        static const QString v(versionMajorMinorPatch() + "." + QString::number(buildTimestampAsVersionSegment(CBuildConfig::buildTimestamp())));
+        return v;
+    }
+
+    const QList<int> &CVersion::getVersionParts()
+    {
+        static const QList<int> parts(splitIntoVersionParts(version()));
+        return parts;
     }
 
     bool CVersion::isNewerVersion(const QString &versionString)
     {
-        if (versionString.isEmpty()) { return false; }
-        if (CVersion::version() == versionString) { return false; }
+        return isNewerVersion(version(), versionString);
+    }
 
-        QList<int> newer(getVersionParts(versionString));
-        QList<int> current(getVersionParts(version()));
-        for (int i = 0; i < current.length(); i++)
+    bool CVersion::isNewerVersion(const QString &aVersion, const QString &bVersion)
+    {
+        if (aVersion.isEmpty() || bVersion.isEmpty()) { return false; }
+        if (aVersion == bVersion) { return true; }
+
+        const QList<int> aParts(splitIntoVersionParts(aVersion));
+        const QList<int> bParts(splitIntoVersionParts(bVersion));
+        for (int i = 0; i < bParts.length(); i++)
         {
-            if (newer.length() <= i) { return false; }
-            if (current.at(i) > newer.at(i)) { return false; }
-            if (current.at(i) < newer.at(i)) { return true; }
+            if (aParts.length() <= i) { return true; }
+            if (bParts.at(i) > aParts.at(i)) { return true; }
+            if (bParts.at(i) < aParts.at(i)) { return false; }
+            // same, try next part
         }
         return false;
     }
 
-    QList<int> CVersion::getVersionParts(const QString &versionString)
+    int CVersion::buildTimestampAsVersionSegment(const QDateTime &buildTimestamp)
+    {
+        if (buildTimestamp.isValid())
+        {
+            static const qint64 dt2017 = QDateTime::fromString("20170101000000", "yyyyMMddHHmmss").toMSecsSinceEpoch();
+            const qint64 msSinceEpoch = buildTimestamp.toMSecsSinceEpoch();
+            const qint64 msSinceSwiftEpoch = msSinceEpoch - dt2017;
+            return msSinceSwiftEpoch / 1000; // accuraccy second should be enough, and is shorter
+        }
+        return 0; // intentionally 0 and not zero => 0.7.3.0 <-
+    }
+
+    QList<int> CVersion::splitIntoVersionParts(const QString &versionString)
     {
         const QStringList parts = versionString.split('.');
         QList<int> partsInt;

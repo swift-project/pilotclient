@@ -13,10 +13,8 @@
 #define BLACKCONFIG_BUILDCONFIG_H
 
 #include <QList>
-#include <QString>
-
-class QDateTime;
-class QStringList;
+#include <QStringList>
+#include <QDateTime>
 
 namespace BlackConfig
 {
@@ -60,14 +58,14 @@ namespace BlackConfig
         //! Release build?
         static bool isReleaseBuild();
 
-        //! Beta test?
-        static bool isBetaTest(); // defined in buildconfig_gen.cpp.in
+        //! DEV. branch?
+        static bool isDevBranch(); // defined in buildconfig_gen.cpp.in
+
+        //! STABLE branch?
+        static bool isStableBranch(); // defined in buildconfig_gen.cpp.in
 
         //! Can run in dev. environment?
         static bool canRunInDeveloperEnvironment();
-
-        //! Shipped version?
-        static bool isShippedVersion(); // defined in buildconfig_gen.cpp.in
 
         //! Vatsim enabled version?
         static bool isVatsimVersion(); // defined in buildconfig_gen.cpp.in
@@ -154,6 +152,9 @@ namespace BlackConfig
         //! Returns SHA-1 of git HEAD at build time
         static const QString &gitHeadSha1();
 
+        //! Build timestamp
+        static const QDateTime &buildTimestamp();
+
         //! Returns the build date and time as string
         static const QString &buildDateAndTime();
     };
@@ -162,24 +163,36 @@ namespace BlackConfig
     class CVersion
     {
     public:
-        //! Version info
-        static const QString &version(); // defined in buildconfig_gen.cpp.in
+        //! Version info 3 segments e.g. 0.8.3
+        static const QString &versionMajorMinorPatch(); // defined in buildconfig_gen.cpp.in
 
-        //! Version major
-        static int versionMajor();
+        //! Version info 4 segments e.g. 0.8.3.12131
+        static const QString &version();
 
-        //! Version minor
-        static int versionMinor();
+        //! 4 Parts of the version
+        static const QList<int> &getVersionParts();
 
-        //! Version patch
-        static int versionPatch();
+        //! Major version
+        static int versionMajor(); // defined in buildconfig_gen.cpp.in
 
-        //! Is the given string representing a newer version?
+        //! Minor version
+        static int versionMinor(); // defined in buildconfig_gen.cpp.in
+
+        //! Patch version
+        static int versionPatch(); // defined in buildconfig_gen.cpp.in
+
+        //! Is the given string representing a newer version (newer than "me")?
         static bool isNewerVersion(const QString &versionString);
 
+        //! Is the bVersion newer?
+        static bool isNewerVersion(const QString &aVersion, const QString &bVersion);
+
+        //! Turns build timestamp into a version number
+        static int buildTimestampAsVersionSegment(const QDateTime &buildTimestamp);
+
     private:
-        //! Parts of version string 1.0.2
-        static QList<int> getVersionParts(const QString &versionString);
+        //! Parts of version string 1.0.2.1234123
+        static QList<int> splitIntoVersionParts(const QString &versionString);
     };
 }
 
