@@ -178,6 +178,62 @@ namespace BlackMisc
     {
         return removeChars(name.toUpper(), [](QChar c) { return !c.isUpper(); });
     }
+
+    QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString)
+    {
+        if (dateTimeString.isEmpty()) { return QDateTime(); }
+        if (isDigitsOnlyString(dateTimeString))
+        {
+            // 2017 0301 124421 321
+            if (dateTimeString.length() == 17)
+            {
+                return QDateTime::fromString(dateTimeString, "yyyyMMddHHmmsszzz");
+            }
+            if (dateTimeString.length() == 14)
+            {
+                return QDateTime::fromString(dateTimeString, "yyyyMMddHHmmss");
+            }
+            if (dateTimeString.length() == 12)
+            {
+                return QDateTime::fromString(dateTimeString, "yyyyMMddHHmm");
+            }
+            if (dateTimeString.length() == 8)
+            {
+                return QDateTime::fromString(dateTimeString, "yyyyMMdd");
+            }
+            return QDateTime();
+        }
+
+        // remove simple separators and check if digits only again
+        const QString simpleSeparatorsRemoved = removeChars(dateTimeString, [](QChar c)
+        {
+            return c == ' ' || c == ':' || c == '_' || c == '-';
+        });
+        if (isDigitsOnlyString(simpleSeparatorsRemoved))
+        {
+            return parseMultipleDateTimeFormats(simpleSeparatorsRemoved);
+        }
+
+        // stupid trial and error
+        QDateTime ts = QDateTime::fromString(dateTimeString, Qt::ISODateWithMs);
+        if (ts.isValid()) return ts;
+
+        ts = QDateTime::fromString(dateTimeString, Qt::ISODate);
+        if (ts.isValid()) return ts;
+
+        ts = QDateTime::fromString(dateTimeString, Qt::TextDate);
+        if (ts.isValid()) return ts;
+
+        ts = QDateTime::fromString(dateTimeString, Qt::DefaultLocaleLongDate);
+        if (ts.isValid()) return ts;
+
+        ts = QDateTime::fromString(dateTimeString, Qt::DefaultLocaleShortDate);
+        if (ts.isValid()) return ts;
+
+        // SystemLocaleShortDate,
+        // SystemLocaleLongDate,
+        return QDateTime();
+    }
 }
 
 //! \endcond

@@ -17,6 +17,7 @@
 
 #include <QByteArray>
 #include <QDataStream>
+#include <QDateTime>
 #include <QDebug>
 #include <QList>
 #include <QMapIterator>
@@ -107,6 +108,18 @@ namespace BlackMisc
         return s.trimmed();
     }
 
+    //! String with digits only
+    inline bool isDigitsOnlyString(const QString &testString)
+    {
+        return !containsChar(testString, [](QChar c) { return !c.isDigit(); });
+    }
+
+    //! String only with digits
+    inline QString digitOnlyString(const QString &string)
+    {
+        return removeChars(string, [](QChar c) { return !c.isDigit(); });
+    }
+
     //! Bool to on/off
     BLACKMISC_EXPORT QString boolToOnOff(bool v, bool  i18n = false);
 
@@ -142,6 +155,10 @@ namespace BlackMisc
 
     //! Get a simplified upper case name for searching by removing all characters except A-Z
     BLACKMISC_EXPORT QString simplifyNameForSearch(const QString &name);
+
+    //! Parse multiple date time formats
+    //! \remark potentially slow, so only to be used when format is unknown
+    BLACKMISC_EXPORT QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString);
 
     namespace Mixin
     {
