@@ -15,6 +15,7 @@
 #include "blackmisc/aviation/airport.h"
 #include "blackmisc/aviation/airportlist.h"
 #include "blackmisc/db/dbinfolist.h"
+#include "blackmisc/db/distributionlist.h"
 #include "blackmisc/network/textmessage.h"
 #include "blackmisc/network/textmessagelist.h"
 #include "blackmisc/simulation/distributorlist.h"
@@ -111,6 +112,15 @@ namespace BlackMisc
         for (ITimestampBased &tsObj : this->container())
         {
             tsObj.setCurrentUtcTime();
+        }
+    }
+
+    template<class OBJ, class CONTAINER>
+    void ITimestampObjectList<OBJ, CONTAINER>::setUtcTime(qint64 msSinceEpoch)
+    {
+        for (ITimestampBased &tsObj : this->container())
+        {
+            tsObj.setMSecsSinceEpoch(msSinceEpoch);
         }
     }
 
@@ -236,6 +246,7 @@ namespace BlackMisc
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Aviation::CLivery, BlackMisc::Aviation::CLiveryList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList>;
+    template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Db::CDistribution, BlackMisc::Db::CDistributionList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Network::CTextMessage, BlackMisc::Network::CTextMessageList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList>;
     template class BLACKMISC_EXPORT_DEFINE_TEMPLATE ITimestampObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList>;

@@ -19,6 +19,8 @@ namespace BlackMisc
             CDbInfo::registerMetadata();
             CDbInfoList::registerMetadata();
             CDbFlags::registerMetadata();
+            CDistribution::registerMetadata();
+            CDistributionList::registerMetadata();
         }
     } // ns
 } // ns

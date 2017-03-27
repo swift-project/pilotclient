@@ -13,7 +13,6 @@
 #define BLACKMISC_DB_DATABASEOBJECTLIST_H
 
 #include "blackmisc/timestampobjectlist.h"
-
 #include <QJsonArray>
 #include <QSet>
 #include <QString>
@@ -70,6 +69,7 @@ namespace BlackMisc
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAircraftIcaoCode, BlackMisc::Aviation::CAircraftIcaoCodeList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Aviation::CAirlineIcaoCode, BlackMisc::Aviation::CAirlineIcaoCodeList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Db::CDbInfo, BlackMisc::Db::CDbInfoList, int>;
+        extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Db::CDistribution, BlackMisc::Db::CDistributionList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CAircraftModel, BlackMisc::Simulation::CAircraftModelList, int>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::Simulation::CDistributor, BlackMisc::Simulation::CDistributorList, QString>;
         extern template class BLACKMISC_EXPORT_DECLARE_TEMPLATE IDatastoreObjectList<BlackMisc::CCountry, BlackMisc::CCountryList, QString>;

@@ -137,7 +137,7 @@ namespace BlackMisc
             GlobalIndexIDatastoreString                 = 11100,
             GlobalIndexCDbInfo                          = 11200,
             GlobalIndexCGlobalSetup                     = 12000,
-            GlobalIndexCUpdateInfo                      = 12100,
+            GlobalIndexCDistribution                    = 12100,
             GlobalIndexCVatsimSetup                     = 12200,
             GlobalIndexCLauncherSetup                   = 12300,
             GlobalIndexCGuiStateDbOwnModelsComponent    = 14000,

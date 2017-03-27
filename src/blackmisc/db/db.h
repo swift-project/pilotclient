@@ -21,5 +21,7 @@
 #include "blackmisc/db/dbinfolist.h"
 #include "blackmisc/db/dbinfo.h"
 #include "blackmisc/db/dbflags.h"
+#include "blackmisc/db/distribution.h"
+#include "blackmisc/db/distributionlist.h"
 
 #endif // guard
