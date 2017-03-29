@@ -22,6 +22,7 @@
 #include <QNetworkInterface>
 #include <QNetworkReply>
 #include <QObject>
+#include <QSignalMapper>
 #include <QSslCertificate>
 #include <QSslConfiguration>
 #include <QSslKey>
@@ -88,20 +89,26 @@ namespace BlackMisc
         bool CNetworkUtils::canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs)
         {
             QTcpSocket socket;
-            bool connected = CEventLoop::processEventsUntil(&socket, &QTcpSocket::connected, timeoutMs, [&]
+            QSignalMapper mapper;
+            QObject::connect(&socket, &QTcpSocket::connected, &mapper, QOverload<>::of(&QSignalMapper::map));
+            QObject::connect(&socket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), &mapper, QOverload<>::of(&QSignalMapper::map));
+            mapper.setMapping(&socket, 0);
+            const bool timedOut = !CEventLoop::processEventsUntil(&mapper, QOverload<int>::of(&QSignalMapper::mapped), timeoutMs, [&]
             {
                 socket.connectToHost(hostAddress, static_cast<quint16>(port));
             });
 
-            if (!connected)
+            if (socket.state() != QTcpSocket::ConnectedState)
             {
-                message = QObject::tr("Connection failed : %1", "BlackMisc").arg(socket.errorString());
+                const QString error = timedOut ? QObject::tr("Timed out", "BlackMisc") : socket.errorString();
+                message = QObject::tr("Connection failed : %1", "BlackMisc").arg(error);
+                return false;
             }
             else
             {
                 message = QObject::tr("OK, connected", "BlackMisc");
+                return true;
             }
-            return connected;
         }
 
         bool CNetworkUtils::canConnect(const Network::CServer &server, QString &message, int timeoutMs)

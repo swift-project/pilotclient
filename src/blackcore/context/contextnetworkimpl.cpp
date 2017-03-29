@@ -164,7 +164,7 @@ namespace BlackCore
             {
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, "Invalid ICAO data for own aircraft");
             }
-            else if (!CNetworkUtils::canConnect(server, msg, 2000))
+            else if (!CNetworkUtils::canConnect(server, msg, 5000))
             {
                 return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, msg);
             }
