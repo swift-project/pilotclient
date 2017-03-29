@@ -158,7 +158,7 @@ namespace BlackCore
         if (url.isLocalFile())
         {
             this->m_localSetupFileValue = url.toLocalFile();
-            QFile f(this->m_localSetupFileValue);
+            const QFile f(this->m_localSetupFileValue);
             if (!f.exists())
             {
                 sApp->cmdLineErrorMessage(QString("File '%1' does not exist)").arg(this->m_localSetupFileValue));

@@ -29,7 +29,7 @@ class QTimerEvent;
 
 namespace BlackGui
 {
-    /**
+    /*!
      * The QProgressIndicator class lets an application display a progress indicator to show that a lengthy task is under way.
      * Progress indicators are indeterminate and do nothing more than spin to show that the application is busy.
      * \note based on https://github.com/mojocorp/QProgressIndicator under MIT license
@@ -121,8 +121,8 @@ namespace BlackGui
         QColor m_color              = Qt::blue;
     };
 
-    /**
-     * Enable widgte class for load indicator
+    /*!
+     * Enable widget class for load indicator
      */
     class BLACKGUI_EXPORT CLoadIndicatorEnabled
     {
@@ -148,7 +148,7 @@ namespace BlackGui
 
         //! Indicator timed out
         //! \remark override for usage
-        void virtual indicatorTimedOut();
+        virtual void indicatorTimedOut();
 
         QWidget *m_usingWidget = nullptr; //!< widget which uses load indicator
         CLoadIndicator *m_loadIndicator = nullptr; //!< indicator itself

@@ -24,7 +24,6 @@
 class QWidget;
 
 namespace Ui { class CDbCountryComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -44,7 +43,7 @@ namespace BlackGui
             explicit CDbCountryComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CDbCountryComponent();
+            virtual ~CDbCountryComponent();
 
         private slots:
             //! Countries have been read

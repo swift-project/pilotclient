@@ -121,6 +121,7 @@ namespace BlackCore
         bool isAlreadyRunning() const;
 
         //! Is application shutting down?
+        //! \threadsafe
         bool isShuttingDown() const;
 
         //! Application name and version
