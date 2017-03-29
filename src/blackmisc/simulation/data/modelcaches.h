@@ -261,7 +261,7 @@ namespace BlackMisc
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
-                virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 //! @}
 
             private:
@@ -303,7 +303,7 @@ namespace BlackMisc
                 virtual BlackMisc::Simulation::CSimulatorInfo getCurrentSimulator() const override { return this->m_currentSimulator.get(); }
                 virtual BlackMisc::CStatusMessage setCurrentSimulator(const BlackMisc::Simulation::CSimulatorInfo &simulator) override;
                 virtual QString getFilename(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
-                virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const;
+                virtual bool isSaved(const BlackMisc::Simulation::CSimulatorInfo &simulator) const override;
                 //! @}
 
             private:
