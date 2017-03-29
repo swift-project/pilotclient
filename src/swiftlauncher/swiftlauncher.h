@@ -16,7 +16,6 @@
 #include "blackgui/enableforframelesswindow.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/data/updateinfo.h"
 #include "blackcore/data/launchersetup.h"
 #include "blackcore/coremodeenums.h"
 #include "blackmisc/identifiable.h"
@@ -78,15 +77,14 @@ protected:
 private:
     QScopedPointer<Ui::CSwiftLauncher> ui;
     QScopedPointer<BlackGui::Components::CConfigurationWizard> m_wizard;
-    BlackMisc::CData<BlackCore::Data::TUpdateInfo> m_updateInfo { this, &CSwiftLauncher::ps_changedUpdateInfoCache }; //!< version cache
-    BlackMisc::CData<BlackCore::Data::TLauncherSetup> m_setup { this }; //!< setup, i.e. last user selection
+    BlackMisc::CData<BlackCore::Data::TLauncherSetup>          m_setup { this }; //!< setup, i.e. last user selection
+
     QString     m_executable;
     QStringList m_executableArgs;
     QTimer      m_checkTimer { this };
     int         m_startCoreWaitCycles = 0;
     int         m_startMappingToolWaitCycles = 0;
     int         m_startGuiWaitCycles = 0;
-    bool        m_updateInfoLoaded = false;
 
     //! Get core mode
     BlackCore::CoreModes::CoreMode getCoreMode() const;
@@ -106,11 +104,11 @@ private:
     //! combobox for DBus
     void initDBusGui();
 
-    //! Version string
-    void initVersion();
-
     //! Log display
     void initLogDisplay();
+
+    //! Set header info
+    void setHeaderInfo(const QString &newVersionAvailable);
 
     //! Latest news
     //! \sa CSwiftLauncher::ps_displayLatestNews
@@ -147,17 +145,11 @@ private:
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
 
 private slots:
-    //! Load latest version
-    void ps_loadSetup();
-
-    //! Loaded latest version
-    void ps_loadedUpdateInfo(bool success);
-
     //! Display latest news
     void ps_displayLatestNews(QNetworkReply *reply);
 
-    //! Cache values have been changed
-    void ps_changedUpdateInfoCache();
+    //! Distribution info is available
+    void ps_distributionInfoAvailable(bool success);
 
     //! Start button pressed
     void ps_startButtonPressed();

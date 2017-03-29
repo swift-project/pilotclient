@@ -15,8 +15,8 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/context/contextapplicationproxy.h"
 #include "blackcore/setupreader.h"
-#include "blackmisc/dbusserver.h"
 #include "blackmisc/network/networkutils.h"
+#include "blackmisc/dbusserver.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/loghandler.h"
@@ -24,6 +24,7 @@
 #include <QBitmap>
 #include <QTimer>
 #include <QProcess>
+#include <QPushButton>
 #include <QStringBuilder>
 #include <QDesktopServices>
 #include <QShortcut>
@@ -33,7 +34,6 @@ using namespace BlackConfig;
 using namespace BlackGui;
 using namespace BlackGui::Components;
 using namespace BlackCore;
-using namespace BlackCore::Application;
 using namespace BlackCore::Context;
 using namespace BlackCore::Data;
 using namespace BlackMisc;
@@ -47,7 +47,6 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
 {
     ui->setupUi(this);
     this->init();
-    connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CSwiftLauncher::ps_loadSetup);
     connect(ui->tb_SwiftCore, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_SwiftMappingTool, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
     connect(ui->tb_SwiftGui, &QPushButton::pressed, this, &CSwiftLauncher::ps_startButtonPressed);
@@ -55,14 +54,7 @@ CSwiftLauncher::CSwiftLauncher(QWidget *parent) :
     connect(ui->tb_BackToMain, &QToolButton::pressed, this, &CSwiftLauncher::ps_showMainPage);
     connect(ui->tb_ConfigurationWizard, &QToolButton::pressed, this, &CSwiftLauncher::ps_startWizard);
     connect(ui->tb_Launcher, &QToolBox::currentChanged, this, &CSwiftLauncher::ps_tabChanged);
-
-    // use version signal as trigger for completion
-    connect(sGui, &CApplication::updateInfoAvailable, this, &CSwiftLauncher::ps_loadedUpdateInfo);
-    QTimer::singleShot(10 * 1000, this, [ = ]
-    {
-        if (m_updateInfoLoaded) { return; }
-        this->ps_loadedUpdateInfo(true); // failover
-    });
+    connect(ui->comp_DistributionInfo, &CDistributionInfoComponent::distributionInfoAvailable, this, &CSwiftLauncher::ps_distributionInfoAvailable);
 
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_L), this, SLOT(ps_showLogPage()));
     ui->le_DBusServerPort->setValidator(new QIntValidator(0, 65535, this));
@@ -138,6 +130,20 @@ void CSwiftLauncher::ps_displayLatestNews(QNetworkReply *reply)
     }
 }
 
+void CSwiftLauncher::ps_distributionInfoAvailable(bool success)
+{
+    if (success)
+    {
+        this->setHeaderInfo(ui->comp_DistributionInfo->getNewVersionAvailable());
+    }
+    else
+    {
+        this->setHeaderInfo("");
+    }
+    this->loadLatestNews();
+    this->loadAbout();
+}
+
 void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 {
     if (!handleMousePressEvent(event)) { QDialog::mousePressEvent(event); }
@@ -151,17 +157,9 @@ void CSwiftLauncher::init()
     m_mwaStatusBar = nullptr;
     m_mwaLogComponent = ui->comp_SwiftLauncherLog;
 
-    ui->lbl_NewVersionUrl->setTextFormat(Qt::RichText);
-    ui->lbl_NewVersionUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    ui->lbl_NewVersionUrl->setOpenExternalLinks(true);
-
-    ui->wi_NewVersionAvailable->setVisible(false);
-    ui->wi_NoNewVersion->setVisible(true);
-
     this->initStyleSheet();
     this->initLogDisplay();
     this->initDBusGui();
-    this->initVersion();
 
     ui->lbl_HeaderInfo->setVisible(false);
     ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain);
@@ -195,6 +193,7 @@ void CSwiftLauncher::loadAbout()
     // 2) Reading the file resource fails (likely because of the style sheet)
     static const QString html = CFileUtils::readFileToString(CBuildConfig::getAboutFileLocation());
     static const QString legalDir = sGui->getGlobalSetup().getLegalDirectoryUrl().getFullUrl();
+
     // make links absolute
     static const QString htmlFixed = QString(html).
                                      replace(QLatin1String("href=\"./"), "href=\"" + legalDir);
@@ -212,15 +211,10 @@ void CSwiftLauncher::initDBusGui()
     connect(ui->rb_DBusSystem, &QRadioButton::clicked, this, &CSwiftLauncher::ps_dbusServerModeSelected);
 
     // normally no system Bus on Windows
-    if (CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::isShippedVersion())
+    if (CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::isStableBranch())
     {
         ui->rb_DBusSystem->setEnabled(false);
     }
-}
-
-void CSwiftLauncher::initVersion()
-{
-    ui->le_CurrentVersion->setText(sGui->versionStringDevBetaInfo());
 }
 
 void CSwiftLauncher::initLogDisplay()
@@ -234,6 +228,16 @@ void CSwiftLauncher::initLogDisplay()
 
     ui->comp_SwiftLauncherLog->showFilterBar();
     ui->comp_SwiftLauncherLog->filterUseRadioButtonDescriptiveIcons(false);
+}
+
+void CSwiftLauncher::setHeaderInfo(const QString &newVersionAvailable)
+{
+    ui->lbl_HeaderInfo->setVisible(!newVersionAvailable.isEmpty());
+    if (!newVersionAvailable.isEmpty())
+    {
+        ui->lbl_HeaderInfo->setText("New version '" + newVersionAvailable + "' available");
+        ui->lbl_HeaderInfo->setStyleSheet("background: red; color: yellow;");
+    }
 }
 
 void CSwiftLauncher::startSwiftCore()
@@ -392,55 +396,6 @@ QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs
         cmd = cmd.append(" ").append(a);
     }
     return cmd;
-}
-
-void CSwiftLauncher::ps_loadSetup()
-{
-    if (!ui->le_LatestVersion->text().isEmpty())
-    {
-        ui->le_LatestVersion->setText("");
-        const CStatusMessageList msgs(sApp->requestReloadOfSetupAndVersion());
-        this->ps_appendLogMessages(msgs);
-    }
-}
-
-void CSwiftLauncher::ps_loadedUpdateInfo(bool success)
-{
-    if (!success)
-    {
-        CLogMessage(this).warning("Loading setup or version information failed");
-        return;
-    }
-
-    m_updateInfoLoaded = true;
-    const CUpdateInfo updateInfo(m_updateInfo.get());
-    const QString latestVersion(updateInfo.getLatestVersion()) ; // need to get this from somewhere
-    CFailoverUrlList downloadUrls(updateInfo.getDownloadUrls());
-    const bool newVersionAvailable = CVersion::isNewerVersion(latestVersion) && !downloadUrls.isEmpty();
-    ui->wi_NewVersionAvailable->setVisible(newVersionAvailable);
-    ui->wi_NoNewVersion->setVisible(!newVersionAvailable);
-    ui->le_LatestVersion->setText(latestVersion);
-    ui->le_Channel->setText(updateInfo.getChannel());
-    ui->lbl_HeaderInfo->setVisible(newVersionAvailable);
-    ui->lbl_HeaderInfo->setText("New version " + latestVersion + " available");
-    ui->lbl_HeaderInfo->setStyleSheet("background: red; color: yellow;");
-
-    if (!downloadUrls.isEmpty())
-    {
-        const CUrl downloadUrl(downloadUrls.obtainNextUrl());
-        const QString urlStr(downloadUrl.toQString());
-        const QString hl("<a href=\"%1\"><img src=\":/own/icons/own/drophere16.png\"></a>");
-        ui->lbl_NewVersionUrl->setText(hl.arg(urlStr));
-        ui->lbl_NewVersionUrl->setToolTip("Download " + latestVersion);
-    }
-
-    this->loadLatestNews();
-    this->loadAbout();
-}
-
-void CSwiftLauncher::ps_changedUpdateInfoCache()
-{
-    this->ps_loadedUpdateInfo(true);
 }
 
 void CSwiftLauncher::ps_startButtonPressed()

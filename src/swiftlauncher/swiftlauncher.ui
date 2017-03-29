@@ -38,7 +38,7 @@
       <enum>QFrame::Raised</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="pg_SwiftLauncherMain">
       <layout class="QVBoxLayout" name="wl_SwiftLauncherMainPage">
@@ -457,7 +457,7 @@
                 <property name="title">
                  <string>Software</string>
                 </property>
-                <layout class="QGridLayout" name="gl_Version">
+                <layout class="QVBoxLayout" name="vl_Software">
                  <property name="leftMargin">
                   <number>4</number>
                  </property>
@@ -470,109 +470,13 @@
                  <property name="bottomMargin">
                   <number>4</number>
                  </property>
-                 <item row="3" column="1" colspan="3">
-                  <widget class="QWidget" name="wi_NoNewVersion" native="true">
-                   <layout class="QVBoxLayout" name="vl_NoNewVersion">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="lbl_NoNewVersion">
-                      <property name="text">
-                       <string>You are running the latest version!</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="2" column="1" colspan="3">
-                  <widget class="QWidget" name="wi_NewVersionAvailable" native="true">
-                   <layout class="QVBoxLayout" name="vl_NewVersionAvailable">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="lbl_NewVersion">
-                      <property name="text">
-                       <string>New version available</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLineEdit" name="le_Channel">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="lbl_CurrentVersion">
-                   <property name="text">
-                    <string>This version:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="lbl_LatestVersion">
-                   <property name="text">
-                    <string>Latest version:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="lbl_Channel">
-                   <property name="text">
-                    <string>Channel:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLineEdit" name="le_CurrentVersion">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QLineEdit" name="le_LatestVersion">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QPushButton" name="pb_CheckForUpdates">
-                   <property name="text">
-                    <string>check again</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="3">
-                  <widget class="QLabel" name="lbl_NewVersionUrl">
-                   <property name="text">
-                    <string>URL goes here</string>
+                 <item>
+                  <widget class="BlackGui::Components::CDistributionInfoComponent" name="comp_DistributionInfo">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>80</height>
+                    </size>
                    </property>
                   </widget>
                  </item>
@@ -611,7 +515,7 @@
                       <x>0</x>
                       <y>0</y>
                       <width>376</width>
-                      <height>189</height>
+                      <height>199</height>
                      </rect>
                     </property>
                     <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -931,6 +835,12 @@ p, li { white-space: pre-wrap; }
    <class>BlackGui::Components::CInfoBarWebReadersStatusSmallComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/infobarwebreadersstatussmallcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CDistributionInfoComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/distributioninfocomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
