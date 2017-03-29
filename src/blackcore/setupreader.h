@@ -14,7 +14,7 @@
 
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/data/updateinfo.h"
+#include "blackmisc/db/distributionlist.h"
 #include "blackmisc/datacache.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/statusmessagelist.h"
@@ -39,11 +39,11 @@ namespace BlackCore
     //!
     //! \note This class is no(!) BlackCore::CThreadedReader as it will be loaded once during startup
     //!       and reading setup data is fast. The read file is also called "bootstrap" file as it tells
-    //!       swift which data are located where. Without that file we cannot start. Once the file is in place (ie in the cache)
-    //!       it can be automatically updated.
+    //!       swift which data and versions are located where. Without that file we cannot start.
+    //!       Once the file is in place (i.e. in the cache) it can be automatically updated.
     //!
     //! \sa BlackCore::Data::TGlobalSetup
-    //! \sa BlackCore::Data::TUpdateInfo
+    //! \sa BlackMisc::Db::TDistributionInfo
     class BLACKCORE_EXPORT CSetupReader : public QObject
     {
         Q_OBJECT
@@ -53,7 +53,7 @@ namespace BlackCore
         //! Categories
         static const BlackMisc::CLogCategoryList &getLogCategories();
 
-        //! Has a given cmd line argument for bootstrap URL
+        //! Has a given cmd line argument for bootstrap URL?
         bool hasCmdLineBootstrapUrl() const;
 
         //! CMD line argument for bootstrap URL
@@ -64,9 +64,9 @@ namespace BlackCore
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getSetup() const;
 
-        //! Update info (version, updates, download URLs)
+        //! Distributions info (channel, version, platforms, download URLs)
         //! \threadsafe
-        BlackCore::Data::CUpdateInfo getUpdateInfo() const;
+        BlackMisc::Db::CDistributionList getDistributionInfo() const;
 
         //! Last setup parsing error messages (if any)
         BlackMisc::CStatusMessageList getLastSetupReadErrorMessages() const;
@@ -76,7 +76,7 @@ namespace BlackCore
         void setupHandlingCompleted(bool available);
 
         //! Setup avialable (from web, cache
-        void updateInfoAvailable(bool available);
+        void distributionInfoAvailable(bool available);
 
     protected:
         //! Constructor
@@ -100,14 +100,14 @@ namespace BlackCore
 
         //! Version info available?
         //! \threadsafe
-        bool isUpdateInfoAvailable() const { return m_updateInfoAvailable; }
+        bool isUpdateInfoAvailable() const { return m_distributionInfoAvailable; }
 
     private slots:
         //! Setup has been read (aka bootstrap file)
         void ps_parseSetupFile(QNetworkReply *nwReply);
 
         //! Update info has been read
-        void ps_parseUpdateInfoFile(QNetworkReply *nwReplyPtr);
+        void ps_parseDistributionsFile(QNetworkReply *nwReplyPtr);
 
         //! Do reading
         void ps_readSetup();
@@ -129,7 +129,7 @@ namespace BlackCore
 
         bool m_shutdown = false;
         std::atomic<bool> m_setupAvailable { false };
-        std::atomic<bool> m_updateInfoAvailable { false };
+        std::atomic<bool> m_distributionInfoAvailable { false };
         QString m_localSetupFileValue;                         //! Local file for setup, passed by cmd line arguments
         QString m_bootstrapUrlFileValue;                       //! Bootstrap URL if not local
         BootstrapMode m_bootstrapMode = Explicit;              //! How to bootstrap
@@ -139,8 +139,8 @@ namespace BlackCore
         QCommandLineOption m_cmdBootstrapMode;                 //!< bootstrap mode
         mutable QReadWriteLock m_lockSetup;                    //!< lock for setup
         BlackMisc::CStatusMessageList m_setupReadErrorMsgs;    //!< last parsing error messages
-        BlackMisc::CData<BlackCore::Data::TGlobalSetup> m_setup {this, &CSetupReader::ps_setupChanged};  //!< data cache setup
-        BlackMisc::CData<BlackCore::Data::TUpdateInfo>  m_updateInfo {this};                             //!< data cache update info
+        BlackMisc::CData<BlackCore::Data::TGlobalSetup>    m_setup {this, &CSetupReader::ps_setupChanged}; //!< data cache setup
+        BlackMisc::CData<BlackMisc::Db::TDistributionInfo> m_distributions {this};                         //!< data cache distributions
 
         //! Read by local individual file and update cache from that
         BlackMisc::CStatusMessageList readLocalBootstrapFile(QString &fileName);
@@ -154,7 +154,7 @@ namespace BlackCore
 
         //! Emit the available signal
         //! \threadsafe
-        void manageUpdateAvailability(bool webRead);
+        void manageDistributionsInfoAvailability(bool webRead);
 
         //! Set last setup parsing messages
         void setLastSetupReadErrorMessages(const BlackMisc::CStatusMessageList &messages);

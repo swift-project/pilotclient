@@ -30,6 +30,7 @@
 #include <QtGlobal>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackCore::Data;
@@ -226,17 +227,19 @@ namespace BlackCore
 
     void CSetupReader::ps_readUpdateInfo()
     {
-        const CUrl url(this->m_updateInfoUrls.obtainNextWorkingUrl());
+        // const CUrl url(this->m_updateInfoUrls.obtainNextWorkingUrl());
+
+        const CUrl url("https://datastore.swift-project.org/shared/0.7.0/updateinfo/updateinfo2.json");
         if (url.isEmpty())
         {
             CLogMessage(this).warning("Cannot read update info, URLs: %1, failed URLs: %2")
                     << this->m_updateInfoUrls
                     << this->m_updateInfoUrls.getFailedUrls();
-            this->manageUpdateAvailability(false);
+            this->manageDistributionsInfoAvailability(false);
             return;
         }
         if (m_shutdown) { return; }
-        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseUpdateInfoFile});
+        sApp->getFromNetwork(url.toNetworkRequest(), { this, &CSetupReader::ps_parseDistributionsFile});
     }
 
     void CSetupReader::ps_setupChanged()
@@ -382,7 +385,7 @@ namespace BlackCore
         }
     }
 
-    void CSetupReader::ps_parseUpdateInfoFile(QNetworkReply *nwReplyPtr)
+    void CSetupReader::ps_parseDistributionsFile(QNetworkReply *nwReplyPtr)
     {
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
@@ -395,50 +398,48 @@ namespace BlackCore
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
-            qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
-            QString setupJson(nwReplyPtr->readAll());
+            const qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
+            const QString distributionJson(nwReplyPtr->readAll());
             nwReplyPtr->close();
-            if (setupJson.isEmpty())
+            if (distributionJson.isEmpty())
             {
-                CLogMessage(this).info("No update info file");
+                CLogMessage(this).info("No distribution file content");
                 // try next URL
             }
             else
             {
                 try
                 {
-                    CUpdateInfo currentUpdateInfo(m_updateInfo.get()); // from cache
-                    CUpdateInfo loadedUpdateInfo;
-                    loadedUpdateInfo.convertFromJson(Json::jsonObjectFromString(setupJson));
-                    if (lastModified > 0 && lastModified > loadedUpdateInfo.getMSecsSinceEpoch()) { loadedUpdateInfo.setMSecsSinceEpoch(lastModified); }
-                    const bool sameVersionLoaded = (loadedUpdateInfo == currentUpdateInfo);
-                    if (sameVersionLoaded)
+                    const CDistributionList loadedDistributions = CDistributionList::fromDatabaseJson(
+                                Json::jsonArrayFromString(distributionJson)
+                            );
+                    if (loadedDistributions.isEmpty())
                     {
-                        CLogMessage(this).info("Same update info version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
-                        this->manageUpdateAvailability(true);
-                        return; // success
-                    }
-
-                    CStatusMessage m = m_updateInfo.set(loadedUpdateInfo, loadedUpdateInfo.getMSecsSinceEpoch());
-                    if (!m.isEmpty())
-                    {
-                        m.addCategories(getLogCategories());
-                        CLogMessage::preformatted(m);
-                        this->manageUpdateAvailability(false);
-                        return; // issue with cache
+                        CLogMessage(this).error("Loading of distribution yielded no data");
+                        this->manageDistributionsInfoAvailability(false);
                     }
                     else
                     {
-                        CLogMessage(this).info("Update info: Updated data cache in %1") << m_updateInfo.getFilename();
-                        this->manageUpdateAvailability(true);
-                        return; // success
-                    } // cache
+                        CStatusMessage m = m_distributions.set(loadedDistributions, lastModified);
+                        if (m.isFailure())
+                        {
+                            m.addCategories(getLogCategories());
+                            CLogMessage::preformatted(m);
+                            this->manageDistributionsInfoAvailability(false);
+                        }
+                        else
+                        {
+                            CLogMessage(this).info("Distribution info: Updated data cache in '%1'") << m_distributions.getFilename();
+                            this->manageDistributionsInfoAvailability(true);
+                        } // cache
+                    }
+                    return;
                 }
                 catch (const CJsonException &ex)
                 {
                     // we downloaded an unparsable JSON file.
                     // as we control those files something is wrong
-                    const QString errorMsg = QString("Update file loaded from '%1' cannot be parsed").arg(urlString);
+                    const QString errorMsg = QString("Distribution file loaded from '%1' cannot be parsed").arg(urlString);
                     const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
                     CLogMessage::preformatted(msg);
 
@@ -488,9 +489,9 @@ namespace BlackCore
         return m_setup.get();
     }
 
-    CUpdateInfo CSetupReader::getUpdateInfo() const
+    CDistributionList CSetupReader::getDistributionInfo() const
     {
-        return m_updateInfo.get();
+        return m_distributions.get();
     }
 
     CStatusMessageList CSetupReader::getLastSetupReadErrorMessages() const
@@ -549,23 +550,23 @@ namespace BlackCore
         if (!webRead && !localRead)
         {
             msgs.push_back(CStatusMessage(this).warning("Since setup was not updated this time, will not start loading of update information"));
-            this->manageUpdateAvailability(false);
+            this->manageDistributionsInfoAvailability(false);
         }
         return msgs;
     }
 
-    void CSetupReader::manageUpdateAvailability(bool webRead)
+    void CSetupReader::manageDistributionsInfoAvailability(bool webRead)
     {
         if (webRead)
         {
-            this->m_updateInfoAvailable = true;
-            emit updateInfoAvailable(true);
+            this->m_distributionInfoAvailable = true;
+            emit distributionInfoAvailable(true);
         }
         else
         {
-            bool cached = this->m_updateInfo.isSaved();
-            this->m_updateInfoAvailable = cached;
-            emit updateInfoAvailable(cached);
+            const bool cached = this->m_distributions.isSaved();
+            this->m_distributionInfoAvailable = cached;
+            emit distributionInfoAvailable(cached);
         }
     }
 } // namespace
