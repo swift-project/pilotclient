@@ -10,7 +10,6 @@
 #include "blackconfig/buildconfig.h"
 #include "blackcore/context/contextnetwork.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/data/updateinfo.h"
 #include "blackgui/components/applicationclosedialog.h"
 #include "blackgui/guiapplication.h"
 #include "blackgui/guiutility.h"
@@ -434,10 +433,10 @@ namespace BlackGui
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
-        a = sm->addAction("JSON update info");
+        a = sm->addAction("JSON distribution info");
         c = connect(a, &QAction::triggered, this, [a, this]()
         {
-            this->displayTextInConsole(this->getUpdateInfo().toJsonString());
+            this->displayTextInConsole(this->getDistributionInfo().toJsonString());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 

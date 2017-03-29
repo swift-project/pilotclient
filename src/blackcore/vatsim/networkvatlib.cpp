@@ -691,7 +691,7 @@ namespace BlackCore
             };
 
             // only in not officially shipped versions
-            return (CBuildConfig::isShippedVersion() && !CBuildConfig::isBetaTest()) ? e : opts;
+            return (CBuildConfig::isStableBranch() && !CBuildConfig::isDevBranch()) ? e : opts;
         }
 
         bool CNetworkVatlib::getCmdLineClientIdAndKey(int &id, QString &key) const

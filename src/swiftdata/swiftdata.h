@@ -12,7 +12,6 @@
 #ifndef SWIFTDATA_H
 #define SWIFTDATA_H
 
-#include "blackcore/data/updateinfo.h"
 #include "blackgui/mainwindowaccess.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/datacache.h"
@@ -75,7 +74,6 @@ private:
 
     QScopedPointer<Ui::CSwiftData> ui;
     BlackGui::CManagedStatusBar    m_statusBar;
-    BlackMisc::CData<BlackCore::Data::TUpdateInfo> m_updateInfo { this };  //!< download / version data
 };
 
 #endif // guard
