@@ -72,10 +72,10 @@ namespace BlackCore
         //! Uploading of crash dumps is enabled or disabled
         struct TCrashDumpUploadEnabled : public BlackMisc::TSettingTrait<bool>
         {
-            //! \copydoc BlackCore::TSettingTrait::key
+            //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "application/crashdumpuploadenabled"; }
 
-            //! \copydoc BlackCore::TSettingTrait::defaultValue
+            //! \copydoc BlackMisc::TSettingTrait::defaultValue
             static bool defaultValue() { return true; }
         };
     } // ns
