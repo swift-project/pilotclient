@@ -30,15 +30,21 @@ namespace BlackGui
         void CInfoBarWebReadersStatusBase::init()
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "No sGui");
-            Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "No web data services");
             this->initLeds();
-            bool c = connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusBase::ps_checkServerAndData);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
+
+            // connect timer
             m_timer.setInterval(30 * 1000);
             m_timer.start();
             m_timer.setObjectName("CInfoBarWebReadersStatusBase::CheckSwiftDbTimer");
-            c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusBase::ps_dataRead);
+            bool c = connect(&m_timer, &QTimer::timeout, this,  &CInfoBarWebReadersStatusBase::ps_checkServerAndData);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
+
+            if (sGui->hasWebDataServices())
+            {
+                c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusBase::ps_dataRead);
+                Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
+            }
+
             Q_UNUSED(c);
         }
 
@@ -70,8 +76,9 @@ namespace BlackGui
 
         void CInfoBarWebReadersStatusBase::ps_checkServerAndData()
         {
-            bool swift =
+            const bool swift =
                 sGui &&
+                sGui->hasWebDataServices() &&
                 sGui->getWebDataServices()->canConnectSwiftDb();
             this->led_SwiftDb->setOn(swift);
 

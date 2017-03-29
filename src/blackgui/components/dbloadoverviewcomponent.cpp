@@ -28,7 +28,6 @@ namespace BlackGui
             ui(new Ui::CDbLoadOverviewComponent)
         {
             Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
-            Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "no data services");
 
             ui->setupUi(this);
             this->admitCaches(); // in background
@@ -59,8 +58,11 @@ namespace BlackGui
             connect(ui->pb_LoadAllFromDB, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromDb);
             connect(ui->pb_LoadAllFromShared, &QPushButton::pressed, this, &CDbLoadOverviewComponent::loadAllFromShared);
 
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
             connect(this, &CDbLoadOverviewComponent::ps_triggerDigestGuiUpdate, this, &CDbLoadOverviewComponent::ps_setValues);
+            if (sGui->hasWebDataServices())
+            {
+                connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadOverviewComponent::ps_dataLoaded);
+            }
         }
 
         CDbLoadOverviewComponent::~CDbLoadOverviewComponent()
@@ -241,6 +243,7 @@ namespace BlackGui
 
         void CDbLoadOverviewComponent::admitCaches()
         {
+            if (!sGui->hasWebDataServices()) { return; }
             sGui->getWebDataServices()->admitDbCaches(CEntityFlags::AllDbEntities);
         }
 
