@@ -29,15 +29,13 @@
 #include "blackcore/cookiemanager.h"
 #include "blackcore/corefacadeconfig.h"
 #include "blackcore/data/globalsetup.h"
-#include "blackcore/data/updateinfo.h"
 #include "blackcore/db/databasereaderconfig.h"
 #include "blackcore/application/applicationsettings.h"
 #include "blackcore/webreaderflags.h"
-#include "blackmisc/applicationinfolist.h"
-#include "blackmisc/network/url.h"
+#include "blackmisc/db/distributionlist.h"
 #include "blackmisc/network/urllist.h"
 #include "blackmisc/slot.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/applicationinfolist.h"
 #include "blackmisc/statusmessagelist.h"
 
 #if defined(Q_CC_MSVC) || defined(Q_OS_OSX) // Crashpad only supported on MSVC and MacOS/X
@@ -150,9 +148,9 @@ namespace BlackCore
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getGlobalSetup() const;
 
-        //! Update info
+        //! Distributions
         //! \threadsafe
-        BlackCore::Data::CUpdateInfo getUpdateInfo() const;
+        BlackMisc::Db::CDistributionList getDistributionInfo() const;
 
         //! Delete all cookies from cookier manager
         void deleteAllCookies();
@@ -176,7 +174,7 @@ namespace BlackCore
         bool isApplicationThread() const;
 
         //! String with beta, dev. and version
-        const QString &versionStringDevBetaInfo() const;
+        const QString &versionStringDetailed() const;
 
         //! swift info string
         const QString &swiftVersionString() const;
@@ -375,7 +373,7 @@ namespace BlackCore
         void setupHandlingCompleted(bool success);
 
         //! Update info available (cache, web load)
-        void updateInfoAvailable(bool success);
+        void distributionInfoAvailable(bool success);
 
         //! Startup has been completed
         //! \remark needs to be triggered by application when it think it is done

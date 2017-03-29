@@ -66,6 +66,7 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
@@ -144,7 +145,7 @@ namespace BlackCore
             sApp = this;
             this->m_setupReader.reset(new CSetupReader(this));
             connect(this->m_setupReader.data(), &CSetupReader::setupHandlingCompleted, this, &CApplication::ps_setupHandlingCompleted);
-            connect(this->m_setupReader.data(), &CSetupReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable);
+            connect(this->m_setupReader.data(), &CSetupReader::distributionInfoAvailable, this, &CApplication::distributionInfoAvailable);
 
             this->m_parser.addOptions(this->m_setupReader->getCmdLineOptions());
 
@@ -285,12 +286,12 @@ namespace BlackCore
         return r->getSetup();
     }
 
-    CUpdateInfo CApplication::getUpdateInfo() const
+    CDistributionList CApplication::getDistributionInfo() const
     {
-        if (this->m_shutdown) { return CUpdateInfo(); }
+        if (this->m_shutdown) { return CDistributionList(); }
         const CSetupReader *r = this->m_setupReader.data();
-        if (!r) { return CUpdateInfo(); }
-        return r->getUpdateInfo();
+        if (!r) { return CDistributionList(); }
+        return r->getDistributionInfo();
     }
 
     bool CApplication::start()
@@ -419,29 +420,29 @@ namespace BlackCore
         return CThreadUtils::isCurrentThreadApplicationThread();
     }
 
-    const QString &CApplication::versionStringDevBetaInfo() const
+    const QString &CApplication::versionStringDetailed() const
     {
-        if (isRunningInDeveloperEnvironment() && CBuildConfig::isBetaTest())
+        if (isRunningInDeveloperEnvironment() && CBuildConfig::isDevBranch())
         {
-            static const QString s(CVersion::version() + " [DEV, BETA]");
+            static const QString s(CBuildConfig::getVersionString() + " [dev,DEV]");
             return s;
         }
         if (isRunningInDeveloperEnvironment())
         {
-            static const QString s(CVersion::version() + " [DEV]");
+            static const QString s(CBuildConfig::getVersionString() + " [dev]");
             return s;
         }
-        if (CBuildConfig::isBetaTest())
+        if (CBuildConfig::isDevBranch())
         {
-            static const QString s(CVersion::version() + " [BETA]");
+            static const QString s(CBuildConfig::getVersionString() + " [DEV]");
             return s;
         }
-        return CVersion::version();
+        return CBuildConfig::getVersionString();
     }
 
     const QString &CApplication::swiftVersionString() const
     {
-        static const QString s(QString("swift %1").arg(versionStringDevBetaInfo()));
+        static const QString s(QString("swift %1").arg(versionStringDetailed()));
         return s;
     }
 
