@@ -182,7 +182,7 @@ namespace BlackCore
     {
         CApplicationInfo::ApplicationMode mode;
         if (isRunningInDeveloperEnvironment()) { mode |= CApplicationInfo::Developer; }
-        if (CBuildConfig::isBetaTest()) { mode |= CApplicationInfo::BetaTest; }
+        if (CBuildConfig::isDevBranch()) { mode |= CApplicationInfo::BetaTest; }
         return { CApplication::getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CVersion::version(), CProcessInfo::currentProcess() };
     }
 
@@ -218,7 +218,7 @@ namespace BlackCore
 
     const QString &CApplication::getApplicationNameVersionBetaDev() const
     {
-        static const QString s(QCoreApplication::instance()->applicationName() + " " + this->versionStringDevBetaInfo());
+        static const QString s(QCoreApplication::instance()->applicationName() + " " + this->versionStringDetailed());
         return s;
     }
 
@@ -476,7 +476,7 @@ namespace BlackCore
     {
         const QString env =
             QLatin1String("Beta: ") %
-            boolToYesNo(CBuildConfig::isBetaTest()) %
+            boolToYesNo(CBuildConfig::isDevBranch()) %
             QLatin1String(" dev.env,: ") %
             boolToYesNo(isRunningInDeveloperEnvironment()) %
             separator %

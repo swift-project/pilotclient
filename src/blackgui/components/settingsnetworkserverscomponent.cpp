@@ -61,7 +61,7 @@ namespace BlackGui
 
             // add swift test servers in case we have no servers:
             // this is debug/bootstrap feature we can continue to test when something goes wrong
-            if (serverList.isEmpty() && (CBuildConfig::isBetaTest() || sGui->isRunningInDeveloperEnvironment()))
+            if (serverList.isEmpty() && (CBuildConfig::isDevBranch() || sGui->isRunningInDeveloperEnvironment()))
             {
                 serverList.push_back(sGui->getGlobalSetup().getFsdTestServersPlusHardcodedServers());
             }

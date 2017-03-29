@@ -67,7 +67,7 @@ namespace BlackGui
 
     void CLoginModeButtons::configureLoginModes()
     {
-        if(CBuildConfig::isShippedVersion() && !sGui->getIContextSimulator()->isSimulatorSimulating())
+        if(CBuildConfig::isStableBranch() && !sGui->getIContextSimulator()->isSimulatorSimulating())
         {
             // Disable pilot login modes
             ui->rb_LoginNormal->setEnabled(false);

@@ -72,7 +72,7 @@ namespace BlackMisc
                     "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X",
                     "C:/FSX"
                 });
-                if (!CBuildConfig::isShippedVersion())
+                if (!CBuildConfig::isStableBranch())
                 {
                     // developer directories
                     someDefaultDirs.push_back("P:/FSX (MSI)");
