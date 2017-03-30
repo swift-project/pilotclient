@@ -357,7 +357,7 @@ namespace BlackCore
             CLogMessage::preformatted(msgs);
         }
 
-        this->m_started = true;
+        this->m_started = this->m_startSetupReader; // only if requested it will be started
         return this->m_started;
     }
 
