@@ -166,7 +166,7 @@ namespace BlackCore
             }
             else if (!CNetworkUtils::canConnect(server, msg, 5000))
             {
-                return CStatusMessage({ CLogCategory::validation() }, CStatusMessage::SeverityError, msg);
+                return CStatusMessage(CStatusMessage::SeverityError, msg);
             }
             else if (this->m_network->isConnected())
             {
