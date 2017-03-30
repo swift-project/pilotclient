@@ -375,6 +375,18 @@ namespace BlackConfig
         return buildDateAndTime;
     }
 
+    const QVersionNumber &CBuildConfig::getVersion()
+    {
+        static const QVersionNumber v { versionMajor(), versionMinor(), versionMicro(), buildTimestampAsVersionSegment(buildTimestamp()) };
+        return v;
+    }
+
+    const QString &CBuildConfig::getVersionString()
+    {
+        static const QString s(getVersion().toString());
+        return s;
+    }
+
     namespace Private
     {
         const QDateTime buildTimestampImpl()
@@ -393,41 +405,7 @@ namespace BlackConfig
         return dt;
     }
 
-    const QString &CVersion::version()
-    {
-        static const QString v(versionMajorMinorPatch() + "." + QString::number(buildTimestampAsVersionSegment(CBuildConfig::buildTimestamp())));
-        return v;
-    }
-
-    const QList<int> &CVersion::getVersionParts()
-    {
-        static const QList<int> parts(splitIntoVersionParts(version()));
-        return parts;
-    }
-
-    bool CVersion::isNewerVersion(const QString &versionString)
-    {
-        return isNewerVersion(version(), versionString);
-    }
-
-    bool CVersion::isNewerVersion(const QString &aVersion, const QString &bVersion)
-    {
-        if (aVersion.isEmpty() || bVersion.isEmpty()) { return false; }
-        if (aVersion == bVersion) { return true; }
-
-        const QList<int> aParts(splitIntoVersionParts(aVersion));
-        const QList<int> bParts(splitIntoVersionParts(bVersion));
-        for (int i = 0; i < bParts.length(); i++)
-        {
-            if (aParts.length() <= i) { return true; }
-            if (bParts.at(i) > aParts.at(i)) { return true; }
-            if (bParts.at(i) < aParts.at(i)) { return false; }
-            // same, try next part
-        }
-        return false;
-    }
-
-    int CVersion::buildTimestampAsVersionSegment(const QDateTime &buildTimestamp)
+    int CBuildConfig::buildTimestampAsVersionSegment(const QDateTime &buildTimestamp)
     {
         if (buildTimestamp.isValid())
         {
@@ -437,19 +415,6 @@ namespace BlackConfig
             return msSinceSwiftEpoch / 1000; // accuraccy second should be enough, and is shorter
         }
         return 0; // intentionally 0 and not zero => 0.7.3.0 <-
-    }
-
-    QList<int> CVersion::splitIntoVersionParts(const QString &versionString)
-    {
-        const QStringList parts = versionString.split('.');
-        QList<int> partsInt;
-        for (const QString &p : parts)
-        {
-            bool ok = false;
-            int pInt = p.toInt(&ok);
-            partsInt.append(ok ? pInt : -1);
-        }
-        return partsInt;
     }
 } // ns
 

@@ -112,7 +112,7 @@ namespace BlackCore
         {
             if (withMetadata) { CApplication::registerMetadata(); }
             QCoreApplication::setApplicationName(this->m_applicationName);
-            QCoreApplication::setApplicationVersion(CVersion::version());
+            QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
             this->setObjectName(this->m_applicationName);
             const QString executable = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
             if (executable.startsWith("test"))
@@ -184,7 +184,7 @@ namespace BlackCore
         CApplicationInfo::ApplicationMode mode;
         if (isRunningInDeveloperEnvironment()) { mode |= CApplicationInfo::Developer; }
         if (CBuildConfig::isDevBranch()) { mode |= CApplicationInfo::BetaTest; }
-        return { CApplication::getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CVersion::version(), CProcessInfo::currentProcess() };
+        return { CApplication::getSwiftApplication(), mode, QCoreApplication::applicationFilePath(), CBuildConfig::getVersionString(), CProcessInfo::currentProcess() };
     }
 
     CApplicationInfoList CApplication::getRunningApplications()
@@ -213,7 +213,7 @@ namespace BlackCore
 
     const QString &CApplication::getApplicationNameAndVersion() const
     {
-        static const QString s(QCoreApplication::instance()->applicationName() + " " + CVersion::version());
+        static const QString s(QCoreApplication::instance()->applicationName() + " " + CBuildConfig::getVersionString());
         return s;
     }
 
@@ -296,6 +296,8 @@ namespace BlackCore
 
     bool CApplication::start()
     {
+        this->m_started = false; // reset
+
         // parse if needed, parsing contains its own error handling
         if (!this->m_parsed)
         {
@@ -525,7 +527,7 @@ namespace BlackCore
     QString CApplication::getInfoString(const QString &separator) const
     {
         const QString str =
-            CVersion::version() %
+            CBuildConfig::getVersionString() %
             QLatin1Char(' ') % (CBuildConfig::isReleaseBuild() ? QLatin1String("Release build") : QLatin1String("Debug build")) %
             separator %
             getEnvironmentInfoString(separator) %
@@ -1147,7 +1149,7 @@ namespace BlackCore
 
         // Caliper (mini-breakpad-server) annotations
         annotations["prod"] = executable().toStdString();
-        annotations["ver"] = CVersion::version().toStdString();
+        annotations["ver"] = CBuildConfig::getVersionString().toStdString();
 
         QDir().mkpath(database);
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));

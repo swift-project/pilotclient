@@ -15,6 +15,7 @@
 #include <QList>
 #include <QStringList>
 #include <QDateTime>
+#include <QVersionNumber>
 
 namespace BlackConfig
 {
@@ -152,26 +153,25 @@ namespace BlackConfig
         //! Returns SHA-1 of git HEAD at build time
         static const QString &gitHeadSha1();
 
+        //! Version info 3 segments e.g. 0.8.3
+        static const QString &versionMajorMinorPatch(); // defined in buildconfig_gen.cpp.in
+
         //! Build timestamp
         static const QDateTime &buildTimestamp();
 
         //! Returns the build date and time as string
         static const QString &buildDateAndTime();
-    };
 
-    //! Version
-    class CVersion
-    {
-    public:
-        //! Version info 3 segments e.g. 0.8.3
-        static const QString &versionMajorMinorPatch(); // defined in buildconfig_gen.cpp.in
+        //! Version as QVersionNumber
+        static const QVersionNumber &getVersion();
 
-        //! Version info 4 segments e.g. 0.8.3.12131
-        static const QString &version();
+        //! Version as QVersionNumber
+        static const QString &getVersionString();
 
-        //! 4 Parts of the version
-        static const QList<int> &getVersionParts();
+        //! Turns build timestamp into a version number
+        static int buildTimestampAsVersionSegment(const QDateTime &buildTimestamp);
 
+    private:
         //! Major version
         static int versionMajor(); // defined in buildconfig_gen.cpp.in
 
@@ -179,20 +179,7 @@ namespace BlackConfig
         static int versionMinor(); // defined in buildconfig_gen.cpp.in
 
         //! Patch version
-        static int versionPatch(); // defined in buildconfig_gen.cpp.in
-
-        //! Is the given string representing a newer version (newer than "me")?
-        static bool isNewerVersion(const QString &versionString);
-
-        //! Is the bVersion newer?
-        static bool isNewerVersion(const QString &aVersion, const QString &bVersion);
-
-        //! Turns build timestamp into a version number
-        static int buildTimestampAsVersionSegment(const QDateTime &buildTimestamp);
-
-    private:
-        //! Parts of version string 1.0.2.1234123
-        static QList<int> splitIntoVersionParts(const QString &versionString);
+        static int versionMicro(); // defined in buildconfig_gen.cpp.in
     };
 }
 

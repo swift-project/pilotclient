@@ -13,6 +13,7 @@
 
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QVersionNumber>
 #include <QDir>
 #include <QFileInfo>
 #include <QFlags>
@@ -22,9 +23,10 @@
 #include <QStringBuilder>
 #include <QtGlobal>
 
+using namespace BlackConfig;
+
 namespace BlackMisc
 {
-
     CFileLogger::CFileLogger(QObject *parent) :
         CFileLogger(QCoreApplication::applicationName(), QString(), parent)
     {
@@ -117,12 +119,12 @@ namespace BlackMisc
     void CFileLogger::writeHeaderToFile()
     {
         m_stream << "This is " << m_applicationName;
-        m_stream << " version " << BlackConfig::CVersion::version();
+        m_stream << " version " << CBuildConfig::getVersionString();
         m_stream << " running on " << QSysInfo::prettyProductName();
         m_stream << " " << QSysInfo::currentCpuArchitecture() << endl;
 
-        m_stream << "Built from revision " << BlackConfig::CBuildConfig::gitHeadSha1();
-        m_stream << " on " << BlackConfig::CBuildConfig::buildTimestamp().toString() << endl;
+        m_stream << "Built from revision " << CBuildConfig::gitHeadSha1();
+        m_stream << " on " << CBuildConfig::buildTimestamp().toString() << endl;
 
         m_stream << "Built with Qt " << QT_VERSION_STR;
         m_stream << " and running with Qt " << qVersion();

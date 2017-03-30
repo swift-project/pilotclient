@@ -212,7 +212,7 @@ namespace BlackMisc
 
         void CNetworkUtils::setSwiftUserAgent(QNetworkRequest &request)
         {
-            static const QString userAgent("swift/" + CVersion::version());
+            static const QString userAgent("swift/" + CBuildConfig::getVersionString());
             request.setRawHeader("User-Agent", userAgent.toLatin1());
         }
 

@@ -16,7 +16,7 @@ include(version.pri)
 !win32 {
     VER_MAJ = $${BLACK_VER_MAJ}
     VER_MIN = $${BLACK_VER_MIN}
-    VER_PAT = $${BLACK_VER_PAT}
+    VER_MIC = $${BLACK_VER_MIC}
     VERSION = $${BLACK_VERSION}
 }
 

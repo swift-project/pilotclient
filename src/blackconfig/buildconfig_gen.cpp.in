@@ -151,13 +151,6 @@ const QString &BlackConfig::CBuildConfig::gitHeadSha1()
     return gitHeadSha1;
 }
 
-const QString &BlackConfig::CVersion::versionMajorMinorPatch()
-{
-    static const QString version(\"$$BLACK_VERSION\");
-    Q_ASSERT(!version.isEmpty());
-    return version;
-}
-
-int BlackConfig::CVersion::versionMajor() { return $$BLACK_VER_MAJ; }
-int BlackConfig::CVersion::versionMinor() { return $$BLACK_VER_MIN; }
-int BlackConfig::CVersion::versionPatch() { return $$BLACK_VER_PAT; }
+int BlackConfig::CBuildConfig::versionMajor() { return $$BLACK_VER_MAJ; }
+int BlackConfig::CBuildConfig::versionMinor() { return $$BLACK_VER_MIN; }
+int BlackConfig::CBuildConfig::versionMicro() { return $$BLACK_VER_MIC; }
