@@ -75,9 +75,12 @@ namespace BlackMisc
         void IDatastoreObjectWithIntegerKey::setKeyAndTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
         {
             const int dbKey = json.value(prefix + "id").toInt(-1);
-            const QString timestampString(json.value(prefix + "lastupdated").toString());
-            const QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
             this->setDbKey(dbKey);
+
+            // we check 2 formats, the DB format and the backend object format
+            QString timestampString(json.value(prefix + "lastupdated").toString());
+            if (timestampString.isEmpty()) { timestampString = json.value(prefix + "tsLastUpdated").toString(); }
+            const QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
             this->setUtcTimestamp(ts);
         }
 
