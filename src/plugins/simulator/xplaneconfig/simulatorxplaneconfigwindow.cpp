@@ -83,8 +83,7 @@ namespace BlackSimPlugin
 
         void CSimulatorXPlaneConfigWindow::ps_installXBus()
         {
-            QString xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplaneRootDir();
-
+            const QString xPlaneLocation = BlackMisc::Simulation::XPlane::CXPlaneUtil::xplaneRootDir();
             QString path = QFileDialog::getExistingDirectory(parentWidget(),
                            tr("Choose your X-Plane install directory"),
                            xPlaneLocation,
@@ -103,7 +102,7 @@ namespace BlackSimPlugin
             path.append("/xbus");
 
             // TODO Use QtConcurrent here, maybe?
-            bool result = BlackMisc::CFileUtils::copyRecursively(xBusOriginDir(), path);
+            const bool result = BlackMisc::CFileUtils::copyRecursively(xBusOriginDir(), path);
             if (result)
             {
                 QMessageBox::information(this, tr("XBus installed"), tr("You may now launch your X-Plane and start using XBus!"));
