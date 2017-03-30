@@ -81,7 +81,7 @@ namespace BlackCore
                       );
         if (this->m_bootstrapMode == CacheOnly)
         {
-            this->m_updateInfoUrls = cachedSetup.getUpdateInfoFileUrls();
+            this->m_distributionUrls = cachedSetup.getDistributionUrls();
             msgs.push_back(cacheAvailable ?
                            CStatusMessage(this, CStatusMessage::SeverityInfo, "Cache only setup, using it as it is") :
                            CStatusMessage(this, CStatusMessage::SeverityError, "Cache only setup, but cache is empty")
@@ -227,14 +227,12 @@ namespace BlackCore
 
     void CSetupReader::ps_readUpdateInfo()
     {
-        // const CUrl url(this->m_updateInfoUrls.obtainNextWorkingUrl());
-
-        const CUrl url("https://datastore.swift-project.org/shared/0.7.0/updateinfo/updateinfo2.json");
+        const CUrl url(this->m_distributionUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
             CLogMessage(this).warning("Cannot read update info, URLs: %1, failed URLs: %2")
-                    << this->m_updateInfoUrls
-                    << this->m_updateInfoUrls.getFailedUrls();
+                    << this->m_distributionUrls
+                    << this->m_distributionUrls.getFailedUrls();
             this->manageDistributionsInfoAvailability(false);
             return;
         }
@@ -330,7 +328,7 @@ namespace BlackCore
                     bool sameVersionLoaded = (loadedSetup == currentSetup);
                     if (sameVersionLoaded)
                     {
-                        this->m_updateInfoUrls = currentSetup.getUpdateInfoFileUrls(); // defaults
+                        this->m_distributionUrls = currentSetup.getDistributionUrls(); // defaults
                         CLogMessage(this).info("Same setup version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
                         CLogMessage::preformatted(this->manageSetupAvailability(true));
                         return; // success
@@ -343,7 +341,7 @@ namespace BlackCore
                     if (m.isSeverityInfoOrLess())
                     {
                         // no issue with cache
-                        this->m_updateInfoUrls = loadedSetup.getUpdateInfoFileUrls();
+                        this->m_distributionUrls = loadedSetup.getDistributionUrls();
                         CLogMessage(this).info("Setup: Updated data cache in '%1'") << this->m_setup.getFilename();
                     }
                     CLogMessage::preformatted(this->manageSetupAvailability(true));
@@ -457,7 +455,7 @@ namespace BlackCore
         }
 
         // try next one if any
-        if (this->m_updateInfoUrls.addFailedUrl(url))
+        if (this->m_distributionUrls.addFailedUrl(url))
         {
             QTimer::singleShot(500, this, &CSetupReader::ps_readUpdateInfo);
         }

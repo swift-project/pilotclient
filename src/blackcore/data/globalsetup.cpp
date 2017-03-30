@@ -155,10 +155,10 @@ namespace BlackCore
             return setup;
         }
 
-        CUrlList CGlobalSetup::getUpdateInfoFileUrls() const
+        CUrlList CGlobalSetup::getDistributionUrls() const
         {
             const CUrlList urls(m_sharedUrls);
-            return urls.appendPath(CGlobalSetup::versionString() + "/updateinfo/updateinfo.json");
+            return urls.appendPath(CGlobalSetup::versionString() + "/updateinfo/distribution.json");
         }
 
         CUrlList CGlobalSetup::getSwiftDbDataFileLocationUrls() const
@@ -194,8 +194,8 @@ namespace BlackCore
             s.append(boolToYesNo(isDevelopment()));
             s.append(separator);
 
-            s.append("Update info URLs: ");
-            s.append(getUpdateInfoFileUrls().toQString(i18n));
+            s.append("Distribution URLs: ");
+            s.append(getDistributionUrls().toQString(i18n));
             s.append(separator);
             s.append("Bootstrap URLs: ");
             s.append(getBootstrapFileUrls().toQString(i18n));
@@ -270,7 +270,7 @@ namespace BlackCore
             case IndexVatsimMetars:
                 return CVariant::fromValue(this->m_vatsimMetarsUrls);
             case IndexUpdateInfo:
-                return CVariant::fromValue(this->getUpdateInfoFileUrls());
+                return CVariant::fromValue(this->getDistributionUrls());
             case IndexBootstrapFileUrls:
                 return CVariant::fromValue(this->getBootstrapFileUrls());
             case IndexSwiftDbFiles:

@@ -130,15 +130,15 @@ namespace BlackCore
         bool m_shutdown = false;
         std::atomic<bool> m_setupAvailable { false };
         std::atomic<bool> m_distributionInfoAvailable { false };
-        QString m_localSetupFileValue;                         //! Local file for setup, passed by cmd line arguments
-        QString m_bootstrapUrlFileValue;                       //! Bootstrap URL if not local
-        BootstrapMode m_bootstrapMode = Explicit;              //! How to bootstrap
-        BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;  //!< location of setup files
-        BlackMisc::Network::CFailoverUrlList m_updateInfoUrls; //!< location of info files
-        QCommandLineOption m_cmdBootstrapUrl;                  //!< bootstrap URL
-        QCommandLineOption m_cmdBootstrapMode;                 //!< bootstrap mode
-        mutable QReadWriteLock m_lockSetup;                    //!< lock for setup
-        BlackMisc::CStatusMessageList m_setupReadErrorMsgs;    //!< last parsing error messages
+        QString m_localSetupFileValue;                           //! Local file for setup, passed by cmd line arguments
+        QString m_bootstrapUrlFileValue;                         //! Bootstrap URL if not local
+        BootstrapMode m_bootstrapMode = Explicit;                //! How to bootstrap
+        BlackMisc::Network::CFailoverUrlList m_bootstrapUrls;    //!< location of setup files
+        BlackMisc::Network::CFailoverUrlList m_distributionUrls; //!< location of info files
+        QCommandLineOption m_cmdBootstrapUrl;                    //!< bootstrap URL
+        QCommandLineOption m_cmdBootstrapMode;                   //!< bootstrap mode
+        mutable QReadWriteLock m_lockSetup;                      //!< lock for setup
+        BlackMisc::CStatusMessageList m_setupReadErrorMsgs;      //!< last parsing error messages
         BlackMisc::CData<BlackCore::Data::TGlobalSetup>    m_setup {this, &CSetupReader::ps_setupChanged}; //!< data cache setup
         BlackMisc::CData<BlackMisc::Db::TDistributionInfo> m_distributions {this};                         //!< data cache distributions
 

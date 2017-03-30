@@ -132,7 +132,7 @@ namespace BlackCore
             BlackMisc::Network::CUrlList getBootstrapFileUrls() const;
 
             //! Version and download locations
-            BlackMisc::Network::CUrlList getUpdateInfoFileUrls() const;
+            BlackMisc::Network::CUrlList getDistributionUrls() const;
 
             //! Alternative locations of swift DB data files
             BlackMisc::Network::CUrlList getSwiftDbDataFileLocationUrls() const;
