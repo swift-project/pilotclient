@@ -66,6 +66,7 @@ namespace BlackGui
         QLabel *m_statusBarLabel = nullptr; //!< status bar label
         QTimer *m_timerStatusBar = nullptr; //!< cleaning up status bar (own cleaning as I need to clean window / icon)
         bool m_ownStatusBar = false;
+        BlackMisc::StatusSeverity m_currentSeverity = BlackMisc::StatusSeverity::SeverityDebug; // severity currently displayed
     };
 
 } // namespace

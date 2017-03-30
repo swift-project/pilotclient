@@ -102,6 +102,9 @@ namespace BlackGui
         Q_ASSERT_X(this->m_statusBarIcon, Q_FUNC_INFO, "Missing status bar icon");
         Q_ASSERT_X(this->m_statusBar, Q_FUNC_INFO, "Missing status bar");
 
+        // already displaying a message with severity higher than this one?
+        if (!statusMessage.isSeverityHigherOrEqual(m_currentSeverity)) { return; }
+
         // used with log subscriber, make sure it is not displayed twice
         if (statusMessage.wasHandledBy(this)) { return; }
         statusMessage.markAsHandledBy(this);
@@ -110,6 +113,7 @@ namespace BlackGui
         this->m_timerStatusBar->start(3000); // start / restart
         this->m_statusBarIcon->setPixmap(statusMessage.toPixmap());
         this->m_statusBarLabel->setText(statusMessage.getMessage());
+        m_currentSeverity = statusMessage.getSeverity();
 
         // restrict size for own status bars
         if (this->m_ownStatusBar)
@@ -130,6 +134,7 @@ namespace BlackGui
 
     void CManagedStatusBar::ps_clearStatusBar()
     {
+        m_currentSeverity = StatusSeverity::SeverityDebug;
         if (!this->m_statusBar) { return; }
         this->m_statusBarIcon->clear();
         this->m_statusBarLabel->clear();
