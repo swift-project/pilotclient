@@ -381,14 +381,6 @@ namespace XBus
                 }
                 else { return xpmpData_Unchanged; }
             }
-            else
-            {
-                // hack because we need to provide xpmp_LightStatus::timeOffset even if we don't have surfaces
-                const auto io_surfaces = static_cast<XPMPPlaneSurfaces_t *>(io_data);
-                std::memcpy(io_surfaces, &plane->surfaces, sizeof(*io_surfaces));
-                plane->hasSurfaces = true;
-                return xpmpData_NewData;
-            }
 
         case xpmpDataType_Radar:
             if (plane->hasXpdr)
