@@ -278,8 +278,7 @@ namespace XBus
     void CTraffic::addPlaneSurfaces(const QString &callsign, double gear, double flap, double spoiler, double speedBrake, double slat, double wingSweep, double thrust,
                                     double elevator, double rudder, double aileron, bool landLight, bool beaconLight, bool strobeLight, bool navLight, int lightPattern, bool onGround, qint64 relativeTime)
     {
-        const auto plane = m_planesByCallsign.value(callsign, nullptr);
-        if (plane)
+        const auto surfaces = std::make_pair(relativeTime + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane *plane)
         {
             plane->hasSurfaces = true;
             plane->surfaces.gearPosition = gear;
@@ -297,6 +296,13 @@ namespace XBus
             plane->surfaces.lights.strbLights = strobeLight;
             plane->surfaces.lights.navLights = navLight;
             plane->surfaces.lights.flashPattern = lightPattern;
+        });
+
+        const auto plane = m_planesByCallsign.value(callsign, nullptr);
+        if (plane)
+        {
+            if (plane->hasSurfaces) { plane->pendingSurfaces.push_back(surfaces); }
+            else { surfaces.second(plane); }
 
             BlackMisc::Aviation::CAircraftParts parts;
             parts.setOnGround(onGround);
@@ -372,6 +378,12 @@ namespace XBus
         case xpmpDataType_Surfaces:
             if (plane->hasSurfaces)
             {
+                const auto currentTime = QDateTime::currentMSecsSinceEpoch();
+                while (! plane->pendingSurfaces.isEmpty() && plane->pendingSurfaces.front().first <= currentTime)
+                {
+                    plane->pendingSurfaces.front().second(plane);
+                    plane->pendingSurfaces.pop_front();
+                }
                 const auto io_surfaces = static_cast<XPMPPlaneSurfaces_t *>(io_data);
 
                 if (memcmpPayload(io_surfaces, &plane->surfaces))

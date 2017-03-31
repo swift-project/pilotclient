@@ -527,7 +527,7 @@ namespace BlackSimPlugin
 
             if (! isRemoteAircraftSupportingParts(situation.getCallsign()))
             {
-                // if aircraft not supporting parts then guess (currently only onGround is guessed)
+                // if aircraft not supporting parts then guess the basics (onGround, gear, lights)
                 //! \todo not working for vtol
                 BlackMisc::Aviation::CAircraftParts parts;
                 parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
@@ -541,7 +541,16 @@ namespace BlackSimPlugin
                     if (nearestAirport != m_airportsInRange.cend() && situation.getAltitude() - nearestAirport->getElevation() < CLength(50, CLengthUnit::ft()))
                     {
                         parts.setOnGround(true);
+                        parts.setGearDown(true);
                     }
+                }
+                if (situation.getAltitude() < CAltitude(10'000, CLengthUnit::ft()))
+                {
+                    parts.setLights({ true, true, true, true, true, true, true, true });
+                }
+                else
+                {
+                    parts.setLights({ true, false, false, true, true, true, true, true });
                 }
                 ps_remoteProviderAddAircraftParts(situation.getCallsign(), parts);
             }
@@ -550,9 +559,11 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::ps_remoteProviderAddAircraftParts(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftParts &parts)
         {
             Q_ASSERT(isConnected());
-            //! \fixme Parts currently not used by libxplanemp
-            m_traffic->addPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0, parts.isOnGround(),
-                                        parts.getAdjustedMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch());
+            m_traffic->addPlaneSurfaces(callsign.asString(), parts.isGearDown() ? 1 : 0,
+                                        parts.getFlapsPercent() / 100.0, parts.isSpoilersOut() ? 1 : 0, parts.isSpoilersOut() ? 1 : 0, parts.getFlapsPercent() / 100.0,
+                                        0, parts.isAnyEngineOn() ? 0 : 0.75, 0, 0, 0,
+                                        parts.getLights().isLandingOn(), parts.getLights().isBeaconOn(), parts.getLights().isStrobeOn(), parts.getLights().isNavOn(),
+                                        0, parts.isOnGround(), parts.getAdjustedMSecsSinceEpoch() - QDateTime::currentMSecsSinceEpoch());
             m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false);
         }
 

@@ -22,6 +22,8 @@
 #include <QVector>
 #include <QStringList>
 #include "XPMPMultiplayer.h"
+#include <functional>
+#include <utility>
 
 //! \cond PRIVATE
 #define XBUS_TRAFFIC_INTERFACENAME "org.swift_project.xbus.traffic"
@@ -138,6 +140,7 @@ namespace XBus
             CTerrainProbe terrainProbe;
             BlackMisc::Simulation::CInterpolationHints hints();
             XPMPPlaneSurfaces_t surfaces;
+            QVector<std::pair<qint64, std::function<void(Plane *)>>> pendingSurfaces;
             XPMPPlaneRadar_t xpdr;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);
         };
