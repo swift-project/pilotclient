@@ -281,7 +281,7 @@ namespace XBus
         const auto surfaces = std::make_pair(relativeTime + QDateTime::currentMSecsSinceEpoch(), [ = ](Plane *plane)
         {
             plane->hasSurfaces = true;
-            plane->surfaces.gearPosition = gear;
+            plane->targetGearPosition = gear;
             plane->surfaces.flapRatio = flap;
             plane->surfaces.spoilerRatio = spoiler;
             plane->surfaces.speedBrakeRatio = speedBrake;
@@ -381,9 +381,20 @@ namespace XBus
                 const auto currentTime = QDateTime::currentMSecsSinceEpoch();
                 while (! plane->pendingSurfaces.isEmpty() && plane->pendingSurfaces.front().first <= currentTime)
                 {
+                    //! \todo if gear is currently retracted, look ahead and pull gear position from pendingSurfaces up to 5 seconds in the future
                     plane->pendingSurfaces.front().second(plane);
                     plane->pendingSurfaces.pop_front();
                 }
+                if (plane->surfaces.gearPosition != plane->targetGearPosition)
+                {
+                    // interpolate gear position
+                    constexpr float gearMoveTimeMs = 5000;
+                    const auto gearPositionDiffRemaining = plane->targetGearPosition - plane->surfaces.gearPosition;
+                    const auto gearPositionDiffThisFrame = (currentTime - plane->prevSurfacesLerpTime) / gearMoveTimeMs;
+                    plane->surfaces.gearPosition += std::copysign(gearPositionDiffThisFrame, gearPositionDiffRemaining);
+                    plane->surfaces.gearPosition = qBound(0.0f, plane->surfaces.gearPosition, 1.0f);
+                }
+                plane->prevSurfacesLerpTime = currentTime;
                 const auto io_surfaces = static_cast<XPMPPlaneSurfaces_t *>(io_data);
 
                 if (memcmpPayload(io_surfaces, &plane->surfaces))

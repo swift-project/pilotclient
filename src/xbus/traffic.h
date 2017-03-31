@@ -141,6 +141,8 @@ namespace XBus
             BlackMisc::Simulation::CInterpolationHints hints();
             XPMPPlaneSurfaces_t surfaces;
             QVector<std::pair<qint64, std::function<void(Plane *)>>> pendingSurfaces;
+            float targetGearPosition = 0;
+            qint64 prevSurfacesLerpTime = 0;
             XPMPPlaneRadar_t xpdr;
             Plane(void *id_, QString callsign_, QString aircraftIcao_, QString airlineIcao_, QString livery_);
         };
