@@ -107,7 +107,7 @@ namespace BlackMisc
     {
         const QString program = QStringLiteral("dbus-daemon");
         const QStringList arguments = { QStringLiteral("--config-file=../etc/dbus-1/session.conf") };
-        bool success = CProcessCtrl::startDetachedWithoutConsole(program, arguments);
+        bool success = CProcessCtrl::startDetached(program, arguments, false);
         if (!success) { CLogMessage(this).error("Failed to launch dbus-daemon!"); }
     }
 

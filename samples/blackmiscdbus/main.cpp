@@ -14,6 +14,7 @@
 #include "blackmisc/registermetadata.h"
 #include "blackmisc/network/networkutils.h"
 #include "blackmisc/dbusutils.h"
+#include "blackmisc/processctrl.h"
 #include "servicetool.h"
 #include <stdio.h>
 #include <QCoreApplication>
@@ -181,7 +182,7 @@ int main(int argc, char *argv[])
         }
 
         // testing in new process
-        QProcess::startDetached(executable, args);
+        BlackMisc::CProcessCtrl::startDetached(executable, args, true);
 
         // testing in same process
         // BlackSample::ServiceTool::dataTransferTestClient(address);
