@@ -14,14 +14,12 @@
 
 #include "blackgui/blackguiexport.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QSize>
 #include <QWidget>
 
 namespace Ui { class CCockpitComponent; }
-
 namespace BlackGui
 {
     class CDockWidgetInfoArea;
@@ -40,7 +38,7 @@ namespace BlackGui
             explicit CCockpitComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CCockpitComponent();
+            virtual ~CCockpitComponent();
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget) override;
@@ -51,6 +49,9 @@ namespace BlackGui
         public slots:
             //! \copydoc BlackGui::Components::CTransponderModeSelector::setSelectedTransponderModeStateIdent
             void setSelectedTransponderModeStateIdent();
+
+            //! Show the audio ui
+            void showAudio();
 
         private slots:
             //! Show or hide cockpit details
@@ -68,9 +69,7 @@ namespace BlackGui
             QSize m_sizeFloatingHidden;   //! size when info area is hidden
             int m_minHeightInfoArea = -1; //! minimum height of the info area
         };
-
     } // namespace
 } // namespace
-
 
 #endif // guard

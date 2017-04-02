@@ -189,6 +189,11 @@ void SwiftGuiStd::initGuiSignals()
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
     connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::commandEntered, ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::handleGlobalCommandLine);
     connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
+    connect(ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::audioPressed, [ = ]
+    {
+        ui->comp_MainInfoArea->getCockpitComponent()->showAudio();
+        ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaCockpit);
+    });
 
     // menu
     connect(ui->menu_TestLocationsEDDF, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);

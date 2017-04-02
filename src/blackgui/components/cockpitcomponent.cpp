@@ -55,6 +55,11 @@ namespace BlackGui
             ui->comp_CockpitComComponent->setSelectedTransponderModeStateIdent();
         }
 
+        void CCockpitComponent::showAudio()
+        {
+            ui->comp_CockpitInfoArea->selectArea(CCockpitInfoAreaComponent::InfoAreaAudio);
+        }
+
         void CCockpitComponent::ps_onToggleShowHideDetails(bool show)
         {
             // use the toggle method to set the sizes

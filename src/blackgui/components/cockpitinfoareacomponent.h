@@ -23,7 +23,6 @@ class QPixmap;
 class QWidget;
 
 namespace Ui { class CCockpitInfoAreaComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -39,7 +38,7 @@ namespace BlackGui
             explicit CCockpitInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CCockpitInfoAreaComponent();
+            virtual ~CCockpitInfoAreaComponent();
 
             //! Info areas
             enum InfoArea
