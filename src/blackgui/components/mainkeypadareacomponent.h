@@ -28,7 +28,6 @@ class QWidget;
 
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CMainKeypadAreaComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -66,6 +65,9 @@ namespace BlackGui
 
             //! Ident pressed
             void identPressed();
+
+            //! Request audio
+            void audioPressed();
 
         public slots:
             //! Main info area changed

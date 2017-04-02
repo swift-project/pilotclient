@@ -60,6 +60,7 @@ namespace BlackGui
             connect(ui->pb_Opacity100, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
             connect(ui->pb_SoundMaxVolume, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
             connect(ui->pb_SoundMute, &QPushButton::released, this, &CMainKeypadAreaComponent::ps_buttonSelected);
+            connect(ui->pb_Audio, &QPushButton::released, this, &CMainKeypadAreaComponent::ps_buttonSelected);
 
             // command line
             this->connect(ui->lep_CommandLineInput, &QLineEdit::returnPressed, this, &CMainKeypadAreaComponent::ps_commandEntered);
@@ -129,12 +130,16 @@ namespace BlackGui
             }
             else if (senderButton == ui->pb_SoundMute && sGui->getIContextAudio())
             {
-                bool mute = sGui->getIContextAudio()->isMuted();
+                const bool mute = sGui->getIContextAudio()->isMuted();
                 sGui->getIContextAudio()->setMute(!mute);
             }
             else if (senderButton == ui->pb_Connect)
             {
                 emit connectPressed();
+            }
+            else if (senderButton == ui->pb_Audio)
+            {
+                emit audioPressed();
             }
         }
 

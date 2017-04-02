@@ -117,12 +117,9 @@
        </widget>
       </item>
       <item row="2" column="4">
-       <widget class="QPushButton" name="pb_Empty_3">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
+       <widget class="QPushButton" name="pb_Audio">
         <property name="text">
-         <string/>
+         <string>Audio</string>
         </property>
        </widget>
       </item>
