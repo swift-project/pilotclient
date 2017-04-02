@@ -111,11 +111,6 @@ QAbstractScrollArea #pg_StatusPageCons	ole  { background-color: black; }
   background-color: black;
 }
 
-/* volume buttons */
-#wi_AudioSoundButtons QPushButton {
-  background-color: transparent;
-}
-
 /* COM panel */
 #wip_CockpitComPanelShowHideBar QPushButton {
   background-color: transparent;
