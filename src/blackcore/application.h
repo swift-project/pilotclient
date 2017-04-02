@@ -159,6 +159,9 @@ namespace BlackCore
         //! Network accessible?
         bool isNetworkAccessible() const;
 
+        //! Setup reader?
+        bool hasSetupReader() const;
+
         //! Setup already synchronized
         bool isSetupAvailable() const;
 
@@ -416,8 +419,7 @@ namespace BlackCore
         bool isSetOrTrue(const QCommandLineOption &option) const;
 
         //! Severe issue during startup, most likely it does not make sense to continue
-        //! \note call this here if the parsing stage is over and reaction to a runtime issue
-        //!       is needed
+        //! \note call this here if the parsing stage is over and reaction to a runtime issue is needed
         void severeStartupProblem(const BlackMisc::CStatusMessage &message);
 
         //! Start the core facade

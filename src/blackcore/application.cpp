@@ -301,7 +301,7 @@ namespace BlackCore
         // parse if needed, parsing contains its own error handling
         if (!this->m_parsed)
         {
-            bool s = this->parse();
+            const bool s = this->parse();
             if (!s) { return false; }
         }
 
@@ -586,6 +586,12 @@ namespace BlackCore
     bool CApplication::isNetworkAccessible() const
     {
         return this->m_accessManager.networkAccessible() == QNetworkAccessManager::Accessible;
+    }
+
+    bool CApplication::hasSetupReader() const
+    {
+        // m_startSetupReader set to false, if something wrong with parsing
+        return m_setupReader && m_startSetupReader;
     }
 
     void CApplication::exit(int retcode)

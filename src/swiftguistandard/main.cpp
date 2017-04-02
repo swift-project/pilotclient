@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     a.setSignalStartupAutomatically(false); // application will signal startup on its own
     a.splashScreen(CIcons::swift256());
     if (!a.parse()) { return EXIT_FAILURE; }
-    if (!a.start())
+    if (!a.hasSetupReader() || !a.start())
     {
         a.gracefulShutdown();
         return EXIT_FAILURE;
