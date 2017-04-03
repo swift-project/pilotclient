@@ -392,7 +392,7 @@ namespace BlackConfig
         const QDateTime buildTimestampImpl()
         {
             // Mar 27 2017 20:17:06 (needs to be on english locale, otherwise fails - e.g.
-            QDateTime dt = QLocale(QLocale::English).toDateTime(CBuildConfig::buildDateAndTime(), "MMM dd yyyy hh:mm:ss");
+            QDateTime dt = QLocale(QLocale::English).toDateTime(CBuildConfig::buildDateAndTime().simplified(), "MMM d yyyy hh:mm:ss");
             dt.setUtcOffset(0);
             return dt;
         }
