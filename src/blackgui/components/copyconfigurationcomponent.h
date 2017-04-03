@@ -57,6 +57,10 @@ namespace BlackGui
             //! Allow to toggle cache and settings
             void allowToggleCacheSettings(bool allow);
 
+        protected:
+            //! \copydoc QWidget::resizeEvent
+            virtual void resizeEvent(QResizeEvent *event) override;
+
         private:
             //! Preselect newer files
             void preselectMissingOrOutdated();

@@ -226,6 +226,13 @@ namespace BlackGui
             ui->rb_Settings->setEnabled(allow);
         }
 
+        void CCopyConfigurationComponent::resizeEvent(QResizeEvent *event)
+        {
+            const int w = 0.45 * this->width();
+            ui->cb_OtherVersions->setMaximumWidth(w);
+            QFrame::resizeEvent(event);
+        }
+
         void CCopyConfigurationComponent::currentVersionChanged(const QString &text)
         {
             Q_UNUSED(text);
