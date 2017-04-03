@@ -239,7 +239,7 @@ namespace BlackMisc
             QString v = firstSegments.cap(0); // first 3 segments, like 0.9.3
             if (!v.endsWith('.')) { v += '.'; }
 
-            static const QRegExp ts1("\\d{4}.\\d{2}.\\d{2}.\\d{2}.\\d{2}.\\d{2}");
+            static const QRegExp ts1("\\d{4}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}.?\\d{2}");
             if (ts1.indexIn(filename) < 0)
             {
                 // version without timestamp
