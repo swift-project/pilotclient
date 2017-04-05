@@ -318,16 +318,16 @@ bitrock_builder_bin = $$(BITROCK_BUILDER)
 !isEmpty(create_installer.commands) {
     win32: {
         # Fixme: the path to date.exe is currently hard coded
-        PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(C:\UnxUtils\usr\local\wbin\date.exe -u +%Y-%m-%d_%H-%M-%S).$${INSTALLER_EXT}
+        PUBLISHED_FILENAME = $${INSTALLER_BASENAME}.$$system(C:\UnxUtils\usr\local\wbin\date.exe -u +%Y%m%d%H%M%S).$${INSTALLER_EXT}
         publish_installer.commands = move $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
     }
 
     unix: {
         isEmpty(INSTALLER_CONTAINER_EXT) {
-            PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date -u '+%F_%H-%M-%S').$${INSTALLER_EXT}
+            PUBLISHED_FILENAME = $${INSTALLER_BASENAME}.$$system(date -u '+%Y%m%d%H%M%S').$${INSTALLER_EXT}
             publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_EXT} ../$${PUBLISHED_FILENAME}
         } else {
-            PUBLISHED_FILENAME = $${INSTALLER_BASENAME}_$$system(date -u '+%F_%H-%M-%S').$${INSTALLER_CONTAINER_EXT}
+            PUBLISHED_FILENAME = $${INSTALLER_BASENAME}.$$system(date -u '+%Y%m%d%H%M%S').$${INSTALLER_CONTAINER_EXT}
             publish_installer.commands = mv $${INSTALLER_BASENAME}.$${INSTALLER_CONTAINER_EXT} ../$${PUBLISHED_FILENAME}
         }
     }
