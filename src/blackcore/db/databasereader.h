@@ -91,6 +91,9 @@ namespace BlackCore
                 //! URL loaded
                 const BlackMisc::Network::CUrl &getUrl() const { return m_url; }
 
+                //! URL loaded as string
+                QString getUrlString() const { return m_url.toQString(); }
+
                 //! Set the loaded URL
                 void setUrl(const BlackMisc::Network::CUrl &url) { m_url = url; }
 
@@ -100,11 +103,14 @@ namespace BlackCore
                 //! Load time in ms (from request to response)
                 qint64 getLoadTimeMs() const { return m_loadTimeMs; }
 
+                //! Load time as string
+                QString getLoadTimeString() const { return QString("%1ms").arg(getLoadTimeMs()); }
+
                 //! Set the load time (delta start -> response received)
                 void setLoadTimeMs(qint64 deltaTime) { m_loadTimeMs = deltaTime; }
             };
 
-            //!  Response from our database (depneding on JSON DB backend generates)
+            //!  Response from our database (depending on JSON DB backend generates)
             struct JsonDatastoreResponse : public HeaderResponse
             {
             private:
@@ -259,6 +265,9 @@ namespace BlackCore
 
             //! Split into single entity and send dataRead signal
             BlackMisc::Network::CEntityFlags::Entity emitReadSignalPerSingleCachedEntity(BlackMisc::Network::CEntityFlags::Entity cachedEntities, bool onlyIfHasData);
+
+            //! Emit signal and log when data have been read
+            void emitAndLogDataRead(BlackMisc::Network::CEntityFlags::Entity entity, int number, const JsonDatastoreResponse &res);
 
             //! Get the service URL, individual for each reader
             virtual BlackMisc::Network::CUrl getDbServiceBaseUrl() const = 0;

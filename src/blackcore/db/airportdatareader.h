@@ -64,7 +64,7 @@ namespace BlackCore
 
         private slots:
             //! Parse downloaded JSON file
-            void ps_parseAirportData(QNetworkReply *nwReply);
+            void ps_parseAirportData(QNetworkReply *nwReplyPtr);
 
             //! Read / re-read data file
             void ps_read(BlackMisc::Network::CEntityFlags::Entity entity = BlackMisc::Network::CEntityFlags::DistributorLiveryModel,

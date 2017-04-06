@@ -261,7 +261,6 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isShuttingDown()) { return; }
-            QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -293,9 +292,7 @@ namespace BlackCore
             this->m_liveryCache.set(liveries, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
-            // never emit when lock is held -> deadlock
-            emit dataRead(CEntityFlags::LiveryEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read '%1' '%2' from '%3'") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
+            this->emitAndLogDataRead(CEntityFlags::LiveryEntity, n, res);
         }
 
         void CModelDataReader::ps_parseDistributorData(QNetworkReply *nwReplyPtr)
@@ -304,7 +301,6 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isShuttingDown()) { return; }
-            const QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -336,8 +332,7 @@ namespace BlackCore
             this->m_distributorCache.set(distributors, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
-            emit dataRead(CEntityFlags::DistributorEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read '%1' '%2' from '%3'") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
+            this->emitAndLogDataRead(CEntityFlags::DistributorEntity, n, res);
         }
 
         void CModelDataReader::ps_parseModelData(QNetworkReply *nwReplyPtr)
@@ -346,7 +341,6 @@ namespace BlackCore
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isShuttingDown()) { return; }
-            const QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -379,8 +373,7 @@ namespace BlackCore
             this->m_modelCache.set(models, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
 
-            emit dataRead(CEntityFlags::ModelEntity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read '%1' '%2' from '%3'") << n << CEntityFlags::flagToString(CEntityFlags::ModelEntity) << urlString;
+            this->emitAndLogDataRead(CEntityFlags::ModelEntity, n, res);
         }
 
         CStatusMessageList CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)

@@ -132,7 +132,6 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isShuttingDown()) { return; }
 
-            QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -142,19 +141,16 @@ namespace BlackCore
             }
 
             // get all or incremental set
-            CDbInfoList infoObjects = CDbInfoList::fromDatabaseJson(res.getJsonArray());
+            const CDbInfoList infoObjects = CDbInfoList::fromDatabaseJson(res.getJsonArray());
 
             // this part needs to be synchronized
-            int n = infoObjects.size();
+            const int n = infoObjects.size();
             {
                 QWriteLocker wl(&this->m_lockInfoObjects);
                 this->m_infoObjects = infoObjects;
             }
 
-            // never emit when lock is held -> deadlock
-            emit dataRead(CEntityFlags::InfoObjectEntity,
-                          res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::InfoObjectEntity) << urlString;
+            this->emitAndLogDataRead(CEntityFlags::InfoObjectEntity, n, res);
         }
 
         CUrl CInfoDataReader::getInfoObjectsUrl() const

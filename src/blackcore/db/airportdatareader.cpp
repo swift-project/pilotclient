@@ -143,9 +143,14 @@ namespace BlackCore
             return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AirportEntity, mode));
         }
 
-        void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReply)
+        void CAirportDataReader::ps_parseAirportData(QNetworkReply *nwReplyPtr)
         {
-            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply);
+            // wrap pointer, make sure any exit cleans up reply
+            // required to use delete later as object is created in a different thread
+            QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+            if (this->isShuttingDown()) { return; }
+
+            const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReplyPtr);
             if (res.hasErrorMessage())
             {
                 CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -170,12 +175,13 @@ namespace BlackCore
             if (size > 0 && latestTimestamp < 0)
             {
                 CLogMessage(this).error("No timestamp in airport list, setting to last modified value");
-                latestTimestamp = lastModifiedMsSinceEpoch(nwReply);
+                latestTimestamp = lastModifiedMsSinceEpoch(nwReply.data());
             }
 
             this->m_airportCache.set(airports, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
-            emit this->dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, airports.size());
+
+            this->emitAndLogDataRead(CEntityFlags::AirportEntity, size, res);
         }
 
         void CAirportDataReader::ps_read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)

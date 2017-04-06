@@ -249,7 +249,7 @@ namespace BlackCore
                 const QString url(nwReply->url().toString());
                 nwReply->abort();
                 headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError,
-                                          QString("Reading data failed: " + error + " " + url)));
+                                          QString("Reading data failed: '" + error + "' " + url)));
                 return false;
             }
         }
@@ -406,6 +406,13 @@ namespace BlackCore
                 currentCachedEntity  = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
             }
             return emitted;
+        }
+
+        void CDatabaseReader::emitAndLogDataRead(CEntityFlags::Entity entity, int number, const JsonDatastoreResponse &res)
+        {
+            // never emit when lock is held, deadlock
+            emit dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number);
+            CLogMessage(this).info("Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::flagToString(entity) << res.getUrlString() << res.getLoadTimeString();
         }
 
         CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const

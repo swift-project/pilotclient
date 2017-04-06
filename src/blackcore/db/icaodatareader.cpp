@@ -230,7 +230,6 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isShuttingDown()) { return; }
 
-            const QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -251,8 +250,8 @@ namespace BlackCore
 
             this->m_aircraftIcaoCache.set(codes, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
-            emit dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AircraftIcaoEntity) << urlString;
+
+            this->emitAndLogDataRead(CEntityFlags::AircraftIcaoEntity, n, res);
         }
 
         void CIcaoDataReader::ps_parseAirlineIcaoData(QNetworkReply *nwReplyPtr)
@@ -260,7 +259,6 @@ namespace BlackCore
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
             if (this->isShuttingDown()) { return; }
 
-            QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -279,14 +277,13 @@ namespace BlackCore
 
             this->m_airlineIcaoCache.set(codes, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
-            emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::AirlineIcaoEntity) << urlString;
+
+            this->emitAndLogDataRead(CEntityFlags::AirlineIcaoEntity, n, res);
         }
 
         void CIcaoDataReader::ps_parseCountryData(QNetworkReply *nwReplyPtr)
         {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            QString urlString(nwReply->url().toString());
             CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
             if (res.hasErrorMessage())
             {
@@ -305,8 +302,8 @@ namespace BlackCore
 
             this->m_countryCache.set(countries, latestTimestamp);
             this->updateReaderUrl(getBaseUrl(CDbFlags::DbReading));
-            emit dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, n);
-            CLogMessage(this).info("Read %1 %2 from %3") << n << CEntityFlags::flagToString(CEntityFlags::CountryEntity) << urlString;
+
+            this->emitAndLogDataRead(CEntityFlags::CountryEntity, n, res);
         }
 
         CStatusMessageList CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
