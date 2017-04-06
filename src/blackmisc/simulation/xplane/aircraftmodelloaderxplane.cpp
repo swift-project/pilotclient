@@ -128,11 +128,11 @@ namespace BlackMisc
 
             QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
             {
-                const QString modelName =
+                QString modelName =
                     dirNames.join(' ') %
                     QLatin1Char(' ') % objectName %
                     QLatin1Char(' ') % textureName;
-                return modelName;
+                return std::move(modelName).trimmed();
             }
 
             CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QString &rootDirectory, const QStringList &excludeDirectories)
@@ -476,9 +476,13 @@ namespace BlackMisc
                     CLogMessage(this).warning("%1 - %2: OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
                 }
 
-                // RW: I need an example of the file to properly implement and test it.
-                CLogMessage(this).warning("Not implemented yet.");
-                return false;
+                package.planes.push_back(CSLPlane());
+                package.planes.back().dirNames << package.path.mid(package.path.lastIndexOf('/') + 1);
+                package.planes.back().objectName = tokens[1];
+                package.planes.back().filePath = package.path;
+                // Package name and object name uniquely identify an OBJ8 aircraft.
+                // File path just points to the package root.
+                return true;
             }
 
             bool CAircraftModelLoaderXPlane::parseObj8Command(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
@@ -487,12 +491,11 @@ namespace BlackMisc
                 // OBJ8 <group> <animate YES|NO> <filename>
                 if (tokens.size() != 4)
                 {
-                    CLogMessage(this).warning("%1 - %2: OBJ8_AIRCARFT command requires 3 arguments.") << path << lineNum;
+                    CLogMessage(this).warning("%1 - %2: OBJ8 command requires 3 arguments.") << path << lineNum;
                 }
 
-                // RW: I need an example of the file to properly implement and test it.
-                CLogMessage(this).warning("Not implemented yet.");
-                return false;
+                // command contains no useful information for us
+                return true;
             }
 
             bool CAircraftModelLoaderXPlane::parseHasGearCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)

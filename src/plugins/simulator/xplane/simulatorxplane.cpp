@@ -476,7 +476,8 @@ namespace BlackSimPlugin
 
         QString CSimulatorXPlane::findCslPackage(const QString &modelFile)
         {
-            QDir dir = QFileInfo(modelFile).dir();
+            const QFileInfo info(modelFile);
+            QDir dir = info.isDir() ? QDir(modelFile) : info.dir();
             do
             {
                 if (dir.exists(QStringLiteral("xsb_aircraft.txt")))

@@ -71,7 +71,7 @@ namespace BlackMisc
                     // Model name parts
                     QStringList dirNames; //!< List dir names starting from xsb_aircrafts.txt parent down to obj folder
                     QString objectName;   //!< Complete basename of the object file
-                    QString textureName;  //!< Complete basename of the texture file
+                    QString textureName;  //!< Complete basename of the texture file. Can be empty.
 
                     QString filePath;   //!< object filePath
                     QString icao;       //!< Icao type of this model
