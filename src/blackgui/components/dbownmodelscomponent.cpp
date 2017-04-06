@@ -386,7 +386,7 @@ namespace BlackGui
                         if (!this->m_reloadActions[6])
                         {
                             this->m_reloadActions[6] = new QAction(CIcons::appModels16(), "XPlane models", this);
-                            connect(this->m_reloadActions[3], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
+                            connect(this->m_reloadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked)
                             {
                                 Q_UNUSED(checked);
                                 ownModelsComp->ps_requestSimulatorModels(CSimulatorInfo(CSimulatorInfo::XPLANE), IAircraftModelLoader::InBackgroundNoCache);
