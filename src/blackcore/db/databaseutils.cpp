@@ -306,5 +306,50 @@ namespace BlackCore
         {
             return sApp && sApp->hasWebDataServices() && sApp->getWebDataServices()->hasDbAircraftData();
         }
+
+        const QUrlQuery &CDatabaseUtils::getCompressedQuery()
+        {
+            static const QUrlQuery q("compressed=true");
+            return q;
+        }
+
+        QHttpPart CDatabaseUtils::getJsonTextMultipart(const QJsonObject &json, bool compress)
+        {
+            const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
+            return getJsonTextMultipart(bytes, compress);
+        }
+
+        QHttpPart CDatabaseUtils::getJsonTextMultipart(const QJsonArray &json, bool compress)
+        {
+            const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
+            return getJsonTextMultipart(bytes, compress);
+        }
+
+        QHttpPart CDatabaseUtils::getJsonTextMultipart(const QByteArray &bytes, bool compress)
+        {
+            static const QString name("form-data; name=\"swiftjson\"");
+            static const QVariant header(name);
+            QHttpPart textPart;
+            textPart.setHeader(QNetworkRequest::ContentDispositionHeader, header);
+            if (compress)
+            {
+                QByteArray ba = qCompress(bytes);
+                ba.remove(0, 4); // remove the non standard header
+                textPart.setBody(ba);
+            }
+            else
+            {
+                textPart.setBody(bytes);
+            }
+            return textPart;
+        }
+
+        QHttpPart CDatabaseUtils::getMultipartWithDebugFlag()
+        {
+            QHttpPart textPartDebug;
+            textPartDebug.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"XDEBUG_SESSION_START\""));
+            textPartDebug.setBody(QString("ECLIPSE_DBGP").toUtf8());
+            return textPartDebug;
+        }
     } // ns
 } // ns

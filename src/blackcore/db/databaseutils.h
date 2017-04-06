@@ -15,6 +15,11 @@
 #include "blackcore/blackcoreexport.h"
 #include "blackcore/progress.h"
 #include "blackmisc/simulation/aircraftmodel.h"
+#include <QHttpPart>
+#include <QUrlQuery>
+#include <QByteArray>
+#include <QJsonArray>
+#include <QJsonObject>
 
 namespace BlackCore
 {
@@ -69,6 +74,21 @@ namespace BlackCore
 
             //! Convenience function
             static bool hasDbAircraftData();
+
+            //! Mark as compressed
+            static const QUrlQuery &getCompressedQuery();
+
+            //! Multipart for JSON
+            static QHttpPart getJsonTextMultipart(const QJsonObject &json, bool compress);
+
+            //! Multipart for JSON
+            static QHttpPart getJsonTextMultipart(const QJsonArray &json, bool compress);
+
+            //! Multipart for JSON
+            static QHttpPart getJsonTextMultipart(const QByteArray &bytes, bool compress);
+
+            //! Multipart with DEBUG FLAG for server
+            static QHttpPart getMultipartWithDebugFlag();
         };
     } // ns
 } // ns

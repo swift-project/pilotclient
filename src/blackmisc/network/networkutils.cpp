@@ -259,38 +259,9 @@ namespace BlackMisc
             }
         }
 
-        QHttpPart CNetworkUtils::getMultipartWithDebugFlag()
-        {
-            QHttpPart textPartDebug;
-            textPartDebug.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"XDEBUG_SESSION_START\""));
-            textPartDebug.setBody(QString("ECLIPSE_DBGP").toUtf8());
-            return textPartDebug;
-        }
-
         void CNetworkUtils::addDebugFlag(QUrlQuery &qurl)
         {
             qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP");
-        }
-
-        QHttpPart CNetworkUtils::getJsonTextMultipart(const QJsonObject &json)
-        {
-            const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
-            return getJsonTextMultipart(bytes);
-        }
-
-        QHttpPart CNetworkUtils::getJsonTextMultipart(const QJsonArray &json)
-        {
-            const QByteArray bytes(QJsonDocument(json).toJson(QJsonDocument::Compact));
-            return getJsonTextMultipart(bytes);
-        }
-
-        QHttpPart CNetworkUtils::getJsonTextMultipart(const QByteArray &bytes)
-        {
-            QHttpPart textPart;
-            QString name("form-data; name=\"swiftjson\"");
-            textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant(name));
-            textPart.setBody(bytes);
-            return textPart;
         }
 
         QNetworkRequest CNetworkUtils::getNetworkRequest(const CUrl &url, RequestType type)

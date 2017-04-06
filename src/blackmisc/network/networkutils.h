@@ -15,10 +15,6 @@
 #include "blackmisc/blackmiscexport.h"
 #include "blackmisc/network/urllist.h"
 
-#include <QByteArray>
-#include <QHttpPart>
-#include <QJsonArray>
-#include <QJsonObject>
 #include <QNetworkRequest>
 #include <QString>
 #include <QStringList>
@@ -109,20 +105,8 @@ namespace BlackMisc
             //! Set swift client SSL certificate
             static void setSwiftClientSslCertificate(QNetworkRequest &request, const BlackMisc::Network::CUrlList &swiftSharedUrls);
 
-            //! Multipart with DEBUG FLAG for server
-            static QHttpPart getMultipartWithDebugFlag();
-
             //! Add debug flag
             static void addDebugFlag(QUrlQuery &qurl);
-
-            //! Multipart for JSON
-            static QHttpPart getJsonTextMultipart(const QJsonObject &json);
-
-            //! Multipart for JSON
-            static QHttpPart getJsonTextMultipart(const QJsonArray &json);
-
-            //! Multipart for JSON
-            static QHttpPart getJsonTextMultipart(const QByteArray &bytes);
 
             //! Our tweaked network request
             static QNetworkRequest getNetworkRequest(const CUrl &url, RequestType type = Get);
