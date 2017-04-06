@@ -10,6 +10,7 @@
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/databasewriter.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/db/datastoreutility.h"
 #include "blackmisc/logcategory.h"
 #include "blackmisc/logcategorylist.h"
@@ -29,6 +30,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Simulation;
+using namespace BlackCore::Db;
 
 namespace BlackCore
 {
@@ -73,16 +75,18 @@ namespace BlackCore
                 return msgs;
             }
 
-            QUrl url(m_modelPublishUrl.toQUrl());
-            QNetworkRequest request(url);
-            CNetworkUtils::ignoreSslVerification(request);
+            const bool compress = models.size() > 3;
             QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
-            multiPart->append(CNetworkUtils::getJsonTextMultipart(models.toDatabaseJson()));
+            multiPart->append(CDatabaseUtils::getJsonTextMultipart(models.toDatabaseJson(), compress));
             if (sApp->getGlobalSetup().dbDebugFlag())
             {
-                multiPart->append(CNetworkUtils::getMultipartWithDebugFlag());
+                multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag());
             }
 
+            QUrl url(m_modelPublishUrl.toQUrl());
+            if (compress) { url.setQuery(CDatabaseUtils::getCompressedQuery()); }
+            QNetworkRequest request(url);
+            CNetworkUtils::ignoreSslVerification(request);
             m_pendingReply = sApp->postToNetwork(request, multiPart, { this, &CDatabaseWriter::ps_postModelsResponse});
             m_replyPendingSince = QDateTime::currentMSecsSinceEpoch();
             return msgs;
