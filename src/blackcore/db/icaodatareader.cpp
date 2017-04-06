@@ -10,6 +10,7 @@
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/icaodatareader.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
@@ -323,7 +324,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::CountryEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "countries.json");
-                const QString countriesJson(CFileUtils::readFileToString(fileName));
+                const QJsonObject countriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                 if (countriesJson.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
@@ -333,7 +334,7 @@ namespace BlackCore
                     try
                     {
                         CCountryList countries;
-                        countries.convertFromJson(Json::jsonObjectFromString(countriesJson));
+                        countries.convertFromJson(countriesJson);
                         const int c = countries.size();
                         this->m_countryCache.set(countries);
                         reallyRead |= CEntityFlags::CountryEntity;
@@ -350,7 +351,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "aircrafticao.json");
-                const QString aircraftJson(fileName);
+                const QJsonObject aircraftJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                 if (aircraftJson.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
@@ -360,7 +361,7 @@ namespace BlackCore
                     try
                     {
                         CAircraftIcaoCodeList aircraftIcaos;
-                        aircraftIcaos.convertFromJson(Json::jsonObjectFromString(aircraftJson));
+                        aircraftIcaos.convertFromJson(aircraftJson);
                         const int c = aircraftIcaos.size();
                         this->m_aircraftIcaoCache.set(aircraftIcaos);
                         reallyRead |= CEntityFlags::AircraftIcaoEntity;
@@ -377,7 +378,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "airlineicao.json");
-                const QString airlineJson(fileName);
+                const QJsonObject airlineJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                 if (airlineJson.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
@@ -387,7 +388,7 @@ namespace BlackCore
                     try
                     {
                         CAirlineIcaoCodeList airlineIcaos;
-                        airlineIcaos.convertFromJson(Json::jsonObjectFromString(airlineJson));
+                        airlineIcaos.convertFromJson(airlineJson);
                         const int c = airlineIcaos.size();
                         this->m_airlineIcaoCache.set(airlineIcaos);
                         reallyRead |= CEntityFlags::AirlineIcaoEntity;

@@ -10,6 +10,7 @@
 #include "blackcore/application.h"
 #include "blackcore/data/globalsetup.h"
 #include "blackcore/db/modeldatareader.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackmisc/fileutils.h"
 #include "blackmisc/json.h"
 #include "blackmisc/logmessage.h"
@@ -34,6 +35,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Simulation;
 using namespace BlackMisc::Network;
 using namespace BlackCore::Data;
+using namespace BlackCore::Db;
 
 namespace BlackCore
 {
@@ -383,7 +385,7 @@ namespace BlackCore
 
         CStatusMessageList CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead)
         {
-            QDir directory(dir);
+            const QDir directory(dir);
             if (!directory.exists())
             {
                 return CStatusMessage(this).error("Missing directory '%1'") << dir;
@@ -396,7 +398,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::LiveryEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json");
-                const QString liveriesJson(CFileUtils::readFileToString(fileName));
+                const QJsonObject liveriesJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                 if (liveriesJson.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
@@ -423,7 +425,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::ModelEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "models.json");
-                const QString modelsJson(CFileUtils::readFileToString(fileName));
+                const QJsonObject modelsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                 if (modelsJson.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
@@ -433,7 +435,7 @@ namespace BlackCore
                     try
                     {
                         CAircraftModelList models;
-                        models.convertFromJson(Json::jsonObjectFromString(modelsJson));
+                        models.convertFromJson(modelsJson);
                         const int c = models.size();
                         this->m_modelCache.set(models);
                         emit dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, c);
@@ -450,7 +452,7 @@ namespace BlackCore
             if (whatToRead.testFlag(CEntityFlags::DistributorEntity))
             {
                 const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json");
-                const QString distributorsJson(CFileUtils::readFileToString(fileName));
+                const QJsonObject distributorsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
                 if (distributorsJson.isEmpty())
                 {
                     msgs.push_back(CStatusMessage(this).error("Failed to read from file/empty file '%1'") << fileName);
@@ -460,7 +462,7 @@ namespace BlackCore
                     try
                     {
                         CDistributorList distributors;
-                        distributors.convertFromJson(Json::jsonObjectFromString(distributorsJson));
+                        distributors.convertFromJson(distributorsJson);
                         const int c = distributors.size();
                         this->m_distributorCache.set(distributors);
                         emit dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c);

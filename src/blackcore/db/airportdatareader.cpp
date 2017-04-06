@@ -8,6 +8,7 @@
  */
 
 #include "airportdatareader.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackcore/application.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/network/networkutils.h"
@@ -67,7 +68,7 @@ namespace BlackCore
 
             int c = 0;
             CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
-            const QString airportsJson(CFileUtils::readFileToString(fileName));
+            const QJsonObject airportsJson(CDatabaseUtils::readQJsonObjectFromDatabaseFile(fileName));
             if (!airportsJson.isEmpty())
             {
                 try
