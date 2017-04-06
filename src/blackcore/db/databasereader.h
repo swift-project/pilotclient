@@ -34,7 +34,6 @@
 
 class QNetworkReply;
 namespace BlackMisc { class CLogCategoryList; }
-
 namespace BlackCore
 {
     namespace Db
@@ -109,9 +108,9 @@ namespace BlackCore
             struct JsonDatastoreResponse : public HeaderResponse
             {
             private:
-                QJsonArray m_jsonArray;           //!< JSON array data
-                int        m_arraySize  = -1;     //!< size of array, if applicable (copied to member for debugging purposes)
-                bool       m_restricted = false;  //!< restricted reponse, only changed data
+                QJsonArray m_jsonArray;          //!< JSON array data
+                int        m_arraySize  = -1;    //!< size of array, if applicable (copied to member for debugging purposes)
+                bool       m_restricted = false; //!< restricted reponse, only changed data
 
             public:
                 //! Any data?
@@ -274,7 +273,7 @@ namespace BlackCore
             //! \remark normally constant after startup phase
             static BlackMisc::Network::CUrl getWorkingDbDataFileLocationUrl();
 
-            //! File appendix for given mode, such as ".php" or ".json"
+            //! File name for given mode, either php service or shared file name
             static QString fileNameForMode(BlackMisc::Network::CEntityFlags::Entity entity, BlackMisc::Db::CDbFlags::DataRetrievalModeFlag mode);
 
             //! \name Cache access

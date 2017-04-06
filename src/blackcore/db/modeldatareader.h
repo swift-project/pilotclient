@@ -115,7 +115,7 @@ namespace BlackCore
             //! \threadsafe
             bool areAllDataRead() const;
 
-            //! Read to JSON file
+            //! Read from local JSON file
             BlackMisc::CStatusMessageList readFromJsonFiles(const QString &dir, BlackMisc::Network::CEntityFlags::Entity whatToRead = BlackMisc::Network::CEntityFlags::DistributorLiveryModel);
 
             //! Read from static DB data file
