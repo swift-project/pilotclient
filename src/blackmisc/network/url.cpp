@@ -83,7 +83,7 @@ namespace BlackMisc
 
         void CUrl::setQuery(const QString &query)
         {
-            QString q(stripQueryString(query));
+            const QString q(stripQueryString(query));
             m_query = q;
         }
 
@@ -94,7 +94,7 @@ namespace BlackMisc
 
         QString CUrl::appendQuery(const QString &queryToAppend)
         {
-            QString q(stripQueryString(queryToAppend));
+            const QString q(stripQueryString(queryToAppend));
             if (q.isEmpty()) { return m_query;  }
             if (!hasQuery())
             {

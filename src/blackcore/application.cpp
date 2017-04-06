@@ -42,6 +42,7 @@
 #include <QEventLoop>
 #include <QFile>
 #include <QFileInfo>
+#include <QHttpMultiPart>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>

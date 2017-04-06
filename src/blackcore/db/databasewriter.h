@@ -36,7 +36,7 @@ namespace BlackCore
             //! Constructor
             CDatabaseWriter(const BlackMisc::Network::CUrl &baseUrl, QObject *parent);
 
-            //! Write models to DB
+            //! Write model to DB
             BlackMisc::CStatusMessageList asyncPublishModel(const BlackMisc::Simulation::CAircraftModel &model);
 
             //! Write models to DB
@@ -44,6 +44,9 @@ namespace BlackCore
 
             //! Shutdown
             void gracefulShutdown();
+
+            //! Shutting down?
+            bool isShuttingDown() const { return m_shutdown; }
 
         signals:
             //! Published models, the response to \sa asyncPublishModels

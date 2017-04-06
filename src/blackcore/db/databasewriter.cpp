@@ -98,16 +98,15 @@ namespace BlackCore
         {
             static const CLogCategoryList cats(CLogCategoryList(this).join({ CLogCategory::swiftDbWebservice()}));
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            m_pendingReply = nullptr;
-            QUrl url(nwReply->url());
-            QString urlString(url.toString());
-
             if (m_shutdown)
             {
                 nwReply->abort();
                 return;
             }
 
+            m_pendingReply = nullptr;
+            const QUrl url(nwReply->url());
+            const QString urlString(url.toString());
             if (nwReply->error() == QNetworkReply::NoError)
             {
                 const QString dataFileData(nwReply->readAll().trimmed());
@@ -128,7 +127,7 @@ namespace BlackCore
             }
             else
             {
-                QString error = nwReply->errorString();
+                const QString error = nwReply->errorString();
                 nwReply->close(); // close asap
                 const CStatusMessageList msgs( {CStatusMessage(cats, CStatusMessage::SeverityError, "HTTP error: " + error)});
                 emit publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
@@ -147,7 +146,7 @@ namespace BlackCore
         bool CDatabaseWriter::isReplyOverdue() const
         {
             if (m_replyPendingSince < 0 || !m_pendingReply) { return false; }
-            qint64 ms = QDateTime::currentMSecsSinceEpoch() - m_replyPendingSince;
+            const qint64 ms = QDateTime::currentMSecsSinceEpoch() - m_replyPendingSince;
             return ms > 7500;
         }
 
