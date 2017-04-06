@@ -55,6 +55,18 @@ namespace BlackCore
             //! Create stash models if the DB models miss that simulator
             static BlackMisc::Simulation::CAircraftModelList updateSimulatorForFsFamily(const BlackMisc::Simulation::CAircraftModelList &ownModels, int maxToStash = -1, BlackCore::IProgressIndicator *progressIndicator = nullptr, bool processEvents = true);
 
+            //! Database JSON from content string, which can be compressed
+            static QJsonDocument databaseJsonToQJsonDocument(const QString &content);
+
+            //! QJsonDocument from database JSON file (normally shared file)
+            static QJsonDocument readQJsonDocumentFromDatabaseFile(const QString &filename);
+
+            //! QJsonObject from database JSON file (normally shared file)
+            static QJsonObject readQJsonObjectFromDatabaseFile(const QString &filename);
+
+            //! QJsonObject from database JSON file (normally shared file)
+            static QJsonObject readQJsonObjectFromDatabaseFile(const QString &directory, const QString &filename);
+
             //! Convenience function
             static bool hasDbAircraftData();
         };

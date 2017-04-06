@@ -9,6 +9,7 @@
 
 #include "blackcore/db/databasereader.h"
 #include "blackcore/db/infodatareader.h"
+#include "blackcore/db/databaseutils.h"
 #include "blackcore/webdataservices.h"
 #include "blackcore/application.h"
 #include "blackmisc/db/datastoreutility.h"
@@ -32,6 +33,7 @@ using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackCore;
 using namespace BlackCore::Data;
+using namespace BlackCore::Db;
 
 namespace BlackCore
 {
@@ -188,7 +190,7 @@ namespace BlackCore
             const bool ok = this->setHeaderInfoPart(datastoreResponse, nwReply);
             if (ok)
             {
-                const QString dataFileData = nwReply->readAll().trimmed();
+                const QString dataFileData = nwReply->readAll();
                 nwReply->close(); // close asap
                 if (dataFileData.isEmpty())
                 {
@@ -337,7 +339,7 @@ namespace BlackCore
                 url.appendPath(fileName);
 
                 const QString entityString = CEntityFlags::flagToString(currentEntity);
-                CLogMessage(this).info("Triggered read of header for shared file of %1") << entityString;
+                CLogMessage(this).info("Triggered read of header for shared file of '%1'") << entityString;
                 const QNetworkReply *reply = sApp->headerFromNetwork(url, { this, &CDatabaseReader::receivedSharedFileHeader });
                 if (reply) { c++; }
                 currentEntity = CEntityFlags::iterateDbEntities(allEntities);
@@ -439,7 +441,7 @@ namespace BlackCore
             // wrap pointer, make sure any exit cleans up reply
             // required to use delete later as object is created in a different thread
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-            if (this->isAbandoned()) { return; }
+            if (this->isShuttingDown()) { return; }
             this->receivedSharedFileHeaderNonClosing(nwReplyPtr);
             nwReply->close();
         }
@@ -585,7 +587,13 @@ namespace BlackCore
                 return;
             }
 
-            const QJsonDocument jsonResponse = QJsonDocument::fromJson(jsonContent.toUtf8());
+            const QJsonDocument jsonResponse = CDatabaseUtils::databaseJsonToQJsonDocument(jsonContent);
+            if (jsonResponse.isEmpty())
+            {
+                datastoreResponse.setMessage(CStatusMessage(getLogCategories(), CStatusMessage::SeverityError, "Empty JSON, no data"));
+                return;
+            }
+
             if (jsonResponse.isArray())
             {
                 // directly an array, no further info

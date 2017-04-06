@@ -11,6 +11,7 @@
 #include "databaseutils.h"
 #include "blackcore/webdataservices.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/fileutils.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -237,6 +238,68 @@ namespace BlackCore
                 stashModels.push_back(dbModel);
             }
             return stashModels;
+        }
+
+        QJsonDocument CDatabaseUtils::databaseJsonToQJsonDocument(const QString &content)
+        {
+            static const QString compressed("swift:");
+            if (content.isEmpty()) { return QJsonDocument(); }
+            QByteArray byteData;
+            if (Json::looksLikeJson(content))
+            {
+                // uncompressed
+                byteData = content.toUtf8();
+            }
+            else if (content.startsWith(compressed) && content.length() > compressed.length() + 3)
+            {
+                do
+                {
+                    // "swift:1234:base64encoded
+                    const int cl = compressed.length();
+                    const int contentIndex = content.indexOf(':', cl);
+                    if (contentIndex < cl) break; // should not happen, malformed
+                    const QString ls = content.mid(cl, contentIndex - cl); // content length
+                    bool ok;
+                    const qint32 size = ls.toInt(&ok);
+                    if (!ok) break; // malformed size
+                    if (size < 1) break;
+
+                    // Length header, unsigned, big-endian, 32-bit integer
+                    QByteArray lengthHeader;
+                    QDataStream stream(&lengthHeader, QIODevice::WriteOnly);
+                    stream.setByteOrder(QDataStream::BigEndian);
+                    stream << size;
+
+                    QByteArray ba;
+                    ba.append(content.mid(contentIndex));
+                    ba = QByteArray::fromBase64(ba);
+                    ba.insert(0, lengthHeader); // adding 4 bytes length header
+                    byteData = qUncompress(ba);
+                }
+                while (false);
+
+            }
+            if (byteData.isEmpty()) { return QJsonDocument(); }
+            return QJsonDocument::fromJson(byteData);
+        }
+
+        QJsonDocument CDatabaseUtils::readQJsonDocumentFromDatabaseFile(const QString &filename)
+        {
+            const QString raw = CFileUtils::readFileToString(filename);
+            if (raw.isEmpty()) { return QJsonDocument(); }
+            return CDatabaseUtils::databaseJsonToQJsonDocument(raw);
+        }
+
+        QJsonObject CDatabaseUtils::readQJsonObjectFromDatabaseFile(const QString &filename)
+        {
+            const QString raw = CFileUtils::readFileToString(filename);
+            if (raw.isEmpty()) { return QJsonObject(); }
+            return BlackMisc::Json::jsonObjectFromString(raw);
+        }
+
+        QJsonObject CDatabaseUtils::readQJsonObjectFromDatabaseFile(const QString &directory, const QString &filename)
+        {
+            return CDatabaseUtils::readQJsonObjectFromDatabaseFile(CFileUtils::appendFilePaths(directory, filename));
         }
 
         bool CDatabaseUtils::hasDbAircraftData()
