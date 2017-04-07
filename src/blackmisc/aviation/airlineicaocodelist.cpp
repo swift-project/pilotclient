@@ -106,6 +106,22 @@ namespace BlackMisc
             });
         }
 
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByValidDesignator() const
+        {
+            return this->findBy([](const CAirlineIcaoCode & code)
+            {
+                return code.hasValidDesignator();
+            });
+        }
+
+        CAirlineIcaoCodeList CAirlineIcaoCodeList::findByInvalidDesignator() const
+        {
+            return this->findBy([](const CAirlineIcaoCode & code)
+            {
+                return !code.hasValidDesignator();
+            });
+        }
+
         CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
         {
             if (icaoPattern.hasValidDbKey()) { return icaoPattern; }

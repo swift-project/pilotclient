@@ -34,6 +34,22 @@ namespace BlackMisc
             });
         }
 
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByValidDesignator() const
+        {
+            return this->findBy([](const CAircraftIcaoCode & code)
+            {
+                return code.hasValidDesignator();
+            });
+        }
+
+        CAircraftIcaoCodeList CAircraftIcaoCodeList::findByInvalidDesignator() const
+        {
+            return this->findBy([](const CAircraftIcaoCode & code)
+            {
+                return !code.hasValidDesignator();
+            });
+        }
+
         CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignatorOrIataCode(const QString &icaoOrIata) const
         {
             if (icaoOrIata.isEmpty()) { return CAircraftIcaoCodeList(); }

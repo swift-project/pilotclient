@@ -54,6 +54,12 @@ namespace BlackMisc
             //! Find by family
             CAircraftIcaoCodeList findByFamily(const QString &family) const;
 
+            //! Ones with a valid designator
+            CAircraftIcaoCodeList findByValidDesignator() const;
+
+            //! Ones with an invalid designator
+            CAircraftIcaoCodeList findByInvalidDesignator() const;
+
             //! Find by ICAO/IATA code
             CAircraftIcaoCodeList findByDesignatorOrIataCode(const QString &icaoOrIata) const;
 

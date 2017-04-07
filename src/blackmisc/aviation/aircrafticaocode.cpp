@@ -532,8 +532,8 @@ namespace BlackMisc
 
             // Amphibian, Glider, Helicopter, Seaplane, Landplane, Tilt wing
             static const QString validDescriptions = "AGHSLT";
-            // Electric, Jet, Piston, Turpoprop
-            static const QString validEngines = "EJPT";
+            // Electric, Jet, Piston, Turpoprop, and - for no engine
+            static const QString validEngines = "EJPT-";
 
             if (!validDescriptions.contains(combinedType[0])) { return false; }
             if (!combinedType[1].isDigit()) { return false; }

@@ -74,6 +74,12 @@ namespace BlackMisc
             //! Find by military flag
             CAirlineIcaoCodeList findByMilitary(bool military) const;
 
+            //! The ones with a valid designator
+            CAirlineIcaoCodeList findByValidDesignator() const;
+
+            //! The ones with an invalid designator
+            CAirlineIcaoCodeList findByInvalidDesignator() const;
+
             //! Best selection by given pattern
             CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const;
 

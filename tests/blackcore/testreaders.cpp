@@ -81,10 +81,29 @@ namespace BlackCoreTest
         QVERIFY2(this->m_icaoReader->getAircraftIcaoCodesCount() > 0, qUtf8Printable(m1));
         QVERIFY2(this->m_icaoReader->getAirlineIcaoCodesCount() > 0, qUtf8Printable(m2));
 
-        const CAircraftIcaoCode aircraftIcao(this->m_icaoReader->getAircraftIcaoCodes().frontOrDefault());
-        const CAirlineIcaoCode airlineIcao(this->m_icaoReader->getAirlineIcaoCodes().frontOrDefault());
-        QVERIFY2(aircraftIcao.hasDesignator(), "Missing data for aircraft ICAO");
-        QVERIFY2(airlineIcao.hasValidDesignator(), "Missing data for airline ICAO");
+        // reader set to ignore incomplete ICAO data, so sizes must match
+        const CAircraftIcaoCodeList aircraftIcaos = this->m_icaoReader->getAircraftIcaoCodes();
+        const CAirlineIcaoCodeList airlineIcaos = this->m_icaoReader->getAirlineIcaoCodes();
+        const CAircraftIcaoCodeList aircraftIcaosValid(aircraftIcaos.findByValidDesignator());
+        const CAirlineIcaoCodeList airlineIcaosValid(airlineIcaos.findByValidDesignator());
+        const CAircraftIcaoCodeList aircraftIcaosInvalid(aircraftIcaos.findByInvalidDesignator());
+        const CAirlineIcaoCodeList airlineIcaosInvalid(airlineIcaos.findByInvalidDesignator());
+        const int aircraftValidSize = aircraftIcaosValid.size();
+        const int aircraftSize = aircraftIcaos.size();
+        const int airlineValidSize = airlineIcaosValid.size();
+        const int airlineSize = airlineIcaos.size();
+
+        if (!aircraftIcaosInvalid.isEmpty())
+        {
+            qDebug() << aircraftIcaosInvalid.toQString();
+        }
+        if (!airlineIcaosInvalid.isEmpty())
+        {
+            qDebug() << airlineIcaosInvalid.toQString();
+        }
+
+        QVERIFY2(aircraftValidSize == aircraftSize, "All aircraft ICAOs must be valid");
+        QVERIFY2(airlineValidSize == airlineSize, "Some airline ICAOs must be valid");
 
         CApplication::processEventsFor(2500); // make sure events are processed
     }

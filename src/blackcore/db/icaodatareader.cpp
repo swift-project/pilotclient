@@ -239,7 +239,7 @@ namespace BlackCore
             }
 
             // normally read from special view which already filter incomplete
-            const CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(res, false);
+            const CAircraftIcaoCodeList codes = CAircraftIcaoCodeList::fromDatabaseJson(res, true);
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
@@ -266,7 +266,7 @@ namespace BlackCore
                 emit dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0);
                 return;
             }
-            const CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(res, false);
+            const CAirlineIcaoCodeList codes = CAirlineIcaoCodeList::fromDatabaseJson(res, true);
             const int n = codes.size();
             qint64 latestTimestamp = codes.latestTimestampMsecsSinceEpoch();
             if (n > 0 && latestTimestamp < 0)
