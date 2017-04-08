@@ -276,7 +276,8 @@ QPlainTextEdit {
 
 QGroupBox {
   border: 1px solid green;
-  margin-top: 2ex; /* the x-height of the relevant font, leave space at the top for the title */
+  margin-top: 2.5ex; /* the x-height of the relevant font, leave space at the top for the title */
+  padding-top: 2.5ex;
   border-radius: 5px;
   background: black; /* background is background color here */
   background-image: url(:/textures/icons/textures/texture-inner.jpg);
@@ -291,7 +292,7 @@ QGroupBox::title {
   left: 5px;
   subcontrol-origin: margin;
   subcontrol-position: middle left; /* position at the top center */
-  padding: 0px 10px;
+  padding: 0px 10px 0px 10px;
   background-color: darkblue;
   border: 1px solid green;
   border-radius: 5px;

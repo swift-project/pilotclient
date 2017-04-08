@@ -250,7 +250,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>110</height>
+           <height>100</height>
           </size>
          </property>
         </widget>
@@ -332,15 +332,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Views::CAircraftModelView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/aircraftmodelview.h</header>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::Editors::CAircraftModelForm</class>
    <extends>QFrame</extends>
    <header>blackgui/editors/aircraftmodelform.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Views::CAircraftModelView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/views/aircraftmodelview.h</header>
   </customwidget>
   <customwidget>
    <class>BlackGui::Editors::CModelMappingForm</class>
