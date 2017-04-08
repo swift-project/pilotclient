@@ -64,9 +64,17 @@ namespace BlackCore
         //! \threadsafe
         BlackCore::Data::CGlobalSetup getSetup() const;
 
+        //! Last distribution URL successfully read
+        //! \threadsafe
+        QString getLastSuccessfulSetupUrl() const;
+
         //! Distributions info (channel, version, platforms, download URLs)
         //! \threadsafe
         BlackMisc::Db::CDistributionList getDistributionInfo() const;
+
+        //! Last distribution URL successfully read
+        //! \threadsafe
+        QString getLastSuccessfulDistributionUrl() const;
 
         //! Last setup parsing error messages (if any)
         BlackMisc::CStatusMessageList getLastSetupReadErrorMessages() const;
@@ -138,6 +146,9 @@ namespace BlackCore
         QCommandLineOption m_cmdBootstrapUrl;                    //!< bootstrap URL
         QCommandLineOption m_cmdBootstrapMode;                   //!< bootstrap mode
         mutable QReadWriteLock m_lockSetup;                      //!< lock for setup
+        mutable QReadWriteLock m_lockDistribution;               //!< lock for distribution
+        QString m_lastSuccessfulSetupUrl;                        //!< last successful read setup URL
+        QString m_lastSuccessfulDistributionUrl;                 //!< last successful read distribution URL
         BlackMisc::CStatusMessageList m_setupReadErrorMsgs;      //!< last parsing error messages
         BlackMisc::CData<BlackCore::Data::TGlobalSetup>    m_setup {this, &CSetupReader::ps_setupChanged}; //!< data cache setup
         BlackMisc::CData<BlackMisc::Db::TDistributionInfo> m_distributions {this};                         //!< data cache distributions

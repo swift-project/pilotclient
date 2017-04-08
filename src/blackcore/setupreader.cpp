@@ -200,8 +200,7 @@ namespace BlackCore
         if (this->m_shutdown) { return CStatusMessage(this, CStatusMessage::SeverityError, "shutdown"); }
         if (!sApp->isNetworkAccessible())
         {
-            const CStatusMessage m(this, CStatusMessage::SeverityError,
-                                   "No network, cancelled reading of setup");
+            const CStatusMessage m(this, CStatusMessage::SeverityError, "No network, cancelled reading of setup");
             CStatusMessageList msgs(m);
             msgs.push_back(this->manageSetupAvailability(false, false));
             this->setLastSetupReadErrorMessages(msgs);
@@ -230,7 +229,7 @@ namespace BlackCore
         const CUrl url(this->m_distributionUrls.obtainNextWorkingUrl());
         if (url.isEmpty())
         {
-            CLogMessage(this).warning("Cannot read update info, URLs: %1, failed URLs: %2")
+            CLogMessage(this).warning("Cannot read update info, URLs: '%1', failed URLs: '%2'")
                     << this->m_distributionUrls
                     << this->m_distributionUrls.getFailedUrls();
             this->manageDistributionsInfoAvailability(false);
@@ -329,7 +328,7 @@ namespace BlackCore
                     if (sameVersionLoaded)
                     {
                         this->m_distributionUrls = currentSetup.getDistributionUrls(); // defaults
-                        CLogMessage(this).info("Same setup version loaded from %1 as already in data cache %2") << urlString << m_setup.getFilename();
+                        CLogMessage(this).info("Same setup version loaded from '%1' as already in data cache '%2'") << urlString << m_setup.getFilename();
                         CLogMessage::preformatted(this->manageSetupAvailability(true));
                         return; // success
                     }
@@ -342,7 +341,12 @@ namespace BlackCore
                     {
                         // no issue with cache
                         this->m_distributionUrls = loadedSetup.getDistributionUrls();
+                        CLogMessage(this).info("Loaded setup from '%1'") << urlString;
                         CLogMessage(this).info("Setup: Updated data cache in '%1'") << this->m_setup.getFilename();
+                        {
+                            QWriteLocker l(&m_lockSetup);
+                            m_lastSuccessfulSetupUrl = urlString;
+                        }
                     }
                     CLogMessage::preformatted(this->manageSetupAvailability(true));
                     return;
@@ -366,7 +370,7 @@ namespace BlackCore
             // network error, log as warning as we will read again if possible
             // however, store as error because this will be a possible root cause if nothing else is
             nwReply->abort();
-            const CStatusMessage msg = CStatusMessage(this).error("Reading setup failed %1 %2 (can possibly be fixed by reading from another server afterwards)") << replyMessage << urlString;
+            const CStatusMessage msg = CStatusMessage(this).error("Reading setup failed '%1' '%2' (can possibly be fixed by reading from another server afterwards)") << replyMessage << urlString;
             CLogMessage::preformatted(msg);
             this->setLastSetupReadErrorMessages(msg);
         }
@@ -427,6 +431,11 @@ namespace BlackCore
                         }
                         else
                         {
+                            {
+                                QWriteLocker l(&m_lockDistribution);
+                                m_lastSuccessfulDistributionUrl = urlString;
+                            }
+                            CLogMessage(this).info("Distribution info loaded from '%1") << urlString;
                             CLogMessage(this).info("Distribution info: Updated data cache in '%1'") << m_distributions.getFilename();
                             this->manageDistributionsInfoAvailability(true);
                         } // cache
@@ -441,8 +450,7 @@ namespace BlackCore
                     const CStatusMessage msg = ex.toStatusMessage(this, errorMsg);
                     CLogMessage::preformatted(msg);
 
-                    // in dev. I get notified, in productive code I try next URL
-                    // by falling thru
+                    // in dev. I get notified, in productive code I try next URL by falling thru
                     BLACK_VERIFY_X(false, Q_FUNC_INFO, errorMsg.toLocal8Bit().constData());
                 }
             } // json empty
@@ -487,9 +495,21 @@ namespace BlackCore
         return m_setup.get();
     }
 
+    QString CSetupReader::getLastSuccessfulSetupUrl() const
+    {
+        QReadLocker l(&m_lockSetup);
+        return m_lastSuccessfulSetupUrl;
+    }
+
     CDistributionList CSetupReader::getDistributionInfo() const
     {
         return m_distributions.get();
+    }
+
+    QString CSetupReader::getLastSuccessfulDistributionUrl() const
+    {
+        QReadLocker l(&m_lockDistribution);
+        return m_lastSuccessfulDistributionUrl;
     }
 
     CStatusMessageList CSetupReader::getLastSetupReadErrorMessages() const

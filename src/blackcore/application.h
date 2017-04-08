@@ -162,6 +162,14 @@ namespace BlackCore
         //! Setup reader?
         bool hasSetupReader() const;
 
+        //! Last setup URL (successfully read)
+        //! \threadsafe
+        QString getLastSuccesfulSetupUrl() const;
+
+        //! Last distribution URL (successfully read)
+        //! \threadsafe
+        QString getLastSuccesfulDistributionUrl() const;
+
         //! Setup already synchronized
         bool isSetupAvailable() const;
 

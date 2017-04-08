@@ -38,9 +38,9 @@ namespace BlackGui
             connect(sGui, &CGuiApplication::distributionInfoAvailable, this, &CDistributionInfoComponent::ps_loadedDistributionInfo);
             QTimer::singleShot(10 * 1000, this, [ = ]
             {
-                // use has time out failover with cache data
+                // use this as timeout failover with cached data
                 if (m_distributionsLoaded) { return; }
-                this->ps_loadedDistributionInfo(true); // failover
+                this->ps_loadedDistributionInfo(true);
             });
 
             connect(ui->pb_CheckForUpdates, &QPushButton::pressed, this, &CDistributionInfoComponent::ps_loadSetup);
@@ -61,6 +61,7 @@ namespace BlackGui
 
         void CDistributionInfoComponent::ps_loadedDistributionInfo(bool success)
         {
+            ui->pb_CheckForUpdates->setToolTip("");
             if (!success)
             {
                 CLogMessage(this).warning("Loading setup or distribution information failed");
@@ -69,6 +70,7 @@ namespace BlackGui
 
             m_distributionsLoaded = true;
             this->ps_channelChanged();
+            ui->pb_CheckForUpdates->setToolTip(sApp->getLastSuccesfulDistributionUrl());
 
             // emit only after all has been set
             emit this->distributionInfoAvailable(success);
