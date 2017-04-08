@@ -107,6 +107,9 @@ namespace BlackGui
             //! Is stashed view
             bool isStashTab() const;
 
+            //! Tab can contribute to model set
+            bool canAddToModelSetTab() const;
+
             //! Current model view
             BlackGui::Views::CAircraftModelView *currentModelView() const;
 

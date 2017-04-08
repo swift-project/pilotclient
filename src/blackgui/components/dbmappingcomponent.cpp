@@ -91,6 +91,7 @@ namespace BlackGui
 
             ui->comp_StashAircraft->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_StashAircraft->view(), this, true));
             ui->comp_StashAircraft->view()->setCustomMenu(new CApplyDbDataMenu(this, true));
+            ui->comp_StashAircraft->view()->setCustomMenu(new COwnModelSetMenu(this, true));
             ui->comp_StashAircraft->view()->setCustomMenu(new CModelStashToolsMenu(this, false));
 
             // connects
@@ -341,6 +342,12 @@ namespace BlackGui
         bool CDbMappingComponent::isStashTab() const
         {
             return currentTabIndex() == TabStash;
+        }
+
+        bool CDbMappingComponent::canAddToModelSetTab() const
+        {
+            const bool allowed = this->currentTabIndex() == CDbMappingComponent::TabOwnModels || this->currentTabIndex() == CDbMappingComponent::TabStash;
+            return allowed && this->currentModelView()->hasSelection();
         }
 
         CStatusMessageList CDbMappingComponent::validateCurrentModel(bool withNestedForms) const
@@ -647,8 +654,7 @@ namespace BlackGui
 
         void CDbMappingComponent::ps_addToOwnModelSet()
         {
-            if (this->currentTabIndex() != CDbMappingComponent::TabOwnModels) { return; }
-            if (!currentModelView()->hasSelection()) { return; }
+            if (!this->canAddToModelSetTab()) { return; }
             const CAircraftModelList models(this->currentModelView()->selectedObjects());
             const CStatusMessage m = this->addToOwnModelSet(models, this->getOwnModelsSimulator());
             CLogMessage::preformatted(m);
@@ -954,7 +960,7 @@ namespace BlackGui
         {
             CDbMappingComponent *mapComp = mappingComponent();
             Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
-            if (mapComp->currentTabIndex() == CDbMappingComponent::TabOwnModels && mapComp->currentModelView()->hasSelection())
+            if (mapComp->canAddToModelSetTab())
             {
                 menuActions.addMenuModelSet();
                 this->m_menuAction = menuActions.addAction(this->m_menuAction, CIcons::appModels16(), "Add to own model set", CMenuAction::pathModelSet(), this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet });
