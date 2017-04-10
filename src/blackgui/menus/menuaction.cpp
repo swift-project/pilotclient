@@ -120,7 +120,11 @@ namespace BlackGui
             std::reverse(myActions.begin(), myActions.end()); // the order is reverse because of the insert multi value
             for (const CMenuAction &action : myActions)
             {
-                if (action.isSubMenu() || !action.getQAction())
+                if (action.isSeparator())
+                {
+                    actions.append(action);
+                }
+                else if (action.isSubMenu() || !action.getQAction())
                 {
                     menus.append(action);
                 }
@@ -186,6 +190,12 @@ namespace BlackGui
         CMenuAction CMenuActions::addMenu(const QString &title, const QString &path)
         {
             return this->addMenu(QIcon(), title, path);
+        }
+
+        void CMenuActions::addSeparator(const QString &path)
+        {
+            static const CMenuAction separatorDummy(QIcon(), "_SEP_", path);
+            this->addAction(separatorDummy);
         }
 
         CMenuAction CMenuActions::addMenu(const QIcon &icon, const QString &title, const QString &path)
@@ -348,7 +358,14 @@ namespace BlackGui
                         currentMenu = currentMenuForAction(menu, menuAction, menus, subMenus, key, pathDepth);
                     }
                     Q_ASSERT_X(currentMenu, Q_FUNC_INFO, "Missing menu");
-                    Q_ASSERT_X(!menuAction.isSubMenu() && menuAction.getQAction(), Q_FUNC_INFO, "Wrong menu type");
+                    Q_ASSERT_X(menuAction.isSubMenu() || menuAction.isSeparator() || menuAction.getQAction(), Q_FUNC_INFO, "Wrong  type");
+
+                    if (menuAction.isSeparator())
+                    {
+                        if (menu.isEmpty()) continue;
+                        currentMenu->addSeparator();
+                        continue;
+                    }
 
                     if (menuAction.hasNoPath())
                     {

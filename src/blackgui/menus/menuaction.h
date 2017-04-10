@@ -81,6 +81,9 @@ namespace BlackGui
             //! Is menu?
             bool isSubMenu() const { return m_isMenu; }
 
+            //! Is separator
+            bool isSeparator() const { return m_title == "_SEP_"; }
+
             //! Is menu?
             void setSubMenu(bool menu) { m_isMenu = menu; }
 
@@ -111,6 +114,9 @@ namespace BlackGui
 
             //! No key
             static const QString &pathNone() { static const QString p("_NONE"); return p; }
+
+            //! Path converter into separator
+            static const QString &pathSeparator() { static const QString p("_SEPARATOR"); return p; }
 
             //! Model set
             static const QString &pathModelSet()  { static const QString p("Custom.10.Model/Model set"); return p; }
@@ -237,6 +243,9 @@ namespace BlackGui
             //! Add a sub menu
             CMenuAction addMenu(const QString &title, const QString &path);
 
+            //! Add a separator
+            void addSeparator(const QString &path);
+
             //! Add a sub menu
             CMenuAction addMenu(const QIcon &icon, const QString &title, const QString &path);
 
@@ -326,6 +335,9 @@ namespace BlackGui
 
             //! Model set menu
             CMenuAction addMenuModelSet();
+
+            //! Add ModelConverterX menu (optional)
+            CMenuAction addMenuModelConverterX();
 
             //! @}
 
