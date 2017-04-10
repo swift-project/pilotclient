@@ -17,9 +17,11 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/simulation/aircraftmodelutils.h"
-
+#include "blackmisc/simulation/modelconverterx.h"
+#include "blackconfig/buildconfig.h"
 #include <QDesktopServices>
 
+using namespace BlackConfig;
 using namespace BlackMisc;
 using namespace BlackMisc::Simulation;
 using namespace BlackGui;
@@ -84,17 +86,28 @@ namespace BlackGui
             if (mv->hasSingleSelectedRow())
             {
                 const CAircraftModel model(mv->selectedObject());
-                if (model.hasFileName() || (!model.getIconPath().isEmpty() && this->m_messageFrame))
+                bool added = false;
+                if (model.hasFileName())
                 {
                     menuActions.addMenuSimulator();
-                    if (this->m_messageFrame)
-                    {
-                        if (!model.getIconPath().isEmpty())
-                        {
-                            this->m_iconAction = menuActions.addAction(this->m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_displayIcon });
-                        }
-                    }
                     this->m_fileAction = menuActions.addAction(this->m_fileAction, CIcons::text16(), "Open simulator file", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_showSimulatorFile });
+                    added = true;
+                    if (CModelConverterX::supportsModelConverterX())
+                    {
+                        this->m_modelConverterX = menuActions.addAction(this->m_modelConverterX, CIcons::appAircraft16(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_startModelConverterX });
+                    }
+                }
+
+                if (this->m_messageFrame && !model.getIconPath().isEmpty())
+                {
+                    added = true;
+                    menuActions.addMenuSimulator();
+                    this->m_iconAction = menuActions.addAction(this->m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_displayIcon });
+                }
+
+                if (added)
+                {
+                    menuActions.addSeparator(CMenuAction::pathSimulator());
                 }
             }
             this->nestedCustomMenu(menuActions);
@@ -127,9 +140,17 @@ namespace BlackGui
             }
             else
             {
-                msg.setCategories(getLogCategories());
-                CLogMessage::preformatted(msg);
+                    CLogMessage::preformatted(msg);
             }
+        }
+
+        void CShowSimulatorFileMenu::ps_startModelConverterX()
+        {
+            if (!CModelConverterX::supportsModelConverterX()) { return; }
+            const CAircraftModelView *mv = modelView();
+            if (!mv->hasSingleSelectedRow()) { return; }
+            const CAircraftModel model(mv->selectedObject());
+            CModelConverterX::startModelConverterX(model, sApp);
         }
 
         // --------------------------------- with DB data ---------------------------------

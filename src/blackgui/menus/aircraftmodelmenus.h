@@ -67,13 +67,15 @@ namespace BlackGui
             virtual void customMenu(CMenuActions &menuActions) override;
 
         private slots:
-            void ps_showSimulatorFile(); //!< simulator file
-            void ps_displayIcon();       //!< aircraft icon if any
+            void ps_showSimulatorFile();    //!< simulator file
+            void ps_displayIcon();          //!< aircraft icon if any
+            void ps_startModelConverterX(); //!< show in model converter X
 
         private:
             BlackGui::COverlayMessagesFrame *m_messageFrame = nullptr;
             QAction *m_fileAction = nullptr;
             QAction *m_iconAction = nullptr;
+            QAction *m_modelConverterX = nullptr;
         };
 
         //! Merge with DB data
