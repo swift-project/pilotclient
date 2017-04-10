@@ -52,6 +52,7 @@ namespace BlackGui
         ui(new Ui::COverlayMessages)
     {
         this->init(w, h);
+        this->showKillButton(false);
         connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::ps_onStyleSheetsChanged);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::ps_okClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::ps_cancelClicked);
@@ -325,6 +326,7 @@ namespace BlackGui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_Image);
         this->setHeader("Image");
+        this->showKillButton(false);
     }
 
     void COverlayMessages::setConfirmationMessage(const QString &message)

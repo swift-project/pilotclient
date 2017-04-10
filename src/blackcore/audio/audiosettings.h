@@ -25,9 +25,6 @@ namespace BlackCore
             //! \copydoc BlackMisc::TSettingTrait::key
             static const char *key() { return "audio/setup"; }
 
-            //! \copydoc BlackMisc::TSettingTrait::defaultValue
-            static const BlackMisc::Audio::CSettings &defaultValue() { static const BlackMisc::Audio::CSettings a; return a; }
-
             //! \copydoc BlackMisc::TSettingTrait::isValid
             static bool isValid(const BlackMisc::Audio::CSettings &value) { Q_UNUSED(value); return true; }
         };

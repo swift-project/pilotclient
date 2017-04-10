@@ -29,8 +29,7 @@ namespace BlackGui
     namespace Components
     {
         //! Audio setup such as input / output devices
-        class BLACKGUI_EXPORT CAudioSetupComponent :
-            public QFrame
+        class BLACKGUI_EXPORT CAudioSetupComponent : public QFrame
         {
             Q_OBJECT
 
@@ -73,7 +72,6 @@ namespace BlackGui
 
             QScopedPointer<Ui::CAudioSetupComponent> ui;
             BlackMisc::CSetting<BlackCore::Audio::TSettings> m_audioSettings { this, &CAudioSetupComponent::ps_reloadSettings };
-
         };
     } // namespace
 } // namespace

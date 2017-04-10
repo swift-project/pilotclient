@@ -108,8 +108,8 @@ namespace BlackGui
             if (!model.hasFileName()) { return; }
             if (QFile::exists(model.getFileName()))
             {
-                const QString url("file:///" + model.getFileName());
-                QDesktopServices::openUrl(QUrl(url));
+                const QUrl url = QUrl::fromLocalFile(model.getFileName());
+                QDesktopServices::openUrl(url);
             }
         }
 
@@ -119,7 +119,7 @@ namespace BlackGui
             if (!mv->hasSingleSelectedRow()) { return; }
             const CAircraftModel model(mv->selectedObject());
             if (model.getIconPath().isEmpty()) { return; }
-            CStatusMessage msg;
+            CStatusMessage msg(this);
             const CPixmap pm(model.loadIcon(msg));
             if (msg.isSuccess())
             {

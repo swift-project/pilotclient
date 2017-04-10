@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_FLIGHTPLANCOMPONENT_H
-#define BLACKGUI_FLIGHTPLANCOMPONENT_H
+#ifndef BLACKGUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
+#define BLACKGUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
 
 #include "blackgui/blackguiexport.h"
 #include "blackmisc/aviation/flightplan.h"
@@ -29,7 +29,6 @@ class QWidget;
 
 namespace BlackMisc { namespace Simulation { class CSimulatedAircraft; } }
 namespace Ui { class CFlightPlanComponent; }
-
 namespace BlackGui
 {
     namespace Components
