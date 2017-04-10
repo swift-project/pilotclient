@@ -32,7 +32,7 @@
    <property name="bottomMargin">
     <number>4</number>
    </property>
-   <item row="2" column="4">
+   <item row="3" column="4">
     <widget class="QGroupBox" name="gb_DistributorPreferences">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -76,11 +76,11 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QGroupBox" name="gb_SwiftDb">
+    <widget class="QGroupBox" name="gb_Models">
      <property name="title">
-      <string>swift DB</string>
+      <string>Models</string>
      </property>
-     <layout class="QGridLayout" name="gl_SwiftDB">
+     <layout class="QVBoxLayout" name="vl_ModelSettings">
       <property name="leftMargin">
        <number>4</number>
       </property>
@@ -93,26 +93,13 @@
       <property name="bottomMargin">
        <number>4</number>
       </property>
-      <item row="1" column="0">
-       <spacer name="vs_SwiftDb">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
+      <item>
+       <widget class="BlackGui::Components::CSettingsModelComponent" name="comp_ModelSettings">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0">
-       <widget class="BlackGui::Components::CDbLoginComponent" name="comp_LoginComponent">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>175</height>
-         </size>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
         </property>
        </widget>
       </item>
@@ -169,12 +156,12 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="gb_Models">
+   <item row="3" column="0">
+    <widget class="QGroupBox" name="gb_SwiftDb">
      <property name="title">
-      <string>Models</string>
+      <string>swift DB</string>
      </property>
-     <layout class="QVBoxLayout" name="vl_ModelSettings">
+     <layout class="QGridLayout" name="gl_SwiftDB">
       <property name="leftMargin">
        <number>4</number>
       </property>
@@ -187,20 +174,33 @@
       <property name="bottomMargin">
        <number>4</number>
       </property>
-      <item>
-       <widget class="BlackGui::Components::CSettingsModelComponent" name="comp_ModelSettings">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
+      <item row="1" column="0">
+       <spacer name="vs_SwiftDb">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="BlackGui::Components::CDbLoginComponent" name="comp_LoginComponent">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>175</height>
+         </size>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="0" column="4" rowspan="2">
+   <item row="0" column="4" rowspan="3">
     <widget class="QGroupBox" name="gb_Simulator">
      <property name="title">
       <string>Simulator</string>
@@ -227,6 +227,30 @@
          <enum>QFrame::Raised</enum>
         </property>
        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="gb_ExternalTools">
+     <property name="title">
+      <string>External tools</string>
+     </property>
+     <layout class="QVBoxLayout" name="vl_ExternalTools">
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="BlackGui::Components::CModelConverterXSetupComponent" name="comp_ModelConverterX"/>
       </item>
      </layout>
     </widget>
@@ -262,6 +286,12 @@
    <class>BlackGui::Components::CSettingsModelComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingsmodelcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CModelConverterXSetupComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/modelconverterxsetupcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
