@@ -94,7 +94,7 @@ namespace BlackGui
                     added = true;
                     if (CModelConverterX::supportsModelConverterX())
                     {
-                        this->m_modelConverterX = menuActions.addAction(this->m_modelConverterX, CIcons::appAircraft16(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_startModelConverterX });
+                        this->m_modelConverterX = menuActions.addAction(this->m_modelConverterX, CIcons::modelConverterX(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::ps_startModelConverterX });
                     }
                 }
 
@@ -140,7 +140,7 @@ namespace BlackGui
             }
             else
             {
-                    CLogMessage::preformatted(msg);
+                CLogMessage::preformatted(msg);
             }
         }
 

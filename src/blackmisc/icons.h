@@ -666,6 +666,9 @@ namespace BlackMisc
         //! Model exclude
         static const QPixmap &modelExclude16();
 
+        //! Model Converter X
+        static const QPixmap &modelConverterX();
+
         // -------------------------------------------------------------
         // By index
         // -------------------------------------------------------------

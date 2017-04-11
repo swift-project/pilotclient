@@ -959,9 +959,14 @@ namespace BlackMisc
 
     const QPixmap &CIcons::modelExclude16()
     {
-        // static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane--minus.png");
-        // return pm;
+        // Alternative: static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane--minus.png");
         return cross16();
+    }
+
+    const QPixmap &CIcons::modelConverterX()
+    {
+        static const QPixmap pm(":/misc/icons/misc/mcx.png");
+        return pm;
     }
 
     const QPixmap &CIcons::pixmapByIndex(CIcons::IconIndex index)
