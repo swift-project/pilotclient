@@ -1,5 +1,5 @@
 {
-    "crashreportServerUrl": {
+    "crashReportServerUrl": {
         "url": "http://crashreports.swift-project.org/crash_upload"
     },
     "dbDebugFlag": false,
@@ -17,12 +17,28 @@
             "url": "http://swift-project.org/"
         }]
     },
+    "onlineHelpUrls": {
+        "containerbase": [{
+            "url": "http://help.swift-project.org"
+        }]
+    },
+    "mapUrls": {
+        "containerbase": [{
+            "url": "http://map.swift-project.org"
+        }]
+    },
     "sharedUrls": {
         "containerbase": [{
             "url": "https://datastore.swift-project.org/shared"
         },
         {
             "url": "https://vatsim-germany.org:50443/datastore/shared"
+        },
+        {
+            "url": "http://www.siliconmind.de/datastore/shared"
+        },
+        {
+            "url": "http://swift-project.org/datastore/shared"
         }]
     },
     "timestampMSecsSinceEpoch": 1476907647000,

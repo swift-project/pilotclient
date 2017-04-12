@@ -49,7 +49,10 @@ namespace BlackCore
                 IndexVatsimMetars,
                 IndexVatsimData,
                 IndexSwiftDbFiles,
+                IndexSwiftMapUrls,
                 IndexBootstrapFileUrls,
+                IndexNewsUrls,
+                IndexOnlineHelpUrls,
                 IndexCrashReportServerUrl,
                 IndexUpdateInfo,
                 IndexWasLoaded,
@@ -140,13 +143,19 @@ namespace BlackCore
             //! Locations of swift DB news
             const BlackMisc::Network::CUrlList &getSwiftLatestNewsUrls() const { return m_newsUrls; }
 
+            //! Online help URLs
+            const BlackMisc::Network::CUrlList &getOnlineHelpUrls() const { return m_onlineHelpUrls; }
+
+            //! swift map URLs
+            const BlackMisc::Network::CUrlList &getSwiftMapUrls() const { return m_mapUrls; }
+
             //! FSD test servers
             const BlackMisc::Network::CServerList &getFsdTestServers() const { return m_fsdTestServers; }
 
             //! FSD test servers plus hardcoded
             BlackMisc::Network::CServerList getFsdTestServersPlusHardcodedServers() const;
 
-            //! Productive settings?
+            //! Is server a development server?
             bool isDevelopment() const { return m_development; }
 
             //! Productive settings?
@@ -189,6 +198,8 @@ namespace BlackCore
             BlackMisc::Network::CUrlList    m_vatsimDataFileUrls;   //!< Overall VATSIM data file / merely for bootstrapping the first time
             BlackMisc::Network::CUrlList    m_sharedUrls;           //!< where we can obtain shared info files such as bootstrap, ..
             BlackMisc::Network::CUrlList    m_newsUrls;             //!< where we can obtain latest news
+            BlackMisc::Network::CUrlList    m_onlineHelpUrls;       //!< online help URLs
+            BlackMisc::Network::CUrlList    m_mapUrls;              //!< swift map URLs
             BlackMisc::Network::CServerList m_fsdTestServers;       //!< FSD test servers
 
             // transient members, to be switched on/off via GUI or set from reader
@@ -208,6 +219,8 @@ namespace BlackCore
                 BLACK_METAMEMBER(vatsimMetarsUrls),
                 BLACK_METAMEMBER(sharedUrls),
                 BLACK_METAMEMBER(newsUrls),
+                BLACK_METAMEMBER(onlineHelpUrls),
+                BLACK_METAMEMBER(mapUrls),
                 BLACK_METAMEMBER(fsdTestServers),
                 BLACK_METAMEMBER(development),
                 BLACK_METAMEMBER(dbDebugFlag, BlackMisc::DisabledForJson)

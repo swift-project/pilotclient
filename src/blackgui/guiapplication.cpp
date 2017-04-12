@@ -50,6 +50,7 @@
 
 using namespace BlackConfig;
 using namespace BlackMisc;
+using namespace BlackMisc::Db;
 using namespace BlackMisc::Network;
 using namespace BlackGui::Components;
 using namespace BlackCore::Data;
@@ -384,6 +385,7 @@ namespace BlackGui
             }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
     }
 
     void CGuiApplication::addMenuForStyleSheets(QMenu &menu)
@@ -395,6 +397,7 @@ namespace BlackGui
             this->reloadStyleSheets();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
     }
 
     void CGuiApplication::addMenuFile(QMenu &menu)
@@ -421,6 +424,7 @@ namespace BlackGui
             this->gracefulShutdown();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
     }
 
     void CGuiApplication::addMenuInternals(QMenu &menu)
@@ -429,14 +433,16 @@ namespace BlackGui
         QAction *a = sm->addAction("JSON bootstrap");
         bool c = connect(a, &QAction::triggered, this, [a, this]()
         {
-            this->displayTextInConsole(this->getGlobalSetup().toJsonString());
+            const CGlobalSetup s = this->getGlobalSetup();
+            this->displayTextInConsole(s.toJsonString());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
-        a = sm->addAction("JSON distribution info");
+        a = sm->addAction("JSON distributions (info only)");
         c = connect(a, &QAction::triggered, this, [a, this]()
         {
-            this->displayTextInConsole(this->getDistributionInfo().toJsonString());
+            const CDistributionList d = this->getDistributionInfo();
+            this->displayTextInConsole(d.toJsonString());
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -460,6 +466,7 @@ namespace BlackGui
             this->displayTextInConsole(this->getInfoString("\n"));
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
     }
 
     void CGuiApplication::addMenuWindow(QMenu &menu)
@@ -504,6 +511,7 @@ namespace BlackGui
             }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
     }
 
     void CGuiApplication::addMenuHelp(QMenu &menu)
@@ -513,12 +521,14 @@ namespace BlackGui
 
         const CGlobalSetup gs = this->getGlobalSetup();
         const CUrl helpPage = gs.getHelpPageUrl();
+        if (helpPage.isEmpty()) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
         bool c = connect(a, &QAction::triggered, this, [helpPage]()
         {
             QDesktopServices::openUrl(helpPage);
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c);
     }
 
     const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const

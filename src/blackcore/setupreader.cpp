@@ -262,7 +262,7 @@ namespace BlackCore
     {
         if (fileName.isEmpty()) { return CStatusMessage(this).error("No file name for local bootstrap file"); }
         QString fn;
-        QFile file(fileName);
+        const QFile file(fileName);
         if (!file.exists())
         {
             // relative name?
@@ -277,7 +277,7 @@ namespace BlackCore
             fn = fileName;
         }
 
-        QString content(CFileUtils::readFileToString(fn));
+        const QString content(CFileUtils::readFileToString(fn));
         if (content.isEmpty()) { return CStatusMessage(this).error("File '%1' not existing or empty") << fn; }
 
         try

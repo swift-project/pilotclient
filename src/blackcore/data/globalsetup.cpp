@@ -30,7 +30,10 @@ namespace BlackCore
         CGlobalSetup::CGlobalSetup() :
             ITimestampBased(0),
             m_dbRootDirectoryUrl("https://datastore.swift-project.org/"), m_vatsimBookingsUrl("http://vatbook.euroutepro.com/xml2.php"),
-            m_vatsimMetarsUrls( {"http://metar.vatsim.net/metar.php"}), m_vatsimStatusFileUrls({ "https://status.vatsim.net" }), m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" }), m_sharedUrls({"https://datastore.swift-project.org/shared", "https://vatsim-germany.org:50443/datastore/shared"}), m_newsUrls(QStringList({ "http://swift-project.org/" }))
+            m_vatsimMetarsUrls( {"http://metar.vatsim.net/metar.php"}), m_vatsimStatusFileUrls({ "https://status.vatsim.net" }),
+            m_vatsimDataFileUrls({ "http://info.vroute.net/vatsim-data.txt" }), m_sharedUrls({"https://datastore.swift-project.org/shared", "https://vatsim-germany.org:50443/datastore/shared"}),
+            m_newsUrls(QStringList({ "http://swift-project.org/" })), m_onlineHelpUrls(QStringList({ "help.swift-project.org/" })),
+            m_mapUrls(QStringList({ "map.swift-project.org/" }))
         { }
 
         CUrl CGlobalSetup::getDbIcaoReaderUrl() const
@@ -65,7 +68,9 @@ namespace BlackCore
 
         CUrl CGlobalSetup::getHelpPageUrl() const
         {
-            return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
+            const CUrlList urls(this->m_onlineHelpUrls);
+            const CUrl url = urls.getRandomWorkingUrl();
+            return url;
         }
 
         CUrl CGlobalSetup::getLegalDirectoryUrl() const
@@ -85,7 +90,7 @@ namespace BlackCore
             if (!m_dbDebugFlag) { return false; }
 
             // further checks could go here
-            bool f = isDevelopment();
+            const bool f = isDevelopment();
             return f;
         }
 
@@ -203,6 +208,12 @@ namespace BlackCore
                    % "News URLs: "
                    % getSwiftLatestNewsUrls().toQString(i18n)
                    % separator
+                   % "Help URLs: "
+                   % getOnlineHelpUrls().toQString(i18n)
+                   % separator
+                   % "swift map URLs: "
+                   % getSwiftMapUrls().toQString(i18n)
+                   % separator
 
                    % "DB root directory: "
                    % getDbRootDirectoryUrl().toQString(i18n)
@@ -249,7 +260,7 @@ namespace BlackCore
             if (index.isMyself()) { return CVariant::from(*this); }
             if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDbRootDirectory:
@@ -276,6 +287,12 @@ namespace BlackCore
                 return CVariant::fromValue(this->getSwiftDbDataFileLocationUrls());
             case IndexSharedUrls:
                 return CVariant::fromValue(this->m_sharedUrls);
+            case IndexNewsUrls:
+                return CVariant::fromValue(this->m_newsUrls);
+            case IndexSwiftMapUrls:
+                return CVariant::fromValue(this->m_mapUrls);
+            case IndexOnlineHelpUrls:
+                return CVariant::fromValue(this->m_onlineHelpUrls);
             case IndexCrashReportServerUrl:
                 return CVariant::fromValue(this->m_crashReportServerUrl);
             case IndexWasLoaded:
@@ -294,7 +311,7 @@ namespace BlackCore
                 return;
             }
 
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDbRootDirectory:
@@ -320,6 +337,15 @@ namespace BlackCore
             case IndexSharedUrls:
                 this->m_sharedUrls = variant.value<CUrlList>();
                 break;
+            case IndexNewsUrls:
+                this->m_newsUrls = variant.value<CUrlList>();
+                break;
+            case IndexOnlineHelpUrls:
+                this->m_onlineHelpUrls = variant.value<CUrlList>();
+                break;
+            case IndexSwiftMapUrls:
+                this->m_mapUrls = variant.value<CUrlList>();
+                break;
             case IndexCrashReportServerUrl:
                 this->m_crashReportServerUrl = variant.value<CUrl>();
                 break;
@@ -334,7 +360,7 @@ namespace BlackCore
 
         const QString &CGlobalSetup::versionString()
         {
-            // This not the current swift version, but the schema version
+            // This is not the current swift version, but the schema version
             static const QString v("0.7.0");
             return v;
         }
