@@ -353,9 +353,17 @@ namespace BlackCore
             const QDateTime cacheTs(this->getCacheTimestamp(entity));
             if (!cacheTs.isValid()) { return true; } // we have no cache ts
 
-            const QDateTime hts(this->getLatestSharedFileHeaderTimestamp(entity));
-            if (!hts.isValid()) { return false; }
-            return hts > cacheTs;
+            const QDateTime headerTimestamp(this->getLatestSharedFileHeaderTimestamp(entity));
+            if (!headerTimestamp.isValid()) { return false; }
+
+            // we restrict by latest entity from info objects (if available)
+            // a header ts shall be never newer than the info object, if it is it is an issue with shared file sync
+            const QDateTime infoObjectTs = this->getLatestEntityTimestampFromInfoObjects(entity);
+            if (infoObjectTs.isValid() && infoObjectTs < headerTimestamp)
+            {
+                return infoObjectTs > cacheTs;
+            }
+            return headerTimestamp > cacheTs;
         }
 
         CEntityFlags::Entity CDatabaseReader::getEntitesWithNewerHeaderTimestamp(CEntityFlags::Entity entities) const
